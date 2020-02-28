@@ -1,0 +1,352 @@
+{
+  "$vuetify": {
+    "badge": "Badge",
+    "close": "Close",
+    "dataIterator": {
+      "noResultsText": "No matching records found",
+      "loadingText": "Loading items..."
+    },
+    "dataTable": {
+      "itemsPerPageText": "Rows per page:",
+      "ariaLabel": {
+        "sortDescending": ": Sorted descending. Activate to remove sorting.",
+        "sortAscending": ": Sorted ascending. Activate to sort descending.",
+        "sortNone": ": Not sorted. Activate to sort ascending."
+      },
+      "sortBy": "Sort by"
+    },
+    "dataFooter": {
+      "itemsPerPageText": "Items per page:",
+      "itemsPerPageAll": "All",
+      "nextPage": "Next page",
+      "prevPage": "Previous page",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "pageText": "{0}-{1} of {2}"
+    },
+    "datePicker": {
+      "itemsSelected": "{0} selected"
+    },
+    "noDataText": "No data available",
+    "carousel": {
+      "prev": "Previous visual",
+      "next": "Next visual",
+      "ariaLabel": {
+        "delimiter": "Carousel slide {0} of {1}"
+      }
+    },
+    "calendar": {
+      "moreEvents": "{0} more"
+    },
+    "fileInput": {
+      "counter": "{0} files",
+      "counterSize": "{0} files ({1} in total)"
+    },
+    "timePicker": {
+      "am": "AM",
+      "pm": "PM"
+    }
+  },
+  "infinity": {
+    "error": {
+      "INVALID_SESSION": "Your session has expired. Please login again.",
+      "INVALID_LOGIN_DETAILS": "Login failed: Invalid username or password.",
+      "EMAIL_NOT_FOUND": "Login failed: Invalid email",
+      "USER_NOT_FOUND": "Login failed: Invalid user",
+      "INCORRECT_PASSWORD": "Login failed: Invalid password.",
+      "MOBILE_NUMBER_NOT_FOUND": "Send OTP failed: Invalid mobile number.",
+      "INVALID_OTP": "Login failed: Invalid OTP.",
+      "INVALID_USERNAME": "Invalid username: Username must have 5 to 15 characters containing only [a-z], [0-9], _ and -.",
+      "INVALID_CURRENT_PASSWORD": "Update password failed: Invalid current password.",
+      "FAILED_TO_SEND_SMS": "SMS sending failed: Please try again.",
+      "USER_ALREADY_EXIST": "User already exists.",
+      "FIELD_MAPPING_REQUIRED": "One or more required column(s) are not mapped yet. Please check you column mappings."
+    },
+    "success": {},
+    "help": {
+      "title": "Help"
+    },
+    "userProfile": {
+      "tabs": {
+        "profile": "Profile",
+        "activity": "Activity",
+        "settings": "Settings"
+      },
+      "profile": {
+        "labels": {
+          "firstName": "First name",
+          "lastName":"Last name",
+          "email": "Email",
+          "phoneNumber": "Mobile number",
+          "username": "Username",
+          "password": "Current Password",
+          "newPassword": "New password",
+          "confirmNewPassword": "Confirm new password"
+        },
+        "buttons": {
+          "updateUser": "Update info",
+          "updatePassword": "Update password"
+        }
+      },
+      "settings": {
+        "title": "Preferences",
+        "locale": {
+          "label": "Select locale",
+          "items": {
+            "english": "English",
+            "hindi": "Hindi",
+            "simplifiedChinese": "Simplified Chinese",
+            "thai": "Thai"
+          }
+        }
+      }
+    },
+    "account": {
+      "headers": {
+        "sites": "Sites",
+        "account": "Account"
+      },
+      "menu": {
+        "items": {
+          "profile": "Profile",
+          "darkMode": "Dark mode",
+          "lightMode": "Light mode",
+          "logout": "Logout"
+        }
+      }
+    },
+    "modules": {
+      "home": "Home",
+      "machinedashboard": "Machine dashboard",
+      "planning": "Planning",
+      "reports": "Report",
+      "production": "Production",
+      "downtime": "Downtime",
+      "rejection": "Rejection",
+      "oee": "Oee",
+      "masters": "Masters",
+      "admin": "Admin"
+    },
+    "snackbar": {
+      "buttons": {
+        "close": "Close",
+        "redirectToLogin": "Redirecting in {time} secs"
+      }
+    },
+    "auth": {
+      "login": {
+        "title": "Login to ShopWorx",
+        "subTitle": "Digitize. Analyze. Transform.",
+        "otpForm": {
+          "labels": {
+            "phoneNumber": "Mobile number",
+            "otp": "OTP"
+          },
+          "buttons": {
+            "sendOtp": "Send Otp",
+            "login": "Login"
+          },
+          "resendOtp": "Resend OTP",
+          "loginWithPassword": "or login with password"
+        },
+        "passwordForm": {
+          "labels": {
+            "identifier": "Mobile number, email or username",
+            "password": "Password"
+          },
+          "buttons": {
+            "login": "Login",
+            "forgotPassword": "Forgot password?"
+          },
+          "loginWithOtp": "or login with OTP"
+        }
+      },
+      "forgotPassword": {
+        "title": "Forgot Password?",
+        "subTitle": "Submit your mobile number or email and you'll receive your new password.",
+        "form": {
+          "labels": {
+            "identifier":"Mobile number or email"
+          },
+          "buttons": {
+            "submit": "Submit",
+            "back": "Back"
+          }
+        }
+      }
+    },
+    "user": {
+      "register": {
+        "title": "We've been expecting you.",
+        "subTitle": "Let's start by creating your account. It will take less than a minute.",
+        "form": {
+          "labels": {
+            "firstName": "First name",
+            "lastName": "Last name",
+            "email": "Email",
+            "phoneNumber": "Mobile number",
+            "username": "Create username",
+            "password": "Current passwrod",
+            "newPassword": "New password",
+            "confirmNewPassword": "Confirm new password"
+          },
+          "buttons": {
+            "next": "Next",
+            "back": "Back",
+            "complete": "Complete"
+          }
+        }
+      },
+      "invite": {
+        "title": "Invite users to ShopWorx!",
+        "subTitle": "You can invite your employees to ShopWorx in a jiffy."
+      },
+      "welcome": {
+        "title": "Welcome to ShopWorx!",
+        "subTitle":"ShopWorx gives you the tools you need to analyze data for your manufacturing shop floor in one place, so you can make smarter decisions.",
+        "buttons": {
+          "startSetup": "Start setup",
+          "go": "All set! Let's go"
+        },
+        "details": {
+          "featureOne": {
+            "title": "Complete information",
+            "description": "Understand your shop floors to better check the performance of your machines, operators, products, and more."
+          },
+          "featureTwo": {
+            "title": "Get insights only ShopWorx can give",
+            "description": "Access ShopWorx's unique insights and machine learning capabilities to make the most of your data."
+          },
+          "featureThree": {
+            "title": "Connect your insights to results",
+            "description": "Analytics works with ShopWorx's report, so you can use your insights to deliver business results."
+          }
+        }
+      }
+    },
+    "onboarding": {
+      "buttons": {
+        "download": "Download template",
+        "upload": "Upload CSV",
+        "back": "Back",
+        "skip": "Skip for now",
+        "next": "Save & Continue",
+        "finish": "Finish On-boarding"
+      },
+      "steps": {
+        "title": {
+          "tool": "Tools",
+          "part": "Parts",
+          "operator": "Operators",
+          "calendar": "Business Hours",
+          "downtimereasons": "Downtime reasons",
+          "rejectionreasons": "Rejection reasons"
+        },
+        "optional": "Optional",
+        "details": {}
+      },
+      "users": {
+        "title": "Invite users to ShopWorx"
+      },
+      "tools": {
+        "title": "Bulk add tools",
+        "subTitle": "...or just manually input the tools"
+      },
+      "parts": {
+        "title": "Bulk add parts",
+        "subTitle": "...or just manually input the parts"
+      },
+      "downtimeReasons": {
+        "title": "Bulk add downtime reasons",
+        "subTitle": "...or just manually input the downtime reasons"
+      },
+      "rejectionReasons": {
+        "title": "Bulk add rejection reasons",
+        "subTitle": "...or just manually input the rejection reasons"
+      },
+      "calendar": {
+        "title": "Add your calendar"
+      }
+    },
+    "insights": {
+      "toolbar": {
+        "title": "Insights",
+        "back": "Back"
+      },
+      "list": {
+        "notFound": {
+          "title": "No new insights right now.",
+          "subTitle": "Check back soon!"
+        }
+      },
+      "onDemand": {
+        "header": "Insights on demand"
+      },
+      "details": {
+        "youAsked": "You asked:"
+      }
+    },
+    "machineDashboard": {
+      "labels": {
+        "actual": "Actual",
+        "planned": "Planned",
+        "target": "Target",
+        "efficiency": "Eff",
+        "downtimeSince": "Down Since",
+        "downtimeReason": "Reason",
+        "noPlanSince": "No plan since",
+        "noPlanShots": "Shots",
+        "purgeSince": "Purge since",
+        "purgeShots": "Shots"
+      }
+    },
+    "planning": {
+      "onboarding": {
+        "buttons": {
+          "next": "Next",
+          "back": "Back",
+          "complete": "Complete"
+        },
+        "welcome": {
+          "title": "Welcome to ShopWorx Planning!"
+        },
+        "schema": {
+          "title": "Onboarding: Select all that applies!"
+        }
+      },
+      "notFound": {
+        "title": "Your plans appear here",
+        "subTitle": "Create new"
+      },
+      "toolbar": {
+        "title": "Planning"
+      }
+    },
+    "reports": {
+      "production": "Production",
+      "productiondaily": "Production Daily",
+      "productionbyshift": "Production By Shift",
+      "productioncyclecomparison": "Production Cycle Comparision",
+      "productiondetail": "Production Detail",
+      "productiondetail_bk": "Production Detail",
+      "productionheader": "Production Header",
+      "productionhourly": "Production Hourly",
+      "productionnoplan": "Production No Plan",
+      "downtimebymachine": "Downtime By Machine",
+      "downtimebyoccurence": "Downtime By Occurence",
+      "downtimebyreason": "Downtime By Reason",
+      "downtimebyshift": "Downtime By Shift",
+      "downtimebydepartment": "Downtime By Department",
+      "ppmgraph": "PPM Rejection Graph Report",
+      "ppmproduction": "PPM Partwise Rejection",
+      "rejectionbydefect": "Rejection By Defect",
+      "rejectionbymachine": "Rejection By Machine",
+      "rejectionbyshift": "Rejection By Shift",
+      "rejectionmonthly": "Rejection By Month",
+      "oeebyshift": "Oee By Shift",
+      "oeebymachine": "Oee By Month",
+      "oeebyplan": "Oee By Plan",
+      "oeebyshiftaggregated": "Oee By Shift"
+    }
+  }
+}

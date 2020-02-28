@@ -1,0 +1,331 @@
+{
+  "$vuetify": {
+    "badge": "बिल्ला",
+    "close": "बंद करे",
+    "dataIterator": {
+      "noResultsText": "कोई मिलान रिकॉर्ड पाया",
+      "loadingText": "आइटम लोड हो रहे हैं ..."
+    },
+    "dataTable": {
+      "itemsPerPageText": "प्रति पृष्ठ पंक्तियाँ:",
+      "ariaLabel": {
+        "sortDescending": ": क्रमबद्ध अवरोही। छँटाई को हटाने के लिए सक्रिय करें।",
+        "sortAscending": ": आरोही क्रमबद्ध। अवरोही क्रमबद्ध करने के लिए सक्रिय करें।",
+        "sortNone": ": सॉर्ट नहीं किया गया। आरोही को सॉर्ट करने के लिए सक्रिय करें।"
+      },
+      "sortBy": "इसके अनुसार क्रमबद्ध करें"
+    },
+    "dataFooter": {
+      "itemsPerPageText": "आइटम प्रति पेज:",
+      "itemsPerPageAll": "सब",
+      "nextPage": "अगला पृष्ठ",
+      "prevPage": "पिछला पृष्ठ",
+      "firstPage": "पहला पन्ना",
+      "lastPage": "अंतिम पृष्ठ",
+      "pageText": "{0} - {1} का {2}"
+    },
+    "datePicker": {
+      "itemsSelected": "{0} चयनित"
+    },
+    "noDataText": "कोई डेटा उपलब्ध नहीं है",
+    "carousel": {
+      "prev": "पिछला दृश्य",
+      "next": "अगला दृश्य",
+      "ariaLabel": {
+        "delimiter": "हिंडोला स्लाइड {0} का {1}"
+      }
+    },
+    "calendar": {
+      "moreEvents": "{0} अधिक"
+    },
+    "fileInput": {
+      "counter": "{0} फ़ाइलें",
+      "counterSize": "{0} फ़ाइलें ({1} कुल मिलाकर)"
+    },
+    "timePicker": {
+      "am": "AM",
+      "pm": "PM"
+    }
+  },
+  "infinity": {
+    "error": {
+      "INVALID_SESSION": "आपका सत्र समाप्त हो गया है। कृपया फिर भाग लें।",
+      "INVALID_LOGIN_DETAILS": "लॉगिन विफल: अमान्य उपयोगकर्ता नाम या पासवर्ड।",
+      "EMAIL_NOT_FOUND": "लॉगिन विफल: अमान्य ईमेल",
+      "USER_NOT_FOUND": "लॉगिन विफल: अमान्य उपयोगकर्ता",
+      "INCORRECT_PASSWORD": "लॉगिन विफल: अमान्य पासवर्ड।",
+      "MOBILE_NUMBER_NOT_FOUND": "OTP भेजना विफल: अमान्य मोबाइल नंबर।",
+      "INVALID_OTP": "लॉगिन विफल: अमान्य ओटीपी।",
+      "INVALID_USERNAME": "अमान्य उपयोगकर्ता नाम: उपयोगकर्ता नाम में केवल [a-z], [0-9], _ और - वाले 5 से 15 वर्ण होने चाहिए।",
+      "INVALID_CURRENT_PASSWORD": "अपडेट पासवर्ड विफल: अमान्य वर्तमान पासवर्ड।",
+      "FAILED_TO_SEND_SMS": "SMS भेजना विफल: कृपया पुनः प्रयास करें"
+    },
+    "success": {},
+    "help": {
+      "title": "मदद"
+    },
+    "userProfile": {
+      "tabs": {
+        "profile": "प्रोफ़ाइल",
+        "activity": "गतिविधि",
+        "settings": "समायोजन"
+      },
+      "profile": {
+        "labels": {
+          "firstName": "पहला नाम",
+          "lastName":"उपनाम",
+          "email": "ईमेल",
+          "phoneNumber": "मोबाइल नंबर",
+          "username": "उपयोगकर्ता नाम",
+          "password": "वर्तमान पासवर्ड",
+          "newPassword": "नया पासवर्ड",
+          "confirmNewPassword": "नए पासवर्ड की पुष्टि करें"
+        },
+        "buttons": {
+          "updateUser": "अद्यतन जानकारी",
+          "updatePassword": "पासवर्ड अपडेट करें"
+        }
+      },
+      "settings": {
+        "title": "पसंद",
+        "locale": {
+          "label": "स्थान का चयन करें",
+          "items": {
+            "english": "अंग्रेज़ी",
+            "hindi": "हिन्दी",
+            "simplifiedChinese": "सरलीकृत चीनी",
+            "thai": "थाई"
+          }
+        }
+      }
+    },
+    "account": {
+      "headers": {
+        "sites": "साइटें",
+        "account": "लेखा"
+      },
+      "menu": {
+        "items": {
+          "profile": "प्रोफ़ाइल",
+          "darkMode": "डार्क मोड",
+          "lightMode": "प्रकाश मोड",
+          "logout": "लॉग आउट"
+        }
+      }
+    },
+    "modules": {
+      "home": "घर",
+      "machineDashboard": "मशीन का डैशबोर्ड",
+      "planning": "योजना",
+      "reports": "रिपोर्ट",
+      "production": "उत्पादन",
+      "downtime": "स्र्कना",
+      "rejection": "अस्वीकार",
+      "oee": "कौन",
+      "masters": "मास्टर्स",
+      "admin": "व्यवस्थापक"
+    },
+    "snackbar": {
+      "buttons": {
+        "close": "बंद करे",
+        "redirectToLogin": "{time} सेकंड्स में रीडायरेक्ट करना"
+      }
+    },
+    "auth": {
+      "login": {
+        "title": "ShopWorx में लॉगिन करें",
+        "subTitle": "Digitize. Analyze. Transform.",
+        "otpForm": {
+          "labels": {
+            "phoneNumber": "मोबाइल नंबर",
+            "otp": "OTP"
+          },
+          "buttons": {
+            "sendOtp": "OTP भेजें",
+            "login": "लॉग इन करें"
+          },
+          "resendOtp": "OTP को फिर से भेजें",
+          "loginWithPassword": "या पासवर्ड से लॉगिन करें"
+        },
+        "passwordForm": {
+          "labels": {
+            "identifier": "मोबाइल नंबर, ईमेल या उपयोगकर्ता नाम",
+            "password": "कुंजिका"
+          },
+          "buttons": {
+            "login": "लॉग इन करें",
+            "forgotPassword": "पासवर्ड भूल गए?"
+          },
+          "loginWithOtp": "या OTP से लॉगिन करें"
+        }
+      },
+      "forgotPassword": {
+        "title": "पासवर्ड भूल गए?",
+        "subTitle": "अपना मोबाइल नंबर या ईमेल भेजें और आप अपना नया पासवर्ड प्राप्त करेंगे।",
+        "form": {
+          "labels": {
+            "identifier":"मोबाइल नंबर या ईमेल"
+          },
+          "buttons": {
+            "submit": "प्रस्तुत",
+            "back": "वापस"
+          }
+        }
+      }
+    },
+    "user": {
+      "register": {
+        "title": "हमारी आपसे उम्मीद रही है।",
+        "subTitle": "चलिए अपना खाता बनाकर शुरू करते हैं। इसमें एक मिनट से भी कम समय लगेगा।",
+        "form": {
+          "labels": {
+            "firstName": "पहला नाम",
+            "lastName": "उपनाम",
+            "email": "ईमेल",
+            "phoneNumber": "मोबाइल नंबर",
+            "username": "उपयोगकर्ता नाम बनाएँ",
+            "password": "करंट पासवर",
+            "newPassword": "नया पासवर्ड",
+            "confirmNewPassword": "नए पासवर्ड की पुष्टि करें"
+          },
+          "buttons": {
+            "next": "आगे",
+            "back": "वापस",
+            "complete": "पूर्ण"
+          }
+        }
+      },
+      "welcome": {
+        "title": "ShopWorx में आपका स्वागत है!",
+        "subTitle":"ShpoWorx आपको एक जगह पर अपने निर्माण की दुकान के फर्श के लिए डेटा का विश्लेषण करने के लिए आवश्यक उपकरण प्रदान करता है, ताकि आप और भी बेहतर निर्णय ले सकें।",
+        "buttons": {
+          "startSetup": "सेटअप प्रारंभ करें",
+          "go": "सब तैयार! चलो चलते हैं"
+        },
+        "details": {
+          "featureOne": {
+            "title": "पूरी जानकारी",
+            "description": "अपनी मशीनों, ऑपरेटरों, उत्पादों और अन्य के प्रदर्शन की बेहतर जांच करने के लिए अपनी दुकान के फर्श को समझें।"
+          },
+          "featureTwo": {
+            "title": "केवल अंतर्दृष्टि प्राप्त करें ShopWorx दे सकता है",
+            "description": "अपने डेटा का अधिकतम उपयोग करने के लिए ShopWorx की अद्वितीय अंतर्दृष्टि और मशीन सीखने की क्षमताओं तक पहुँचें।"
+          },
+          "featureThree": {
+            "title": "परिणामों के लिए अपनी अंतर्दृष्टि कनेक्ट करें",
+            "description": "ShopWorx एनालिटिक्स की रिपोर्ट के साथ काम करता है, इसलिए आप अपने अंतर्दृष्टि का उपयोग व्यावसायिक परिणाम देने के लिए कर सकते हैं।"
+          }
+        }
+      },
+      "invite": {}
+    },
+    "onboarding": {
+      "buttons": {
+        "download": "टेम्पलेट डाउनलोड करें",
+        "upload": "CSV अपलोड करें",
+        "back": "वापस",
+        "skip": "अभी के लिए जाने दे",
+        "next": "सहेजें और जारी रखें",
+        "finish": "ऑन-बोर्डिंग समाप्त करें"
+      },
+      "steps": {
+        "title": {
+          "users": "उपयोगकर्ता",
+          "machines": "मशीनें",
+          "tools": "उपकरण",
+          "parts": "पार्ट्स",
+          "calendar": "पंचांग",
+          "downtimeReasons": "डाउनटाइम कारण",
+          "rejectionReasons": "अस्वीकृति के कारण"
+        },
+        "optional": "ऐच्छिक",
+        "details": {}
+      },
+      "users": {
+        "title": "ShopWorx पर उपयोगकर्ताओं को आमंत्रित करें"
+      },
+      "machines": {
+        "title": "थोक जोड़ने वाली मशीनें",
+        "subTitle": "... या मशीनों को मैन्युअल रूप से इनपुट करें"
+      },
+      "tools": {
+        "title": "थोक जोड़ने के उपकरण",
+        "subTitle": "... या बस मैन्युअल रूप से टूल इनपुट करें"
+      },
+      "parts": {
+        "title": "बल्क जोड़ भागों",
+        "subTitle": "... या बस मैन्युअल रूप से भागों इनपुट"
+      },
+      "downtimeReasons": {
+        "title": "थोक डाउनटाइम कारण जोड़ें",
+        "subTitle": "... या बस मैन्युअल रूप से इनपुट डाउनटाइम कारणों"
+      },
+      "rejectionReasons": {
+        "title": "थोक अस्वीकृति कारण जोड़ें",
+        "subTitle": "... या अस्वीकृति कारणों को मैन्युअल रूप से इनपुट करें"
+      },
+      "calendar": {
+        "title": "अपना कैलेंडर जोड़ें"
+      }
+    },
+    "insights": {
+      "toolbar": {
+        "title": "इनसाइट्स",
+        "back": "वापस"
+      },
+      "list": {
+        "notFound": {
+          "title": "अभी कोई नई जानकारी नहीं है।",
+          "subTitle": "कृपया थोड़ी देर बाद जांचें!"
+        }
+      },
+      "onDemand": {
+        "header": "मांग पर अंतर्दृष्टि"
+      },
+      "details": {
+        "youAsked": "तुम ने पूछा था:"
+      }
+    },
+    "machineDashboard": {
+      "labels": {
+        "actual": "वास्तविक",
+        "planned": "की योजना बनाई",
+        "target": "लक्ष्य",
+        "efficiency": "उड़ानों",
+        "downtimeSince": "नीचे से",
+        "downtimeReason": "कारण",
+        "noPlanSince": "तब से कोई योजना नहीं",
+        "noPlanShots": "शॉट्स",
+        "purgeSince": "तब से पर्ज",
+        "purgeShots": "शॉट्स"
+      }
+    },
+    "planning": {},
+    "reports": {
+      "production": "Production",
+      "productiondaily": "Production Daily",
+      "productionbyshift": "Production By Shift",
+      "productioncyclecomparison": "Production Cycle Comparision",
+      "productiondetail": "Production Detail",
+      "productiondetail_bk": "Production Detail",
+      "productionheader": "Production Header",
+      "productionhourly": "Production Hourly",
+      "productionnoplan": "Production No Plan",
+      "downtimebymachine": "Downtime By Machine",
+      "downtimebyoccurence": "Downtime By Occurence",
+      "downtimebyreason": "Downtime By Reason",
+      "downtimebyshift": "Downtime By Shift",
+      "downtimebydepartment": "Downtime By Department",
+      "ppmgraph": "PPM Rejection Graph Report",
+      "ppmproduction": "PPM Partwise Rejection",
+      "rejectionbydefect": "Rejection By Defect",
+      "rejectionbymachine": "Rejection By Machine",
+      "rejectionbyshift": "Rejection By Shift",
+      "rejectionmonthly": "Rejection By Month",
+      "oeebyshift": "Oee By Shift",
+      "oeebymachine": "Oee By Month",
+      "oeebyplan": "Oee By Plan",
+      "oeebyshiftaggregated": "Oee By Shift"
+    }
+  }
+}
