@@ -1,0 +1,15 @@
+{
+  "name": "@shopworx/services",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.19.2",
+    "flexsearch": "^0.6.32",
+    "js-cookie": "^2.2.1",
+    "papaparse": "^5.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.2"
+  }
+}
