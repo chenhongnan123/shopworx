@@ -1,0 +1,11 @@
+{
+  "packages": [
+    "packages/assets",
+    "packages/infinity",
+    "packages/origin",
+    "packages/services",
+    "packages/ui-components",
+    "packages/web-modules/*"
+  ],
+  "version": "0.0.0"
+}
