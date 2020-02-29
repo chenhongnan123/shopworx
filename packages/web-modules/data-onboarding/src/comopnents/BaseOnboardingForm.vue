@@ -113,8 +113,9 @@ export default {
     ...mapActions('element', [
       'createElement',
       'createElementTags',
-      'postElementRecords',
+      'postBulkRecords',
     ]),
+    ...mapActions('onboarding', ['getElements']),
     onDataImport(data) {
       this.importedData = data.data;
       this.fields = data.fields;
@@ -129,27 +130,39 @@ export default {
     async onDataReviewed(data) {
       this.tagsToProvision = data.tags;
       this.dataToProvision = data.data;
-      this.elementId = await this.createElement(this.element);
-      if (this.elementId) {
-        const tagsPayload = this.tagsToProvision.map((tag) => ({
-          ...tag,
-          elementId: this.elementId,
-        }));
-        const tagsCreated = await this.createElementTags(tagsPayload);
-        if (tagsCreated) {
-          const dataPayload = this.dataToProvision.map((postData) => ({
-            ...postData,
-            assetId: this.assetId,
+      try {
+        this.elementId = await this.createElement(this.element);
+        if (this.elementId) {
+          const tagsPayload = this.tagsToProvision.map((tag) => ({
+            ...tag,
+            elementId: this.elementId,
           }));
-          const recordsPosted = await this.postElementRecords({
-            elementName: this.element.elementName,
-            payload: dataPayload,
-          });
-          console.log(recordsPosted);
+          const tagsCreated = await this.createElementTags(tagsPayload);
+          if (tagsCreated) {
+            const dataPayload = this.dataToProvision.map((postData) => ({
+              ...postData,
+              assetId: this.assetId,
+            }));
+            const recordsPosted = await this.postBulkRecords({
+              elementName: this.element.elementName,
+              payload: dataPayload,
+            });
+            if (recordsPosted && recordsPosted.errors) {
+              this.$root.$snackbar.error(recordsPosted.errors);
+            } else {
+              /* move to pending asset onboarding
+              or next element onboarding
+              or finish if last onboarding step */
+              const elements = await this.getElements();
+              if (elements && elements.errors) {
+                this.$root.$snackbar.error(elements.errors);
+              }
+            }
+          }
         }
+      } catch (e) {
+        console.error(e);
       }
-      // this.postElementRecords();
-      // Move to next omnboarding item or next asset item
     },
   },
 };

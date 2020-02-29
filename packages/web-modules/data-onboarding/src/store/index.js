@@ -1,4 +1,5 @@
 import IndustryService from '@shopworx/services/api/industry.service';
+import CustomerService from '@shopworx/services/api/customer.service';
 import ElementService from '@shopworx/services/api/element.service';
 import { set } from '@shopworx/services/util/store.service';
 
@@ -8,6 +9,7 @@ export default ({
     step: 1,
     assets: [],
     elements: [],
+    currentAsset: 0,
     masterElements: [],
     onboardingItems: [],
   },
@@ -15,6 +17,7 @@ export default ({
     setStep: set('step'),
     setAssets: set('assets'),
     setElements: set('elements'),
+    setCurrentAsset: set('currentAsset'),
     setMasterElements: set('masterElements'),
     setOnboardingItems: set('onboardingItems'),
   },
@@ -60,8 +63,7 @@ export default ({
     },
 
     getOnboardingElements: ({ commit, getters, state }) => {
-      const { assets } = state;
-      const currentStep = state.step;
+      const { assets, currentAsset } = state;
       const {
         filteredMasterElements,
         filteredElements,
@@ -70,6 +72,7 @@ export default ({
       } = getters;
       let items = [];
       if (filteredMasterElements && filteredMasterElements.length) {
+        let selectedAsset = currentAsset;
         const onboardingItems = filteredMasterElements.map((elem) => {
           let isComplete = false;
           let isEditable = elem.sequence === 1;
@@ -93,16 +96,18 @@ export default ({
               };
             });
             if (assetBased && assets && assets.length) {
-              assets.forEach((asset) => {
+              assets.forEach((asset, index) => {
                 const { id } = asset;
                 const existingTags = tags.filter((tag) => tag.assetId === id);
                 if (existingTags && existingTags.length) {
                   tagsProvisioned.push('true');
+                  selectedAsset = index + 1;
                 }
               });
               if (tagsProvisioned.length === assets.length) {
                 isComplete = true;
                 isEditable = true;
+                selectedAsset = 0;
               } else {
                 isComplete = false;
                 isEditable = true;
@@ -124,14 +129,23 @@ export default ({
             tags: masterTags,
           };
         });
+        const lastCompleteItemIndex = onboardingItems
+          .findIndex((item) => !item.isComplete && item.type.toUpperCase().trim() !== 'CALENDAR');
+        if (lastCompleteItemIndex !== -1) {
+          onboardingItems[lastCompleteItemIndex + 1] = {
+            ...onboardingItems[lastCompleteItemIndex + 1],
+            isEditable: true,
+          };
+          commit('setStep', lastCompleteItemIndex + 1);
+        }
         const calendarItems = onboardingItems
           .filter((item) => item.type.toUpperCase().trim() === 'CALENDAR');
         const isComplete = calendarItems.every((item) => item.isComplete);
         const isEditable = calendarItems.some((item) => item.isEditable);
         const categories = calendarItems.map((item) => ({
-          element: item,
+          element: item.element,
           title: item.title,
-          tags: item.tags,
+          tags: item.tags.flat(),
         }));
         const { step, type } = calendarItems[0];
         const calendarItem = {
@@ -145,18 +159,29 @@ export default ({
         const nonCalendarItems = onboardingItems
           .filter((item) => item.type.toUpperCase().trim() !== 'CALENDAR');
         items = [...nonCalendarItems, calendarItem];
-        const currentItem = items.find((item) => item.isEditable && !item.isComplete);
-        commit('setStep', currentItem ? currentItem.step : currentStep);
         commit('setOnboardingItems', items);
+        commit('setCurrentAsset', selectedAsset);
       }
       return items;
+    },
+
+    completeOnboarding: async ({ rootState, dispatch }) => {
+      const { activeSite } = rootState.user;
+      const { data, status } = await CustomerService.completeOnboarding(activeSite);
+      if (status === 200) {
+        await dispatch('getMe', '', { root: true });
+        return data.results.onboardingCompleted;
+      }
+      return false;
     },
   },
   getters: {
     filteredMasterElements: ({ masterElements }) => {
       let elems = [];
       if (masterElements && masterElements.length) {
-        elems = masterElements.map((elem) => elem.masterElement);
+        elems = masterElements
+          .map((elem) => elem.masterElement)
+          .sort((a, b) => a.sequence - b.sequence);
       }
       return elems;
     },

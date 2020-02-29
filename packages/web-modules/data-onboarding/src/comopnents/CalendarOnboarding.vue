@@ -21,15 +21,23 @@
       <v-expansion-panel-content class="mt-1">
         <business-month-start
           v-if="index === 0"
+          :category="step"
+          @month-provisioned="onMonthProvisioned"
         />
         <business-working-days
           v-else-if="index === 1"
+          :category="step"
+          @days-provisioned="onDaysProvisioned"
         />
         <business-hours
           v-else-if="index === 2"
+          :category="step"
+          @hours-provisioned="onHoursProvisioned"
         />
         <business-holidays
-          v-else-if="index === 2"
+          v-else-if="index === 3"
+          :category="step"
+          @holidays-provisioned="onHolidaysProvisioned"
         />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -37,6 +45,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import BusinessMonthStart from './calendar/BusinessMonthStart.vue';
 import BusinessWorkingDays from './calendar/BusinessWorkingDays.vue';
 import BusinessHours from './calendar/BusinessHours.vue';
@@ -70,6 +79,13 @@ export default {
     },
   },
   methods: {
+    ...mapActions('element', [
+      'createElement',
+      'createElementTags',
+      'postBulkRecords',
+      'postRecord',
+    ]),
+    ...mapActions('onboarding', ['completeOnboarding']),
     getIcon(category) {
       let icon = null;
       if (category) {
@@ -92,21 +108,98 @@ export default {
       }
       return icon;
     },
-    onDataImport(data) {
-      this.importedData = data;
-      this.dataImported = true;
-      this.panel = 1;
+    async onMonthProvisioned(data) {
+      const {
+        element,
+        tags,
+        record,
+      } = data;
+      const created = await this.createData(element, tags, record);
+      if (created) {
+        this.panel = 1;
+      }
     },
-    onColumnsMatched(data) {
-      this.matchedColumns = data;
-      this.columnsMatched = true;
-      this.panel = 2;
+    async onDaysProvisioned(data) {
+      const {
+        element,
+        tags,
+        records,
+      } = data;
+      const created = await this.createBulkData(element, tags, records);
+      if (created) {
+        this.panel = 2;
+      }
     },
-    onDataReviewed(data) {
-      console.log(data);
-      this.tagsToProvision = data.tags;
-      this.dataToProvision = data.data;
-      // Move to next omnboarding item or next asset item
+    async onHoursProvisioned(data) {
+      const {
+        element,
+        tags,
+        records,
+      } = data;
+      const created = await this.createBulkData(element, tags, records);
+      if (created) {
+        this.panel = 3;
+      }
+    },
+    async onHolidaysProvisioned(data) {
+      const {
+        element,
+        tags,
+        records,
+      } = data;
+      const created = await this.createBulkData(element, tags, records);
+      if (created) {
+        const onboarding = await this.completeOnboarding();
+        if (onboarding && onboarding.errors) {
+          this.$root.$snackbar.error(onboarding.errors);
+        } else {
+          this.$router.replace({ name: 'home' });
+        }
+      }
+    },
+    async createData(element, tags, record) {
+      try {
+        const elementId = await this.createElement(element);
+        if (elementId) {
+          const tagsCreated = await this.createElementTags(tags);
+          if (tagsCreated) {
+            const recordsPosted = await this.postRecord({
+              elementName: element.elementName,
+              payload: record,
+            });
+            if (recordsPosted && recordsPosted.errors) {
+              this.$root.$snackbar.error(recordsPosted.errors);
+            } else {
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      return false;
+    },
+    async createBulkData(element, tags, records) {
+      try {
+        const elementId = await this.createElement(element);
+        if (elementId) {
+          const tagsCreated = await this.createElementTags(tags);
+          if (tagsCreated) {
+            const recordsPosted = await this.postBulkRecords({
+              elementName: element.elementName,
+              payload: records,
+            });
+            if (recordsPosted && recordsPosted.errors) {
+              this.$root.$snackbar.error(recordsPosted.errors);
+            } else {
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      return false;
     },
   },
 };

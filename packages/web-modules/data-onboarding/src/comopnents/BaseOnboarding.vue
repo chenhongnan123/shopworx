@@ -2,7 +2,7 @@
   <v-card flat class="transparent">
     <v-tabs
       v-if="isAssetBased"
-      v-model="currentAsset"
+      v-model="selectedAsset"
     >
       <v-tab
         :key="asset.id"
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import BaseOnboardingForm from './BaseOnboardingForm.vue';
 
 export default {
@@ -46,13 +46,16 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      currentAsset: 0,
-    };
-  },
   computed: {
-    ...mapState('onboarding', ['assets']),
+    ...mapState('onboarding', ['assets', 'currentAsset']),
+    selectedAsset: {
+      get() {
+        return this.currentAsset;
+      },
+      set(val) {
+        this.setCurrentAsset(val);
+      },
+    },
     element() {
       return this.item && this.item.element ? this.item.element : null;
     },
@@ -61,6 +64,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('onboarding', ['setCurrentAsset']),
     getTags(assetId = 0) {
       return this.item.tags.filter((tag) => (
         !tag.hide

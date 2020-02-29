@@ -72,7 +72,32 @@
         "businessyear": "When does your working year start?",
         "businessworkingdays": "Please mark your working days",
         "businesshours": "How does your business hours look like?",
-        "businessholidays": "When are your business holidays?"
+        "businessholidays": "What are your upcoming business holidays?",
+        "months": {
+          "Jan": "Jan",
+          "Feb": "Feb",
+          "Mar": "Mar",
+          "Apr": "Apr",
+          "May": "May",
+          "Jun": "Jun",
+          "Jul": "Jul",
+          "Aug": "Aug",
+          "Sep": "Sep",
+          "Oct": "Oct",
+          "Nov": "Nov",
+          "Dec": "Dec"
+        },
+        "days": {
+          "Sun": "S",
+          "Mon": "M",
+          "Tue": "T",
+          "Wed": "W",
+          "Thu": "T",
+          "Fri": "F",
+          "Sat": "S"
+        },
+        "shift": "Shift",
+        "break": "Break"
       }
     }
   }

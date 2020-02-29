@@ -9,22 +9,6 @@
       :categories="categories"
     />
     <v-card-actions>
-      <v-btn
-        type="submit"
-        @click="next"
-        color="primary"
-        class="text-none"
-        v-text="$t('onboarding.next')"
-        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      ></v-btn>
-      <v-btn
-        text
-        @click="back"
-        color="primary"
-        v-if="step > 1"
-        class="text-none"
-        v-text="$t('onboarding.back')"
-      ></v-btn>
       <v-spacer></v-spacer>
       <v-btn
         text
@@ -75,17 +59,8 @@ export default {
   },
   methods: {
     ...mapMutations('onboarding', ['setStep']),
-    next() {
-      this.setStep(this.step + 1);
-    },
-    back() {
-      this.setStep(this.step - 1);
-    },
     skip() {
       this.setStep(this.step + 1);
-    },
-    complete() {
-      console.log('complete');
     },
   },
 };

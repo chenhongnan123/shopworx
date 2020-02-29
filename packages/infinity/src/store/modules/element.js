@@ -30,27 +30,21 @@ export default ({
     },
 
     createElementTags: async (_, payload) => {
-      try {
-        const { status } = await ElementService.createElementTags(payload);
-        if (status === 200) {
-          return true;
-        }
-      } catch (e) {
-        console.log(e.response);
+      const { status } = await ElementService.createElementTags(payload);
+      if (status === 200) {
+        return true;
       }
       return false;
     },
 
-    postElementRecords: async (_, { elementName, payload }) => {
-      try {
-        const { status } = await ElementService.postElementRecords(elementName, payload);
-        if (status === 200) {
-          return true;
-        }
-      } catch (e) {
-        console.log(e.response);
-      }
-      return false;
+    postBulkRecords: async (_, { elementName, payload }) => {
+      const { data } = await ElementService.postBulkRecords(elementName, payload);
+      return data;
+    },
+
+    postRecord: async (_, { elementName, payload }) => {
+      const { data } = await ElementService.postRecords(elementName, payload);
+      return data;
     },
   },
 });

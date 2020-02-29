@@ -21,8 +21,12 @@ class ElementService {
     return this.request.get(`/server/elements/site/${id}`);
   }
   
-  postElementRecords(elementName, payload) {
+  postBulkRecords(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/createbulkrecords`, payload);
+  }
+  
+  postRecords(elementName, payload) {
+    return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
 }
 
