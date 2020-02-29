@@ -4,11 +4,11 @@ class AgGridService {
       case 'String':
         return null;
       case 'Integer':
-        return 'AgGridIntEditor';
+        return null;
       case 'Double':
-        return 'AgGridFloatEditor';
+        return null;
       case 'Float':
-        return 'AgGridFloatEditor';
+        return null;
       case 'Boolean':
         return null;
       default:
@@ -27,7 +27,7 @@ class AgGridService {
       case 'Float':
         return null;
       case 'Boolean':
-        return 'AgGridBoolRenderer';
+        return null;
       default:
         return null;
     }
