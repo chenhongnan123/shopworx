@@ -130,7 +130,7 @@ export default ({
           };
         });
         const lastCompleteItemIndex = onboardingItems
-          .findIndex((item) => !item.isComplete && item.type.toUpperCase().trim() !== 'CALENDAR');
+          .findIndex((item, index) => !item.isComplete && index < onboardingItems.length);
         if (lastCompleteItemIndex !== -1) {
           onboardingItems[lastCompleteItemIndex + 1] = {
             ...onboardingItems[lastCompleteItemIndex + 1],
@@ -169,7 +169,7 @@ export default ({
       const { activeSite } = rootState.user;
       const { data, status } = await CustomerService.completeOnboarding(activeSite);
       if (status === 200) {
-        await dispatch('getMe', '', { root: true });
+        await dispatch('user/getMe', null, { root: true });
         return data.results.onboardingCompleted;
       }
       return false;
