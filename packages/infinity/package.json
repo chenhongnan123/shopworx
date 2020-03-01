@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/infinity",
-  "version": "4.1.0-alpha.0",
+  "version": "4.1.0-alpha.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,10 +9,10 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@shopworx/assets": "^4.1.0-alpha.0",
-    "@shopworx/data-onboarding": "^4.1.0-alpha.0",
-    "@shopworx/services": "^4.1.0-alpha.0",
-    "@shopworx/ui-components": "^4.1.0-alpha.0",
+    "@shopworx/assets": "^4.1.0-alpha.1",
+    "@shopworx/data-onboarding": "^4.1.0-alpha.1",
+    "@shopworx/services": "^4.1.0-alpha.1",
+    "@shopworx/ui-components": "^4.1.0-alpha.1",
     "ag-grid-community": "^22.1.1",
     "ag-grid-enterprise": "^22.1.1",
     "ag-grid-vue": "^22.1.1",
