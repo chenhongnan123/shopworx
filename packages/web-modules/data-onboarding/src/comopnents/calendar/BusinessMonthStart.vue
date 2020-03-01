@@ -60,7 +60,6 @@ export default {
   methods: {
     saveMonthStart() {
       const [tag] = this.category.tags;
-      console.log(tag);
       const payload = {
         ...this.category,
         record: {
