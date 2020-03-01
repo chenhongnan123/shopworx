@@ -2,6 +2,9 @@
   "name": "@shopworx/data-onboarding",
   "version": "4.1.0-alpha.0",
   "private": true,
+  "scripts": {
+    "lint": "vue-cli-service lint"
+  },
   "dependencies": {
     "@shopworx/services": "^4.1.0-alpha.0",
     "@shopworx/ui-components": "^4.1.0-alpha.0",
