@@ -8,7 +8,11 @@
   "dependencies": {
     "@shopworx/services": "^4.1.0-alpha.1",
     "@shopworx/ui-components": "^4.1.0-alpha.1",
+    "ag-grid-community": "^22.1.1",
+    "ag-grid-enterprise": "^22.1.1",
+    "ag-grid-vue": "^22.1.1",
     "vue": "^2.6.11",
+    "vue-property-decorator": "^8.4.0",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
