@@ -125,7 +125,6 @@ export default {
               .filter((user) => usersNotAdded.includes(user.identifier))
               .map((user) => {
                 const currentUser = addedUsers.find((u) => u.identifier === user.identifier);
-                console.log(currentUser);
                 const message = JSON.parse(currentUser.message);
                 return {
                   ...user,
@@ -133,7 +132,6 @@ export default {
                   error: message.errorCode,
                 };
               });
-            console.log(this.users);
           } else {
             this.users = [{
               identifier: null,
