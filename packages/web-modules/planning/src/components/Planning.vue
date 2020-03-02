@@ -16,9 +16,9 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import PlanningFilter from '@/components/planning/PlanningFilter.vue';
-import PlanningListView from '@/components/planning/views/PlanningListView.vue';
-import PlanningCalendarView from '@/components/planning/views/PlanningCalendarView.vue';
+import PlanningFilter from './PlanningFilter.vue';
+import PlanningListView from './views/PlanningListView.vue';
+import PlanningCalendarView from './views/PlanningCalendarView.vue';
 
 export default {
   name: 'Planning',
