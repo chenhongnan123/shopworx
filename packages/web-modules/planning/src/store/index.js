@@ -2,6 +2,7 @@ import ElementService from '@shopworx/services/api/element.service';
 import { set, toggle } from '@shopworx/services/util/store.service';
 
 export default ({
+  namespaced: true,
   state: {
     view: 0,
     plans: [],

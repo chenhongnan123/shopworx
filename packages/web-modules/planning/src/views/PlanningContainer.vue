@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import PlanningToolbar from '@/components/planning/PlanningToolbar.vue';
-import PlanningOnboarding from '@/components/planning/onboarding/PlanningOnboarding.vue';
+import PlanningToolbar from '../components/PlanningToolbar.vue';
+import PlanningOnboarding from '../components/onboarding/PlanningOnboarding.vue';
 
 export default {
-  name: 'Planning',
+  name: 'PlanningContainer',
   components: {
     PlanningToolbar,
     PlanningOnboarding,
