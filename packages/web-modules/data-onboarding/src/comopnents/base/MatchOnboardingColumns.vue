@@ -15,15 +15,15 @@
           ></span>
         </v-col>
         <v-col cols="4" lg="5">
-          <v-autocomplete
+          <v-select
             outlined
             hide-details
-            :items="filteredTags"
+            :items="tags"
             item-value="tagName"
             item-text="tagDescription"
             v-model="item.tagName"
             :label="$t('onboarding.matchColumns.labels.lookUp')"
-          ></v-autocomplete>
+          ></v-select>
         </v-col>
         <v-col cols="5" lg="3" class="my-auto">
           <v-btn
@@ -115,20 +115,35 @@ export default {
       this.items[index].ignore = !this.items[index].ignore;
       this.items[index].tagName = null;
     },
+    getKeysMap() {
+      return this.items
+        .filter((item) => !item.ignore && item.tagName)
+        .reduce((acc, cur) => {
+          acc[cur.field] = cur.tagName;
+          return acc;
+        }, {});
+    },
+    isKeyMultiMapped() {
+      const cols = Object.values(this.getKeysMap);
+      const uniqueCols = [...new Set(cols)];
+      return cols.length !== uniqueCols.length;
+    },
     matchColumns() {
+      console.log(this.getKeysMap());
       if (this.filteredTags.some((tag) => tag.required)) {
         const error = {
           errorMessage: 'Please map all required fields',
           errorCode: 'FIELD_MAPPING_REQUIRED',
         };
         this.$root.$snackbar.error(error);
+      } else if (this.isKeyMultiMapped()) {
+        const error = {
+          errorMessage: 'One column mapped with multiple fields',
+          errorCode: 'MULTI_MAPPING_FOUND',
+        };
+        this.$root.$snackbar.error(error);
       } else {
-        const keysMap = this.items
-          .filter((item) => !item.ignore && item.tagName)
-          .reduce((acc, cur) => {
-            acc[cur.field] = cur.tagName;
-            return acc;
-          }, {});
+        const keysMap = this.getKeysMap();
         this.$emit('columns-matched', keysMap);
       }
     },
