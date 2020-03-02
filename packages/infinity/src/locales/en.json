@@ -60,7 +60,8 @@
       "INVALID_CURRENT_PASSWORD": "Update password failed: Invalid current password.",
       "FAILED_TO_SEND_SMS": "SMS sending failed: Please try again.",
       "USER_ALREADY_EXIST": "User already exists.",
-      "FIELD_MAPPING_REQUIRED": "One or more required column(s) are not mapped yet. Please check you column mappings."
+      "FIELD_MAPPING_REQUIRED": "One or more required column(s) are not mapped yet. Please check your column mappings.",
+      "MULTI_MAPPING_FOUND": "One or more column(s) are not mapped multiple times. Please check your column mappings."
     },
     "success": {},
     "help": {
