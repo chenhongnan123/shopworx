@@ -12,6 +12,7 @@
     "@shopworx/assets": "^4.1.0-alpha.5",
     "@shopworx/data-onboarding": "^4.1.0-alpha.5",
     "@shopworx/masters": "^4.1.0-alpha.5",
+    "@shopworx/planning": "^4.1.0-alpha.1",
     "@shopworx/services": "^4.1.0-alpha.5",
     "@shopworx/ui-components": "^4.1.0-alpha.5",
     "core-js": "^3.6.4",
