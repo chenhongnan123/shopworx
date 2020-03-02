@@ -36,23 +36,6 @@ const routes = [
         ],
       },
       {
-        path: 'planning',
-        component: () => import(/* webpackChunkName: "planning" */ '@/views/Planning.vue'),
-        children: [
-          {
-            path: '',
-            name: 'planning',
-            component: () => import(/* webpackChunkName: "planning" */ '@/components/planning/Planning.vue'),
-          },
-          {
-            path: ':id',
-            name: 'plan-details',
-            component: () => import(/* webpackChunkName: "plan-details" */ '@/components/planning/PlanDetails.vue'),
-            props: true,
-          },
-        ],
-      },
-      {
         path: 'report/:id',
         name: 'reports',
         component: () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue'),

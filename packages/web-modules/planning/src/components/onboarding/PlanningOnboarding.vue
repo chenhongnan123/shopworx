@@ -37,8 +37,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import PlanningWelcome from '@/components/planning/onboarding/PlanningWelcome.vue';
-import PlanningSchema from '@/components/planning/onboarding/PlanningSchema.vue';
+import PlanningWelcome from './PlanningWelcome.vue';
+import PlanningSchema from './PlanningSchema.vue';
 
 export default {
   name: 'PlanningOnboarding',
