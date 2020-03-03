@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   name: 'SwxSnackbar',
   data() {
@@ -42,7 +40,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions('auth', ['logoutUser']),
     success(successObj) {
       this.snackbar = true;
       this.type = 'success';
@@ -71,7 +68,7 @@ export default {
     },
     async logout() {
       try {
-        const data = await this.logoutUser();
+        const data = await this.$store.dispatch('auth/logoutUser');
         if (data && data.errors) {
           this.$root.$snackbar.error(data.errors);
         } else {
