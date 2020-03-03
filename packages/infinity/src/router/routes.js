@@ -59,11 +59,6 @@ const routes = [
         props: true,
       },
       {
-        path: 'masters',
-        name: 'masters',
-        component: () => import(/* webpackChunkName: "masters" */ '@/views/Masters.vue'),
-      },
-      {
         path: 'admin',
         name: 'admin',
         component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin.vue'),

@@ -11,6 +11,7 @@
   "dependencies": {
     "@shopworx/assets": "^4.1.0-alpha.2",
     "@shopworx/data-onboarding": "^4.1.0-alpha.2",
+    "@shopworx/masters": "^4.1.0-alpha.2",
     "@shopworx/services": "^4.1.0-alpha.2",
     "@shopworx/ui-components": "^4.1.0-alpha.2",
     "ag-grid-community": "^22.1.1",
