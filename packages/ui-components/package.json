@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/ui-components",
-  "version": "4.1.0-alpha.2",
+  "version": "4.1.0-alpha.3",
   "private": true,
   "dependencies": {
     "core-js": "^3.6.4",
