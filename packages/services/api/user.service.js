@@ -38,11 +38,11 @@ class UserService {
   }
 
   inviteUsers(payload) {
-    return this.request.post('server/users', payload);
+    return this.request.post('/server/users', payload);
   }
 
   resendInvitation(payload) {
-    return this.request.post('server/users/invite', payload);
+    return this.request.post('/server/users/invite', payload);
   }
 
   setUserSite(id) {
