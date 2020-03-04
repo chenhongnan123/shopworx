@@ -132,14 +132,17 @@ export default {
       this.$refs.uploader.click();
     },
     async onFileChanged(e) {
-      const selectedFile = e.target.files[0];
-      const csvData = await this.csvParser.parse(selectedFile);
-      if (csvData && csvData.data) {
-        const data = {
-          data: csvData.data,
-          fields: csvData.meta.fields,
-        };
-        this.$emit('data-imported', data);
+      const selectedFile = e && e !== undefined ? e.target.files[0] : null;
+      e.target.value = '';
+      if (selectedFile) {
+        const csvData = await this.csvParser.parse(selectedFile);
+        if (csvData && csvData.data) {
+          const data = {
+            data: csvData.data,
+            fields: csvData.meta.fields,
+          };
+          this.$emit('data-imported', data);
+        }
       }
     },
     isFirstColumn(params) {
