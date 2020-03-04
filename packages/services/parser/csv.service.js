@@ -1,7 +1,10 @@
 import Papa from 'papaparse';
 
 class CSVParser {
-  parse(file, options = { header: true }) {
+  parse(file, options = {
+    header: true,
+    skipEmptyLines: true,
+  }) {
     return new Promise((resolve, reject) => {
       const opt = Object.assign(options, {
         error: (err, file, inputElem, reason) => reject({
