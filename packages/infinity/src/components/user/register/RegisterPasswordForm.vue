@@ -39,20 +39,11 @@ export default {
   methods: {
     ...mapActions('user', ['updatePassword']),
     async update() {
-      try {
-        const data = await this.updatePassword({
-          currentpassword: this.currentPassword,
-          newpassword: this.newPassword,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.error(e);
-        return false;
-      }
+      const updated = await this.updatePassword({
+        currentpassword: this.currentPassword,
+        newpassword: this.newPassword,
+      });
+      return updated;
     },
   },
 };

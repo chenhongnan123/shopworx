@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import 'ag-grid-enterprise';
 
 import './registerServiceWorker';
 

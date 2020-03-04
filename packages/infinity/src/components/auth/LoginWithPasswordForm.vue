@@ -33,34 +33,35 @@
           color="primary"
           :loading="loading"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-          v-text="$t('infinity.auth.login.passwordForm.buttons.login')"
-        ></v-btn>
+        >
+         {{ $t('infinity.auth.login.passwordForm.buttons.login') }}
+        </v-btn>
       </v-card-actions>
     </v-form>
     <v-btn
       text
       color="primary"
+      :disabled="loading"
       class="text-none ml-4 pa-0"
       @click="$router.push({ name: 'forgot-password' })"
       v-text="$t('infinity.auth.login.passwordForm.buttons.forgotPassword')"
-    >
-      Forgot Password?
-    </v-btn>
+    ></v-btn>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'LoginWithPasswordForm',
   data() {
     return {
-      error: null,
-      loading: null,
       password: null,
       identifier: null,
     };
+  },
+  computed: {
+    ...mapState('auth', ['loading']),
   },
   methods: {
     ...mapActions('auth', ['loginWithPassword']),
@@ -69,21 +70,13 @@ export default {
       this.setLoginWithOtp(true);
     },
     async login() {
-      this.loading = true;
-      try {
-        const data = await this.loginWithPassword({
-          identifier: this.identifier,
-          password: this.password,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$emit('success', true);
-        }
-      } catch (e) {
-        console.error(e.message);
+      const success = await this.loginWithPassword({
+        identifier: this.identifier,
+        password: this.password,
+      });
+      if (success) {
+        this.$emit('success');
       }
-      this.loading = null;
     },
     onSubmit() {
       this.login();

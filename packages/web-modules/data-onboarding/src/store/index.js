@@ -22,26 +22,70 @@ export default ({
     setOnboardingItems: set('onboardingItems'),
   },
   actions: {
+    initOnboarding: async ({ rootState, dispatch }) => {
+      let { me } = rootState.user;
+      if (!me) {
+        me = await dispatch('user/getMe', null, { root: true });
+      }
+      if (me) {
+        const assets = await dispatch('getAssets');
+        if (assets) {
+          const master = await dispatch('getMasterElements');
+          if (master) {
+            await dispatch('getElements');
+          }
+        }
+      }
+    },
     getAssets: async ({ commit, rootState }) => {
       const { me } = rootState.user;
       const industryId = me && me.industry ? me.industry.id : null;
-      const { data, status } = await IndustryService.getAssets();
-      if (status === 200) {
-        const assets = data.results.filter((asset) => asset.industryId === industryId);
-        commit('setAssets', assets);
+      try {
+        const { data } = await IndustryService.getAssets();
+        if (data && data.results) {
+          const assets = data.results.filter((asset) => asset.industryId === industryId);
+          commit('setAssets', assets);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
       }
-      return data;
+      return true;
     },
 
     getMasterElements: async ({ commit, rootState }) => {
       const { me } = rootState.user;
       const industryId = me && me.industry ? me.industry.id : null;
-      const { data, status } = await IndustryService.getMasterByIndustry(industryId);
-      if (status === 200) {
-        const masterElements = data.results.filter((elem) => elem.masterElement.onboardingRequired);
-        commit('setMasterElements', masterElements);
+      try {
+        const { data } = await IndustryService.getMasterByIndustry(industryId);
+        if (data && data.results) {
+          const masterElements = data.results
+            .filter((elem) => elem.masterElement.onboardingRequired);
+          commit('setMasterElements', masterElements);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
       }
-      return data;
+      return true;
     },
 
     getElements: async ({
@@ -52,13 +96,25 @@ export default ({
     }) => {
       const { masterElements } = state;
       const { activeSite } = rootState.user;
-      const { data, status } = await ElementService.getElementsBySite(activeSite);
-      if (status === 200) {
-        const masterElementNames = masterElements.map((elem) => elem.elementName);
-        const elements = data.results
-          .filter((elem) => masterElementNames.includes(elem.elementName));
-        commit('setElements', elements);
-        dispatch('getOnboardingElements');
+      try {
+        const { data } = await ElementService.getElementsBySite(activeSite);
+        if (data && data.results) {
+          const masterElementNames = masterElements.map((elem) => elem.elementName);
+          const elements = data.results
+            .filter((elem) => masterElementNames.includes(elem.elementName));
+          commit('setElements', elements);
+          dispatch('getOnboardingElements');
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+        }
+      } catch (e) {
+        console.error(e);
       }
     },
 
@@ -167,10 +223,12 @@ export default ({
 
     completeOnboarding: async ({ rootState, dispatch }) => {
       const { activeSite } = rootState.user;
-      const { data, status } = await CustomerService.completeOnboarding(activeSite);
-      if (status === 200) {
-        await dispatch('user/getMe', null, { root: true });
-        return data.results.onboardingCompleted;
+      const { data } = await CustomerService.completeOnboarding(activeSite);
+      if (data && data.results) {
+        const success = await dispatch('user/getMe', null, { root: true });
+        if (success) {
+          return data.results.onboardingCompleted;
+        }
       }
       return false;
     },

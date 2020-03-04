@@ -54,20 +54,14 @@ export default {
     ...mapActions('user', ['updatePassword']),
     async update() {
       this.loading = true;
-      try {
-        const data = await this.updatePassword({
-          currentpassword: this.currentPassword,
-          newpassword: this.newPassword,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.currentPassword = null;
-          this.newPassword = null;
-          this.confirmPassword = null;
-        }
-      } catch (e) {
-        console.error(e);
+      const updated = await this.updatePassword({
+        currentpassword: this.currentPassword,
+        newpassword: this.newPassword,
+      });
+      if (updated) {
+        this.currentPassword = null;
+        this.newPassword = null;
+        this.confirmPassword = null;
       }
       this.loading = null;
     },

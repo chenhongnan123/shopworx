@@ -16,7 +16,7 @@
                   : ''"
               ></v-text-field>
             </v-col>
-            <v-col cols="9" sm="3">
+            <v-col cols="9" sm="4">
               <v-select
                 v-model="user.roleId"
                 outlined
@@ -27,11 +27,21 @@
                 label="Role"
               ></v-select>
             </v-col>
-            <v-col cols="3" sm="3">
-              <v-btn icon class="mt-2" @click="addUser">
+            <v-col cols="3" sm="2">
+              <v-btn
+                icon
+                class="mt-2"
+                @click="addUser"
+                :disabled="loading"
+              >
                 <v-icon>mdi-plus-circle-outline</v-icon>
               </v-btn>
-              <v-btn icon class="mt-2" @click="removeUser(index)" :disabled="users.length === 1">
+              <v-btn
+                icon
+                class="mt-2"
+                @click="removeUser(index)"
+                :disabled="users.length === 1 || loading"
+              >
                 <v-icon>mdi-minus-circle-outline</v-icon>
               </v-btn>
             </v-col>
@@ -53,6 +63,7 @@
           @click="skip"
           color="primary"
           class="text-none"
+          :disabled="loading"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
         >
           Skip for now
@@ -75,14 +86,7 @@ export default {
   },
   async created() {
     this.addUser();
-    try {
-      const data = await this.getUserRoles();
-      if (data && data.errors) {
-        this.$root.$snackbar.error(data.errors);
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    await this.getUserRoles();
   },
   computed: {
     ...mapState('user', ['activeSite', 'roles']),
@@ -105,44 +109,37 @@ export default {
     },
     async onSubmit() {
       this.loading = true;
-      try {
-        const payload = this.users.map((user) => ({
-          identifier: user.identifier,
-          roleId: user.roleId,
-          siteId: user.siteId,
-        }));
-        const data = await this.inviteUsers(payload);
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
+      const payload = this.users.map((user) => ({
+        identifier: user.identifier,
+        roleId: user.roleId,
+        siteId: user.siteId,
+      }));
+      const addedUsers = await this.inviteUsers(payload);
+      if (addedUsers && addedUsers.length) {
+        if (addedUsers.some((user) => !user.created)) {
+          const usersNotAdded = addedUsers
+            .filter((user) => !user.created)
+            .map((u) => u.identifier)
+            .slice();
+          this.users = this.users
+            .filter((user) => usersNotAdded.includes(user.identifier))
+            .map((user) => {
+              const currentUser = addedUsers.find((u) => u.identifier === user.identifier);
+              const message = JSON.parse(currentUser.message);
+              return {
+                ...user,
+                showError: true,
+                error: message.errorCode,
+              };
+            });
         } else {
-          const addedUsers = data;
-          if (addedUsers.some((user) => !user.created)) {
-            const usersNotAdded = addedUsers
-              .filter((user) => !user.created)
-              .map((u) => u.identifier)
-              .slice();
-            this.users = this.users
-              .filter((user) => usersNotAdded.includes(user.identifier))
-              .map((user) => {
-                const currentUser = addedUsers.find((u) => u.identifier === user.identifier);
-                const message = JSON.parse(currentUser.message);
-                return {
-                  ...user,
-                  showError: true,
-                  error: message.errorCode,
-                };
-              });
-          } else {
-            this.users = [{
-              identifier: null,
-              roleId: null,
-              siteId: this.activeSite,
-            }];
-            this.$emit('success');
-          }
+          this.users = [{
+            identifier: null,
+            roleId: null,
+            siteId: this.activeSite,
+          }];
+          this.$emit('success');
         }
-      } catch (e) {
-        console.error(e);
       }
       this.loading = false;
     },

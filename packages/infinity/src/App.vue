@@ -40,18 +40,9 @@ export default {
     this.setIsDark(dark ? JSON.parse(dark) : false);
     this.initAuth();
     if (SessionService.getSession()) {
-      try {
-        const data = await this.getMe();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          const response = await this.getMySolutions();
-          if (response && response.errors) {
-            this.$root.$snackbar.error(response.errors);
-          }
-        }
-      } catch (e) {
-        console.error(e);
+      const user = await this.getMe();
+      if (user) {
+        await this.getMySolutions();
       }
     }
   },

@@ -62,36 +62,17 @@ export default {
     async getUsername() {
       this.fetch = true;
       this.isValid = null;
-      try {
-        const data = await this.isUsernameAvailable({
-          username: this.username,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else if (data.results) {
-          this.isValid = true;
-        } else {
-          this.isValid = false;
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      const available = await this.isUsernameAvailable({
+        username: this.username,
+      });
+      this.isValid = available;
       this.fetch = false;
     },
     async update() {
-      try {
-        const data = await this.updateUser({
-          username: this.username,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.error(e);
-        return false;
-      }
+      const updated = await this.updateUser({
+        username: this.username,
+      });
+      return updated;
     },
   },
 };

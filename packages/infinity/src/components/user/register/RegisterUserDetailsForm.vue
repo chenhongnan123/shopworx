@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['updateUser', 'getMe']),
+    ...mapActions('user', ['updateUser']),
     assignUser(user) {
       this.firstName = user.firstname;
       this.lastName = user.lastname;
@@ -59,22 +59,13 @@ export default {
       this.phoneNumber = user.phoneNumber;
     },
     async update() {
-      try {
-        const data = await this.updateUser({
-          firstname: this.firstName,
-          lastname: this.lastName,
-          emailId: this.email,
-          phoneNumber: this.phoneNumber,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-          return false;
-        }
-        return true;
-      } catch (e) {
-        console.error(e);
-        return false;
-      }
+      const updated = await this.updateUser({
+        firstname: this.firstName,
+        lastname: this.lastName,
+        emailId: this.email,
+        phoneNumber: this.phoneNumber,
+      });
+      return updated;
     },
   },
 };
