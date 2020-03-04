@@ -1,7 +1,7 @@
 <template>
   <swx-fullscreen-layout>
     <template slot="navbarItems">
-      <infinity-account-menu />
+      <infinity-account-menu :showProfile="false" />
     </template>
     <v-card flat class="transparent">
       <p
@@ -71,15 +71,9 @@ export default {
   methods: {
     ...mapActions('user', ['activateUser']),
     async success() {
-      try {
-        const data = await this.activateUser();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$router.replace({ name: 'invite' });
-        }
-      } catch (e) {
-        console.error(e);
+      const activated = await this.activateUser();
+      if (activated) {
+        this.$router.replace({ name: 'invite' });
       }
     },
   },

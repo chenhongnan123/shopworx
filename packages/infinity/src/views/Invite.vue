@@ -1,7 +1,7 @@
 <template>
   <swx-fullscreen-layout>
     <template slot="navbarItems">
-      <infinity-account-menu />
+      <infinity-account-menu :showProfile="false" />
     </template>
     <v-card flat class="transparent">
       <p
@@ -14,7 +14,7 @@
       ></p>
       <v-row>
         <v-col
-          md="6"
+          md="5"
           cols="12"
           class="text-center"
           v-if="$vuetify.breakpoint.mdAndUp"
@@ -27,7 +27,7 @@
           </v-img>
         </v-col>
         <v-col
-          md="6"
+          md="7"
           cols="12"
         >
           <invite-users @success="success" />

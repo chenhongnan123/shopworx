@@ -1,7 +1,7 @@
 <template>
   <swx-fullscreen-layout>
     <template slot="navbarItems">
-      <infinity-account-menu />
+      <infinity-account-menu :showProfile="false" />
     </template>
     <v-card flat class="transparent">
       <p
