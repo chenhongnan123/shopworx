@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <swx-snackbar ref="snackbar" />
+    <swx-snackbar />
     <router-view></router-view>
   </v-app>
 </template>
@@ -45,9 +45,6 @@ export default {
         await this.getMySolutions();
       }
     }
-  },
-  mounted() {
-    this.$root.$snackbar = this.$refs.snackbar;
   },
 };
 </script>
