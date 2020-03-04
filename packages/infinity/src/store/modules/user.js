@@ -16,58 +16,165 @@ export default ({
   },
   actions: {
     getMe: async ({ commit }) => {
-      const { data, status } = await UserService.getMe();
-      if (status === 200) {
-        commit('setMe', data.results);
-        commit('setActiveSite', data.results.activeSiteId);
+      try {
+        const { data } = await UserService.getMe();
+        if (data && data.results) {
+          commit('setMe', data.results);
+          commit('setActiveSite', data.results.activeSiteId);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
       }
-      return data;
+      return true;
     },
 
     getMySolutions: async ({ commit }) => {
-      const { data, status } = await UserService.getSolution();
-      if (status === 200) {
-        commit('setMySolutions', data.results);
+      try {
+        const { data } = await UserService.getSolution();
+        if (data && data.results) {
+          commit('setMySolutions', data.results);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
       }
-      return data;
+      return true;
     },
 
     updateActiveSite: async ({ commit }, id) => {
-      const { data, status } = await UserService.setUserSite(id);
-      if (status === 200) {
-        commit('setActiveSite', id);
+      try {
+        const { data } = await UserService.setUserSite(id);
+        if (data && data.results) {
+          commit('setActiveSite', id);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
       }
-      return data;
+      return true;
     },
 
-    updateUser: async (_, payload) => {
-      const { data } = await UserService.updateUser(payload);
-      return data;
+    updateUser: async ({ commit }, payload) => {
+      try {
+        const { data } = await UserService.updateUser(payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
 
-    updatePassword: async (_, payload) => {
-      const { data } = await UserService.updatePassword(payload);
-      return data;
+    updatePassword: async ({ commit }, payload) => {
+      try {
+        const { data } = await UserService.updatePassword(payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
 
-    activateUser: async ({ state }) => {
+    activateUser: async ({ state, commit }) => {
       const { me } = state;
       let id = null;
       if (me && me.user) {
         ({ id } = me.user);
       }
-      const { data } = await UserService.activateUser(id);
-      return data;
+      try {
+        const { data } = await UserService.activateUser(id);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
 
-    isUsernameAvailable: async (_, { username }) => {
-      const { data } = await UserService.isUsernameAvailable(username);
-      return data;
+    isUsernameAvailable: async ({ commit }, { username }) => {
+      try {
+        const { data } = await UserService.isUsernameAvailable(username);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
 
     inviteUsers: async (_, payload) => {
-      const { data } = await UserService.inviteUsers(payload);
-      return data;
+      try {
+        const { data } = await UserService.inviteUsers(payload);
+        return data;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
     },
 
     resendInvitation: async (_, payload) => {
@@ -76,11 +183,22 @@ export default ({
     },
 
     getUserRoles: async ({ commit }) => {
-      const { data, status } = await UserService.getRoles();
-      if (status === 200) {
-        commit('setRoles', data.results);
+      try {
+        const { data } = await UserService.getRoles();
+        if (data && data.results) {
+          commit('setRoles', data.results);
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+        }
+      } catch (e) {
+        console.error(e);
       }
-      return data;
     },
   },
   getters: {

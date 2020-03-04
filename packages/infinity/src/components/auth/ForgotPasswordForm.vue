@@ -18,13 +18,15 @@
           color="primary"
           :loading="loading"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-          v-text="$t('infinity.auth.forgotPassword.form.buttons.submit')"
-        ></v-btn>
+        >
+          {{ $t('infinity.auth.forgotPassword.form.buttons.submit') }}
+        </v-btn>
       </v-card-actions>
     </v-form>
     <v-btn
       text
       color="primary"
+      :disabled="loading"
       class="text-none ml-4 pa-0"
       @click="$router.push({ name: 'login' })"
       v-text="$t('infinity.auth.forgotPassword.form.buttons.back')"
@@ -33,34 +35,27 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'ForgotPasswordForm',
   data() {
     return {
-      error: null,
-      loading: false,
       identifier: null,
     };
+  },
+  computed: {
+    ...mapState('auth', ['loading']),
   },
   methods: {
     ...mapActions('auth', ['resetPassword']),
     async forgotPassword() {
-      this.loading = true;
-      try {
-        const data = await this.resetPassword({
-          identifier: this.identifier,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$emit('success', true);
-        }
-      } catch (e) {
-        console.error(e.message);
+      const success = await this.resetPassword({
+        identifier: this.identifier,
+      });
+      if (success) {
+        this.$emit('success');
       }
-      this.loading = false;
     },
     onSubmit() {
       this.forgotPassword();

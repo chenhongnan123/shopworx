@@ -23,6 +23,12 @@ export default {
   components: {
     SwxAccountMenu,
   },
+  props: {
+    showProfile: {
+      type: Boolean,
+      default: true,
+    },
+  },
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('user', ['activeSite']),
@@ -31,11 +37,6 @@ export default {
       let items = [
         {
           header: 'account',
-        },
-        {
-          title: 'profile',
-          icon: '$profile',
-          action: 'goToProfile',
         },
         { divider: true },
         {
@@ -61,6 +62,14 @@ export default {
         ];
       }
       let additionalItems = [];
+      let profile = null;
+      if (this.showProfile) {
+        profile = {
+          title: 'profile',
+          icon: '$profile',
+          action: 'goToProfile',
+        };
+      }
       if (this.isDark) {
         additionalItems = [{
           title: 'lightMode',
@@ -74,8 +83,9 @@ export default {
           action: 'toggleDarkMode',
         }];
       }
-      const index = items.findIndex((item) => item.title === 'profile');
-      items.splice(index + 1, 0, ...additionalItems);
+      const index = items.findIndex((item) => item.header === 'account');
+      const appendItems = profile ? [profile, ...additionalItems] : additionalItems;
+      items.splice(index + 1, 0, ...appendItems);
       return items;
     },
   },
@@ -87,26 +97,13 @@ export default {
       this.$router.push({ name: 'user-profile' });
     },
     async logout() {
-      try {
-        const data = await this.logoutUser();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$router.replace({ name: 'login' });
-        }
-      } catch (e) {
-        console.error(e);
+      const success = await this.logoutUser();
+      if (success) {
+        this.$router.replace({ name: 'login' });
       }
     },
     async setActiveSite(id) {
-      try {
-        const data = await this.updateActiveSite(id);
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      await this.updateActiveSite(id);
     },
     toggleDarkMode() {
       this.toggleIsDark();

@@ -78,26 +78,13 @@ export default {
     ...mapMutations('helper', ['toggleIsDark']),
     ...mapActions('user', ['updateActiveSite']),
     async logout() {
-      try {
-        const data = await this.logoutUser();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$router.replace({ name: 'login' });
-        }
-      } catch (e) {
-        console.error(e);
+      const success = await this.logoutUser();
+      if (success) {
+        this.$router.replace({ name: 'login' });
       }
     },
     async setActiveSite(id) {
-      try {
-        const data = await this.updateActiveSite(id);
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      await this.updateActiveSite(id);
     },
     toggleDarkMode() {
       this.toggleIsDark();

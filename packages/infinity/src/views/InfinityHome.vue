@@ -64,14 +64,7 @@ export default {
       } else if (!this.isOnboardingComplete) {
         this.$router.replace({ name: 'invite' });
       } else {
-        try {
-          const data = await this.getMySolutions();
-          if (data && data.errors) {
-            this.$root.$snackbar.error(data.errors);
-          }
-        } catch (e) {
-          console.error(e);
-        }
+        await this.getMySolutions();
       }
     }
   },

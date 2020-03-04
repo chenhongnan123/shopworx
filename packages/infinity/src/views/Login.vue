@@ -29,8 +29,8 @@
         >
           <v-fade-transition mode="out-in">
             <login-with-password-form
-              v-if="!loginWithOtp"
               @success="success"
+              v-if="!loginWithOtp"
             />
             <login-with-otp-form
               v-else
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import SwxFullscreenLayout from '@shopworx/ui-components/core/SwxFullscreenLayout.vue';
 import LoginWithPasswordForm from '@/components/auth/LoginWithPasswordForm.vue';
 import LoginWithOtpForm from '@/components/auth/LoginWithOtpForm.vue';
@@ -70,18 +70,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('user', ['getMe']),
-    async success() {
-      try {
-        const data = await this.getMe();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          this.$router.replace(this.$route.query.redirect || { name: 'home' });
-        }
-      } catch (e) {
-        console.error(e);
-      }
+    success() {
+      this.$router.replace(this.$route.query.redirect || { name: 'home' });
     },
   },
 };

@@ -70,14 +70,7 @@ export default {
   async created() {
     if (!this.me) {
       this.fetching = true;
-      try {
-        const data = await this.getMe();
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      await this.getMe();
       this.fetching = false;
     }
   },

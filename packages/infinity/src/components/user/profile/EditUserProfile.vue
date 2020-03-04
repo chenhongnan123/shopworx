@@ -100,24 +100,15 @@ export default {
     },
     async update() {
       this.loading = true;
-      try {
-        const data = await this.updateUser({
-          firstname: this.firstName,
-          lastname: this.lastName,
-          emailId: this.email,
-          phoneNumber: this.phoneNumber,
-          username: this.username,
-        });
-        if (data && data.errors) {
-          this.$root.$snackbar.error(data.errors);
-        } else {
-          const resp = await this.getMe();
-          if (resp && resp.errors) {
-            this.$root.$snackbar.error(resp.errors);
-          }
-        }
-      } catch (e) {
-        console.error(e);
+      const updated = await this.updateUser({
+        firstname: this.firstName,
+        lastname: this.lastName,
+        emailId: this.email,
+        phoneNumber: this.phoneNumber,
+        username: this.username,
+      });
+      if (updated) {
+        await this.getMe();
       }
       this.loading = null;
     },

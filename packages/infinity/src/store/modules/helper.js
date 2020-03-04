@@ -2,16 +2,22 @@ import { set, toggle } from '@shopworx/services/util/store.service';
 
 export default ({
   state: {
+    alert: {
+      show: false,
+      type: null,
+      message: null,
+    },
     drawer: true,
-    insightsDrawer: false,
     isDark: null,
+    insightsDrawer: false,
   },
   mutations: {
+    setAlert: set('alert'),
     setDrawer: set('drawer'),
+    setIsDark: set('isDark'),
     toggleDrawer: toggle('drawer'),
+    toggleIsDark: toggle('isDark'),
     setInsightsDrawer: set('insightsDrawer'),
     toggleInsightsDrawer: toggle('insightsDrawer'),
-    setIsDark: set('isDark'),
-    toggleIsDark: toggle('isDark'),
   },
 });

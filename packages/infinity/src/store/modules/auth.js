@@ -5,10 +5,14 @@ import { set } from '@shopworx/services/util/store.service';
 
 export default ({
   state: {
+    loading: false,
+    otpSent: false,
     sessionId: null,
-    loginWithOtp: null,
+    loginWithOtp: false,
   },
   mutations: {
+    setLoading: set('loading'),
+    setOtpSent: set('otpSent'),
     setSessionId: set('sessionId'),
     setLoginWithOtp: set('loginWithOtp'),
   },
@@ -19,42 +23,154 @@ export default ({
       ApiService.setHeader(sessionId);
     },
 
-    loginWithPassword: async ({ commit }, payload) => {
-      const { data, status } = await AuthService.authenticate(payload);
-      if (status === 200) {
-        commit('setSessionId', data.sessionId);
-        SessionService.setSession(data.sessionId);
-        ApiService.setHeader(data.sessionId);
+    loginWithPassword: async ({ commit, dispatch }, payload) => {
+      try {
+        commit('setLoading', true);
+        const { data } = await AuthService.authenticate(payload);
+        if (data && data.sessionId) {
+          commit('setSessionId', data.sessionId);
+          SessionService.setSession(data.sessionId);
+          ApiService.setHeader(data.sessionId);
+          const success = await dispatch('user/getMe', null, { root: true });
+          if (success) {
+            commit('setLoading', false);
+            return true;
+          }
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          commit('setLoading', false);
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        commit('setLoading', false);
+        return false;
       }
-      return data;
+      commit('setLoading', false);
+      return true;
     },
 
-    loginWithOtp: async ({ commit }, payload) => {
-      const { data, status } = await AuthService.authenticateWithOtp(payload);
-      if (status === 200) {
-        commit('setSessionId', data.sessionId);
-        SessionService.setSession(data.sessionId);
-        ApiService.setHeader(data.sessionId);
+    loginWithOtp: async ({ commit, dispatch }, payload) => {
+      try {
+        commit('setLoading', true);
+        const { data } = await AuthService.authenticateWithOtp(payload);
+        if (data && data.sessionId) {
+          commit('setSessionId', data.sessionId);
+          SessionService.setSession(data.sessionId);
+          ApiService.setHeader(data.sessionId);
+          const success = await dispatch('user/getMe', null, { root: true });
+          if (success) {
+            commit('setLoading', false);
+            return true;
+          }
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          commit('setLoading', false);
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        commit('setLoading', false);
+        return false;
       }
-      return data;
+      commit('setLoading', false);
+      return true;
     },
 
-    logoutUser: async () => {
-      const { data, status } = await AuthService.logout();
-      if (status === 200) {
-        SessionService.removeSession();
+    logoutUser: async ({ commit }) => {
+      try {
+        commit('setLoading', true);
+        const { data } = await AuthService.logout();
+        // TODO: update data.result to data.results
+        if (data && data.result) {
+          SessionService.removeSession();
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          commit('setLoading', false);
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        commit('setLoading', false);
+        return false;
       }
-      return data;
+      commit('setLoading', false);
+      return true;
     },
 
-    generateOtp: async (_, payload) => {
-      const { data } = await AuthService.generateOtp(payload);
-      return data;
+    generateOtp: async ({ commit }, payload) => {
+      try {
+        commit('setLoading', true);
+        const { data } = await AuthService.generateOtp(payload);
+        if (data && data.results) {
+          commit('setOtpSent', true);
+          commit('helper/setAlert', {
+            show: true,
+            type: 'success',
+            message: 'OTP_SENT',
+          }, {
+            root: true,
+          });
+        } else if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          commit('setLoading', false);
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        commit('setLoading', false);
+        return false;
+      }
+      commit('setLoading', false);
+      return true;
     },
 
-    resetPassword: async (_, payload) => {
-      const { data } = await AuthService.resetPassword(payload);
-      return data;
+    resetPassword: async ({ commit }, payload) => {
+      try {
+        commit('setLoading', true);
+        const { data } = await AuthService.resetPassword(payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          commit('setLoading', false);
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        commit('setLoading', false);
+        return false;
+      }
+      commit('setLoading', false);
+      return true;
     },
   },
 });
