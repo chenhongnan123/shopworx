@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
@@ -94,6 +95,7 @@ export default {
     return {
       rowData: [],
       gridApi: null,
+      isValid: true,
       columnDefs: [],
       csvParser: null,
       dataObject: null,
@@ -128,6 +130,21 @@ export default {
     this.addRow();
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    validateData(data) {
+      this.isValid = true;
+      data.forEach((d) => {
+        this.tags.forEach((t) => {
+          if (t.required) {
+            const val = d[t.tagDescription];
+            if (!val) {
+              this.isValid = false;
+            }
+          }
+        });
+      });
+      this.$emit('is-valid-data', this.isValid);
+    },
     importCSV() {
       this.$refs.uploader.click();
     },
@@ -141,7 +158,22 @@ export default {
             data: csvData.data,
             fields: csvData.meta.fields,
           };
-          this.$emit('data-imported', data);
+          this.validateData(csvData.data);
+          if (csvData.data && csvData.data.length) {
+            this.$emit('data-imported', data);
+          } else if (!this.isValid) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'NO_RECORDS_IN_FILE',
+            });
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'NO_RECORDS_IN_FILE',
+            });
+          }
         }
       }
     },
@@ -172,7 +204,16 @@ export default {
         data: this.rowData,
         fields: this.tags.map((tag) => tag.tagDescription),
       };
-      this.$emit('data-imported', data);
+      this.validateData(this.rowData);
+      if (this.isValid) {
+        this.$emit('data-imported', data);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MISSING_REQUIRED_VALUE',
+        });
+      }
     },
   },
 };

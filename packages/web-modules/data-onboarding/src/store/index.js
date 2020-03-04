@@ -228,14 +228,16 @@ export default ({
 
     completeOnboarding: async ({ rootState, dispatch }) => {
       const { activeSite } = rootState.user;
-      const { data } = await CustomerService.completeOnboarding(activeSite);
-      if (data && data.results) {
-        const success = await dispatch('user/getMe', null, { root: true });
-        if (success) {
-          return data.results.onboardingCompleted;
+      let success = false;
+      try {
+        const { data } = await CustomerService.completeOnboarding(activeSite);
+        if (data && data.results) {
+          success = await dispatch('user/getMe', null, { root: true });
         }
+      } catch (e) {
+        console.error(e);
       }
-      return false;
+      return success;
     },
   },
   getters: {

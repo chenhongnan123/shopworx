@@ -17,35 +17,23 @@
         <v-col cols="4" lg="5">
           <v-select
             outlined
+            clearable
             hide-details
             :items="tags"
             item-value="tagName"
             item-text="tagDescription"
             v-model="item.tagName"
+            @change="mapColumn(index)"
             :label="$t('onboarding.matchColumns.labels.lookUp')"
           ></v-select>
         </v-col>
-        <v-col cols="5" lg="3" class="my-auto">
-          <v-btn
-            outlined
-            color="success"
-            class="text-none"
-            v-if="item.tagName"
-            @click="edit(index)"
-            v-text="$t('onboarding.matchColumns.buttons.edit')"
-          >
-          </v-btn>
-          <v-btn
-            outlined
-            color="error"
-            class="text-none ml-2"
-            @click="ignoreColumn(index)"
-          >
-            {{ !item.ignore
-              ? $t('onboarding.matchColumns.buttons.ignoreColumn')
-              : $t('onboarding.matchColumns.buttons.columnIgnored')
-            }}
-          </v-btn>
+        <v-col cols="5" lg="3">
+          <v-switch
+            hide-details
+            v-model="item.ignore"
+            @change="ignoreColumn(index)"
+            :label="$t('onboarding.matchColumns.buttons.ignoreColumn') "
+          ></v-switch>
         </v-col>
       </v-row>
     </v-card-text>
@@ -107,16 +95,21 @@ export default {
         return {
           field,
           tagName,
-          ignore: false,
+          ignore: !tagName,
         };
       });
     },
-    edit(index) {
-      this.items[index].tagName = null;
+    mapColumn(index) {
+      if (this.items[index].tagName) {
+        this.items[index].ignore = null;
+      } else {
+        this.items[index].ignore = true;
+      }
     },
     ignoreColumn(index) {
-      this.items[index].ignore = !this.items[index].ignore;
-      this.items[index].tagName = null;
+      if (this.items[index].ignore) {
+        this.items[index].tagName = null;
+      }
     },
     getKeysMap() {
       return this.items

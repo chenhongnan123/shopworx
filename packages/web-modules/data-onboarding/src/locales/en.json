@@ -25,7 +25,6 @@
       "buttons": {
         "edit": "Edit",
         "ignoreColumn": "Ignore Column",
-        "columnIgnored": "Column Ignored",
         "continue": "Continue"
       }
     },

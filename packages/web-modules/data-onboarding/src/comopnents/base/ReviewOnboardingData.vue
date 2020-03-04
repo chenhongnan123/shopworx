@@ -22,25 +22,27 @@
       <v-btn
         color="primary"
         class="text-none"
+        :loading="loading"
         @click="reviewData"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
+        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn
         outlined
+        @click="addRow"
         color="success"
         class="text-none"
-        @click="addRow"
+        :disabled="loading"
         v-text="$t('onboarding.reviewData.buttons.addRow')"
       ></v-btn>
       <v-btn
         outlined
         color="error"
         class="text-none"
-        :disabled="!rowsSelected"
         @click="deleteSelectedRows"
+        :disabled="!rowsSelected || loading"
         v-text="$t('onboarding.reviewData.buttons.deleteRows')"
       ></v-btn>
     </v-card-actions>
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
@@ -59,6 +62,10 @@ export default {
     AgGridVue,
   },
   props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     tags: {
       type: Array,
       required: true,
@@ -75,6 +82,7 @@ export default {
   data() {
     return {
       rowData: [],
+      isValid: true,
       gridApi: null,
       columnDefs: [],
       filteredTags: [],
@@ -113,6 +121,20 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    validateData(data) {
+      this.isValid = true;
+      data.forEach((d) => {
+        this.filteredTags.forEach((t) => {
+          if (t.required) {
+            const val = d[t.tagName];
+            if (!val) {
+              this.isValid = false;
+            }
+          }
+        });
+      });
+    },
     setRowData() {
       const filteredData = this.importedData
         .map((data) => this.filterData(this.matchedColumns, data));
@@ -147,7 +169,7 @@ export default {
     },
     getNewRowItem() {
       return this.tags.reduce((acc, tag) => {
-        acc[tag.tagDescription] = null;
+        acc[tag.tagName] = null;
         return acc;
       }, {});
     },
@@ -167,7 +189,16 @@ export default {
         data: this.rowData,
         tags: this.filteredTags,
       };
-      this.$emit('data-reviewed', data);
+      this.validateData(this.rowData);
+      if (this.isValid) {
+        this.$emit('data-reviewed', data);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MISSING_REQUIRED_VALUE',
+        });
+      }
     },
   },
 };
