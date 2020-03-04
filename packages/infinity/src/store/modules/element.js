@@ -2,12 +2,19 @@ import ElementService from '@shopworx/services/api/element.service';
 
 export default ({
   actions: {
-    getElement: async (_, elementName) => {
+    getElement: async ({ commit }, elementName) => {
       try {
-        const { data, status } = await ElementService.getElement(elementName);
-        if (status === 200) {
+        const { data } = await ElementService.getElement(elementName);
+        if (data && data.results) {
           return data.results.element.id;
         }
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: data.errors.errorCode,
+        }, {
+          root: true,
+        });
       } catch (e) {
         console.error(e);
       }
@@ -16,17 +23,16 @@ export default ({
 
     createElement: async ({ dispatch }, payload) => {
       try {
-        const { data, status } = await ElementService.createElement(payload);
-        if (status === 201) {
+        const { data } = await ElementService.createElement(payload);
+        if (data && data.results) {
           return data.elementId;
         }
+        const elementId = await dispatch('getElement', payload.elementName);
+        return elementId;
       } catch (e) {
-        if (e.response.status === 409) {
-          const elementId = await dispatch('getElement', payload.elementName);
-          return elementId;
-        }
+        console.error(e);
+        return null;
       }
-      return null;
     },
 
     createElementTags: async (_, payload) => {
