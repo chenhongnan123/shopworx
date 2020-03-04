@@ -63,7 +63,9 @@
       "FIELD_MAPPING_REQUIRED": "One or more required column(s) are not mapped yet. Please check your column mappings.",
       "MULTI_MAPPING_FOUND": "One or more column(s) are not mapped multiple times. Please check your column mappings."
     },
-    "success": {},
+    "success": {
+      "OTP_SENT": "OTP sent."
+    },
     "help": {
       "title": "Help"
     },
