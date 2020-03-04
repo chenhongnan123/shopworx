@@ -149,57 +149,39 @@ export default {
       } = data;
       const created = await this.createBulkData(element, tags, records);
       if (created) {
-        const onboarding = await this.completeOnboarding();
-        if (onboarding && onboarding.errors) {
-          this.$root.$snackbar.error(onboarding.errors);
-        } else {
+        const success = await this.completeOnboarding();
+        if (success) {
           this.$router.replace({ name: 'home' });
         }
       }
     },
     async createData(element, tags, record) {
-      try {
-        const elementId = await this.createElement(element);
-        if (elementId) {
-          const tagsCreated = await this.createElementTags(tags);
-          if (tagsCreated) {
-            const recordsPosted = await this.postRecord({
-              elementName: element.elementName,
-              payload: record,
-            });
-            if (recordsPosted && recordsPosted.errors) {
-              this.$root.$snackbar.error(recordsPosted.errors);
-            } else {
-              return true;
-            }
-          }
+      let recordsPosted = false;
+      const elementId = await this.createElement(element);
+      if (elementId) {
+        const tagsCreated = await this.createElementTags(tags);
+        if (tagsCreated) {
+          recordsPosted = await this.postRecord({
+            elementName: element.elementName,
+            payload: record,
+          });
         }
-      } catch (e) {
-        console.error(e);
       }
-      return false;
+      return recordsPosted;
     },
     async createBulkData(element, tags, records) {
-      try {
-        const elementId = await this.createElement(element);
-        if (elementId) {
-          const tagsCreated = await this.createElementTags(tags);
-          if (tagsCreated) {
-            const recordsPosted = await this.postBulkRecords({
-              elementName: element.elementName,
-              payload: records,
-            });
-            if (recordsPosted && recordsPosted.errors) {
-              this.$root.$snackbar.error(recordsPosted.errors);
-            } else {
-              return true;
-            }
-          }
+      let recordsPosted = false;
+      const elementId = await this.createElement(element);
+      if (elementId) {
+        const tagsCreated = await this.createElementTags(tags);
+        if (tagsCreated) {
+          recordsPosted = await this.postBulkRecords({
+            elementName: element.elementName,
+            payload: records,
+          });
         }
-      } catch (e) {
-        console.error(e);
       }
-      return false;
+      return recordsPosted;
     },
   },
 };

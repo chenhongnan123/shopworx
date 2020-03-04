@@ -36,21 +36,55 @@ export default ({
     },
 
     createElementTags: async (_, payload) => {
-      const { status } = await ElementService.createElementTags(payload);
-      if (status === 200) {
-        return true;
+      try {
+        const { status } = await ElementService.createElementTags(payload);
+        if (status === 200) {
+          return true;
+        }
+      } catch (e) {
+        console.error(e);
       }
       return false;
     },
 
-    postBulkRecords: async (_, { elementName, payload }) => {
-      const { data } = await ElementService.postBulkRecords(elementName, payload);
-      return data;
+    postBulkRecords: async ({ commit }, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.postBulkRecords(elementName, payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
 
-    postRecord: async (_, { elementName, payload }) => {
-      const { data } = await ElementService.postRecords(elementName, payload);
-      return data;
+    postRecord: async ({ commit }, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.postRecords(elementName, payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+      return true;
     },
   },
 });

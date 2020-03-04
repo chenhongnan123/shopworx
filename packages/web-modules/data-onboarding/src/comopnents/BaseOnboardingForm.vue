@@ -8,7 +8,7 @@
     >
       <v-expansion-panel
         :key="index"
-        :disabled="step.disabled"
+        :disabled="step.disabled || loading"
         v-for="(step, index) in formSteps"
       >
         <v-expansion-panel-header>
@@ -27,6 +27,7 @@
           <import-onboarding-data
             :tags="tags"
             v-if="index === 0"
+            @is-valid-data="onVaildData"
             @data-imported="onDataImport"
           />
           <match-onboarding-columns
@@ -37,10 +38,11 @@
           />
           <review-onboarding-data
             :tags="tags"
+            :loading="loading"
             v-else-if="index === 2"
+            :importedData="importedData"
             @data-reviewed="onDataReviewed"
             :matchedColumns="matchedColumns"
-            :importedData="importedData"
           />
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -78,13 +80,14 @@ export default {
   data() {
     return {
       panel: 0,
+      fields: [],
+      loading: false,
       elementId: null,
       importedData: [],
-      fields: [],
       tagsToProvision: [],
       dataToProvision: [],
-      matchedColumns: null,
       dataImported: false,
+      matchedColumns: null,
       columnsMatched: false,
     };
   },
@@ -116,6 +119,11 @@ export default {
       'postBulkRecords',
     ]),
     ...mapActions('onboarding', ['getElements']),
+    onVaildData(val) {
+      if (!val) {
+        this.dataImported = false;
+      }
+    },
     onDataImport(data) {
       this.importedData = data.data;
       this.fields = data.fields;
@@ -128,41 +136,31 @@ export default {
       this.panel = 2;
     },
     async onDataReviewed(data) {
+      this.loading = true;
       this.tagsToProvision = data.tags;
       this.dataToProvision = data.data;
-      try {
-        this.elementId = await this.createElement(this.element);
-        if (this.elementId) {
-          const tagsPayload = this.tagsToProvision.map((tag) => ({
-            ...tag,
-            elementId: this.elementId,
+      this.elementId = await this.createElement(this.element);
+      if (this.elementId) {
+        const tagsPayload = this.tagsToProvision.map((tag) => ({
+          ...tag,
+          elementId: this.elementId,
+        }));
+        const tagsCreated = await this.createElementTags(tagsPayload);
+        if (tagsCreated) {
+          const dataPayload = this.dataToProvision.map((postData) => ({
+            ...postData,
+            assetId: this.assetId,
           }));
-          const tagsCreated = await this.createElementTags(tagsPayload);
-          if (tagsCreated) {
-            const dataPayload = this.dataToProvision.map((postData) => ({
-              ...postData,
-              assetId: this.assetId,
-            }));
-            const recordsPosted = await this.postBulkRecords({
-              elementName: this.element.elementName,
-              payload: dataPayload,
-            });
-            if (recordsPosted && recordsPosted.errors) {
-              this.$root.$snackbar.error(recordsPosted.errors);
-            } else {
-              /* move to pending asset onboarding
-              or next element onboarding
-              or finish if last onboarding step */
-              const elements = await this.getElements();
-              if (elements && elements.errors) {
-                this.$root.$snackbar.error(elements.errors);
-              }
-            }
+          const recordsPosted = await this.postBulkRecords({
+            elementName: this.element.elementName,
+            payload: dataPayload,
+          });
+          if (recordsPosted) {
+            await this.getElements();
           }
         }
-      } catch (e) {
-        console.error(e);
       }
+      this.loading = false;
     },
   },
 };
