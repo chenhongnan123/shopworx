@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'MatchOnboardingColumns',
   props: {
@@ -94,6 +96,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     mapItems() {
       this.items = this.fields.map((field) => {
         const currentTag = this.tags.find((tag) => tag.tagDescription === field);
@@ -124,24 +127,23 @@ export default {
         }, {});
     },
     isKeyMultiMapped() {
-      const cols = Object.values(this.getKeysMap);
+      const cols = Object.values(this.getKeysMap());
       const uniqueCols = [...new Set(cols)];
       return cols.length !== uniqueCols.length;
     },
     matchColumns() {
-      console.log(this.getKeysMap());
       if (this.filteredTags.some((tag) => tag.required)) {
-        const error = {
-          errorMessage: 'Please map all required fields',
-          errorCode: 'FIELD_MAPPING_REQUIRED',
-        };
-        this.$root.$snackbar.error(error);
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FIELD_MAPPING_REQUIRED',
+        });
       } else if (this.isKeyMultiMapped()) {
-        const error = {
-          errorMessage: 'One column mapped with multiple fields',
-          errorCode: 'MULTI_MAPPING_FOUND',
-        };
-        this.$root.$snackbar.error(error);
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MULTI_MAPPING_FOUND',
+        });
       } else {
         const keysMap = this.getKeysMap();
         this.$emit('columns-matched', keysMap);
