@@ -119,6 +119,7 @@ export default ({
     },
 
     getOnboardingElements: ({ commit, getters, state }) => {
+      commit('setStep', 1);
       const { assets, currentAsset } = state;
       const {
         filteredMasterElements,
@@ -185,14 +186,18 @@ export default ({
             tags: masterTags,
           };
         });
-        const lastCompleteItemIndex = onboardingItems
-          .findIndex((item, index) => !item.isComplete && index < onboardingItems.length);
-        if (lastCompleteItemIndex !== -1) {
+        const lastNonCompleteIndex = onboardingItems
+          .findIndex((item, index) => (
+            !item.isComplete
+            && index < onboardingItems.length
+          ));
+        const lastCompleteItemIndex = lastNonCompleteIndex - 1;
+        if (lastCompleteItemIndex > -1) {
           onboardingItems[lastCompleteItemIndex + 1] = {
             ...onboardingItems[lastCompleteItemIndex + 1],
             isEditable: true,
           };
-          commit('setStep', lastCompleteItemIndex + 1);
+          commit('setStep', lastCompleteItemIndex + 2);
         }
         const calendarItems = onboardingItems
           .filter((item) => item.type.toUpperCase().trim() === 'CALENDAR');
