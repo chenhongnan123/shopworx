@@ -1,4 +1,3 @@
-import ElementService from '@shopworx/services/api/element.service';
 import { set } from '@shopworx/services/util/store.service';
 
 export default ({
@@ -10,12 +9,15 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
-    getElements: async ({ commit, rootState }) => {
+    getElements: async ({ commit, rootState, dispatch }) => {
       const { activeSite } = rootState.user;
-      const { data, status } = await ElementService.getElementsBySite(activeSite);
-      if (status === 200) {
-        console.log(data.results);
-        commit('setElements', data.results);
+      const elements = await dispatch(
+        'element/getElementsBySite',
+        activeSite,
+        { root: true },
+      );
+      if (elements && elements.length) {
+        commit('setElements', elements);
       }
     },
   },
@@ -23,15 +25,33 @@ export default ({
     formattedElements: ({ elements }) => {
       let list = [];
       if (elements && elements.length) {
-        const elems = elements
+        const provisioningElements = elements
           .map((elem) => elem.element)
-          .filter((elem) => elem.elementType.toUpperCase().trim() === 'PROVISIONING')
+          .filter((elem) => elem.elementType.toUpperCase().trim() === 'PROVISIONING');
+        const groupedElements = provisioningElements
           .reduce((acc, cur) => {
             acc[cur.categoryType] = [...acc[cur.categoryType] || [], cur];
             return acc;
           }, {});
-        console.log(elems);
-        list = [];
+        const groups = Object.keys(groupedElements);
+        list = groups
+          .map((group) => {
+            const header = { header: group.toLowerCase() };
+            const items = provisioningElements
+              .map((elem) => {
+                if (elem.categoryType === group) {
+                  return {
+                    title: elem.elementName,
+                    to: elem.elementName,
+                    icon: `$${elem.elementName}`,
+                  };
+                }
+                return null;
+              })
+              .filter((e) => e !== null);
+            return [header, ...items];
+          })
+          .flat();
       }
       return list;
     },

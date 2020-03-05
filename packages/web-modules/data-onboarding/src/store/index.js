@@ -1,6 +1,5 @@
 import IndustryService from '@shopworx/services/api/industry.service';
 import CustomerService from '@shopworx/services/api/customer.service';
-import ElementService from '@shopworx/services/api/element.service';
 import { set } from '@shopworx/services/util/store.service';
 
 export default ({
@@ -97,21 +96,17 @@ export default ({
       const { masterElements } = state;
       const { activeSite } = rootState.user;
       try {
-        const { data } = await ElementService.getElementsBySite(activeSite);
-        if (data && data.results) {
+        const elements = await dispatch(
+          'element/getElementsBySite',
+          activeSite,
+          { root: true },
+        );
+        if (elements && elements.length) {
           const masterElementNames = masterElements.map((elem) => elem.elementName);
-          const elements = data.results
+          const elems = elements
             .filter((elem) => masterElementNames.includes(elem.elementName));
-          commit('setElements', elements);
+          commit('setElements', elems);
           dispatch('getOnboardingElements');
-        } else if (data && data.errors) {
-          commit('helper/setAlert', {
-            show: true,
-            type: 'error',
-            message: data.errors.errorCode,
-          }, {
-            root: true,
-          });
         }
       } catch (e) {
         console.error(e);
