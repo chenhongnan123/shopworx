@@ -6,8 +6,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.1.0-alpha.2",
-    "@shopworx/ui-components": "^4.1.0-alpha.2",
+    "@shopworx/services": "^4.1.0-alpha.4",
+    "@shopworx/ui-components": "^4.1.0-alpha.4",
     "ag-grid-community": "^22.1.1",
     "ag-grid-enterprise": "^22.1.1",
     "ag-grid-vue": "^22.1.1",

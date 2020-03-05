@@ -1,5 +1,21 @@
 {
   "masters": {
-    "title": "Masters"
+    "title": "Masters",
+    "categories": {
+      "asset": "Assets",
+      "reason": "Reasons",
+      "calendar": "Calendar"
+    },
+    "elements": {
+      "tool": "Tools",
+      "part": "Parts",
+      "operator": "Operators",
+      "downtimereasons": "Downtime reasons",
+      "rejectionreasons": "Rejection reasons",
+      "businessyear": "Business month start",
+      "businessworkingdays": "Business working days",
+      "businesshours": "Business hours",
+      "businessholidays": "Business holidays"
+    }
   }
 }
