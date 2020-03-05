@@ -91,6 +91,11 @@ export default {
       this.$store.commit('helper/setAlert', alert);
     },
     cancel() {
+      this.setAlert({
+        show: false,
+        type: null,
+        message: null,
+      });
       this.snackbar = false;
     },
     async logout() {

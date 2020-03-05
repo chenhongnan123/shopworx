@@ -22,7 +22,7 @@ export default {
   name: 'SwxNavbar',
   methods: {
     toggleSidebar() {
-      this.$emit('toggleSidebar');
+      this.$emit('toggle-sidebar');
     },
   },
 };
