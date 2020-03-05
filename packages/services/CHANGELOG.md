@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.3...v4.1.0-alpha.4) (2020-03-04)
+
+
+### Bug Fixes
+
+* **onboarding:** User can now upload same file while importing data ([a031767](https://bitbucket.org/entrib/shopworx/commits/a03176755c317fe3d3dabe11b8b2cd12c79ba500))
+
+
+
+
+
+
 # [4.1.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.2...v4.1.0-alpha.3) (2020-03-03)
 
 
