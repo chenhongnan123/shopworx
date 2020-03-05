@@ -165,7 +165,7 @@ export default {
         return this.showSidebar;
       },
       set(val) {
-        this.$emit('setSidebar', val);
+        this.$emit('set-sidebar', val);
       },
     },
     isMini() {

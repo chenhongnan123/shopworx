@@ -74,7 +74,7 @@ export default {
     formSteps() {
       return this.categories.map((category) => ({
         ...category,
-        icon: this.getIcon(category),
+        icon: `$${category.title}`,
       }));
     },
   },
@@ -86,28 +86,6 @@ export default {
       'postRecord',
     ]),
     ...mapActions('onboarding', ['completeOnboarding']),
-    getIcon(category) {
-      let icon = null;
-      if (category) {
-        switch (category.title) {
-          case 'businessyear':
-            icon = 'mdi-calendar-repeat-outline';
-            break;
-          case 'businessworkingdays':
-            icon = 'mdi-calendar-range-outline';
-            break;
-          case 'businesshours':
-            icon = 'mdi-timetable';
-            break;
-          case 'businessholidays':
-            icon = 'mdi-beach';
-            break;
-          default:
-            icon = null;
-        }
-      }
-      return icon;
-    },
     async onMonthProvisioned(data) {
       const {
         element,

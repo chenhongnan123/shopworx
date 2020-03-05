@@ -21,6 +21,25 @@ export default ({
       return null;
     },
 
+    getElementsBySite: async ({ commit }, siteId) => {
+      try {
+        const { data } = await ElementService.getElementsBySite(siteId);
+        if (data && data.results) {
+          return data.results;
+        }
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: data.errors.errorCode,
+        }, {
+          root: true,
+        });
+      } catch (e) {
+        console.error(e);
+      }
+      return null;
+    },
+
     createElement: async ({ dispatch }, payload) => {
       try {
         const { data } = await ElementService.createElement(payload);

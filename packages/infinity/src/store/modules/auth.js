@@ -93,8 +93,7 @@ export default ({
       try {
         commit('setLoading', true);
         const { data } = await AuthService.logout();
-        // TODO: update data.result to data.results
-        if (data && data.result) {
+        if (data && data.results) {
           SessionService.removeSession();
         } else if (data && data.errors) {
           commit('helper/setAlert', {
