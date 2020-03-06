@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import PlanningNotFound from '@/components/planning/PlanningNotFound.vue';
+import PlanningNotFound from '../PlanningNotFound.vue';
 
 export default {
   name: 'PlanningListView',
