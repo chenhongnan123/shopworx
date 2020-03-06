@@ -28,6 +28,10 @@ class ElementService {
   postRecords(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
+  
+  getRecords(elementName) {
+    return this.request.get(`/server/elements/${elementName}/records`);
+  }
 }
 
 export default new ElementService();
