@@ -6,7 +6,7 @@ export default ({
       try {
         const { data } = await ElementService.getElement(elementName);
         if (data && data.results) {
-          return data.results.element.id;
+          return data.results;
         }
         commit('helper/setAlert', {
           show: true,
@@ -46,7 +46,8 @@ export default ({
         if (data && data.results) {
           return data.elementId;
         }
-        const elementId = await dispatch('getElement', payload.elementName);
+        const result = await dispatch('getElement', payload.elementName);
+        const elementId = result.element.id;
         return elementId;
       } catch (e) {
         console.error(e);
@@ -104,6 +105,27 @@ export default ({
         return false;
       }
       return true;
+    },
+
+    getRecords: async ({ commit }, elementName) => {
+      try {
+        const { data } = await ElementService.getRecords(elementName);
+        if (data && data.results) {
+          return data.results;
+        }
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      return false;
     },
   },
 });
