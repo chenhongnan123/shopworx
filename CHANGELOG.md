@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
+
+
+### Bug Fixes
+
+* **infinity:** Fixed logout ([a273fa2](https://bitbucket.org/entrib/shopworx/commits/a273fa28558511f1e04710647c523502949373da))
+* **ui-components:** Fixed drawer toggle on mobile screen ([eb8e11c](https://bitbucket.org/entrib/shopworx/commits/eb8e11c7731353f59bc5902f3fab50deb6bd4e11))
+
+
+### Features
+
+* **icons:** Added provisioning icons ([5d2a256](https://bitbucket.org/entrib/shopworx/commits/5d2a2560a04d98e3b7c35633fcd135008d099ebb))
+* **masters:** Added master provisioning baseline structure ([bb183fe](https://bitbucket.org/entrib/shopworx/commits/bb183feee58f6d51caf2204d2ff4240fd23d7101))
+* **masters:** Added masters as a web module ([0f14712](https://bitbucket.org/entrib/shopworx/commits/0f1471231eb78f2c964b958d43a6ff054ce2afe3))
+* **masters:** Added masters as a web module ([94ccd4a](https://bitbucket.org/entrib/shopworx/commits/94ccd4ab7e2fcee26c082ac2f104c735f055ca70))
+
+
+
+
+
+
 # [4.1.0-alpha.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.3...v4.1.0-alpha.4) (2020-03-04)
 
 
