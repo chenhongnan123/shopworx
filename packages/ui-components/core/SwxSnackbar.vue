@@ -67,6 +67,15 @@ export default {
     },
   },
   watch: {
+    snackbar(val) {
+      if (!val) {
+        this.setAlert({
+          show: false,
+          type: null,
+          message: null,
+        });
+      }
+    },
     type(val) {
       if (val && val.toUpperCase().trim() === 'ERROR') {
         const { message } = this.alert;
