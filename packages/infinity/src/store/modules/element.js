@@ -97,7 +97,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: e.response.code,
+          message: 'RECORDS_NOT_CREATED',
         }, {
           root: true,
         });
@@ -136,13 +136,109 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: e.response.code,
+          message: 'RECORDS_NOT_CREATED',
         }, {
           root: true,
         });
         console.error(e);
       }
       return recordsCreated;
+    },
+
+    upsertRecord: async ({ commit, dispatch }, {
+      element,
+      tags,
+      record,
+      assetId = 0,
+    }) => {
+      let upsert = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          const tagsCreated = await dispatch('createElementTags', tagsToProvision);
+          if (tagsCreated) {
+            const payload = {
+              ...record,
+              assetId,
+            };
+            const rec = await dispatch('getRecords', element.elementName);
+            if (rec && rec.length) {
+              await Promise.all([rec.forEach((r) => {
+                dispatch('deleteRecord', {
+                  elementName: element.elementName,
+                  id: r._id,
+                });
+              })]);
+            }
+            upsert = await dispatch('postRecord', {
+              elementName: element.elementName,
+              payload,
+            });
+          }
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'RECORDS_NOT_CREATED',
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return upsert;
+    },
+
+    upsertBulkRecords: async ({ commit, dispatch }, {
+      element,
+      tags,
+      records,
+      assetId = 0,
+    }) => {
+      let upsert = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          const tagsCreated = await dispatch('createElementTags', tagsToProvision);
+          if (tagsCreated) {
+            const payload = records.map((record) => ({
+              ...record,
+              assetId,
+            }));
+            const rec = await dispatch('getRecords', element.elementName);
+            if (rec && rec.length) {
+              await Promise.all([rec.forEach((r) => {
+                dispatch('deleteRecord', {
+                  elementName: element.elementName,
+                  id: r._id,
+                });
+              })]);
+            }
+            upsert = await dispatch('postBulkRecords', {
+              elementName: element.elementName,
+              payload,
+            });
+          }
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'RECORDS_NOT_CREATED',
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return upsert;
     },
 
     postBulkRecords: async ({ commit }, { elementName, payload }) => {
@@ -190,6 +286,27 @@ export default ({
         const { data } = await ElementService.getRecords(elementName);
         if (data && data.results) {
           return data.results;
+        }
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      return false;
+    },
+
+    deleteRecord: async ({ commit }, { elementName, id }) => {
+      try {
+        const { data } = await ElementService.deleteRecord(elementName, id);
+        if (data && data.id) {
+          return true;
         }
         if (data && data.errors) {
           commit('helper/setAlert', {

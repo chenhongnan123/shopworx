@@ -86,22 +86,13 @@ export default {
   },
   methods: {
     ...mapActions('element', [
-      'createRecord',
-      'createBulkRecords',
+      'upsertRecord',
+      'upsertBulkRecords',
     ]),
     ...mapActions('onboarding', ['completeOnboarding']),
     async onMonthProvisioned(data) {
       this.loading = true;
-      const {
-        element,
-        tags,
-        record,
-      } = data;
-      const created = await this.createRecord({
-        element,
-        tags,
-        record,
-      });
+      const created = await this.upsertRecord(data);
       if (created) {
         this.panel = 1;
       }
@@ -109,16 +100,7 @@ export default {
     },
     async onDaysProvisioned(data) {
       this.loading = true;
-      const {
-        element,
-        tags,
-        records,
-      } = data;
-      const created = await this.createBulkRecords({
-        element,
-        tags,
-        records,
-      });
+      const created = await this.upsertBulkRecords(data);
       if (created) {
         this.panel = 2;
       }
@@ -126,16 +108,7 @@ export default {
     },
     async onHoursProvisioned(data) {
       this.loading = true;
-      const {
-        element,
-        tags,
-        records,
-      } = data;
-      const created = await this.createBulkRecords({
-        element,
-        tags,
-        records,
-      });
+      const created = await this.upsertBulkRecords(data);
       if (created) {
         this.panel = 3;
       }
@@ -143,16 +116,7 @@ export default {
     },
     async onHolidaysProvisioned(data) {
       this.loading = true;
-      const {
-        element,
-        tags,
-        records,
-      } = data;
-      const created = await this.createBulkRecords({
-        element,
-        tags,
-        records,
-      });
+      const created = await this.upsertBulkRecords(data);
       if (created) {
         const success = await this.completeOnboarding();
         if (success) {
