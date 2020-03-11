@@ -191,7 +191,7 @@
             "email": "Email",
             "phoneNumber": "Mobile number",
             "username": "Create username",
-            "password": "Current passwrod",
+            "password": "Current password",
             "newPassword": "New password",
             "confirmNewPassword": "Confirm new password"
           },
