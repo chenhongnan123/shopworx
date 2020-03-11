@@ -67,6 +67,84 @@ export default ({
       return false;
     },
 
+    createRecord: async ({ commit, dispatch }, {
+      element,
+      tags,
+      record,
+      assetId = 0,
+    }) => {
+      let recordCreated = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          const tagsCreated = await dispatch('createElementTags', tagsToProvision);
+          if (tagsCreated) {
+            const payload = {
+              ...record,
+              assetId,
+            };
+            recordCreated = await dispatch('postRecord', {
+              elementName: element.elementName,
+              payload,
+            });
+          }
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: e.response.code,
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return recordCreated;
+    },
+
+    createBulkRecords: async ({ commit, dispatch }, {
+      element,
+      tags,
+      records,
+      assetId = 0,
+    }) => {
+      let recordsCreated = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          const tagsCreated = await dispatch('createElementTags', tagsToProvision);
+          if (tagsCreated) {
+            const payload = records.map((record) => ({
+              ...record,
+              assetId,
+            }));
+            recordsCreated = await dispatch('postBulkRecords', {
+              elementName: element.elementName,
+              payload,
+            });
+          }
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: e.response.code,
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return recordsCreated;
+    },
+
     postBulkRecords: async ({ commit }, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postBulkRecords(elementName, payload);

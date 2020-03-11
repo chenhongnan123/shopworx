@@ -113,11 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('element', [
-      'createElement',
-      'createElementTags',
-      'postBulkRecords',
-    ]),
+    ...mapActions('element', ['createBulkRecords']),
     ...mapActions('onboarding', ['getElements']),
     onVaildData(val) {
       if (!val) {
@@ -139,26 +135,14 @@ export default {
       this.loading = true;
       this.tagsToProvision = data.tags;
       this.dataToProvision = data.data;
-      this.elementId = await this.createElement(this.element);
-      if (this.elementId) {
-        const tagsPayload = this.tagsToProvision.map((tag) => ({
-          ...tag,
-          elementId: this.elementId,
-        }));
-        const tagsCreated = await this.createElementTags(tagsPayload);
-        if (tagsCreated) {
-          const dataPayload = this.dataToProvision.map((postData) => ({
-            ...postData,
-            assetId: this.assetId,
-          }));
-          const recordsPosted = await this.postBulkRecords({
-            elementName: this.element.elementName,
-            payload: dataPayload,
-          });
-          if (recordsPosted) {
-            await this.getElements();
-          }
-        }
+      const recordsCreated = await this.createBulkRecords({
+        element: this.element,
+        tags: this.tagsToProvision,
+        records: this.dataToProvision,
+        assetId: this.assetId,
+      });
+      if (recordsCreated) {
+        await this.getElements();
       }
       this.loading = false;
     },
