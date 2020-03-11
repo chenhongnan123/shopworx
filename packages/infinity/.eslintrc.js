@@ -16,5 +16,6 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-return-assign': 'off',
     'vue/no-unused-components': 'off',
+    'no-underscore-dangle': 'off',
   },
 };
