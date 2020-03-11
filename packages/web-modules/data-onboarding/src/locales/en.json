@@ -72,6 +72,7 @@
         "businessworkingdays": "Please mark your working days",
         "businesshours": "How does your business hours look like?",
         "businessholidays": "What are your upcoming business holidays?",
+        "businessHoursNote": "Note: Time has to be provisioned in 24 hour format. Start the provisioning from first activity of your day. Sum of all durations should sum to 24 hours.",
         "months": {
           "Jan": "Jan",
           "Feb": "Feb",
