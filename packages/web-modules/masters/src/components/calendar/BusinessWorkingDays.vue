@@ -34,8 +34,12 @@
 export default {
   name: 'BusinessWorkingDays',
   props: {
-    category: {
-      type: Object,
+    tags: {
+      type: Array,
+      required: true,
+    },
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -53,7 +57,22 @@ export default {
       ],
     };
   },
+  created() {
+    this.setWorkingDays();
+  },
+  watch: {
+    records() {
+      this.setWorkingDays();
+    },
+  },
   methods: {
+    setWorkingDays() {
+      if (this.records && this.records.length) {
+        this.workingDays = this.records
+          .filter((rec) => rec.isWorking)
+          .map((rec) => rec.day);
+      }
+    },
     saveWorkingDays() {
       const records = this.days.map((day, index) => {
         let isWorking = false;
@@ -65,11 +84,7 @@ export default {
           isWorking,
         };
       });
-      const payload = {
-        ...this.category,
-        records,
-      };
-      this.$emit('days-provisioned', payload);
+      this.$emit('days-provisioned', records);
     },
   },
 };

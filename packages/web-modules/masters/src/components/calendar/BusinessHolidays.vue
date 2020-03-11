@@ -52,8 +52,12 @@
 export default {
   name: 'BusinessHolidays',
   props: {
-    category: {
-      type: Object,
+    tags: {
+      type: Array,
+      required: true,
+    },
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -65,7 +69,18 @@ export default {
       }],
     };
   },
+  created() {
+    this.setHolidays();
+  },
+  watch: {
+    records() {
+      this.setHolidays();
+    },
+  },
   methods: {
+    setHolidays() {
+      this.holidays = this.records;
+    },
     addHoliday() {
       this.holidays.push({
         name: null,
@@ -76,12 +91,7 @@ export default {
       this.holidays.splice(index, 1);
     },
     saveHolidays() {
-      const records = this.holidays;
-      const payload = {
-        ...this.category,
-        records,
-      };
-      this.$emit('holidays-provisioned', payload);
+      this.$emit('holidays-provisioned', this.holidays);
     },
   },
 };

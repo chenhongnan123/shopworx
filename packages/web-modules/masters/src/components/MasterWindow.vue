@@ -65,7 +65,9 @@ export default {
     };
   },
   async created() {
-    await this.fetchData();
+    if (this.id) {
+      await this.fetchData();
+    }
   },
   methods: {
     ...mapActions('masters', ['initMasterData']),

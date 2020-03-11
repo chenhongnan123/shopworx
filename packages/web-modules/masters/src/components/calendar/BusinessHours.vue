@@ -72,8 +72,12 @@
 export default {
   name: 'BusinessHours',
   props: {
-    category: {
-      type: Object,
+    tags: {
+      type: Array,
+      required: true,
+    },
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -96,7 +100,18 @@ export default {
       }],
     };
   },
+  created() {
+    this.setRoutine();
+  },
+  watch: {
+    records() {
+      this.setRoutine();
+    },
+  },
   methods: {
+    setRoutine() {
+      this.routines = this.records;
+    },
     addRoutine() {
       this.routines.push({
         type: 'shift',
