@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
+
+
+### Bug Fixes
+
+* **core:** Check if alert type exists ([423c512](https://bitbucket.org/entrib/shopworx/commits/423c51268c70807b1e13523f7abb02182f5f36ff))
+* **core:** Set alert null on snackbar close ([d5200a8](https://bitbucket.org/entrib/shopworx/commits/d5200a8a8cfe052b8d4e4fc4c7d4eda5d1a458cb))
+
+
+
+
+
+
 # [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
 
 

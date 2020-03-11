@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/ui-components",
-  "version": "4.1.0-alpha.5",
+  "version": "4.1.0-alpha.6",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"

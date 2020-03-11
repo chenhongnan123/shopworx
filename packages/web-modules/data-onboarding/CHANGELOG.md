@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
+
+
+### Bug Fixes
+
+* **onboarding:** Added loading state to calendar onboarding ([163840d](https://bitbucket.org/entrib/shopworx/commits/163840d960f5627c092c2bacdf6f01aff35ea349))
+* **onboarding:** Added upsert for business calendar onboarding ([c889baf](https://bitbucket.org/entrib/shopworx/commits/c889bafb63fffc7e02cadc10a4a16bf7a59fbd26))
+* **onboarding:** Added validations for business hour provisioning ([2d9d445](https://bitbucket.org/entrib/shopworx/commits/2d9d4459ca63809459c9bb112b340d28d9cc4a38))
+* **onboarding:** Fixed onboarding stepper form ([93a7582](https://bitbucket.org/entrib/shopworx/commits/93a758214116d53ce43fb4c3625386fe46cd7a48))
+
+
+
+
+
+
 # [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
 
 **Note:** Version bump only for package @shopworx/data-onboarding
