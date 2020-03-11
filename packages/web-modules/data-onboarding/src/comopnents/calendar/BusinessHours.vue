@@ -60,9 +60,10 @@
         color="primary"
         class="text-none"
         @click="saveHours"
+        :loading="loading"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
+        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -72,6 +73,10 @@
 export default {
   name: 'BusinessHours',
   props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     category: {
       type: Object,
       required: true,

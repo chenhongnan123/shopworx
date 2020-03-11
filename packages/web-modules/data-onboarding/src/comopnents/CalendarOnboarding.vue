@@ -7,6 +7,7 @@
   >
     <v-expansion-panel
       :key="index"
+      :disabled="loading || panel < index"
       v-for="(step, index) in formSteps"
     >
       <v-expansion-panel-header>
@@ -20,23 +21,27 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content class="mt-1">
         <business-month-start
-          v-if="index === 0"
           :category="step"
+          :loading="loading"
+          v-if="index === 0"
           @month-provisioned="onMonthProvisioned"
         />
         <business-working-days
-          v-else-if="index === 1"
           :category="step"
+          :loading="loading"
+          v-else-if="index === 1"
           @days-provisioned="onDaysProvisioned"
         />
         <business-hours
-          v-else-if="index === 2"
           :category="step"
+          :loading="loading"
+          v-else-if="index === 2"
           @hours-provisioned="onHoursProvisioned"
         />
         <business-holidays
-          v-else-if="index === 3"
           :category="step"
+          :loading="loading"
+          v-else-if="index === 3"
           @holidays-provisioned="onHolidaysProvisioned"
         />
       </v-expansion-panel-content>
@@ -68,6 +73,7 @@ export default {
   data() {
     return {
       panel: 0,
+      loading: false,
     };
   },
   computed: {
@@ -80,86 +86,80 @@ export default {
   },
   methods: {
     ...mapActions('element', [
-      'createElement',
-      'createElementTags',
-      'postBulkRecords',
-      'postRecord',
+      'createRecord',
+      'createBulkRecords',
     ]),
     ...mapActions('onboarding', ['completeOnboarding']),
     async onMonthProvisioned(data) {
+      this.loading = true;
       const {
         element,
         tags,
         record,
       } = data;
-      const created = await this.createData(element, tags, record);
+      const created = await this.createRecord({
+        element,
+        tags,
+        record,
+      });
       if (created) {
         this.panel = 1;
       }
+      this.loading = false;
     },
     async onDaysProvisioned(data) {
+      this.loading = true;
       const {
         element,
         tags,
         records,
       } = data;
-      const created = await this.createBulkData(element, tags, records);
+      const created = await this.createBulkRecords({
+        element,
+        tags,
+        records,
+      });
       if (created) {
         this.panel = 2;
       }
+      this.loading = false;
     },
     async onHoursProvisioned(data) {
+      this.loading = true;
       const {
         element,
         tags,
         records,
       } = data;
-      const created = await this.createBulkData(element, tags, records);
+      const created = await this.createBulkRecords({
+        element,
+        tags,
+        records,
+      });
       if (created) {
         this.panel = 3;
       }
+      this.loading = false;
     },
     async onHolidaysProvisioned(data) {
+      this.loading = true;
       const {
         element,
         tags,
         records,
       } = data;
-      const created = await this.createBulkData(element, tags, records);
+      const created = await this.createBulkRecords({
+        element,
+        tags,
+        records,
+      });
       if (created) {
         const success = await this.completeOnboarding();
         if (success) {
           this.$router.replace({ name: 'home' });
         }
       }
-    },
-    async createData(element, tags, record) {
-      let recordsPosted = false;
-      const elementId = await this.createElement(element);
-      if (elementId) {
-        const tagsCreated = await this.createElementTags(tags);
-        if (tagsCreated) {
-          recordsPosted = await this.postRecord({
-            elementName: element.elementName,
-            payload: record,
-          });
-        }
-      }
-      return recordsPosted;
-    },
-    async createBulkData(element, tags, records) {
-      let recordsPosted = false;
-      const elementId = await this.createElement(element);
-      if (elementId) {
-        const tagsCreated = await this.createElementTags(tags);
-        if (tagsCreated) {
-          recordsPosted = await this.postBulkRecords({
-            elementName: element.elementName,
-            payload: records,
-          });
-        }
-      }
-      return recordsPosted;
+      this.loading = false;
     },
   },
 };
