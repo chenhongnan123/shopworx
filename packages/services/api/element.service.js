@@ -28,6 +28,14 @@ class ElementService {
   postRecords(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
+  
+  getRecords(elementName) {
+    return this.request.get(`/server/elements/${elementName}/records`);
+  }
+  
+  deleteRecord(elementName, id) {
+    return this.request.delete(`/server/elements/${elementName}/records/${id}`);
+  }
 }
 
 export default new ElementService();

@@ -57,9 +57,9 @@ export default {
       let msg = null;
       if (this.type) {
         const { message } = this.alert;
-        if (this.type.toUpperCase().trim() === 'SUCCESS') {
+        if (this.type && this.type.toUpperCase().trim() === 'SUCCESS') {
           msg = this.$t(`infinity.success.${message}`);
-        } else if (this.type.toUpperCase().trim() === 'ERROR') {
+        } else if (this.type && this.type.toUpperCase().trim() === 'ERROR') {
           msg = this.$t(`infinity.error.${message}`);
         }
       }
@@ -67,8 +67,17 @@ export default {
     },
   },
   watch: {
+    snackbar(val) {
+      if (!val) {
+        this.setAlert({
+          show: false,
+          type: null,
+          message: null,
+        });
+      }
+    },
     type(val) {
-      if (val.toUpperCase().trim() === 'ERROR') {
+      if (val && val.toUpperCase().trim() === 'ERROR') {
         const { message } = this.alert;
         if (message === 'INVALID_SESSION') {
           this.reLogin = true;

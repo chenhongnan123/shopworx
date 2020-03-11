@@ -39,11 +39,10 @@
       <v-btn
         color="primary"
         class="text-none"
-        @click="saveHours"
-        :loading="loading"
+        @click="saveHolidays"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
-        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -53,12 +52,12 @@
 export default {
   name: 'BusinessHolidays',
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
+    tags: {
+      type: Array,
+      required: true,
     },
-    category: {
-      type: Object,
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -70,7 +69,18 @@ export default {
       }],
     };
   },
+  created() {
+    this.setHolidays();
+  },
+  watch: {
+    records() {
+      this.setHolidays();
+    },
+  },
   methods: {
+    setHolidays() {
+      this.holidays = this.records;
+    },
     addHoliday() {
       this.holidays.push({
         name: null,
@@ -80,13 +90,8 @@ export default {
     removeHoliday(index) {
       this.holidays.splice(index, 1);
     },
-    saveHours() {
-      const records = this.holidays;
-      const payload = {
-        ...this.category,
-        records,
-      };
-      this.$emit('holidays-provisioned', payload);
+    saveHolidays() {
+      this.$emit('holidays-provisioned', this.holidays);
     },
   },
 };

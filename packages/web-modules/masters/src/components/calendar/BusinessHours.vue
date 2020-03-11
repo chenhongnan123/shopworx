@@ -1,10 +1,6 @@
 <template>
   <v-card flat class="transparent">
     <v-card-text class="pa-0">
-      <p
-        class="mt-1 text-justify"
-        v-text="$t('onboarding.steps.calendar.businessHoursNote')"
-      ></p>
       <v-row v-for="(rountine, index) in routines" :key="index">
         <v-col cols="12" md="3">
           <v-select
@@ -64,27 +60,24 @@
         color="primary"
         class="text-none"
         @click="saveHours"
-        :loading="loading"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
-        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
 export default {
   name: 'BusinessHours',
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
+    tags: {
+      type: Array,
+      required: true,
     },
-    category: {
-      type: Object,
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -107,8 +100,18 @@ export default {
       }],
     };
   },
+  created() {
+    this.setRoutine();
+  },
+  watch: {
+    records() {
+      this.setRoutine();
+    },
+  },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
+    setRoutine() {
+      this.routines = this.records;
+    },
     addRoutine() {
       this.routines.push({
         type: 'shift',
@@ -123,58 +126,25 @@ export default {
     getStartTime(time) {
       return `${time}:00`;
     },
-    getDuration({ endtime, starttime }) {
-      const timeStart = new Date(`01/01/2007 ${starttime}`).getHours();
-      const timeEnd = new Date(`01/01/2007 ${endtime}`).getHours();
-      return timeEnd - timeStart;
-    },
     getEndTime(time) {
       const [hours, mins] = time.split(':');
       const actualSecs = '59';
       const actualMins = mins !== '00' ? parseInt(mins, 10) - 1 : '59';
-      let actualHour = mins !== '00' ? parseInt(hours, 10) : parseInt(hours, 10) - 1;
-      if (actualHour === -1) {
-        actualHour = 23;
-      }
+      const actualHour = mins !== '00' ? parseInt(hours, 10) : parseInt(hours, 10) - 1;
       const actualTime = [actualHour, actualMins, actualSecs];
       return actualTime.join(':');
     },
-    isHourMissing() {
-      return this.routines.some((routine, index) => (
-        index !== this.routines.length - 1
-        && routine.endtime !== this.routines[index + 1].starttime
-      ));
-    },
-    isSumInvalid() {
-      const sum = this.routines.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      console.log(!!sum);
-      return !!sum;
-    },
     saveHours() {
-      if (this.isHourMissing()) {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'MISSING_BUSINESS_HOUR',
-        });
-      } else if (this.isSumInvalid()) {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'INVALID_HOURS_SUM',
-        });
-      } else {
-        const records = this.routines.map((routine) => ({
-          ...routine,
-          starttime: this.getStartTime(routine.starttime),
-          endtime: this.getEndTime(routine.endtime),
-        }));
-        const payload = {
-          ...this.category,
-          records,
-        };
-        this.$emit('hours-provisioned', payload);
-      }
+      const records = this.routines.map((routine) => ({
+        ...routine,
+        starttime: this.getStartTime(routine.starttime),
+        endtime: this.getEndTime(routine.endtime),
+      }));
+      const payload = {
+        ...this.category,
+        records,
+      };
+      this.$emit('hours-provisioned', payload);
     },
   },
 };

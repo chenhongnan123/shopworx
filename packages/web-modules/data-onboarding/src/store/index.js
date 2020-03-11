@@ -36,6 +36,7 @@ export default ({
         }
       }
     },
+
     getAssets: async ({ commit, rootState }) => {
       const { me } = rootState.user;
       const industryId = me && me.industry ? me.industry.id : null;
@@ -181,19 +182,6 @@ export default ({
             tags: masterTags,
           };
         });
-        const lastNonCompleteIndex = onboardingItems
-          .findIndex((item, index) => (
-            !item.isComplete
-            && index < onboardingItems.length
-          ));
-        const lastCompleteItemIndex = lastNonCompleteIndex - 1;
-        if (lastCompleteItemIndex > -1) {
-          onboardingItems[lastCompleteItemIndex + 1] = {
-            ...onboardingItems[lastCompleteItemIndex + 1],
-            isEditable: true,
-          };
-          commit('setStep', lastCompleteItemIndex + 2);
-        }
         const calendarItems = onboardingItems
           .filter((item) => item.type.toUpperCase().trim() === 'CALENDAR');
         const isComplete = calendarItems.every((item) => item.isComplete);
@@ -215,6 +203,19 @@ export default ({
         const nonCalendarItems = onboardingItems
           .filter((item) => item.type.toUpperCase().trim() !== 'CALENDAR');
         items = [...nonCalendarItems, calendarItem];
+        const lastNonCompleteIndex = items
+          .findIndex((item, index) => (
+            !item.isComplete
+            && index < items.length
+          ));
+        const lastCompleteItemIndex = lastNonCompleteIndex - 1;
+        if (lastCompleteItemIndex > -1) {
+          items[lastCompleteItemIndex + 1] = {
+            ...items[lastCompleteItemIndex + 1],
+            isEditable: true,
+          };
+          commit('setStep', lastCompleteItemIndex + 2);
+        }
         commit('setOnboardingItems', items);
         commit('setCurrentAsset', selectedAsset);
       }

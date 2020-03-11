@@ -20,11 +20,10 @@
       <v-btn
         color="primary"
         class="text-none"
-        :loading="loading"
         @click="saveMonthStart"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
-        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -34,12 +33,12 @@
 export default {
   name: 'BusinessStartMonth',
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
+    tags: {
+      type: Array,
+      required: true,
     },
-    category: {
-      type: Object,
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -62,11 +61,23 @@ export default {
       monthStart: 0,
     };
   },
+  created() {
+    this.setMonth();
+  },
+  watch: {
+    records() {
+      this.setMonth();
+    },
+  },
   methods: {
+    setMonth() {
+      if (this.records && this.records.length) {
+        this.monthStart = this.records[0].startmonth;
+      }
+    },
     saveMonthStart() {
-      const [tag] = this.category.tags;
+      const [tag] = this.tags;
       const payload = {
-        ...this.category,
         record: {
           [tag.tagName]: this.monthStart,
         },

@@ -21,11 +21,10 @@
       <v-btn
         color="primary"
         class="text-none"
-        :loading="loading"
         @click="saveWorkingDays"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        v-text="$t('onboarding.reviewData.buttons.continue')"
       >
-        {{ $t('onboarding.reviewData.buttons.continue') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -35,12 +34,12 @@
 export default {
   name: 'BusinessWorkingDays',
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
+    tags: {
+      type: Array,
+      required: true,
     },
-    category: {
-      type: Object,
+    records: {
+      type: Array,
       required: true,
     },
   },
@@ -58,7 +57,22 @@ export default {
       ],
     };
   },
+  created() {
+    this.setWorkingDays();
+  },
+  watch: {
+    records() {
+      this.setWorkingDays();
+    },
+  },
   methods: {
+    setWorkingDays() {
+      if (this.records && this.records.length) {
+        this.workingDays = this.records
+          .filter((rec) => rec.isWorking)
+          .map((rec) => rec.day);
+      }
+    },
     saveWorkingDays() {
       const records = this.days.map((day, index) => {
         let isWorking = false;
@@ -70,11 +84,7 @@ export default {
           isWorking,
         };
       });
-      const payload = {
-        ...this.category,
-        records,
-      };
-      this.$emit('days-provisioned', payload);
+      this.$emit('days-provisioned', records);
     },
   },
 };
