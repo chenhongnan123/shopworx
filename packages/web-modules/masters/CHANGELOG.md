@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
+
+
+### Bug Fixes
+
+* **masters:** Updated master calendar provisioning components ([95ca155](https://bitbucket.org/entrib/shopworx/commits/95ca15568e4b19a61406fb6d2dd7a5f94e76f348))
+
+
+### Features
+
+* **masters:** Added ag grid enterprise version ([d35f111](https://bitbucket.org/entrib/shopworx/commits/d35f1116c5cb3b57ebd0203fa2f5c432f50a975f))
+* **masters:** Display provisioned elements data asset wise ([f890683](https://bitbucket.org/entrib/shopworx/commits/f8906838dbf817b5b047d0bbfc9c2f842b5049d2))
+
+
+
+
+
+
 # [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
 
 

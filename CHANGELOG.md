@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
+
+
+### Bug Fixes
+
+* **auth:** Fix spelling ([4624e3e](https://bitbucket.org/entrib/shopworx/commits/4624e3efd9c1ec0fa22b7c3653e92f0683fbe233))
+* **core:** Check if alert type exists ([423c512](https://bitbucket.org/entrib/shopworx/commits/423c51268c70807b1e13523f7abb02182f5f36ff))
+* **core:** Set alert null on snackbar close ([d5200a8](https://bitbucket.org/entrib/shopworx/commits/d5200a8a8cfe052b8d4e4fc4c7d4eda5d1a458cb))
+* **masters:** Updated master calendar provisioning components ([95ca155](https://bitbucket.org/entrib/shopworx/commits/95ca15568e4b19a61406fb6d2dd7a5f94e76f348))
+* **onboarding:** Added loading state to calendar onboarding ([163840d](https://bitbucket.org/entrib/shopworx/commits/163840d960f5627c092c2bacdf6f01aff35ea349))
+* **onboarding:** Added upsert for business calendar onboarding ([c889baf](https://bitbucket.org/entrib/shopworx/commits/c889bafb63fffc7e02cadc10a4a16bf7a59fbd26))
+* **onboarding:** Added validations for business hour provisioning ([2d9d445](https://bitbucket.org/entrib/shopworx/commits/2d9d4459ca63809459c9bb112b340d28d9cc4a38))
+* **onboarding:** Fixed onboarding stepper form ([93a7582](https://bitbucket.org/entrib/shopworx/commits/93a758214116d53ce43fb4c3625386fe46cd7a48))
+
+
+### Features
+
+* **masters:** Added ag grid enterprise version ([d35f111](https://bitbucket.org/entrib/shopworx/commits/d35f1116c5cb3b57ebd0203fa2f5c432f50a975f))
+* **masters:** Display provisioned elements data asset wise ([f890683](https://bitbucket.org/entrib/shopworx/commits/f8906838dbf817b5b047d0bbfc9c2f842b5049d2))
+
+
+
+
+
+
 # [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
 
 

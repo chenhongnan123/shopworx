@@ -7,5 +7,5 @@
     "packages/ui-components",
     "packages/web-modules/*"
   ],
-  "version": "4.1.0-alpha.5"
+  "version": "4.1.0-alpha.6"
 }
