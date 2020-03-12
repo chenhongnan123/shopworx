@@ -139,6 +139,19 @@ export default {
       const actualTime = [actualHour, actualMins, actualSecs];
       return actualTime.join(':');
     },
+    isValidDate(d) {
+      return d instanceof Date && !Number.isNaN(d.getTime());
+    },
+    isInvalidHour() {
+      return this.routines.some((routine) => {
+        const timeStart = new Date(`1970-01-01T${routine.starttime}Z`);
+        const timeEnd = new Date(`1970-01-01T${routine.endtime}Z`);
+        console.log(this.isValidDate(timeStart));
+        console.log(this.isValidDate(timeEnd));
+        return !this.isValidDate(timeStart)
+          || !this.isValidDate(timeEnd);
+      });
+    },
     isHourMissing() {
       return this.routines.some((routine, index) => (
         index !== this.routines.length - 1
@@ -147,11 +160,17 @@ export default {
     },
     isSumInvalid() {
       const sum = this.routines.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      console.log(!!sum);
+      console.log(sum);
       return !!sum;
     },
     saveHours() {
-      if (this.isHourMissing()) {
+      if (this.isInvalidHour()) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'INVALID_HOUR',
+        });
+      } else if (this.isHourMissing()) {
         this.setAlert({
           show: true,
           type: 'error',
