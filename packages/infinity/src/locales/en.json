@@ -65,7 +65,8 @@
       "NO_RECORDS_IN_FILE": "Your file does not have any records. Please add one record per row in your file.",
       "MISSING_REQUIRED_VALUE": "One or more required values are missing. Please verify your data.",
       "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
-      "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data."
+      "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data.",
+      "INVALID_HOUR": "One or more hours are invalid. Please verify your data."
     },
     "success": {
       "OTP_SENT": "OTP sent."
