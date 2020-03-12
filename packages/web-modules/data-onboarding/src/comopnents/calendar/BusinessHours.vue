@@ -146,8 +146,6 @@ export default {
       return this.routines.some((routine) => {
         const timeStart = new Date(`1970-01-01T${routine.starttime}Z`);
         const timeEnd = new Date(`1970-01-01T${routine.endtime}Z`);
-        console.log(this.isValidDate(timeStart));
-        console.log(this.isValidDate(timeEnd));
         return !this.isValidDate(timeStart)
           || !this.isValidDate(timeEnd);
       });
@@ -160,7 +158,6 @@ export default {
     },
     isSumInvalid() {
       const sum = this.routines.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      console.log(sum);
       return !!sum;
     },
     saveHours() {
