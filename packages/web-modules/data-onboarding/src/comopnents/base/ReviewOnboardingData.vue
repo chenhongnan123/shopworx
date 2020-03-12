@@ -17,6 +17,10 @@
         style="width: 100%; height: 90%;"
         @selection-changed="onSelectionChanged"
       ></ag-grid-vue>
+      <p
+        class="mt-1 caption text-justify"
+        v-text="$tc('onboarding.reviewData.helper.count', rowData.length)"
+      ></p>
     </v-card-text>
     <v-card-actions class="px-0">
       <v-btn

@@ -33,6 +33,9 @@
         "addRow": "Add empty row",
         "deleteRows": "Delete selected rows",
         "continue": "Save"
+      },
+      "helper": {
+        "count": "No records | 1 record | {count} records"
       }
     },
     "steps": {
