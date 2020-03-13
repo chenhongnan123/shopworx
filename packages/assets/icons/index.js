@@ -17,6 +17,7 @@ export default {
     oee: 'mdi-chart-multiline',
     masters: 'mdi-database',
     users: 'mdi-account-multiple-outline',
+    permissions: 'mdi-shield-key-outline',
     alerts: 'mdi-car-brake-alert',
     radioBlank: 'mdi-radiobox-blank',
     radioMarked: 'mdi-radiobox-marked',
