@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import DataOnboarding from '@shopworx/data-onboarding';
 import Masters from '@shopworx/masters';
+import Admin from '@shopworx/admin';
 import Planning from '@shopworx/planning';
 
 import router from '../router';
@@ -14,6 +15,12 @@ Vue.use(DataOnboarding, {
 });
 
 Vue.use(Masters, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(Admin, {
   router,
   store,
   i18n,

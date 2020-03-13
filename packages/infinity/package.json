@@ -9,6 +9,7 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
+    "@shopworx/admin": "^4.1.0-alpha.6",
     "@shopworx/assets": "^4.1.0-alpha.6",
     "@shopworx/data-onboarding": "^4.1.0-alpha.6",
     "@shopworx/masters": "^4.1.0-alpha.6",

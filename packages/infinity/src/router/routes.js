@@ -16,7 +16,7 @@ const routes = [
       {
         path: 'profile',
         name: 'user-profile',
-        component: () => import(/* webpackChunkName: "user-dashboard" */ '@/views/UserProfile.vue'),
+        component: () => import(/* webpackChunkName: "user-profile" */ '@/views/UserProfile.vue'),
       },
       {
         path: 'machine-dashboard',
@@ -40,11 +40,6 @@ const routes = [
         name: 'reports',
         component: () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue'),
         props: true,
-      },
-      {
-        path: 'admin',
-        name: 'admin',
-        component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin.vue'),
       },
     ],
   },

@@ -177,7 +177,7 @@ export default {
     scrollbarHeight() {
       // 56 - height of help button
       // 64 - height of toolbar
-      let totalHeight = 56 + 64;
+      let totalHeight = 57 + 64;
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding

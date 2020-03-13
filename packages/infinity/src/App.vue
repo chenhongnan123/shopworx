@@ -50,16 +50,16 @@ export default {
 </script>
 
 <style lang="scss">
-html, body {
-  width: 100%;
-  height: 100%;
-  ::-webkit-scrollbar {
-    display: none;  /* Chrome Safari */
-  }
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
-  overflow:hidden;
-}
+// html, body {
+//   width: 100%;
+//   height: 100%;
+//   ::-webkit-scrollbar {
+//     display: none;  /* Chrome Safari */
+//   }
+//   scrollbar-width: none; /* Firefox */
+//   -ms-overflow-style: none;  /* IE 10+ */
+//   overflow:hidden;
+// }
 .toolbar-padding .v-toolbar__content {
   padding-left: 2px;
   padding-right: 2px;

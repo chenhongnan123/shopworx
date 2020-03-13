@@ -18,7 +18,7 @@
       </v-toolbar-items>
     </v-app-bar>
     <v-content>
-      <perfect-scrollbar>
+      <!-- <perfect-scrollbar> -->
         <v-container
           :style="$vuetify.breakpoint.mdAndUp
             ? 'height: calc(100vh - 64px)'
@@ -30,7 +30,7 @@
             </v-col>
           </v-row>
         </v-container>
-      </perfect-scrollbar>
+      <!-- </perfect-scrollbar> -->
     </v-content>
   </div>
 </template>

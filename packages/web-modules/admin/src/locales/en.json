@@ -1,0 +1,10 @@
+{
+  "admin": {
+    "admin": "Administrator",
+    "items": {
+      "users": "Users",
+      "permissions": "Role permissions",
+      "alerts": "Alerts"
+    }
+  }
+}
