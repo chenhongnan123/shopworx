@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.6...v4.1.0-alpha.7) (2020-03-13)
+
+
+### Bug Fixes
+
+* **core:** added default browser scrollbar ([6f24be9](https://bitbucket.org/entrib/shopworx/commits/6f24be90935e5fb94f5a16c2eda25718dfd4dc24))
+
+
+
+
+
 # [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
 
 

@@ -11,7 +11,7 @@
           </div>
           <div
             class="title font-weight-regular"
-            v-text="'Onboarding unavilable'"
+            v-text="'Onboarding unavailable'"
           ></div>
           <span
             class="mt-2"

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-alpha.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.6...v4.1.0-alpha.7) (2020-03-13)
+
+
+### Bug Fixes
+
+* **onboarding:** added invalid hours validation to calendar ([41f2c3e](https://bitbucket.org/entrib/shopworx/commits/41f2c3ea0f370ee83ffffb12586fe0d66759a9b3))
+* **onboarding:** display record count on review screen ([9b1ba04](https://bitbucket.org/entrib/shopworx/commits/9b1ba040e3c218e77d575095123d3ef068d44c84))
+* **onboarding:** spell check ([5b51d5f](https://bitbucket.org/entrib/shopworx/commits/5b51d5f9a1e2febeeed0f41fa10681caf89fd45d))
+
+
+
+
+
 # [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
 
 
