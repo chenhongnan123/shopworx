@@ -66,7 +66,9 @@
       "MISSING_REQUIRED_VALUE": "One or more required values are missing. Please verify your data.",
       "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
       "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data.",
-      "INVALID_HOUR": "One or more hours are invalid. Please verify your data."
+      "INVALID_HOUR": "One or more hours are invalid. Please verify your data.",
+      "INVALID_HOLIDAY_DATE": "One or more holiday dates are invalid. Please verify your data.",
+      "EMPTY_HOLIDAY_NAME": "One or more holiday names are empty. Please verify your data."
     },
     "success": {
       "OTP_SENT": "OTP sent."

@@ -115,7 +115,7 @@
     },
     "modules": {
       "home": "घर",
-      "machineDashboard": "मशीन का डैशबोर्ड",
+      "machinedashboard": "मशीन का डैशबोर्ड",
       "planning": "योजना",
       "reports": "रिपोर्ट",
       "production": "उत्पादन",
