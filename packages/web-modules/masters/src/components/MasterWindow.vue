@@ -72,7 +72,9 @@ export default {
   methods: {
     ...mapActions('masters', ['initMasterData']),
     async fetchData() {
-      await this.initMasterData(this.id);
+      if (this.id !== undefined) {
+        await this.initMasterData(this.id);
+      }
     },
   },
   watch: {
