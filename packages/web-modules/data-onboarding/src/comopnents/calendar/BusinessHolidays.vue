@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'BusinessHolidays',
   props: {
@@ -71,6 +73,13 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    isInvalidDate() {
+      return this.holidays.some((holiday) => !holiday.date);
+    },
+    isEmptyName() {
+      return this.holidays.some((holiday) => !holiday.name);
+    },
     addHoliday() {
       this.holidays.push({
         name: null,
@@ -82,11 +91,25 @@ export default {
     },
     saveHours() {
       const records = this.holidays;
-      const payload = {
-        ...this.category,
-        records,
-      };
-      this.$emit('holidays-provisioned', payload);
+      if (this.isInvalidDate()) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'INVALID_HOLIDAY_DATE',
+        });
+      } else if (this.isEmptyName()) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'EMPTY_HOLIDAY_NAME',
+        });
+      } else {
+        const payload = {
+          ...this.category,
+          records,
+        };
+        this.$emit('holidays-provisioned', payload);
+      }
     },
   },
 };
