@@ -21,7 +21,7 @@
         <v-list-item-icon>
           <v-icon v-text="item.icon"></v-icon>
         </v-list-item-icon>
-        <v-list-item-title v-text="$t(`admin.items.${item.title}`)"></v-list-item-title>
+        <v-list-item-title v-text="$t(`admin.items.${item.title}.title`)"></v-list-item-title>
       </v-list-item>
     </template>
   </v-list>
@@ -34,6 +34,9 @@ export default {
   name: 'AdminList',
   computed: {
     ...mapState('admin', ['items']),
+    id() {
+      return this.$route.params.id;
+    },
   },
   created() {
     this.redirect();
@@ -42,10 +45,13 @@ export default {
     items() {
       this.redirect();
     },
+    id() {
+      this.redirect();
+    },
   },
   methods: {
     redirect() {
-      if (this.$route.params.id === undefined && !this.$vuetify.breakpoint.smAndDown) {
+      if (this.id === undefined && !this.$vuetify.breakpoint.smAndDown) {
         if (this.items && this.items.length) {
           const index = this.items.findIndex((elem) => elem.title);
           const { to } = this.items.find((item, i) => index === i);

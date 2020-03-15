@@ -1,10 +1,28 @@
 {
   "admin": {
-    "admin": "Administrator",
+    "account": "Account",
+    "payment": "Payment",
     "items": {
-      "users": "Users",
-      "permissions": "Role permissions",
-      "alerts": "Alerts"
+      "info": {
+        "title": "Info",
+        "subTitle": "General information"
+      },
+      "users": {
+        "title": "Users",
+        "subTitle": "Manage user accounts"
+      },
+      "permissions": {
+        "title": "Permissions",
+        "subTitle": "Manage role permissions"
+      },
+      "alerts": {
+        "title": "Alerts",
+        "subTitle": "Alerts"
+      },
+      "billing": {
+        "title": "Billing",
+        "subTitle": "Billing"
+      }
     }
   }
 }
