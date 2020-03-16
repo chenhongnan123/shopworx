@@ -125,7 +125,7 @@ export default ({
 
     getOnboardingElements: ({ commit, getters, state }) => {
       commit('setStep', 1);
-      const { assets, currentAsset, step } = state;
+      const { assets, currentAsset } = state;
       const {
         filteredMasterElements,
         filteredElements,
@@ -201,9 +201,8 @@ export default ({
             isEditable: true,
           };
           commit('setStep', lastCompleteItemIndex + 2);
-        }
-        if (step > items.length) {
-          commit('isOnboardingComplete', true);
+        } else {
+          commit('setIsOnboardingComplete', true);
         }
         commit('setOnboardingItems', items);
         commit('setCurrentAsset', selectedAsset);
