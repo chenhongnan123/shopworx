@@ -145,6 +145,33 @@ export default ({
       return recordsCreated;
     },
 
+    createElementAndTags: async ({ commit, dispatch }, {
+      element,
+      tags,
+    }) => {
+      let tagsCreated = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          tagsCreated = await dispatch('createElementTags', tagsToProvision);
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'RECORDS_NOT_CREATED',
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return tagsCreated;
+    },
+
     upsertRecord: async ({ commit, dispatch }, {
       element,
       tags,

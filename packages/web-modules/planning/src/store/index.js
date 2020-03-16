@@ -1,5 +1,4 @@
 import IndustryService from '@shopworx/services/api/industry.service';
-import ElementService from '@shopworx/services/api/element.service';
 import { set, toggle } from '@shopworx/services/util/store.service';
 
 export default ({
@@ -14,6 +13,7 @@ export default ({
     currentAsset: 0,
     masterElements: [],
     onboardingItems: [],
+    generatedMatrix: [],
     isOnboardingComplete: false,
   },
   mutations: {
@@ -27,6 +27,7 @@ export default ({
     setCurrentAsset: set('currentAsset'),
     setMasterElements: set('masterElements'),
     setOnboardingItems: set('onboardingItems'),
+    setGeneratedMatrix: set('generatedMatrix'),
     setIsOnboardingComplete: set('isOnboardingComplete'),
   },
   actions: {
@@ -210,14 +211,24 @@ export default ({
       return items;
     },
 
-    getPlans: async ({ commit }) => {
-      const { data, status } = await ElementService.getElementRecords(
-        'planning',
-      );
-      if (status === 200) {
-        commit('setPlans', data.results);
+    generateMatrix: async ({ commit, dispatch }, elements) => {
+      if (elements && elements.length) {
+        const getAllRecords = elements.map(
+          (element) => dispatch('element/getRecords', element, { root: true }),
+        );
+        const records = await Promise.all(getAllRecords);
+        const result = records.reduce((acc, cur) => acc
+          .flatMap((x) => cur.map((y) => ({ ...x, ...y }))), [[]]);
+        commit('setGeneratedMatrix', result);
       }
-      return data;
+    },
+
+    getPlans: async ({ commit, dispatch }) => {
+      const records = await dispatch('element/getRecords', 'planning', { root: true });
+      if (records) {
+        commit('setPlans', records);
+      }
+      return records;
     },
   },
   getters: {
@@ -268,6 +279,26 @@ export default ({
           .flat();
       }
       return tags;
+    },
+
+    masterAssetElements: ({ elements }) => {
+      let elems = [];
+      if (elements && elements.length) {
+        elems = elements
+          .filter((elem) => elem.element.categoryType.toUpperCase().trim() === 'ASSET');
+      }
+      return elems;
+    },
+
+    assetPartMatrixTags: ({ elements }) => {
+      let elems = [];
+      if (elements && elements.length) {
+        elems = elements
+          .filter((elem) => elem.element.elementName.toUpperCase().trim() === 'ASSETPARTMATRIX')
+          .map((elem) => elem.tags)
+          .flat();
+      }
+      return elems;
     },
   },
 });

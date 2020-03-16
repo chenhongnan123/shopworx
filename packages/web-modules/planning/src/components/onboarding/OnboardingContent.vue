@@ -13,12 +13,16 @@
         v-for="asset in assets"
       >
         <asset-matrix-schema
+          :element="element"
+          :assetId="asset.id"
           v-if="isAssetMatrix"
-          :item="item"
+          :tags="getTags(asset.id)"
         />
         <planning-schema
           v-else
-          :categories="categories"
+          :element="element"
+          :assetId="asset.id"
+          :tags="getTags(asset.id)"
         />
       </v-tab-item>
     </v-tabs>
@@ -52,12 +56,22 @@ export default {
         this.setCurrentAsset(val);
       },
     },
+    element() {
+      return this.item && this.item.element ? this.item.element : null;
+    },
     isAssetMatrix() {
-      return this.item && this.item.title === 'ASSETPARTMATRIX';
+      return this.item && this.item.title.toUpperCase().trim() === 'ASSETPARTMATRIX';
     },
   },
   methods: {
     ...mapMutations('planning', ['setCurrentAsset']),
+    getTags(assetId = 0) {
+      return this.item.tags.filter((tag) => (
+        !tag.hide
+        && tag.assetId === assetId
+        && tag.status.toUpperCase().trim() === 'ACTIVE'
+      ));
+    },
   },
 };
 </script>

@@ -49,6 +49,7 @@
   },
   "infinity": {
     "error": {
+      "ACCESS_NOT_ALLOWED_TO_ELEMENT": "Access not allowed!",
       "INVALID_SESSION": "Your session has expired. Please login again.",
       "INVALID_LOGIN_DETAILS": "Login failed: Invalid username or password.",
       "EMAIL_NOT_FOUND": "Login failed: Invalid email",
