@@ -82,7 +82,7 @@ export default {
         if (message === 'INVALID_SESSION') {
           this.reLogin = true;
           const self = this;
-          this.logoutInterval = setInterval(async () => {
+          this.logoutInterval = setInterval(() => {
             self.logoutTimer -= 1;
           }, 1000);
           setTimeout(async () => {

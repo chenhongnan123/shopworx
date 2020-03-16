@@ -158,6 +158,7 @@
             "login": "Login"
           },
           "resendOtp": "Resend OTP",
+          "resendOtpIn": "Resend OTP in {time} secs",
           "loginWithPassword": "or login with password"
         },
         "passwordForm": {
