@@ -145,6 +145,33 @@ export default ({
       return recordsCreated;
     },
 
+    createElementAndTags: async ({ commit, dispatch }, {
+      element,
+      tags,
+    }) => {
+      let tagsCreated = false;
+      try {
+        const elementId = await dispatch('createElement', element);
+        if (elementId) {
+          const tagsToProvision = tags.map((tag) => ({
+            ...tag,
+            elementId,
+          }));
+          tagsCreated = await dispatch('createElementTags', tagsToProvision);
+        }
+      } catch (e) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'RECORDS_NOT_CREATED',
+        }, {
+          root: true,
+        });
+        console.error(e);
+      }
+      return tagsCreated;
+    },
+
     upsertRecord: async ({ commit, dispatch }, {
       element,
       tags,
@@ -165,7 +192,7 @@ export default ({
               ...record,
               assetId,
             };
-            const rec = await dispatch('getRecords', element.elementName);
+            const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecord', {
@@ -213,7 +240,7 @@ export default ({
               ...record,
               assetId,
             }));
-            const rec = await dispatch('getRecords', element.elementName);
+            const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecord', {
@@ -281,9 +308,9 @@ export default ({
       return true;
     },
 
-    getRecords: async ({ commit }, elementName) => {
+    getRecords: async ({ commit }, { elementName, query = '' }) => {
       try {
-        const { data } = await ElementService.getRecords(elementName);
+        const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
           return data.results;
         }

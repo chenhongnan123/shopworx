@@ -17,97 +17,97 @@
         style="width: 100%; height: 90%;"
         @selection-changed="onSelectionChanged"
       ></ag-grid-vue>
-      <p
-        class="mt-1 caption text-justify"
-        v-text="$tc('onboarding.reviewData.helper.count', rowData.length)"
-      ></p>
+      <p class="mt-1 caption text-justify">
+        {{ $t('onboarding.importData.helper.required') }}
+        |
+        {{ $tc('onboarding.reviewData.helper.count', rowData.length) }}
+      </p>
     </v-card-text>
     <v-card-actions class="px-0">
       <v-btn
         color="primary"
         class="text-none"
-        :loading="loading"
-        @click="reviewData"
+        @click="importData"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      >
-        {{ $t('onboarding.reviewData.buttons.continue') }}
-      </v-btn>
+        v-text="$t('onboarding.importData.buttons.continue')"
+      ></v-btn>
       <v-spacer></v-spacer>
       <v-btn
         outlined
-        @click="addRow"
         color="success"
         class="text-none"
-        :disabled="loading"
-        v-text="$t('onboarding.reviewData.buttons.addRow')"
+        @click="addRow"
+        v-text="$t('onboarding.importData.buttons.addRow')"
       ></v-btn>
       <v-btn
         outlined
         color="error"
         class="text-none"
+        :disabled="!rowsSelected"
         @click="deleteSelectedRows"
-        :disabled="!rowsSelected || loading"
-        v-text="$t('onboarding.reviewData.buttons.deleteRows')"
+        v-text="$t('onboarding.importData.buttons.deleteRows')"
       ></v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
 import AgGridService from '@shopworx/services/util/agGrid.service';
 
 export default {
-  name: 'ReviewOnboardingData',
+  name: 'GenerateData',
   components: {
     AgGridVue,
   },
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    tags: {
+    masters: {
       type: Array,
       required: true,
     },
-    importedData: {
+    masterTags: {
       type: Array,
       required: true,
     },
-    matchedColumns: {
-      type: Object,
+    assetId: {
+      type: Number,
       required: true,
+    },
+  },
+  created() {
+    this.mapTags();
+  },
+  watch: {
+    masters() {
+      this.mapTags();
+      this.mapColumns();
+      this.addRows();
     },
   },
   data() {
     return {
+      tags: [],
       rowData: [],
-      isValid: true,
       gridApi: null,
+      isValid: true,
       columnDefs: [],
-      filteredTags: [],
+      dataObject: null,
       gridOptions: null,
       gridColumnApi: null,
       defaultColDef: null,
+      generatedData: [],
       rowsSelected: false,
     };
   },
-  watch: {
-    matchedColumns() {
-      this.setRowData();
-      this.setColumnDefs();
-    },
-    importedData() {
-      this.setRowData();
-      this.setColumnDefs();
-    },
+  computed: {
+    ...mapState('planning', ['generatedMatrix']),
   },
   beforeMount() {
     this.gridOptions = {};
+    this.mapColumns();
     this.defaultColDef = {
       filter: true,
       editable: true,
@@ -116,20 +116,46 @@ export default {
       headerCheckboxSelection: this.isFirstColumn,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
     };
-    this.setRowData();
-    this.setColumnDefs();
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    this.gridApi.sizeColumnsToFit();
+    this.addRows();
+    // this.gridApi.sizeColumnsToFit();
   },
   methods: {
+    ...mapActions('planning', ['generateMatrix']),
     ...mapMutations('helper', ['setAlert']),
+    mapTags() {
+      if (this.masters && this.masters.length) {
+        this.tags = [
+          ...this.masters.map((master) => master.tags).flat(),
+          ...this.masterTags,
+        ];
+      }
+    },
+    mapColumns() {
+      this.columnDefs = this.tags.map((tag) => ({
+        headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
+        field: tag.tagName,
+        cellEditor: AgGridService.getCellEditor(tag.emgTagType),
+        cellRenderer: AgGridService.getCellRenderer(tag.emgTagType),
+      }));
+    },
+    async generateData() {
+      const elements = this.masters.map((master) => master.element);
+      await this.generateMatrix({ elements, assetId: this.assetId });
+    },
+    async addRows() {
+      this.gridApi.showLoadingOverlay();
+      await this.generateData();
+      this.gridApi.updateRowData({ add: this.generatedMatrix });
+      this.gridApi.hideOverlay();
+    },
     validateData(data) {
       this.isValid = true;
       data.forEach((d) => {
-        this.filteredTags.forEach((t) => {
+        this.tags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
             if (val === null || val === '' || val === undefined) {
@@ -138,33 +164,7 @@ export default {
           }
         });
       });
-    },
-    setRowData() {
-      const filteredData = this.importedData
-        .map((data) => this.filterData(this.matchedColumns, data));
-      const renamedData = filteredData.map((data) => this.renameKeys(this.matchedColumns, data));
-      this.rowData = renamedData;
-    },
-    setColumnDefs() {
-      this.filteredTags = this.tags
-        .filter((tag) => Object.values(this.matchedColumns).includes(tag.tagName));
-      this.columnDefs = this.filteredTags.map((tag) => ({
-        headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
-        field: tag.tagName,
-        cellEditor: AgGridService.getCellEditor(tag.emgTagType),
-        cellRenderer: AgGridService.getCellRenderer(tag.emgTagType),
-      }));
-    },
-    filterData(keysMap, obj) {
-      return Object.keys(keysMap)
-        .map((k) => (k in obj ? { [k]: obj[k] } : null))
-        .reduce((res, o) => Object.assign(res, o), {});
-    },
-    renameKeys(keysMap, obj) {
-      return Object.keys(obj).reduce((acc, key) => ({
-        ...acc,
-        ...{ [keysMap[key] || key]: obj[key] },
-      }), {});
+      this.$emit('is-valid-data', this.isValid);
     },
     isFirstColumn(params) {
       const displayedColumns = params.columnApi.getAllDisplayedColumns();
@@ -188,14 +188,14 @@ export default {
       this.gridApi.updateRowData({ remove: selectedRows });
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
-    reviewData() {
+    importData() {
       const data = {
         data: this.rowData,
-        tags: this.filteredTags,
+        fields: this.tags,
       };
       this.validateData(this.rowData);
       if (this.isValid) {
-        this.$emit('data-reviewed', data);
+        this.$emit('data-imported', data);
       } else {
         this.setAlert({
           show: true,

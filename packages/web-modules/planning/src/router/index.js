@@ -6,7 +6,7 @@ const routes = [
       {
         path: '',
         name: 'planning',
-        component: () => import(/* webpackChunkName: "planning" */ '../components/Planning.vue'),
+        component: () => import(/* webpackChunkName: "planning" */ '../components/PlanningView.vue'),
       },
       {
         path: ':id',

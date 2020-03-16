@@ -26,9 +26,14 @@
           class="text-right body-2 mt-1"
         >
           <span
+            v-if="!otpGenerated"
             @click="sendOtp"
             style="cursor: pointer;"
             v-text="$t('infinity.auth.login.otpForm.resendOtp')"
+          ></span>
+          <span
+            v-else
+            v-text="$t('infinity.auth.login.otpForm.resendOtpIn', { time: resendTimer })"
           ></span>
         </p>
         <div v-if="otpSent">
@@ -77,6 +82,9 @@ export default {
     return {
       phoneNumber: null,
       otp: null,
+      otpGenerated: false,
+      interval: null,
+      resendTimer: 30,
     };
   },
   computed: {
@@ -89,9 +97,20 @@ export default {
       this.setLoginWithOtp(null);
     },
     async sendOtp() {
-      await this.generateOtp({
+      this.otpGenerated = await this.generateOtp({
         phoneNumber: this.phoneNumber,
       });
+      if (this.otpGenerated) {
+        const self = this;
+        this.interval = setInterval(() => {
+          self.resendTimer -= 1;
+          if (self.resendTimer <= 0) {
+            clearInterval(self.interval);
+            self.otpGenerated = false;
+            self.resendTimer = 30;
+          }
+        }, 1000);
+      }
     },
     async login() {
       const success = await this.loginWithOtp({

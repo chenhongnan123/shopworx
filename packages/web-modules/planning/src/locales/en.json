@@ -1,5 +1,20 @@
 {
   "planning": {
-    "title": "Planning"
+    "title": "Planning",
+    "onboarding": {
+      "steps": {
+        "assetpartmatrix": {
+          "title": "Asset part matrix",
+          "selectMasters": "Select masters for planning",
+          "importData": "Auto generated matrix",
+          "matchColumns": "Select fields",
+          "reviewData": "Review matrix data"
+        },
+        "planning": {
+          "title": "Planning",
+          "matchColumns": "Select fields"
+        }
+      }
+    }
   }
 }

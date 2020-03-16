@@ -41,7 +41,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['getMe']),
     ...mapActions('onboarding', ['initOnboarding']),
   },
 };

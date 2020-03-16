@@ -61,7 +61,7 @@ import { AgGridVue } from 'ag-grid-vue';
 import AgGridService from '@shopworx/services/util/agGrid.service';
 
 export default {
-  name: 'ReviewOnboardingData',
+  name: 'ReviewData',
   components: {
     AgGridVue,
   },
@@ -70,16 +70,12 @@ export default {
       type: Boolean,
       default: false,
     },
-    tags: {
-      type: Array,
-      required: true,
-    },
     importedData: {
       type: Array,
       required: true,
     },
-    matchedColumns: {
-      type: Object,
+    selectedTags: {
+      type: Array,
       required: true,
     },
   },
@@ -89,7 +85,6 @@ export default {
       isValid: true,
       gridApi: null,
       columnDefs: [],
-      filteredTags: [],
       gridOptions: null,
       gridColumnApi: null,
       defaultColDef: null,
@@ -97,7 +92,7 @@ export default {
     };
   },
   watch: {
-    matchedColumns() {
+    selectedTags() {
       this.setRowData();
       this.setColumnDefs();
     },
@@ -122,14 +117,14 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    this.gridApi.sizeColumnsToFit();
+    // this.gridApi.sizeColumnsToFit();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     validateData(data) {
       this.isValid = true;
       data.forEach((d) => {
-        this.filteredTags.forEach((t) => {
+        this.selectedTags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
             if (val === null || val === '' || val === undefined) {
@@ -140,31 +135,23 @@ export default {
       });
     },
     setRowData() {
+      const keys = this.selectedTags.map((t) => t.tagName);
       const filteredData = this.importedData
-        .map((data) => this.filterData(this.matchedColumns, data));
-      const renamedData = filteredData.map((data) => this.renameKeys(this.matchedColumns, data));
-      this.rowData = renamedData;
+        .map((data) => this.filterData(keys, data));
+      this.rowData = filteredData;
     },
     setColumnDefs() {
-      this.filteredTags = this.tags
-        .filter((tag) => Object.values(this.matchedColumns).includes(tag.tagName));
-      this.columnDefs = this.filteredTags.map((tag) => ({
+      this.columnDefs = this.selectedTags.map((tag) => ({
         headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
         field: tag.tagName,
         cellEditor: AgGridService.getCellEditor(tag.emgTagType),
         cellRenderer: AgGridService.getCellRenderer(tag.emgTagType),
       }));
     },
-    filterData(keysMap, obj) {
-      return Object.keys(keysMap)
+    filterData(keys, obj) {
+      return keys
         .map((k) => (k in obj ? { [k]: obj[k] } : null))
         .reduce((res, o) => Object.assign(res, o), {});
-    },
-    renameKeys(keysMap, obj) {
-      return Object.keys(obj).reduce((acc, key) => ({
-        ...acc,
-        ...{ [keysMap[key] || key]: obj[key] },
-      }), {});
     },
     isFirstColumn(params) {
       const displayedColumns = params.columnApi.getAllDisplayedColumns();
@@ -172,7 +159,7 @@ export default {
       return thisIsFirstColumn;
     },
     getNewRowItem() {
-      return this.tags.reduce((acc, tag) => {
+      return this.selectedTags.reduce((acc, tag) => {
         acc[tag.tagName] = null;
         return acc;
       }, {});
@@ -191,7 +178,7 @@ export default {
     reviewData() {
       const data = {
         data: this.rowData,
-        tags: this.filteredTags,
+        tags: this.selectedTags,
       };
       this.validateData(this.rowData);
       if (this.isValid) {

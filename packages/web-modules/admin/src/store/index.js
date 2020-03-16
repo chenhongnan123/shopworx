@@ -5,7 +5,12 @@ export default ({
   state: {
     items: [
       {
-        header: 'admin',
+        header: 'account',
+      },
+      {
+        title: 'info',
+        icon: '$info',
+        to: 'info',
       },
       {
         title: 'users',
@@ -21,6 +26,14 @@ export default ({
         title: 'alerts',
         icon: '$alerts',
         to: 'alerts',
+      },
+      {
+        header: 'payment',
+      },
+      {
+        title: 'billing',
+        icon: '$billing',
+        to: 'billing',
       },
     ],
     loading: false,

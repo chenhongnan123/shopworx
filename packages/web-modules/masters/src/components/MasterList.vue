@@ -34,6 +34,9 @@ export default {
   name: 'MasterList',
   computed: {
     ...mapGetters('masters', ['formattedElements']),
+    id() {
+      return this.$route.params.id;
+    },
   },
   created() {
     this.redirect();
@@ -42,10 +45,13 @@ export default {
     formattedElements() {
       this.redirect();
     },
+    id() {
+      this.redirect();
+    },
   },
   methods: {
     redirect() {
-      if (this.$route.params.id === undefined && !this.$vuetify.breakpoint.smAndDown) {
+      if (this.id === undefined && !this.$vuetify.breakpoint.smAndDown) {
         if (this.formattedElements && this.formattedElements.length) {
           const index = this.formattedElements.findIndex((elem) => elem.title);
           const { to } = this.formattedElements.find((item, i) => index === i);
