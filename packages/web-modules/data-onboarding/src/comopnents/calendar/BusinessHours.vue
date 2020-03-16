@@ -131,8 +131,24 @@ export default {
     getEndTime(time) {
       const [hours, mins] = time.split(':');
       const actualSecs = '59';
-      const actualMins = mins !== '00' ? parseInt(mins, 10) - 1 : '59';
-      let actualHour = mins !== '00' ? parseInt(hours, 10) : parseInt(hours, 10) - 1;
+      let actualMins = null;
+      let actualHour = null;
+      if (mins !== '00') {
+        actualMins = (parseInt(mins, 10) - 1).toString().length === 1
+          ? `0${parseInt(mins, 10) - 1}`
+          : parseInt(mins, 10) - 1;
+      } else {
+        actualMins = '59';
+      }
+      if (mins === '00') {
+        actualHour = (parseInt(hours, 10) - 1).toString().length === 1
+          ? `0${parseInt(hours, 10) - 1}`
+          : parseInt(hours, 10) - 1;
+      } else {
+        actualHour = (parseInt(hours, 10)).toString().length === 1
+          ? `0${parseInt(hours, 10)}`
+          : parseInt(hours, 10);
+      }
       if (actualHour === -1) {
         actualHour = 23;
       }
