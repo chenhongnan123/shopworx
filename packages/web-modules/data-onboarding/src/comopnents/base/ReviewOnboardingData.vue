@@ -132,7 +132,7 @@ export default {
         this.filteredTags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
-            if (!val) {
+            if (val === null || val === '' || val === undefined) {
               this.isValid = false;
             }
           }

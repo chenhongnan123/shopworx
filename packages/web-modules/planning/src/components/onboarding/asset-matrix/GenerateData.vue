@@ -72,6 +72,10 @@ export default {
       type: Array,
       required: true,
     },
+    assetId: {
+      type: Number,
+      required: true,
+    },
   },
   created() {
     this.mapTags();
@@ -140,7 +144,7 @@ export default {
     },
     async generateData() {
       const elements = this.masters.map((master) => master.element);
-      await this.generateMatrix(elements);
+      await this.generateMatrix({ elements, assetId: this.assetId });
     },
     async addRows() {
       this.gridApi.showLoadingOverlay();
@@ -154,7 +158,7 @@ export default {
         this.tags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
-            if (!val) {
+            if (val === null || val === '' || val === undefined) {
               this.isValid = false;
             }
           }

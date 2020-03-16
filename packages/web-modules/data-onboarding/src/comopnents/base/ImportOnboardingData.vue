@@ -137,7 +137,7 @@ export default {
         this.tags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagDescription];
-            if (!val) {
+            if (val === null || val === '' || val === undefined) {
               this.isValid = false;
             }
           }
