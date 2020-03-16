@@ -29,8 +29,8 @@ class ElementService {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
   
-  getRecords(elementName) {
-    return this.request.get(`/server/elements/${elementName}/records`);
+  getRecords(elementName, queryParam) {
+    return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
   }
   
   deleteRecord(elementName, id) {

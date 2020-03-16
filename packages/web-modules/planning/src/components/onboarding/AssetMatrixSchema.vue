@@ -32,6 +32,7 @@
           <generate-data
             :masters="selectedMaster"
             :masterTags="tags"
+            :assetId="assetId"
             v-else-if="index === 1"
             @data-imported="onDataImport"
           />

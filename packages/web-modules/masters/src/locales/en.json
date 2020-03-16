@@ -4,7 +4,8 @@
     "categories": {
       "asset": "Assets",
       "reason": "Reasons",
-      "calendar": "Calendar"
+      "calendar": "Calendar",
+      "other": "Other"
     },
     "elements": {
       "tool": "Tools",

@@ -211,11 +211,14 @@ export default ({
       return items;
     },
 
-    generateMatrix: async ({ commit, dispatch }, elements) => {
+    generateMatrix: async ({ commit, dispatch }, { elements, assetId }) => {
       if (elements && elements.length) {
-        const getAllRecords = elements.map(
-          (element) => dispatch('element/getRecords', element, { root: true }),
-        );
+        const getAllRecords = elements
+          .map((element) => dispatch(
+            'element/getRecords',
+            { elementName: element, query: `?query=assetId==${assetId}` },
+            { root: true },
+          ));
         const records = await Promise.all(getAllRecords);
         const result = records.reduce((acc, cur) => acc
           .flatMap((x) => cur.map((y) => ({ ...x, ...y }))), [[]]);
@@ -224,7 +227,7 @@ export default ({
     },
 
     getPlans: async ({ commit, dispatch }) => {
-      const records = await dispatch('element/getRecords', 'planning', { root: true });
+      const records = await dispatch('element/getRecords', { elementName: 'planning' }, { root: true });
       if (records) {
         commit('setPlans', records);
       }

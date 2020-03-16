@@ -37,7 +37,7 @@ export default ({
             commit('setDataLoading', true);
             commit('setElementError', false);
             commit('setMaster', master);
-            const records = await dispatch('element/getRecords', elementName, { root: true });
+            const records = await dispatch('element/getRecords', { elementName }, { root: true });
             if (records && records.length) {
               commit('setRecords', records);
             }

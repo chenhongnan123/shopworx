@@ -192,7 +192,7 @@ export default ({
               ...record,
               assetId,
             };
-            const rec = await dispatch('getRecords', element.elementName);
+            const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecord', {
@@ -240,7 +240,7 @@ export default ({
               ...record,
               assetId,
             }));
-            const rec = await dispatch('getRecords', element.elementName);
+            const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecord', {
@@ -308,9 +308,9 @@ export default ({
       return true;
     },
 
-    getRecords: async ({ commit }, elementName) => {
+    getRecords: async ({ commit }, { elementName, query = '' }) => {
       try {
-        const { data } = await ElementService.getRecords(elementName);
+        const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
           return data.results;
         }
