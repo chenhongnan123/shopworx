@@ -52,6 +52,10 @@ class UserService {
   getRoles() {
     return this.request.get('/server/role');
   }
+
+  getUsers() {
+    return this.request.get('/server/users');
+  }
 }
 
 export default new UserService();
