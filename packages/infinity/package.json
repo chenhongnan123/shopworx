@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/infinity",
-  "version": "4.1.0-beta.0",
+  "version": "4.1.0-beta.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,12 +9,12 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@shopworx/admin": "^4.1.0-beta.0",
+    "@shopworx/admin": "^4.1.0-beta.1",
     "@shopworx/assets": "^4.1.0-beta.0",
-    "@shopworx/data-onboarding": "^4.1.0-beta.0",
-    "@shopworx/masters": "^4.1.0-beta.0",
-    "@shopworx/planning": "^4.1.0-beta.0",
-    "@shopworx/services": "^4.1.0-beta.0",
+    "@shopworx/data-onboarding": "^4.1.0-beta.1",
+    "@shopworx/masters": "^4.1.0-beta.1",
+    "@shopworx/planning": "^4.1.0-beta.1",
+    "@shopworx/services": "^4.1.0-beta.1",
     "@shopworx/ui-components": "^4.1.0-beta.0",
     "core-js": "^3.6.4",
     "lodash.camelcase": "^4.3.0",
