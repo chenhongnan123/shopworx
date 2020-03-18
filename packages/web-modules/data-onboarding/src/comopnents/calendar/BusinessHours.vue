@@ -5,11 +5,11 @@
         class="mt-1 text-justify"
         v-text="$t('onboarding.steps.calendar.businessHoursNote')"
       ></p>
-      <v-row v-for="(rountine, index) in routines" :key="index">
-        <v-col cols="12" md="3">
+      <v-row v-for="(routine, index) in routines" :key="index">
+        <v-col cols="12" md="2">
           <v-select
             outlined
-            v-model="rountine.type"
+            v-model="routine.type"
             :items="items"
             item-text="text"
             item-value="value"
@@ -17,19 +17,39 @@
             label="Type"
           ></v-select>
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4" v-if="routine.type === 'shift'">
           <v-text-field
             outlined
-            v-model="rountine.name"
+            v-model="routine.name"
             hide-details
             type="text"
             label="Name"
           ></v-text-field>
         </v-col>
+        <template v-else>
+          <v-col cols="12" md="3">
+            <v-text-field
+              outlined
+              v-model="routine.name"
+              hide-details
+              type="text"
+              label="Name"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="1">
+            <v-select
+              outlined
+              v-model="routine.shift"
+              :items="shifts"
+              hide-details
+              label="Shift name"
+            ></v-select>
+          </v-col>
+        </template>
         <v-col cols="12" md="2">
           <v-text-field
             outlined
-            v-model="rountine.starttime"
+            v-model="routine.starttime"
             hide-details
             type="time"
             label="Start time"
@@ -38,7 +58,7 @@
         <v-col cols="12" md="2">
           <v-text-field
             outlined
-            v-model="rountine.endtime"
+            v-model="routine.endtime"
             hide-details
             type="time"
             label="End time"
@@ -75,6 +95,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { getDurationBetweenTime } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'BusinessHours',
@@ -102,10 +123,24 @@ export default {
       routines: [{
         type: 'shift',
         name: 'Shift 1',
+        shift: 'Shift 1',
+        duration: null,
         starttime: '08:00',
         endtime: '14:00',
       }],
     };
+  },
+  computed: {
+    shifts() {
+      let shifts = [];
+      if (this.routines && this.routines.length) {
+        const shiftMap = this.routines
+          .filter((r) => r.type === 'shift' && r.name)
+          .map((r) => r.name);
+        shifts = [...new Set(shiftMap)];
+      }
+      return shifts;
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -113,6 +148,8 @@ export default {
       this.routines.push({
         type: 'shift',
         name: null,
+        shift: null,
+        duration: null,
         starttime: null,
         endtime: null,
       });
@@ -174,10 +211,36 @@ export default {
     },
     isSumInvalid() {
       const sum = this.routines.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
+      console.log(sum);
       return !!sum;
     },
+    isEmptyName(records) {
+      return records.some((routine) => !routine.name);
+    },
+    isEmptyShift(records) {
+      return records.some((routine) => !routine.shift);
+    },
     saveHours() {
-      if (this.isInvalidHour()) {
+      const records = this.routines.map((routine) => ({
+        ...routine,
+        shift: routine.type === 'shift' ? routine.name : routine.shift,
+        duration: getDurationBetweenTime(routine.endtime, routine.starttime),
+        starttime: this.getStartTime(routine.starttime),
+        endtime: this.getEndTime(routine.endtime),
+      }));
+      if (this.isEmptyName(records)) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'HOUR_NAME_REQUIRED',
+        });
+      } else if (this.isEmptyShift(records)) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'HOUR_SHIFT_REQUIRED',
+        });
+      } else if (this.isInvalidHour()) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -196,15 +259,11 @@ export default {
           message: 'INVALID_HOURS_SUM',
         });
       } else {
-        const records = this.routines.map((routine) => ({
-          ...routine,
-          starttime: this.getStartTime(routine.starttime),
-          endtime: this.getEndTime(routine.endtime),
-        }));
         const payload = {
           ...this.category,
           records,
         };
+        console.log(payload);
         this.$emit('hours-provisioned', payload);
       }
     },
