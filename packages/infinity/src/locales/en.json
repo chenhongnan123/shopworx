@@ -54,6 +54,7 @@
       "INVALID_LOGIN_DETAILS": "Login failed: Invalid username or password.",
       "EMAIL_NOT_FOUND": "Login failed: Invalid email",
       "USER_NOT_FOUND": "Login failed: Invalid user",
+      "INVITE_FAILED": "Could not send invitatoin. Please try again.",
       "INCORRECT_PASSWORD": "Login failed: Invalid password.",
       "MOBILE_NUMBER_NOT_FOUND": "Send OTP failed: Invalid mobile number.",
       "INVALID_OTP": "Login failed: Invalid OTP.",
@@ -74,7 +75,8 @@
       "EMPTY_HOLIDAY_NAME": "One or more holiday names are empty. Please verify your data."
     },
     "success": {
-      "OTP_SENT": "OTP sent."
+      "OTP_SENT": "OTP sent.",
+      "INVITE_SENT": "Invitation sent."
     },
     "help": {
       "title": "Help"
