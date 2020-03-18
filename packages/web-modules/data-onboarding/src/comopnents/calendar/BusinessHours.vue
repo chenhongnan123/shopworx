@@ -211,7 +211,6 @@ export default {
     },
     isSumInvalid() {
       const sum = this.routines.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      console.log(sum);
       return !!sum;
     },
     isEmptyName(records) {
@@ -263,7 +262,6 @@ export default {
           ...this.category,
           records,
         };
-        console.log(payload);
         this.$emit('hours-provisioned', payload);
       }
     },

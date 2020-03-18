@@ -1,6 +1,9 @@
 <template>
   <div>
-    <planning-init v-if="!isOnboardingComplete" />
+    <span v-if="loading">
+      Loading ...
+    </span>
+    <planning-init v-else-if="!isOnboardingComplete" />
     <template v-else>
       <planning-toolbar />
       <v-fade-transition mode="out-in">
@@ -20,6 +23,11 @@ export default {
   components: {
     PlanningToolbar,
     PlanningInit,
+  },
+  data() {
+    return {
+      loading: false,
+    };
   },
   computed: {
     ...mapState('planning', ['isOnboardingComplete']),

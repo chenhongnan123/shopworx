@@ -201,7 +201,8 @@ export default ({
             isEditable: true,
           };
           commit('setStep', lastCompleteItemIndex + 2);
-        } else {
+        }
+        if (lastNonCompleteIndex === -1) {
           commit('setIsOnboardingComplete', true);
         }
         commit('setOnboardingItems', items);
