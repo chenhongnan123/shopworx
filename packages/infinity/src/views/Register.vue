@@ -1,80 +1,56 @@
 <template>
-  <swx-fullscreen-layout>
-    <template slot="navbarItems">
-      <infinity-account-menu :showProfile="false" />
-    </template>
-    <v-card flat class="transparent">
-      <p
-        class="text-center primary--text display-2 font-weight-medium"
-        v-text="$t('infinity.user.register.title')"
-      ></p>
-      <p
-        class="text-center title font-weight-regular"
-        v-text="$t('infinity.user.register.subTitle')"
-      ></p>
-      <v-row>
-        <v-col
-          md="6"
-          cols="12"
-          class="text-center"
-          v-if="$vuetify.breakpoint.mdAndUp"
-        >
-          <v-img
-            :src="require(`@shopworx/assets/svgs/${userInfoSvg}.svg`)"
-            contain
-            height="330"
-          >
-          </v-img>
+  <v-content>
+    <auth-header />
+    <v-container fill-height>
+      <v-row
+        align="center"
+        justify="center"
+        :no-gutters="$vuetify.breakpoint.smAndDown"
+      >
+        <v-col cols="12" md="6" lg="5" xl="4">
+          <v-fade-transition mode="out-in">
+            <create-account v-if="!isAccountCreated" />
+            <create-password
+              v-else
+              @success="onSuccess"
+            />
+          </v-fade-transition>
         </v-col>
-        <v-col
-          md="6"
-          cols="12"
-        >
-          <register-user @success="success" />
+        <v-col v-if="$vuetify.breakpoint.mdAndUp" md="6" xl="5">
+          <v-img
+            :src="require(`@shopworx/assets/illustrations/${registerIllustration}.svg`)"
+            contain
+          />
         </v-col>
       </v-row>
-    </v-card>
-  </swx-fullscreen-layout>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import SwxFullscreenLayout from '@shopworx/ui-components/core/SwxFullscreenLayout.vue';
-import InfinityAccountMenu from '@/components/core/navbar/InfinityAccountMenu.vue';
-import RegisterUser from '@/components/user/register/RegisterUser.vue';
+import { mapGetters } from 'vuex';
+import AuthHeader from '@/components/auth/AuthHeader.vue';
+import CreateAccount from '@/components/user/CreateAccount.vue';
+import CreatePassword from '@/components/user/CreatePassword.vue';
 
 export default {
   name: 'Register',
-  metaInfo() {
-    return {
-      title: 'Register',
-    };
-  },
   components: {
-    SwxFullscreenLayout,
-    InfinityAccountMenu,
-    RegisterUser,
+    AuthHeader,
+    CreateAccount,
+    CreatePassword,
   },
   computed: {
-    ...mapGetters('user', ['isRegistrationComplete']),
-    userInfoSvg() {
+    ...mapGetters('user', ['isAccountCreated']),
+    registerIllustration() {
       return this.$vuetify.theme.dark
-        ? 'user-info-dark'
-        : 'user-info-light';
+        ? 'register-dark'
+        : 'register-light';
     },
   },
-  created() {
-    if (this.isRegistrationComplete) {
-      this.$router.replace({ name: 'home' });
-    }
-  },
   methods: {
-    ...mapActions('user', ['activateUser']),
-    async success() {
-      const activated = await this.activateUser();
-      if (activated) {
-        this.$router.replace({ name: 'invite' });
-      }
+    onSuccess() {
+      this.$router.replace({ name: 'onboarding' });
     },
   },
 };

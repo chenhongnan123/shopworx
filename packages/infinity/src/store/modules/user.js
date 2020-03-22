@@ -1,18 +1,20 @@
 import UserService from '@shopworx/services/api/user.service';
-import { set } from '@shopworx/services/util/store.service';
+import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
     me: null,
-    mySolutions: [],
-    activeSite: null,
     roles: [],
+    userState: null,
+    activeSite: null,
+    mySolutions: [],
   },
   mutations: {
     setMe: set('me'),
-    setMySolutions: set('mySolutions'),
-    setActiveSite: set('activeSite'),
     setRoles: set('roles'),
+    setUserState: set('userState'),
+    setActiveSite: set('activeSite'),
+    setMySolutions: set('mySolutions'),
   },
   actions: {
     getMe: async ({ commit }) => {
@@ -21,6 +23,7 @@ export default ({
         if (data && data.results) {
           commit('setMe', data.results);
           commit('setActiveSite', data.results.activeSiteId);
+          commit('setUserState', data.results.user.userState.toUpperCase().trim());
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -82,7 +85,7 @@ export default ({
       return true;
     },
 
-    updateUser: async ({ commit }, payload) => {
+    updateUser: async ({ commit, dispatch }, payload) => {
       try {
         const { data } = await UserService.updateUser(payload);
         if (data && data.errors) {
@@ -95,14 +98,18 @@ export default ({
           });
           return false;
         }
+        const me = await dispatch('getMe');
+        if (me) {
+          return true;
+        }
       } catch (e) {
         console.error(e);
         return false;
       }
-      return true;
+      return false;
     },
 
-    updatePassword: async ({ commit }, payload) => {
+    updatePassword: async ({ commit, dispatch }, payload) => {
       try {
         const { data } = await UserService.updatePassword(payload);
         if (data && data.errors) {
@@ -115,11 +122,15 @@ export default ({
           });
           return false;
         }
+        const me = await dispatch('getMe');
+        if (me) {
+          return true;
+        }
       } catch (e) {
         console.error(e);
         return false;
       }
-      return true;
+      return false;
     },
 
     activateUser: async ({ state, commit }) => {
@@ -130,26 +141,6 @@ export default ({
       }
       try {
         const { data } = await UserService.activateUser(id);
-        if (data && data.errors) {
-          commit('helper/setAlert', {
-            show: true,
-            type: 'error',
-            message: data.errors.errorCode,
-          }, {
-            root: true,
-          });
-          return false;
-        }
-      } catch (e) {
-        console.error(e);
-        return false;
-      }
-      return true;
-    },
-
-    isUsernameAvailable: async ({ commit }, { username }) => {
-      try {
-        const { data } = await UserService.isUsernameAvailable(username);
         if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -202,11 +193,18 @@ export default ({
     },
   },
   getters: {
-    isRegistrationComplete: ({ me }) => {
-      if (me && me.user.userState) {
-        return me.user.userState.toUpperCase().trim() !== 'REGISTERED';
+    isAccountCreated: ({ userState }) => {
+      if (userState) {
+        return userState !== 'REGISTERED';
       }
-      return null;
+      return false;
+    },
+
+    isPasswordCreated: ({ userState }) => {
+      if (userState) {
+        return userState !== 'REGISTERED' && userState !== 'RESET';
+      }
+      return false;
     },
 
     isOnboardingComplete: ({ me, activeSite }) => {
@@ -214,7 +212,7 @@ export default ({
         const site = me.site.find((s) => s.id === activeSite);
         return site.onboardingCompleted;
       }
-      return null;
+      return false;
     },
 
     isAdmin: ({ me }) => {

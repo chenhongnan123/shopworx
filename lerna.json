@@ -2,10 +2,11 @@
   "packages": [
     "packages/assets",
     "packages/infinity",
+    "packages/infinity-modules/*",
     "packages/origin",
+    "packages/origin-modules/*",
     "packages/services",
-    "packages/ui-components",
-    "packages/web-modules/*"
+    "packages/ui-components"
   ],
-  "version": "4.1.0-beta.2"
+  "version": "0.0.0"
 }

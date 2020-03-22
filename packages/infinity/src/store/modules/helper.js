@@ -1,4 +1,4 @@
-import { set, toggle } from '@shopworx/services/util/store.service';
+import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
