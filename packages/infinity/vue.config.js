@@ -4,7 +4,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/server': {
-        target: 'http://demo.shopworx.io:1013/server',
+        target: 'http://13.127.85.87/server',
         changeOrigin: true,
         pathRewrite: {
           '^/server': '',
