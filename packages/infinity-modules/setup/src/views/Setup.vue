@@ -23,7 +23,7 @@
 
 <script>
 import AuthHeader from '@/components/auth/AuthHeader.vue';
-import Onboarding from '@/components/components/Onboarding.vue';
+import Onboarding from '../components/Onboarding.vue';
 
 export default {
   name: 'Setup',

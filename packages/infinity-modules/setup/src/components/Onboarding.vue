@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import ImportMasterData from '@/components/onboarding/import/ImportMasterData.vue';
-import OnboardCalendar from '@/components/onboarding/calendar/OnboardCalendar.vue';
-import InviteUsers from '@/components/onboarding/invite/InviteUsers.vue';
+import ImportMasterData from './import/ImportMasterData.vue';
+import OnboardCalendar from './calendar/OnboardCalendar.vue';
+import InviteUsers from './invite/InviteUsers.vue';
 
 export default {
   name: 'Onboarding',

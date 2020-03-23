@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import ProcessMasterData from '@/components/onboarding/import/ProcessMasterData.vue';
+import ProcessMasterData from './ProcessMasterData.vue';
 
 export default {
   name: 'ImportMasterData',

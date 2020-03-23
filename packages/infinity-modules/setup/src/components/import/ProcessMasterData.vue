@@ -60,7 +60,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import ReviewMasterData from '@/components/onboarding/import/ReviewMasterData.vue';
+import ReviewMasterData from './ReviewMasterData.vue';
 
 export default {
   name: 'ProcessMasterData',

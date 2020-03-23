@@ -12,6 +12,8 @@ import vuetify from './plugins/vuetify';
 import './plugins/perfect-scrollbar';
 import './plugins/vee-validate';
 
+import './modules';
+
 Vue.config.productionTip = false;
 
 new Vue({

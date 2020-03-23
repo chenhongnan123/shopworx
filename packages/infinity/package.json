@@ -9,8 +9,9 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@shopworx/assets": "0.0.0",
-    "@shopworx/services": "0.0.0",
+    "@shopworx/assets": "^0.0.0",
+    "@shopworx/services": "^0.0.0",
+    "@shopworx/setup": "^0.0.0",
     "core-js": "^3.6.4",
     "lodash.camelcase": "^4.3.0",
     "lodash.debounce": "^4.0.8",
