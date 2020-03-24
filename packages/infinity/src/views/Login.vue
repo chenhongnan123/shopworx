@@ -38,7 +38,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['isAccountCreated', 'isPasswordCreated', 'isOnboardingComplete']),
+    ...mapGetters('user', ['isAccountUpdated', 'isPasswordUpdated', 'isOnboardingComplete']),
     loginIllustration() {
       return this.$vuetify.theme.dark
         ? 'login-dark'
@@ -47,9 +47,9 @@ export default {
   },
   methods: {
     onSuccess() {
-      if (!this.isAccountCreated) {
+      if (!this.isAccountUpdated) {
         this.$router.replace({ name: 'welcome' });
-      } else if (this.isAccountCreated && !this.isPasswordCreated) {
+      } else if (this.isAccountUpdated && !this.isPasswordUpdated) {
         this.$router.replace({ name: 'register' });
       } else if (!this.isOnboardingComplete) {
         this.$router.replace({ name: 'onboarding' });

@@ -1,10 +1,10 @@
 <template>
   <v-card flat class="transparent">
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
-      Create your ShopWorx Account
+      Update your ShopWorx Account
     </div>
     <validation-observer #default="{ invalid, validated, passes }">
-      <v-form @submit.prevent="passes(onCreateAccount)">
+      <v-form @submit.prevent="passes(onUpdateAccount)">
         <v-card-text>
           <validation-provider
             rules="required"
@@ -67,13 +67,14 @@
         <v-card-actions>
           <v-btn
             block
+            type="submit"
             color="primary"
             class="text-none"
             :loading="loading"
             :disabled="invalid || !validated"
           >
             <v-icon left>mdi-account-check-outline</v-icon>
-            Create account
+            Update account
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -85,7 +86,7 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'CreateAccount',
+  name: 'UpdateAccount',
   data() {
     return {
       email: '',
@@ -97,7 +98,7 @@ export default {
   },
   methods: {
     ...mapActions('user', ['updateUser']),
-    async onCreateAccount() {
+    async onUpdateAccount() {
       this.loading = true;
       const payload = {
         userState: 'RESET',

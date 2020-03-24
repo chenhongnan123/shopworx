@@ -1,215 +1,153 @@
 <template>
-  <div>
-    <span>
-      {{ message }}
-    </span>
-    <v-btn
-      text
-      small
-      v-if="error"
-      color="primary"
-      class="text-none"
-    >
-      Review
-    </v-btn>
-  </div>
+  <v-dialog
+    persistent
+    scrollable
+    v-model="dialog"
+    :overlay="false"
+    max-width="700px"
+    transition="dialog-transition"
+  >
+    <template #activator="{ on }">
+      <v-btn
+        text
+        v-on="on"
+        color="primary"
+        class="text-none pa-0"
+      >
+        Review
+      </v-btn>
+    </template>
+    <v-card>
+      <v-card-title primary-title>
+        Review {{ title }}
+        <v-spacer></v-spacer>
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          @click="showColumnMappings = true"
+          v-if="reviewType === 'data' && !showColumnMappings"
+        >
+          Update columns
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          @click="uploadFile"
+        >
+          Re-import
+        </v-btn>
+        <input
+          type="file"
+          accept=".csv"
+          ref="uploader"
+          class="d-none"
+          @change="onFileChanged"
+        >
+      </v-card-title>
+      <v-card-text class="pa-0">
+        <review-column
+          @save="columnReviewed"
+          :masterTags="masterTags"
+          :missingTags="missingTags"
+          @cancel="dialog = false"
+          v-if="reviewType === 'column' || showColumnMappings"
+          :matchedColumns="matchedColumns"
+        />
+        <review-data
+          :tags="tags"
+          :records="records"
+          @save="dataReviewed"
+          :missingData="missingData"
+          @cancel="dialog = false"
+          v-else-if="reviewType === 'data' && !showColumnMappings"
+          :invalidDataTypes="invalidDataTypes"
+          :duplicateColumnData="duplicateColumnData"
+        />
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import CSVParser from '@shopworx/services/util/csv.service';
+import ReviewColumn from './ReviewColumn.vue';
+import ReviewData from './ReviewData.vue';
 
 export default {
   name: 'ReviewMasterData',
   props: {
-    files: {
-      type: FileList,
+    title: {
+      type: String,
       required: true,
     },
-    data: {
-      type: Object,
+    tags: {
+      type: Array,
+      default: () => [],
+    },
+    records: {
+      type: Array,
+      default: () => [],
+    },
+    masterTags: {
+      type: Array,
+      default: () => [],
+    },
+    reviewType: {
+      type: String,
       required: true,
     },
+    missingData: {
+      type: Array,
+      default: () => [],
+    },
+    missingTags: {
+      type: Array,
+      default: () => [],
+    },
+    matchedColumns: {
+      type: Array,
+      default: () => [],
+    },
+    invalidDataTypes: {
+      type: Array,
+      default: () => [],
+    },
+    duplicateColumnData: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  components: {
+    ReviewColumn,
+    ReviewData,
   },
   data() {
     return {
-      file: null,
-      columns: [],
-      message: '',
-      error: false,
-      reviewedData: [],
-      reviewedTags: [],
-      extractedData: null,
-      matchedColumns: null,
+      dialog: false,
+      showColumnMappings: false,
     };
   },
-  computed: {
-    tagsNotInMatchedColumns() {
-      const tagNames = this.columns.map((col) => col.tagName);
-      return this.data.tags.filter((tag) => !tagNames.includes(tag.tagName));
-    },
-  },
-  async created() {
-    this.$emit('on-loading', {
-      index: this.data.index,
-      loading: true,
-    });
-    this.message = 'Starting...';
-    const records = await this.getElementRecords({
-      assetId: this.data.assetId,
-      elementName: this.data.element.elementName,
-    });
-    if (records && records.length) {
-      this.$emit('on-review', {
-        index: this.data.index,
-        success: true,
-      });
-      this.message = 'Records already exist!';
-    } else {
-      this.file = Array.from(this.files).find((f) => f.name === this.data.expectedFileName);
-      await this.processData();
-    }
-    this.$emit('on-loading', {
-      index: this.data.index,
-      loading: false,
-    });
-  },
   methods: {
-    ...mapActions('setup', ['getElementRecords']),
-    ...mapActions('element', ['createBulkRecords']),
-    async extractData(file) {
-      this.message = 'Extracting...';
+    uploadFile() {
+      this.$refs.uploader.click();
+    },
+    onFileChanged(e) {
+      const file = e && e !== undefined ? e.target.files[0] : null;
+      // e.target.value = '';
       if (file) {
-        const csvParser = new CSVParser();
-        try {
-          this.extractedData = await csvParser.parse(file);
-        } catch (e) {
-          this.error = true;
-          this.message = 'Cannot parse file!';
-          this.$emit('on-review', {
-            index: this.data.index,
-            success: !this.error,
-          });
-        }
-      } else {
-        this.error = true;
-        this.$emit('on-review', {
-          index: this.data.index,
-          success: !this.error,
-        });
-        this.message = 'No file found!';
+        this.$emit('file-imported', file);
+        this.dialog = false;
       }
     },
-    getKeysMap() {
-      return this.columns
-        .filter((item) => !item.ignore && item.tagName)
-        .reduce((acc, cur) => {
-          acc[cur.column] = cur.tagName;
-          return acc;
-        }, {});
+    columnReviewed(matchedColumns) {
+      this.$emit('column-reviewed', matchedColumns);
+      this.dialog = false;
+      this.showColumnMappings = false;
     },
-    isKeyMultiMapped() {
-      const cols = Object.values(this.getKeysMap());
-      const uniqueCols = [...new Set(cols)];
-      return cols.length !== uniqueCols.length;
-    },
-    matchColumns(tags, columns) {
-      this.message = 'Mappping...';
-      this.columns = columns.map((column) => {
-        const currentTag = tags.find((tag) => tag.tagDescription === column);
-        let tagName = null;
-        if (currentTag) {
-          ({ tagName } = currentTag);
-        }
-        return {
-          column,
-          tagName,
-          ignore: !tagName,
-        };
-      });
-      if (this.tagsNotInMatchedColumns.some((tag) => tag.required)) {
-        this.error = true;
-        this.message = 'Missing required colunms!';
-        this.$emit('on-review', {
-          index: this.data.index,
-          success: !this.error,
-        });
-      } else if (this.isKeyMultiMapped()) {
-        this.error = true;
-        this.message = 'Multiple columns with same name!';
-        this.$emit('on-review', {
-          index: this.data.index,
-          success: !this.error,
-        });
-      } else {
-        this.error = false;
-        this.matchedColumns = this.getKeysMap();
-      }
-    },
-    mapData(keysMap, obj) {
-      return Object.keys(keysMap)
-        .map((k) => (k in obj ? { [k]: obj[k] } : null))
-        .reduce((res, o) => Object.assign(res, o), {});
-    },
-    renameKeys(keysMap, obj) {
-      return Object.keys(obj).reduce((acc, key) => ({
-        ...acc,
-        ...{ [keysMap[key] || key]: obj[key] },
-      }), {});
-    },
-    validateRequiredData(data, tags) {
-      let isValid = true;
-      data.forEach((d) => {
-        tags.forEach((t) => {
-          if (t.required) {
-            const val = d[t.tagName];
-            if (val === null || val === '' || val === undefined) {
-              isValid = false;
-            }
-          }
-        });
-      });
-      return isValid;
-    },
-    reviewData(data, matchedColumns) {
-      const mappedData = data.map((d) => this.mapData(this.matchedColumns, d));
-      this.reviewedData = mappedData.map((d) => this.renameKeys(matchedColumns, d));
-    },
-    async processData() {
-      await this.extractData(this.file);
-      if (this.extractedData) {
-        this.matchColumns(this.data.tags, this.extractedData.meta.fields);
-        if (this.matchedColumns) {
-          this.reviewData(this.extractedData.data, this.matchedColumns);
-          this.reviewedTags = this.data.tags
-            .filter((tag) => Object.values(this.matchedColumns).includes(tag.tagName));
-          const valid = this.validateRequiredData(this.reviewedData, this.reviewedTags);
-          if (!valid) {
-            this.error = true;
-            this.message = 'Missing required data!';
-            this.$emit('on-review', {
-              index: this.data.index,
-              success: !this.error,
-            });
-          } else {
-            this.message = 'Importing...';
-            const recordsCreated = await this.createBulkRecords({
-              element: this.data.element,
-              tags: this.reviewedTags,
-              records: this.reviewedData,
-              assetId: this.data.assetId,
-            });
-            if (recordsCreated) {
-              this.error = false;
-              this.message = 'Imported!';
-              this.$emit('on-review', {
-                index: this.data.index,
-                success: !this.error,
-              });
-            }
-          }
-        }
-      }
+    dataReviewed(data) {
+      this.$emit('data-reviewed', data);
+      this.dialog = false;
     },
   },
 };

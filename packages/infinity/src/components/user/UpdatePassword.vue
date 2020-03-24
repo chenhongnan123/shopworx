@@ -1,7 +1,7 @@
 <template>
   <v-card flat class="transparent">
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
-      Create your ShopWorx Password
+      Update your ShopWorx Password
     </div>
     <validation-observer #default="{ invalid, validated, passes }">
       <v-form @submit.prevent="passes(onAccountCreation)">
@@ -45,7 +45,7 @@
             :disabled="invalid || !validated"
           >
             <v-icon left>mdi-lock-outline</v-icon>
-            Create password
+            Update password
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -57,7 +57,7 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'CreatePassword',
+  name: 'UpdatePassword',
   data() {
     return {
       password: '',
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     ...mapActions('user', ['updatePassword']),
-    async onCreateAccount() {
+    async onUpdateAccount() {
       this.loading = true;
       const payload = {
         userState: 'ACTIVE',

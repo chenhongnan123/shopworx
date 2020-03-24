@@ -9,8 +9,8 @@
       >
         <v-col cols="12" md="6" lg="5" xl="4">
           <v-fade-transition mode="out-in">
-            <create-account v-if="!isAccountCreated" />
-            <create-password
+            <update-account v-if="!isAccountUpdated" />
+            <update-password
               v-else
               @success="onSuccess"
             />
@@ -30,18 +30,18 @@
 <script>
 import { mapGetters } from 'vuex';
 import AuthHeader from '@/components/auth/AuthHeader.vue';
-import CreateAccount from '@/components/user/CreateAccount.vue';
-import CreatePassword from '@/components/user/CreatePassword.vue';
+import UpdateAccount from '@/components/user/UpdateAccount.vue';
+import UpdatePassword from '@/components/user/UpdatePassword.vue';
 
 export default {
   name: 'Register',
   components: {
     AuthHeader,
-    CreateAccount,
-    CreatePassword,
+    UpdateAccount,
+    UpdatePassword,
   },
   computed: {
-    ...mapGetters('user', ['isAccountCreated']),
+    ...mapGetters('user', ['isAccountUpdated']),
     registerIllustration() {
       return this.$vuetify.theme.dark
         ? 'register-dark'

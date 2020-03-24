@@ -193,14 +193,14 @@ export default ({
     },
   },
   getters: {
-    isAccountCreated: ({ userState }) => {
+    isAccountUpdated: ({ userState }) => {
       if (userState) {
         return userState !== 'REGISTERED';
       }
       return false;
     },
 
-    isPasswordCreated: ({ userState }) => {
+    isPasswordUpdated: ({ userState }) => {
       if (userState) {
         return userState !== 'REGISTERED' && userState !== 'RESET';
       }
