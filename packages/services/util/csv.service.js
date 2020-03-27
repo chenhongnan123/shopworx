@@ -18,6 +18,10 @@ class CSVParser {
       Papa.parse(file, opt);
     });
   }
+
+  unparse(data) {
+    return Papa.unparse(data);
+  }
 }
 
 export default CSVParser;
