@@ -34,6 +34,7 @@
             v-if="!otpSent"
             :disabled="loading"
             :loading="loadingOtp"
+            @click="onGenerateOtp"
             class="text-none pa-0"
           >
             Resend otp?
