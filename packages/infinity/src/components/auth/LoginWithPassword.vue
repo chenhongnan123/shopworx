@@ -1,5 +1,5 @@
 <template>
-  <validation-observer #default="{ invalid, validated, passes }">
+  <validation-observer #default="{ passes }">
     <v-form @submit.prevent="passes(onLogin)">
       <v-card-text>
         <identifier-input
@@ -19,6 +19,7 @@
             :disabled="loading"
             hide-details="auto"
             :error-messages="errors"
+            autocomplete="current-password"
             prepend-inner-icon="mdi-lock-outline"
           ></v-text-field>
         </validation-provider>
@@ -42,7 +43,6 @@
           color="primary"
           class="text-none"
           :loading="loading"
-          :disabled="invalid || !validated"
         >
           <v-icon left>mdi-shield-check-outline</v-icon>
           Login securely

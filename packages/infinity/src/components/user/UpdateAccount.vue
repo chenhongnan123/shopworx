@@ -3,7 +3,7 @@
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
       Update your ShopWorx Account
     </div>
-    <validation-observer #default="{ invalid, validated, passes }">
+    <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdateAccount)">
         <v-card-text>
           <validation-provider
@@ -71,7 +71,6 @@
             color="primary"
             class="text-none"
             :loading="loading"
-            :disabled="invalid || !validated"
           >
             <v-icon left>mdi-account-check-outline</v-icon>
             Update account

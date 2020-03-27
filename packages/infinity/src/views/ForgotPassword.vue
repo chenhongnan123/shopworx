@@ -4,7 +4,7 @@
     :title="'Reset password?'"
     :subTitle="'Enter your email or phone number'"
   >
-    <validation-observer #default="{ invalid, validated, passes }">
+    <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onResetPassword)">
         <v-card-text>
           <identifier-input
@@ -20,7 +20,6 @@
             color="primary"
             class="text-none"
             :loading="loading"
-            :disabled="invalid || !validated"
           >
             <v-icon left>mdi-lock-reset</v-icon>
             Reset password

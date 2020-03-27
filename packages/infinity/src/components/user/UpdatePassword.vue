@@ -3,7 +3,7 @@
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
       Update your ShopWorx Password
     </div>
-    <validation-observer #default="{ invalid, validated, passes }">
+    <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdatePassword)">
         <v-card-text>
           <validation-provider
@@ -18,6 +18,7 @@
               :disabled="loading"
               label="New password"
               :error-messages="errors"
+              autocomplete="new-password"
               prepend-inner-icon="mdi-lock-outline"
             ></v-text-field>
           </validation-provider>
@@ -32,6 +33,7 @@
               :error-messages="errors"
               label="Confirm password"
               v-model="confirmPassword"
+              autocomplete="new-password"
               prepend-inner-icon="mdi-lock-outline"
             ></v-text-field>
           </validation-provider>
@@ -43,7 +45,6 @@
             color="primary"
             class="text-none"
             :loading="loading"
-            :disabled="invalid || !validated"
           >
             <v-icon left>mdi-lock-outline</v-icon>
             Update password
