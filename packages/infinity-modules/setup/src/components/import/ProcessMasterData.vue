@@ -58,9 +58,9 @@
       </v-list>
       <v-btn
         block
-        v-if="valid"
         color="primary"
         class="text-none"
+        :disabled="!valid"
         @click="$emit('success')"
       >
         <v-icon left>mdi-chevron-triple-right</v-icon>

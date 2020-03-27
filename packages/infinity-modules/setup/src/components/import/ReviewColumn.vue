@@ -22,7 +22,7 @@
           ></span>
         </v-col>
         <v-col cols="5">
-          <v-select
+          <v-autocomplete
             clearable
             hide-details
             :items="masterTags"
@@ -31,7 +31,7 @@
             v-model="item.tagName"
             @change="mapColumn(index)"
             label="Lookup matching column"
-          ></v-select>
+          ></v-autocomplete>
         </v-col>
         <v-col cols="4">
           <v-switch

@@ -103,7 +103,7 @@ export default {
       const payload = {
         userState: 'RESET',
         emailId: this.email,
-        phoneNumber: this.phone,
+        phoneNumber: `91${this.phone}`,
         lastname: this.lastName,
         firstname: this.firstName,
       };

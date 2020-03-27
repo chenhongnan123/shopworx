@@ -1,13 +1,18 @@
 <template>
   <v-app>
+    <snackbar />
     <router-view />
   </v-app>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import Snackbar from '@/components/Snackbar.vue';
 
 export default {
+  components: {
+    Snackbar,
+  },
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('auth', ['sessionId']),

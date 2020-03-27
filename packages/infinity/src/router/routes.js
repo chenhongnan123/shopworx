@@ -1,7 +1,7 @@
 const routes = [
   {
     path: '/',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
   },
   {
     path: '/login',

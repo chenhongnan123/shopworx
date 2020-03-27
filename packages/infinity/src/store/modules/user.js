@@ -35,7 +35,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -57,7 +56,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -79,7 +77,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -103,7 +100,6 @@ export default ({
           return true;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return false;
@@ -122,12 +118,11 @@ export default ({
           });
           return false;
         }
-        const me = await dispatch('getMe');
-        if (me) {
+        const updatedMe = await dispatch('updateUser', { userState: 'ACTIVE' });
+        if (updatedMe) {
           return true;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return false;
@@ -152,7 +147,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -163,7 +157,6 @@ export default ({
         const { data } = await UserService.inviteUsers(payload);
         return data;
       } catch (e) {
-        console.error(e);
         return false;
       }
     },
@@ -186,10 +179,12 @@ export default ({
           }, {
             root: true,
           });
+          return false;
         }
       } catch (e) {
-        console.error(e);
+        return false;
       }
+      return true;
     },
   },
   getters: {

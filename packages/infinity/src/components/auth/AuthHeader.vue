@@ -8,7 +8,7 @@
     <img
       :src="require(`@shopworx/assets/logo/${shopworxLogo}.png`)"
       contain
-      height="50"
+      height="40"
     />
     <v-spacer></v-spacer>
   </v-app-bar>

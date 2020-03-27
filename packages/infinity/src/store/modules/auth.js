@@ -38,7 +38,7 @@ export default ({
           });
         }
       } catch (e) {
-        console.error(e);
+        return false;
       }
       return false;
     },
@@ -64,7 +64,7 @@ export default ({
           });
         }
       } catch (e) {
-        console.error(e);
+        return false;
       }
       return false;
     },
@@ -85,7 +85,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -105,7 +104,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -125,7 +123,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;

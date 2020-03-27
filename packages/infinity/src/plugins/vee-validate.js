@@ -5,21 +5,12 @@ import {
   // setInteractionMode,
   extend,
 } from 'vee-validate';
-import {
-  confirmed,
-  required,
-  digits,
-  email,
-  max,
-} from 'vee-validate/dist/rules';
+import * as rules from 'vee-validate/dist/rules';
 
 Vue.component('validation-observer', ValidationObserver);
 Vue.component('validation-provider', ValidationProvider);
 
 // setInteractionMode('eager');
-
-extend('confirmed', confirmed);
-extend('required', required);
-extend('digits', digits);
-extend('email', email);
-extend('max', max);
+Object.keys(rules).forEach((rule) => {
+  extend(rule, rules[rule]);
+});

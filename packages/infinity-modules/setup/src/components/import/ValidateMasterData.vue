@@ -87,6 +87,9 @@ export default {
     masterTags() {
       return this.data.tags;
     },
+    hiddenTags() {
+      return this.data.hiddenTags;
+    },
     assetId() {
       return this.data.assetId;
     },
@@ -132,11 +135,11 @@ export default {
     uploadFile() {
       this.$refs.uploader.click();
     },
-    onFileChanged(e) {
+    async onFileChanged(e) {
       this.file = e && e !== undefined ? e.target.files[0] : null;
       // e.target.value = '';
       if (this.file) {
-        this.processFileUpload();
+        await this.processFileUpload();
       }
     },
     async mapFile() {
@@ -218,11 +221,17 @@ export default {
           return acc;
         }, {});
     },
-    mapData() {
-      this.records = this.importedRows.map((row) => this.mapRow(row));
+    async mapData() {
+      const filteredData = this.importedRows.map((row) => this.filterData(row));
+      this.records = filteredData.map((data) => this.mapRow(data));
       this.tags = this.masterTags
         .filter((tag) => Object.values(this.mappedTags).includes(tag.tagName));
-      this.validateData();
+      await this.validateData();
+    },
+    filterData(obj) {
+      return Object.keys(this.mappedTags)
+        .map((k) => (k in obj ? { [k]: obj[k] } : null))
+        .reduce((res, o) => Object.assign(res, o), {});
     },
     mapRow(obj) {
       return Object.keys(obj).reduce((acc, key) => ({
@@ -230,7 +239,7 @@ export default {
         ...{ [this.mappedTags[key] || key]: obj[key] },
       }), {});
     },
-    validateData() {
+    async validateData() {
       this.missingData = this.missingRequiredData();
       this.duplicateColumnData = this.duplicateData();
       this.invalidDataTypes = this.validateDataType();
@@ -262,7 +271,7 @@ export default {
           success: !this.error,
         });
       } else {
-        this.createRecords();
+        await this.createRecords();
       }
     },
     missingRequiredData() {
@@ -323,7 +332,7 @@ export default {
       this.message = 'Importing...';
       const recordsCreated = await this.createBulkRecords({
         element: this.masterElement,
-        tags: this.tags,
+        tags: [...this.tags, ...this.hiddenTags],
         records: this.records,
         assetId: this.assetId,
       });
@@ -354,7 +363,7 @@ export default {
         this.mapColumns();
         this.validateColumns();
         if (this.mappedTags) {
-          this.mapData();
+          await this.mapData();
         }
       }
       this.$emit('on-loading', {
@@ -373,7 +382,7 @@ export default {
         this.mapColumns();
         this.validateColumns();
         if (this.mappedTags) {
-          this.mapData();
+          await this.mapData();
         }
       }
       this.$emit('on-loading', {
@@ -381,7 +390,7 @@ export default {
         loading: false,
       });
     },
-    processColumnReview(matchedColumns) {
+    async processColumnReview(matchedColumns) {
       this.$emit('on-loading', {
         index: this.index,
         loading: true,
@@ -389,20 +398,20 @@ export default {
       this.matchedColumns = matchedColumns;
       this.validateColumns();
       if (this.mappedTags) {
-        this.mapData();
+        await this.mapData();
       }
       this.$emit('on-loading', {
         index: this.index,
         loading: false,
       });
     },
-    processDataReview(records) {
+    async processDataReview(records) {
       this.$emit('on-loading', {
         index: this.index,
         loading: true,
       });
       this.records = records;
-      this.validateData();
+      await this.validateData();
       this.$emit('on-loading', {
         index: this.index,
         loading: false,

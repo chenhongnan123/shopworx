@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     onSuccess() {
-      this.$router.replace({ name: 'onboarding' });
+      this.$router.replace({ name: 'setup' });
     },
   },
 };

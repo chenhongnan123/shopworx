@@ -21,12 +21,16 @@ class ElementService {
     return this.request.post(`/server/elements/${elementName}/createbulkrecords`, payload);
   }
   
-  postRecords(elementName, payload) {
+  postRecord(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
   
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
+  }
+  
+  deleteRecord(elementName, id) {
+    return this.request.delete(`/server/elements/${elementName}/records/${id}`);
   }
 }
 

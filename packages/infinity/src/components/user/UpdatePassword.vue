@@ -4,7 +4,7 @@
       Update your ShopWorx Password
     </div>
     <validation-observer #default="{ invalid, validated, passes }">
-      <v-form @submit.prevent="passes(onAccountCreation)">
+      <v-form @submit.prevent="passes(onUpdatePassword)">
         <v-card-text>
           <validation-provider
             vid="password"
@@ -39,6 +39,7 @@
         <v-card-actions>
           <v-btn
             block
+            type="submit"
             color="primary"
             class="text-none"
             :loading="loading"
@@ -67,13 +68,15 @@ export default {
   },
   methods: {
     ...mapActions('user', ['updatePassword']),
-    async onUpdateAccount() {
+    async onUpdatePassword() {
       this.loading = true;
       const payload = {
-        userState: 'ACTIVE',
-        password: this.password,
+        newpassword: this.password,
       };
-      await this.updatePassword(payload);
+      const updated = await this.updatePassword(payload);
+      if (updated) {
+        this.$emit('success');
+      }
       this.loading = false;
     },
   },
