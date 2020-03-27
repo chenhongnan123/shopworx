@@ -45,6 +45,7 @@
         <business-holidays
           :loading="loading"
           :master="calendarData"
+          @skip="updateStep"
           @save="onHolidaysProvisioned"
         />
       </v-window-item>
@@ -124,6 +125,9 @@ export default {
         this.$emit('update-step');
       }
       this.loading = false;
+    },
+    updateStep() {
+      this.$emit('update-step');
     },
   },
 };

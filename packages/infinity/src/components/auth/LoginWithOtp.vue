@@ -1,5 +1,5 @@
 <template>
-  <validation-observer #default="{ invalid, validated, passes }">
+  <validation-observer #default="{ passes }">
     <v-form @submit.prevent="passes(onSubmit)">
       <v-card-text>
         <identifier-input
@@ -58,7 +58,6 @@
           color="primary"
           class="text-none"
           :loading="loadingOtp"
-          :disabled="invalid || !validated"
         >
           <v-icon left>mdi-send-outline</v-icon>
           Send OTP
@@ -70,7 +69,6 @@
           color="primary"
           class="text-none"
           :loading="loading"
-          :disabled="invalid || !validated"
         >
           <v-icon left>mdi-shield-check-outline</v-icon>
           Login securely

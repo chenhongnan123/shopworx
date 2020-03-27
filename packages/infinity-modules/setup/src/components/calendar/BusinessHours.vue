@@ -6,7 +6,7 @@
     <div v-if="fetching">
       Fetching hours...
     </div>
-    <validation-observer #default="{ invalid, validated, passes }" v-else>
+    <validation-observer #default="{ passes }" v-else>
       <v-form @submit.prevent="passes(save)">
         <v-card
           flat
@@ -19,6 +19,7 @@
               <validation-provider
                 name="Type"
                 rules="required"
+                vid="hourType"
                 #default="{ errors }"
               >
                 <v-select
@@ -38,7 +39,7 @@
             <v-col cols="8" v-if="hour.type === 'shift'">
               <validation-provider
                 name="Name"
-                rules="required_if:hour.type,shift"
+                rules="required_if:hourType,shift"
                 #default="{ errors }"
               >
                 <v-text-field
@@ -53,7 +54,7 @@
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
                 name="Name"
-                rules="required_if:hour.type,break"
+                rules="required_if:hourType,break"
                 #default="{ errors }"
               >
                 <v-text-field
@@ -68,7 +69,7 @@
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
                 name="Shift"
-                rules="required_if:hour.type,break"
+                rules="required_if:hourType,break"
                 #default="{ errors }"
               >
                 <v-select
@@ -138,7 +139,6 @@
           color="primary"
           class="text-none"
           :loading="loading"
-          :disabled="invalid || !validated"
         >
           <v-icon left>mdi-skip-next-circle-outline</v-icon>
           Next
@@ -215,10 +215,12 @@ export default {
           .map((rec) => ({
             type: rec.type,
             name: rec.name,
+            shift: rec.shift,
             starttime: rec.starttime,
             endtime: rec.endtime,
+            sortindex: rec.sortindex,
           }))
-          .sort((a, b) => a.sortindex - b.sortIndex);
+          .sort((a, b) => a.sortindex - b.sortindex);
       }
       this.fetching = false;
     },

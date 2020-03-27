@@ -11,8 +11,9 @@
       :prefix="prefix"
       :disabled="loading"
       v-model="identifier"
-      :error-messages="errors"
       label="Email or phone"
+      autocomplete="username"
+      :error-messages="errors"
       prepend-inner-icon="mdi-account-outline"
     ></v-text-field>
   </validation-provider>

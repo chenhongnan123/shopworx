@@ -6,7 +6,7 @@
     <div v-if="fetching">
       Fetching holidays...
     </div>
-    <validation-observer #default="{ invalid, validated, passes }" v-else>
+    <validation-observer #default="{ passes }" v-else>
       <v-form @submit.prevent="passes(save)">
         <v-card
           flat
@@ -73,11 +73,26 @@
           color="primary"
           class="text-none"
           :loading="loading"
-          :disabled="invalid || !validated"
+          :disabled="skipping"
         >
           <v-icon left>mdi-chevron-triple-right</v-icon>
             Continue to next step
         </v-btn>
+        <div class="text-center">
+          <span>or</span>
+        </div>
+        <div class="text-center">
+          <v-btn
+            text
+            @click="skip"
+            color="primary"
+            class="text-none"
+            :disabled="loading"
+            :loading="skipping"
+          >
+            Skip for now
+          </v-btn>
+        </div>
       </v-form>
     </validation-observer>
   </div>
@@ -101,6 +116,7 @@ export default {
   data() {
     return {
       fetching: false,
+      skipping: false,
       holidays: [{
         name: '',
         date: '',
@@ -117,6 +133,7 @@ export default {
   },
   methods: {
     ...mapActions('setup', ['getElementRecords']),
+    ...mapActions('element', ['createElementAndTags']),
     async fetchRecords() {
       this.fetching = true;
       const records = await this.getElementRecords({
@@ -147,6 +164,18 @@ export default {
         records: this.holidays,
       };
       this.$emit('save', payload);
+    },
+    async skip() {
+      this.skipping = true;
+      const payload = {
+        element: this.masterDetails.element,
+        tags: this.masterDetails.tags,
+      };
+      const success = await this.createElementAndTags(payload);
+      if (success) {
+        this.$emit('skip');
+      }
+      this.skipping = false;
     },
   },
 };
