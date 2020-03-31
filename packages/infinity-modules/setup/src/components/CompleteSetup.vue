@@ -49,7 +49,7 @@ export default {
       const success = await this.completeOnboarding();
       if (success) {
         localStorage.removeItem('step');
-        this.$router.replace({ name: 'home' });
+        this.$router.replace({ path: '/' });
       }
       this.loading = false;
     },

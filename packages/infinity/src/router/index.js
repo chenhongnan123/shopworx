@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
     });
   }
   if (loggedIn && onlyWhenLoggedOut) {
-    next({ name: 'home' });
+    next({ path: '/' });
   }
   next();
 });

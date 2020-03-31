@@ -68,7 +68,7 @@ export default {
       } else if (!this.isOnboardingComplete) {
         this.$router.replace({ name: 'setup' });
       } else {
-        this.$router.replace({ name: 'home' });
+        this.$router.replace({ path: '/' });
       }
     },
   },
