@@ -14,12 +14,12 @@
         color="primary"
         class="text-none pa-0"
       >
-        Review
+        {{ $t('setup.importMaster.review') }}
       </v-btn>
     </template>
     <v-card>
       <v-card-title primary-title>
-        Review {{ title }}
+        {{ $t('setup.importMaster.reviewTitle', { title }) }}
         <v-spacer></v-spacer>
         <v-btn
           text
@@ -28,7 +28,7 @@
           @click="showColumnMappings = true"
           v-if="reviewType === 'data' && !showColumnMappings"
         >
-          Update columns
+          {{ $t('setup.importMaster.updateColumns') }}
         </v-btn>
         <v-btn
           text
@@ -36,7 +36,7 @@
           class="text-none"
           @click="uploadFile"
         >
-          Re-import
+          {{ $t('setup.importMaster.reimport') }}
         </v-btn>
         <input
           type="file"

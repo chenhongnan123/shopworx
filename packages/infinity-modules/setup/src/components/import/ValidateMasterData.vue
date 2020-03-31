@@ -11,7 +11,7 @@
           class="text-none pa-0"
           @click="uploadFile"
         >
-          Import file
+          {{ $t('setup.importMaster.importFile') }}
         </v-btn>
         <input
           type="file"
@@ -104,30 +104,21 @@ export default {
     },
   },
   async created() {
-    this.$emit('on-loading', {
-      index: this.index,
-      loading: true,
-    });
-    this.message = 'Initiating...';
+    this.$emit('on-loading', true);
+    this.message = this.$i18n.t('setup.importMaster.starting');
     const records = await this.getElementRecords({
       assetId: this.assetId,
       elementName: this.masterElement.elementName,
     });
     if (records && records.length) {
       this.error = false;
-      this.$emit('on-validation', {
-        index: this.index,
-        success: !this.error,
-      });
-      this.message = `${records.length} records already exist! You can edit them after onboarding completion.`;
+      this.$emit('on-validation', !this.error);
+      this.message = this.$i18n.tc('setup.importMaster.recordsExist', records.length);
     } else {
       this.file = Array.from(this.files).find((f) => f.name === this.expectedFileName);
       await this.processFileUpload();
     }
-    this.$emit('on-loading', {
-      index: this.index,
-      loading: false,
-    });
+    this.$emit('on-loading', false);
   },
   methods: {
     ...mapActions('setup', ['getElementRecords']),
@@ -143,32 +134,39 @@ export default {
       }
     },
     async mapFile() {
-      this.message = 'Extracting...';
+      this.message = this.$i18n.t('setup.importMaster.parsing');
       if (this.file) {
         const csvParser = new CSVParser();
         try {
           const extractedData = await csvParser.parse(this.file);
           this.importedRows = extractedData.data;
-          this.importedColumns = extractedData.meta.fields;
+          this.importedColumns = extractedData.meta.fields
+            .map((field) => field.trim());
+          if (this.importedColumns && this.importedColumns.length === 0) {
+            this.error = true;
+            this.file = null;
+            this.message = this.$i18n.t('setup.importMaster.missingHeaders');
+            this.$emit('on-validation', !this.error);
+          } else if (this.importedRows && this.importedRows.length === 0) {
+            this.error = true;
+            this.file = null;
+            this.message = this.$i18n.t('setup.importMaster.missingData');
+            this.$emit('on-validation', !this.error);
+          }
         } catch (e) {
           this.error = true;
-          this.message = 'Cannot parse file!';
-          this.$emit('on-validation', {
-            index: this.index,
-            success: !this.error,
-          });
+          this.message = this.$i18n.t('setup.importMaster.fileUnparsable');
+          this.$emit('on-validation', !this.error);
         }
       } else {
         this.error = true;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
+        this.message = this.$i18n.t('setup.importMaster.fileNotFound', { file: this.expectedFileName });
         this.message = `File ${this.expectedFileName} not found!`;
       }
     },
     mapColumns() {
-      this.message = 'Mapping...';
+      this.message = this.$i18n.t('setup.importMaster.mapping');
       this.matchedColumns = this.importedColumns.map((column) => {
         const matchedTag = this.masterTags.find((tag) => tag.tagDescription === column);
         let tagName = null;
@@ -197,18 +195,12 @@ export default {
         this.reviewType = 'column';
         this.message = `Missing required colunms -${this.missingTags[0]}
         ${this.missingTags.length > 1 ? 'and more' : ''}!`;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
       } else if (matchedTags.length !== uniqueTags.length) {
         this.error = true;
         this.reviewType = 'column';
         this.message = 'Column names are not unique!';
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
       } else {
         this.mappedTags = this.mapTags();
       }
@@ -248,28 +240,19 @@ export default {
         this.reviewType = 'data';
         this.message = `Missing required data for ${this.missingData[0].tag}
           at row ${this.missingData[0].row} ${this.missingData.length > 1 ? 'and more' : ''}!`;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
       } else if (this.duplicateColumnData && this.duplicateColumnData.length) {
         this.error = true;
         this.reviewType = 'data';
         this.message = `Duplicate data for ${this.duplicateColumnData[0].tag}
           ${this.duplicateColumnData.length > 1 ? 'and more' : ''}!`;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
       } else if (this.invalidDataTypes && this.invalidDataTypes.length) {
         this.error = true;
         this.reviewType = 'data';
         this.message = `Invalid data type for ${this.invalidDataTypes[0]}
           ${this.invalidDataTypes.length > 1 ? 'and more' : ''}!`;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.$emit('on-validation', !this.error);
       } else {
         await this.createRecords();
       }
@@ -320,7 +303,7 @@ export default {
           }
         } else if (t.emgTagType.toLowerCase() === 'boolean') {
           const truthyValues = ['true', 'false', true, false];
-          const invalid = matchedRecords.some((rec) => !truthyValues.includes(rec));
+          const invalid = matchedRecords.some((rec) => !truthyValues.includes(rec.toLowerCase()));
           if (invalid) {
             res.push(`${t.tagDescription}(Boolean)`);
           }
@@ -329,7 +312,7 @@ export default {
       return res;
     },
     async createRecords() {
-      this.message = 'Importing...';
+      this.message = this.$i18n.t('setup.importMaster.importing');
       const recordsCreated = await this.createBulkRecords({
         element: this.masterElement,
         tags: [...this.tags, ...this.hiddenTags],
@@ -338,84 +321,56 @@ export default {
       });
       if (recordsCreated) {
         this.error = false;
-        this.message = `${this.records.length} records imported!`;
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.message = this.$i18n.tc('setup.importMaster.recordsImported', this.records.length);
+        this.$emit('on-validation', !this.error);
       } else {
         this.error = true;
         this.reviewType = 'connection';
-        this.message = 'Cannot reach ShopWorx servers!';
-        this.$emit('on-validation', {
-          index: this.index,
-          success: !this.error,
-        });
+        this.message = this.$i18n.t('setup.importMaster.recordsNotCreated');
+        this.$emit('on-validation', !this.error);
       }
     },
     async processFileUpload() {
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: true,
-      });
+      this.$emit('on-loading', true);
       await this.mapFile();
-      if (this.importedRows && this.importedColumns) {
+      if (this.importedRows && this.importedRows.length
+        && this.importedColumns && this.importedColumns.length) {
         this.mapColumns();
         this.validateColumns();
         if (this.mappedTags) {
           await this.mapData();
         }
       }
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: false,
-      });
+      this.$emit('on-loading', false);
     },
     async processFileReview(file) {
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: true,
-      });
+      this.$emit('on-loading', true);
       this.file = file;
       await this.mapFile();
-      if (this.importedRows && this.importedColumns) {
+      if (this.importedRows && this.importedRows.length
+        && this.importedColumns && this.importedColumns.length) {
         this.mapColumns();
         this.validateColumns();
         if (this.mappedTags) {
           await this.mapData();
         }
       }
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: false,
-      });
+      this.$emit('on-loading', false);
     },
     async processColumnReview(matchedColumns) {
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: true,
-      });
+      this.$emit('on-loading', true);
       this.matchedColumns = matchedColumns;
       this.validateColumns();
       if (this.mappedTags) {
         await this.mapData();
       }
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: false,
-      });
+      this.$emit('on-loading', false);
     },
     async processDataReview(records) {
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: true,
-      });
+      this.$emit('on-loading', true);
       this.records = records;
       await this.validateData();
-      this.$emit('on-loading', {
-        index: this.index,
-        loading: false,
-      });
+      this.$emit('on-loading', false);
     },
   },
 };

@@ -12,14 +12,14 @@
       v-if="!reLogin"
       class="text-none"
       @click="snackbar = false"
-      v-text="$t('infinity.snackbar.buttons.close')"
+      v-text="$t('snackbar.close')"
     ></v-btn>
     <v-btn
       text
       v-else
       class="text-none"
       @click="logout"
-      v-text="$t('infinity.snackbar.buttons.redirectToLogin', { time: logoutTimer })"
+      v-text="$t('snackbar.redirectToLogin', { time: logoutTimer })"
     ></v-btn>
   </v-snackbar>
 </template>
@@ -58,9 +58,9 @@ export default {
       if (this.type) {
         const { message } = this.alert;
         if (this.type && this.type.toUpperCase().trim() === 'SUCCESS') {
-          msg = this.$t(`infinity.success.${message}`);
+          msg = this.$t(`success.${message}`);
         } else if (this.type && this.type.toUpperCase().trim() === 'ERROR') {
-          msg = this.$t(`infinity.error.${message}`);
+          msg = this.$t(`error.${message}`);
         }
       }
       return msg;

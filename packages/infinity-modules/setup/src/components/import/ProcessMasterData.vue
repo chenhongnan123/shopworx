@@ -3,21 +3,20 @@
     <template v-if="loading">
       <v-progress-circular indeterminate></v-progress-circular>
       <span>
-        Fetching master data from ShopWorx servers
+        {{ $t('setup.importMaster.fetchMaster') }}
       </span>
     </template>
     <template v-else-if="error">
-      We couldn't fetch master data from ShopWorx servers.
-      Please
+      {{ $t('setup.importMaster.fetchError') }}
       <a
         @click="fetchMaster"
         class="primary--text font-weight-medium"
       >
-        retry.
+      {{ $t('setup.importMaster.retryFetch') }}
       </a>
     </template>
     <template v-else>
-      <v-list class="pa-0">
+      <v-list class="pa-0 transparent">
         <v-list-item
           :key="index"
           class="pa-0"
@@ -32,15 +31,13 @@
               <v-icon
                 color="success"
                 v-if="list.success"
-              >
-                mdi-check-circle-outline
-              </v-icon>
+                v-text="'$success'"
+              ></v-icon>
               <v-icon
                 v-else
                 color="error"
-              >
-                mdi-alert-circle-outline
-              </v-icon>
+                v-text="'$error'"
+              ></v-icon>
             </template>
           </v-list-item-icon>
           <v-list-item-content>
@@ -48,10 +45,10 @@
               {{ list.title }}
             </v-list-item-title>
             <validate-master-data
-              :data="{ ...list, index }"
+              :data="list"
               :files="files"
-              @on-validation="onValidation"
-              @on-loading="onLoading"
+              @on-loading="onLoading($event, index)"
+              @on-validation="onValidation($event, index)"
             />
           </v-list-item-content>
         </v-list-item>
@@ -63,7 +60,10 @@
         :disabled="!valid"
         @click="$emit('success')"
       >
-        <v-icon left>mdi-chevron-triple-right</v-icon>
+        <v-icon
+          left
+          v-text="'$next'"
+        ></v-icon>
         Continue to next step
       </v-btn>
     </template>
@@ -110,14 +110,14 @@ export default {
       this.error = !success;
       this.loading = false;
     },
-    onValidation(obj) {
-      this.masterList[obj.index].success = obj.success;
+    onValidation(success, index) {
+      this.masterList[index].success = success;
       if (this.masterList.every((v) => v.success)) {
         this.valid = true;
       }
     },
-    onLoading(obj) {
-      this.masterList[obj.index].loading = obj.loading;
+    onLoading(loading, index) {
+      this.masterList[index].loading = loading;
     },
   },
 };

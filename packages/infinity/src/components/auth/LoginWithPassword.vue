@@ -14,13 +14,13 @@
         >
           <v-text-field
             type="password"
-            label="Password"
             v-model="password"
             :disabled="loading"
             hide-details="auto"
             :error-messages="errors"
+            :label="$t('login.password')"
             autocomplete="current-password"
-            prepend-inner-icon="mdi-lock-outline"
+            prepend-inner-icon="$password"
           ></v-text-field>
         </validation-provider>
         <p class="text-right ma-0 pa-0 px-1">
@@ -32,7 +32,7 @@
             @click="resetPassword"
             class="text-none pa-0"
           >
-            Forgot password?
+            {{ $t('login.forgotPassword') }}
           </v-btn>
         </p>
       </v-card-text>
@@ -44,12 +44,15 @@
           class="text-none"
           :loading="loading"
         >
-          <v-icon left>mdi-shield-check-outline</v-icon>
-          Login securely
+          <v-icon
+            left
+            v-text="'$login'"
+          ></v-icon>
+          {{ $t('login.login') }}
         </v-btn>
       </v-card-actions>
       <v-card-text class="text-center py-0">
-        <span>or</span>
+        <span>{{ $t('helper.or') }}</span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -60,7 +63,7 @@
           :disabled="loading"
           @click="$emit('login-with-otp')"
         >
-          Login with otp
+          {{ $t('login.loginWithOtp') }}
         </v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>

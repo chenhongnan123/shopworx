@@ -5,16 +5,15 @@
     #default="{ errors }"
   >
     <v-text-field
-      required
       autofocus
       type="email"
       :prefix="prefix"
       :disabled="loading"
       v-model="identifier"
-      label="Email or phone"
       autocomplete="username"
       :error-messages="errors"
-      prepend-inner-icon="mdi-account-outline"
+      :label="$t('login.identifier')"
+      prepend-inner-icon="$identifier"
     ></v-text-field>
   </validation-provider>
 </template>
@@ -50,15 +49,16 @@ export default {
         return this.value;
       },
       set(val) {
-        /* const id = this.isMobileNumber
-          ? `${this.prefix.slice(1)}${val}`
-          : val; */
         this.$emit('input', val);
-        this.$emit('on-update', {
-          isMobile: this.isMobileNumber,
-          prefix: this.prefix.slice(1),
-        });
       },
+    },
+  },
+  watch: {
+    identifier() {
+      this.$emit('on-update', {
+        isMobile: this.isMobileNumber,
+        prefix: this.prefix.slice(1),
+      });
     },
   },
   methods: {

@@ -11,9 +11,30 @@
           <v-fade-transition mode="out-in">
             <update-account v-if="!isAccountUpdated" />
             <update-password
-              v-else
               @success="onSuccess"
+              v-else-if="!isPasswordUpdated"
             />
+            <v-card
+              flat
+              v-else
+              class="transparent"
+            >
+              <div class="display-1 mb-4 font-weight-medium text-center primary--text">
+                {{ $t('register.updated') }}
+              </div>
+              <v-btn
+                block
+                color="primary"
+                class="text-none"
+                @click="onSuccess"
+              >
+                <v-icon
+                  left
+                  v-text="'$next'"
+                ></v-icon>
+                {{ $t('helper.next') }}
+              </v-btn>
+            </v-card>
           </v-fade-transition>
         </v-col>
         <v-col v-if="$vuetify.breakpoint.mdAndUp" md="6" xl="5">
@@ -41,7 +62,7 @@ export default {
     UpdatePassword,
   },
   computed: {
-    ...mapGetters('user', ['isAccountUpdated']),
+    ...mapGetters('user', ['isAccountUpdated', 'isPasswordUpdated', 'isOnboardingComplete']),
     registerIllustration() {
       return this.$vuetify.theme.dark
         ? 'register-dark'
@@ -50,7 +71,11 @@ export default {
   },
   methods: {
     onSuccess() {
-      this.$router.replace({ name: 'setup' });
+      if (!this.isOnboardingComplete) {
+        this.$router.replace({ name: 'setup' });
+      } else {
+        this.$router.replace({ path: '/' });
+      }
     },
   },
 };

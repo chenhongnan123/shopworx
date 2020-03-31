@@ -1,10 +1,11 @@
 <template>
   <div>
-    <validation-observer #default="{ invalid, validated, passes }">
+    <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(save)">
         <v-card
           flat
           :key="index"
+          class="mb-2 transparent"
           v-for="(user, index) in users"
         >
           <v-row>
@@ -22,7 +23,6 @@
                 #default="{ errors }"
               >
                 <v-select
-                  label="Role"
                   :items="roles"
                   item-value="roleId"
                   hide-details="auto"
@@ -30,6 +30,7 @@
                   v-model="user.roleId"
                   :error-messages="errors"
                   item-text="roleDescription"
+                  :label="$t('setup.inviteUsers.role')"
                 ></v-select>
               </validation-provider>
             </v-col>
@@ -40,7 +41,7 @@
                 class="mx-2"
                 @click="addUser"
               >
-                <v-icon>mdi-plus-circle-outline</v-icon>
+                <v-icon v-text="'$add'"></v-icon>
               </v-btn>
               <v-btn
                 icon
@@ -49,7 +50,7 @@
                 @click="removeUser(index)"
                 :disabled="users.length === 1"
               >
-                <v-icon>mdi-minus-circle-outline</v-icon>
+                <v-icon v-text="'$remove'"></v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -60,13 +61,15 @@
           color="primary"
           class="text-none"
           :loading="loading"
-          :disabled="invalid || !validated"
         >
-          <v-icon left>mdi-account-multiple-plus-outline</v-icon>
-            Invite users
+          <v-icon
+            left
+            v-text="'$invite'"
+          ></v-icon>
+            {{ $t('setup.inviteUsers.invite') }}
         </v-btn>
         <div class="text-center">
-          <span>or</span>
+          <span>{{ $t('helper.or') }}</span>
         </div>
         <div class="text-center">
           <v-btn
@@ -76,7 +79,7 @@
             class="text-none"
             :disabled="loading"
           >
-            Skip for now
+            {{ $t('helper.skip') }}
           </v-btn>
         </div>
       </v-form>
@@ -100,15 +103,18 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', ['activeSite', 'roles']),
+    ...mapState('user', ['activeSite', 'roles', 'me']),
   },
   async created() {
+    if (!this.me) {
+      await this.getMe();
+    }
     this.addUser();
     await this.getUserRoles();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('user', ['inviteUsers', 'getUserRoles']),
+    ...mapActions('user', ['inviteUsers', 'getUserRoles', 'getMe']),
     setIdentifier({ isMobile, prefix }, index) {
       this.users[index].isMobile = isMobile;
       this.users[index].prefix = prefix;

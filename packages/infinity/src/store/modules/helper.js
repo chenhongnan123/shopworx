@@ -7,17 +7,33 @@ export default ({
       type: null,
       message: null,
     },
-    drawer: true,
+    locales: [
+      {
+        text: 'English',
+        value: 'en',
+      },
+      {
+        text: 'हिन्दी',
+        value: 'hi',
+      },
+      {
+        text: '中文',
+        value: 'zhHans',
+      },
+      {
+        text: 'ไทย',
+        value: 'th',
+      },
+      {
+        text: 'Deutsche',
+        value: 'de',
+      },
+    ],
     isDark: null,
-    insightsDrawer: false,
   },
   mutations: {
     setAlert: set('alert'),
-    setDrawer: set('drawer'),
     setIsDark: set('isDark'),
-    toggleDrawer: toggle('drawer'),
     toggleIsDark: toggle('isDark'),
-    setInsightsDrawer: set('insightsDrawer'),
-    toggleInsightsDrawer: toggle('insightsDrawer'),
   },
 });

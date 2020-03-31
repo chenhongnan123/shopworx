@@ -1,8 +1,8 @@
 <template>
   <auth-layout
+    :title="$t('login.title')"
+    :subTitle="$t('login.subTitle')"
     :illustration="loginIllustration"
-    :title="'Log in to Infinity'"
-    :subTitle="'Use your ShopWorx Account'"
   >
     <v-fade-transition mode="out-in">
       <login-with-password
@@ -49,12 +49,12 @@ export default {
     onSuccess() {
       if (!this.isAccountUpdated) {
         this.$router.replace({ name: 'welcome' });
-      } else if (this.isAccountUpdated && !this.isPasswordUpdated) {
+      } else if (!this.isPasswordUpdated) {
         this.$router.replace({ name: 'register' });
       } else if (!this.isOnboardingComplete) {
-        this.$router.replace({ name: 'onboarding' });
+        this.$router.replace({ name: 'setup' });
       } else {
-        this.$router.replace(this.$route.query.redirect || { name: 'home' });
+        this.$router.replace(this.$route.query.redirect || { path: '/' });
       }
     },
   },

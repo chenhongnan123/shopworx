@@ -2,6 +2,13 @@ const routes = [
   {
     path: '/',
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
+    children: [
+      {
+        path: 'account',
+        name: 'account',
+        component: () => import(/* webpackChunkName: "account" */ '@/views/Account.vue'),
+      },
+    ],
   },
   {
     path: '/login',

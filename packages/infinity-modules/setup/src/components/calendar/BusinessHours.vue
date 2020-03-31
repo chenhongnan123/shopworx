@@ -1,17 +1,17 @@
 <template>
   <div>
     <span class="headline">
-      Update business's daily hours
+      {{ $t('setup.onboardCalendar.hours.title') }}
     </span>
     <div v-if="fetching">
-      Fetching hours...
+      {{ $t('setup.onboardCalendar.hours.fetching') }}
     </div>
     <validation-observer #default="{ passes }" v-else>
       <v-form @submit.prevent="passes(save)">
         <v-card
           flat
           :key="index"
-          class="mb-2"
+          class="mb-2 transparent"
           v-for="(hour, index) in hours"
         >
           <v-row>
@@ -23,16 +23,16 @@
                 #default="{ errors }"
               >
                 <v-select
-                  label="Type"
                   :items="items"
                   item-text="text"
                   item-value="value"
-                  v-model="hour.type"
                   hide-details="auto"
+                  v-model="hour.type"
                   :error-messages="errors"
                   :prepend-inner-icon="hour.type === 'shift'
-                    ? 'mdi-clock-outline'
-                    : 'mdi-timer-sand'"
+                    ? '$shift'
+                    : '$break'"
+                  :label="$t('setup.onboardCalendar.hours.type')"
                 ></v-select>
               </validation-provider>
             </v-col>
@@ -44,10 +44,10 @@
               >
                 <v-text-field
                   type="text"
-                  label="Name"
                   v-model="hour.name"
                   hide-details="auto"
                   :error-messages="errors"
+                  :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -59,10 +59,10 @@
               >
                 <v-text-field
                   type="text"
-                  label="Name"
                   v-model="hour.name"
                   hide-details="auto"
                   :error-messages="errors"
+                  :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -74,10 +74,10 @@
               >
                 <v-select
                   :items="shifts"
-                  label="Include in"
                   hide-details="auto"
                   v-model="hour.shift"
                   :error-messages="errors"
+                  :label="$t('setup.onboardCalendar.hours.includeIn')"
                 ></v-select>
               </validation-provider>
             </v-col>
@@ -89,10 +89,10 @@
               >
                 <v-text-field
                   type="time"
-                  label="Start time"
                   hide-details="auto"
                   v-model="hour.starttime"
                   :error-messages="errors"
+                  :label="$t('setup.onboardCalendar.hours.startTime')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -104,10 +104,10 @@
               >
                 <v-text-field
                   type="time"
-                  label="End time"
                   hide-details="auto"
                   v-model="hour.endtime"
                   :error-messages="errors"
+                  :label="$t('setup.onboardCalendar.hours.endTime')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -118,7 +118,7 @@
                 class="mx-2"
                 @click="addHour"
               >
-                <v-icon>mdi-plus-circle-outline</v-icon>
+                <v-icon v-text="'$add'"></v-icon>
               </v-btn>
               <v-btn
                 icon
@@ -127,7 +127,7 @@
                 @click="removeHour(index)"
                 :disabled="hours.length === 1"
               >
-                <v-icon>mdi-minus-circle-outline</v-icon>
+                <v-icon v-text="'$remove'"></v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -140,8 +140,11 @@
           class="text-none"
           :loading="loading"
         >
-          <v-icon left>mdi-skip-next-circle-outline</v-icon>
-          Next
+          <v-icon
+            left
+            v-text="'$skip'"
+          ></v-icon>
+          {{ $t('helper.next') }}
         </v-btn>
       </v-form>
     </validation-observer>
@@ -168,15 +171,15 @@ export default {
     return {
       fetching: false,
       items: [{
-        text: 'Shift',
+        text: this.$i18n.t('setup.onboardCalendar.hours.shift'),
         value: 'shift',
       },
       {
-        text: 'Break',
+        text: this.$i18n.t('setup.onboardCalendar.hours.break'),
         value: 'break',
       }],
       hours: [{
-        type: '',
+        type: 'shift',
         name: '',
         starttime: '',
         endtime: '',
