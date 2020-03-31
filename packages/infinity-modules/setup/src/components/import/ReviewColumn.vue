@@ -5,7 +5,7 @@
         v-if="missingTags.length"
         class="font-weight-medium"
       >
-        Missing required mappings:
+        {{ $t('setup.importMaster.missingMapping') }}
         {{ missingTags.join(',') }}
       </span>
       <v-row
@@ -50,7 +50,7 @@
         class="text-none"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
-        Save changes
+        {{ $t('setup.importMaster.save') }}
       </v-btn>
       <v-btn
         text
@@ -59,7 +59,7 @@
         @click="$emit('cancel')"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
-        Cancel
+        {{ $t('setup.importMaster.cancel') }}
       </v-btn>
     </v-card-actions>
   </div>

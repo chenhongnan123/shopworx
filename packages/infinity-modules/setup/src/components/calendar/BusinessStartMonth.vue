@@ -1,10 +1,10 @@
 <template>
   <div>
     <span class="headline">
-      Select business's month start
+      {{ $t('setup.onboardCalendar.month.title') }}
     </span>
     <div v-if="fetching">
-      Fetching month start...
+      {{ $t('setup.onboardCalendar.month.fetching') }}
     </div>
     <v-chip-group
       v-else
@@ -17,8 +17,8 @@
       <v-chip
         large
         :key="index"
-        v-text="month"
         v-for="(month, index) in months"
+        v-text="$t(`setup.onboardCalendar.month.${month}`)"
       ></v-chip>
     </v-chip-group>
     <v-btn
@@ -28,8 +28,11 @@
       class="text-none"
       :loading="loading"
     >
-      <v-icon left>mdi-skip-next-circle-outline</v-icon>
-      Next
+      <v-icon
+        left
+        v-text="'$skip'"
+      ></v-icon>
+      {{ $t('helper.next') }}
     </v-btn>
   </div>
 </template>
@@ -53,18 +56,18 @@ export default {
     return {
       fetching: false,
       months: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        'jan',
+        'feb',
+        'mar',
+        'apr',
+        'may',
+        'jun',
+        'jul',
+        'aug',
+        'sep',
+        'oct',
+        'nov',
+        'dec',
       ],
       monthStart: 0,
     };

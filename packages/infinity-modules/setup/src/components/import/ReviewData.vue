@@ -5,7 +5,7 @@
         v-if="requiredData"
         class="font-weight-medium"
       >
-        Missing required data:
+        {{ $t('setup.importMaster.requiredData') }}
         <div v-for="(data, n) in requiredData" :key="n">
           {{ data }}
         </div>
@@ -14,14 +14,14 @@
         v-if="duplicateColumnData && duplicateColumnData.length"
         class="font-weight-medium"
       >
-        Duplicate data for:
+        {{ $t('setup.importMaster.duplicateData') }}
         {{ duplicateColumnData.join(',') }}
       </div>
       <div
         v-if="invalidDataTypes && invalidDataTypes.length"
         class="font-weight-medium"
       >
-        Invalid data type for:
+        {{ $t('setup.importMaster.invalidDataType') }}
         {{ invalidDataTypes.join(',') }}
       </div>
       <ag-grid-vue
@@ -40,7 +40,7 @@
         class="text-none"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
-        Save changes
+        {{ $t('setup.importMaster.save') }}
       </v-btn>
       <v-btn
         text
@@ -49,7 +49,7 @@
         @click="$emit('cancel')"
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
-        Cancel
+        {{ $t('setup.importMaster.cancel') }}
       </v-btn>
     </v-card-actions>
   </v-card>

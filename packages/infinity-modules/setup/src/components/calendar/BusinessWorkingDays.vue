@@ -1,10 +1,10 @@
 <template>
   <div>
     <span class="headline">
-      Select business's working days
+      {{ $t('setup.onboardCalendar.days.title') }}
     </span>
     <div v-if="fetching">
-      Fetching working days...
+      {{ $t('setup.onboardCalendar.days.fetching') }}
     </div>
     <v-chip-group
       v-else
@@ -18,8 +18,8 @@
       <v-chip
         large
         :key="index"
-        v-text="day"
         v-for="(day, index) in days"
+        v-text="$t(`setup.onboardCalendar.days.${day}`)"
       ></v-chip>
     </v-chip-group>
     <v-btn
@@ -29,8 +29,11 @@
       class="text-none"
       :loading="loading"
     >
-      <v-icon left>mdi-skip-next-circle-outline</v-icon>
-      Next
+      <v-icon
+        left
+        v-text="'$skip'"
+      ></v-icon>
+      {{ $t('helper.next') }}
     </v-btn>
   </div>
 </template>
@@ -54,13 +57,13 @@ export default {
     return {
       fetching: false,
       days: [
-        'S',
-        'M',
-        'T',
-        'W',
-        'T',
-        'F',
-        'S',
+        'sun',
+        'mon',
+        'tue',
+        'wed',
+        'thu',
+        'fri',
+        'sat',
       ],
       workingDays: [1, 2, 3, 4, 5, 6],
     };

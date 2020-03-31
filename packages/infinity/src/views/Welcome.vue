@@ -10,14 +10,14 @@
         <v-col cols="12" md="6" lg="5" xl="4" class="text-center">
           <v-card flat class="transparent">
             <div class="display-2">
-              Welcome! We have been expecting you.
+              {{ $t('welcome.title') }}
             </div>
             <div class="display-1 my-12">
-              First things first, let's start by
+              {{ $t('welcome.subTitle1') }}
               <span class="primary--text font-weight-medium">
-                creating your account.
+                {{ $t('welcome.subTitle2') }}
               </span>
-              It will take less than a minute.
+              {{ $t('welcome.subTitle3') }}
             </div>
             <v-btn
               block
@@ -25,8 +25,11 @@
               class="text-none"
               @click="createAccount"
             >
-              <v-icon left>mdi-skip-next-circle-outline</v-icon>
-              Let's get started
+              <v-icon
+                left
+                v-text="'$skip'"
+              ></v-icon>
+              {{ $t('welcome.start') }}
             </v-btn>
           </v-card>
         </v-col>
@@ -42,6 +45,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import AuthHeader from '@/components/auth/AuthHeader.vue';
 
 export default {
@@ -50,6 +54,7 @@ export default {
     AuthHeader,
   },
   computed: {
+    ...mapGetters('user', ['isPasswordUpdated', 'isOnboardingComplete']),
     welcomeIllustration() {
       return this.$vuetify.theme.dark
         ? 'welcome-dark'
@@ -58,7 +63,13 @@ export default {
   },
   methods: {
     createAccount() {
-      this.$router.push({ name: 'register' });
+      if (!this.isPasswordUpdated) {
+        this.$router.replace({ name: 'register' });
+      } else if (!this.isOnboardingComplete) {
+        this.$router.replace({ name: 'setup' });
+      } else {
+        this.$router.replace({ name: 'home' });
+      }
     },
   },
 };

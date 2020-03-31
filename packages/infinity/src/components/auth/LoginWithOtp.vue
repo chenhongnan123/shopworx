@@ -14,13 +14,14 @@
           #default="{ errors }"
         >
           <v-text-field
-            label="OTP"
             type="number"
             v-model="otp"
             :disabled="loading"
             hide-details="auto"
+            :label="$t('login.otp')"
             :error-messages="errors"
-            prepend-inner-icon="mdi-lock-outline"
+            autocomplete="one-time-code"
+            prepend-inner-icon="$password"
           ></v-text-field>
         </validation-provider>
         <p
@@ -37,7 +38,7 @@
             @click="onGenerateOtp"
             class="text-none pa-0"
           >
-            Resend otp?
+            {{ $t('login.resendOtp') }}
           </v-btn>
           <v-btn
             text
@@ -47,7 +48,7 @@
             color="primary"
             class="text-none pa-0"
           >
-            Resend otp in {{ resendTimer }}
+            {{ $t('login.resendOtpIn', { time: resendTimer }) }}
           </v-btn>
         </p>
       </v-card-text>
@@ -60,8 +61,11 @@
           class="text-none"
           :loading="loadingOtp"
         >
-          <v-icon left>mdi-send-outline</v-icon>
-          Send OTP
+          <v-icon
+            left
+            v-text="'$send'"
+          ></v-icon>
+          {{ $t('login.sendOtp') }}
         </v-btn>
         <v-btn
           block
@@ -71,12 +75,15 @@
           class="text-none"
           :loading="loading"
         >
-          <v-icon left>mdi-shield-check-outline</v-icon>
-          Login securely
+          <v-icon
+            left
+            v-text="'$login'"
+          ></v-icon>
+          {{ $t('login.login') }}
         </v-btn>
       </v-card-actions>
       <v-card-text class="text-center py-0">
-        <span>or</span>
+        <span>{{ $t('helper.or') }}</span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -87,7 +94,7 @@
           :disabled="loading"
           @click="$emit('login-with-password')"
         >
-          Login with password
+          {{ $t('login.loginWithPassword') }}
         </v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>

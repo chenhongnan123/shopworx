@@ -1,8 +1,8 @@
 <template>
   <auth-layout
+    :title="$t('forgotPassword.title')"
     :illustration="resetPasswordIllustration"
-    :title="'Reset password?'"
-    :subTitle="'Enter your email or phone number'"
+    :subTitle="$t('forgotPassword.subTitle')"
   >
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onResetPassword)">
@@ -21,12 +21,15 @@
             class="text-none"
             :loading="loading"
           >
-            <v-icon left>mdi-lock-reset</v-icon>
-            Reset password
+            <v-icon
+              left
+              v-text="'$passwordReset'"
+            ></v-icon>
+            {{ $t('forgotPassword.reset') }}
           </v-btn>
         </v-card-actions>
         <v-card-text class="text-center py-0">
-          <span>or</span>
+          <span>{{ $t('helper.or') }}</span>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -37,7 +40,7 @@
             class="text-none"
             :disabled="loading"
           >
-            Login with password
+            {{ $t('login.loginWithPassword') }}
           </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -73,7 +76,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('auth', ['setAlert']),
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('auth', ['resetPassword']),
     login() {
       this.$router.push({ name: 'login' });

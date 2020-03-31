@@ -21,12 +21,6 @@ export default {
     const dark = localStorage.getItem('dark');
     this.setIsDark(dark ? JSON.parse(dark) : false);
     this.initAuth();
-    if (this.sessionId) {
-      const user = await this.getMe();
-      if (user) {
-        await this.getMySolutions();
-      }
-    }
   },
   watch: {
     isDark() {

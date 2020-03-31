@@ -1,3 +1,126 @@
 {
-  "msg": "Hello"
+  "$vuetify": {
+    "badge": "Badge",
+    "close": "Close",
+    "dataIterator": {
+      "noResultsText": "No matching records found",
+      "loadingText": "Loading items..."
+    },
+    "dataTable": {
+      "itemsPerPageText": "Rows per page:",
+      "ariaLabel": {
+        "sortDescending": ": Sorted descending. Activate to remove sorting.",
+        "sortAscending": ": Sorted ascending. Activate to sort descending.",
+        "sortNone": ": Not sorted. Activate to sort ascending."
+      },
+      "sortBy": "Sort by"
+    },
+    "dataFooter": {
+      "itemsPerPageText": "Items per page:",
+      "itemsPerPageAll": "All",
+      "nextPage": "Next page",
+      "prevPage": "Previous page",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "pageText": "{0}-{1} of {2}"
+    },
+    "datePicker": {
+      "itemsSelected": "{0} selected"
+    },
+    "noDataText": "No data available",
+    "carousel": {
+      "prev": "Previous visual",
+      "next": "Next visual",
+      "ariaLabel": {
+        "delimiter": "Carousel slide {0} of {1}"
+      }
+    },
+    "calendar": {
+      "moreEvents": "{0} more"
+    },
+    "fileInput": {
+      "counter": "{0} files",
+      "counterSize": "{0} files ({1} in total)"
+    },
+    "timePicker": {
+      "am": "AM",
+      "pm": "PM"
+    }
+  },
+  "success": {
+    "OTP_SENT": "One time password sent on registered email/phone.",
+    "PASSWORD_RESET": "New password sent on registered email/phone."
+  },
+  "error": {
+    "USER_NOT_FOUND": "User account not found.",
+    "EMAIL_NOT_FOUND": "User account not found.",
+    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
+    "INVALID_OTP": "Login failed: Incorrect OTP.",
+    "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
+    "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data."
+  },
+  "snackbar": {
+    "close": "Close",
+    "redirectToLogin": "Redirecting in {time}"
+  },
+  "helper": {
+    "or": "or",
+    "next": "Next",
+    "skip": "Skip for now"
+  },
+  "login": {
+    "title": "Log in to Infinity",
+    "subTitle": "Use your ShopWorx Account",
+    "identifier": "Email or phone",
+    "password": "Password",
+    "otp": "OTP",
+    "resendOtp": "Resend otp?",
+    "resendOtpIn": "Resend otp in {time}",
+    "sendOtp": "Send OTP",
+    "forgotPassword": "Forgot password?",
+    "login": "Login securely",
+    "loginWithOtp": "Login with otp",
+    "loginWithPassword": "Login with password"
+  },
+  "forgotPassword": {
+    "title": "Reset password?",
+    "subTitle": "Enter your email or phone number",
+    "reset": "Reset password"
+  },
+  "welcome": {
+    "title": "Welcome! We have been expecting you.",
+    "subTitle1": "First things first, let's start by",
+    "subTitle2": "creating your account.",
+    "subTitle3": "It will take less than a minute.",
+    "start": "Let's get started"
+  },
+  "register": {
+    "account": {
+      "title": "Update your ShopWorx Account",
+      "update": "Update account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "password": {
+      "title": "Update your ShopWorx Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "updated": "Your ShopWorx account is updated!"
+  },
+  "modules": {
+    "home": "Home",
+    "machinedashboard": "Machine dashboard",
+    "planning": "Planning",
+    "reports": "Report",
+    "production": "Production",
+    "downtime": "Downtime",
+    "rejection": "Rejection",
+    "oee": "Oee",
+    "masters": "Masters",
+    "admin": "Admin"
+  }
 }

@@ -1,7 +1,7 @@
 <template>
   <v-card flat class="transparent">
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
-      Update your ShopWorx Account
+      {{ $t('register.account.title') }}
     </div>
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdateAccount)">
@@ -13,11 +13,12 @@
           >
             <v-text-field
               type="text"
-              label="First name"
               v-model="firstName"
               :disabled="loading"
               :error-messages="errors"
-              prepend-inner-icon="mdi-account-outline"
+              autocomplete="given-name"
+              prepend-inner-icon="$identifier"
+              :label="$t('register.account.firstName')"
             ></v-text-field>
           </validation-provider>
           <validation-provider
@@ -27,11 +28,12 @@
           >
             <v-text-field
               type="text"
-              label="Last name"
               v-model="lastName"
               :disabled="loading"
               :error-messages="errors"
-              prepend-inner-icon="mdi-account-outline"
+              autocomplete="family-name"
+              prepend-inner-icon="$identifier"
+              :label="$t('register.account.lastName')"
             ></v-text-field>
           </validation-provider>
           <validation-provider
@@ -41,11 +43,12 @@
           >
             <v-text-field
               type="email"
-              label="Email"
               v-model="email"
               :disabled="loading"
+              autocomplete="email"
               :error-messages="errors"
-              prepend-inner-icon="mdi-email-outline"
+              prepend-inner-icon="$email"
+              :label="$t('register.account.email')"
             ></v-text-field>
           </validation-provider>
           <validation-provider
@@ -56,11 +59,12 @@
             <v-text-field
               type="tel"
               prefix="+91"
-              label="Phone"
               v-model="phone"
+              autocomplete="tel"
               :disabled="loading"
               :error-messages="errors"
-              prepend-inner-icon="mdi-phone-outline"
+              prepend-inner-icon="$phone"
+              :label="$t('register.account.phone')"
             ></v-text-field>
           </validation-provider>
         </v-card-text>
@@ -72,8 +76,11 @@
             class="text-none"
             :loading="loading"
           >
-            <v-icon left>mdi-account-check-outline</v-icon>
-            Update account
+            <v-icon
+              left
+              v-text="'$updateAccount'"
+            ></v-icon>
+            {{ $t('register.account.update') }}
           </v-btn>
         </v-card-actions>
       </v-form>

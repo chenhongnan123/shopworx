@@ -4,11 +4,11 @@
     class="transparent"
   >
     <v-card-title>
-        Step {{ step }} of {{ steps.length }}
+        {{ $t('setup.steps.counter', { current: step, total: steps.length }) }}
       <v-progress-linear :value="progress"></v-progress-linear>
     </v-card-title>
     <v-card-title class="primary--text display-1 font-weight-medium">
-      {{ steps[step - 1].title }}
+      {{ $t(`setup.steps.${steps[step - 1].title}`) }}
     </v-card-title>
     <v-card-text>
       <v-fade-transition mode="out-in">
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import ImportMasterData from './import/ImportMasterData.vue';
 import OnboardCalendar from './calendar/OnboardCalendar.vue';
 import InviteUsers from './invite/InviteUsers.vue';
@@ -52,25 +53,30 @@ export default {
       step: 1,
       steps: [
         {
-          title: 'Import master data',
+          title: 'importMaster',
         },
         {
-          title: 'Onboard calendar',
+          title: 'onboardCalendar',
         },
         {
-          title: 'Invite users',
+          title: 'inviteUsers',
         },
         {
-          title: 'Finish onboarding',
+          title: 'complete',
         },
       ],
     };
   },
   created() {
-    const step = localStorage.getItem('step');
-    this.step = step ? JSON.parse(step) : this.step;
+    if (this.isOnboardingComplete) {
+      this.step = 4;
+    } else {
+      const step = localStorage.getItem('step');
+      this.step = step ? JSON.parse(step) : this.step;
+    }
   },
   computed: {
+    ...mapGetters('user', ['isOnboardingComplete']),
     progress() {
       return (this.step / this.steps.length) * 100;
     },

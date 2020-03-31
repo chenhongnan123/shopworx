@@ -1,0 +1,124 @@
+{
+  "$vuetify": {
+    "badge": "बिल्ला",
+    "close": "बंद करे",
+    "dataIterator": {
+      "noResultsText": "कोई मिलान रिकॉर्ड पाया",
+      "loadingText": "आइटम लोड हो रहे हैं ..."
+    },
+    "dataTable": {
+      "itemsPerPageText": "प्रति पृष्ठ पंक्तियाँ:",
+      "ariaLabel": {
+        "sortDescending": ": क्रमबद्ध अवरोही। छँटाई को हटाने के लिए सक्रिय करें।",
+        "sortAscending": ": आरोही क्रमबद्ध। अवरोही क्रमबद्ध करने के लिए सक्रिय करें।",
+        "sortNone": ": सॉर्ट नहीं किया गया। आरोही को सॉर्ट करने के लिए सक्रिय करें।"
+      },
+      "sortBy": "इसके अनुसार क्रमबद्ध करें"
+    },
+    "dataFooter": {
+      "itemsPerPageText": "आइटम प्रति पेज:",
+      "itemsPerPageAll": "सब",
+      "nextPage": "अगला पृष्ठ",
+      "prevPage": "पिछला पृष्ठ",
+      "firstPage": "पहला पन्ना",
+      "lastPage": "अंतिम पृष्ठ",
+      "pageText": "{0} - {1} का {2}"
+    },
+    "datePicker": {
+      "itemsSelected": "{0} चयनित"
+    },
+    "noDataText": "कोई डेटा उपलब्ध नहीं है",
+    "carousel": {
+      "prev": "पिछला दृश्य",
+      "next": "अगला दृश्य",
+      "ariaLabel": {
+        "delimiter": "हिंडोला स्लाइड {0} का {1}"
+      }
+    },
+    "calendar": {
+      "moreEvents": "{0} अधिक"
+    },
+    "fileInput": {
+      "counter": "{0} फ़ाइलें",
+      "counterSize": "{0} फ़ाइलें ({1} कुल मिलाकर)"
+    },
+    "timePicker": {
+      "am": "AM",
+      "pm": "PM"
+    }
+  },
+  "success": {
+    "OTP_SENT": "पंजीकृत ईमेल / फोन पर वन टाइम पासवर्ड भेजा जाता है।",
+    "PASSWORD_RESET": "नया पासवर्ड पंजीकृत ईमेल / फोन पर भेजा जाता है।"
+  },
+  "error": {
+    "USER_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
+    "EMAIL_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
+    "INCORRECT_PASSWORD": "लॉगिन विफल: गलत पासवर्ड।",
+    "INVALID_OTP": "लॉगिन विफल: गलत ओटीपी।"
+  },
+  "snackbar": {
+    "close": "बंद करे",
+    "redirectToLogin": "में पुनर्निर्देशित कर रहा है {time}"
+  },
+  "helper": {
+    "or": "या",
+    "next": "आगे",
+    "skip": "छोड़ें"
+  },
+  "login": {
+    "title": "Infinity में प्रवेश करें",
+    "subTitle": "अपने ShopWorx खाते का उपयोग करें",
+    "identifier": "ईमेल या फोन",
+    "password": "कुंजिका",
+    "otp": "OTP",
+    "resendOtp": "Otp को पुनः भेजें?",
+    "resendOtpIn": "में otp को पुनः भेजें {time}",
+    "sendOtp": "ओटीपी भेजें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "login": "सुरक्षित रूप से लॉगिन करें",
+    "loginWithOtp": "Otp के साथ लॉगिन करें",
+    "loginWithPassword": "पासवर्ड से लॉगिन करें"
+  },
+  "forgotPassword": {
+    "title": "पासवर्ड रीसेट?",
+    "subTitle": "अपना ईमेल या फ़ोन नंबर दर्ज करें",
+    "reset": "पासवर्ड रीसेट"
+  },
+  "welcome": {
+    "title": "स्वागत हे! हम आपसे उम्मीद करते रहे हैं।",
+    "subTitle1": "पहले चीजें पहले, चलो शुरू करते हैं",
+    "subTitle2": "अपना खाता बनाना।",
+    "subTitle3": "इसमें एक मिनट से भी कम समय लगेगा।",
+    "start": "आएँ शुरू करें"
+  },
+  "register": {
+    "account": {
+      "title": "अपना ShopWorx खाता अपडेट करें",
+      "update": "अधतन खाता",
+      "firstName": "पहला नाम",
+      "lastName": "उपनाम",
+      "email": "ईमेल",
+      "phone": "फ़ोन"
+    },
+    "password": {
+      "title": "अपने ShopWorx पासवर्ड को अपडेट करें",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि कीजिये",
+      "update": "पासवर्ड अपडेट करें"
+    },
+    "updated": "आपका ShopWorx खाता अपडेट हो गया है!"
+  },
+  "modules": {
+    "home": "घर",
+    "machinedashboard": "मशीन का डैशबोर्ड",
+    "planning": "योजना",
+    "reports": "रिपोर्ट good",
+    "production": "उत्पादन",
+    "downtime": "स्र्कना",
+    "rejection": "अस्वीकार",
+    "oee": "कौन",
+    "masters": "मास्टर्स",
+    "admin": "व्यवस्थापक"
+  }
+}

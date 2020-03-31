@@ -3,11 +3,11 @@
     <v-window v-model="window">
       <v-window-item :value="0">
         <div class="headline mb-4">
-          Connect master data with ShopWorx to get better
+          {{ $t('setup.importMaster.title1') }}
           <span class="primary--text font-weight-medium">
-            insights
+            {{ $t('setup.importMaster.title2') }}
           </span>
-          of your machines, operators, products and more.
+          {{ $t('setup.importMaster.title3') }}
         </div>
         <v-btn
           block
@@ -15,8 +15,11 @@
           class="text-none"
           @click="uploadFiles"
         >
-          <v-icon left>mdi-cloud-upload-outline</v-icon>
-          Import master data
+          <v-icon
+            left
+            v-text="'$upload'"
+          ></v-icon>
+          {{ $t('setup.importMaster.import') }}
         </v-btn>
         <input
           multiple
@@ -28,25 +31,24 @@
         >
         <div class="subheading my-2" v-if="downloading">
           <v-progress-circular indeterminate></v-progress-circular>
-          <span>Generating templates...</span>
+          {{ $t('setup.importMaster.downloading') }}
         </div>
         <div class="subheading my-2" v-else-if="error">
-          Could not download the master data templates.
+          {{ $t('setup.importMaster.downloadError') }}
           <a
             @click="downloadZip"
             class="primary--text font-weight-medium"
           >
-            Retry
+            {{ $t('setup.importMaster.retryDownload') }}
           </a>
-          download.
         </div>
         <div class="subheading my-2" v-else>
-          You can download the master data templates
+          {{ $t('setup.importMaster.download') }}
           <a
             @click="downloadZip"
             class="primary--text font-weight-medium"
           >
-            here.
+            {{ $t('setup.importMaster.downloadLink') }}
           </a>
         </div>
       </v-window-item>

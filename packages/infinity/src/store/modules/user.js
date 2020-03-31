@@ -237,11 +237,7 @@ export default ({
 
     modules: ({ mySolutions }) => {
       const modules = {
-        items: [{
-          title: 'home',
-          icon: '$home',
-          to: 'user-dashboard',
-        }],
+        items: [],
         adminItems: [],
       };
       if (mySolutions && mySolutions.length) {

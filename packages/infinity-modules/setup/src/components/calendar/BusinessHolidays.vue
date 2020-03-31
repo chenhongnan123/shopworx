@@ -1,17 +1,17 @@
 <template>
   <div>
     <span class="headline">
-      Update business's holidays
+      {{ $t('setup.onboardCalendar.holidays.title') }}
     </span>
     <div v-if="fetching">
-      Fetching holidays...
+      {{ $t('setup.onboardCalendar.holidays.title') }}
     </div>
     <validation-observer #default="{ passes }" v-else>
       <v-form @submit.prevent="passes(save)">
         <v-card
           flat
           :key="index"
-          class="mb-2"
+          class="mb-2 transparent"
           v-for="(holiday, index) in holidays"
         >
           <v-row>
@@ -23,10 +23,11 @@
               >
                 <v-text-field
                   type="text"
-                  label="Name"
                   hide-details="auto"
                   v-model="holiday.name"
                   :error-messages="errors"
+                  :disabled="skipping || loading"
+                  :label="$t('setup.onboardCalendar.holidays.name')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -38,10 +39,11 @@
               >
                 <v-text-field
                   type="date"
-                  label="Date"
                   hide-details="auto"
                   v-model="holiday.date"
                   :error-messages="errors"
+                  :disabled="skipping || loading"
+                  :label="$t('setup.onboardCalendar.holidays.date')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
@@ -52,7 +54,7 @@
                 class="mx-2"
                 @click="addHoliday"
               >
-                <v-icon>mdi-plus-circle-outline</v-icon>
+                <v-icon v-text="'$add'"></v-icon>
               </v-btn>
               <v-btn
                 icon
@@ -61,7 +63,7 @@
                 @click="removeHoliday(index)"
                 :disabled="holidays.length === 1"
               >
-                <v-icon>mdi-minus-circle-outline</v-icon>
+                <v-icon v-text="'$remove'"></v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -75,11 +77,14 @@
           :loading="loading"
           :disabled="skipping"
         >
-          <v-icon left>mdi-chevron-triple-right</v-icon>
-            Continue to next step
+          <v-icon
+            left
+            v-text="'$skip'"
+          ></v-icon>
+          {{ $t('setup.onboardCalendar.holidays.continue') }}
         </v-btn>
         <div class="text-center">
-          <span>or</span>
+          <span>{{ $t('helper.or') }}</span>
         </div>
         <div class="text-center">
           <v-btn
@@ -90,7 +95,7 @@
             :disabled="loading"
             :loading="skipping"
           >
-            Skip for now
+            {{ $t('helper.skip') }}
           </v-btn>
         </div>
       </v-form>

@@ -1,7 +1,7 @@
 <template>
   <v-card flat class="transparent">
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
-      Update your ShopWorx Password
+      {{ $t('register.password.title') }}
     </div>
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdatePassword)">
@@ -16,10 +16,10 @@
               type="password"
               v-model="password"
               :disabled="loading"
-              label="New password"
               :error-messages="errors"
               autocomplete="new-password"
-              prepend-inner-icon="mdi-lock-outline"
+              prepend-inner-icon="$password"
+              :label="$t('register.password.newPassword')"
             ></v-text-field>
           </validation-provider>
           <validation-provider
@@ -31,10 +31,10 @@
               type="password"
               :disabled="loading"
               :error-messages="errors"
-              label="Confirm password"
               v-model="confirmPassword"
               autocomplete="new-password"
-              prepend-inner-icon="mdi-lock-outline"
+              prepend-inner-icon="$password"
+              :label="$t('register.password.confirmPassword')"
             ></v-text-field>
           </validation-provider>
         </v-card-text>
@@ -46,8 +46,11 @@
             class="text-none"
             :loading="loading"
           >
-            <v-icon left>mdi-lock-outline</v-icon>
-            Update password
+            <v-icon
+              left
+              v-text="'$password'"
+            ></v-icon>
+            {{ $t('register.password.update') }}
           </v-btn>
         </v-card-actions>
       </v-form>
