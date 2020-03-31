@@ -52,6 +52,7 @@
     "PASSWORD_RESET": "New password sent on registered email/phone."
   },
   "error": {
+    "INVALID_SESSION": "Session expired: Please login again.",
     "USER_NOT_FOUND": "User account not found.",
     "EMAIL_NOT_FOUND": "User account not found.",
     "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
