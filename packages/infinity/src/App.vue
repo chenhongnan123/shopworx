@@ -20,7 +20,9 @@ export default {
   async created() {
     const dark = localStorage.getItem('dark');
     this.setIsDark(dark ? JSON.parse(dark) : false);
-    this.initAuth();
+    if (!this.sessionId) {
+      this.initAuth();
+    }
   },
   watch: {
     isDark() {
@@ -29,7 +31,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('user', ['getMe', 'getMySolutions']),
     ...mapActions('auth', ['initAuth']),
     ...mapMutations('helper', ['setIsDark']),
   },

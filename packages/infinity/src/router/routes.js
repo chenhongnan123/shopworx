@@ -1,4 +1,5 @@
 const routes = [
+  { path: '*', redirect: '/' },
   {
     path: '/',
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),

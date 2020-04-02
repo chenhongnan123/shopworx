@@ -60,12 +60,23 @@
     "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
     "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data."
   },
+  "validatoins": {
+    "required": "{_field_} is required.",
+    "email": "{_field_} is not vaild.",
+    "phone": "{_field_} is not vaild."
+  },
+  "fields": {
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password"
+  },
   "snackbar": {
     "close": "Close",
     "redirectToLogin": "Redirecting in {time}"
   },
   "helper": {
     "or": "or",
+    "help": "Help",
     "next": "Next",
     "skip": "Skip for now"
   },
@@ -114,7 +125,7 @@
   },
   "modules": {
     "home": "Home",
-    "machinedashboard": "Machine dashboard",
+    "machineDashboard": "Machine dashboard",
     "planning": "Planning",
     "reports": "Report",
     "production": "Production",

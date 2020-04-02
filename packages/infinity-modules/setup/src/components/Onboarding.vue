@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import ImportMasterData from './import/ImportMasterData.vue';
 import OnboardCalendar from './calendar/OnboardCalendar.vue';
 import InviteUsers from './invite/InviteUsers.vue';
@@ -67,12 +67,15 @@ export default {
       ],
     };
   },
-  created() {
+  async created() {
     if (this.isOnboardingComplete) {
       this.step = 4;
     } else {
       const step = localStorage.getItem('step');
       this.step = step ? JSON.parse(step) : this.step;
+    }
+    if (!this.me) {
+      await this.getMe();
     }
   },
   computed: {
@@ -82,6 +85,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('user', ['getMe']),
     updateStep() {
       this.step += 1;
       localStorage.setItem('step', this.step);

@@ -53,15 +53,17 @@ export default {
     if (!this.me) {
       await this.getMe();
     }
-    if (!this.isAccountUpdated) {
-      this.$router.replace({ name: 'welcome' });
-    } else if (!this.isPasswordUpdated) {
-      this.$router.replace({ name: 'register' });
-    } else if (!this.isOnboardingComplete) {
-      this.$router.replace({ name: 'setup' });
-    } else {
-      await this.getMySolutions();
-      this.redirect(this.$route.fullPath);
+    if (this.me) {
+      if (!this.isAccountUpdated) {
+        this.$router.replace({ name: 'welcome' });
+      } else if (!this.isPasswordUpdated) {
+        this.$router.replace({ name: 'register' });
+      } else if (!this.isOnboardingComplete) {
+        this.$router.replace({ name: 'setup' });
+      } else {
+        await this.getMySolutions();
+        this.redirect(this.$route.fullPath);
+      }
     }
     this.loading = false;
   },
@@ -101,7 +103,7 @@ export default {
       if (path === '/') {
         const index = this.items.findIndex((elem) => elem.title);
         const { to } = this.items.find((item, i) => index === i);
-        this.$router.push({ name: to });
+        this.$router.push({ path: to });
       }
     },
     setDrawer(val) {

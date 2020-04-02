@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import SessionService from '@shopworx/services/util/session.service';
 import routes from './routes';
+import store from '../store';
 
 Vue.use(VueRouter);
 
@@ -9,20 +10,39 @@ const router = new VueRouter({
   routes,
 });
 
+const isAppProvisioned = async (appName) => {
+  let permit = false;
+  const checkAccess = () => store.getters['user/isAppProvisioned'](appName);
+  const { me } = store.state.user;
+  if (!me) {
+    store.dispatch('auth/initAuth');
+    await store.dispatch('user/getMe');
+  }
+  permit = checkAccess();
+  return permit;
+};
+
 router.beforeEach((to, from, next) => {
   const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some((record) => record.meta.onlyWhenLoggedOut);
+  const appPermissionRequired = to.matched.some((record) => record.meta.permissionRequired);
   const loggedIn = !!SessionService.getSession();
   if (!isPublic && !loggedIn) {
     next({
       name: 'login',
       query: { redirect: to.fullPath },
     });
-  }
-  if (loggedIn && onlyWhenLoggedOut) {
+  } else if (loggedIn && onlyWhenLoggedOut) {
     next({ path: '/' });
+  } else if (loggedIn && appPermissionRequired) {
+    if (isAppProvisioned(to.name)) {
+      next();
+    } else {
+      next({ path: '/' });
+    }
+  } else {
+    next();
   }
-  next();
 });
 
 export default router;

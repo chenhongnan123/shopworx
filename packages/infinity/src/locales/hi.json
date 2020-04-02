@@ -57,6 +57,16 @@
     "INCORRECT_PASSWORD": "लॉगिन विफल: गलत पासवर्ड।",
     "INVALID_OTP": "लॉगिन विफल: गलत ओटीपी।"
   },
+  "validatoins": {
+    "required": "{_field_} आवश्यक है।",
+    "email": "{_field_} वैध नहीं है।",
+    "phone": "{_field_} वैध नहीं है।"
+  },
+  "fields": {
+    "email": "ईमेल",
+    "phone": "फ़ोन",
+    "password": "कुंजिका"
+  },
   "snackbar": {
     "close": "बंद करे",
     "redirectToLogin": "में पुनर्निर्देशित कर रहा है {time}"
@@ -73,7 +83,7 @@
     "password": "कुंजिका",
     "otp": "OTP",
     "resendOtp": "Otp को पुनः भेजें?",
-    "resendOtpIn": "में otp को पुनः भेजें {time}",
+    "resendOtpIn": "{time} में otp को पुनः भेजें",
     "sendOtp": "ओटीपी भेजें",
     "forgotPassword": "पासवर्ड भूल गए?",
     "login": "सुरक्षित रूप से लॉगिन करें",
@@ -111,7 +121,7 @@
   },
   "modules": {
     "home": "घर",
-    "machinedashboard": "मशीन का डैशबोर्ड",
+    "machineDashboard": "मशीन का डैशबोर्ड",
     "planning": "योजना",
     "reports": "रिपोर्ट good",
     "production": "उत्पादन",

@@ -39,10 +39,12 @@ export default {
       return this.isMobileNumber ? '+91' : '';
     },
     identifierField() {
-      return this.isMobileNumber ? 'Mobile' : 'Email';
+      return this.isMobileNumber
+        ? this.$i18n.t('fields.phone')
+        : this.$i18n.t('fields.email');
     },
     identifierValidationRules() {
-      return this.isMobileNumber ? 'required|digits:10' : 'required|email';
+      return this.isMobileNumber ? 'required|phone:10' : 'required|email';
     },
     identifier: {
       get() {

@@ -255,9 +255,9 @@ export default ({
             modules.items.push({ header: 'reports' });
             module.details.forEach((detail) => {
               modules.items.push({
-                title: detail.subModuleName,
+                title: detail.reportsCategoryName,
                 icon: detail.iconUrl,
-                group: detail.subModuleName,
+                group: detail.reportsCategoryName,
                 children: detail.reportViews.map((report) => ({
                   title: report.reportDescription,
                   to: 'reports',
@@ -285,6 +285,18 @@ export default ({
         }));
       }
       return modules;
+    },
+
+    isAppProvisioned: (_, { modules }) => (appName) => {
+      let isProvisioned = false;
+      if (modules) {
+        const { items, adminItems } = modules;
+        const itemTitles = items.map((item) => item.title);
+        const adminItemTitles = adminItems.map((item) => item.title);
+        const mods = [...itemTitles, ...adminItemTitles];
+        isProvisioned = mods.includes(appName);
+      }
+      return isProvisioned;
     },
   },
 });

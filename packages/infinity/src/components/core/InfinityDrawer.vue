@@ -72,7 +72,7 @@
               :key="child.param"
               :title="$t(`reports.${child.param}`)"
               v-for="child in item.children"
-              :to="{ name: child.to, params: { id: child.param } }"
+              :to="{ path: child.to, params: { id: child.param } }"
               :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
             >
               <v-list-item-icon>
@@ -87,7 +87,7 @@
             link
             v-else
             :key="index"
-            :to="{ name: item.to }"
+            :to="{ path: item.to }"
             :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
           >
             <v-list-item-icon>
@@ -102,7 +102,7 @@
       <v-list-item
         v-for="item in adminItems"
         :key="item.title"
-        :to="{ name: item.to }"
+        :to="{ path: item.to }"
         :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
       >
         <v-list-item-icon>
@@ -122,7 +122,7 @@
         </v-list-item-icon>
         <v-list-item-title
           class="primary--text font-weight-medium"
-          v-text="$t('help.title')"
+          v-text="$t('helper.help')"
         >
         </v-list-item-title>
       </v-list-item>
