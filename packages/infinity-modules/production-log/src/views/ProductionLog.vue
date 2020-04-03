@@ -2,7 +2,7 @@
   <div>
     <portal to="app-header">
       <v-toolbar-title class="headline font-weight-medium">
-        Production log
+        Production Log
       </v-toolbar-title>
     </portal>
     Coming soon!

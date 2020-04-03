@@ -2,7 +2,7 @@
   <div>
     <portal to="app-header">
       <v-toolbar-title class="headline font-weight-medium">
-        Master data
+        Master Data
       </v-toolbar-title>
     </portal>
     Coming soon!

@@ -111,7 +111,7 @@
   },
   "modules": {
     "home": "Home",
-    "machineDashboard": "Machine dashboard",
+    "machineDashboard": "Machine Dashboard",
     "planning": "Planning",
     "reports": "Report",
     "production": "Production",

@@ -43,5 +43,6 @@ export default {
     logout: 'mdi-logout-variant',
     settings: 'mdi-settings-outline',
     info: 'mdi-information-outline',
+    fullscreen: 'mdi-fullscreen',
   },
 };
