@@ -1,10 +1,9 @@
 <template>
   <v-app-bar
     app
-    short
     clipped-right
     elevate-on-scroll
-    extension-height="40"
+    extension-height="28"
     :color="$vuetify.theme.dark ? '#121212' : 'white'"
   >
     <v-app-bar-nav-icon
