@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <template v-if="loading">
-      <v-content :class="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'">
+      <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
         <v-container fill-height>
           <v-row
             align="center"
@@ -23,7 +23,7 @@
         @set-drawer="setDrawer"
       />
       <infinity-header @toggle-drawer="toggleDrawer" />
-      <v-content :class="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'">
+      <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
         <v-container
           fluid
           style="height:100%"
@@ -38,7 +38,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+  mapState,
+  mapMutations,
+} from 'vuex';
 import InfinityHeader from '@/components/core/InfinityHeader.vue';
 import InfinityDrawer from '@/components/core/InfinityDrawer.vue';
 
@@ -69,6 +74,7 @@ export default {
   },
   watch: {
     $route(val) {
+      this.setExtendedHeader(false);
       this.redirect(val.fullPath);
     },
   },
@@ -98,6 +104,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('user', ['getMe', 'getMySolutions']),
     redirect(path) {
       if (path === '/') {

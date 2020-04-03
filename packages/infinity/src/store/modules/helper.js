@@ -30,10 +30,12 @@ export default ({
       },
     ],
     isDark: null,
+    extendedHeader: false,
   },
   mutations: {
     setAlert: set('alert'),
     setIsDark: set('isDark'),
     toggleIsDark: toggle('isDark'),
+    setExtendedHeader: set('extendedHeader'),
   },
 });

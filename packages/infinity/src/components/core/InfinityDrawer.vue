@@ -1,16 +1,17 @@
 <template>
   <v-navigation-drawer
     app
+    dark
     floating
     v-model="drawer"
+    color="#212121"
     :expand-on-hover="expandOnHover && $vuetify.breakpoint.lgAndUp"
-    :color="$vuetify.theme.dark ? '#1F1F1F' : 'white'"
   >
     <v-list shaped class="py-1">
       <v-list-item>
         <v-list-item-icon>
           <v-icon
-            color="primary"
+            :color="$vuetify.theme.dark ? 'primary': 'secondary'"
             v-text="'$infinity'"
           ></v-icon>
         </v-list-item-icon>
@@ -31,12 +32,12 @@
           >
             <v-icon
               v-if="!expandOnHover"
-              color="primary"
+              :color="$vuetify.theme.dark ? 'primary': 'secondary'"
               v-text="'$radioMarked'"
             ></v-icon>
             <v-icon
               v-else
-              color="primary"
+              :color="$vuetify.theme.dark ? 'primary': 'secondary'"
               v-text="'$radioBlank'"
             ></v-icon>
           </v-btn>
@@ -60,7 +61,7 @@
             :group="item.group"
             :prepend-icon="item.icon"
             v-else-if="item.children"
-            :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <template #activator>
               <v-list-item-title
@@ -116,13 +117,16 @@
       <v-list-item>
         <v-list-item-icon>
           <v-icon
-            color="primary"
+            :color="$vuetify.theme.dark ? 'primary': 'secondary'"
             v-text="'$help'"
           ></v-icon>
         </v-list-item-icon>
         <v-list-item-title
-          class="primary--text font-weight-medium"
           v-text="$t('helper.help')"
+          class="font-weight-medium"
+          :class="$vuetify.theme.dark
+            ? 'primary--text'
+            : 'secondary--text'"
         >
         </v-list-item-title>
       </v-list-item>
@@ -149,14 +153,14 @@ export default {
   },
   data() {
     return {
-      expandOnHover: false,
+      expandOnHover: true,
     };
   },
   computed: {
     logoName() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
-        : 'shopworx-light';
+        : 'shopworx-dark';
     },
     drawer: {
       get() {
@@ -193,7 +197,7 @@ export default {
   color: #212121
 }
 .highlighted {
-  background-color: var(--v-primary-base);
-  color: #ffffff
+  background-color: var(--v-secondary-base);
+  color: #212121
 }
 </style>
