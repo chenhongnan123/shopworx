@@ -21,6 +21,7 @@
             </div>
             <v-btn
               block
+              id="start"
               color="primary"
               class="text-none"
               @click="createAccount"
