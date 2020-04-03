@@ -22,7 +22,7 @@ const isAppProvisioned = async (appName) => {
   return permit;
 };
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some((record) => record.meta.onlyWhenLoggedOut);
   const appPermissionRequired = to.matched.some((record) => record.meta.permissionRequired);
@@ -35,7 +35,7 @@ router.beforeEach((to, from, next) => {
   } else if (loggedIn && onlyWhenLoggedOut) {
     next({ path: '/' });
   } else if (loggedIn && appPermissionRequired) {
-    if (isAppProvisioned(to.name)) {
+    if (await isAppProvisioned(to.name)) {
       next();
     } else {
       next({ path: '/' });
