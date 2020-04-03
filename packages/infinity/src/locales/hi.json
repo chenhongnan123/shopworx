@@ -108,8 +108,8 @@
       "update": "अधतन खाता",
       "firstName": "पहला नाम",
       "lastName": "उपनाम",
-      "email": "ईमेल",
-      "phone": "फ़ोन"
+      "email": "ईमेल (ऐच्छिक)",
+      "phone": "फ़ोन (ऐच्छिक)"
     },
     "password": {
       "title": "अपने ShopWorx पासवर्ड को अपडेट करें",

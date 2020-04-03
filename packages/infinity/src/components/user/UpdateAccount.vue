@@ -37,13 +37,14 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="required|email"
+            rules="email"
             name="Email"
             #default="{ errors }"
           >
             <v-text-field
               type="email"
               v-model="email"
+              v-if="showEmail"
               :disabled="loading"
               autocomplete="email"
               :error-messages="errors"
@@ -52,7 +53,7 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="required|digits:10"
+            rules="digits:10"
             name="Phone"
             #default="{ errors }"
           >
@@ -60,6 +61,7 @@
               type="tel"
               prefix="+91"
               v-model="phone"
+              v-if="showPhone"
               autocomplete="tel"
               :disabled="loading"
               :error-messages="errors"
@@ -89,7 +91,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'UpdateAccount',
@@ -101,6 +103,23 @@ export default {
       firstName: '',
       loading: false,
     };
+  },
+  computed: {
+    ...mapState('user', ['me']),
+    showEmail() {
+      let show = false;
+      if (this.me && this.me.user) {
+        show = !this.me.user.emailId;
+      }
+      return show;
+    },
+    showPhone() {
+      let show = false;
+      if (this.me && this.me.user) {
+        show = !this.me.user.phoneNumber;
+      }
+      return show;
+    },
   },
   methods: {
     ...mapActions('user', ['updateUser']),
