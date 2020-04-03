@@ -6,6 +6,7 @@
   >
     <v-text-field
       autofocus
+      id="email"
       type="email"
       :prefix="prefix"
       :disabled="loading"

@@ -29,6 +29,7 @@
                     flat
                     solo
                     dense
+                    id="locale"
                     :items="locales"
                     menu-props="top"
                     item-text="text"

@@ -13,6 +13,7 @@
           #default="{ errors }"
         >
           <v-text-field
+            id="password"
             type="password"
             v-model="password"
             :disabled="loading"
@@ -28,6 +29,7 @@
             text
             small
             color="primary"
+            id="forgotPassword"
             :disabled="loading"
             @click="resetPassword"
             class="text-none pa-0"
@@ -39,6 +41,7 @@
       <v-card-actions>
         <v-btn
           block
+          id="login"
           type="submit"
           color="primary"
           class="text-none"
@@ -59,6 +62,7 @@
         <v-btn
           text
           color="primary"
+          id="loginWithOtp"
           class="text-none"
           :disabled="loading"
           @click="$emit('login-with-otp')"
