@@ -52,6 +52,8 @@
     "PASSWORD_RESET": "New password sent on registered email/phone."
   },
   "error": {
+    "NO_LICENSE": "You have zero active licenses. Please contat ShopWorx support.",
+    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licenses. Please try again.",
     "INVALID_SESSION": "Session expired: Please login again.",
     "USER_NOT_FOUND": "User account not found.",
     "EMAIL_NOT_FOUND": "User account not found.",
@@ -112,8 +114,8 @@
       "update": "Update account",
       "firstName": "First name",
       "lastName": "Last name",
-      "email": "Email",
-      "phone": "Phone"
+      "email": "Email (Optional)",
+      "phone": "Phone (Optional)"
     },
     "password": {
       "title": "Update your ShopWorx Password",

@@ -1,4 +1,5 @@
 import UserService from '@shopworx/services/api/user.service';
+import SiteService from '@shopworx/services/api/site.service';
 import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -8,6 +9,7 @@ export default ({
     userState: null,
     activeSite: null,
     mySolutions: [],
+    licenses: [],
   },
   mutations: {
     setMe: set('me'),
@@ -15,6 +17,7 @@ export default ({
     setUserState: set('userState'),
     setActiveSite: set('activeSite'),
     setMySolutions: set('mySolutions'),
+    setLicenses: set('licenses'),
   },
   actions: {
     getMe: async ({ commit }) => {
@@ -22,8 +25,34 @@ export default ({
         const { data } = await UserService.getMe();
         if (data && data.results) {
           commit('setMe', data.results);
-          commit('setActiveSite', data.results.activeSiteId);
-          commit('setUserState', data.results.user.userState.toUpperCase().trim());
+          const customerId = data.results.customer.id;
+          const siteId = data.results.activeSiteId;
+          const userState = data.results.user.userState.toUpperCase().trim();
+          commit('setActiveSite', siteId);
+          commit('setUserState', userState);
+          const site = await SiteService.getLicense(customerId, siteId);
+          if (site && site.data.results) {
+            commit('setLicenses', site.data.results);
+            if (!site.data.results.length) {
+              commit('helper/setAlert', {
+                show: true,
+                type: 'error',
+                message: 'NO_LICENSE',
+              }, {
+                root: true,
+              });
+              return false;
+            }
+          } else {
+            commit('helper/setAlert', {
+              show: true,
+              type: 'error',
+              message: 'CANNOT_FETCH_LICENSE',
+            }, {
+              root: true,
+            });
+            return false;
+          }
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -245,9 +274,10 @@ export default ({
           if (module.moduleName.toUpperCase().trim() === 'APPS') {
             module.details.forEach((detail) => {
               modules.items.push({
-                title: detail.webAppName,
+                id: detail.id,
                 icon: detail.iconURL,
                 to: detail.webAppLink,
+                title: detail.webAppName,
               });
             });
           }
@@ -255,13 +285,15 @@ export default ({
             modules.items.push({ header: 'reports' });
             module.details.forEach((detail) => {
               modules.items.push({
-                title: detail.reportsCategoryName,
+                id: detail.id,
                 icon: detail.iconUrl,
+                title: detail.reportsCategoryName,
                 group: detail.reportsCategoryName,
                 children: detail.reportViews.map((report) => ({
-                  title: report.reportDescription,
-                  to: 'reports',
+                  id: report.id,
+                  to: 'report-viewer',
                   param: report.reportName,
+                  title: report.reportDescription,
                   avatarText: report.reportDescription.match(/\b(\w)/g).join(''),
                 })),
               });
@@ -269,22 +301,32 @@ export default ({
           }
           if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
             modules.adminItems.push({
+              id: module.id,
+              to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
-              to: module.moduleLink,
             });
           }
           if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
             modules.adminItems.push({
+              id: module.id,
+              to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
-              to: module.moduleLink,
             });
           }
           return modules;
         }));
       }
       return modules;
+    },
+
+    licensedAssets: ({ licenses }) => {
+      let assets = [];
+      if (licenses && licenses.length) {
+        assets = licenses.map((license) => license.assetId);
+      }
+      return assets;
     },
 
     isAppProvisioned: (_, { modules }) => (appName) => {
