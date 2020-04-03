@@ -28,6 +28,7 @@
                   item-value="value"
                   hide-details="auto"
                   v-model="hour.type"
+                  :id="`type-${index}`"
                   :error-messages="errors"
                   :prepend-inner-icon="hour.type === 'shift'
                     ? '$shift'
@@ -46,6 +47,7 @@
                   type="text"
                   v-model="hour.name"
                   hide-details="auto"
+                  :id="`name-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
@@ -61,6 +63,7 @@
                   type="text"
                   v-model="hour.name"
                   hide-details="auto"
+                  :id="`name-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
@@ -76,6 +79,7 @@
                   :items="shifts"
                   hide-details="auto"
                   v-model="hour.shift"
+                  :id="`shift-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.includeIn')"
                 ></v-select>
@@ -92,6 +96,7 @@
                   hide-details="auto"
                   v-model="hour.starttime"
                   :error-messages="errors"
+                  :id="`starttime-${index}`"
                   :label="$t('setup.onboardCalendar.hours.startTime')"
                 ></v-text-field>
               </validation-provider>
@@ -107,6 +112,7 @@
                   hide-details="auto"
                   v-model="hour.endtime"
                   :error-messages="errors"
+                  :id="`endtime-${index}`"
                   :label="$t('setup.onboardCalendar.hours.endTime')"
                 ></v-text-field>
               </validation-provider>
@@ -117,6 +123,7 @@
                 small
                 class="mx-2"
                 @click="addHour"
+                :id="`add-${index}`"
               >
                 <v-icon v-text="'$add'"></v-icon>
               </v-btn>
@@ -124,6 +131,7 @@
                 icon
                 small
                 class="pa-0"
+                :id="`remove-${index}`"
                 @click="removeHour(index)"
                 :disabled="hours.length === 1"
               >
@@ -137,6 +145,7 @@
           block
           type="submit"
           color="primary"
+          id="finishHours"
           class="text-none"
           :loading="loading"
         >

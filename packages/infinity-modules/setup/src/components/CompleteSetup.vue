@@ -13,6 +13,7 @@
       class="text-none"
       @click="complete"
       :loading="loading"
+      id="completeOboarding"
     >
       <v-icon
         left

@@ -13,6 +13,7 @@
               <identifier-input
                 :loading="loading"
                 v-model="user.identifier"
+                :id="`identifier-${index}`"
                 @on-update="setIdentifier($event, index)"
               />
             </v-col>
@@ -27,6 +28,7 @@
                   item-value="roleId"
                   hide-details="auto"
                   :disabled="loading"
+                  :id="`role-${index}`"
                   v-model="user.roleId"
                   :error-messages="errors"
                   item-text="roleDescription"
@@ -40,6 +42,7 @@
                 small
                 class="mx-2"
                 @click="addUser"
+                :id="`add-${index}`"
               >
                 <v-icon v-text="'$add'"></v-icon>
               </v-btn>
@@ -47,6 +50,7 @@
                 icon
                 small
                 class="pa-0"
+                :id="`remove-${index}`"
                 @click="removeUser(index)"
                 :disabled="users.length === 1"
               >
@@ -59,6 +63,7 @@
           block
           type="submit"
           color="primary"
+          id="inviteUsers"
           class="text-none"
           :loading="loading"
         >
@@ -76,6 +81,7 @@
             text
             @click="skip"
             color="primary"
+            id="skipInvite"
             class="text-none"
             :disabled="loading"
           >

@@ -5,8 +5,8 @@
     #default="{ errors }"
   >
     <v-text-field
+      :id="id"
       autofocus
-      id="email"
       type="email"
       :prefix="prefix"
       :disabled="loading"
@@ -26,6 +26,11 @@ export default {
     value: {
       type: String,
       required: true,
+    },
+    id: {
+      type: String,
+      required: true,
+      default: 'identifier',
     },
     loading: {
       type: Boolean,

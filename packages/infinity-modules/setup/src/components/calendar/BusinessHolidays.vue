@@ -24,6 +24,7 @@
                 <v-text-field
                   type="text"
                   hide-details="auto"
+                  :id="`name-${index}`"
                   v-model="holiday.name"
                   :error-messages="errors"
                   :disabled="skipping || loading"
@@ -40,6 +41,7 @@
                 <v-text-field
                   type="date"
                   hide-details="auto"
+                  :id="`date-${index}`"
                   v-model="holiday.date"
                   :error-messages="errors"
                   :disabled="skipping || loading"
@@ -53,6 +55,7 @@
                 small
                 class="mx-2"
                 @click="addHoliday"
+                :id="`add-${index}`"
               >
                 <v-icon v-text="'$add'"></v-icon>
               </v-btn>
@@ -60,6 +63,7 @@
                 icon
                 small
                 class="pa-0"
+                :id="`remove-${index}`"
                 @click="removeHoliday(index)"
                 :disabled="holidays.length === 1"
               >
@@ -75,6 +79,7 @@
           color="primary"
           class="text-none"
           :loading="loading"
+          id="finishHolidays"
           :disabled="skipping"
         >
           <v-icon
@@ -92,6 +97,7 @@
             @click="skip"
             color="primary"
             class="text-none"
+            id="skipHolidays"
             :disabled="loading"
             :loading="skipping"
           >

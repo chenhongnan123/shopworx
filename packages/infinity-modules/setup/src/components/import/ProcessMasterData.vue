@@ -56,6 +56,7 @@
       <v-btn
         block
         color="primary"
+        id="finishImport"
         class="text-none"
         :disabled="!valid"
         @click="$emit('success')"
