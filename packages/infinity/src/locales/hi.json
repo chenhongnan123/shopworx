@@ -130,5 +130,13 @@
     "oee": "कौन",
     "masters": "मास्टर्स",
     "admin": "व्यवस्थापक"
+  },
+  "account": {
+    "account": "लेखा",
+    "sites": "साइटें",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉग आउट",
+    "lightMode": "प्रकाश मोड",
+    "darkMode": "डार्क मोड"
   }
 }

@@ -1,24 +1,29 @@
 <template>
   <v-app-bar
     app
+    short
     clipped-right
     elevate-on-scroll
-    :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
+    extension-height="40"
+    :color="$vuetify.theme.dark ? '#121212' : 'white'"
   >
     <v-app-bar-nav-icon
       v-if="$vuetify.breakpoint.mdAndDown"
       @click="$emit('toggle-drawer')"
     ></v-app-bar-nav-icon>
     <portal-target name="app-header"></portal-target>
+    <template #extension v-if="extendedHeader">
+      <portal-target name="app-tabs" slim />
+    </template>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-text-field
-        solo
+        outlined
         flat
         dense
         rounded
         single-line
-        class="mt-3"
+        class="mt-2 mr-2"
         hide-details
         label="Search"
         v-if="$vuetify.breakpoint.mdAndUp"
@@ -31,7 +36,7 @@
     <v-btn
       text
       color="primary"
-      class="mx-1 text-none"
+      class="text-none"
       :icon="$vuetify.breakpoint.smAndDown"
     >
       <v-icon
@@ -42,17 +47,21 @@
         Insights
       </span>
     </v-btn>
-    <v-avatar
-      size="38"
-      color="secondary"
-    >
-      <v-icon v-text="'$account'"></v-icon>
-    </v-avatar>
+    <account-menu />
   </v-app-bar>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import AccountMenu from '@/components/util/AccountMenu.vue';
+
 export default {
   name: 'InfinityHeader',
+  components: {
+    AccountMenu,
+  },
+  computed: {
+    ...mapState('helper', ['extendedHeader']),
+  },
 };
 </script>

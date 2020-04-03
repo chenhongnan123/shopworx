@@ -134,5 +134,13 @@
     "oee": "Oee",
     "masters": "Masters",
     "admin": "Admin"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
   }
 }
