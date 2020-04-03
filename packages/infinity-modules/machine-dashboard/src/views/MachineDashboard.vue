@@ -1,6 +1,6 @@
 <template>
   <div
-    id="content"
+    id="machine-dashboard"
     :class="[
       $vuetify.theme.dark ? '#121212' : 'white',
       isFullScreen ? 'pa-4' : '',
@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     enterFullscreen() {
-      const elem = document.querySelector('#content');
+      const elem = document.querySelector('#machine-dashboard');
       elem.onfullscreenchange = (event) => {
         const e = event.target;
         this.isFullScreen = document.fullscreenElement === e;
