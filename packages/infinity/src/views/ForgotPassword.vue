@@ -19,6 +19,7 @@
             type="submit"
             color="primary"
             class="text-none"
+            id="resetPassword"
             :loading="loading"
           >
             <v-icon
@@ -39,6 +40,7 @@
             color="primary"
             class="text-none"
             :disabled="loading"
+            id="loginWithPassword"
           >
             {{ $t('login.loginWithPassword') }}
           </v-btn>
