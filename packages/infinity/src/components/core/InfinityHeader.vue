@@ -15,23 +15,7 @@
       <portal-target name="app-tabs" slim />
     </template>
     <v-spacer></v-spacer>
-    <v-toolbar-items>
-      <v-text-field
-        outlined
-        flat
-        dense
-        rounded
-        single-line
-        class="mt-2 mr-2"
-        hide-details
-        label="Search"
-        v-if="$vuetify.breakpoint.mdAndUp"
-      >
-        <template #prepend-inner>
-          <v-icon v-text="'$search'"></v-icon>
-        </template>
-      </v-text-field>
-    </v-toolbar-items>
+    <infinity-search />
     <v-btn
       text
       color="primary"
@@ -52,11 +36,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import InfinitySearch from '@/components/util/InfinitySearch.vue';
 import AccountMenu from '@/components/util/AccountMenu.vue';
 
 export default {
   name: 'InfinityHeader',
   components: {
+    InfinitySearch,
     AccountMenu,
   },
   computed: {
