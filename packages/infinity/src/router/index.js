@@ -1,8 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import SessionService from '@shopworx/services/util/session.service';
+
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
 import routes from './routes';
 import store from '../store';
+
+NProgress.configure({
+  showSpinner: false,
+  easing: 'ease',
+  speed: 400,
+});
 
 Vue.use(VueRouter);
 
@@ -15,7 +24,6 @@ const isAppProvisioned = async (appName) => {
   const checkAccess = () => store.getters['user/isAppProvisioned'](appName);
   const { me } = store.state.user;
   if (!me) {
-    store.dispatch('auth/initAuth');
     await store.dispatch('user/getMe');
     await store.dispatch('user/getMySolutions');
   }
@@ -24,10 +32,14 @@ const isAppProvisioned = async (appName) => {
 };
 
 router.beforeEach(async (to, from, next) => {
+  NProgress.start();
+  if (!store.state.auth.sessionId) {
+    store.dispatch('auth/initAuth');
+  }
   const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some((record) => record.meta.onlyWhenLoggedOut);
   const appPermissionRequired = to.matched.some((record) => record.meta.permissionRequired);
-  const loggedIn = !!SessionService.getSession();
+  const loggedIn = store.getters['auth/isLoggedIn'];
   if (!isPublic && !loggedIn) {
     next({
       name: 'login',
@@ -45,5 +57,7 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
 });
+
+router.afterEach(() => NProgress.done());
 
 export default router;
