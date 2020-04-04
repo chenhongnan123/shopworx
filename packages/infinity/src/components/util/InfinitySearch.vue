@@ -43,14 +43,14 @@ export default {
   mounted() {
     document.onkeydown = (event) => {
       const e = event || window.event;
-      if (
-        e.key === '/'
-        && e.target !== this.$refs.search.$refs.input
-      ) {
+      if (e.key === '/' && e.target !== this.$refs.search.$refs.input) {
         e.preventDefault();
         this.$refs.search.focus();
       }
     };
+  },
+  destroyed() {
+    document.onkeydown = null;
   },
   methods: {
     onBlur() {
