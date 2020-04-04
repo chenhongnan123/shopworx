@@ -41,6 +41,7 @@
       <v-card-actions>
         <v-btn
           block
+          rounded
           id="login"
           type="submit"
           color="primary"

@@ -57,6 +57,7 @@
       <v-card-actions>
         <v-btn
           block
+          rounded
           id="sendOtp"
           type="submit"
           color="primary"
@@ -73,6 +74,7 @@
         <v-btn
           block
           v-else
+          rounded
           type="submit"
           color="primary"
           class="text-none"

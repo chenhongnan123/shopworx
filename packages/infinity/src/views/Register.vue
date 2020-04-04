@@ -24,6 +24,7 @@
               </div>
               <v-btn
                 block
+                rounded
                 id="next"
                 color="primary"
                 class="text-none"

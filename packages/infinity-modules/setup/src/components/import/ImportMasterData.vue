@@ -11,6 +11,7 @@
         </div>
         <v-btn
           block
+          rounded
           id="importData"
           color="primary"
           class="text-none"

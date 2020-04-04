@@ -61,6 +61,7 @@
         </v-card>
         <v-btn
           block
+          rounded
           type="submit"
           color="primary"
           id="inviteUsers"

@@ -25,6 +25,7 @@
     </v-chip-group>
     <v-btn
       block
+      rounded
       @click="save"
       id="finishDays"
       color="primary"

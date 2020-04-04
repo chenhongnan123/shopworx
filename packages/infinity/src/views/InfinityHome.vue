@@ -65,8 +65,10 @@ export default {
         this.$router.replace({ name: 'register' });
       } else if (!this.isOnboardingComplete) {
         this.$router.replace({ name: 'setup' });
-      } else {
+      } else if (this.mySolutions && !this.mySolutions.length) {
         await this.getMySolutions();
+        this.redirect(this.$route.fullPath);
+      } else {
         this.redirect(this.$route.fullPath);
       }
     }
@@ -85,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', ['me']),
+    ...mapState('user', ['me', 'mySolutions']),
     ...mapGetters('user', [
       'modules',
       'isAccountUpdated',

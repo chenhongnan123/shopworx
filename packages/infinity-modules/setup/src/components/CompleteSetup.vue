@@ -9,6 +9,7 @@
     </div>
     <v-btn
       block
+      rounded
       color="primary"
       class="text-none"
       @click="complete"

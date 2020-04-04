@@ -24,6 +24,7 @@
     </v-chip-group>
     <v-btn
       block
+      rounded
       @click="save"
       color="primary"
       id="finishMonth"

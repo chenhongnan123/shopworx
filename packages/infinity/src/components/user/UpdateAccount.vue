@@ -77,6 +77,7 @@
         <v-card-actions>
           <v-btn
             block
+            rounded
             type="submit"
             color="primary"
             class="text-none"
