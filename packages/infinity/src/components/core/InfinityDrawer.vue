@@ -74,7 +74,7 @@
               :title="$t(`reports.${child.param}`)"
               v-for="child in item.children"
               :to="{ path: child.to, params: { id: child.param } }"
-              :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+              :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
             >
               <v-list-item-icon>
                 <span class="mx-auto" v-text="child.avatarText"></span>
@@ -89,7 +89,7 @@
             v-else
             :key="index"
             :to="{ path: item.to }"
-            :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
@@ -104,7 +104,7 @@
         v-for="item in adminItems"
         :key="item.title"
         :to="{ path: item.to }"
-        :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+        :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
       >
         <v-list-item-icon>
           <v-icon v-text="item.icon"></v-icon>
@@ -117,16 +117,13 @@
       <v-list-item>
         <v-list-item-icon>
           <v-icon
-            :color="$vuetify.theme.dark ? 'primary': 'secondary'"
+            color="accent"
             v-text="'$help'"
           ></v-icon>
         </v-list-item-icon>
         <v-list-item-title
           v-text="$t('helper.help')"
-          class="font-weight-medium"
-          :class="$vuetify.theme.dark
-            ? 'primary--text'
-            : 'secondary--text'"
+          class="accent--text font-weight-medium"
         >
         </v-list-item-title>
       </v-list-item>
@@ -153,7 +150,7 @@ export default {
   },
   data() {
     return {
-      expandOnHover: true,
+      expandOnHover: false,
     };
   },
   computed: {
@@ -190,14 +187,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.highlighted-dark {
-  background-color: var(--v-primary-base);
-  color: #212121
-}
-.highlighted {
-  background-color: var(--v-secondary-base);
-  color: #212121
-}
-</style>
