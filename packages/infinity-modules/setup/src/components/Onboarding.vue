@@ -68,14 +68,14 @@ export default {
     };
   },
   async created() {
+    if (!this.me) {
+      await this.getMe();
+    }
     if (this.isOnboardingComplete) {
       this.step = 4;
     } else {
       const step = localStorage.getItem('step');
       this.step = step ? JSON.parse(step) : this.step;
-    }
-    if (!this.me) {
-      await this.getMe();
     }
   },
   computed: {
