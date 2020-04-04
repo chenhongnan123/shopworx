@@ -82,6 +82,20 @@
     "next": "Next",
     "skip": "Skip for now"
   },
+  "notFound": {
+    "title": "That's an error!",
+    "subTitle1": "The requested URL",
+    "subTitle2": "{url}",
+    "subTitle3": "was not found on this server.",
+    "goHome": "Go back home"
+  },
+  "forbidden": {
+    "title": "Access forbidden!",
+    "subTitle1": "You tried to access a page you did not have prior",
+    "subTitle2": "authorization",
+    "subTitle3": "for.",
+    "goHome": "Go back home"
+  },
   "login": {
     "title": "Log in to Infinity",
     "subTitle": "Use your ShopWorx Account",

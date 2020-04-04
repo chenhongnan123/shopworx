@@ -17,6 +17,7 @@ const isAppProvisioned = async (appName) => {
   if (!me) {
     store.dispatch('auth/initAuth');
     await store.dispatch('user/getMe');
+    await store.dispatch('user/getMySolutions');
   }
   permit = checkAccess();
   return permit;
@@ -38,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
     if (await isAppProvisioned(to.name)) {
       next();
     } else {
-      next({ path: '/' });
+      next({ name: '401' });
     }
   } else {
     next();

@@ -1,5 +1,14 @@
 const routes = [
-  { path: '*', redirect: '/' },
+  {
+    path: '*',
+    name: '404',
+    component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
+  },
+  {
+    path: '/401',
+    name: '401',
+    component: () => import(/* webpackChunkName: "401" */ '@/views/401.vue'),
+  },
   {
     path: '/',
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
