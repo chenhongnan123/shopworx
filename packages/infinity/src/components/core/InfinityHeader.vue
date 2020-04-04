@@ -15,35 +15,29 @@
       <portal-target name="app-tabs" slim />
     </template>
     <v-spacer></v-spacer>
-    <infinity-search />
-    <v-btn
-      text
-      color="primary"
-      class="text-none"
-      :icon="$vuetify.breakpoint.smAndDown"
-    >
-      <v-icon
-        v-text="'$insights'"
-        :left="$vuetify.breakpoint.mdAndUp"
-      ></v-icon>
-      <span v-if="$vuetify.breakpoint.mdAndUp">
-        Insights
-      </span>
-    </v-btn>
-    <account-menu />
+    <template v-if="$vuetify.breakpoint.mdAndUp">
+      <infinity-search />
+      <infinity-insights />
+      <infinity-help />
+      <infinity-account />
+    </template>
   </v-app-bar>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import InfinityAccount from '@/components/util/InfinityAccount.vue';
+import InfinityHelp from '@/components/util/InfinityHelp.vue';
+import InfinityInsights from '@/components/util/InfinityInsights.vue';
 import InfinitySearch from '@/components/util/InfinitySearch.vue';
-import AccountMenu from '@/components/util/AccountMenu.vue';
 
 export default {
   name: 'InfinityHeader',
   components: {
+    InfinityAccount,
+    InfinityHelp,
+    InfinityInsights,
     InfinitySearch,
-    AccountMenu,
   },
   computed: {
     ...mapState('helper', ['extendedHeader']),

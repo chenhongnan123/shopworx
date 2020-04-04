@@ -112,22 +112,6 @@
         <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
       </v-list-item>
     </v-list>
-    <v-divider></v-divider>
-    <v-list shaped dense>
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon
-            color="accent"
-            v-text="'$help'"
-          ></v-icon>
-        </v-list-item-icon>
-        <v-list-item-title
-          v-text="$t('helper.help')"
-          class="accent--text font-weight-medium"
-        >
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
   </v-navigation-drawer>
 </template>
 
@@ -168,10 +152,8 @@ export default {
       },
     },
     scrollbarHeight() {
-      // 1 - height of divider
-      // 56 - height of help button
       // 64 - height of toolbar
-      let totalHeight = 1 + 56 + 64;
+      let totalHeight = 64;
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding

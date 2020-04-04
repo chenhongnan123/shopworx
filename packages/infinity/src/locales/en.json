@@ -154,9 +154,17 @@
   "account": {
     "account": "Account",
     "sites": "Sites",
-    "profile": "Profile",
+    "profile": "Profile settings",
     "logout": "Logout",
     "lightMode": "Light mode",
     "darkMode": "Dark mode"
+  },
+  "help": {
+    "help": "Help",
+    "legal": "Legal",
+    "keyboardShortcuts": "Keyboard shortcuts",
+    "support": "Support",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy"
   }
 }

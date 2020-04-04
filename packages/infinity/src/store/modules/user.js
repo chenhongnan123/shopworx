@@ -248,7 +248,7 @@ export default ({
 
     fullName: ({ me }) => {
       if (me && me.user) {
-        return `${me.user.firstname} ${me.user.lastname.charAt(0)}`;
+        return `${me.user.firstname} ${me.user.lastname}`;
       }
       return null;
     },

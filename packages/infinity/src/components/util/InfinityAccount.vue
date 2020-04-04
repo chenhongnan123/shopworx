@@ -5,38 +5,47 @@
     z-index="9999"
     transition="slide-y-transition"
   >
-    <template #activator="{ on }">
-      <v-btn
-        icon
-        v-on="on"
-        class="text-none"
-      >
-        <v-avatar
-          size="36"
-          v-on="on"
-          color="secondary"
-        >
-          <v-icon v-text="'$account'"></v-icon>
-        </v-avatar>
-      </v-btn>
+    <template #activator="{ on: menu }">
+      <v-tooltip bottom>
+        <template #activator="{ on: tooltip }">
+          <v-btn
+            icon
+            v-on="{ ...tooltip, ...menu }"
+          >
+            <v-avatar
+              size="36"
+              color="secondary"
+            >
+              <v-icon
+                v-text="'$account'"
+                :color="$vuetify.theme.dark ? 'white' : '#212121'"
+              ></v-icon>
+            </v-avatar>
+          </v-btn>
+        </template>
+        <span class="text-center">
+          <div class="font-weight-medium">{{ fullName }}</div>
+          <div>{{ currentSite }}</div>
+        </span>
+      </v-tooltip>
     </template>
-    <v-list dense nav>
+    <v-list dense>
       <template v-for="(item, index) in items">
         <v-subheader
-          v-if="item.header"
           :key="index"
+          v-if="item.header"
+          class="mb-0 pb-0 text-uppercase"
           v-text="$t(`account.${item.header}`)"
-          class="mb-0 pb-0"
         ></v-subheader>
         <v-divider
-          v-else-if="item.divider"
           :key="index"
           class="pb-1"
+          v-else-if="item.divider"
         ></v-divider>
         <v-list-item
-          v-else-if="item.id"
-          :class="activeSite === item.id ? 'secondary white--text' : ''"
           :key="index"
+          color="primary"
+          v-else-if="item.id"
           @click="setActiveSite(item.id)"
         >
           <v-list-item-icon>
@@ -49,9 +58,6 @@
           :key="index"
           @click="action(item.action)"
         >
-          <v-list-item-icon>
-            <v-icon v-text="item.icon"></v-icon>
-          </v-list-item-icon>
           <v-list-item-title
             v-text="$t(`account.${item.title}`)"
           ></v-list-item-title>
@@ -70,11 +76,19 @@ import {
 } from 'vuex';
 
 export default {
-  name: 'AccountMenu',
+  name: 'InfinityAccount',
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('user', ['activeSite']),
     ...mapGetters('user', ['fullName', 'sites']),
+    currentSite() {
+      let description = '';
+      const site = this.sites.find((s) => s.id === this.activeSite);
+      if (site) {
+        ({ description } = site);
+      }
+      return description;
+    },
     items() {
       let items = [
         {

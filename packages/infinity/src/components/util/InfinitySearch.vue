@@ -2,7 +2,6 @@
   <v-responsive
     class="transition-swing"
     :max-width="isFocused ? 360 : 180"
-    v-if="$vuetify.breakpoint.mdAndUp"
   >
     <v-text-field
       flat
@@ -20,7 +19,6 @@
       @focus="onFocus"
       autocomplete="off"
       @keydown.esc="onEsc"
-      v-if="$vuetify.breakpoint.mdAndUp"
     >
       <template #prepend-inner>
         <v-icon v-text="'$search'"></v-icon>
