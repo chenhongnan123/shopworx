@@ -17,7 +17,7 @@
           <v-row>
             <v-col cols="4">
               <validation-provider
-                name="Type"
+                name="type"
                 rules="required"
                 vid="hourType"
                 #default="{ errors }"
@@ -39,7 +39,7 @@
             </v-col>
             <v-col cols="8" v-if="hour.type === 'shift'">
               <validation-provider
-                name="Name"
+                name="name"
                 rules="required_if:hourType,shift"
                 #default="{ errors }"
               >
@@ -55,7 +55,7 @@
             </v-col>
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
-                name="Name"
+                name="name"
                 rules="required_if:hourType,break"
                 #default="{ errors }"
               >
@@ -71,7 +71,7 @@
             </v-col>
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
-                name="Shift"
+                name="shift"
                 rules="required_if:hourType,break"
                 #default="{ errors }"
               >
@@ -88,7 +88,7 @@
             <v-col cols="4">
               <validation-provider
                 rules="required"
-                name="Start time"
+                name="startTime"
                 #default="{ errors }"
               >
                 <v-text-field
@@ -103,7 +103,7 @@
             </v-col>
             <v-col cols="4">
               <validation-provider
-                name="End time"
+                name="endTime"
                 rules="required"
                 #default="{ errors }"
               >

@@ -17,7 +17,7 @@
           <v-row>
             <v-col cols="4">
               <validation-provider
-                name="Name"
+                name="name"
                 rules="required"
                 #default="{ errors }"
               >
@@ -34,7 +34,7 @@
             </v-col>
             <v-col cols="5">
               <validation-provider
-                name="Date"
+                name="date"
                 rules="required"
                 #default="{ errors }"
               >

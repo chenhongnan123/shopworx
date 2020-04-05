@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'CompleteSetup',
@@ -35,16 +35,7 @@ export default {
       loading: false,
     };
   },
-  async created() {
-    if (!this.me) {
-      await this.getMe();
-    }
-  },
-  computed: {
-    ...mapState('user', ['me']),
-  },
   methods: {
-    ...mapActions('user', ['getMe']),
     ...mapActions('setup', ['completeOnboarding']),
     async complete() {
       this.loading = true;

@@ -8,7 +8,7 @@
         <v-card-text>
           <validation-provider
             rules="required"
-            name="First name"
+            name="firstName"
             #default="{ errors }"
           >
             <v-text-field
@@ -24,7 +24,7 @@
           </validation-provider>
           <validation-provider
             rules="required"
-            name="Last name"
+            name="lastName"
             #default="{ errors }"
           >
             <v-text-field
@@ -40,7 +40,7 @@
           </validation-provider>
           <validation-provider
             rules="email"
-            name="Email"
+            name="email"
             #default="{ errors }"
           >
             <v-text-field
@@ -56,8 +56,8 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="digits:10"
-            name="Phone"
+            rules="phone"
+            name="phone"
             #default="{ errors }"
           >
             <v-text-field
@@ -115,6 +115,11 @@ export default {
       this.assignUser(this.me.user);
     }
   },
+  watch: {
+    me() {
+      this.assignUser(this.me.user);
+    },
+  },
   computed: {
     ...mapState('user', ['me']),
     showEmail() {
@@ -138,7 +143,9 @@ export default {
       this.firstName = user.firstname;
       this.lastName = user.lastname;
       this.email = user.emailId;
-      this.phone = user.phoneNumber;
+      this.phone = user.phoneNumber
+        ? user.phoneNumber.substring(2)
+        : user.phoneNumber;
     },
     async onUpdateAccount() {
       this.loading = true;

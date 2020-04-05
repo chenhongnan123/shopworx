@@ -8,7 +8,7 @@
           @on-update="setIdentifier"
         />
         <validation-provider
-          name="OTP"
+          name="otp"
           v-if="otpGenerated"
           rules="required|max:4"
           #default="{ errors }"
