@@ -1,10 +1,8 @@
 <template>
   <v-app>
+    <infinity-snackbar />
     <infinity-loading v-if="infinityLoading" />
-    <template v-else>
-      <infinity-snackbar />
-      <router-view />
-    </template>
+    <router-view v-else />
   </v-app>
 </template>
 
