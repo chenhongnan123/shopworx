@@ -21,7 +21,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import AuthLayout from '@/components/auth/AuthLayout.vue';
+import AuthLayout from '@/components/layout/AuthLayout.vue';
 import LoginWithOtp from '@/components/auth/LoginWithOtp.vue';
 import LoginWithPassword from '@/components/auth/LoginWithPassword.vue';
 

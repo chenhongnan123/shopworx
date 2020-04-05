@@ -97,7 +97,7 @@ export default {
         {
           title: 'profile',
           icon: '$profile',
-          action: 'goToProfile',
+          action: 'goToUserProfile',
         },
         { divider: true },
         {
@@ -147,8 +147,8 @@ export default {
     action(actionName) {
       this[`${actionName}`]();
     },
-    goToProfile() {
-      this.$router.push({ name: 'profile' });
+    goToUserProfile() {
+      this.$router.push({ name: 'user' });
     },
     async logout() {
       const success = await this.logoutUser();

@@ -54,7 +54,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import AuthLayout from '@/components/auth/AuthLayout.vue';
+import AuthLayout from '@/components/layout/AuthLayout.vue';
 import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
 export default {
