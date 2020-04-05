@@ -52,15 +52,11 @@
     "PASSWORD_RESET": "नया पासवर्ड पंजीकृत ईमेल / फोन पर भेजा जाता है।"
   },
   "error": {
+    "NOT_VALID": "{_field_} वैध नहीं है।",
     "USER_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
     "EMAIL_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
     "INCORRECT_PASSWORD": "लॉगिन विफल: गलत पासवर्ड।",
     "INVALID_OTP": "लॉगिन विफल: गलत ओटीपी।"
-  },
-  "validatoins": {
-    "required": "{_field_} आवश्यक है।",
-    "email": "{_field_} वैध नहीं है।",
-    "phone": "{_field_} वैध नहीं है।"
   },
   "fields": {
     "email": "ईमेल",

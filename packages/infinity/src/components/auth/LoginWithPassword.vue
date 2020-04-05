@@ -9,7 +9,7 @@
         />
         <validation-provider
           rules="required"
-          name="Password"
+          name="password"
           #default="{ errors }"
         >
           <v-text-field

@@ -45,8 +45,8 @@ export default {
     },
     identifierField() {
       return this.isMobileNumber
-        ? this.$i18n.t('fields.phone')
-        : this.$i18n.t('fields.email');
+        ? 'phone'
+        : 'email';
     },
     identifierValidationRules() {
       return this.isMobileNumber ? 'required|phone:10' : 'required|email';
