@@ -1,20 +1,25 @@
 <template>
   <v-app>
-    <snackbar />
-    <router-view />
+    <infinity-loading v-if="infinityLoading" />
+    <template v-else>
+      <infinity-snackbar />
+      <router-view />
+    </template>
   </v-app>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
-import Snackbar from '@/components/Snackbar.vue';
+import InfinitySnackbar from '@/components/core/InfinitySnackbar.vue';
+import InfinityLoading from '@/components/core/InfinityLoading.vue';
 
 export default {
   components: {
-    Snackbar,
+    InfinitySnackbar,
+    InfinityLoading,
   },
   computed: {
-    ...mapState('helper', ['isDark']),
+    ...mapState('helper', ['isDark', 'infinityLoading']),
     ...mapState('auth', ['sessionId']),
   },
   async created() {

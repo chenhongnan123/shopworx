@@ -24,8 +24,10 @@ const isAppProvisioned = async (appName) => {
   const checkAccess = () => store.getters['user/isAppProvisioned'](appName);
   const { me } = store.state.user;
   if (!me) {
+    store.commit('helper/setInfinityLoading', true);
     await store.dispatch('user/getMe');
     await store.dispatch('user/getMySolutions');
+    store.commit('helper/setInfinityLoading', false);
   }
   permit = checkAccess();
   return permit;

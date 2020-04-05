@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'SwxSnackbar',
+  name: 'InfinitySnackbar',
   data() {
     return {
       timeout: 6000,

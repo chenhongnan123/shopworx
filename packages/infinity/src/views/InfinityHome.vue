@@ -1,35 +1,18 @@
 <template>
-  <v-app>
-    <template v-if="loading">
-      <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
-        <v-container fill-height>
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
-          >
-            <span class="display-3">
-              Loading...
-            </span>
-          </v-row>
-        </v-container>
-      </v-content>
-    </template>
-    <template v-else>
-      <infinity-drawer
-        :showDrawer="drawer"
-        :items="items"
-        :adminItems="adminItems"
-        @set-drawer="setDrawer"
-      />
-      <infinity-header @toggle-drawer="toggleDrawer" />
-      <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
-        <v-fade-transition mode="out-in">
-          <router-view />
-        </v-fade-transition>
-      </v-content>
-      <infinity-bottom v-if="$vuetify.breakpoint.smAndDown" />
-    </template>
+  <v-app v-if="!infinityLoading">
+    <infinity-drawer
+      :showDrawer="drawer"
+      :items="items"
+      :adminItems="adminItems"
+      @set-drawer="setDrawer"
+    />
+    <infinity-header @toggle-drawer="toggleDrawer" />
+    <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
+      <v-fade-transition mode="out-in">
+        <router-view />
+      </v-fade-transition>
+    </v-content>
+    <infinity-bottom v-if="$vuetify.breakpoint.smAndDown" />
   </v-app>
 </template>
 
@@ -52,7 +35,7 @@ export default {
     InfinityBottom,
   },
   async created() {
-    this.loading = true;
+    this.setInfinityLoading(true);
     if (!this.me) {
       await this.getMe();
     }
@@ -70,7 +53,7 @@ export default {
         this.redirect(this.$route.fullPath);
       }
     }
-    this.loading = false;
+    this.setInfinityLoading(false);
   },
   watch: {
     $route(val) {
@@ -80,11 +63,11 @@ export default {
   },
   data() {
     return {
-      drawer: true,
-      loading: false,
+      drawer: null,
     };
   },
   computed: {
+    ...mapState('helper', ['infinityLoading']),
     ...mapState('user', ['me', 'mySolutions']),
     ...mapGetters('user', [
       'modules',
@@ -104,7 +87,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapMutations('helper', ['setExtendedHeader', 'setInfinityLoading']),
     ...mapActions('user', ['getMe', 'getMySolutions']),
     redirect(path) {
       if (path === '/') {
