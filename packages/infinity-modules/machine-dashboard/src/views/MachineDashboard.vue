@@ -7,18 +7,16 @@
     ]"
   >
     <portal to="app-header">
-      <v-toolbar-title class="headline font-weight-medium">
-        Machine Dashboard
-        <v-icon
-          class="ml-4 mb-1"
-          v-text="'$info'"
-        ></v-icon>
-        <v-icon
-          class="ml-2 mb-1"
-          v-text="'$fullscreen'"
-          @click="enterFullscreen"
-        ></v-icon>
-      </v-toolbar-title>
+      Machine Dashboard
+      <v-icon
+        class="ml-4 mb-1"
+        v-text="'$info'"
+      ></v-icon>
+      <v-icon
+        class="ml-2 mb-1"
+        v-text="'$fullscreen'"
+        @click="enterFullscreen"
+      ></v-icon>
     </portal>
     Coming soon!
   </div>

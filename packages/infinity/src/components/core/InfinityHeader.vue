@@ -10,7 +10,13 @@
       v-if="$vuetify.breakpoint.mdAndDown"
       @click="$emit('toggle-drawer')"
     ></v-app-bar-nav-icon>
-    <portal-target name="app-header"></portal-target>
+    <v-toolbar-title
+      :class="$vuetify.breakpoint.mdAndUp
+        ? 'headline font-weight-medium'
+        : 'title pl-0'"
+    >
+      <portal-target name="app-header"></portal-target>
+    </v-toolbar-title>
     <template #extension v-if="extendedHeader">
       <portal-target name="app-tabs" slim />
     </template>

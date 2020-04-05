@@ -1,9 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <v-toolbar-title class="headline font-weight-medium">
-        Master Data
-      </v-toolbar-title>
+      Master Data
     </portal>
     Coming soon!
   </div>

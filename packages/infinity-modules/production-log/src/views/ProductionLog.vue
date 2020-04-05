@@ -1,9 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <v-toolbar-title class="headline font-weight-medium">
-        Production Log
-      </v-toolbar-title>
+      Production Log
     </portal>
     Coming soon!
   </div>
