@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
+
+
+### Bug Fixes
+
+* **license:** fetch site license along with user ([caf3a43](https://bitbucket.org/entrib/shopworx/commits/caf3a439ac10c52534992af6ea2f21883a3af14b))
+
+
+
+
+
 # [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
 
 

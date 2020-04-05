@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
+
+
+### Bug Fixes
+
+* **button:** rounded all block buttons ([fc57708](https://bitbucket.org/entrib/shopworx/commits/fc577085439acc4f57cd592fbed3a02f6d69d17c))
+* **license:** fetch site license along with user ([caf3a43](https://bitbucket.org/entrib/shopworx/commits/caf3a439ac10c52534992af6ea2f21883a3af14b))
+* **locale:** fixed validation field locales ([ee0ff4c](https://bitbucket.org/entrib/shopworx/commits/ee0ff4cb8c10debc6ef62e00ee2c60f3e43a43c8))
+* **setup:** added invite users error handling ([f771e38](https://bitbucket.org/entrib/shopworx/commits/f771e38f4b13f8b7953d5296064d596ce3bda7f5))
+* **setup:** fetch user on init ([050f042](https://bitbucket.org/entrib/shopworx/commits/050f0427bc681c4730e4f888987790807f45f786))
+* **style:** updated button placement ([9080489](https://bitbucket.org/entrib/shopworx/commits/90804896a16d783d1e2afe8de2dfe057dc50063b))
+
+
+
+
+
 # [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
 
 

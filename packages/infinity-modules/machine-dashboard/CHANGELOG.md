@@ -5,12 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
 
-**Note:** Version bump only for package @shopworx/planning
 
+### Features
 
-
-
-
-# [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
-
-**Note:** Version bump only for package @shopworx/planning
+* **machine-dashboard:** added fullscreen toggle to machine dashboard ([e5cc992](https://bitbucket.org/entrib/shopworx/commits/e5cc992626325df102e9344f8574ea527fbc4989))

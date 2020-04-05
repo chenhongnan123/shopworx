@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
+
+
+### Bug Fixes
+
+* **core:** updated layuot style ([6b8b924](https://bitbucket.org/entrib/shopworx/commits/6b8b924071eb9653cc0f325b80c754abcd6aae47))
+* **icons:** updated icons ([a10b35a](https://bitbucket.org/entrib/shopworx/commits/a10b35aecdf51aad4531c8e984c3eb51ff100764))
+* **setup:** added invite users error handling ([f771e38](https://bitbucket.org/entrib/shopworx/commits/f771e38f4b13f8b7953d5296064d596ce3bda7f5))
+
+
+### Features
+
+* **navigation:** added bottom navigation for mobile and tablets ([c58b097](https://bitbucket.org/entrib/shopworx/commits/c58b0976edc7f35346f774992265b67d938a6e2f))
+* **router:** added forbidden and not found routes ([1a7bb36](https://bitbucket.org/entrib/shopworx/commits/1a7bb36ccc23f4b78414d3d27c03ddcad0cf87c8))
+
+
+
+
+
 # [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
 
 
