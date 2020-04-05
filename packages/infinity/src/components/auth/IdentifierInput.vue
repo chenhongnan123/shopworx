@@ -1,8 +1,9 @@
 <template>
   <validation-provider
-    :rules="identifierValidationRules"
-    :name="identifierField"
+    vid="identifier"
     #default="{ errors }"
+    :name="identifierField"
+    :rules="identifierValidationRules"
   >
     <v-text-field
       :id="id"

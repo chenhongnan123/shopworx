@@ -36,7 +36,7 @@
       "updateColumns": "Update columns",
       "reimport": "Re-import",
       "reviewTitle": "Review {title}",
-      "save": "Save",
+      "save": "Save changes",
       "cancel": "Cancel",
       "missingMapping": "Missing required mappings:",
       "requiredData": "Missing required data:",
@@ -92,7 +92,9 @@
     },
     "inviteUsers": {
       "role": "Role",
-      "invite": "Invite users"
+      "invite": "Invite users",
+      "invited": "Invitaion sent.",
+      "continue": "Continue"
     },
     "complete": {
       "title1": "Hurray! Welcome to ShopWorx. We have successfully",

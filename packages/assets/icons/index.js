@@ -56,5 +56,6 @@ export default {
     log: 'mdi-post-outline',
     subscription: 'mdi-sync',
     list: 'mdi-clipboard-list-outline',
+    tick: 'mdi-check-circle-outline',
   },
 };
