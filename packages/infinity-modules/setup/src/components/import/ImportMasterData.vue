@@ -11,6 +11,8 @@
         </div>
         <v-btn
           block
+          rounded
+          id="importData"
           color="primary"
           class="text-none"
           @click="uploadFiles"
@@ -27,6 +29,7 @@
           accept=".csv"
           ref="uploader"
           class="d-none"
+          id="uploadFiles"
           @change="onFilesChanged"
         >
         <div class="subheading my-2" v-if="downloading">
@@ -37,6 +40,7 @@
           {{ $t('setup.importMaster.downloadError') }}
           <a
             @click="downloadZip"
+            id="downloadTemplates"
             class="primary--text font-weight-medium"
           >
             {{ $t('setup.importMaster.retryDownload') }}

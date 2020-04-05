@@ -1,16 +1,20 @@
 <template>
   <v-navigation-drawer
     app
+    dark
     floating
+    color="#212121"
     v-model="drawer"
     :expand-on-hover="expandOnHover && $vuetify.breakpoint.lgAndUp"
-    :color="$vuetify.theme.dark ? '#1F1F1F' : 'white'"
   >
-    <v-list shaped class="py-1">
+    <v-list
+      shaped
+      class="py-1"
+    >
       <v-list-item>
         <v-list-item-icon>
           <v-icon
-            color="primary"
+            :color="$vuetify.theme.dark ? 'primary': 'secondary'"
             v-text="'$infinity'"
           ></v-icon>
         </v-list-item-icon>
@@ -31,12 +35,12 @@
           >
             <v-icon
               v-if="!expandOnHover"
-              color="primary"
+              :color="$vuetify.theme.dark ? 'primary': 'secondary'"
               v-text="'$radioMarked'"
             ></v-icon>
             <v-icon
               v-else
-              color="primary"
+              :color="$vuetify.theme.dark ? 'primary': 'secondary'"
               v-text="'$radioBlank'"
             ></v-icon>
           </v-btn>
@@ -45,8 +49,9 @@
     </v-list>
     <perfect-scrollbar :style="`height: calc(100% - ${scrollbarHeight}px);`">
       <v-list
-        shaped
         dense
+        shaped
+        class="py-0"
       >
         <template v-for="(item, index) in items">
           <v-subheader
@@ -60,11 +65,11 @@
             :group="item.group"
             :prepend-icon="item.icon"
             v-else-if="item.children"
-            :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <template #activator>
               <v-list-item-title
-                v-text="$t(`modules.${item.title}`)"
+                v-text="$t(`modules.${item.group}`)"
               ></v-list-item-title>
             </template>
             <v-list-item
@@ -72,8 +77,8 @@
               :key="child.param"
               :title="$t(`reports.${child.param}`)"
               v-for="child in item.children"
-              :to="{ name: child.to, params: { id: child.param } }"
-              :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+              :to="{ name: item.title, params: { id: child.param } }"
+              :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
             >
               <v-list-item-icon>
                 <span class="mx-auto" v-text="child.avatarText"></span>
@@ -87,8 +92,8 @@
             link
             v-else
             :key="index"
-            :to="{ name: item.to }"
-            :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+            :to="{ name: item.title }"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
@@ -98,33 +103,22 @@
         </template>
       </v-list>
     </perfect-scrollbar>
-    <v-list shaped dense>
+    <v-divider></v-divider>
+    <v-list
+      dense
+      shaped
+      class="py-1"
+    >
       <v-list-item
-        v-for="item in adminItems"
         :key="item.title"
-        :to="{ name: item.to }"
-        :active-class="$vuetify.theme.dark ? 'highlighted-dark' : 'highlighted'"
+        :to="{ name: item.title }"
+        v-for="item in adminItems"
+        :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
       >
         <v-list-item-icon>
           <v-icon v-text="item.icon"></v-icon>
         </v-list-item-icon>
         <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-      </v-list-item>
-    </v-list>
-    <v-divider></v-divider>
-    <v-list shaped dense>
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon
-            color="primary"
-            v-text="'$help'"
-          ></v-icon>
-        </v-list-item-icon>
-        <v-list-item-title
-          class="primary--text font-weight-medium"
-          v-text="$t('help.title')"
-        >
-        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -135,8 +129,7 @@ export default {
   name: 'InfinityDrawer',
   props: {
     showDrawer: {
-      type: Boolean,
-      required: true,
+      default: null,
     },
     items: {
       type: Array,
@@ -156,7 +149,7 @@ export default {
     logoName() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
-        : 'shopworx-light';
+        : 'shopworx-dark';
     },
     drawer: {
       get() {
@@ -167,14 +160,12 @@ export default {
       },
     },
     scrollbarHeight() {
-      // 1 - height of divider
-      // 56 - height of help button
       // 64 - height of toolbar
-      let totalHeight = 1 + 56 + 64;
+      let totalHeight = 64;
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 16);
+        totalHeight += (40 * this.adminItems.length + 1 + 8);
       }
       return totalHeight;
     },
@@ -186,14 +177,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.highlighted-dark {
-  background-color: var(--v-primary-base);
-  color: #212121
-}
-.highlighted {
-  background-color: var(--v-primary-base);
-  color: #ffffff
-}
-</style>

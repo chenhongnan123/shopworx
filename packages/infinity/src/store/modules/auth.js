@@ -74,6 +74,9 @@ export default ({
         const { data } = await AuthService.logout();
         if (data && data.results) {
           SessionService.removeSession();
+          commit('setSessionId', null);
+          commit('user/setMe', null, { root: true });
+          commit('user/setMySolutions', [], { root: true });
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,

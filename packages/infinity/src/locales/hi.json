@@ -52,19 +52,43 @@
     "PASSWORD_RESET": "नया पासवर्ड पंजीकृत ईमेल / फोन पर भेजा जाता है।"
   },
   "error": {
+    "NOT_VALID": "{_field_} मान्य नहीं है।",
+    "NO_LICENSE": "आपके पास शून्य सक्रिय लाइसेंस हैं। कृपया ShopWorx का समर्थन करें।",
+    "CANNOT_FETCH_LICENSE": "हम आपके सक्रिय लाइसेंस प्राप्त करने में असमर्थ हैं। कृपया पुन: प्रयास करें।",
+    "INVALID_SESSION": "सत्र समाप्त हो गया: कृपया फिर से लॉगिन करें।",
+    "USER_ALREADY_EXIST": "उपयोगकर्ता पहले से मौजूद है।",
     "USER_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
     "EMAIL_NOT_FOUND": "उपयोगकर्ता खाता नहीं मिला।",
     "INCORRECT_PASSWORD": "लॉगिन विफल: गलत पासवर्ड।",
-    "INVALID_OTP": "लॉगिन विफल: गलत ओटीपी।"
+    "INVALID_OTP": "लॉगिन विफल: गलत ओटीपी।",
+    "MISSING_BUSINESS_HOUR": "एक या अधिक घंटे गायब हैं। कृपया अपना डेटा सत्यापित करें।",
+    "INVALID_HOURS_SUM": "आपके अनंतिम घंटे की कुल राशि 24 होनी चाहिए। कृपया अपना डेटा सत्यापित करें."
+  },
+  "fields": {
+    "email": "ईमेल",
+    "phone": "फ़ोन",
+    "password": "कुंजिका",
+    "otp": "ओटीपी",
+    "firstName":"पहला नाम",
+    "lastName":"उपनाम",
+    "name": "नाम",
+    "type": "प्रकार",
+    "startTime": "समय शुरू",
+    "endTime": "अंतिम समय",
+    "date": "तारीख",
+    "shift": "खिसक जाना",
+    "role": "भूमिका"
   },
   "snackbar": {
     "close": "बंद करे",
-    "redirectToLogin": "में पुनर्निर्देशित कर रहा है {time}"
+    "redirectToLogin": "{time} उपरांत ओटीपी को पुनः भेजें"
   },
   "helper": {
     "or": "या",
+    "help": "मदद",
     "next": "आगे",
-    "skip": "छोड़ें"
+    "skip": "अभी के लिए जाने दे",
+    "loading": "लोड हो रहा है..."
   },
   "login": {
     "title": "Infinity में प्रवेश करें",
@@ -73,7 +97,7 @@
     "password": "कुंजिका",
     "otp": "OTP",
     "resendOtp": "Otp को पुनः भेजें?",
-    "resendOtpIn": "में otp को पुनः भेजें {time}",
+    "resendOtpIn": "{time} में otp को पुनः भेजें",
     "sendOtp": "ओटीपी भेजें",
     "forgotPassword": "पासवर्ड भूल गए?",
     "login": "सुरक्षित रूप से लॉगिन करें",
@@ -98,8 +122,8 @@
       "update": "अधतन खाता",
       "firstName": "पहला नाम",
       "lastName": "उपनाम",
-      "email": "ईमेल",
-      "phone": "फ़ोन"
+      "email": "ईमेल (ऐच्छिक)",
+      "phone": "फ़ोन (ऐच्छिक)"
     },
     "password": {
       "title": "अपने ShopWorx पासवर्ड को अपडेट करें",
@@ -111,7 +135,7 @@
   },
   "modules": {
     "home": "घर",
-    "machinedashboard": "मशीन का डैशबोर्ड",
+    "machineDashboard": "मशीन का डैशबोर्ड",
     "planning": "योजना",
     "reports": "रिपोर्ट good",
     "production": "उत्पादन",
@@ -120,5 +144,13 @@
     "oee": "कौन",
     "masters": "मास्टर्स",
     "admin": "व्यवस्थापक"
+  },
+  "account": {
+    "account": "लेखा",
+    "sites": "साइटें",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉग आउट",
+    "lightMode": "प्रकाश मोड",
+    "darkMode": "डार्क मोड"
   }
 }

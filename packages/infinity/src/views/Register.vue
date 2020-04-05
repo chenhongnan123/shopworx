@@ -24,6 +24,8 @@
               </div>
               <v-btn
                 block
+                rounded
+                id="next"
                 color="primary"
                 class="text-none"
                 @click="onSuccess"
@@ -49,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import AuthHeader from '@/components/auth/AuthHeader.vue';
 import UpdateAccount from '@/components/user/UpdateAccount.vue';
 import UpdatePassword from '@/components/user/UpdatePassword.vue';
@@ -61,6 +63,11 @@ export default {
     UpdateAccount,
     UpdatePassword,
   },
+  async created() {
+    if (!this.me) {
+      await this.getMe();
+    }
+  },
   computed: {
     ...mapGetters('user', ['isAccountUpdated', 'isPasswordUpdated', 'isOnboardingComplete']),
     registerIllustration() {
@@ -70,6 +77,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('user', ['getMe']),
     onSuccess() {
       if (!this.isOnboardingComplete) {
         this.$router.replace({ name: 'setup' });

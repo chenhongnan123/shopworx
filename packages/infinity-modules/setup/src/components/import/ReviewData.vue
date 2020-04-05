@@ -34,6 +34,17 @@
       ></ag-grid-vue>
     </v-card-text>
     <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+        text
+        outlined
+        color="primary"
+        class="text-none"
+        @click="$emit('cancel')"
+        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+      >
+        {{ $t('setup.importMaster.cancel') }}
+      </v-btn>
       <v-btn
         @click="save"
         color="primary"
@@ -41,15 +52,6 @@
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
         {{ $t('setup.importMaster.save') }}
-      </v-btn>
-      <v-btn
-        text
-        color="primary"
-        class="text-none"
-        @click="$emit('cancel')"
-        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      >
-        {{ $t('setup.importMaster.cancel') }}
       </v-btn>
     </v-card-actions>
   </v-card>

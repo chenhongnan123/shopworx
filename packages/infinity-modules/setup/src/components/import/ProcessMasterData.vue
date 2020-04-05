@@ -55,7 +55,9 @@
       </v-list>
       <v-btn
         block
+        rounded
         color="primary"
+        id="finishImport"
         class="text-none"
         :disabled="!valid"
         @click="$emit('success')"

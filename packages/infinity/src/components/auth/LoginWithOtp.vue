@@ -8,12 +8,13 @@
           @on-update="setIdentifier"
         />
         <validation-provider
-          name="OTP"
+          name="otp"
           v-if="otpGenerated"
           rules="required|max:4"
           #default="{ errors }"
         >
           <v-text-field
+            id="otp"
             type="number"
             v-model="otp"
             :disabled="loading"
@@ -31,6 +32,7 @@
           <v-btn
             text
             small
+            id="resendOtp"
             color="primary"
             v-if="!otpSent"
             :disabled="loading"
@@ -55,10 +57,12 @@
       <v-card-actions>
         <v-btn
           block
-          v-if="!otpGenerated"
+          rounded
+          id="sendOtp"
           type="submit"
           color="primary"
           class="text-none"
+          v-if="!otpGenerated"
           :loading="loadingOtp"
         >
           <v-icon
@@ -70,6 +74,7 @@
         <v-btn
           block
           v-else
+          rounded
           type="submit"
           color="primary"
           class="text-none"
@@ -92,6 +97,7 @@
           color="primary"
           class="text-none"
           :disabled="loading"
+          id="loginWithPassword"
           @click="$emit('login-with-password')"
         >
           {{ $t('login.loginWithPassword') }}

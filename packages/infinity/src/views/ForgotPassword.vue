@@ -16,9 +16,11 @@
         <v-card-actions>
           <v-btn
             block
+            rounded
             type="submit"
             color="primary"
             class="text-none"
+            id="resetPassword"
             :loading="loading"
           >
             <v-icon
@@ -39,6 +41,7 @@
             color="primary"
             class="text-none"
             :disabled="loading"
+            id="loginWithPassword"
           >
             {{ $t('login.loginWithPassword') }}
           </v-btn>
@@ -51,7 +54,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import AuthLayout from '@/components/auth/AuthLayout.vue';
+import AuthLayout from '@/components/layout/AuthLayout.vue';
 import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
 export default {

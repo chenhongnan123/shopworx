@@ -12,7 +12,8 @@ export default ({
     setCalendarData: set('calendarData'),
   },
   actions: {
-    getMasterData: async ({ commit, dispatch }) => {
+    getMasterData: async ({ commit, dispatch, rootGetters }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
       const masterElements = await dispatch(
         'industry/getMasterElements',
         null,
@@ -34,21 +35,23 @@ export default ({
               if (masterAssets && masterAssets.length) {
                 const availableAssets = elem.masterTags.map((tag) => tag.assetId);
                 const provisionedAssets = [...new Set(availableAssets)];
-                return provisionedAssets.map((provisionedAsset) => {
-                  const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
-                  const { assetName, assetDescription } = masterAssets
-                    .find((asset) => asset.id === provisionedAsset);
-                  return {
-                    tags: tags.filter((t) => !t.hide),
-                    hiddenTags: tags.filter((t) => t.hide),
-                    success: false,
-                    loading: false,
-                    assetId: provisionedAsset,
-                    element: elem.masterElement,
-                    title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
-                    expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
-                  };
-                });
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
               }
             }
             return {

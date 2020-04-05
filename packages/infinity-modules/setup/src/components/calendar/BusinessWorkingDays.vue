@@ -18,13 +18,16 @@
       <v-chip
         large
         :key="index"
+        :id="`day-${index}`"
         v-for="(day, index) in days"
         v-text="$t(`setup.onboardCalendar.days.${day}`)"
       ></v-chip>
     </v-chip-group>
     <v-btn
       block
+      rounded
       @click="save"
+      id="finishDays"
       color="primary"
       class="text-none"
       :loading="loading"

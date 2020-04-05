@@ -111,7 +111,7 @@
   },
   "modules": {
     "home": "Home",
-    "machinedashboard": "Machine dashboard",
+    "machineDashboard": "Machine Dashboard",
     "planning": "Planning",
     "reports": "Report",
     "production": "Production",
@@ -120,5 +120,13 @@
     "oee": "Oee",
     "masters": "Masters",
     "admin": "Admin"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
   }
 }

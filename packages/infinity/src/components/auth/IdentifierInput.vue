@@ -1,10 +1,12 @@
 <template>
   <validation-provider
-    :rules="identifierValidationRules"
-    :name="identifierField"
+    vid="identifier"
     #default="{ errors }"
+    :name="identifierField"
+    :rules="identifierValidationRules"
   >
     <v-text-field
+      :id="id"
       autofocus
       type="email"
       :prefix="prefix"
@@ -26,6 +28,10 @@ export default {
       type: String,
       required: true,
     },
+    id: {
+      type: String,
+      default: 'identifier',
+    },
     loading: {
       type: Boolean,
       default: false,
@@ -39,10 +45,12 @@ export default {
       return this.isMobileNumber ? '+91' : '';
     },
     identifierField() {
-      return this.isMobileNumber ? 'Mobile' : 'Email';
+      return this.isMobileNumber
+        ? 'phone'
+        : 'email';
     },
     identifierValidationRules() {
-      return this.isMobileNumber ? 'required|digits:10' : 'required|email';
+      return this.isMobileNumber ? 'required|phone:10' : 'required|email';
     },
     identifier: {
       get() {

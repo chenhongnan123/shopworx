@@ -1,7 +1,22 @@
 <template>
   <div>
-    <validation-observer #default="{ passes }">
-      <v-form @submit.prevent="passes(save)">
+    <v-row v-if="invitedUsers && invitedUsers.length">
+      <template v-for="(user, index) in invitedUsers">
+        <v-col cols="12" :key="index">
+          <span>{{ user.identifier }}</span>
+          <span class="mx-2">|</span>
+          <span>
+            {{ $t('setup.inviteUsers.invited') }}
+            <v-icon
+              color="success"
+              v-text="'$tick'"
+            ></v-icon>
+          </span>
+        </v-col>
+      </template>
+    </v-row>
+    <validation-observer ref="form" #default="{ passes }">
+      <v-form @submit.prevent="passes(onSubmit)">
         <v-card
           flat
           :key="index"
@@ -13,12 +28,13 @@
               <identifier-input
                 :loading="loading"
                 v-model="user.identifier"
+                :id="`identifier-${index}`"
                 @on-update="setIdentifier($event, index)"
               />
             </v-col>
             <v-col cols="4" class="py-0">
               <validation-provider
-                name="Role"
+                name="role"
                 rules="required"
                 #default="{ errors }"
               >
@@ -27,6 +43,7 @@
                   item-value="roleId"
                   hide-details="auto"
                   :disabled="loading"
+                  :id="`role-${index}`"
                   v-model="user.roleId"
                   :error-messages="errors"
                   item-text="roleDescription"
@@ -40,6 +57,7 @@
                 small
                 class="mx-2"
                 @click="addUser"
+                :id="`add-${index}`"
               >
                 <v-icon v-text="'$add'"></v-icon>
               </v-btn>
@@ -47,6 +65,7 @@
                 icon
                 small
                 class="pa-0"
+                :id="`remove-${index}`"
                 @click="removeUser(index)"
                 :disabled="users.length === 1"
               >
@@ -57,38 +76,46 @@
         </v-card>
         <v-btn
           block
+          rounded
           type="submit"
           color="primary"
+          id="inviteUsers"
           class="text-none"
           :loading="loading"
         >
           <v-icon
             left
-            v-text="'$invite'"
+            :v-text="success ? '$next' : '$invite'"
           ></v-icon>
-            {{ $t('setup.inviteUsers.invite') }}
+            {{ success
+              ? $t('setup.inviteUsers.continue')
+              : $t('setup.inviteUsers.invite')
+            }}
         </v-btn>
-        <div class="text-center">
-          <span>{{ $t('helper.or') }}</span>
-        </div>
-        <div class="text-center">
-          <v-btn
-            text
-            @click="skip"
-            color="primary"
-            class="text-none"
-            :disabled="loading"
-          >
-            {{ $t('helper.skip') }}
-          </v-btn>
-        </div>
+        <template v-if="!success">
+          <div class="text-center">
+            <span>{{ $t('helper.or') }}</span>
+          </div>
+          <div class="text-center">
+            <v-btn
+              text
+              @click="skip"
+              color="primary"
+              id="skipInvite"
+              class="text-none"
+              :disabled="loading"
+            >
+              {{ $t('helper.skip') }}
+            </v-btn>
+          </div>
+        </template>
       </v-form>
     </validation-observer>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
 export default {
@@ -99,22 +126,20 @@ export default {
   data() {
     return {
       users: [],
+      invitedUsers: [],
       loading: false,
+      success: false,
     };
   },
   computed: {
-    ...mapState('user', ['activeSite', 'roles', 'me']),
+    ...mapState('user', ['activeSite', 'roles']),
   },
   async created() {
-    if (!this.me) {
-      await this.getMe();
-    }
     this.addUser();
     await this.getUserRoles();
   },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
-    ...mapActions('user', ['inviteUsers', 'getUserRoles', 'getMe']),
+    ...mapActions('user', ['inviteUsers', 'getUserRoles']),
     setIdentifier({ isMobile, prefix }, index) {
       this.users[index].isMobile = isMobile;
       this.users[index].prefix = prefix;
@@ -123,6 +148,7 @@ export default {
       this.users.push({
         identifier: '',
         roleId: '',
+        siteId: '',
         isMobile: false,
         prefix: '',
       });
@@ -144,40 +170,41 @@ export default {
       }));
       const addedUsers = await this.inviteUsers(payload);
       if (addedUsers && addedUsers.length) {
-        const createdUsers = addedUsers.filter((u) => u.created).length;
-        if (createdUsers && createdUsers.length) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'INVITE_SENT',
-          });
-        }
+        this.invitedUsers = addedUsers.filter((u) => u.created);
         if (addedUsers.some((user) => !user.created)) {
           const usersNotAdded = addedUsers
             .filter((user) => !user.created)
-            .map((u) => u.identifier)
-            .slice();
+            .map((u) => u.identifier);
           this.users = this.users
-            .filter((user) => usersNotAdded.includes(user.identifier))
+            .filter((user) => usersNotAdded.includes(user.isMobile
+              ? `${user.prefix}${user.identifier}`
+              : user.identifier))
             .map((user) => {
-              const currentUser = addedUsers.find((u) => u.identifier === user.identifier);
+              const currentUser = addedUsers.find((u) => u.identifier === (user.isMobile
+                ? `${user.prefix}${user.identifier}`
+                : user.identifier));
               const message = JSON.parse(currentUser.message);
+              this.$refs.form.setErrors({
+                identifier: [this.$i18n.t(`error.${message.errorCode}`)],
+              });
               return {
                 ...user,
-                showError: true,
-                error: message.errorCode,
+                error: this.$i18n.t(`error.${message.errorCode}`),
               };
             });
         } else {
-          this.users = [{
-            identifier: null,
-            roleId: null,
-            siteId: this.activeSite,
-          }];
-          this.skip();
+          this.users = [];
+          this.success = true;
         }
       }
       this.loading = false;
+    },
+    onSubmit() {
+      if (this.success) {
+        this.skip();
+      } else {
+        this.save();
+      }
     },
   },
 };

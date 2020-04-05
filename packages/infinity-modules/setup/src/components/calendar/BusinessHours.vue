@@ -17,7 +17,7 @@
           <v-row>
             <v-col cols="4">
               <validation-provider
-                name="Type"
+                name="type"
                 rules="required"
                 vid="hourType"
                 #default="{ errors }"
@@ -28,6 +28,7 @@
                   item-value="value"
                   hide-details="auto"
                   v-model="hour.type"
+                  :id="`type-${index}`"
                   :error-messages="errors"
                   :prepend-inner-icon="hour.type === 'shift'
                     ? '$shift'
@@ -38,7 +39,7 @@
             </v-col>
             <v-col cols="8" v-if="hour.type === 'shift'">
               <validation-provider
-                name="Name"
+                name="name"
                 rules="required_if:hourType,shift"
                 #default="{ errors }"
               >
@@ -46,6 +47,7 @@
                   type="text"
                   v-model="hour.name"
                   hide-details="auto"
+                  :id="`name-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
@@ -53,7 +55,7 @@
             </v-col>
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
-                name="Name"
+                name="name"
                 rules="required_if:hourType,break"
                 #default="{ errors }"
               >
@@ -61,6 +63,7 @@
                   type="text"
                   v-model="hour.name"
                   hide-details="auto"
+                  :id="`name-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.name')"
                 ></v-text-field>
@@ -68,7 +71,7 @@
             </v-col>
             <v-col cols="4" v-if="hour.type === 'break'">
               <validation-provider
-                name="Shift"
+                name="shift"
                 rules="required_if:hourType,break"
                 #default="{ errors }"
               >
@@ -76,6 +79,7 @@
                   :items="shifts"
                   hide-details="auto"
                   v-model="hour.shift"
+                  :id="`shift-${index}`"
                   :error-messages="errors"
                   :label="$t('setup.onboardCalendar.hours.includeIn')"
                 ></v-select>
@@ -84,7 +88,7 @@
             <v-col cols="4">
               <validation-provider
                 rules="required"
-                name="Start time"
+                name="startTime"
                 #default="{ errors }"
               >
                 <v-text-field
@@ -92,13 +96,14 @@
                   hide-details="auto"
                   v-model="hour.starttime"
                   :error-messages="errors"
+                  :id="`starttime-${index}`"
                   :label="$t('setup.onboardCalendar.hours.startTime')"
                 ></v-text-field>
               </validation-provider>
             </v-col>
             <v-col cols="4">
               <validation-provider
-                name="End time"
+                name="endTime"
                 rules="required"
                 #default="{ errors }"
               >
@@ -107,6 +112,7 @@
                   hide-details="auto"
                   v-model="hour.endtime"
                   :error-messages="errors"
+                  :id="`endtime-${index}`"
                   :label="$t('setup.onboardCalendar.hours.endTime')"
                 ></v-text-field>
               </validation-provider>
@@ -117,6 +123,7 @@
                 small
                 class="mx-2"
                 @click="addHour"
+                :id="`add-${index}`"
               >
                 <v-icon v-text="'$add'"></v-icon>
               </v-btn>
@@ -124,6 +131,7 @@
                 icon
                 small
                 class="pa-0"
+                :id="`remove-${index}`"
                 @click="removeHour(index)"
                 :disabled="hours.length === 1"
               >
@@ -135,8 +143,10 @@
         </v-card>
         <v-btn
           block
+          rounded
           type="submit"
           color="primary"
+          id="finishHours"
           class="text-none"
           :loading="loading"
         >

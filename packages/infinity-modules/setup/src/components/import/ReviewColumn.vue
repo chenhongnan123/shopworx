@@ -44,14 +44,7 @@
       </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-btn
-        @click="save"
-        color="primary"
-        class="text-none"
-        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      >
-        {{ $t('setup.importMaster.save') }}
-      </v-btn>
+      <v-spacer></v-spacer>
       <v-btn
         text
         color="primary"
@@ -60,6 +53,14 @@
         :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
       >
         {{ $t('setup.importMaster.cancel') }}
+      </v-btn>
+      <v-btn
+        @click="save"
+        color="primary"
+        class="text-none"
+        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+      >
+        {{ $t('setup.importMaster.save') }}
       </v-btn>
     </v-card-actions>
   </div>

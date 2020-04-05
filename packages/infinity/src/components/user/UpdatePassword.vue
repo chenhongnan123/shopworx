@@ -14,6 +14,7 @@
           >
             <v-text-field
               type="password"
+              id="newPassword"
               v-model="password"
               :disabled="loading"
               :error-messages="errors"
@@ -30,6 +31,7 @@
             <v-text-field
               type="password"
               :disabled="loading"
+              id="confirmPassword"
               :error-messages="errors"
               v-model="confirmPassword"
               autocomplete="new-password"
@@ -41,10 +43,12 @@
         <v-card-actions>
           <v-btn
             block
+            rounded
             type="submit"
             color="primary"
             class="text-none"
             :loading="loading"
+            id="updatePassword"
           >
             <v-icon
               left

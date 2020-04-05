@@ -26,13 +26,14 @@
 
 <script>
 export default {
-  name: 'SwxSnackbar',
+  name: 'InfinitySnackbar',
   data() {
     return {
       timeout: 6000,
       reLogin: null,
       logoutTimer: 5,
       logoutInterval: null,
+      snackbarTimeout: null,
     };
   },
   computed: {
@@ -85,7 +86,7 @@ export default {
           this.logoutInterval = setInterval(() => {
             self.logoutTimer -= 1;
           }, 1000);
-          setTimeout(async () => {
+          this.snackbarTimeout = setTimeout(async () => {
             await self.logout();
           }, this.logoutTimer * 1000);
         } else {
@@ -110,8 +111,9 @@ export default {
     async logout() {
       const success = await this.$store.dispatch('auth/logoutUser');
       if (success) {
-        this.cancel();
+        clearTimeout(this.snackbarTimeout);
         clearInterval(this.logoutInterval);
+        this.cancel();
         this.$router.replace({
           name: 'login',
           query: { redirect: this.$route.fullPath },

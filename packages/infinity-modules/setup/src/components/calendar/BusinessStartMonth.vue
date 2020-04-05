@@ -17,14 +17,17 @@
       <v-chip
         large
         :key="index"
+        :id="`month-${index}`"
         v-for="(month, index) in months"
         v-text="$t(`setup.onboardCalendar.month.${month}`)"
       ></v-chip>
     </v-chip-group>
     <v-btn
       block
+      rounded
       @click="save"
       color="primary"
+      id="finishMonth"
       class="text-none"
       :loading="loading"
     >
