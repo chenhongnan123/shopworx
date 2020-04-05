@@ -24,15 +24,11 @@
       />
       <infinity-header @toggle-drawer="toggleDrawer" />
       <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
-        <v-container
-          fluid
-          style="height:100%"
-        >
-          <v-fade-transition mode="out-in">
-            <router-view />
-          </v-fade-transition>
-        </v-container>
+        <v-fade-transition mode="out-in">
+          <router-view />
+        </v-fade-transition>
       </v-content>
+      <infinity-bottom v-if="$vuetify.breakpoint.smAndDown" />
     </template>
   </v-app>
 </template>
@@ -46,12 +42,14 @@ import {
 } from 'vuex';
 import InfinityHeader from '@/components/core/InfinityHeader.vue';
 import InfinityDrawer from '@/components/core/InfinityDrawer.vue';
+import InfinityBottom from '@/components/core/InfinityBottom.vue';
 
 export default {
   name: 'InfinityHome',
   components: {
     InfinityHeader,
     InfinityDrawer,
+    InfinityBottom,
   },
   async created() {
     this.loading = true;

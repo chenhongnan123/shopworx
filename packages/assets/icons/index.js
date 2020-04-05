@@ -44,5 +44,6 @@ export default {
     settings: 'mdi-settings-outline',
     info: 'mdi-information-outline',
     fullscreen: 'mdi-fullscreen',
+    back: 'mdi-undo-variant',
   },
 };
