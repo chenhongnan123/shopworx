@@ -110,6 +110,11 @@ export default {
       loading: false,
     };
   },
+  created() {
+    if (this.me && this.me.user) {
+      this.assignUser(this.me.user);
+    }
+  },
   computed: {
     ...mapState('user', ['me']),
     showEmail() {
@@ -129,6 +134,12 @@ export default {
   },
   methods: {
     ...mapActions('user', ['updateUser']),
+    assignUser(user) {
+      this.firstName = user.firstname;
+      this.lastName = user.lastname;
+      this.email = user.emailId;
+      this.phone = user.phoneNumber;
+    },
     async onUpdateAccount() {
       this.loading = true;
       const payload = {
