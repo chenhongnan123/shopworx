@@ -1,3 +1,31 @@
 {
-  "admin": "Admin"
+  "admin": {
+    "general": "General",
+    "management": "Management",
+    "calendar": "Calendar",
+    "account": {
+      "title": "Account"
+    },
+    "notifications": {
+      "title": "Notifications"
+    },
+    "userRoles": {
+      "title": "User roles"
+    },
+    "users": {
+      "title": "Users"
+    },
+    "fiscalYearStart": {
+      "title": "Fiscal year start"
+    },
+    "workingDays": {
+      "title": "Working days"
+    },
+    "shiftHours": {
+      "title": "Shift hours"
+    },
+    "holidays": {
+      "title": "Holidays"
+    }
+  }
 }

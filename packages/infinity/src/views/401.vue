@@ -29,7 +29,7 @@
             >
               <v-icon
                 left
-                v-text="'$home'"
+                v-text="'$back'"
               ></v-icon>
               {{ $t('forbidden.goHome') }}
             </v-btn>

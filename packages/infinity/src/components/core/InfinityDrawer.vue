@@ -3,8 +3,8 @@
     app
     dark
     floating
-    v-model="drawer"
     color="#212121"
+    v-model="drawer"
     :expand-on-hover="expandOnHover && $vuetify.breakpoint.lgAndUp"
   >
     <v-list shaped class="py-1">
@@ -65,7 +65,7 @@
           >
             <template #activator>
               <v-list-item-title
-                v-text="$t(`modules.${item.title}`)"
+                v-text="$t(`modules.${item.group}`)"
               ></v-list-item-title>
             </template>
             <v-list-item
@@ -73,7 +73,7 @@
               :key="child.param"
               :title="$t(`reports.${child.param}`)"
               v-for="child in item.children"
-              :to="{ path: child.to, params: { id: child.param } }"
+              :to="{ name: item.title, params: { id: child.param } }"
               :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
             >
               <v-list-item-icon>
@@ -88,7 +88,7 @@
             link
             v-else
             :key="index"
-            :to="{ path: item.to }"
+            :to="{ name: item.title }"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
@@ -101,9 +101,9 @@
     </perfect-scrollbar>
     <v-list shaped dense>
       <v-list-item
-        v-for="item in adminItems"
         :key="item.title"
-        :to="{ path: item.to }"
+        :to="{ name: item.title }"
+        v-for="item in adminItems"
         :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
       >
         <v-list-item-icon>

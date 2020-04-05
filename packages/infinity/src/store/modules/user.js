@@ -282,16 +282,15 @@ export default ({
             });
           }
           if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
-            modules.items.push({ header: 'reports' });
+            modules.items.push({ header: module.moduleName });
             module.details.forEach((detail) => {
               modules.items.push({
                 id: detail.id,
                 icon: detail.iconUrl,
-                title: detail.reportsCategoryName,
                 group: detail.reportsCategoryName,
                 children: detail.reportViews.map((report) => ({
                   id: report.id,
-                  to: 'report-viewer',
+                  to: module.moduleName,
                   param: report.reportName,
                   title: report.reportDescription,
                   avatarText: report.reportDescription.match(/\b(\w)/g).join(''),
@@ -333,8 +332,12 @@ export default ({
       let isProvisioned = false;
       if (modules) {
         const { items, adminItems } = modules;
-        const itemTitles = items.map((item) => item.title);
-        const adminItemTitles = adminItems.map((item) => item.title);
+        const itemTitles = items
+          .filter((item) => item.to)
+          .map((item) => item.to);
+        const adminItemTitles = adminItems
+          .filter((item) => item.to)
+          .map((item) => item.to);
         const mods = [...itemTitles, ...adminItemTitles];
         isProvisioned = mods.includes(appName);
       }

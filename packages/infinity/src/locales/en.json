@@ -166,5 +166,21 @@
     "support": "Support",
     "terms": "Terms of service",
     "privacy": "Privacy policy"
+  },
+  "user": {
+    "general": "General",
+    "security": "Security",
+    "profile": {
+      "title": "Profile"
+    },
+    "preferences": {
+      "title": "Preferences"
+    },
+    "password": {
+      "title": "Password"
+    },
+    "auditLog": {
+      "title": "Audit log"
+    }
   }
 }

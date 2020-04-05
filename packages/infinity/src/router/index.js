@@ -48,7 +48,8 @@ router.beforeEach(async (to, from, next) => {
   } else if (loggedIn && onlyWhenLoggedOut) {
     next({ path: '/' });
   } else if (loggedIn && appPermissionRequired) {
-    if (await isAppProvisioned(to.name)) {
+    const appPath = to.fullPath.split('/');
+    if (await isAppProvisioned(appPath[1])) {
       next();
     } else {
       next({ name: '401' });

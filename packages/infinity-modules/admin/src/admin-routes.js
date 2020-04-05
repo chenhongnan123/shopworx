@@ -6,6 +6,11 @@ const routes = [
     meta: {
       permissionRequired: true,
     },
+    children: [{
+      path: ':id',
+      name: 'adminWindow',
+      component: () => import(/* webpackChunkName: "admin" */ './views/AdminWindow.vue'),
+    }],
   },
 ];
 

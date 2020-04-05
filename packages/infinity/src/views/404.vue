@@ -29,7 +29,7 @@
             >
               <v-icon
                 left
-                v-text="'$skip'"
+                v-text="'$back'"
               ></v-icon>
               {{ $t('notFound.goHome') }}
             </v-btn>

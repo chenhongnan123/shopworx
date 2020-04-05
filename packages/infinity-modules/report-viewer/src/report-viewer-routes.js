@@ -1,8 +1,8 @@
 const routes = [
   {
-    path: 'report-viewer',
-    name: 'reportViewer',
-    component: () => import(/* webpackChunkName: "report-viewer" */ './views/ReportViewer.vue'),
+    path: 'reports',
+    name: 'reports',
+    component: () => import(/* webpackChunkName: "reports" */ './views/ReportViewer.vue'),
   },
 ];
 

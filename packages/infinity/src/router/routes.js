@@ -5,7 +5,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
   },
   {
-    path: '/401',
+    path: '/forbidden',
     name: '401',
     component: () => import(/* webpackChunkName: "401" */ '@/views/401.vue'),
   },
@@ -14,9 +14,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
     children: [
       {
-        path: 'profile',
-        name: 'profile',
-        component: () => import(/* webpackChunkName: "profile" */ '@/views/Account.vue'),
+        path: 'user',
+        name: 'user',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User.vue'),
+        children: [{
+          path: ':id',
+          name: 'userWindow',
+          component: () => import(/* webpackChunkName: "user" */ '@/components/user/UserWindow.vue'),
+        }],
       },
     ],
   },
