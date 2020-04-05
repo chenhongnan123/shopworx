@@ -1,13 +1,14 @@
 {
   "admin": {
     "general": "General",
-    "management": "Management",
+    "management": "Access management",
     "calendar": "Calendar",
+    "billing": "Plans and billing",
     "account": {
       "title": "Account"
     },
-    "notifications": {
-      "title": "Notifications"
+    "alerts": {
+      "title": "Alerts"
     },
     "userRoles": {
       "title": "User roles"
@@ -26,6 +27,12 @@
     },
     "holidays": {
       "title": "Holidays"
+    },
+    "planDetails": {
+      "title": "Plan details"
+    },
+    "assets": {
+      "title": "Assets on plan"
     }
   }
 }
