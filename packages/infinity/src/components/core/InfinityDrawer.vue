@@ -7,7 +7,10 @@
     v-model="drawer"
     :expand-on-hover="expandOnHover && $vuetify.breakpoint.lgAndUp"
   >
-    <v-list shaped class="py-1">
+    <v-list
+      shaped
+      class="py-1"
+    >
       <v-list-item>
         <v-list-item-icon>
           <v-icon
@@ -46,8 +49,9 @@
     </v-list>
     <perfect-scrollbar :style="`height: calc(100% - ${scrollbarHeight}px);`">
       <v-list
-        shaped
         dense
+        shaped
+        class="py-0"
       >
         <template v-for="(item, index) in items">
           <v-subheader
@@ -99,7 +103,12 @@
         </template>
       </v-list>
     </perfect-scrollbar>
-    <v-list shaped dense>
+    <v-divider></v-divider>
+    <v-list
+      dense
+      shaped
+      class="py-1"
+    >
       <v-list-item
         :key="item.title"
         :to="{ name: item.title }"
@@ -120,8 +129,7 @@ export default {
   name: 'InfinityDrawer',
   props: {
     showDrawer: {
-      type: Boolean,
-      required: true,
+      default: null,
     },
     items: {
       type: Array,
@@ -157,7 +165,7 @@ export default {
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 16);
+        totalHeight += (40 * this.adminItems.length + 1 + 8);
       }
       return totalHeight;
     },

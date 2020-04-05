@@ -80,7 +80,8 @@
     "or": "or",
     "help": "Help",
     "next": "Next",
-    "skip": "Skip for now"
+    "skip": "Skip for now",
+    "loading": "Loading..."
   },
   "notFound": {
     "title": "That's an error!",
@@ -148,8 +149,10 @@
     "downtime": "Downtime",
     "rejection": "Rejection",
     "oee": "Oee",
-    "masters": "Masters",
-    "admin": "Admin"
+    "masters": "Master Data",
+    "admin": "Admin Console",
+    "search": "Search",
+    "insights": "Insights"
   },
   "account": {
     "account": "Account",

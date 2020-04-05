@@ -5,7 +5,7 @@
     class="text-none"
   >
     <v-icon v-text="'$insights'" left></v-icon>
-    Insights
+    {{ $t('modules.insights') }}
   </v-btn>
 </template>
 
