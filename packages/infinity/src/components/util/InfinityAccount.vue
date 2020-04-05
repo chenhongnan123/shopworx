@@ -44,13 +44,10 @@
         ></v-divider>
         <v-list-item
           :key="index"
-          color="primary"
           v-else-if="item.id"
           @click="setActiveSite(item.id)"
+          :class="activeSite === item.id ? 'secondary' : ''"
         >
-          <v-list-item-icon>
-            <v-icon v-text="item.icon"></v-icon>
-          </v-list-item-icon>
           <v-list-item-title v-text="item.title"></v-list-item-title>
         </v-list-item>
         <v-list-item
