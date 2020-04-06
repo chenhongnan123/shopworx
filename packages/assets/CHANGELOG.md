@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2020-04-06)
+
+
+### Bug Fixes
+
+* **user-profile:** added preferences to user profile ([37e5d25](https://bitbucket.org/entrib/shopworx/commits/37e5d25c434463a2b97e6955b5f9c01308568115))
+
+
+### Features
+
+* **navigation:** added back arrow on mobile and tablet screens ([5eaffcc](https://bitbucket.org/entrib/shopworx/commits/5eaffcc490d4f604d2f950577770f1db68dd904d))
+
+
+
+
+
 # [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
 
 

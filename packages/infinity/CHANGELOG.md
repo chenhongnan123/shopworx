@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2020-04-06)
+
+
+### Bug Fixes
+
+* **layout:** updated settings layout for xl screens ([f365910](https://bitbucket.org/entrib/shopworx/commits/f365910772fb9e53a8fc6756720377dc2c9feedf))
+* **user-profile:** added preferences to user profile ([37e5d25](https://bitbucket.org/entrib/shopworx/commits/37e5d25c434463a2b97e6955b5f9c01308568115))
+* **validation:** updated phone validation ([c55fcd9](https://bitbucket.org/entrib/shopworx/commits/c55fcd9d0da2b5b7a7b50da26a352cef881f3fb8))
+
+
+### Features
+
+* **account:** added customer name to user profile ([eb7f4f5](https://bitbucket.org/entrib/shopworx/commits/eb7f4f54da396ad2f13af37e37fd3eba404b3154))
+* **navigation:** added back arrow on mobile and tablet screens ([5eaffcc](https://bitbucket.org/entrib/shopworx/commits/5eaffcc490d4f604d2f950577770f1db68dd904d))
+* **user-profile:** user can now update his/her password ([edf6e9b](https://bitbucket.org/entrib/shopworx/commits/edf6e9b3947b64f022382da099ffaa3259e5a1be))
+* **user-profile:** user can now update his/her profile ([c149cf4](https://bitbucket.org/entrib/shopworx/commits/c149cf410f7e936aa2548602cf530708bb02cf53))
+
+
+
+
+
 # [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
 
 
