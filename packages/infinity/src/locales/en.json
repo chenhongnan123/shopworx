@@ -191,7 +191,10 @@
       "update": "Update profile"
     },
     "preferences": {
-      "title": "Preferences"
+      "title": "Preferences",
+      "display": "Display settings",
+      "language": "Language",
+      "darkMode": "Dark mode"
     },
     "password": {
       "title": "Password",

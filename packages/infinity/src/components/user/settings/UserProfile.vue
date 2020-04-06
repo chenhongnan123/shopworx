@@ -1,26 +1,6 @@
 <template>
   <v-card class="transparent" flat>
-    <v-row no-gutters>
-      <v-col cols="3" sm="2">
-        <v-avatar
-          size="96"
-          color="secondary"
-        >
-          <v-icon
-            x-large
-            v-text="'$account'"
-          ></v-icon>
-        </v-avatar>
-      </v-col>
-      <v-col class="my-auto">
-        <div class="display-1 font-weight-medium">
-          {{ fullName }}
-        </div>
-        <div class="title">
-          {{ customer }}, {{ currentSite }}
-        </div>
-      </v-col>
-    </v-row>
+    <user-avatar />
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdateProfile)">
         <v-card-text class="py-0">
@@ -121,15 +101,14 @@
 </template>
 
 <script>
-import {
-  mapGetters,
-  mapState,
-  mapActions,
-  mapMutations,
-} from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
+import UserAvatar from '@/components/user/settings/UserAvatar.vue';
 
 export default {
   name: 'UserProfile',
+  components: {
+    UserAvatar,
+  },
   data() {
     return {
       email: '',
@@ -151,7 +130,6 @@ export default {
   },
   computed: {
     ...mapState('user', ['me']),
-    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer']),
     emailRules() {
       return this.phone ? 'email' : 'required|email';
     },

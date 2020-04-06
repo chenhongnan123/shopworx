@@ -167,7 +167,10 @@
       "update": "प्रोफ़ाइल अपडेट करें"
     },
     "preferences": {
-      "title": "पसंद"
+      "title": "पसंद",
+      "display": "प्रदर्शन सेटिंग्स",
+      "language": "भाषा",
+      "darkMode": "डार्क मोड"
     },
     "password": {
       "title": "कुंजिका",

@@ -8,7 +8,7 @@
         <v-card-text>
           <validation-provider
             vid="password"
-            name="Password"
+            name="password"
             rules="required"
             #default="{ errors }"
           >
@@ -24,9 +24,9 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="required|confirmed:password"
-            name="Password"
+            name="password"
             #default="{ errors }"
+            rules="required|confirmed:password"
           >
             <v-text-field
               type="password"

@@ -1,32 +1,12 @@
 <template>
   <v-card class="transparent" flat>
-    <v-row no-gutters>
-      <v-col cols="3" sm="2">
-        <v-avatar
-          size="96"
-          color="secondary"
-        >
-          <v-icon
-            x-large
-            v-text="'$account'"
-          ></v-icon>
-        </v-avatar>
-      </v-col>
-      <v-col class="my-auto">
-        <div class="display-1 font-weight-medium">
-          {{ fullName }}
-        </div>
-        <div class="title">
-          {{ customer }}, {{ currentSite }}
-        </div>
-      </v-col>
-    </v-row>
+    <user-avatar />
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdatePassword)">
         <v-card-text class="py-0">
           <validation-provider
             vid="password"
-            name="Password"
+            name="password"
             rules="required"
             #default="{ errors }"
           >
@@ -43,7 +23,7 @@
           </validation-provider>
           <validation-provider
             rules="required|confirmed:password"
-            name="Password"
+            name="password"
             #default="{ errors }"
           >
             <v-text-field
@@ -80,25 +60,20 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
+import UserAvatar from '@/components/user/settings/UserAvatar.vue';
 
 export default {
   name: 'UserPassword',
+  components: {
+    UserAvatar,
+  },
   data() {
     return {
       password: '',
       loading: false,
       confirmPassword: '',
     };
-  },
-  computed: {
-    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer']),
-    emailRules() {
-      return this.phone ? 'email' : 'required|email';
-    },
-    phoneRules() {
-      return this.email ? 'digits:10' : 'required|digits:10';
-    },
   },
   methods: {
     ...mapActions('user', ['updatePassword']),

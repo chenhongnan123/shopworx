@@ -57,5 +57,6 @@ export default {
     subscription: 'mdi-sync',
     list: 'mdi-clipboard-list-outline',
     tick: 'mdi-check-circle-outline',
+    locale: 'mdi-translate',
   },
 };
