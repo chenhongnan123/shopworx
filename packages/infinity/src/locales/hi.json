@@ -49,7 +49,8 @@
   },
   "success": {
     "OTP_SENT": "पंजीकृत ईमेल / फोन पर वन टाइम पासवर्ड भेजा जाता है।",
-    "PASSWORD_RESET": "नया पासवर्ड पंजीकृत ईमेल / फोन पर भेजा जाता है।"
+    "PASSWORD_RESET": "नया पासवर्ड पंजीकृत ईमेल / फोन पर भेजा जाता है।",
+    "UPDATED": "अपडेट किया गया!"
   },
   "error": {
     "NOT_VALID": "{_field_} मान्य नहीं है।",
@@ -152,5 +153,33 @@
     "logout": "लॉग आउट",
     "lightMode": "प्रकाश मोड",
     "darkMode": "डार्क मोड"
+  },
+  "user": {
+    "general": "सामान्य",
+    "security": "सुरक्षा",
+    "profile": {
+      "title": "प्रोफ़ाइल",
+      "firstName": "पहला नाम",
+      "lastName":"उपनाम",
+      "email": "ईमेल",
+      "phone": "फ़ोन",
+      "reset": "रीसेट",
+      "update": "प्रोफ़ाइल अपडेट करें"
+    },
+    "preferences": {
+      "title": "पसंद",
+      "display": "प्रदर्शन सेटिंग्स",
+      "language": "भाषा",
+      "darkMode": "डार्क मोड"
+    },
+    "password": {
+      "title": "कुंजिका",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि कीजिये",
+      "update": "पासवर्ड अपडेट करें"
+    },
+    "auditLog": {
+      "title": "हिसाब सूचि"
+    }
   }
 }

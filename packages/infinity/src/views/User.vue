@@ -22,7 +22,7 @@
             {{ fullName }}
           </div>
           <div class="title font-weight-regular">
-            {{ currentSite }}
+            {{ customer }}, {{ currentSite }}
           </div>
         </v-card-text>
         <v-card-text>
@@ -113,15 +113,7 @@ export default {
   },
   computed: {
     ...mapState('user', ['activeSite']),
-    ...mapGetters('user', ['fullName', 'sites']),
-    currentSite() {
-      let description = '';
-      const site = this.sites.find((s) => s.id === this.activeSite);
-      if (site) {
-        ({ description } = site);
-      }
-      return description;
-    },
+    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer']),
   },
   methods: {
     ...mapActions('auth', ['logoutUser']),

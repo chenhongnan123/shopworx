@@ -45,6 +45,7 @@ export default {
     info: 'mdi-information-outline',
     fullscreen: 'mdi-fullscreen',
     back: 'mdi-undo-variant',
+    left: 'mdi-arrow-left',
     alerts: 'mdi-car-brake-alert',
     userRoles: 'mdi-shield-key-outline',
     users: 'mdi-account-multiple-outline',
@@ -57,5 +58,6 @@ export default {
     subscription: 'mdi-sync',
     list: 'mdi-clipboard-list-outline',
     tick: 'mdi-check-circle-outline',
+    locale: 'mdi-translate',
   },
 };

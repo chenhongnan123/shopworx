@@ -29,10 +29,6 @@ extend('digits', digits);
 extend('email', email);
 extend('max', max);
 
-extend('phone', {
-  validate: (value, [length]) => value.length === parseInt(length, 10),
-});
-
 configure({
   defaultMessage: (field, values) => {
     values._field_ = i18n.t(`fields.${field}`);

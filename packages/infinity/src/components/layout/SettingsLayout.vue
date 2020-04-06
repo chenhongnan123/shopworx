@@ -39,7 +39,7 @@
           </v-list>
         </v-col>
         <v-divider vertical></v-divider>
-        <v-col cols="12" md="8" lg="7">
+        <v-col cols="12" md="8" lg="7" xl="5">
           <v-card
             flat
             class="transparent"

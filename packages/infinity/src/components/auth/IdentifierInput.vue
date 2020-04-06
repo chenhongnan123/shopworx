@@ -50,7 +50,7 @@ export default {
         : 'email';
     },
     identifierValidationRules() {
-      return this.isMobileNumber ? 'required|phone:10' : 'required|email';
+      return this.isMobileNumber ? 'required|digits:10' : 'required|email';
     },
     identifier: {
       get() {
