@@ -153,5 +153,30 @@
     "logout": "लॉग आउट",
     "lightMode": "प्रकाश मोड",
     "darkMode": "डार्क मोड"
+  },
+  "user": {
+    "general": "सामान्य",
+    "security": "सुरक्षा",
+    "profile": {
+      "title": "प्रोफ़ाइल",
+      "firstName": "पहला नाम",
+      "lastName":"उपनाम",
+      "email": "ईमेल",
+      "phone": "फ़ोन",
+      "reset": "रीसेट",
+      "update": "प्रोफ़ाइल अपडेट करें"
+    },
+    "preferences": {
+      "title": "पसंद"
+    },
+    "password": {
+      "title": "कुंजिका",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि कीजिये",
+      "update": "पासवर्ड अपडेट करें"
+    },
+    "auditLog": {
+      "title": "हिसाब सूचि"
+    }
   }
 }

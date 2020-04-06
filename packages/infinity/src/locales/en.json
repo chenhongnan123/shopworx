@@ -194,7 +194,10 @@
       "title": "Preferences"
     },
     "password": {
-      "title": "Password"
+      "title": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
     },
     "auditLog": {
       "title": "Audit log"
