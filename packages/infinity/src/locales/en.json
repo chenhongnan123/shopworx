@@ -49,7 +49,8 @@
   },
   "success": {
     "OTP_SENT": "One time password sent on registered email/phone.",
-    "PASSWORD_RESET": "New password sent on registered email/phone."
+    "PASSWORD_RESET": "New password sent on registered email/phone.",
+    "UPDATED": "Updated!"
   },
   "error": {
     "NOT_VALID": "{_field_} is not valid.",
@@ -181,7 +182,13 @@
     "general": "General",
     "security": "Security",
     "profile": {
-      "title": "Profile"
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName":"Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "reset": "Reset",
+      "update": "Update profile"
     },
     "preferences": {
       "title": "Preferences"
