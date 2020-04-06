@@ -7,9 +7,16 @@
     :color="$vuetify.theme.dark ? '#121212' : 'white'"
   >
     <v-app-bar-nav-icon
-      v-if="$vuetify.breakpoint.mdAndDown"
+      v-if="$vuetify.breakpoint.mdAndDown && $route.params.id === undefined"
       @click="$emit('toggle-drawer')"
     ></v-app-bar-nav-icon>
+    <v-btn
+      icon
+      v-else-if="$vuetify.breakpoint.mdAndDown && $route.params.id"
+      @click="$router.back()"
+    >
+      <v-icon v-text="'$left'"></v-icon>
+    </v-btn>
     <v-toolbar-title
       :class="$vuetify.breakpoint.mdAndUp
         ? 'headline font-weight-medium'

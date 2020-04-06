@@ -45,6 +45,7 @@ export default {
     info: 'mdi-information-outline',
     fullscreen: 'mdi-fullscreen',
     back: 'mdi-undo-variant',
+    left: 'mdi-arrow-left',
     alerts: 'mdi-car-brake-alert',
     userRoles: 'mdi-shield-key-outline',
     users: 'mdi-account-multiple-outline',
