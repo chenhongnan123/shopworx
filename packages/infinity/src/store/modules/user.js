@@ -243,14 +243,21 @@ export default ({
       if (me && me.role.roleType) {
         return me.role.roleType.toUpperCase().trim() === 'ADMINISTRATOR';
       }
-      return null;
+      return false;
+    },
+
+    customer: ({ me }) => {
+      if (me && me.customer) {
+        return me.customer.description;
+      }
+      return '';
     },
 
     fullName: ({ me }) => {
       if (me && me.user) {
         return `${me.user.firstname} ${me.user.lastname}`;
       }
-      return null;
+      return '';
     },
 
     sites: ({ me }) => {
@@ -262,6 +269,16 @@ export default ({
         }));
       }
       return [];
+    },
+
+    currentSite: ({ activeSite }, { sites }) => {
+      if (sites && sites.length && activeSite) {
+        const site = sites.find((s) => s.id === activeSite);
+        if (site) {
+          return site.description;
+        }
+      }
+      return '';
     },
 
     modules: ({ mySolutions }) => {

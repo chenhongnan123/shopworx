@@ -25,7 +25,7 @@
         </template>
         <span class="text-center">
           <div class="font-weight-medium">{{ fullName }}</div>
-          <div>{{ currentSite }}</div>
+          <div>{{ customer }}, {{ currentSite }}</div>
         </span>
       </v-tooltip>
     </template>
@@ -77,15 +77,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('user', ['activeSite']),
-    ...mapGetters('user', ['fullName', 'sites']),
-    currentSite() {
-      let description = '';
-      const site = this.sites.find((s) => s.id === this.activeSite);
-      if (site) {
-        ({ description } = site);
-      }
-      return description;
-    },
+    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer']),
     items() {
       let items = [
         {
