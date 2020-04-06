@@ -56,7 +56,7 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="phone"
+            rules="digits:10"
             name="phone"
             #default="{ errors }"
           >
