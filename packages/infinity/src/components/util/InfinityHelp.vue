@@ -13,7 +13,6 @@
             v-on="{ ...tooltip, ...menu }"
           >
             <v-icon
-              color="primary"
               v-text="'$help'"
             ></v-icon>
           </v-btn>

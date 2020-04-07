@@ -3,7 +3,7 @@
     <user-profile v-if="id === 'profile'" />
     <user-preferences v-else-if="id === 'preferences'" />
     <user-password v-else-if="id === 'password'" />
-    <user-audit-log v-else-if="id === 'audit=log'" />
+    <user-audit-log v-else-if="id === 'audit-log'" />
   </div>
 </template>
 

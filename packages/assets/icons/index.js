@@ -59,5 +59,6 @@ export default {
     list: 'mdi-clipboard-list-outline',
     tick: 'mdi-check-circle-outline',
     locale: 'mdi-translate',
+    delete: 'mdi-delete-circle-outline',
   },
 };

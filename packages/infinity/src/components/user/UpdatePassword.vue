@@ -7,7 +7,7 @@
       <v-form @submit.prevent="passes(onUpdatePassword)">
         <v-card-text>
           <validation-provider
-            vid="password"
+            vid="createPassword"
             name="password"
             rules="required"
             #default="{ errors }"
@@ -26,7 +26,7 @@
           <validation-provider
             name="password"
             #default="{ errors }"
-            rules="required|confirmed:password"
+            rules="required|confirmed:createPassword"
           >
             <v-text-field
               type="password"

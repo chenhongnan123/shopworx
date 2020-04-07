@@ -1,11 +1,11 @@
 <template>
   <v-card class="transparent" flat>
     <user-avatar />
-    <validation-observer #default="{ passes }">
+    <validation-observer ref="form" #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdatePassword)">
         <v-card-text class="py-0">
           <validation-provider
-            vid="password"
+            vid="updatePassword"
             name="password"
             rules="required"
             #default="{ errors }"
@@ -22,7 +22,7 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="required|confirmed:password"
+            rules="required|confirmed:updatePassword"
             name="password"
             #default="{ errors }"
           >
@@ -92,6 +92,9 @@ export default {
         });
         this.password = '';
         this.confirmPassword = '';
+        requestAnimationFrame(() => {
+          this.$refs.form.reset();
+        });
       }
       this.loading = false;
     },

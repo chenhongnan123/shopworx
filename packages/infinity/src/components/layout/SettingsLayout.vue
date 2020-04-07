@@ -46,6 +46,7 @@
           >
             <v-card-title primary-title>
               {{ $t(`${selectedTitle}`) }}
+              <portal-target name="settings-header"></portal-target>
             </v-card-title>
             <v-card-text>
               <v-fade-transition mode="out-in">
@@ -59,6 +60,7 @@
     <template v-else>
       <portal to="app-header" v-if="id">
         {{ $t(`${selectedTitle}`) }}
+        <portal-target name="settings-header" slim />
       </portal>
       <portal to="app-header" v-else>
         {{ headerTitle }}
