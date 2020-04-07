@@ -47,322 +47,163 @@
       "pm": "PM"
     }
   },
-  "infinity": {
-    "error": {
-      "ACCESS_NOT_ALLOWED_TO_ELEMENT": "Access not allowed!",
-      "INVALID_SESSION": "Your session has expired. Please login again.",
-      "INVALID_LOGIN_DETAILS": "Login failed: Invalid username or password.",
-      "EMAIL_NOT_FOUND": "Login failed: Invalid email",
-      "USER_NOT_FOUND": "Login failed: Invalid user",
-      "INVITE_FAILED": "Could not send invitatoin. Please try again.",
-      "INCORRECT_PASSWORD": "Login failed: Invalid password.",
-      "MOBILE_NUMBER_NOT_FOUND": "Send OTP failed: Invalid mobile number.",
-      "INVALID_OTP": "Login failed: Invalid OTP.",
-      "INVALID_USERNAME": "Invalid username: Username must have 5 to 15 characters containing only [a-z], [0-9], _ and -.",
-      "INVALID_CURRENT_PASSWORD": "Update password failed: Invalid current password.",
-      "FAILED_TO_SEND_SMS": "SMS sending failed: Please try again.",
-      "USER_ALREADY_EXIST": "User already exists.",
-      "FIELD_MAPPING_REQUIRED": "One or more required column(s) are not mapped yet. Please check your column mappings.",
-      "MULTI_MAPPING_FOUND": "One or more column(s) are mapped multiple times. Please check your column mappings.",
-      "NO_RECORDS_IN_FILE": "Your file does not have any records. Please add one record per row in your file.",
-      "MISSING_REQUIRED_VALUE": "One or more required values are missing. Please verify your data.",
-      "HOUR_NAME_REQUIRED": "One or more names are empty. Please verify your data.",
-      "HOUR_SHIFT_REQUIRED": "One or more shifts are empty. Please verify your data.",
-      "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
-      "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data.",
-      "INVALID_HOUR": "One or more hours are invalid. Please verify your data.",
-      "INVALID_HOLIDAY_DATE": "One or more holiday dates are invalid. Please verify your data.",
-      "EMPTY_HOLIDAY_NAME": "One or more holiday names are empty. Please verify your data."
-    },
-    "success": {
-      "OTP_SENT": "OTP sent.",
-      "INVITE_SENT": "Invitation sent."
-    },
-    "help": {
-      "title": "Help"
-    },
-    "userProfile": {
-      "tabs": {
-        "profile": "Profile",
-        "activity": "Activity",
-        "settings": "Settings"
-      },
-      "profile": {
-        "labels": {
-          "firstName": "First name",
-          "lastName":"Last name",
-          "email": "Email",
-          "phoneNumber": "Mobile number",
-          "username": "Username",
-          "password": "Current Password",
-          "newPassword": "New password",
-          "confirmNewPassword": "Confirm new password"
-        },
-        "buttons": {
-          "updateUser": "Update info",
-          "updatePassword": "Update password"
-        }
-      },
-      "settings": {
-        "title": "Preferences",
-        "locale": {
-          "label": "Select locale",
-          "items": {
-            "english": "English",
-            "hindi": "Hindi",
-            "simplifiedChinese": "Simplified Chinese",
-            "thai": "Thai"
-          }
-        }
-      }
-    },
+  "success": {
+    "OTP_SENT": "One time password sent on registered email/phone.",
+    "PASSWORD_RESET": "New password sent on registered email/phone.",
+    "UPDATED": "Updated!"
+  },
+  "error": {
+    "NOT_VALID": "{_field_} is not valid.",
+    "NO_LICENSE": "You have zero active licenses. Please contat ShopWorx support.",
+    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licenses. Please try again.",
+    "INVALID_SESSION": "Session expired: Please login again.",
+    "USER_ALREADY_EXIST": "User already exists.",
+    "USER_NOT_FOUND": "User account not found.",
+    "EMAIL_NOT_FOUND": "User account not found.",
+    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
+    "INVALID_OTP": "Login failed: Incorrect OTP.",
+    "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
+    "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data."
+  },
+  "fields": {
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "otp": "OTP",
+    "firstName":"First name",
+    "lastName":"Last name",
+    "name": "Name",
+    "type": "Type",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "date": "Date",
+    "shift": "Shift",
+    "role": "Role"
+  },
+  "snackbar": {
+    "close": "Close",
+    "redirectToLogin": "Redirecting in {time}"
+  },
+  "helper": {
+    "or": "or",
+    "help": "Help",
+    "next": "Next",
+    "skip": "Skip for now",
+    "loading": "Loading..."
+  },
+  "notFound": {
+    "title": "That's an error!",
+    "subTitle1": "The requested URL",
+    "subTitle2": "{url}",
+    "subTitle3": "was not found on this server.",
+    "goHome": "Go back home"
+  },
+  "forbidden": {
+    "title": "Access forbidden!",
+    "subTitle1": "You tried to access a page you did not have prior",
+    "subTitle2": "authorization",
+    "subTitle3": "for.",
+    "goHome": "Go back home"
+  },
+  "login": {
+    "title": "Log in to Infinity",
+    "subTitle": "Use your ShopWorx Account",
+    "identifier": "Email or phone",
+    "password": "Password",
+    "otp": "OTP",
+    "resendOtp": "Resend otp?",
+    "resendOtpIn": "Resend otp in {time}",
+    "sendOtp": "Send OTP",
+    "forgotPassword": "Forgot password?",
+    "login": "Login securely",
+    "loginWithOtp": "Login with otp",
+    "loginWithPassword": "Login with password"
+  },
+  "forgotPassword": {
+    "title": "Reset password?",
+    "subTitle": "Enter your email or phone number",
+    "reset": "Reset password"
+  },
+  "welcome": {
+    "title": "Welcome! We have been expecting you.",
+    "subTitle1": "First things first, let's start by",
+    "subTitle2": "creating your account.",
+    "subTitle3": "It will take less than a minute.",
+    "start": "Let's get started"
+  },
+  "register": {
     "account": {
-      "headers": {
-        "sites": "Sites",
-        "account": "Account"
-      },
-      "menu": {
-        "items": {
-          "profile": "Profile",
-          "darkMode": "Dark mode",
-          "lightMode": "Light mode",
-          "logout": "Logout"
-        }
-      }
+      "title": "Update your ShopWorx Account",
+      "update": "Update account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email (Optional)",
+      "phone": "Phone (Optional)"
     },
-    "modules": {
-      "home": "Home",
-      "machinedashboard": "Machine dashboard",
-      "planning": "Planning",
-      "reports": "Report",
-      "production": "Production",
-      "downtime": "Downtime",
-      "rejection": "Rejection",
-      "oee": "Oee",
-      "masters": "Masters",
-      "admin": "Admin"
+    "password": {
+      "title": "Update your ShopWorx Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
     },
-    "snackbar": {
-      "buttons": {
-        "close": "Close",
-        "redirectToLogin": "Redirecting in {time} secs"
-      }
+    "updated": "Your ShopWorx account is updated!"
+  },
+  "modules": {
+    "home": "Home",
+    "machineDashboard": "Machine Dashboard",
+    "planning": "Planning",
+    "reports": "Report",
+    "production": "Production",
+    "downtime": "Downtime",
+    "rejection": "Rejection",
+    "oee": "Oee",
+    "masters": "Master Data",
+    "admin": "Admin Console",
+    "search": "Search",
+    "insights": "Insights"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile settings",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  },
+  "help": {
+    "help": "Help",
+    "legal": "Legal",
+    "keyboardShortcuts": "Keyboard shortcuts",
+    "support": "Support",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy"
+  },
+  "user": {
+    "general": "General",
+    "security": "Security",
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName":"Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "reset": "Reset",
+      "update": "Update profile"
     },
-    "auth": {
-      "login": {
-        "title": "Login to ShopWorx",
-        "subTitle": "Digitize. Analyze. Transform.",
-        "otpForm": {
-          "labels": {
-            "phoneNumber": "Mobile number",
-            "otp": "OTP"
-          },
-          "buttons": {
-            "sendOtp": "Send Otp",
-            "login": "Login"
-          },
-          "resendOtp": "Resend OTP",
-          "resendOtpIn": "Resend OTP in {time} secs",
-          "loginWithPassword": "or login with password"
-        },
-        "passwordForm": {
-          "labels": {
-            "identifier": "Mobile number, email or username",
-            "password": "Password"
-          },
-          "buttons": {
-            "login": "Login",
-            "forgotPassword": "Forgot password?"
-          },
-          "loginWithOtp": "or login with OTP"
-        }
-      },
-      "forgotPassword": {
-        "title": "Forgot Password?",
-        "subTitle": "Submit your mobile number or email and you'll receive your new password.",
-        "form": {
-          "labels": {
-            "identifier":"Mobile number or email"
-          },
-          "buttons": {
-            "submit": "Submit",
-            "back": "Back"
-          }
-        }
-      }
+    "preferences": {
+      "title": "Preferences",
+      "display": "Display settings",
+      "language": "Language",
+      "darkMode": "Dark mode"
     },
-    "user": {
-      "register": {
-        "title": "We've been expecting you.",
-        "subTitle": "Let's start by creating your account. It will take less than a minute.",
-        "form": {
-          "labels": {
-            "firstName": "First name",
-            "lastName": "Last name",
-            "email": "Email",
-            "phoneNumber": "Mobile number",
-            "username": "Create username",
-            "password": "Current password",
-            "newPassword": "New password",
-            "confirmNewPassword": "Confirm new password"
-          },
-          "buttons": {
-            "next": "Next",
-            "back": "Back",
-            "complete": "Complete"
-          }
-        }
-      },
-      "invite": {
-        "title": "Invite users to ShopWorx!",
-        "subTitle": "You can invite your employees to ShopWorx in a jiffy."
-      },
-      "welcome": {
-        "title": "Welcome to ShopWorx!",
-        "subTitle":"ShopWorx gives you the tools you need to analyze data for your manufacturing shop floor in one place, so you can make smarter decisions.",
-        "buttons": {
-          "startSetup": "Start setup",
-          "go": "All set! Let's go"
-        },
-        "details": {
-          "featureOne": {
-            "title": "Complete information",
-            "description": "Understand your shop floors to better check the performance of your machines, operators, products, and more."
-          },
-          "featureTwo": {
-            "title": "Get insights only ShopWorx can give",
-            "description": "Access ShopWorx's unique insights and machine learning capabilities to make the most of your data."
-          },
-          "featureThree": {
-            "title": "Connect your insights to results",
-            "description": "Analytics works with ShopWorx's report, so you can use your insights to deliver business results."
-          }
-        }
-      }
+    "password": {
+      "title": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
     },
-    "onboarding": {
-      "buttons": {
-        "download": "Download template",
-        "upload": "Upload CSV",
-        "back": "Back",
-        "skip": "Skip for now",
-        "next": "Save & Continue",
-        "finish": "Finish On-boarding"
-      },
-      "steps": {
-        "title": {
-          "tool": "Tools",
-          "part": "Parts",
-          "operator": "Operators",
-          "calendar": "Business Hours",
-          "downtimereasons": "Downtime reasons",
-          "rejectionreasons": "Rejection reasons"
-        },
-        "optional": "Optional",
-        "details": {}
-      },
-      "users": {
-        "title": "Invite users to ShopWorx"
-      },
-      "tools": {
-        "title": "Bulk add tools",
-        "subTitle": "...or just manually input the tools"
-      },
-      "parts": {
-        "title": "Bulk add parts",
-        "subTitle": "...or just manually input the parts"
-      },
-      "downtimeReasons": {
-        "title": "Bulk add downtime reasons",
-        "subTitle": "...or just manually input the downtime reasons"
-      },
-      "rejectionReasons": {
-        "title": "Bulk add rejection reasons",
-        "subTitle": "...or just manually input the rejection reasons"
-      },
-      "calendar": {
-        "title": "Add your calendar"
-      }
-    },
-    "insights": {
-      "toolbar": {
-        "title": "Insights",
-        "back": "Back"
-      },
-      "list": {
-        "notFound": {
-          "title": "No new insights right now.",
-          "subTitle": "Check back soon!"
-        }
-      },
-      "onDemand": {
-        "header": "Insights on demand"
-      },
-      "details": {
-        "youAsked": "You asked:"
-      }
-    },
-    "machineDashboard": {
-      "labels": {
-        "actual": "Actual",
-        "planned": "Planned",
-        "target": "Target",
-        "efficiency": "Eff",
-        "downtimeSince": "Down Since",
-        "downtimeReason": "Reason",
-        "noPlanSince": "No plan since",
-        "noPlanShots": "Shots",
-        "purgeSince": "Purge since",
-        "purgeShots": "Shots"
-      }
-    },
-    "planning": {
-      "onboarding": {
-        "buttons": {
-          "next": "Next",
-          "back": "Back",
-          "complete": "Complete"
-        },
-        "welcome": {
-          "title": "Welcome to ShopWorx Planning!"
-        },
-        "schema": {
-          "title": "Onboarding: Select all that applies!"
-        }
-      },
-      "notFound": {
-        "title": "Your plans appear here",
-        "subTitle": "Create new"
-      },
-      "toolbar": {
-        "title": "Planning"
-      }
-    },
-    "reports": {
-      "production": "Production",
-      "productiondaily": "Production Daily",
-      "productionbyshift": "Production By Shift",
-      "productioncyclecomparison": "Production Cycle Comparision",
-      "productiondetail": "Production Detail",
-      "productiondetail_bk": "Production Detail",
-      "productionheader": "Production Header",
-      "productionhourly": "Production Hourly",
-      "productionnoplan": "Production No Plan",
-      "downtimebymachine": "Downtime By Machine",
-      "downtimebyoccurence": "Downtime By Occurence",
-      "downtimebyreason": "Downtime By Reason",
-      "downtimebyshift": "Downtime By Shift",
-      "downtimebydepartment": "Downtime By Department",
-      "ppmgraph": "PPM Rejection Graph Report",
-      "ppmproduction": "PPM Partwise Rejection",
-      "rejectionbydefect": "Rejection By Defect",
-      "rejectionbymachine": "Rejection By Machine",
-      "rejectionbyshift": "Rejection By Shift",
-      "rejectionmonthly": "Rejection By Month",
-      "oeebyshift": "Oee By Shift",
-      "oeebymachine": "Oee By Month",
-      "oeebyplan": "Oee By Plan",
-      "oeebyshiftaggregated": "Oee By Shift"
+    "auditLog": {
+      "title": "Audit log"
     }
   }
 }

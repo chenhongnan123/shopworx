@@ -1,77 +1,61 @@
 <template>
-  <swx-fullscreen-layout>
-    <v-card flat class="transparent">
-      <p
-        class="text-center primary--text display-2 font-weight-medium"
-        v-text="$t('infinity.auth.login.title')"
-      ></p>
-      <p
-        class="text-center title font-weight-regular"
-        v-text="$t('infinity.auth.login.subTitle')"
-      ></p>
-      <v-row>
-        <v-col
-          md="6"
-          cols="12"
-          class="text-center"
-          v-if="$vuetify.breakpoint.mdAndUp"
-        >
-          <v-img
-            :src="require(`@shopworx/assets/svgs/${loginSvg}.svg`)"
-            contain
-            height="330"
-          >
-          </v-img>
-        </v-col>
-        <v-col
-          md="6"
-          cols="12"
-        >
-          <v-fade-transition mode="out-in">
-            <login-with-password-form
-              @success="success"
-              v-if="!loginWithOtp"
-            />
-            <login-with-otp-form
-              v-else
-              @success="success"
-            />
-          </v-fade-transition>
-        </v-col>
-      </v-row>
-    </v-card>
-  </swx-fullscreen-layout>
+  <auth-layout
+    :title="$t('login.title')"
+    :subTitle="$t('login.subTitle')"
+    :illustration="loginIllustration"
+  >
+    <v-fade-transition mode="out-in">
+      <login-with-password
+        @success="onSuccess"
+        v-if="loginWithPassword"
+        @login-with-otp="loginWithPassword = false"
+      />
+      <login-with-otp
+        v-else
+        @success="onSuccess"
+        @login-with-password="loginWithPassword = true"
+      />
+    </v-fade-transition>
+  </auth-layout>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import SwxFullscreenLayout from '@shopworx/ui-components/core/SwxFullscreenLayout.vue';
-import LoginWithPasswordForm from '@/components/auth/LoginWithPasswordForm.vue';
-import LoginWithOtpForm from '@/components/auth/LoginWithOtpForm.vue';
+import { mapGetters } from 'vuex';
+import AuthLayout from '@/components/layout/AuthLayout.vue';
+import LoginWithOtp from '@/components/auth/LoginWithOtp.vue';
+import LoginWithPassword from '@/components/auth/LoginWithPassword.vue';
 
 export default {
   name: 'Login',
-  metaInfo() {
+  components: {
+    AuthLayout,
+    LoginWithOtp,
+    LoginWithPassword,
+  },
+  data() {
     return {
-      title: 'Login',
+      loginWithPassword: true,
     };
   },
-  components: {
-    SwxFullscreenLayout,
-    LoginWithPasswordForm,
-    LoginWithOtpForm,
-  },
   computed: {
-    ...mapState('auth', ['loginWithOtp']),
-    loginSvg() {
+    ...mapGetters('user', ['isAccountUpdated', 'isPasswordUpdated', 'isOnboardingComplete']),
+    loginIllustration() {
       return this.$vuetify.theme.dark
         ? 'login-dark'
         : 'login-light';
     },
   },
   methods: {
-    success() {
-      this.$router.replace(this.$route.query.redirect || { name: 'home' });
+    onSuccess() {
+      if (!this.isAccountUpdated) {
+        this.$router.replace({ name: 'welcome' });
+      } else if (!this.isPasswordUpdated) {
+        this.$router.replace({ name: 'register' });
+      } else if (!this.isOnboardingComplete) {
+        this.$router.replace({ name: 'setup' });
+      } else {
+        this.$router.replace(this.$route.query.redirect || { path: '/' });
+      }
     },
   },
 };

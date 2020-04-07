@@ -1,64 +1,109 @@
 <template>
-  <swx-fullscreen-layout>
-    <v-card flat class="transparent">
-      <p
-        class="text-center primary--text display-2 font-weight-medium"
-        v-text="$t('infinity.auth.forgotPassword.title')"
-      ></p>
-      <p
-        class="text-center title font-weight-regular"
-        v-text="$t('infinity.auth.forgotPassword.subTitle')"
-      ></p>
-      <v-row>
-        <v-col
-          md="6"
-          cols="12"
-          class="text-center"
-          v-if="$vuetify.breakpoint.mdAndUp"
-        >
-          <v-img
-            :src="require(`@shopworx/assets/svgs/${forgotPasswordSvg}.svg`)"
-            contain
-            height="330"
+  <auth-layout
+    :title="$t('forgotPassword.title')"
+    :illustration="resetPasswordIllustration"
+    :subTitle="$t('forgotPassword.subTitle')"
+  >
+    <validation-observer #default="{ passes }">
+      <v-form @submit.prevent="passes(onResetPassword)">
+        <v-card-text>
+          <identifier-input
+            :loading="loading"
+            v-model="identifier"
+            @on-update="setIdentifier"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            block
+            rounded
+            type="submit"
+            color="primary"
+            class="text-none"
+            id="resetPassword"
+            :loading="loading"
           >
-          </v-img>
-        </v-col>
-        <v-col
-          md="6"
-          cols="12"
-        >
-          <forgot-password-form @success="success" />
-        </v-col>
-      </v-row>
-    </v-card>
-  </swx-fullscreen-layout>
+            <v-icon
+              left
+              v-text="'$passwordReset'"
+            ></v-icon>
+            {{ $t('forgotPassword.reset') }}
+          </v-btn>
+        </v-card-actions>
+        <v-card-text class="text-center py-0">
+          <span>{{ $t('helper.or') }}</span>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            @click="login"
+            color="primary"
+            class="text-none"
+            :disabled="loading"
+            id="loginWithPassword"
+          >
+            {{ $t('login.loginWithPassword') }}
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-form>
+    </validation-observer>
+  </auth-layout>
 </template>
 
 <script>
-import SwxFullscreenLayout from '@shopworx/ui-components/core/SwxFullscreenLayout.vue';
-import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm.vue';
+import { mapMutations, mapActions } from 'vuex';
+import AuthLayout from '@/components/layout/AuthLayout.vue';
+import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
 export default {
   name: 'ForgotPassword',
-  metaInfo() {
+  components: {
+    AuthLayout,
+    IdentifierInput,
+  },
+  data() {
     return {
-      title: 'Forgot Password',
+      prefix: '',
+      identifier: '',
+      loading: false,
+      isMobile: false,
     };
   },
-  components: {
-    SwxFullscreenLayout,
-    ForgotPasswordForm,
-  },
   computed: {
-    forgotPasswordSvg() {
+    resetPasswordIllustration() {
       return this.$vuetify.theme.dark
         ? 'forgot-password-dark'
         : 'forgot-password-light';
     },
   },
   methods: {
-    success() {
-      this.$router.replace({ name: 'login' });
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('auth', ['resetPassword']),
+    login() {
+      this.$router.push({ name: 'login' });
+    },
+    setIdentifier({ isMobile, prefix }) {
+      this.isMobile = isMobile;
+      this.prefix = prefix;
+    },
+    async onResetPassword() {
+      this.loading = true;
+      const success = await this.resetPassword({
+        identifier: this.isMobile
+          ? `${this.prefix}${this.identifier}`
+          : this.identifier,
+      });
+      if (success) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PASSWORD_RESET',
+        });
+        this.$router.push({ name: 'login' });
+      }
+      this.loading = false;
     },
   },
 };

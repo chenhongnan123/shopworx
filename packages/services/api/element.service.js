@@ -5,27 +5,23 @@ class ElementService {
     this.request = ApiService;
   }
 
-  createElement(data) {
-    return this.request.post('/server/elements', data);
+  getElement(elementName) {
+    return this.request.get(`/server/elements/${elementName}`);
+  }
+
+  createElement(payload) {
+    return this.request.post('/server/elements', payload);
   }
 
   createElementTags(data) {
     return this.request.post('/server/tag/addmultiple', data);
-  }
-
-  getElement(elementName) {
-    return this.request.get(`/server/elements/${elementName}`);
-  }
-  
-  getElementsBySite(id) {
-    return this.request.get(`/server/elements/site/${id}`);
   }
   
   postBulkRecords(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/createbulkrecords`, payload);
   }
   
-  postRecords(elementName, payload) {
+  postRecord(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
   

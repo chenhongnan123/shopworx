@@ -3,75 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.1.0-beta.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2020-03-18)
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
 
 
 ### Bug Fixes
 
-* **admin:** added user management with resend invite feature ([6c5ba35](https://bitbucket.org/entrib/shopworx/commits/6c5ba3578f0980f7a629d63ca4339da8a3f8a2d5))
+* **license:** fetch site license along with user ([caf3a43](https://bitbucket.org/entrib/shopworx/commits/caf3a439ac10c52534992af6ea2f21883a3af14b))
 
 
 
 
 
-# [4.1.0-alpha.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.6...v4.1.0-alpha.7) (2020-03-13)
-
-**Note:** Version bump only for package @shopworx/services
-
-
-
-
-
-# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
+# [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
 
 
 ### Bug Fixes
 
-* **onboarding:** Added upsert for business calendar onboarding ([c889baf](https://bitbucket.org/entrib/shopworx/commits/c889bafb63fffc7e02cadc10a4a16bf7a59fbd26))
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))
 
 
 ### Features
 
-* **masters:** Display provisioned elements data asset wise ([f890683](https://bitbucket.org/entrib/shopworx/commits/f8906838dbf817b5b047d0bbfc9c2f842b5049d2))
+* **setup:** download master templates ([af7057a](https://bitbucket.org/entrib/shopworx/commits/af7057af762978266e2de4e569a1367891f52606))
 
 
 
 
 
-
-# [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
-
-**Note:** Version bump only for package @shopworx/services
-
-
-
-
-
-
-# [4.1.0-alpha.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.3...v4.1.0-alpha.4) (2020-03-04)
+# [4.1.0-beta.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.4) (2020-03-27)
 
 
 ### Bug Fixes
 
-* **onboarding:** User can now upload same file while importing data ([a031767](https://bitbucket.org/entrib/shopworx/commits/a03176755c317fe3d3dabe11b8b2cd12c79ba500))
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))
+
+
+### Features
+
+* **setup:** download master templates ([af7057a](https://bitbucket.org/entrib/shopworx/commits/af7057af762978266e2de4e569a1367891f52606))
 
 
 
 
 
-
-# [4.1.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.2...v4.1.0-alpha.3) (2020-03-03)
+# [4.1.0-beta.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2020-03-27)
 
 
 ### Bug Fixes
 
-* **users:** Fixed invite users throwing 404 ([fb520ad](https://bitbucket.org/entrib/shopworx/commits/fb520adbcf0414bc1b2367d61556c04ed34eaab9))
-
-
-
-
-
-
-# [4.1.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.1...v4.1.0-alpha.2) (2020-03-02)
-
-**Note:** Version bump only for package @shopworx/services
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))

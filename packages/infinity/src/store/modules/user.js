@@ -1,18 +1,23 @@
 import UserService from '@shopworx/services/api/user.service';
-import { set } from '@shopworx/services/util/store.service';
+import SiteService from '@shopworx/services/api/site.service';
+import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
     me: null,
-    mySolutions: [],
-    activeSite: null,
     roles: [],
+    userState: null,
+    activeSite: null,
+    mySolutions: [],
+    licenses: [],
   },
   mutations: {
     setMe: set('me'),
-    setMySolutions: set('mySolutions'),
-    setActiveSite: set('activeSite'),
     setRoles: set('roles'),
+    setUserState: set('userState'),
+    setActiveSite: set('activeSite'),
+    setMySolutions: set('mySolutions'),
+    setLicenses: set('licenses'),
   },
   actions: {
     getMe: async ({ commit }) => {
@@ -20,7 +25,34 @@ export default ({
         const { data } = await UserService.getMe();
         if (data && data.results) {
           commit('setMe', data.results);
-          commit('setActiveSite', data.results.activeSiteId);
+          const customerId = data.results.customer.id;
+          const siteId = data.results.activeSiteId;
+          const userState = data.results.user.userState.toUpperCase().trim();
+          commit('setActiveSite', siteId);
+          commit('setUserState', userState);
+          const site = await SiteService.getLicense(customerId, siteId);
+          if (site && site.data.results) {
+            commit('setLicenses', site.data.results);
+            if (!site.data.results.length) {
+              commit('helper/setAlert', {
+                show: true,
+                type: 'error',
+                message: 'NO_LICENSE',
+              }, {
+                root: true,
+              });
+              return false;
+            }
+          } else {
+            commit('helper/setAlert', {
+              show: true,
+              type: 'error',
+              message: 'CANNOT_FETCH_LICENSE',
+            }, {
+              root: true,
+            });
+            return false;
+          }
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -32,7 +64,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -54,7 +85,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -76,13 +106,12 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
     },
 
-    updateUser: async ({ commit }, payload) => {
+    updateUser: async ({ commit, dispatch }, payload) => {
       try {
         const { data } = await UserService.updateUser(payload);
         if (data && data.errors) {
@@ -95,14 +124,17 @@ export default ({
           });
           return false;
         }
+        const me = await dispatch('getMe');
+        if (me) {
+          return true;
+        }
       } catch (e) {
-        console.error(e);
         return false;
       }
-      return true;
+      return false;
     },
 
-    updatePassword: async ({ commit }, payload) => {
+    updatePassword: async ({ commit, dispatch }, payload) => {
       try {
         const { data } = await UserService.updatePassword(payload);
         if (data && data.errors) {
@@ -115,11 +147,14 @@ export default ({
           });
           return false;
         }
+        const updatedMe = await dispatch('updateUser', { userState: 'ACTIVE' });
+        if (updatedMe) {
+          return true;
+        }
       } catch (e) {
-        console.error(e);
         return false;
       }
-      return true;
+      return false;
     },
 
     activateUser: async ({ state, commit }) => {
@@ -141,27 +176,6 @@ export default ({
           return false;
         }
       } catch (e) {
-        console.error(e);
-        return false;
-      }
-      return true;
-    },
-
-    isUsernameAvailable: async ({ commit }, { username }) => {
-      try {
-        const { data } = await UserService.isUsernameAvailable(username);
-        if (data && data.errors) {
-          commit('helper/setAlert', {
-            show: true,
-            type: 'error',
-            message: data.errors.errorCode,
-          }, {
-            root: true,
-          });
-          return false;
-        }
-      } catch (e) {
-        console.error(e);
         return false;
       }
       return true;
@@ -172,7 +186,6 @@ export default ({
         const { data } = await UserService.inviteUsers(payload);
         return data;
       } catch (e) {
-        console.error(e);
         return false;
       }
     },
@@ -195,18 +208,27 @@ export default ({
           }, {
             root: true,
           });
+          return false;
         }
       } catch (e) {
-        console.error(e);
+        return false;
       }
+      return true;
     },
   },
   getters: {
-    isRegistrationComplete: ({ me }) => {
-      if (me && me.user.userState) {
-        return me.user.userState.toUpperCase().trim() !== 'REGISTERED';
+    isAccountUpdated: ({ userState }) => {
+      if (userState) {
+        return userState !== 'REGISTERED';
       }
-      return null;
+      return false;
+    },
+
+    isPasswordUpdated: ({ userState }) => {
+      if (userState) {
+        return userState !== 'REGISTERED' && userState !== 'RESET';
+      }
+      return false;
     },
 
     isOnboardingComplete: ({ me, activeSite }) => {
@@ -214,21 +236,28 @@ export default ({
         const site = me.site.find((s) => s.id === activeSite);
         return site.onboardingCompleted;
       }
-      return null;
+      return false;
     },
 
     isAdmin: ({ me }) => {
       if (me && me.role.roleType) {
         return me.role.roleType.toUpperCase().trim() === 'ADMINISTRATOR';
       }
-      return null;
+      return false;
+    },
+
+    customer: ({ me }) => {
+      if (me && me.customer) {
+        return me.customer.description;
+      }
+      return '';
     },
 
     fullName: ({ me }) => {
       if (me && me.user) {
-        return `${me.user.firstname} ${me.user.lastname.charAt(0)}`;
+        return `${me.user.firstname} ${me.user.lastname}`;
       }
-      return null;
+      return '';
     },
 
     sites: ({ me }) => {
@@ -242,13 +271,19 @@ export default ({
       return [];
     },
 
+    currentSite: ({ activeSite }, { sites }) => {
+      if (sites && sites.length && activeSite) {
+        const site = sites.find((s) => s.id === activeSite);
+        if (site) {
+          return site.description;
+        }
+      }
+      return '';
+    },
+
     modules: ({ mySolutions }) => {
       const modules = {
-        items: [{
-          title: 'home',
-          icon: '$home',
-          to: 'user-dashboard',
-        }],
+        items: [],
         adminItems: [],
       };
       if (mySolutions && mySolutions.length) {
@@ -256,23 +291,25 @@ export default ({
           if (module.moduleName.toUpperCase().trim() === 'APPS') {
             module.details.forEach((detail) => {
               modules.items.push({
-                title: detail.webAppName,
+                id: detail.id,
                 icon: detail.iconURL,
                 to: detail.webAppLink,
+                title: detail.webAppName,
               });
             });
           }
           if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
-            modules.items.push({ header: 'reports' });
+            modules.items.push({ header: module.moduleName });
             module.details.forEach((detail) => {
               modules.items.push({
-                title: detail.subModuleName,
+                id: detail.id,
                 icon: detail.iconUrl,
-                group: detail.subModuleName,
+                group: detail.reportsCategoryName,
                 children: detail.reportViews.map((report) => ({
-                  title: report.reportDescription,
-                  to: 'reports',
+                  id: report.id,
+                  to: module.moduleName,
                   param: report.reportName,
+                  title: report.reportDescription,
                   avatarText: report.reportDescription.match(/\b(\w)/g).join(''),
                 })),
               });
@@ -280,22 +317,48 @@ export default ({
           }
           if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
             modules.adminItems.push({
+              id: module.id,
+              to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
-              to: module.moduleLink,
             });
           }
           if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
             modules.adminItems.push({
+              id: module.id,
+              to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
-              to: module.moduleLink,
             });
           }
           return modules;
         }));
       }
       return modules;
+    },
+
+    licensedAssets: ({ licenses }) => {
+      let assets = [];
+      if (licenses && licenses.length) {
+        assets = licenses.map((license) => license.assetId);
+      }
+      return assets;
+    },
+
+    isAppProvisioned: (_, { modules }) => (appName) => {
+      let isProvisioned = false;
+      if (modules) {
+        const { items, adminItems } = modules;
+        const itemTitles = items
+          .filter((item) => item.to)
+          .map((item) => item.to);
+        const adminItemTitles = adminItems
+          .filter((item) => item.to)
+          .map((item) => item.to);
+        const mods = [...itemTitles, ...adminItemTitles];
+        isProvisioned = mods.includes(appName);
+      }
+      return isProvisioned;
     },
   },
 });

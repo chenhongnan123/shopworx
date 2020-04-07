@@ -9,10 +9,6 @@ class AuthService {
     return this.request.post('/server/authenticate', data);
   }
 
-  authenticateOriginUser(data) {
-    return this.request.post('/server/authenticatesuperuser', data);
-  }
-
   authenticateWithOtp(data) {
     return this.request.post('/server/authenticatewithotp', data);
   }

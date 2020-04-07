@@ -8,10 +8,12 @@ import router from './router';
 import store from './store';
 import i18n from './i18n';
 
-import './web-modules';
-
 import vuetify from './plugins/vuetify';
-import './plugins/scrollbar';
+import './plugins/perfect-scrollbar';
+import './plugins/vee-validate';
+import './plugins/portal';
+
+import './modules';
 
 Vue.config.productionTip = false;
 

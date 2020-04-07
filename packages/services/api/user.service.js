@@ -12,14 +12,6 @@ class UserService {
   getSolution() {
     return this.request.get('/server/solution');
   }
-  
-  isUsernameAvailable(username) {
-    return this.request.get(`/server/users/isUsernameAvailable/${username}`);
-  }
-
-  getUserById(id) {
-    return this.request.get(`/server/users/${id}`);
-  }
 
   updateUser(payload) {
     return this.request.put('/server/users', payload);

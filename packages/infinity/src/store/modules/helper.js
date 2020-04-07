@@ -1,4 +1,4 @@
-import { set, toggle } from '@shopworx/services/util/store.service';
+import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
@@ -7,17 +7,37 @@ export default ({
       type: null,
       message: null,
     },
-    drawer: true,
+    locales: [
+      {
+        text: 'English',
+        value: 'en',
+      },
+      {
+        text: 'हिन्दी',
+        value: 'hi',
+      },
+      {
+        text: '中文',
+        value: 'zhHans',
+      },
+      {
+        text: 'ไทย',
+        value: 'th',
+      },
+      {
+        text: 'Deutsche',
+        value: 'de',
+      },
+    ],
     isDark: null,
-    insightsDrawer: false,
+    extendedHeader: false,
+    infinityLoading: false,
   },
   mutations: {
     setAlert: set('alert'),
-    setDrawer: set('drawer'),
     setIsDark: set('isDark'),
-    toggleDrawer: toggle('drawer'),
     toggleIsDark: toggle('isDark'),
-    setInsightsDrawer: set('insightsDrawer'),
-    toggleInsightsDrawer: toggle('insightsDrawer'),
+    setExtendedHeader: set('extendedHeader'),
+    setInfinityLoading: toggle('infinityLoading'),
   },
 });

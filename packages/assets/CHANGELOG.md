@@ -3,61 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.1.0-beta.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2020-03-18)
-
-**Note:** Version bump only for package @shopworx/assets
+# [4.1.0-beta.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2020-04-06)
 
 
+### Bug Fixes
 
-
-
-# [4.1.0-alpha.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.6...v4.1.0-alpha.7) (2020-03-13)
-
-**Note:** Version bump only for package @shopworx/assets
-
-
-
-
-
-# [4.1.0-alpha.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.5...v4.1.0-alpha.6) (2020-03-11)
-
-**Note:** Version bump only for package @shopworx/assets
-
-
-
-
-
-
-# [4.1.0-alpha.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.4...v4.1.0-alpha.5) (2020-03-05)
+* **user-profile:** added preferences to user profile ([37e5d25](https://bitbucket.org/entrib/shopworx/commits/37e5d25c434463a2b97e6955b5f9c01308568115))
 
 
 ### Features
 
-* **icons:** Added provisioning icons ([5d2a256](https://bitbucket.org/entrib/shopworx/commits/5d2a2560a04d98e3b7c35633fcd135008d099ebb))
+* **navigation:** added back arrow on mobile and tablet screens ([5eaffcc](https://bitbucket.org/entrib/shopworx/commits/5eaffcc490d4f604d2f950577770f1db68dd904d))
 
 
 
 
 
-
-# [4.1.0-alpha.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.3...v4.1.0-alpha.4) (2020-03-04)
-
-**Note:** Version bump only for package @shopworx/assets
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
 
 
+### Bug Fixes
+
+* **core:** updated layuot style ([6b8b924](https://bitbucket.org/entrib/shopworx/commits/6b8b924071eb9653cc0f325b80c754abcd6aae47))
+* **icons:** updated icons ([a10b35a](https://bitbucket.org/entrib/shopworx/commits/a10b35aecdf51aad4531c8e984c3eb51ff100764))
+* **setup:** added invite users error handling ([f771e38](https://bitbucket.org/entrib/shopworx/commits/f771e38f4b13f8b7953d5296064d596ce3bda7f5))
 
 
+### Features
 
-
-# [4.1.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.2...v4.1.0-alpha.3) (2020-03-03)
-
-**Note:** Version bump only for package @shopworx/assets
-
-
-
+* **navigation:** added bottom navigation for mobile and tablets ([c58b097](https://bitbucket.org/entrib/shopworx/commits/c58b0976edc7f35346f774992265b67d938a6e2f))
+* **router:** added forbidden and not found routes ([1a7bb36](https://bitbucket.org/entrib/shopworx/commits/1a7bb36ccc23f4b78414d3d27c03ddcad0cf87c8))
 
 
 
-# [4.1.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-alpha.1...v4.1.0-alpha.2) (2020-03-02)
 
-**Note:** Version bump only for package @shopworx/assets
+
+# [4.1.0-beta.5](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.5) (2020-03-31)
+
+
+### Bug Fixes
+
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))
+
+
+
+
+
+# [4.1.0-beta.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.4) (2020-03-27)
+
+
+### Bug Fixes
+
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))
+
+
+
+
+
+# [4.1.0-beta.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2020-03-27)
+
+
+### Bug Fixes
+
+* **core:** fixed multiple validation bugs ([31eabe4](https://bitbucket.org/entrib/shopworx/commits/31eabe4a439e41f41ce300de053fd1b64dce17d7))

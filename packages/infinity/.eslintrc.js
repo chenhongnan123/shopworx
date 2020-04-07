@@ -11,11 +11,10 @@ module.exports = {
     parser: 'babel-eslint',
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'off' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-param-reassign': 'off',
-    'no-return-assign': 'off',
-    'vue/no-unused-components': 'off',
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off',
     'no-underscore-dangle': 'off',
   },
 };

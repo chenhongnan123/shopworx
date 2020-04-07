@@ -1,45 +1,27 @@
 const routes = [
   {
+    path: '*',
+    name: '404',
+    component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
+  },
+  {
+    path: '/forbidden',
+    name: '401',
+    component: () => import(/* webpackChunkName: "401" */ '@/views/401.vue'),
+  },
+  {
     path: '/',
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
     children: [
       {
-        path: '',
-        name: 'home',
-        redirect: { name: 'user-dashboard' },
-      },
-      {
-        path: 'home',
-        name: 'user-dashboard',
-        component: () => import(/* webpackChunkName: "user-dashboard" */ '@/views/UserDashboard.vue'),
-      },
-      {
-        path: 'profile',
-        name: 'user-profile',
-        component: () => import(/* webpackChunkName: "user-profile" */ '@/views/UserProfile.vue'),
-      },
-      {
-        path: 'machine-dashboard',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ '@/views/MachineDashboard.vue'),
-        children: [
-          {
-            path: '',
-            name: 'machine-dashboard',
-            component: () => import(/* webpackChunkName: "machine-dashboard" */ '@/components/machine-dashboard/MachineDashboard.vue'),
-          },
-          {
-            path: ':id',
-            name: 'machine-details',
-            component: () => import(/* webpackChunkName: "machine-details" */ '@/components/machine-dashboard/MachineDetails.vue'),
-            props: true,
-          },
-        ],
-      },
-      {
-        path: 'report/:id',
-        name: 'reports',
-        component: () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue'),
-        props: true,
+        path: 'user',
+        name: 'user',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User.vue'),
+        children: [{
+          path: ':id',
+          name: 'userWindow',
+          component: () => import(/* webpackChunkName: "user" */ '@/components/user/UserWindow.vue'),
+        }],
       },
     ],
   },
@@ -62,19 +44,14 @@ const routes = [
     },
   },
   {
-    path: '/register',
-    name: 'register',
-    component: () => import(/* webpackChunkName: "register" */ '@/views/Register.vue'),
-  },
-  {
-    path: '/invite',
-    name: 'invite',
-    component: () => import(/* webpackChunkName: "invite" */ '@/views/Invite.vue'),
-  },
-  {
     path: '/welcome',
     name: 'welcome',
     component: () => import(/* webpackChunkName: "welcome" */ '@/views/Welcome.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import(/* webpackChunkName: "register" */ '@/views/Register.vue'),
   },
 ];
 

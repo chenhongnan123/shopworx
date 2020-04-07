@@ -1,125 +1,77 @@
 <template>
-  <swx-fullscreen-layout>
-    <template slot="navbarItems">
-      <infinity-account-menu :showProfile="false" />
-    </template>
-    <v-card flat class="transparent">
-      <p
-        class="text-center primary--text display-2 font-weight-medium"
-        v-text="$t('infinity.user.welcome.title')"
-      ></p>
-      <p
-        class="text-center title font-weight-regular"
-        v-text="$t('infinity.user.welcome.subTitle')"
-      ></p>
-      <v-row>
-        <v-col cols="12" class="text-center">
-          <v-btn
-            color="primary"
-            class="text-none"
-            @click="start"
-            :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-          >
-            {{ $t('infinity.user.welcome.buttons.startSetup') }}
-          </v-btn>
+  <v-content>
+    <auth-header />
+    <v-container fill-height>
+      <v-row
+        align="center"
+        justify="center"
+        :no-gutters="$vuetify.breakpoint.smAndDown"
+      >
+        <v-col cols="12" md="6" lg="5" xl="4" class="text-center">
+          <v-card flat class="transparent">
+            <div class="display-2">
+              {{ $t('welcome.title') }}
+            </div>
+            <div class="display-1 my-12">
+              {{ $t('welcome.subTitle1') }}
+              <span class="primary--text font-weight-medium">
+                {{ $t('welcome.subTitle2') }}
+              </span>
+              {{ $t('welcome.subTitle3') }}
+            </div>
+            <v-btn
+              block
+              rounded
+              id="start"
+              color="primary"
+              class="text-none"
+              @click="createAccount"
+            >
+              <v-icon
+                left
+                v-text="'$skip'"
+              ></v-icon>
+              {{ $t('welcome.start') }}
+            </v-btn>
+          </v-card>
+        </v-col>
+        <v-col v-if="$vuetify.breakpoint.mdAndUp" md="6" xl="5">
+          <v-img
+            :src="require(`@shopworx/assets/illustrations/${welcomeIllustration}.svg`)"
+            contain
+          />
         </v-col>
       </v-row>
-      <v-card-text>
-        <v-row>
-          <v-col
-            md="6"
-            cols="12"
-            order="2"
-            order-md="1"
-          >
-            <v-row>
-              <v-col cols="12">
-                <span
-                  class="headline font-weight-medium"
-                  v-text="$t('infinity.user.welcome.details.featureOne.title')"
-                ></span>
-                <p
-                  class="body-1"
-                  v-text="$t('infinity.user.welcome.details.featureOne.description')"
-                ></p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <span
-                  class="headline font-weight-medium"
-                  v-text="$t('infinity.user.welcome.details.featureTwo.title')"
-                ></span>
-                <p
-                  class="body-1"
-                  v-text="$t('infinity.user.welcome.details.featureTwo.description')"
-                ></p>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <span
-                  class="headline font-weight-medium"
-                  v-text="$t('infinity.user.welcome.details.featureThree.title')"
-                ></span>
-                <p
-                  class="body-1"
-                  v-text="$t('infinity.user.welcome.details.featureThree.description')"
-                ></p>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col
-            md="6"
-            cols="12"
-            order="1"
-            order-md="2"
-            class="text-center"
-          >
-            <v-img
-              :src="require(`@shopworx/assets/svgs/${dataSvg}.svg`)"
-              contain
-              height="330"
-            ></v-img>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-  </swx-fullscreen-layout>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import SwxFullscreenLayout from '@shopworx/ui-components/core/SwxFullscreenLayout.vue';
-import InfinityAccountMenu from '@/components/core/navbar/InfinityAccountMenu.vue';
+import AuthHeader from '@/components/auth/AuthHeader.vue';
 
 export default {
   name: 'Welcome',
-  metaInfo() {
-    return {
-      title: 'Welcome',
-    };
-  },
-  created() {
-    if (this.isRegistrationComplete) {
-      this.$router.replace({ name: 'home' });
-    }
-  },
   components: {
-    SwxFullscreenLayout,
-    InfinityAccountMenu,
+    AuthHeader,
   },
   computed: {
-    ...mapGetters('user', ['isRegistrationComplete']),
-    dataSvg() {
+    ...mapGetters('user', ['isPasswordUpdated', 'isOnboardingComplete']),
+    welcomeIllustration() {
       return this.$vuetify.theme.dark
-        ? 'data-dark'
-        : 'data-light';
+        ? 'welcome-dark'
+        : 'welcome-light';
     },
   },
   methods: {
-    start() {
-      this.$router.replace({ name: 'register' });
+    createAccount() {
+      if (!this.isPasswordUpdated) {
+        this.$router.replace({ name: 'register' });
+      } else if (!this.isOnboardingComplete) {
+        this.$router.replace({ name: 'setup' });
+      } else {
+        this.$router.replace({ path: '/' });
+      }
     },
   },
 };
