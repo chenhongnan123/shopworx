@@ -28,6 +28,9 @@ export default ({
           if (success) {
             return true;
           }
+          commit('setSessionId', null);
+          SessionService.removeSession();
+          ApiService.removeHeader();
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -54,6 +57,9 @@ export default ({
           if (success) {
             return true;
           }
+          commit('setSessionId', null);
+          SessionService.removeSession();
+          ApiService.removeHeader();
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
