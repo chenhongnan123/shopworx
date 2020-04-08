@@ -11,7 +11,7 @@
           class="text-none pa-0"
           @click="uploadFile"
         >
-          {{ $t('setup.importMaster.importFile') }}
+          {{ $t('planning.setup.importMaster.importFile') }}
         </v-btn>
         <input
           type="file"
@@ -22,7 +22,7 @@
         >
       </template>
       <template v-else>
-        <review-master-data
+        <review-part-matrix
           :tags="tags"
           :title="title"
           :records="records"
@@ -45,10 +45,10 @@
 <script>
 import { mapActions } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
-import ReviewMasterData from './ReviewMasterData.vue';
+import ReviewPartMatrix from './ReviewPartMatrix.vue';
 
 export default {
-  name: 'ValidateMasterData',
+  name: 'ValidatePartMatrix',
   props: {
     files: {
       type: FileList,
@@ -60,7 +60,7 @@ export default {
     },
   },
   components: {
-    ReviewMasterData,
+    ReviewPartMatrix,
   },
   data() {
     return {
@@ -105,7 +105,7 @@ export default {
   },
   async created() {
     this.$emit('on-loading', true);
-    this.message = this.$i18n.t('setup.importMaster.starting');
+    this.message = this.$i18n.t('planning.setup.importMaster.starting');
     const records = await this.getElementRecords({
       assetId: this.assetId,
       elementName: this.masterElement.elementName,
@@ -113,7 +113,7 @@ export default {
     if (records && records.length) {
       this.error = false;
       this.$emit('on-validation', !this.error);
-      this.message = this.$i18n.tc('setup.importMaster.recordsExist', records.length);
+      this.message = this.$i18n.tc('planning.setup.importMaster.recordsExist', records.length);
     } else {
       this.file = Array.from(this.files).find((f) => f.name === this.expectedFileName);
       await this.processFileUpload();
@@ -134,7 +134,7 @@ export default {
       }
     },
     async mapFile() {
-      this.message = this.$i18n.t('setup.importMaster.parsing');
+      this.message = this.$i18n.t('planning.setup.importMaster.parsing');
       if (this.file) {
         const csvParser = new CSVParser();
         try {
@@ -145,28 +145,28 @@ export default {
           if (this.importedColumns && this.importedColumns.length === 0) {
             this.error = true;
             this.file = null;
-            this.message = this.$i18n.t('setup.importMaster.missingHeaders');
+            this.message = this.$i18n.t('planning.setup.importMaster.missingHeaders');
             this.$emit('on-validation', !this.error);
           } else if (this.importedRows && this.importedRows.length === 0) {
             this.error = true;
             this.file = null;
-            this.message = this.$i18n.t('setup.importMaster.missingData');
+            this.message = this.$i18n.t('planning.setup.importMaster.missingData');
             this.$emit('on-validation', !this.error);
           }
         } catch (e) {
           this.error = true;
-          this.message = this.$i18n.t('setup.importMaster.fileUnparsable');
+          this.message = this.$i18n.t('planning.setup.importMaster.fileUnparsable');
           this.$emit('on-validation', !this.error);
         }
       } else {
         this.error = true;
         this.$emit('on-validation', !this.error);
-        this.message = this.$i18n.t('setup.importMaster.fileNotFound', { file: this.expectedFileName });
+        this.message = this.$i18n.t('planning.setup.importMaster.fileNotFound', { file: this.expectedFileName });
         this.message = `File ${this.expectedFileName} not found!`;
       }
     },
     mapColumns() {
-      this.message = this.$i18n.t('setup.importMaster.mapping');
+      this.message = this.$i18n.t('planning.setup.importMaster.mapping');
       this.matchedColumns = this.importedColumns.map((column) => {
         const matchedTag = this.masterTags.find((tag) => tag.tagDescription === column);
         let tagName = null;
@@ -316,7 +316,7 @@ export default {
       return res;
     },
     async createRecords() {
-      this.message = this.$i18n.t('setup.importMaster.importing');
+      this.message = this.$i18n.t('planning.setup.importMaster.importing');
       const recordsCreated = await this.createBulkRecords({
         element: this.masterElement,
         tags: [...this.tags, ...this.hiddenTags],
@@ -325,12 +325,12 @@ export default {
       });
       if (recordsCreated) {
         this.error = false;
-        this.message = this.$i18n.tc('setup.importMaster.recordsImported', this.records.length);
+        this.message = this.$i18n.tc('planning.setup.importMaster.recordsImported', this.records.length);
         this.$emit('on-validation', !this.error);
       } else {
         this.error = true;
         this.reviewType = 'connection';
-        this.message = this.$i18n.t('setup.importMaster.recordsNotCreated');
+        this.message = this.$i18n.t('planning.setup.importMaster.recordsNotCreated');
         this.$emit('on-validation', !this.error);
       }
     },

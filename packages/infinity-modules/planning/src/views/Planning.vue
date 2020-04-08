@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <v-container
+    fluid
+    style="height:100%"
+  >
     <portal to="app-header">
       <span>Planning</span>
       <v-icon
@@ -7,6 +10,7 @@
         v-text="'$info'"
       ></v-icon>
       <v-icon
+        v-if="onboarded"
         class="ml-2 mb-1"
         v-text="'$settings'"
       ></v-icon>
@@ -30,25 +34,31 @@
         </v-tab>
       </v-tabs>
     </portal>
-    <template v-if="!loading">
-      <plan-onboarding v-if="!onboarded" />
-      <v-fade-transition mode="out-in" v-else>
-        <plan-schedule-view v-if="planView === 0" />
-        <plan-list-view v-if="planView === 1" />
-        <plan-board-view v-else-if="planView === 2" />
-        <plan-calendar-view v-else-if="planView === 3" />
-      </v-fade-transition>
-    </template>
-  </div>
+    <v-row style="height:100%">
+      <v-col>
+      <template v-if="loading">
+      </template>
+      <template v-else>
+        <plan-setup v-if="!onboarded" />
+        <v-fade-transition mode="out-in" v-else>
+          <plan-schedule-view v-if="planView === 0" />
+          <plan-list-view v-if="planView === 1" />
+          <plan-board-view v-else-if="planView === 2" />
+          <plan-calendar-view v-else-if="planView === 3" />
+        </v-fade-transition>
+      </template>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
-import PlanScheduleView from '../components/PlanScheduleView.vue';
-import PlanListView from '../components/PlanListView.vue';
-import PlanBoardView from '../components/PlanBoardView.vue';
-import PlanCalendarView from '../components/PlanCalendarView.vue';
-import PlanOnboarding from '../components/PlanOnboarding.vue';
+import PlanScheduleView from './PlanScheduleView.vue';
+import PlanListView from './PlanListView.vue';
+import PlanBoardView from './PlanBoardView.vue';
+import PlanCalendarView from './PlanCalendarView.vue';
+import PlanSetup from './PlanSetup.vue';
 
 export default {
   name: 'Planning',
@@ -57,7 +67,7 @@ export default {
     PlanListView,
     PlanBoardView,
     PlanCalendarView,
-    PlanOnboarding,
+    PlanSetup,
   },
   data() {
     return {
@@ -68,11 +78,9 @@ export default {
   },
   async created() {
     this.loading = true;
-    if (this.onboarded) {
-      this.setExtendedHeader(true);
-    }
     const view = localStorage.getItem('planView');
     this.planView = view ? JSON.parse(view) : 0;
+    await this.getAppSchema();
     const element = await this.getElement('planning');
     if (element) {
       this.onboarded = true;
@@ -92,6 +100,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('element', ['getElement']),
+    ...mapActions('webApp', ['getAppSchema']),
   },
 };
 </script>

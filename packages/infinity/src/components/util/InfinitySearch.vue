@@ -19,11 +19,8 @@
       @focus="onFocus"
       autocomplete="off"
       @keydown.esc="onEsc"
-    >
-      <template #prepend-inner>
-        <v-icon v-text="'$search'"></v-icon>
-      </template>
-    </v-text-field>
+      prepend-inner-icon="$search"
+    ></v-text-field>
   </v-responsive>
 </template>
 

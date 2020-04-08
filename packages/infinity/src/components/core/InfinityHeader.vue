@@ -30,11 +30,9 @@
     <v-spacer></v-spacer>
     <template v-if="$vuetify.breakpoint.mdAndUp">
       <infinity-search />
-      <v-toolbar-items>
-        <infinity-insights />
-        <infinity-help />
-        <infinity-account />
-      </v-toolbar-items>
+      <infinity-insights />
+      <infinity-help />
+      <infinity-account />
     </template>
   </v-app-bar>
 </template>

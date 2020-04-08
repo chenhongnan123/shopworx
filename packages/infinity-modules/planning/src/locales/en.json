@@ -1,3 +1,47 @@
 {
-  "planning": "Planning"
+  "planning": {
+    "setup": {
+      "counter": "Step {current} of {total}",
+      "importMaster": {
+        "title": "Import part matrix",
+        "title1": "Upload part matrix to ShopWorx to better",
+        "title2": "plan",
+        "title3": "your production on the shopfloor.",
+        "import": "Import part matrix",
+        "downloading": "Generating templates...",
+        "downloadError": "Could not download the part matrix templates.",
+        "retryDownload": "Retry download.",
+        "download": "You can download the part matrix templates",
+        "downloadLink": "here.",
+        "fetchMaster": "Fetching part matrix from ShopWorx servers...",
+        "fetchError": "We couldn't fetch part matrix from ShopWorx servers.",
+        "retryFetch": "Please retry.",
+        "importFile": "Import file",
+        "recordsExist": "1 record already exist! | {count} records already exist!",
+        "starting": "Starting...",
+        "parsing": "Parsing...",
+        "mapping": "Mapping...",
+        "importing": "Importing...",
+        "recordsImported": "1 record imported! | {count} records imported!",
+        "recordsNotCreated": "Cannot reach ShopWorx servers!",
+        "missingHeaders": "Please include headers in the first row!",
+        "missingData": "Please have atleast one data row!",
+        "fileUnparsable": "Cannot parse file!",
+        "fileNotFound": "File {file} not found!",
+        "review": "Review",
+        "updateColumns": "Update columns",
+        "reimport": "Re-import",
+        "reviewTitle": "Review {title}",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "missingMapping": "Missing required mappings:",
+        "requiredData": "Missing required data:",
+        "duplicateData": "Duplicate data for:",
+        "invalidDataType": "Invalid data type for:"
+      },
+      "selectPlanParameters": {
+        "title": "Update settings"
+      }
+    }
+  }
 }
