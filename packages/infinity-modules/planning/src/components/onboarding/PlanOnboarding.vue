@@ -16,9 +16,8 @@
           v-if="step === 1"
           @update-step="updateStep"
         />
-        <update-plan-settings
+        <complete-onboarding
           v-else-if="step === 2"
-          @update-step="updateStep"
         />
       </v-fade-transition>
     </v-card-text>
@@ -27,13 +26,13 @@
 
 <script>
 import ImportPartMatrix from './ImportPartMatrix.vue';
-import UpdatePlanSettings from './UpdatePlanSettings.vue';
+import CompleteOnboarding from './CompleteOnboarding.vue';
 
 export default {
   name: 'Onboarding',
   components: {
     ImportPartMatrix,
-    UpdatePlanSettings,
+    CompleteOnboarding,
   },
   data() {
     return {
@@ -43,10 +42,14 @@ export default {
           title: 'importMaster',
         },
         {
-          title: 'selectPlanParameters',
+          title: 'complete',
         },
       ],
     };
+  },
+  created() {
+    const step = localStorage.getItem('planStep');
+    this.step = step ? JSON.parse(step) : this.step;
   },
   computed: {
     progress() {
@@ -56,7 +59,7 @@ export default {
   methods: {
     updateStep() {
       this.step += 1;
-      localStorage.setItem('step', this.step);
+      localStorage.setItem('planStep', this.step);
     },
   },
 };

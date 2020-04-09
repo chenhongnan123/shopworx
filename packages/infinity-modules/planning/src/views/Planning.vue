@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import PlanScheduleView from './PlanScheduleView.vue';
 import PlanListView from './PlanListView.vue';
 import PlanBoardView from './PlanBoardView.vue';
@@ -73,8 +73,10 @@ export default {
     return {
       planView: 0,
       loading: false,
-      onboarded: false,
     };
+  },
+  computed: {
+    ...mapState('planning', ['onboarded']),
   },
   async created() {
     this.loading = true;
@@ -83,7 +85,8 @@ export default {
     await this.getAppSchema();
     const element = await this.getElement('planning');
     if (element) {
-      this.onboarded = true;
+      this.setOnboarded(true);
+      this.setExtendedHeader(true);
     }
     this.loading = false;
   },
@@ -98,6 +101,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('planning', ['setOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('element', ['getElement']),
     ...mapActions('webApp', ['getAppSchema']),

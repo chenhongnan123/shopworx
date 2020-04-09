@@ -39,8 +39,12 @@
         "duplicateData": "Duplicate data for:",
         "invalidDataType": "Invalid data type for:"
       },
-      "selectPlanParameters": {
-        "title": "Update settings"
+      "complete": {
+        "title": "Complete setup",
+        "title1": "Great! you are all set. Welcome to the",
+        "title2": "planning",
+        "title3": "app. Other settings are available in the app for you to change.",
+        "next": "Let's go"
       }
     }
   }

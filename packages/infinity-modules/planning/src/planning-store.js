@@ -3,12 +3,59 @@ import { set } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
+    onboarded: false,
+    planningMaster: null,
     partMatrixMaster: [],
   },
   mutations: {
+    setOnboarded: set('onboarded'),
+    setPlanningMaster: set('planningMaster'),
     setPartMatrixMaster: set('partMatrixMaster'),
   },
   actions: {
+    getPlanningMaster: async ({ commit, dispatch }) => {
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const planningMaster = masterElements
+          .find((elem) => elem.masterElement.elementName === 'planning');
+        commit('setPlanningMaster', planningMaster);
+        return true;
+      }
+      return false;
+    },
+
+    createPlanningElement: async ({ dispatch, state }) => {
+      const { planningMaster } = state;
+      const partMatrix = await dispatch(
+        'element/getElement',
+        'partmatrix',
+        { root: true },
+      );
+      if (partMatrix) {
+        const element = planningMaster.masterElement;
+        const tags = [
+          ...partMatrix.tags.filter((tag) => !tag.hide),
+          ...planningMaster.masterTags,
+        ];
+        const payload = {
+          element,
+          tags,
+        };
+        console.log(payload);
+        const success = await dispatch(
+          'element/createElementAndTags',
+          payload,
+          { root: true },
+        );
+        return success;
+      }
+      return false;
+    },
+
     getPartMatrixMaster: async ({
       commit,
       dispatch,
@@ -27,8 +74,11 @@ export default ({
         { root: true },
       );
       if (masterElements && masterElements.length) {
+        const planningMaster = masterElements
+          .find((elem) => elem.masterElement.elementName === 'planning');
+        commit('setPlanningMaster', planningMaster);
         const filteredMasterElements = masterElements
-          .filter((elem) => elem.masterElement.elementName === 'assetpartmatrix')
+          .filter((elem) => elem.masterElement.elementName === 'partmatrix')
           .map((elem) => {
             const availableAssets = elem.masterTags.map((tag) => tag.assetId);
             const provisionedAssets = [...new Set(availableAssets)];
@@ -39,12 +89,12 @@ export default ({
                 const { assetName, assetDescription } = masterAssets
                   .find((asset) => asset.id === provisionedAsset);
                 const partMatrixElements = getters.partMatrixComposition(provisionedAsset);
-                const partMatrix = partMatrixElements.map((matrix) => {
+                const partMatrix = partMatrixElements.map((element) => {
                   const e = masterElements
-                    .find((master) => master.masterElement.elementName === matrix.elementName);
+                    .find((master) => master.masterElement.elementName === element);
                   const tag = e.masterTags
                     .filter((t) => t.assetId === provisionedAsset)
-                    .find((t) => t.tagName === matrix.primaryTag);
+                    .find((t) => t.tagName === e.masterElement.uniqueTagName);
                   return {
                     tag,
                     element: e.masterElement.elementName,
@@ -72,7 +122,6 @@ export default ({
                 };
               });
           }).flat();
-        console.log(await Promise.all(filteredMasterElements));
         commit('setPartMatrixMaster', await Promise.all(filteredMasterElements));
         return true;
       }
@@ -81,6 +130,7 @@ export default ({
 
     generateMatrix: async ({ dispatch }, { matrixMaster, assetId }) => {
       let result = [];
+      console.log({ matrixMaster, assetId });
       if (matrixMaster && matrixMaster.length) {
         const getAllRecords = matrixMaster
           .map(async (master) => {
@@ -109,45 +159,50 @@ export default ({
     planningSchema: (_, __, rootState, rootGetters) => {
       const { appSchema } = rootState.webApp;
       const licensedAssets = rootGetters['user/licensedAssets'];
-      console.log(appSchema);
-      console.log(licensedAssets);
-      /* if (appSchema) {
+      if (appSchema) {
         return appSchema.filter((schema) => licensedAssets.includes(schema.assetId));
-      } */
-      // TODO: remove static return;
-      return [{
-        assetId: 2,
-        partMatrixComposition: [{
-          elementName: 'part',
-          primaryTag: 'partname',
-        }, {
-          elementName: 'machine',
-          primaryTag: 'name',
-        }, {
-          elementName: 'mold',
-          primaryTag: 'moldname',
-        }],
-      }, {
-        assetId: 3,
-        partMatrixComposition: [{
-          elementName: 'part',
-          primaryTag: 'partname',
-        }, {
-          elementName: 'machine',
-          primaryTag: 'name',
-        }, {
-          elementName: 'tool',
-          primaryTag: 'toolname',
-        }],
-      }];
+      }
+      return [];
     },
 
     partMatrixComposition: (_, { planningSchema }) => (assetId) => {
       if (planningSchema && planningSchema.length) {
         return planningSchema
-          .filter((schema) => schema.assetId === assetId)
-          .map((schema) => schema.partMatrixComposition)
-          .flat();
+          .find((schema) => schema.assetId === assetId)
+          .partMatrixComposition;
+      }
+      return [];
+    },
+
+    primaryDisplayTag: (_, { planningSchema }) => (assetId) => {
+      if (planningSchema && planningSchema.length) {
+        return planningSchema
+          .find((schema) => schema.assetId === assetId)
+          .primaryDisplayTag;
+      }
+      return 'planid';
+    },
+
+    optionalPlanMasterFields: ({ planningMaster }) => (assetId) => {
+      if (planningMaster) {
+        return planningMaster.masterTags
+          .filter((tag) => (
+            tag.assetId === assetId
+            && !tag.hide
+            && !tag.required
+          ));
+      }
+      return [];
+    },
+
+    requiredPlanMasterFields: ({ planningMaster }) => (assetId) => {
+      if (planningMaster) {
+        return planningMaster.masterTags
+          .filter((tag) => (
+            tag.assetId === assetId
+            && !tag.hide
+            && tag.required
+          ));
       }
       return [];
     },

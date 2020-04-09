@@ -18,7 +18,17 @@ export default ({
         const { activeAppId } = state;
         const { data } = await SiteService.getApp(roleId, activeAppId);
         if (data && data.results) {
-          commit('setAppSchema', data.results.schema);
+          try {
+            commit('setAppSchema', JSON.parse(data.results.schema));
+          } catch (e) {
+            commit('helper/setAlert', {
+              show: true,
+              type: 'error',
+              message: 'INVALID_APP_SCHEMA',
+            }, {
+              root: true,
+            });
+          }
         }
       } catch (e) {
         return false;
