@@ -8,6 +8,10 @@ class ElementService {
   getElement(elementName) {
     return this.request.get(`/server/elements/${elementName}`);
   }
+  
+  getElementsBySite(id) {
+    return this.request.get(`/server/elements/site/${id}`);
+  }
 
   createElement(payload) {
     return this.request.post('/server/elements', payload);

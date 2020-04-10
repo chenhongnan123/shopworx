@@ -45,7 +45,6 @@ export default ({
           element,
           tags,
         };
-        console.log(payload);
         const success = await dispatch(
           'element/createElementAndTags',
           payload,
@@ -130,7 +129,6 @@ export default ({
 
     generateMatrix: async ({ dispatch }, { matrixMaster, assetId }) => {
       let result = [];
-      console.log({ matrixMaster, assetId });
       if (matrixMaster && matrixMaster.length) {
         const getAllRecords = matrixMaster
           .map(async (master) => {
@@ -138,7 +136,6 @@ export default ({
             const data = await dispatch(
               'element/getRecords',
               {
-                assetId,
                 elementName: element,
                 query: `?query=assetid==${assetId}`,
               },
