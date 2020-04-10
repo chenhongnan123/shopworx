@@ -1,7 +1,7 @@
 <template>
   <v-responsive
     class="transition-swing"
-    :max-width="isFocused ? 360 : 180"
+    :max-width="isFocused ? 380 : 220"
   >
     <v-text-field
       flat
@@ -13,7 +13,7 @@
       ref="search"
       class="mr-2"
       hide-details
-      label="Search"
+      label="Search reports"
       @blur="onBlur"
       v-model="search"
       @focus="onFocus"
