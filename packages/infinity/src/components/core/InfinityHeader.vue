@@ -25,7 +25,7 @@
       <portal-target name="app-header"></portal-target>
     </v-toolbar-title>
     <template #extension v-if="extendedHeader">
-      <portal-target name="app-tabs" slim />
+      <portal-target name="app-extension" slim />
     </template>
     <v-spacer></v-spacer>
     <template v-if="$vuetify.breakpoint.mdAndUp">
