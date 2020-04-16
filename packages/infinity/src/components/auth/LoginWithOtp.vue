@@ -22,7 +22,7 @@
             :label="$t('login.otp')"
             :error-messages="errors"
             autocomplete="one-time-code"
-            prepend-inner-icon="$password"
+            prepend-icon="$password"
           ></v-text-field>
         </validation-provider>
         <p
@@ -132,6 +132,7 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['generateOtp', 'authenticateWithOtp']),
+    ...mapActions('user', ['getMySolutions']),
     ...mapMutations('helper', ['setAlert']),
     setIdentifier({ isMobile, prefix }) {
       this.isMobile = isMobile;
@@ -173,6 +174,7 @@ export default {
       };
       const authenticated = await this.authenticateWithOtp(payload);
       if (authenticated) {
+        await this.getMySolutions();
         this.$emit('success');
       }
       this.loading = false;

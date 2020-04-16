@@ -30,7 +30,7 @@
                   v-model="hour.type"
                   :id="`type-${index}`"
                   :error-messages="errors"
-                  :prepend-inner-icon="hour.type === 'shift'
+                  :prepend-icon="hour.type === 'shift'
                     ? '$shift'
                     : '$break'"
                   :label="$t('setup.onboardCalendar.hours.type')"

@@ -18,7 +18,7 @@
               :disabled="loading"
               :error-messages="errors"
               autocomplete="given-name"
-              prepend-inner-icon="$identifier"
+              prepend-icon="$identifier"
               :label="$t('register.account.firstName')"
             ></v-text-field>
           </validation-provider>
@@ -34,7 +34,7 @@
               :disabled="loading"
               :error-messages="errors"
               autocomplete="family-name"
-              prepend-inner-icon="$identifier"
+              prepend-icon="$identifier"
               :label="$t('register.account.lastName')"
             ></v-text-field>
           </validation-provider>
@@ -51,7 +51,7 @@
               :disabled="loading"
               autocomplete="email"
               :error-messages="errors"
-              prepend-inner-icon="$email"
+              prepend-icon="$email"
               :label="$t('register.account.email')"
             ></v-text-field>
           </validation-provider>
@@ -69,7 +69,7 @@
               autocomplete="tel"
               :disabled="loading"
               :error-messages="errors"
-              prepend-inner-icon="$phone"
+              prepend-icon="$phone"
               :label="$t('register.account.phone')"
             ></v-text-field>
           </validation-provider>
