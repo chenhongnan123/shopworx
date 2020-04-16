@@ -16,7 +16,7 @@
         <v-btn icon>
           <v-icon>mdi-filter-variant</v-icon>
         </v-btn>
-        <v-btn icon v-if="addPlan">
+        <v-btn icon v-if="addPlan" @click="setAddPlanDialog(true)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
@@ -106,6 +106,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'PlanWidget',
   props: {
@@ -142,6 +144,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('planning', ['setAddPlanDialog']),
     planStatusClass(planstatus) {
       switch (planstatus) {
         case 'In Progress': return 'success';

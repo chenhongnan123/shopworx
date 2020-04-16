@@ -3,7 +3,7 @@
     scrollable
     persistent
     v-model="dialog"
-    max-width="600px"
+    max-width="500px"
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
@@ -23,11 +23,12 @@
           label="Part"
           :items="parts"
           return-object
+          :disabled="saving"
           item-text="partname"
-          v-model="plan.part"
+          v-model="selectedPart"
           :loading="loadingParts"
           prepend-icon="$production"
-          @change="onPartSelection(plan.part)"
+          @change="onPartSelection(selectedPart)"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -36,63 +37,164 @@
             </v-list-item-content>
           </template>
         </v-autocomplete>
-        <template v-if="plan.part">
-          <v-autocomplete
-            label="Machine"
-            class="ml-8"
-            item-text="machinename"
-            item-value="machinename"
-            v-model="plan.machinename"
-            :items="partMatrixRecords(plan.toolname ? {
-              name: 'toolname',
-              value: plan.toolname
-            } : null)"
-          ></v-autocomplete>
-          <v-autocomplete
-            label="Tool"
-            class="ml-8"
-            item-text="toolname"
-            item-value="toolname"
-            v-model="plan.toolname"
-            :items="partMatrixRecords(plan.machinename ? {
-              name: 'machinename',
-              value: plan.machinename
-            } : null)"
-          ></v-autocomplete>
+        <template v-if="selectedPart">
+          <template v-if="fetchingPartMatrix">
+            <span class="ml-8">
+              Fetching part matrix records...
+            </span>
+          </template>
+          <template v-else>
+            <span class="ml-8">
+              Did not find the matching part matrix? Add new <a>here</a>.
+            </span>
+            <template v-for="(matrixTag, index) in essentialMatrixTags">
+              <v-autocomplete
+                :key="index"
+                class="ml-8"
+                clearable
+                :disabled="saving"
+                :items="partMatrixRecords"
+                :item-text="matrixTag.tagName"
+                :item-value="matrixTag.tagName"
+                @change="updatePartMatrixRecords({
+                  name: matrixTag.tagName,
+                  value: partMatrix[matrixTag.tagName]
+                })"
+                v-model="partMatrix[matrixTag.tagName]"
+                :label="matrixTag.tagDescription"
+              ></v-autocomplete>
+            </template>
+            <template v-if="message">
+              <span class="ml-8">
+                {{ message }}
+              </span>
+            </template>
+            <template v-if="displayPlanningFields">
+              <v-text-field
+                type="number"
+                :disabled="saving"
+                v-model="plan.plannedquantity"
+                label="Planned quantity"
+                prepend-icon="mdi-tray-plus"
+              ></v-text-field>
+              <v-text-field
+                type="datetime-local"
+                v-model="plan.scheduledstart"
+                label="Scheduled start"
+                prepend-icon="mdi-clock-start"
+              ></v-text-field>
+              <v-text-field
+                type="datetime-local"
+                :disabled="saving"
+                v-model="plan.scheduledend"
+                label="Scheduled end"
+                class="ml-8"
+              ></v-text-field>
+              <v-text-field
+                type="number"
+                :disabled="saving"
+                v-model="plan.activecavity"
+                label="Active cavity"
+                prepend-icon="$mold"
+              ></v-text-field>
+              <template v-if="showMore">
+                <v-text-field
+                  type="number"
+                  :disabled="saving"
+                  label="Work order number (Optional)"
+                  prepend-icon="mdi-file-document-outline"
+                ></v-text-field>
+              </template>
+            </template>
+          </template>
         </template>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text class="text-none">More options</v-btn>
-        <v-btn color="primary" class="text-none">Save</v-btn>
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          :disabled="saving"
+          v-if="displayPlanningFields"
+          @click="showMore = !showMore"
+        >
+          {{ showMore ? 'Less options': 'More options' }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          class="text-none"
+          :loading="saving"
+          @click="savePlan"
+        >
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import {
+  mapActions,
+  mapState,
+  mapGetters,
+  mapMutations,
+} from 'vuex';
 
 export default {
   name: 'AddPlan',
   data() {
     return {
-      plan: {
-        part: null,
-        machinename: '',
-        toolname: '',
-      },
-      dialog: true,
+      plan: {},
+      assetId: null,
+      filters: {},
+      saving: false,
+      message: null,
+      partTag: null,
+      showMore: false,
+      selectedPart: null,
       loadingParts: false,
+      partMatrix: {},
+      familyParts: [],
+      showFamilyParts: false,
+      partMatrixRecords: [],
+      essentialMatrixTags: [],
+      fetchingPartMatrix: false,
+      displayPlanningFields: false,
     };
   },
   computed: {
-    ...mapState('planning', ['parts']),
+    ...mapState('planning', ['parts', 'addPlanDialog', 'primaryMatrixTags']),
     ...mapGetters('planning', [
+      'selectedAsset',
       'planningTags',
+      'partMatrixTags',
       'filteredPartMatrixRecords',
       'partMatrixComposition',
     ]),
+    isInjectionMolding() {
+      let result = false;
+      if (this.assetId) {
+        result = this.selectedAsset(this.assetId) === 'injectionmolding';
+      }
+      return result;
+    },
+    isPress() {
+      let result = false;
+      if (this.assetId) {
+        result = this.selectedAsset(this.assetId) === 'press';
+      }
+      return result;
+    },
+    dialog: {
+      get() {
+        return this.addPlanDialog;
+      },
+      set(val) {
+        this.setAddPlanDialog(val);
+      },
+    },
   },
   async created() {
     this.loadingParts = true;
@@ -100,19 +202,109 @@ export default {
     this.loadingParts = false;
   },
   methods: {
-    ...mapActions('planning', ['getParts', 'getPartMatrixRecords']),
-    partMatrixRecords(filter) {
-      return this.filteredPartMatrixRecords(filter);
-    },
-    async onPartSelection(part) {
-      if (part) {
-        await this.getPartMatrixRecords(part);
-        this.partMatrixComposition(part.assetid);
-        this.planningTags(part.assetid);
+    ...mapMutations('planning', ['setAddPlanDialog']),
+    ...mapActions('planning', [
+      'getParts',
+      'createPlan',
+      'isFamilyMold',
+      'getFamilyParts',
+      'getPartMatrixRecords',
+      'getPrimaryMatrixTags',
+    ]),
+    async onPartSelection() {
+      if (this.selectedPart) {
+        const { assetid } = this.selectedPart;
+        this.assetId = assetid;
+        this.fetchingPartMatrix = true;
+        await this.getPartMatrixRecords(this.selectedPart);
+        this.partMatrixRecords = this.filteredPartMatrixRecords();
+        await this.getPrimaryMatrixTags(assetid);
+        const nonPartTags = this.primaryMatrixTags
+          .filter((t) => t.element !== 'part')
+          .map((t) => t.tag);
+        this.partTag = this.primaryMatrixTags
+          .find((t) => t.element === 'part')
+          .tag;
+        this.essentialMatrixTags = nonPartTags.map((tag) => ({
+          tagName: tag.tagName,
+          tagDescription: tag.tagDescription,
+        }));
+        const matrixTags = this.partMatrixTags(assetid);
+        this.partMatrix = matrixTags.reduce((acc, cur) => {
+          acc[cur.tagName] = '';
+          return acc;
+        }, {});
+        this.partMatrix[this.partTag.tagName] = this.selectedPart[this.partTag.tagName];
+        const tags = this.planningTags(assetid);
+        this.plan = tags.reduce((acc, cur) => {
+          acc[cur.tagName] = '';
+          return acc;
+        }, {});
+        this.fetchingPartMatrix = false;
       } else {
-        this.plan.machinename = '';
-        this.plan.toolname = '';
+        this.plan = {};
+        this.partMatrix = {};
+        this.filters = {};
+        this.displayPlanningFields = false;
       }
+    },
+    async updatePartMatrixRecords({ name, value }) {
+      if (value) {
+        this.filters[name] = value;
+        this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
+      } else {
+        delete this.filters[name];
+        this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
+      }
+      if (this.partMatrixRecords.length === 1) {
+        if (this.isInjectionMolding) {
+          const uniqueMoldTagName = this.primaryMatrixTags
+            .find((t) => t.element === 'mold')
+            .tag.tagName;
+          const uniqueMachineTagName = this.primaryMatrixTags
+            .find((t) => t.element === 'machine')
+            .tag.tagName;
+          this.message = 'Checking if family mold...';
+          const isFamilyMold = await this.isFamilyMold(
+            `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"`,
+          );
+          if (isFamilyMold) {
+            this.message = 'Fetching family parts...';
+            this.familyParts = await this.getFamilyParts(
+              `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"%26%26${uniqueMachineTagName}=="${this.partMatrix[uniqueMachineTagName]}"%26%26${this.partTag.tagName}!="${this.partMatrix[this.partTag.tagName]}"`,
+            );
+            if (this.familyParts && this.familyParts.length) {
+              this.showFamilyParts = true;
+            }
+          }
+          this.plan.activecavity = this.partMatrix.cavity;
+        }
+        const matrixKeys = Object.keys(this.partMatrix);
+        matrixKeys.forEach((key) => {
+          this.partMatrix[key] = this.partMatrixRecords[0][key];
+        });
+        this.plan.activecavity = this.partMatrix.cavity;
+        this.message = null;
+        this.displayPlanningFields = true;
+        this.plan = { ...this.plan, ...this.partMatrix };
+      } else {
+        this.displayPlanningFields = false;
+      }
+    },
+    async savePlan() {
+      this.saving = true;
+      this.plan = {
+        ...this.plan,
+        status: 'notStarted',
+        starred: false,
+        assetid: this.assetId,
+        scheduledstart: new Date(this.plan.scheduledstart).getTime(),
+        scheduledend: new Date(this.plan.scheduledend).getTime(),
+      };
+      const payload = this.plan;
+      console.log(payload);
+      // this.createPlan();
+      this.saving = false;
     },
   },
 };
