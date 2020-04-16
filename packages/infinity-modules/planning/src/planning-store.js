@@ -3,16 +3,35 @@ import { set } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
+    parts: [],
     onboarded: false,
     planningMaster: null,
     partMatrixMaster: [],
+    partMatrixRecords: [],
+    planningElement: null,
   },
   mutations: {
+    setParts: set('parts'),
     setOnboarded: set('onboarded'),
     setPlanningMaster: set('planningMaster'),
     setPartMatrixMaster: set('partMatrixMaster'),
+    setPartMatrixRecords: set('partMatrixRecords'),
+    setPlanningElement: set('planningElement'),
   },
   actions: {
+    getPlanningElement: async ({ commit, dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'planning',
+        { root: true },
+      );
+      if (element) {
+        commit('setPlanningElement', element);
+        return true;
+      }
+      return false;
+    },
+
     getPlanningMaster: async ({ commit, dispatch }) => {
       const masterElements = await dispatch(
         'industry/getMasterElements',
@@ -151,6 +170,32 @@ export default ({
       }
       return result;
     },
+
+    getParts: async ({ commit, dispatch }) => {
+      const parts = await dispatch(
+        'element/getRecords',
+        { elementName: 'part' },
+        { root: true },
+      );
+      if (parts && parts.length) {
+        commit('setParts', parts);
+      }
+    },
+
+    getPartMatrixRecords: async ({ commit, dispatch }, { partname }) => {
+      const payload = {
+        elementName: 'partmatrix',
+        query: `?query=partname=="${partname}"`,
+      };
+      const partMatrixRecords = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (partMatrixRecords && partMatrixRecords.length) {
+        commit('setPartMatrixRecords', partMatrixRecords);
+      }
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
@@ -202,6 +247,24 @@ export default ({
           ));
       }
       return [];
+    },
+
+    planningTags: ({ planningElement }) => (assetId) => {
+      let tags = [];
+      if (planningElement && assetId) {
+        tags = planningElement.tags.filter((tag) => tag.assetId === assetId);
+      }
+      console.log(tags);
+      return tags;
+    },
+
+    filteredPartMatrixRecords: ({ partMatrixRecords }) => (filter) => {
+      let records = partMatrixRecords;
+      if (filter) {
+        records = partMatrixRecords.filter((record) => record[filter.name] === filter.value);
+      }
+      console.log(filter, records);
+      return records;
     },
   },
 });

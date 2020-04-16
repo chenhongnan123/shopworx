@@ -1,50 +1,50 @@
 <template>
   <v-container
     fluid
+    class="py-0"
     style="height:100%"
   >
     <portal to="app-header">
       <span>Planning</span>
-      <v-icon
-        class="ml-4 mb-1"
-        v-text="'$info'"
-      ></v-icon>
-      <v-icon
-        v-if="onboarded"
-        class="ml-2 mb-1"
-        v-text="'$settings'"
-      ></v-icon>
+      <v-btn icon small class="ml-4 mb-1">
+        <v-icon
+          v-text="'$info'"
+        ></v-icon>
+      </v-btn>
+      <v-btn icon small class="ml-2 mb-1">
+        <v-icon
+          v-if="onboarded"
+          v-text="'$settings'"
+        ></v-icon>
+      </v-btn>
     </portal>
-    <portal to="app-tabs" v-if="onboarded">
+    <portal to="app-extension" v-if="onboarded">
       <v-tabs
         center-active
         v-model="planView"
       >
         <v-tab class="text-none">
-          Schedule
-        </v-tab>
-        <v-tab class="text-none">
-          List
-        </v-tab>
-        <v-tab class="text-none">
-          Board
+          Dashboard
         </v-tab>
         <v-tab class="text-none">
           Calendar
         </v-tab>
+        <v-tab class="text-none">
+          Schedule
+        </v-tab>
       </v-tabs>
     </portal>
+    <add-plan />
     <v-row style="height:100%">
-      <v-col>
+      <v-col class="pa-0">
       <template v-if="loading">
       </template>
       <template v-else>
         <plan-setup v-if="!onboarded" />
         <v-fade-transition mode="out-in" v-else>
-          <plan-schedule-view v-if="planView === 0" />
-          <plan-list-view v-if="planView === 1" />
-          <plan-board-view v-else-if="planView === 2" />
-          <plan-calendar-view v-else-if="planView === 3" />
+          <plan-dashboard v-if="planView === 0" />
+          <plan-calendar-view v-else-if="planView === 1" />
+          <plan-schedule-view v-else-if="planView === 2" />
         </v-fade-transition>
       </template>
       </v-col>
@@ -54,20 +54,20 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import PlanDashboard from './PlanDashboard.vue';
 import PlanScheduleView from './PlanScheduleView.vue';
-import PlanListView from './PlanListView.vue';
-import PlanBoardView from './PlanBoardView.vue';
 import PlanCalendarView from './PlanCalendarView.vue';
 import PlanSetup from './PlanSetup.vue';
+import AddPlan from '../components/AddPlan.vue';
 
 export default {
   name: 'Planning',
   components: {
+    PlanDashboard,
     PlanScheduleView,
-    PlanListView,
-    PlanBoardView,
     PlanCalendarView,
     PlanSetup,
+    AddPlan,
   },
   data() {
     return {
@@ -83,7 +83,7 @@ export default {
     const view = localStorage.getItem('planView');
     this.planView = view ? JSON.parse(view) : 0;
     await this.getAppSchema();
-    const element = await this.getElement('planning');
+    const element = await this.getPlanningElement();
     if (element) {
       this.setOnboarded(true);
       this.setExtendedHeader(true);
@@ -103,8 +103,8 @@ export default {
   methods: {
     ...mapMutations('planning', ['setOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapActions('element', ['getElement']),
     ...mapActions('webApp', ['getAppSchema']),
+    ...mapActions('planning', ['getPlanningElement']),
   },
 };
 </script>
