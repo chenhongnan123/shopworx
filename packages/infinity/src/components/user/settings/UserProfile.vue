@@ -3,39 +3,47 @@
     <user-avatar />
     <validation-observer #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdateProfile)">
-        <v-card-text class="py-0">
-          <validation-provider
-            rules="required"
-            name="firstName"
-            #default="{ errors }"
-          >
-            <v-text-field
-              type="text"
-              id="firstName"
-              v-model="firstName"
-              :disabled="loading"
-              :error-messages="errors"
-              autocomplete="given-name"
-              prepend-inner-icon="$identifier"
-              :label="$t('user.profile.firstName')"
-            ></v-text-field>
-          </validation-provider>
-          <validation-provider
-            rules="required"
-            name="lastName"
-            #default="{ errors }"
-          >
-            <v-text-field
-              type="text"
-              id="lastName"
-              v-model="lastName"
-              :disabled="loading"
-              :error-messages="errors"
-              autocomplete="family-name"
-              prepend-inner-icon="$identifier"
-              :label="$t('user.profile.lastName')"
-            ></v-text-field>
-          </validation-provider>
+        <v-card-text class="py-0 pt-2">
+          <v-row>
+            <v-col cols="12" sm="6" class="py-0">
+              <validation-provider
+                rules="required"
+                name="firstName"
+                #default="{ errors }"
+              >
+                <v-text-field
+                  filled
+                  type="text"
+                  id="firstName"
+                  v-model="firstName"
+                  :disabled="loading"
+                  :error-messages="errors"
+                  autocomplete="given-name"
+                  prepend-icon="$identifier"
+                  :label="$t('user.profile.firstName')"
+                ></v-text-field>
+              </validation-provider>
+            </v-col>
+            <v-col cols="12" sm=6 class="py-0">
+              <validation-provider
+                rules="required"
+                name="lastName"
+                #default="{ errors }"
+              >
+                <v-text-field
+                  filled
+                  type="text"
+                  id="lastName"
+                  v-model="lastName"
+                  :disabled="loading"
+                  :error-messages="errors"
+                  autocomplete="family-name"
+                  :class="$vuetify.breakpoint.xsOnly ? 'ml-8' : ''"
+                  :label="$t('user.profile.lastName')"
+                ></v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
           <validation-provider
             name="email"
             :rules="emailRules"
@@ -43,12 +51,13 @@
           >
             <v-text-field
               id="email"
+              filled
               type="email"
               v-model="email"
               :disabled="loading"
               autocomplete="email"
               :error-messages="errors"
-              prepend-inner-icon="$email"
+              prepend-icon="$email"
               :label="$t('user.profile.email')"
             ></v-text-field>
           </validation-provider>
@@ -58,6 +67,7 @@
             #default="{ errors }"
           >
             <v-text-field
+              filled
               type="tel"
               id="phone"
               prefix="+91"
@@ -65,22 +75,13 @@
               autocomplete="tel"
               :disabled="loading"
               :error-messages="errors"
-              prepend-inner-icon="$phone"
+              prepend-icon="$phone"
               :label="$t('user.profile.phone')"
             ></v-text-field>
           </validation-provider>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            outlined
-            @click="onReset"
-            color="primary"
-            class="text-none"
-            :disabled="loading"
-          >
-            {{ $t('user.profile.reset') }}
-          </v-btn>
           <v-btn
             type="submit"
             color="primary"
@@ -147,9 +148,6 @@ export default {
       this.phone = user.phoneNumber
         ? user.phoneNumber.substring(2)
         : user.phoneNumber;
-    },
-    onReset() {
-      this.assignUser(this.me.user);
     },
     async onUpdateProfile() {
       this.loading = true;

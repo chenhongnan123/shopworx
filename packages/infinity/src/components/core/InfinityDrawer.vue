@@ -93,6 +93,7 @@
             v-else
             :key="index"
             :to="{ name: item.title }"
+            @click="setActiveApp(item)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
@@ -125,6 +126,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'InfinityDrawer',
   props: {
@@ -142,7 +145,7 @@ export default {
   },
   data() {
     return {
-      expandOnHover: false,
+      expandOnHover: true,
     };
   },
   computed: {
@@ -170,9 +173,18 @@ export default {
       return totalHeight;
     },
   },
+  created() {
+    const appId = localStorage.getItem('appId');
+    this.setActiveAppId(appId ? JSON.parse(appId) : null);
+  },
   methods: {
+    ...mapMutations('webApp', ['setActiveAppId']),
     toggleExpand() {
       this.expandOnHover = !this.expandOnHover;
+    },
+    setActiveApp(item) {
+      this.setActiveAppId(item.id);
+      localStorage.setItem('appId', item.id);
     },
   },
 };

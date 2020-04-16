@@ -24,10 +24,12 @@ export default ({
           }, {
             root: true,
           });
+          return false;
         }
       } catch (e) {
-        console.error(e);
+        return false;
       }
+      return true;
     },
 
     resendInvitation: async (_, payload) => {
@@ -35,9 +37,8 @@ export default ({
         const { data } = await UserService.resendInvitation(payload);
         return data;
       } catch (e) {
-        console.error(e);
+        return false;
       }
-      return false;
     },
   },
 });

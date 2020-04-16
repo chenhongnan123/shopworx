@@ -14,6 +14,18 @@ export default ({
       return false;
     },
 
+    getElementsBySite: async (_, siteId) => {
+      try {
+        const { data } = await ElementService.getElementsBySite(siteId);
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, element) => {
       try {
         const { data } = await ElementService.createElement(element);
@@ -197,11 +209,11 @@ export default ({
       return true;
     },
 
-    getRecords: async (_, { elementName, assetId = 0, query = '' }) => {
+    getRecords: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
-          return data.results.filter((rec) => rec.assetid === assetId);
+          return data.results;
         }
         return false;
       } catch (e) {

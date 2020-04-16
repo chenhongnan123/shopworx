@@ -105,7 +105,10 @@ export default ({
       if (elem) {
         const records = await dispatch(
           'element/getRecords',
-          { elementName, assetId },
+          {
+            elementName,
+            query: `?query=assetid==${assetId}`,
+          },
           { root: true },
         );
         if (records && records.length) {

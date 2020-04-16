@@ -1,19 +1,20 @@
 <template>
   <v-card class="transparent" flat>
     <user-avatar />
-    <v-card-text class="py-0">
+    <v-card-text class="py-0 pt-2">
       <v-select
+        filled
         id="locale"
         :items="locales"
         item-text="text"
         item-value="value"
         autocomplete="language"
         v-model="currentLocale"
-        prepend-inner-icon="$locale"
+        prepend-icon="$locale"
         :label="$t('user.preferences.language')"
       ></v-select>
     </v-card-text>
-    <v-card-title class="px-0">
+    <v-card-title class="px-0 py-0 pt-2">
       {{ $t('user.preferences.display') }}
     </v-card-title>
     <v-card-text class="py-0">

@@ -66,17 +66,20 @@
       </v-card>
       <v-divider></v-divider>
     </template>
+    <user-window />
   </settings-layout>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import SettingsLayout from '@/components/layout/SettingsLayout.vue';
+import UserWindow from '@/components/user/UserWindow.vue';
 
 export default {
   name: 'Admin',
   components: {
     SettingsLayout,
+    UserWindow,
   },
   data() {
     return {

@@ -21,7 +21,7 @@
             :error-messages="errors"
             :label="$t('login.password')"
             autocomplete="current-password"
-            prepend-inner-icon="$password"
+            prepend-icon="$password"
           ></v-text-field>
         </validation-provider>
         <p class="text-right ma-0 pa-0 px-1">
@@ -96,6 +96,7 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['authenticate']),
+    ...mapActions('user', ['getMySolutions']),
     resetPassword() {
       this.$router.push({ name: 'forgot-password' });
     },
@@ -113,6 +114,7 @@ export default {
       };
       const authenticated = await this.authenticate(payload);
       if (authenticated) {
+        await this.getMySolutions();
         this.$emit('success');
       }
       this.loading = false;

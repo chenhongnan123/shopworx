@@ -32,8 +32,10 @@ export default ({
           commit('setUserState', userState);
           const site = await SiteService.getLicense(customerId, siteId);
           if (site && site.data.results) {
-            commit('setLicenses', site.data.results);
-            if (!site.data.results.length) {
+            const result = site.data.results
+              .filter((res) => res.status.toUpperCase().trim() === 'ACTIVE');
+            commit('setLicenses', result);
+            if (!result.length) {
               commit('helper/setAlert', {
                 show: true,
                 type: 'error',

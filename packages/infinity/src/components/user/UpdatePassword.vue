@@ -19,7 +19,7 @@
               :disabled="loading"
               :error-messages="errors"
               autocomplete="new-password"
-              prepend-inner-icon="$password"
+              prepend-icon="$password"
               :label="$t('register.password.newPassword')"
             ></v-text-field>
           </validation-provider>
@@ -35,7 +35,7 @@
               :error-messages="errors"
               v-model="confirmPassword"
               autocomplete="new-password"
-              prepend-inner-icon="$password"
+              prepend-icon="$password"
               :label="$t('register.password.confirmPassword')"
             ></v-text-field>
           </validation-provider>
