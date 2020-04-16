@@ -10,7 +10,7 @@
       <v-row
         :no-gutters="$vuetify.breakpoint.smAndDown"
       >
-        <v-col cols="12" md="3" lg="3" xl="2">
+        <v-col cols="12" md="3" xl="2">
           <v-list
             shaped
             class="pa-0 transparent"
@@ -39,7 +39,7 @@
           </v-list>
         </v-col>
         <v-divider vertical></v-divider>
-        <v-col cols="12" md="8" lg="7" xl="5">
+        <v-col cols="12" md="8" xl="7">
           <v-card
             flat
             class="transparent"
