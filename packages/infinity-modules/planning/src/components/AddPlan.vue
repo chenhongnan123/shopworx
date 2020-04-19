@@ -237,7 +237,11 @@ export default {
         this.partMatrix[this.partTag.tagName] = this.selectedPart[this.partTag.tagName];
         const tags = this.planningTags(assetid);
         this.plan = tags.reduce((acc, cur) => {
-          acc[cur.tagName] = '';
+          if (cur.emgTagType === 'String') {
+            acc[cur.tagName] = '';
+          } else {
+            acc[cur.tagName] = 0;
+          }
           return acc;
         }, {});
         this.fetchingPartMatrix = false;
@@ -297,13 +301,14 @@ export default {
         ...this.plan,
         status: 'notStarted',
         starred: false,
-        assetid: this.assetId,
+        assetId: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
         scheduledend: new Date(this.plan.scheduledend).getTime(),
       };
       const payload = this.plan;
       console.log(payload);
-      // this.createPlan();
+      const created = await this.createPlan(payload);
+      console.log(created);
       this.saving = false;
     },
   },

@@ -10,7 +10,7 @@
       ></span>
       <v-spacer></v-spacer>
       <template v-if="!selected.length">
-        <v-btn icon>
+        <v-btn icon @click="$emit('refresh-widget')">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
         <v-btn icon>
@@ -72,7 +72,7 @@
                   <v-list-item-avatar>
                     <v-avatar
                       size="24"
-                      :color="planStatusClass(plan.planstatus)"
+                      :color="planStatusClass(plan.status)"
                     >
                     </v-avatar>
                   </v-list-item-avatar>
@@ -147,11 +147,11 @@ export default {
     ...mapMutations('planning', ['setAddPlanDialog']),
     planStatusClass(planstatus) {
       switch (planstatus) {
-        case 'In Progress': return 'success';
-        case 'Paused': return 'warning';
-        case 'Not Started': return 'info';
-        case 'Abort': return 'error';
-        case 'Complete': return 'accent';
+        case 'inProgress': return 'success';
+        case 'paused': return 'warning';
+        case 'notStarted': return 'info';
+        case 'aborted': return 'error';
+        case 'complete': return 'accent';
         default: return '';
       }
     },

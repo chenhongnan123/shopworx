@@ -13,6 +13,7 @@ export default ({
     planningElement: null,
     primaryMatrixTags: [],
     partMatrixElement: null,
+    notStartedPlanCount: 0,
   },
   mutations: {
     setParts: set('parts'),
@@ -25,6 +26,7 @@ export default ({
     setPlanningElement: set('planningElement'),
     setPrimaryMatrixTags: set('primaryMatrixTags'),
     setPartMatrixElement: set('partMatrixElement'),
+    setNotStartedPlanCount: set('notStartedPlanCount'),
   },
   actions: {
     getPlanningElement: async ({ commit, dispatch }) => {
@@ -288,6 +290,30 @@ export default ({
         }),
       );
       commit('setPrimaryMatrixTags', partMatrixTags);
+    },
+
+    createPlan: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'planning',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    getPlanningRecords: async ({ dispatch }, query) => {
+      const plans = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'planning',
+          query,
+        },
+        { root: true },
+      );
+      return plans;
     },
   },
   getters: {

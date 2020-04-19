@@ -18,7 +18,10 @@
         ></v-icon>
       </v-btn>
     </portal>
-    <portal to="app-extension" v-if="onboarded">
+    <portal
+      to="app-extension"
+      v-if="onboarded && !loading"
+    >
       <v-tabs
         center-active
         v-model="planView"
@@ -37,16 +40,15 @@
     <add-plan />
     <v-row style="height:100%">
       <v-col class="pa-0">
-      <template v-if="loading">
-      </template>
-      <template v-else>
-        <plan-setup v-if="!onboarded" />
-        <v-fade-transition mode="out-in" v-else>
-          <plan-dashboard v-if="planView === 0" />
-          <plan-calendar-view v-else-if="planView === 1" />
-          <plan-schedule-view v-else-if="planView === 2" />
-        </v-fade-transition>
-      </template>
+        <planning-loading v-if="loading" />
+        <template v-else>
+          <plan-setup v-if="!onboarded" />
+          <v-fade-transition mode="out-in" v-else>
+            <plan-dashboard v-if="planView === 0" />
+            <plan-calendar-view v-else-if="planView === 1" />
+            <plan-schedule-view v-else-if="planView === 2" />
+          </v-fade-transition>
+        </template>
       </v-col>
     </v-row>
   </v-container>
@@ -54,6 +56,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import PlanningLoading from './PlanningLoading.vue';
 import PlanDashboard from './PlanDashboard.vue';
 import PlanScheduleView from './PlanScheduleView.vue';
 import PlanCalendarView from './PlanCalendarView.vue';
@@ -63,6 +66,7 @@ import AddPlan from '../components/AddPlan.vue';
 export default {
   name: 'Planning',
   components: {
+    PlanningLoading,
     PlanDashboard,
     PlanScheduleView,
     PlanCalendarView,
