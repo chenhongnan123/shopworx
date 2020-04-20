@@ -67,7 +67,11 @@ export default {
   },
   methods: {
     ...mapMutations('planning', ['setOnboarded']),
-    ...mapActions('planning', ['getPlanningMaster', 'createPlanningElement']),
+    ...mapActions('planning', [
+      'getPlanningMaster',
+      'createPlanningElement',
+      'getPlanningElement',
+    ]),
     async fetchMaster() {
       this.loading = true;
       const success = await this.getPlanningMaster();
@@ -78,8 +82,11 @@ export default {
       this.creating = true;
       const success = await this.createPlanningElement();
       if (success) {
-        localStorage.removeItem('planStep');
-        this.setOnboarded(true);
+        const element = await this.getPlanningElement();
+        if (element) {
+          localStorage.removeItem('planStep');
+          this.setOnboarded(true);
+        }
       }
       this.creating = false;
     },
