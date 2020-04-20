@@ -44,9 +44,11 @@
         <template v-else>
           <plan-setup v-if="!onboarded" />
           <v-fade-transition mode="out-in" v-else>
-            <plan-dashboard v-if="planView === 0" />
-            <plan-calendar-view v-else-if="planView === 1" />
-            <plan-schedule-view v-else-if="planView === 2" />
+            <keep-alive>
+              <plan-dashboard v-if="planView === 0" />
+              <plan-calendar-view v-else-if="planView === 1" />
+              <plan-schedule-view v-else-if="planView === 2" />
+            </keep-alive>
           </v-fade-transition>
         </template>
       </v-col>
