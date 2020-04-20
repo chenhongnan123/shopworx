@@ -44,7 +44,7 @@
             </span>
           </template>
           <template v-else>
-            <span class="ml-8">
+            <span class="ml-8 mb-2">
               Did not find the matching part matrix? Add new <a>here</a>.
             </span>
             <template v-for="(matrixTag, index) in essentialMatrixTags">
@@ -64,6 +64,9 @@
                 :label="matrixTag.tagDescription"
               ></v-autocomplete>
             </template>
+            <span v-if="isFamily" class="ml-8 mb-2">
+              This is a family mold. Add other parts to the plan <a>here</a>.
+            </span>
             <template v-if="message">
               <span class="ml-8">
                 {{ message }}
@@ -98,6 +101,10 @@
                 prepend-icon="$mold"
               ></v-text-field>
               <template v-if="showMore">
+                <v-switch
+                  label="Is this a trial plan?"
+                  v-model="plan.trial"
+                ></v-switch>
                 <v-text-field
                   type="number"
                   :disabled="saving"
@@ -149,6 +156,7 @@ export default {
       plan: {},
       assetId: null,
       filters: {},
+      isFamily: false,
       saving: false,
       message: null,
       partTag: null,
@@ -202,6 +210,7 @@ export default {
     this.loadingParts = false;
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('planning', ['setAddPlanDialog']),
     ...mapActions('planning', [
       'getParts',
@@ -239,6 +248,8 @@ export default {
         this.plan = tags.reduce((acc, cur) => {
           if (cur.emgTagType === 'String') {
             acc[cur.tagName] = '';
+          } else if (cur.emgTagType === 'Boolean') {
+            acc[cur.tagName] = false;
           } else {
             acc[cur.tagName] = 0;
           }
@@ -269,10 +280,10 @@ export default {
             .find((t) => t.element === 'machine')
             .tag.tagName;
           this.message = 'Checking if family mold...';
-          const isFamilyMold = await this.isFamilyMold(
+          this.isFamily = await this.isFamilyMold(
             `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"`,
           );
-          if (isFamilyMold) {
+          if (this.isFamily) {
             this.message = 'Fetching family parts...';
             this.familyParts = await this.getFamilyParts(
               `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"%26%26${uniqueMachineTagName}=="${this.partMatrix[uniqueMachineTagName]}"%26%26${this.partTag.tagName}!="${this.partMatrix[this.partTag.tagName]}"`,
@@ -301,14 +312,30 @@ export default {
         ...this.plan,
         status: 'notStarted',
         starred: false,
-        assetId: this.assetId,
+        assetid: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
         scheduledend: new Date(this.plan.scheduledend).getTime(),
       };
       const payload = this.plan;
-      console.log(payload);
       const created = await this.createPlan(payload);
-      console.log(created);
+      if (created) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_CREATED',
+        });
+        this.dialog = false;
+        this.selectedPart = null;
+        this.assetId = null;
+        this.partMatrix = {};
+        this.plan = {};
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_CREATING_PLAN',
+        });
+      }
       this.saving = false;
     },
   },
