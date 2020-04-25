@@ -1,9 +1,5 @@
 <template>
-  <v-container
-    fluid
-    class="py-0"
-    style="height:100%"
-  >
+  <div style="height:100%">
     <portal to="app-header">
       <span>Planning</span>
       <v-btn icon small class="ml-4 mb-1">
@@ -13,7 +9,6 @@
       </v-btn>
       <v-btn icon small class="ml-2 mb-1">
         <v-icon
-          v-if="onboarded"
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
@@ -23,6 +18,7 @@
       v-if="onboarded && !loading"
     >
       <v-tabs
+        dense
         center-active
         v-model="planView"
       >
@@ -38,22 +34,18 @@
       </v-tabs>
     </portal>
     <add-plan />
-    <v-row style="height:100%">
-      <v-col class="pa-0">
-        <planning-loading v-if="loading" />
-        <template v-else>
-          <plan-setup v-if="!onboarded" />
-          <v-fade-transition mode="out-in" v-else>
-            <keep-alive>
-              <plan-dashboard v-if="planView === 0" />
-              <plan-calendar-view v-else-if="planView === 1" />
-              <plan-schedule-view v-else-if="planView === 2" />
-            </keep-alive>
-          </v-fade-transition>
-        </template>
-      </v-col>
-    </v-row>
-  </v-container>
+    <planning-loading v-if="loading" />
+    <template v-else>
+      <plan-setup v-if="!onboarded" />
+      <v-fade-transition mode="out-in" v-else>
+        <keep-alive>
+          <plan-dashboard v-if="planView === 0" />
+          <plan-calendar-view v-else-if="planView === 1" />
+          <plan-schedule-view v-else-if="planView === 2" />
+        </keep-alive>
+      </v-fade-transition>
+    </template>
+  </div>
 </template>
 
 <script>

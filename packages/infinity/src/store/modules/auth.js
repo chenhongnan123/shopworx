@@ -5,16 +5,19 @@ import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
+    loginType: 'INFINITY',
     sessionId: null,
   },
   mutations: {
     setSessionId: set('sessionId'),
   },
   actions: {
-    initAuth: async ({ commit }) => {
+    initAuth: async ({ state, commit }) => {
+      const { loginType } = state;
       const sessionId = SessionService.getSession();
       commit('setSessionId', sessionId);
-      ApiService.setHeader(sessionId);
+      ApiService.setLoginTypeHeader(loginType);
+      ApiService.setSessionHeader(sessionId);
     },
 
     authenticate: async ({ commit, dispatch }, payload) => {
@@ -23,7 +26,7 @@ export default ({
         if (data && data.sessionId) {
           commit('setSessionId', data.sessionId);
           SessionService.setSession(data.sessionId);
-          ApiService.setHeader(data.sessionId);
+          ApiService.setSessionHeader(data.sessionId);
           const success = await dispatch('user/getMe', null, { root: true });
           if (success) {
             return true;
@@ -52,7 +55,7 @@ export default ({
         if (data && data.sessionId) {
           commit('setSessionId', data.sessionId);
           SessionService.setSession(data.sessionId);
-          ApiService.setHeader(data.sessionId);
+          ApiService.setSessionHeader(data.sessionId);
           const success = await dispatch('user/getMe', null, { root: true });
           if (success) {
             return true;

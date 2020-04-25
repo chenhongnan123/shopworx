@@ -17,7 +17,7 @@ export default {
     const routerData = options.router.options.routes.find((r) => r.path === '/');
     routerData.children = routes;
     options.router.addRoutes([routerData]);
-    options.store.registerModule('reportViewer', store);
+    options.store.registerModule('reports', store);
     loadLocaleMessages(options.i18n);
   },
 };

@@ -5,10 +5,8 @@
         <v-toolbar
           flat
           dense
+          class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
-          :class="$vuetify.breakpoint.mdAndUp
-            ? 'stick'
-            : 'stick-mobile'"
         >
           <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
             <v-icon small left>mdi-plus</v-icon>
@@ -188,7 +186,7 @@ export default {
     },
     formatDate(timestamp) {
       const a = new Date(timestamp);
-      return `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`;
+      return `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`;
     },
   },
 };

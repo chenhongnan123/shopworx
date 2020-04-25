@@ -221,6 +221,10 @@ export default {
       'getPrimaryMatrixTags',
     ]),
     async onPartSelection() {
+      this.plan = {};
+      this.partMatrix = {};
+      this.filters = {};
+      this.displayPlanningFields = false;
       if (this.selectedPart) {
         const { assetid } = this.selectedPart;
         this.assetId = assetid;
@@ -256,11 +260,6 @@ export default {
           return acc;
         }, {});
         this.fetchingPartMatrix = false;
-      } else {
-        this.plan = {};
-        this.partMatrix = {};
-        this.filters = {};
-        this.displayPlanningFields = false;
       }
     },
     async updatePartMatrixRecords({ name, value }) {
