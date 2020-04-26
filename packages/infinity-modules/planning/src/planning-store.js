@@ -1,3 +1,4 @@
+import HourService from '@shopworx/services/api/hour.service';
 import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -304,6 +305,18 @@ export default ({
       return created;
     },
 
+    createFamilyPlan: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'planning',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
     getPlanningRecords: async ({ dispatch }, query) => {
       const plans = await dispatch(
         'element/getRecords',
@@ -314,6 +327,16 @@ export default ({
         { root: true },
       );
       return plans;
+    },
+
+    getScheduledEnd: async (_, { start, end }) => {
+      let scheduledEnd = 0;
+      console.log({ start, end });
+      const { data } = await HourService.getNonWorkingTime(start, end);
+      if (data && data.results) {
+        scheduledEnd = end + data.results.nonWorkingTime;
+      }
+      return scheduledEnd;
     },
   },
   getters: {

@@ -64,9 +64,6 @@
                 :label="matrixTag.tagDescription"
               ></v-autocomplete>
             </template>
-            <span v-if="isFamily" class="ml-8 mb-2">
-              This is a family mold. Add other parts to the plan <a>here</a>.
-            </span>
             <template v-if="message">
               <span class="ml-8">
                 {{ message }}
@@ -76,9 +73,10 @@
               <v-text-field
                 type="number"
                 :disabled="saving"
-                v-model="plan.plannedquantity"
                 label="Planned quantity"
                 prepend-icon="mdi-tray-plus"
+                v-model="plan.plannedquantity"
+                @change="onPlannedQtyChange"
               ></v-text-field>
               <v-text-field
                 type="datetime-local"
@@ -87,30 +85,68 @@
                 prepend-icon="mdi-clock-start"
               ></v-text-field>
               <v-text-field
-                type="datetime-local"
-                :disabled="saving"
-                v-model="plan.scheduledend"
-                label="Scheduled end"
-                class="ml-8"
-              ></v-text-field>
-              <v-text-field
                 type="number"
                 :disabled="saving"
                 v-model="plan.activecavity"
                 label="Active cavity"
                 prepend-icon="$mold"
+                @change="onActiveCavityChange"
               ></v-text-field>
+              <template v-if="isFamily">
+                <div class="ml-8">
+                  This is a family mold. Please select other parts to add to the plan.
+                </div>
+                <v-row
+                  no-gutters
+                  :key="`family-${n}`"
+                  v-for="(family, n) in familyPlan"
+                >
+                  <v-col cols="12">
+                    <v-checkbox
+                      hide-details
+                      :disabled="saving"
+                      v-model="family.selected"
+                      :label="family[partTag.tagName]"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-text-field
+                      type="number"
+                      class="ml-8"
+                      :disabled="saving"
+                      v-model="family.activecavity"
+                      @change="onCavityChange(n)"
+                      label="Active cavity"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-text-field
+                      disabled
+                      class="ml-2"
+                      type="number"
+                      v-model="family.plannedquantity"
+                      label="Quantity"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </template>
               <template v-if="showMore">
-                <v-switch
-                  label="Is this a trial plan?"
-                  v-model="plan.trial"
-                ></v-switch>
                 <v-text-field
                   type="number"
                   :disabled="saving"
                   label="Work order number (Optional)"
                   prepend-icon="mdi-file-document-outline"
                 ></v-text-field>
+                <v-checkbox
+                  hide-details
+                  v-model="plan.trial"
+                  label="Is this a trial plan?"
+                ></v-checkbox>
+                <v-checkbox
+                  hide-details
+                  v-model="plan.starred"
+                  label="Mark as star?"
+                ></v-checkbox>
               </template>
             </template>
           </template>
@@ -165,6 +201,7 @@ export default {
       loadingParts: false,
       partMatrix: {},
       familyParts: [],
+      familyPlan: [],
       showFamilyParts: false,
       partMatrixRecords: [],
       essentialMatrixTags: [],
@@ -215,15 +252,19 @@ export default {
     ...mapActions('planning', [
       'getParts',
       'createPlan',
+      'createFamilyPlan',
       'isFamilyMold',
       'getFamilyParts',
       'getPartMatrixRecords',
       'getPrimaryMatrixTags',
+      'getScheduledEnd',
     ]),
     async onPartSelection() {
       this.plan = {};
       this.partMatrix = {};
       this.filters = {};
+      this.familyPlan = [];
+      this.showFamilyParts = false;
       this.displayPlanningFields = false;
       if (this.selectedPart) {
         const { assetid } = this.selectedPart;
@@ -289,6 +330,13 @@ export default {
             );
             if (this.familyParts && this.familyParts.length) {
               this.showFamilyParts = true;
+              this.familyPlan = this.familyParts.map((part) => ({
+                selected: true,
+                cavity: part.cavity,
+                activecavity: part.cavity,
+                [this.partTag.tagName]: part[this.partTag.tagName],
+                plannedquantity: part.cavity * this.plan.plannedquantity,
+              }));
             }
           }
           this.plan.activecavity = this.partMatrix.cavity;
@@ -305,18 +353,69 @@ export default {
         this.displayPlanningFields = false;
       }
     },
+    onCavityChange(index) {
+      const shots = this.plan.plannedquantity / this.plan.activecavity;
+      this.familyPlan = this.familyPlan.map((p, n) => {
+        let { plannedquantity } = p;
+        if (n === index) {
+          plannedquantity = p.activecavity * shots;
+        }
+        return { ...p, plannedquantity };
+      });
+    },
+    onPlannedQtyChange() {
+      if (this.showFamilyParts) {
+        const shots = this.plan.plannedquantity / this.plan.activecavity;
+        this.familyPlan = this.familyPlan.map((p) => ({
+          ...p,
+          plannedquantity: p.activecavity * shots,
+        }));
+      }
+    },
+    onActiveCavityChange() {
+      if (this.showFamilyParts) {
+        const shots = this.plan.plannedquantity / this.plan.activecavity;
+        this.familyPlan = this.familyPlan.map((p) => ({
+          ...p,
+          plannedquantity: p.activecavity * shots,
+        }));
+      }
+    },
     async savePlan() {
       this.saving = true;
       this.plan = {
         ...this.plan,
         status: 'notStarted',
-        starred: false,
         assetid: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
-        scheduledend: new Date(this.plan.scheduledend).getTime(),
       };
-      const payload = this.plan;
-      const created = await this.createPlan(payload);
+      /* const runTime = this.plan.plannedquantity * (this.plan.stdcycletime * 1000);
+      const scheduledEnd = await this.getScheduledEnd({
+        start: this.plan.scheduledstart,
+        end: (this.plan.scheduledstart + runTime),
+      });
+      this.plan.scheduledend = scheduledEnd; */
+      let created = false;
+      if (!this.showFamilyParts) {
+        const payload = this.plan;
+        created = await this.createPlan(payload);
+      } else {
+        const familyPlans = this.familyPlan
+          .filter((p) => p.selected)
+          .map((p) => ({
+            ...this.plan,
+            cavity: p.cavity,
+            activecavity: p.activecavity,
+            plannedquantity: p.plannedquantity,
+            [this.partTag.tagName]: p[this.partTag.tagName],
+          }));
+        let payload = [this.plan, ...familyPlans];
+        payload = payload.map((plan) => ({
+          ...plan,
+          familyName: 'family',
+        }));
+        created = await this.createFamilyPlan(payload);
+      }
       if (created) {
         this.setAlert({
           show: true,
@@ -328,6 +427,8 @@ export default {
         this.assetId = null;
         this.partMatrix = {};
         this.plan = {};
+        this.showFamilyParts = false;
+        this.familyPlan = [];
       } else {
         this.setAlert({
           show: true,
