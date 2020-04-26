@@ -33,7 +33,7 @@ export default {
     ...mapMutations('planning', ['setNotStartedPlanCount']),
     async fetchPlans() {
       this.loading = true;
-      this.plans = await this.getPlanningRecords('?query=status=="notStarted"');
+      this.plans = await this.getPlanningRecords('?query=status=="notStarted"%26%26starred==false');
       if (!this.plans) {
         this.error = true;
       } else {
