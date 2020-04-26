@@ -428,6 +428,7 @@ export default {
         this.partMatrix = {};
         this.plan = {};
         this.showFamilyParts = false;
+        this.displayPlanningFields = false;
         this.familyPlan = [];
       } else {
         this.setAlert({
