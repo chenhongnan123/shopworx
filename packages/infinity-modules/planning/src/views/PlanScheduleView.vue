@@ -118,7 +118,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .stick {
   position: -webkit-sticky;
   position: sticky;

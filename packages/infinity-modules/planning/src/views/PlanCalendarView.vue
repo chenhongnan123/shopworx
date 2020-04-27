@@ -29,7 +29,10 @@
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
           <span class="mx-4">{{ title }}</span>
-          <v-menu bottom right>
+          <v-menu
+            bottom
+            offset-y
+          >
             <template #activator="{ on }">
               <v-btn small outlined class="text-none ml-2" v-on="on">
                 <span>{{ typeToLabel[type] }}</span>
@@ -191,3 +194,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.stick {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 104px;
+  z-index: 1;
+}
+</style>

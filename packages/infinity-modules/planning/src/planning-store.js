@@ -1,4 +1,4 @@
-import HourService from '@shopworx/services/api/hour.service';
+// import HourService from '@shopworx/services/api/hour.service';
 import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -329,7 +329,7 @@ export default ({
       return plans;
     },
 
-    getScheduledEnd: async (_, { start, end }) => {
+    /* getScheduledEnd: async (_, { start, end }) => {
       let scheduledEnd = 0;
       console.log({ start, end });
       const { data } = await HourService.getNonWorkingTime(start, end);
@@ -337,7 +337,7 @@ export default ({
         scheduledEnd = end + data.results.nonWorkingTime;
       }
       return scheduledEnd;
-    },
+    }, */
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
