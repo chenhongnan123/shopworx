@@ -14,25 +14,22 @@
       Date range
       <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
     </v-btn>
-    <v-btn small color="primary" outlined class="text-none ml-2">
-      Monthly
-      <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-    </v-btn>
-    <v-btn small color="primary" outlined class="text-none ml-2">
-      <v-icon small left>mdi-chart-bar</v-icon>
-      Bar
-      <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-    </v-btn>
+    <report-mappings />
+    <report-chart-type />
   </v-toolbar>
 </template>
 
 <script>
 import ReportTitle from './toolbar/ReportTitle.vue';
+import ReportMappings from './toolbar/ReportMappings.vue';
+import ReportChartType from './toolbar/ReportChartType.vue';
 
 export default {
   name: 'ReportToolbar',
   components: {
     ReportTitle,
+    ReportMappings,
+    ReportChartType,
   },
 };
 </script>
