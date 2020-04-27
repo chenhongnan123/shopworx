@@ -1,132 +1,93 @@
 <template>
-  <div style="height: 2000px;">
-    <portal to="app-header">
-      Production reports
-    </portal>
-    <portal
-      to="app-extension"
-    >
-      <div>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          disabled
-        >
-          Saved
-        </v-btn>
-        <v-btn
-          small
-          color="primary"
-          class="text-none ml-2"
-        >
-          Save as...
-        </v-btn>
-        <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-        >
-          Reports
-          <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-        </v-btn>
-      </div>
-    </portal>
-    <v-toolbar
-      flat
-      dense
-      class="stick"
-      :color="$vuetify.theme.dark ? '#121212': ''"
-    >
-      <v-icon small class="mr-1 mb-1">mdi-lock</v-icon>
-      <v-toolbar-title>
-        <span v-if="!edit">
-          {{ reportName }}
-        </span>
-        <v-text-field
-          dense
-          v-else
-          outlined
-          ref="title"
-          single-line
-          hide-details
-          v-model="newReportName"
-          @blur="onBlur"
-          autocomplete="off"
-          @keydown.esc="onEsc"
-          @keydown.enter="onEnter"
-        ></v-text-field>
-      </v-toolbar-title>
-      <v-btn small icon class="ml-2 mb-1" @click="onEdit" v-if="!edit">
-        <v-icon small>mdi-pencil</v-icon>
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn small outlined color="primary" class="text-none">
-        <v-icon small left>mdi-calendar-range-outline</v-icon>
-        Date range
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-      <v-btn small color="primary" outlined class="text-none ml-2">
-        Monthly
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-      <v-btn small color="primary" outlined class="text-none ml-2">
-        <v-icon small left>mdi-chart-bar</v-icon>
-        Bar
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </v-toolbar>
-    <report-container />
+  <div style="height: 100%;">
+    <report-view-loading v-if="loading" />
+    <template v-else>
+      <portal to="app-header">
+        {{ $t(`reports.category.${title}`) }}
+      </portal>
+      <report-views-not-found v-if="!reportsFound" />
+      <template v-else>
+        <report-toolbar-extension />
+        <report-toolbar />
+        <report-container />
+      </template>
+    </template>
   </div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapMutations,
+  mapGetters,
+  mapState,
+} from 'vuex';
+import ReportViewLoading from './ReportViewLoading.vue';
+import ReportViewsNotFound from './ReportViewsNotFound.vue';
+import ReportToolbarExtension from '../components/ReportToolbarExtension.vue';
+import ReportToolbar from '../components/ReportToolbar.vue';
 import ReportContainer from '../components/ReportContainer.vue';
 
 export default {
   name: 'ReportViewer',
   components: {
+    ReportViewLoading,
+    ReportViewsNotFound,
+    ReportToolbarExtension,
+    ReportToolbar,
     ReportContainer,
   },
   data() {
     return {
-      edit: false,
-      reportName: 'Production by plan',
-      newReportName: '',
+      loading: false,
     };
   },
-  async created() {
-    this.setExtendedHeader(true);
-    await this.getReportViews();
+  created() {
+    this.fetchReports();
   },
   watch: {
     $route() {
-      this.setExtendedHeader(true);
+      this.fetchReports();
+    },
+  },
+  computed: {
+    ...mapState('reports', ['reportViews']),
+    ...mapGetters('reports', ['activeReportCategory']),
+    title() {
+      return this.$route.query.id;
+    },
+    reportsFound() {
+      return this.reportViews && this.reportViews.length;
     },
   },
   methods: {
     ...mapActions('reports', ['getReportViews']),
     ...mapMutations('helper', ['setExtendedHeader']),
-    onEdit() {
-      this.newReportName = this.reportName;
-      this.edit = true;
-      this.$nextTick(() => {
-        this.$refs.title.focus();
-      });
-    },
-    onBlur() {
-      this.edit = false;
-    },
-    onEsc() {
-      this.newReportName = this.reportName;
-      this.$refs.title.blur();
-    },
-    onEnter() {
-      this.reportName = this.newReportName;
-      this.$refs.title.blur();
+    async fetchReports() {
+      this.loading = true;
+      const reportCategory = this.activeReportCategory(this.title);
+      if (reportCategory) {
+        await this.getReportViews(reportCategory.id);
+        if (this.reportsFound) {
+          this.setExtendedHeader(true);
+        } else {
+          this.setExtendedHeader(false);
+        }
+        this.loading = false;
+      } else {
+        const invalidPath = this.$route.fullPath;
+        this.$router.push({ name: '404', params: { 0: invalidPath } });
+      }
     },
   },
 };
 </script>
+
+<style scoped>
+.stick {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 104px;
+  z-index: 1;
+}
+</style>

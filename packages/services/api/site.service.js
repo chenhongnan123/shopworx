@@ -17,8 +17,8 @@ class SiteService {
     return this.request.get(`/server/webappaccess/${roleId}/${appId}`);
   }
 
-  getReportViews() {
-    return this.request.get('/server/reportview');
+  getReportViews(reportCategoryId) {
+    return this.request.get(`/server/reportview/reportscategory/${reportCategoryId}`);
   }
 }
 
