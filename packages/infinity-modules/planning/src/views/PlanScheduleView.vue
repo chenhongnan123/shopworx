@@ -5,10 +5,8 @@
         <v-toolbar
           flat
           dense
+          class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
-          :class="$vuetify.breakpoint.mdAndUp
-            ? 'stick'
-            : 'stick-mobile'"
         >
           <v-btn small color="primary" class="text-none">
             <v-icon small left>mdi-plus</v-icon>
@@ -120,17 +118,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .stick {
   position: -webkit-sticky;
   position: sticky;
-  top: 92px;
-  z-index: 1;
-}
-.stick-mobile {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 84px;
+  top: 104px;
   z-index: 1;
 }
 .card-border {

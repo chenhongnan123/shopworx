@@ -16,6 +16,10 @@ class SiteService {
   getApp(roleId, appId) {
     return this.request.get(`/server/webappaccess/${roleId}/${appId}`);
   }
+
+  getReportViews(reportCategoryId) {
+    return this.request.get(`/server/reportview/reportscategory/${reportCategoryId}`);
+  }
 }
 
 export default new SiteService();

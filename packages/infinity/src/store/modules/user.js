@@ -306,14 +306,8 @@ export default ({
               modules.items.push({
                 id: detail.id,
                 icon: detail.iconUrl,
-                group: detail.reportsCategoryName,
-                children: detail.reportViews.map((report) => ({
-                  id: report.id,
-                  to: module.moduleName,
-                  param: report.reportName,
-                  title: report.reportDescription,
-                  avatarText: report.reportDescription.match(/\b(\w)/g).join(''),
-                })),
+                to: module.moduleName,
+                title: detail.reportsCategoryName,
               });
             });
           }

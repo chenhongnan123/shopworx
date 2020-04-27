@@ -7,14 +7,18 @@
         justify="center"
         :no-gutters="$vuetify.breakpoint.smAndDown"
       >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="72"
-        ></v-progress-circular>
-        <span class="display-3">
-          {{ $t('helper.loading') }}
-        </span>
+        <v-col cols="12" align="center">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            size="72"
+          ></v-progress-circular>
+        </v-col>
+        <v-col cols="12" align="center">
+          <span class="display-3">
+            {{ $t('helper.loading') }}
+          </span>
+        </v-col>
       </v-row>
     </v-container>
   </v-content>

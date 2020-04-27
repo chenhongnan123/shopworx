@@ -50,7 +50,8 @@
   "success": {
     "OTP_SENT": "One time password sent on registered email/phone.",
     "PASSWORD_RESET": "New password sent on registered email/phone.",
-    "UPDATED": "Updated!"
+    "UPDATED": "Updated!",
+    "PLAN_CREATED": "Plan created!"
   },
   "error": {
     "NOT_VALID": "{_field_} is not valid.",
@@ -63,7 +64,8 @@
     "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
     "INVALID_OTP": "Login failed: Incorrect OTP.",
     "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
-    "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data."
+    "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data.",
+    "ERROR_CREATING_PLAN": "Error while creating plan, please retry."
   },
   "fields": {
     "email": "Email",
