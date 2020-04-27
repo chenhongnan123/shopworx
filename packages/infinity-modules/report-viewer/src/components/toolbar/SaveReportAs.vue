@@ -19,7 +19,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Save report as...
+          Save as new report
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
@@ -27,6 +27,13 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
+        <v-text-field
+          outlined
+          hide-details
+          single-line
+          v-model="title"
+          label="Enter a title for your report"
+        ></v-text-field>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -34,7 +41,8 @@
           color="primary"
           class="text-none"
           :loading="saving"
-          @click="savePlan"
+          :disabled="!title"
+          @click="saveReport"
         >
           Save
         </v-btn>
@@ -44,12 +52,25 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'SaveReportAs',
   data() {
     return {
+      title: '',
+      saving: false,
       dialog: false,
     };
+  },
+  methods: {
+    ...mapActions('reports', ['saveAsNewReport']),
+    async saveReport() {
+      this.saving = true;
+      await this.saveAsNewReport(this.title);
+      this.saving = false;
+      this.dialog = false;
+    },
   },
 };
 </script>
