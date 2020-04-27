@@ -2,7 +2,6 @@
   <plan-widget
     :plans="plans"
     :error="error"
-    :addPlan="true"
     :loading="loading"
     :title="'Plans running on time'"
     @refresh-widget="fetchPlans"

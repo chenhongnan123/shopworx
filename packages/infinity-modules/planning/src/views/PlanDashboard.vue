@@ -16,15 +16,15 @@
         <starred-plans />
       </v-col>
       <v-col cols="12" md="6" xl="5">
-        <on-time-plans />
+        <not-started-plans />
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="12" md="6" xl="5">
-        <overdue-plans />
+        <on-time-plans />
       </v-col>
       <v-col cols="12" md="6" xl="5">
-        <not-started-plans />
+        <overdue-plans />
       </v-col>
     </v-row>
   </v-container>
