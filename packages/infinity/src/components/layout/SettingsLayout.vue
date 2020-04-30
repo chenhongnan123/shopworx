@@ -10,7 +10,7 @@
       <v-row
         :no-gutters="$vuetify.breakpoint.smAndDown"
       >
-        <v-col cols="12" md="3" lg="3" xl="2">
+        <v-col cols="12" md="3" xl="2">
           <v-list
             shaped
             class="pa-0 transparent"
@@ -39,7 +39,7 @@
           </v-list>
         </v-col>
         <v-divider vertical></v-divider>
-        <v-col cols="12" md="8" lg="7" xl="5">
+        <v-col cols="12" md="8" xl="7">
           <v-card
             flat
             class="transparent"
@@ -47,10 +47,12 @@
             <v-card-title primary-title>
               {{ $t(`${selectedTitle}`) }}
               <portal-target name="settings-header"></portal-target>
+              <v-spacer></v-spacer>
+              <portal-target name="settings-header-secondary"></portal-target>
             </v-card-title>
             <v-card-text>
               <v-fade-transition mode="out-in">
-                <router-view />
+                <slot />
               </v-fade-transition>
             </v-card-text>
           </v-card>
@@ -85,7 +87,7 @@
                 v-else
                 :key="index"
                 color="primary"
-                :to="{ name: windowRouteName, params: { id: item.to } }"
+                :to="{ params: { id: item.to } }"
               >
                 <v-list-item-icon>
                   <v-icon v-text="item.icon"></v-icon>
@@ -102,7 +104,7 @@
           >
             <v-card-text>
               <v-fade-transition mode="out-in">
-                <router-view />
+                <slot />
               </v-fade-transition>
             </v-card-text>
           </v-card>
@@ -168,7 +170,7 @@ export default {
       const to = this.routes.map((item) => item.to);
       if (this.id === undefined && !this.$vuetify.breakpoint.smAndDown) {
         if (this.items && this.items.length) {
-          this.$router.push({ name: this.windowRouteName, params: { id: to[0] } });
+          this.$router.push({ params: { id: to[0] } });
         }
       } else if (this.id && !this.$vuetify.breakpoint.smAndDown) {
         const validId = to.includes(this.id);

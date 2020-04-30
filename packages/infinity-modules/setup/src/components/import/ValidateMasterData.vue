@@ -288,7 +288,11 @@ export default {
       const res = [];
       this.tags.forEach((t) => {
         const matchedRecords = this.records.map((rec) => rec[t.tagName]);
-        if (t.emgTagType.toLowerCase() === 'int' || t.emgTagType.toLowerCase() === 'long') {
+        if (
+          t.emgTagType.toLowerCase() === 'int'
+          || t.emgTagType.toLowerCase() === 'long'
+          || t.emgTagType.toLowerCase() === 'duration'
+        ) {
           const invalid = matchedRecords.some((rec) => rec % 1 !== 0);
           if (invalid) {
             res.push(`${t.tagDescription}(Number)`);

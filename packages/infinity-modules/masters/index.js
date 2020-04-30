@@ -1,3 +1,4 @@
+import 'ag-grid-enterprise';
 import routes from './src/masters-routes';
 import store from './src/masters-store';
 

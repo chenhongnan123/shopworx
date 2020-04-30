@@ -1,9 +1,9 @@
 <template>
   <v-app-bar
     app
+    short
     clipped-right
     elevate-on-scroll
-    extension-height="28"
     :color="$vuetify.theme.dark ? '#121212' : 'white'"
   >
     <v-app-bar-nav-icon
@@ -25,16 +25,14 @@
       <portal-target name="app-header"></portal-target>
     </v-toolbar-title>
     <template #extension v-if="extendedHeader">
-      <portal-target name="app-tabs" slim />
+      <portal-target name="app-extension" slim />
     </template>
     <v-spacer></v-spacer>
     <template v-if="$vuetify.breakpoint.mdAndUp">
       <infinity-search />
-      <v-toolbar-items>
-        <infinity-insights />
-        <infinity-help />
-        <infinity-account />
-      </v-toolbar-items>
+      <infinity-insights />
+      <infinity-help />
+      <infinity-account />
     </template>
   </v-app-bar>
 </template>

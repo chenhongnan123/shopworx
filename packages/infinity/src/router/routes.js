@@ -14,14 +14,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
     children: [
       {
-        path: 'user',
+        path: 'user/:id?',
         name: 'user',
         component: () => import(/* webpackChunkName: "user" */ '@/views/User.vue'),
-        children: [{
-          path: ':id',
-          name: 'userWindow',
-          component: () => import(/* webpackChunkName: "user" */ '@/components/user/UserWindow.vue'),
-        }],
       },
     ],
   },

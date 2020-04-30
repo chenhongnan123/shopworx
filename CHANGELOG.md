@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.8](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2020-04-27)
+
+
+### Bug Fixes
+
+* **auth:** clear session if license not valid ([54c5148](https://bitbucket.org/entrib/shopworx/commits/54c514885a6f7a19bfc9e9be8d900a3386b758d2))
+* **header:** updated header extension slot name ([6deeffe](https://bitbucket.org/entrib/shopworx/commits/6deeffee9cdf99b6efcc5a668712cfc900f6e6e1))
+* **layout:** updated aettings layout for xl and lg screens ([726e99c](https://bitbucket.org/entrib/shopworx/commits/726e99cec9f2ca311e4e6acabb66bc5f0afc78d8))
+* **layout:** updated infinity loading layout ([af82728](https://bitbucket.org/entrib/shopworx/commits/af82728886881138cb6e71a613def4325f2c5377))
+* **license:** filter active license for a site ([cbabf61](https://bitbucket.org/entrib/shopworx/commits/cbabf614fbbf289a75416107c4a68817b53cedb2))
+* **locale:** updated hindi locale for infinity sidebar ([43cbaf0](https://bitbucket.org/entrib/shopworx/commits/43cbaf0e3c0e68fab9376fef81c9e4833eb953bb))
+* **planning:** fetch planning element after onboarding ([04e89b2](https://bitbucket.org/entrib/shopworx/commits/04e89b2e56ec69ead5709ec6971bc1ed42b2f8a1))
+* **planning:** onboarding complete ([8852766](https://bitbucket.org/entrib/shopworx/commits/8852766353e05d3498403bbfd140e4fa2b4b920b))
+* **planning:** reset display flag after plan create ([3db89f0](https://bitbucket.org/entrib/shopworx/commits/3db89f03bcd63f7cb585af97005897228aa06845))
+* **planning:** reset input after plan creation ([7395f40](https://bitbucket.org/entrib/shopworx/commits/7395f4005f5a6b17a73421d6c419642bd732855b))
+* **planning:** updated planning dashboard ([c06f26a](https://bitbucket.org/entrib/shopworx/commits/c06f26a4cb82b232c499aa75ac45975c80378b57))
+* **planning:** updated widget queires ([28a858d](https://bitbucket.org/entrib/shopworx/commits/28a858d78b3987fce156765b24789000e447d0a5))
+* **planning:** updated with add plan feature ([b5b1dc1](https://bitbucket.org/entrib/shopworx/commits/b5b1dc1e6debe277bf43f13e709d78931814504c))
+* **polyfill:** added babel polyfill ([1b8cec3](https://bitbucket.org/entrib/shopworx/commits/1b8cec3da707a09f639b2ce32d068705bf2a3b51))
+* **report-viewer:** save report as new ([e63807a](https://bitbucket.org/entrib/shopworx/commits/e63807afdd01166f72c86dbf27bcd4ade9ff0b11))
+* **typo:** updated search bar text ([6c3d99e](https://bitbucket.org/entrib/shopworx/commits/6c3d99e38801c08de02654658b19cbe51a2ec26d))
+
+
+### Features
+
+* **masters:** added master data view ([08046f3](https://bitbucket.org/entrib/shopworx/commits/08046f3674f9f33c412306c0ae6cec7db8cc89b4))
+* **planning:** added calendar view ([d381926](https://bitbucket.org/entrib/shopworx/commits/d381926f45f554c2e73f3902bf57bbbaf7ccecac))
+* **planning:** added import part matrix to onboarding ([b160a16](https://bitbucket.org/entrib/shopworx/commits/b160a169b398663e8cbfd592e5280f7546929347))
+* **planning:** create plans with family mold ([572fc13](https://bitbucket.org/entrib/shopworx/commits/572fc13c1ef1b166f4f3330ea4a99896c9266816))
+* **report-viewer:** added report viewer base ([ef8f469](https://bitbucket.org/entrib/shopworx/commits/ef8f46930d8c1554208f46ab53285e280ce6d93a))
+
+
+
+
+
 # [4.1.0-beta.7](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2020-04-06)
 
 

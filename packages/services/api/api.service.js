@@ -7,8 +7,12 @@ class ApiService {
     });
   }
 
-  setHeader(session) {
+  setSessionHeader(session) {
     this.instance.defaults.headers.common.sessionId = session;
+  }
+
+  setLoginTypeHeader(loginType) {
+    this.instance.defaults.headers.common.loginType = loginType;
   }
 
   removeHeader() {

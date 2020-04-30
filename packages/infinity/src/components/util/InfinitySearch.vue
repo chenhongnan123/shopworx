@@ -1,7 +1,7 @@
 <template>
   <v-responsive
     class="transition-swing"
-    :max-width="isFocused ? 360 : 180"
+    :max-width="isFocused ? 380 : 220"
   >
     <v-text-field
       flat
@@ -13,17 +13,14 @@
       ref="search"
       class="mr-2"
       hide-details
-      label="Search"
+      label="Search reports"
       @blur="onBlur"
       v-model="search"
       @focus="onFocus"
       autocomplete="off"
       @keydown.esc="onEsc"
-    >
-      <template #prepend-inner>
-        <v-icon v-text="'$search'"></v-icon>
-      </template>
-    </v-text-field>
+      prepend-inner-icon="$search"
+    ></v-text-field>
   </v-responsive>
 </template>
 

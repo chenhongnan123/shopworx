@@ -3,19 +3,10 @@
     <portal to="settings-header">
       <span>
         <v-btn
-          icon
           small
           color="primary"
-          @click="fetchUsers"
+          class="text-none"
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon v-text="'mdi-refresh'"></v-icon>
-        </v-btn>
-        <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
         >
           <v-icon
             left
@@ -23,6 +14,31 @@
             v-text="'$invite'"
           ></v-icon>
           Invite users
+        </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="fetchUsers"
+        >
+          <v-icon small v-text="'mdi-refresh'" left></v-icon>
+          Refresh
+        </v-btn>
+      </span>
+    </portal>
+    <portal to="settings-header-secondary">
+      <span>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="fetchUsers"
+        >
+          <v-icon small v-text="'$download'" left></v-icon>
+          Export users
+          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
         </v-btn>
       </span>
     </portal>

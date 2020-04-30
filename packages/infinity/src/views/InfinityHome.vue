@@ -7,7 +7,7 @@
       @set-drawer="setDrawer"
     />
     <infinity-header @toggle-drawer="toggleDrawer" />
-    <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
+    <v-content>
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>

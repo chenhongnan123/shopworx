@@ -15,7 +15,7 @@
       autocomplete="username"
       :error-messages="errors"
       :label="$t('login.identifier')"
-      prepend-inner-icon="$identifier"
+      prepend-icon="$identifier"
     ></v-text-field>
   </validation-provider>
 </template>

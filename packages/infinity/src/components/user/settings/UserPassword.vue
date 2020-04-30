@@ -3,7 +3,7 @@
     <user-avatar />
     <validation-observer ref="form" #default="{ passes }">
       <v-form @submit.prevent="passes(onUpdatePassword)">
-        <v-card-text class="py-0">
+        <v-card-text class="py-0 pt-2">
           <validation-provider
             vid="updatePassword"
             name="password"
@@ -11,13 +11,14 @@
             #default="{ errors }"
           >
             <v-text-field
+              filled
               type="password"
               id="newPassword"
               v-model="password"
               :disabled="loading"
               :error-messages="errors"
               autocomplete="new-password"
-              prepend-inner-icon="$password"
+              prepend-icon="$password"
               :label="$t('user.password.newPassword')"
             ></v-text-field>
           </validation-provider>
@@ -27,13 +28,14 @@
             #default="{ errors }"
           >
             <v-text-field
+              filled
+              class="ml-8"
               type="password"
               :disabled="loading"
               id="confirmPassword"
               :error-messages="errors"
               v-model="confirmPassword"
               autocomplete="new-password"
-              prepend-inner-icon="$password"
               :label="$t('user.password.confirmPassword')"
             ></v-text-field>
           </validation-provider>

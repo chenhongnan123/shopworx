@@ -1,81 +1,90 @@
 <template>
-  <div>
+  <div style="height:100%">
     <portal to="app-header">
       <span>Planning</span>
-      <v-icon
-        class="ml-4 mb-1"
-        v-text="'$info'"
-      ></v-icon>
-      <v-icon
-        class="ml-2 mb-1"
-        v-text="'$settings'"
-      ></v-icon>
+      <v-btn icon small class="ml-4 mb-1">
+        <v-icon
+          v-text="'$info'"
+        ></v-icon>
+      </v-btn>
+      <v-btn icon small class="ml-2 mb-1">
+        <v-icon
+          v-text="'$settings'"
+        ></v-icon>
+      </v-btn>
     </portal>
-    <portal to="app-tabs" v-if="onboarded">
+    <portal
+      to="app-extension"
+      v-if="onboarded && !loading"
+    >
       <v-tabs
+        dense
         center-active
         v-model="planView"
       >
         <v-tab class="text-none">
-          Schedule
-        </v-tab>
-        <v-tab class="text-none">
-          List
-        </v-tab>
-        <v-tab class="text-none">
-          Board
+          Dashboard
         </v-tab>
         <v-tab class="text-none">
           Calendar
         </v-tab>
+        <v-tab class="text-none">
+          Schedule
+        </v-tab>
       </v-tabs>
     </portal>
-    <template v-if="!loading">
-      <plan-onboarding v-if="!onboarded" />
+    <add-plan />
+    <planning-loading v-if="loading" />
+    <template v-else>
+      <plan-setup v-if="!onboarded" />
       <v-fade-transition mode="out-in" v-else>
-        <plan-schedule-view v-if="planView === 0" />
-        <plan-list-view v-if="planView === 1" />
-        <plan-board-view v-else-if="planView === 2" />
-        <plan-calendar-view v-else-if="planView === 3" />
+        <keep-alive>
+          <plan-dashboard v-if="planView === 0" />
+          <plan-calendar-view v-else-if="planView === 1" />
+          <plan-schedule-view v-else-if="planView === 2" />
+        </keep-alive>
       </v-fade-transition>
     </template>
   </div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
-import PlanScheduleView from '../components/PlanScheduleView.vue';
-import PlanListView from '../components/PlanListView.vue';
-import PlanBoardView from '../components/PlanBoardView.vue';
-import PlanCalendarView from '../components/PlanCalendarView.vue';
-import PlanOnboarding from '../components/PlanOnboarding.vue';
+import { mapActions, mapMutations, mapState } from 'vuex';
+import PlanningLoading from './PlanningLoading.vue';
+import PlanDashboard from './PlanDashboard.vue';
+import PlanScheduleView from './PlanScheduleView.vue';
+import PlanCalendarView from './PlanCalendarView.vue';
+import PlanSetup from './PlanSetup.vue';
+import AddPlan from '../components/AddPlan.vue';
 
 export default {
   name: 'Planning',
   components: {
+    PlanningLoading,
+    PlanDashboard,
     PlanScheduleView,
-    PlanListView,
-    PlanBoardView,
     PlanCalendarView,
-    PlanOnboarding,
+    PlanSetup,
+    AddPlan,
   },
   data() {
     return {
       planView: 0,
       loading: false,
-      onboarded: false,
     };
+  },
+  computed: {
+    ...mapState('planning', ['onboarded']),
   },
   async created() {
     this.loading = true;
-    if (this.onboarded) {
-      this.setExtendedHeader(true);
-    }
     const view = localStorage.getItem('planView');
     this.planView = view ? JSON.parse(view) : 0;
-    const element = await this.getElement('planning');
+    await this.getAppSchema();
+    const element = await this.getPlanningElement();
     if (element) {
-      this.onboarded = true;
+      this.setOnboarded(true);
+      this.setExtendedHeader(true);
     }
     this.loading = false;
   },
@@ -90,8 +99,10 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('planning', ['setOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapActions('element', ['getElement']),
+    ...mapActions('webApp', ['getAppSchema']),
+    ...mapActions('planning', ['getPlanningElement']),
   },
 };
 </script>

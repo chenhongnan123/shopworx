@@ -60,39 +60,25 @@
             class="text-uppercase"
             v-text="$t(`modules.${item.header}`)"
           ></v-subheader>
-          <v-list-group
+          <v-list-item
+            exact
             :key="index"
-            :group="item.group"
-            :prepend-icon="item.icon"
-            v-else-if="item.children"
+            v-else-if="item.to ===  'reports'"
+            :title="$t(`reports.${item.title}`)"
+            :to="{ name: item.to, query: { id: item.title } }"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
-            <template #activator>
-              <v-list-item-title
-                v-text="$t(`modules.${item.group}`)"
-              ></v-list-item-title>
-            </template>
-            <v-list-item
-              exact
-              :key="child.param"
-              :title="$t(`reports.${child.param}`)"
-              v-for="child in item.children"
-              :to="{ name: item.title, params: { id: child.param } }"
-              :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
-            >
-              <v-list-item-icon>
-                <span class="mx-auto" v-text="child.avatarText"></span>
-              </v-list-item-icon>
-              <v-list-item-title
-                v-text="$t(`reports.${child.param}`)"
-              ></v-list-item-title>
-            </v-list-item>
-          </v-list-group>
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+          </v-list-item>
           <v-list-item
             link
             v-else
             :key="index"
             :to="{ name: item.title }"
+            @click="setActiveApp(item)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
@@ -125,6 +111,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'InfinityDrawer',
   props: {
@@ -170,9 +158,18 @@ export default {
       return totalHeight;
     },
   },
+  created() {
+    const appId = localStorage.getItem('appId');
+    this.setActiveAppId(appId ? JSON.parse(appId) : null);
+  },
   methods: {
+    ...mapMutations('webApp', ['setActiveAppId']),
     toggleExpand() {
       this.expandOnHover = !this.expandOnHover;
+    },
+    setActiveApp(item) {
+      this.setActiveAppId(item.id);
+      localStorage.setItem('appId', item.id);
     },
   },
 };

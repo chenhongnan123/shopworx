@@ -3,16 +3,20 @@
     :items="items"
     windowRouteName="adminWindow"
     headerTitle="Admin Console"
-  ></settings-layout>
+  >
+    <admin-window />
+  </settings-layout>
 </template>
 
 <script>
 import SettingsLayout from '@/components/layout/SettingsLayout.vue';
+import AdminWindow from './AdminWindow.vue';
 
 export default {
   name: 'Admin',
   components: {
     SettingsLayout,
+    AdminWindow,
   },
   data() {
     return {
