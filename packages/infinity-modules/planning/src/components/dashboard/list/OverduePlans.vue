@@ -1,6 +1,6 @@
 <template>
   <plan-widget
-    :plans="plans"
+    :groupedPlans="plans"
     :error="error"
     :loading="loading"
     :title="'Plans running late'"
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import PlanWidget from '../PlanWidget.vue';
 
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      plans: [],
+      plans: {},
       error: false,
       loading: false,
     };
@@ -27,16 +27,14 @@ export default {
   created() {
     this.fetchPlans();
   },
+  computed: {
+    ...mapState('planning', ['overduePlans']),
+  },
   methods: {
-    ...mapActions('planning', ['getPlanningRecords']),
+    ...mapActions('planning', ['getOverduePlans']),
     async fetchPlans() {
       this.loading = true;
-      this.plans = await this.getPlanningRecords(
-        '?query=status=="inProgress"%7C%7Cstatus=="paused"%26%26starred==false',
-      );
-      if (!this.plans) {
-        this.error = true;
-      }
+      await this.getOverduePlans();
       this.loading = false;
     },
   },

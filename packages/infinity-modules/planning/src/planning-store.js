@@ -14,7 +14,12 @@ export default ({
     planningElement: null,
     primaryMatrixTags: [],
     partMatrixElement: null,
-    notStartedPlanCount: 0,
+    starredPlans: null,
+    notStartedPlans: null,
+    onTimePlans: null,
+    overduePlans: null,
+    inProgressPlans: null,
+    pausedPlans: null,
   },
   mutations: {
     setParts: set('parts'),
@@ -27,7 +32,12 @@ export default ({
     setPlanningElement: set('planningElement'),
     setPrimaryMatrixTags: set('primaryMatrixTags'),
     setPartMatrixElement: set('partMatrixElement'),
-    setNotStartedPlanCount: set('notStartedPlanCount'),
+    setStarredPlans: set('starredPlans'),
+    setNotStartedPlans: set('notStartedPlans'),
+    setOnTimePlans: set('onTimePlans'),
+    setOverduePlans: set('overduePlans'),
+    setInProgressPlans: set('inProgressPlans'),
+    setPausedPlans: set('pausedPlans'),
   },
   actions: {
     getPlanningElement: async ({ commit, dispatch }) => {
@@ -326,7 +336,14 @@ export default ({
         },
         { root: true },
       );
-      return plans;
+      if (plans && plans.length) {
+        const groupedPlans = plans.reduce((acc, cur) => {
+          acc[cur.planid] = [...acc[cur.planid] || [], cur];
+          return acc;
+        }, {});
+        return groupedPlans;
+      }
+      return null;
     },
 
     getScheduledEnd: async (_, { start, end }) => {
@@ -336,6 +353,91 @@ export default ({
         scheduledEnd = end + data.results;
       }
       return scheduledEnd;
+    },
+
+    getStarredPlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=starred==true',
+      );
+      if (plans) {
+        commit('setStarredPlans', plans);
+      }
+    },
+
+    getNotStartedPlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=status=="notStarted"',
+      );
+      if (plans) {
+        commit('setNotStartedPlans', plans);
+      }
+    },
+
+    getInProgressPlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=status=="inProgress"',
+      );
+      if (plans) {
+        commit('setInProgressPlans', plans);
+      }
+    },
+
+    getPausedPlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=status=="paused"',
+      );
+      if (plans) {
+        commit('setPausedPlans', plans);
+      }
+    },
+
+    getOnTimePlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=status=="inProgress"',
+      );
+      if (plans) {
+        commit('setOnTimePlans', plans);
+      }
+    },
+
+    getOverduePlans: async ({ commit, dispatch }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        '?query=status=="paused"',
+      );
+      if (plans) {
+        commit('setOverduePlans', plans);
+      }
+    },
+
+    updatePlan: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'planning',
+          queryParam: `?query=planid=="${id}"`,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
+    deletePlan: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'planning',
+          queryParam: `?query=planid=="${id}"`,
+        },
+        { root: true },
+      );
+      return deleted;
     },
   },
   getters: {

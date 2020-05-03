@@ -258,6 +258,7 @@ export default {
       'getPartMatrixRecords',
       'getPrimaryMatrixTags',
       'getScheduledEnd',
+      'getNotStartedPlans',
     ]),
     async onPartSelection() {
       this.plan = {};
@@ -423,6 +424,7 @@ export default {
           type: 'success',
           message: 'PLAN_CREATED',
         });
+        await this.getNotStartedPlans();
         this.dialog = false;
         this.selectedPart = null;
         this.assetId = null;

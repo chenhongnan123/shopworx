@@ -1,15 +1,15 @@
 <template>
   <plan-widget
-    :plans="plans"
     :error="error"
     :loading="loading"
-    :title="'Plans running on time'"
+    :groupedPlans="onTimePlans"
     @refresh-widget="fetchPlans"
+    :title="'Plans running on time'"
   ></plan-widget>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import PlanWidget from '../PlanWidget.vue';
 
 export default {
@@ -19,7 +19,6 @@ export default {
   },
   data() {
     return {
-      plans: [],
       error: false,
       loading: false,
     };
@@ -27,16 +26,14 @@ export default {
   created() {
     this.fetchPlans();
   },
+  computed: {
+    ...mapState('planning', ['onTimePlans']),
+  },
   methods: {
-    ...mapActions('planning', ['getPlanningRecords']),
+    ...mapActions('planning', ['getOnTimePlans']),
     async fetchPlans() {
       this.loading = true;
-      this.plans = await this.getPlanningRecords(
-        '?query=status=="inProgress"%7C%7Cstatus=="paused"%26%26starred==false',
-      );
-      if (!this.plans) {
-        this.error = true;
-      }
+      await this.getOnTimePlans();
       this.loading = false;
     },
   },

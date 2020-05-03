@@ -1,9 +1,9 @@
 <template>
   <stats-widget
+    :stat="stat"
+    color="info"
     :title="'Not started'"
     icon="mdi-progress-wrench"
-    color="info"
-    :stat="notStartedPlanCount"
   />
 </template>
 
@@ -17,7 +17,14 @@ export default {
     StatsWidget,
   },
   computed: {
-    ...mapState('planning', ['notStartedPlanCount']),
+    ...mapState('planning', ['notStartedPlans']),
+    stat() {
+      let count = 0;
+      if (this.notStartedPlans) {
+        count = Object.keys(this.notStartedPlans).length;
+      }
+      return count;
+    },
   },
 };
 </script>

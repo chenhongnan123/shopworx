@@ -159,14 +159,20 @@ export default {
       let events = [];
       /* const min = new Date(`${start.date}T00:00:00`).getTime();
       const max = new Date(`${end.date}T23:59:59`).getTime(); */
-      const plans = await this.getPlanningRecords('?query=status=="notStarted"');
-      if (plans && plans.length) {
-        events = plans.map((plan) => ({
-          name: plan.planid,
-          start: this.formatDate(plan.scheduledstart),
-          end: this.formatDate(plan.scheduledend),
-          color: this.planStatusClass(plan.status),
-        }));
+      const groupedPlans = await this.getPlanningRecords('?query=status=="notStarted"');
+      if (groupedPlans) {
+        events = Object
+          .keys(groupedPlans)
+          .map((planId) => {
+            const plans = groupedPlans[planId];
+            const { scheduledstart, scheduledend, status } = plans[0];
+            return {
+              name: planId,
+              start: this.formatDate(scheduledstart),
+              end: this.formatDate(scheduledend),
+              color: this.planStatusClass(status),
+            };
+          });
       }
       this.start = start;
       this.end = end;
