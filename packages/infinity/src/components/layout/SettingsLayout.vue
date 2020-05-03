@@ -7,9 +7,7 @@
       <portal to="app-header">
         {{ headerTitle }}
       </portal>
-      <v-row
-        :no-gutters="$vuetify.breakpoint.smAndDown"
-      >
+      <v-row>
         <v-col cols="12" md="3" xl="2">
           <v-list
             shaped
