@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import ReportChart from './ReportChart.vue';
 import ReportList from './ReportList.vue';
 
@@ -18,6 +19,32 @@ export default {
   components: {
     ReportChart,
     ReportList,
+  },
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  computed: {
+    ...mapState('reports', ['reportMapping', 'dateRange']),
+  },
+  watch: {
+    reportMapping(val) {
+      if (val) {
+        this.runReport();
+      }
+    },
+    dateRange() {
+      this.runReport();
+    },
+  },
+  methods: {
+    ...mapActions('reports', ['executeReport']),
+    async runReport() {
+      this.loading = true;
+      await this.executeReport();
+      this.loading = false;
+    },
   },
 };
 </script>
