@@ -153,6 +153,7 @@
   "modules": {
     "home": "Home",
     "machineDashboard": "Machine Dashboard",
+    "productionLog": "Production Log",
     "planning": "Planning",
     "reports": "Report",
     "production": "Production",
