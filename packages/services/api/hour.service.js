@@ -6,7 +6,7 @@ class HourService {
   }
 
   getNonWorkingTime(start, end) {
-    return this.request.get(`/server/nonworkingtime/${start}/${end}`);
+    return this.request.get(`/server/getnonworkingtime?starttime=${start}&endtime=${end}`);
   }
 }
 
