@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/machine-dashboard",
-  "version": "4.1.0-beta.8",
+  "version": "4.1.0-beta.9",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.1.0-beta.8",
+    "@shopworx/services": "^4.1.0-beta.9",
     "vuex": "^3.3.0"
   },
   "devDependencies": {

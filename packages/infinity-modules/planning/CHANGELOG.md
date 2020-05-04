@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.9](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2020-05-04)
+
+
+### Bug Fixes
+
+* **layout:** updated planning layout ([e997dee](https://bitbucket.org/entrib/shopworx/commits/e997dee437fdfd107f13bae3f703a0f0f2918027))
+* **onboarding:** user can expand and collapse errors ([4348943](https://bitbucket.org/entrib/shopworx/commits/43489439d8591c4687176ab65203a46aeb94184e))
+
+
+### Features
+
+* **planning:** add scheduled end date to plan ([b2fb6c7](https://bitbucket.org/entrib/shopworx/commits/b2fb6c7148aefa8bc84a52d4fc4004123459bc76))
+* **planning:** group plans by planid ([6f7579b](https://bitbucket.org/entrib/shopworx/commits/6f7579b381ce5559c43283b6c4194e12edf6d53a))
+
+
+
+
+
 # [4.1.0-beta.8](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2020-04-27)
 
 

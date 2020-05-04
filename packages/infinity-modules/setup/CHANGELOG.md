@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.9](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2020-05-04)
+
+
+### Bug Fixes
+
+* **onboarding:** user can expand and collapse errors ([4348943](https://bitbucket.org/entrib/shopworx/commits/43489439d8591c4687176ab65203a46aeb94184e))
+
+
+
+
+
 # [4.1.0-beta.8](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2020-04-27)
 
 
