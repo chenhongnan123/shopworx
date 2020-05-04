@@ -1,5 +1,6 @@
 import HourService from '@shopworx/services/api/hour.service';
 import { set } from '@shopworx/services/util/store.helper';
+import { now } from '@shopworx/services/util/date.service';
 
 export default ({
   namespaced: true,
@@ -390,7 +391,7 @@ export default ({
     getOnTimePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        '?query=status=="inProgress"',
+        `?query=(status=="inProgress"%7C%7Cstatus=="paused")%26%26${now()}<scheduledend`,
       );
       commit('setOnTimePlans', plans);
     },
@@ -398,9 +399,17 @@ export default ({
     getOverduePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        '?query=status=="paused"',
+        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26${now()}>scheduledend`,
       );
       commit('setOverduePlans', plans);
+    },
+
+    getPlansBetweenDateRange: async ({ dispatch }, { min, max }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
+      );
+      return plans;
     },
 
     updatePlan: async ({ dispatch }, { id, payload }) => {

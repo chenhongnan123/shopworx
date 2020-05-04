@@ -1,6 +1,6 @@
 import { differenceInMilliseconds } from 'date-fns';
 
-export const test = () => null;
+export const now = () => new Date().getTime();
 
 /**
  * 
