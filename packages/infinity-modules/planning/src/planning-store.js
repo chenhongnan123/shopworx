@@ -360,9 +360,7 @@ export default ({
         'getPlanningRecords',
         '?query=starred==true',
       );
-      if (plans) {
-        commit('setStarredPlans', plans);
-      }
+      commit('setStarredPlans', plans);
     },
 
     getNotStartedPlans: async ({ commit, dispatch }) => {
@@ -370,9 +368,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="notStarted"',
       );
-      if (plans) {
-        commit('setNotStartedPlans', plans);
-      }
+      commit('setNotStartedPlans', plans);
     },
 
     getInProgressPlans: async ({ commit, dispatch }) => {
@@ -380,9 +376,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="inProgress"',
       );
-      if (plans) {
-        commit('setInProgressPlans', plans);
-      }
+      commit('setInProgressPlans', plans);
     },
 
     getPausedPlans: async ({ commit, dispatch }) => {
@@ -390,9 +384,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="paused"',
       );
-      if (plans) {
-        commit('setPausedPlans', plans);
-      }
+      commit('setPausedPlans', plans);
     },
 
     getOnTimePlans: async ({ commit, dispatch }) => {
@@ -400,9 +392,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="inProgress"',
       );
-      if (plans) {
-        commit('setOnTimePlans', plans);
-      }
+      commit('setOnTimePlans', plans);
     },
 
     getOverduePlans: async ({ commit, dispatch }) => {
@@ -410,9 +400,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="paused"',
       );
-      if (plans) {
-        commit('setOverduePlans', plans);
-      }
+      commit('setOverduePlans', plans);
     },
 
     updatePlan: async ({ dispatch }, { id, payload }) => {
