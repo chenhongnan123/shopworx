@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     ...mapMutations('planning', ['setAddPlanDialog']),
-    ...mapActions('planning', ['getPlanningRecords']),
+    ...mapActions('planning', ['getPlansBetweenDateRange']),
     viewDay({ date }) {
       this.focus = date;
       this.type = 'day';
@@ -156,9 +156,9 @@ export default {
     },
     async updateRange({ start, end }) {
       let events = [];
-      /* const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime(); */
-      const groupedPlans = await this.getPlanningRecords('?query=status=="notStarted"');
+      const min = new Date(`${start.date}T00:00:00`).getTime();
+      const max = new Date(`${end.date}T23:59:59`).getTime();
+      const groupedPlans = await this.getPlansBetweenDateRange({ min, max });
       if (groupedPlans) {
         events = Object
           .keys(groupedPlans)
