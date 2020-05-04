@@ -55,16 +55,16 @@
   },
   "error": {
     "NOT_VALID": "{_field_} is not valid.",
-    "NO_LICENSE": "You have zero active licenses. Please contat ShopWorx support.",
-    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licenses. Please try again.",
+    "NO_LICENSE": "You do not have an active licence. Please contact ShopWorx support.",
+    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licence. Please try again.",
     "INVALID_SESSION": "Session expired: Please login again.",
     "USER_ALREADY_EXIST": "User already exists.",
     "USER_NOT_FOUND": "User account not found.",
     "EMAIL_NOT_FOUND": "User account not found.",
     "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
     "INVALID_OTP": "Login failed: Incorrect OTP.",
-    "MISSING_BUSINESS_HOUR": "One or more hours are missing. Please verify your data.",
-    "INVALID_HOURS_SUM": "Total sum of your provisoined hours should be 24. Please verify your data.",
+    "MISSING_BUSINESS_HOUR": "Hours should be provisioned in sequence. Please verify your data.",
+    "INVALID_HOURS_SUM": "Total sum of your provisioned hours should be 24. Please verify your data.",
     "ERROR_CREATING_PLAN": "Error while creating plan, please retry."
   },
   "fields": {
@@ -153,6 +153,7 @@
   "modules": {
     "home": "Home",
     "machineDashboard": "Machine Dashboard",
+    "productionLog": "Production Log",
     "planning": "Planning",
     "reports": "Report",
     "production": "Production",

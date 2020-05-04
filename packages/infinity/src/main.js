@@ -12,6 +12,7 @@ import i18n from './i18n';
 import vuetify from './plugins/vuetify';
 import './plugins/perfect-scrollbar';
 import './plugins/vee-validate';
+import './plugins/highcharts';
 import './plugins/portal';
 
 import './modules';

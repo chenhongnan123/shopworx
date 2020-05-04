@@ -1,60 +1,43 @@
 <template>
-  <v-card flat class="transparent">
-    <v-card-text style="height:500px">
-      <div
-        v-if="requiredData"
-        class="font-weight-medium"
-      >
-        {{ $t('setup.importMaster.requiredData') }}
-        <div v-for="(data, n) in requiredData" :key="n">
-          {{ data }}
-        </div>
-      </div>
-      <div
-        v-if="duplicateColumnData && duplicateColumnData.length"
-        class="font-weight-medium"
-      >
-        {{ $t('setup.importMaster.duplicateData') }}
-        {{ duplicateColumnData.join(',') }}
-      </div>
-      <div
-        v-if="invalidDataTypes && invalidDataTypes.length"
-        class="font-weight-medium"
-      >
-        {{ $t('setup.importMaster.invalidDataType') }}
-        {{ invalidDataTypes.join(',') }}
-      </div>
-      <ag-grid-vue
-        v-model="rowData"
-        :columnDefs="columnDefs"
-        :gridOptions="gridOptions"
-        class="ag-theme-balham mt-2"
-        :defaultColDef="defaultColDef"
-        style="width: 100%; height: 70%;"
-      ></ag-grid-vue>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-        text
-        outlined
-        color="primary"
-        class="text-none"
-        @click="$emit('cancel')"
-        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      >
-        {{ $t('setup.importMaster.cancel') }}
-      </v-btn>
-      <v-btn
-        @click="save"
-        color="primary"
-        class="text-none"
-        :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-      >
-        {{ $t('setup.importMaster.save') }}
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-card-text style="height:500px">
+    <v-expansion-panels
+      flat
+      accordion
+    >
+      <v-expansion-panel v-if="requiredData">
+        <v-expansion-panel-header class="pa-0 ma-0">
+          {{ $tc('setup.importMaster.requiredData', requiredData.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in requiredData" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="duplicateColumnData && duplicateColumnData.length">
+        <v-expansion-panel-header class="pa-0 ma-0">
+          {{ $tc('setup.importMaster.duplicateData', duplicateColumnData.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in duplicateColumnData" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="invalidDataTypes && invalidDataTypes.length">
+        <v-expansion-panel-header class="pa-0 ma-0">
+          {{ $tc('setup.importMaster.invalidDataType', invalidDataTypes.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in invalidDataTypes" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+    <ag-grid-vue
+      v-model="rowData"
+      :columnDefs="columnDefs"
+      :gridOptions="gridOptions"
+      class="ag-theme-balham mt-2"
+      :defaultColDef="defaultColDef"
+      style="width: 100%; height: 70%;"
+    ></ag-grid-vue>
+  </v-card-text>
 </template>
 
 <script>
@@ -144,9 +127,6 @@ export default {
         headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
         field: tag.tagName,
       }));
-    },
-    save() {
-      this.$emit('save', this.rowData);
     },
   },
 };

@@ -9,30 +9,31 @@
         v-text="title"
       ></span>
       <v-spacer></v-spacer>
-      <template v-if="!selected.length">
+      <template v-if="!selectedPlans.length">
         <v-btn icon @click="$emit('refresh-widget')">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
-        <v-btn icon>
+        <!-- <v-btn icon>
           <v-icon>mdi-filter-variant</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn icon v-if="addPlan" @click="setAddPlanDialog(true)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
       <template v-else>
-        <v-btn icon v-if="!starredPlans">
-          <v-icon>mdi-star-outline</v-icon>
-        </v-btn>
-        <v-btn icon v-else>
-          <v-icon>mdi-star-off</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-close-octagon-outline</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-delete-outline</v-icon>
-        </v-btn>
+        <toggle-star
+          :starred="starredPlans"
+          :planIds="selectedPlanIds"
+          @on-update="$emit('refresh-widget')"
+        />
+        <abort-plan
+          :planIds="selectedPlanIds"
+          @on-abort="$emit('refresh-widget')"
+        />
+        <delete-plan
+          :planIds="selectedPlanIds"
+          @on-delete="$emit('refresh-widget')"
+        />
       </template>
     </v-toolbar>
     <template v-if="loading">
@@ -73,8 +74,7 @@
                     <v-avatar
                       size="24"
                       :color="planStatusClass(plan.status)"
-                    >
-                    </v-avatar>
+                    ></v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>
@@ -89,6 +89,7 @@
                     <v-checkbox
                       hide-details
                       v-model="plan.selected"
+                      @change="onSelectionChanged(plan)"
                     ></v-checkbox>
                   </v-list-item-action>
                 </v-list-item>
@@ -107,13 +108,21 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import ToggleStar from '../ToggleStar.vue';
+import DeletePlan from '../DeletePlan.vue';
+import AbortPlan from '../AbortPlan.vue';
 
 export default {
   name: 'PlanWidget',
+  components: {
+    ToggleStar,
+    DeletePlan,
+    AbortPlan,
+  },
   props: {
-    plans: {
-      type: Array,
-      default: () => [],
+    groupedPlans: {
+      type: Object,
+      default: () => {},
     },
     title: {
       type: String,
@@ -136,15 +145,54 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      selectedPlans: [],
+    };
+  },
+  watch: {
+    groupedPlans() {
+      this.selectedPlans = [];
+    },
+  },
   computed: {
-    selected() {
-      return this.plans
-        .filter((plan) => plan.selected)
-        .map((plan) => plan._id);
+    selectedPlanIds() {
+      return this.selectedPlans.map((plan) => plan.planid);
+    },
+    plans() {
+      if (this.groupedPlans) {
+        const items = Object
+          .keys(this.groupedPlans)
+          .map((planId) => {
+            const plans = this.groupedPlans[planId];
+            let { partname } = plans[0];
+            if (plans.length > 1) {
+              partname = plans
+                .map((plan) => plan.partname)
+                .join(', ');
+            }
+            return {
+              ...plans[0],
+              planid: planId,
+              partname,
+              selected: false,
+            };
+          });
+        return items;
+      }
+      return [];
     },
   },
   methods: {
     ...mapMutations('planning', ['setAddPlanDialog']),
+    onSelectionChanged(plan) {
+      if (plan.selected) {
+        this.selectedPlans.push(plan);
+      } else {
+        const index = this.selectedPlans.findIndex((p) => p._id === plan._id);
+        this.selectedPlans.splice(index, 1);
+      }
+    },
     planStatusClass(planstatus) {
       switch (planstatus) {
         case 'inProgress': return 'success';

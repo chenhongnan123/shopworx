@@ -126,7 +126,7 @@ export default ({
             const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
-                dispatch('deleteRecord', {
+                dispatch('deleteRecordById', {
                   elementName: element.elementName,
                   id: r._id,
                 });
@@ -167,7 +167,7 @@ export default ({
             const rec = await dispatch('getRecords', { elementName: element.elementName });
             if (rec && rec.length) {
               await Promise.all([rec.forEach((r) => {
-                dispatch('deleteRecord', {
+                dispatch('deleteRecordById', {
                   elementName: element.elementName,
                   id: r._id,
                 });
@@ -221,10 +221,53 @@ export default ({
       }
     },
 
-    deleteRecord: async (_, { elementName, id }) => {
+    deleteRecordById: async (_, { elementName, id }) => {
       try {
-        const { data } = await ElementService.deleteRecord(elementName, id);
+        const { data } = await ElementService.deleteRecordById(elementName, id);
         if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    deleteRecordByQuery: async (_, { elementName, queryParam }) => {
+      try {
+        const { data } = await ElementService.deleteRecordByQuery(
+          elementName,
+          queryParam,
+        );
+        if (data && data.deleted) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    updateRecordById: async (_, { elementName, id, payload }) => {
+      try {
+        const { data } = await ElementService.updateRecordById(elementName, id, payload);
+        if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    updateRecordByQuery: async (_, { elementName, queryParam, payload }) => {
+      try {
+        const { data } = await ElementService.updateRecordByQuery(
+          elementName,
+          queryParam,
+          payload,
+        );
+        if (data && data.updated) {
           return true;
         }
       } catch (e) {

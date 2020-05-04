@@ -38,10 +38,10 @@
       "reviewTitle": "Review {title}",
       "save": "Save changes",
       "cancel": "Cancel",
-      "missingMapping": "Missing required mappings:",
-      "requiredData": "Missing required data:",
-      "duplicateData": "Duplicate data for:",
-      "invalidDataType": "Invalid data type for:"
+      "missingMapping": "Missing required mapping for one column | Missing required mappings for {count} columns",
+      "requiredData": "Missing required data for one record | Missing required data for {count} records",
+      "duplicateData": "Duplicate data for one column | Duplicate data for {count} columns",
+      "invalidDataType": "Invalid data type for one column | Invalid data type for {count} columns"
     },
     "onboardCalendar": {
       "month": {

@@ -1,16 +1,16 @@
 <template>
   <plan-widget
-    :plans="plans"
     :error="error"
     :loading="loading"
     :starredPlans="true"
     :title="'Starred plans'"
+    :groupedPlans="starredPlans"
     @refresh-widget="fetchPlans"
   ></plan-widget>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import PlanWidget from '../PlanWidget.vue';
 
 export default {
@@ -20,7 +20,6 @@ export default {
   },
   data() {
     return {
-      plans: [],
       error: false,
       loading: false,
     };
@@ -28,14 +27,14 @@ export default {
   created() {
     this.fetchPlans();
   },
+  computed: {
+    ...mapState('planning', ['starredPlans']),
+  },
   methods: {
-    ...mapActions('planning', ['getPlanningRecords']),
+    ...mapActions('planning', ['getStarredPlans']),
     async fetchPlans() {
       this.loading = true;
-      this.plans = await this.getPlanningRecords('?query=starred==true');
-      if (!this.plans) {
-        this.error = true;
-      }
+      await this.getStarredPlans();
       this.loading = false;
     },
   },

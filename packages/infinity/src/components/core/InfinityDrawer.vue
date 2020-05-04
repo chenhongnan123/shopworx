@@ -5,7 +5,9 @@
     floating
     color="#212121"
     v-model="drawer"
-    :expand-on-hover="expandOnHover && $vuetify.breakpoint.lgAndUp"
+    :mini-variant="isMini"
+    :expand-on-hover="canHover"
+    @transitionend="toggleMini"
   >
     <v-list
       shaped
@@ -131,9 +133,16 @@ export default {
   data() {
     return {
       expandOnHover: false,
+      miniVariant: false,
     };
   },
   computed: {
+    canHover() {
+      return this.expandOnHover && this.$vuetify.breakpoint.lgAndUp;
+    },
+    isMini() {
+      return this.miniVariant && this.$vuetify.breakpoint.lgAndUp;
+    },
     logoName() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
@@ -166,6 +175,14 @@ export default {
     ...mapMutations('webApp', ['setActiveAppId']),
     toggleExpand() {
       this.expandOnHover = !this.expandOnHover;
+      if (!this.expandOnHover) {
+        this.miniVariant = this.expandOnHover;
+      }
+    },
+    toggleMini() {
+      if (this.expandOnHover) {
+        this.miniVariant = this.expandOnHover;
+      }
     },
     setActiveApp(item) {
       this.setActiveAppId(item.id);
