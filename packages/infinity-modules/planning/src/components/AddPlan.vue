@@ -13,7 +13,7 @@
           Create plan
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -74,15 +74,9 @@
                 type="number"
                 :disabled="saving"
                 label="Planned quantity"
-                prepend-icon="mdi-tray-plus"
+                prepend-icon="mdi-plus-minus"
                 v-model="plan.plannedquantity"
                 @change="onPlannedQtyChange"
-              ></v-text-field>
-              <v-text-field
-                type="datetime-local"
-                v-model="plan.scheduledstart"
-                label="Scheduled start"
-                prepend-icon="mdi-clock-start"
               ></v-text-field>
               <v-text-field
                 type="number"
@@ -130,6 +124,12 @@
                   </v-col>
                 </v-row>
               </template>
+              <v-text-field
+                type="datetime-local"
+                v-model="plan.scheduledstart"
+                label="Scheduled start"
+                prepend-icon="mdi-clock-start"
+              ></v-text-field>
               <template v-if="showMore">
                 <v-text-field
                   type="number"
@@ -258,6 +258,7 @@ export default {
       'getPartMatrixRecords',
       'getPrimaryMatrixTags',
       'getScheduledEnd',
+      'getNotStartedPlans',
     ]),
     async onPartSelection() {
       this.plan = {};
@@ -321,12 +322,12 @@ export default {
             .tag.tagName;
           this.message = 'Checking if family mold...';
           this.isFamily = await this.isFamilyMold(
-            `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"`,
+            `?query=${uniqueMoldTagName}=="${encodeURIComponent(this.partMatrix[uniqueMoldTagName])}"`,
           );
           if (this.isFamily) {
             this.message = 'Fetching family parts...';
             this.familyParts = await this.getFamilyParts(
-              `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"%26%26${uniqueMachineTagName}=="${this.partMatrix[uniqueMachineTagName]}"%26%26${this.partTag.tagName}!="${this.partMatrix[this.partTag.tagName]}"`,
+              `?query=${uniqueMoldTagName}=="${encodeURIComponent(this.partMatrix[uniqueMoldTagName])}"%26%26${uniqueMachineTagName}=="${encodeURIComponent(this.partMatrix[uniqueMachineTagName])}"%26%26${this.partTag.tagName}!="${encodeURIComponent(this.partMatrix[this.partTag.tagName])}"`,
             );
             if (this.familyParts && this.familyParts.length) {
               this.showFamilyParts = true;
@@ -389,12 +390,13 @@ export default {
         assetid: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
       };
-      /* const runTime = this.plan.plannedquantity * (this.plan.stdcycletime * 1000);
+      const runTime = (this.plan.plannedquantity / this.plan.activecavity)
+        * (this.plan.stdcycletime * 1000);
       const scheduledEnd = await this.getScheduledEnd({
         start: this.plan.scheduledstart,
         end: (this.plan.scheduledstart + runTime),
       });
-      this.plan.scheduledend = scheduledEnd; */
+      this.plan.scheduledend = scheduledEnd;
       let created = false;
       if (!this.showFamilyParts) {
         const payload = this.plan;
@@ -422,6 +424,7 @@ export default {
           type: 'success',
           message: 'PLAN_CREATED',
         });
+        await this.getNotStartedPlans();
         this.dialog = false;
         this.selectedPart = null;
         this.assetId = null;

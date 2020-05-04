@@ -8,17 +8,6 @@
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
-          <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
-            <v-icon small left>mdi-plus</v-icon>
-            Add plan
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2"
-            @click="updateRange({ start, end })"
-          >
-            <v-icon small left>mdi-refresh</v-icon>
-            Refresh
-          </v-btn>
-          <v-spacer></v-spacer>
           <v-btn small outlined class="text-none" @click="setToday">
             Today
           </v-btn>
@@ -55,7 +44,17 @@
             </v-list>
           </v-menu>
           <v-spacer></v-spacer>
-          <v-btn small color="primary" outlined class="text-none" @click="drawer = true">
+          <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
+            <v-icon small left>mdi-plus</v-icon>
+            Add plan
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2"
+            @click="updateRange({ start, end })"
+          >
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="drawer = true">
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>
@@ -159,14 +158,20 @@ export default {
       let events = [];
       /* const min = new Date(`${start.date}T00:00:00`).getTime();
       const max = new Date(`${end.date}T23:59:59`).getTime(); */
-      const plans = await this.getPlanningRecords('?query=status=="notStarted"');
-      if (plans && plans.length) {
-        events = plans.map((plan) => ({
-          name: plan.planid,
-          start: this.formatDate(plan.scheduledstart),
-          end: this.formatDate(plan.scheduledend),
-          color: this.planStatusClass(plan.status),
-        }));
+      const groupedPlans = await this.getPlanningRecords('?query=status=="notStarted"');
+      if (groupedPlans) {
+        events = Object
+          .keys(groupedPlans)
+          .map((planId) => {
+            const plans = groupedPlans[planId];
+            const { scheduledstart, scheduledend, status } = plans[0];
+            return {
+              name: planId,
+              start: this.formatDate(scheduledstart),
+              end: this.formatDate(scheduledend),
+              color: this.planStatusClass(status),
+            };
+          });
       }
       this.start = start;
       this.end = end;

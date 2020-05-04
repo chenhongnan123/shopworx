@@ -36,23 +36,22 @@ export default {
     ...mapState('reports', ['reportViews']),
   },
   created() {
-    if (this.reportViews && this.reportViews.length) {
-      this.setReportView(this.reportViews[0]);
-    } else {
-      this.setReportView(null);
-    }
+    this.setDefaultView();
   },
   watch: {
     reportViews() {
+      this.setDefaultView();
+    },
+  },
+  methods: {
+    ...mapMutations('reports', ['setReportView']),
+    setDefaultView() {
       if (this.reportViews && this.reportViews.length) {
         this.setReportView(this.reportViews[0]);
       } else {
         this.setReportView(null);
       }
     },
-  },
-  methods: {
-    ...mapMutations('reports', ['setReportView']),
   },
 };
 </script>

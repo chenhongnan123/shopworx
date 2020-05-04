@@ -41,7 +41,7 @@ export default {
       chartTypes: [
         {
           name: 'Bar',
-          value: 'bar',
+          value: 'column',
           icon: 'mdi-chart-bar',
         },
         {

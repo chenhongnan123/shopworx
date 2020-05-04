@@ -8,6 +8,7 @@
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
+          <v-spacer></v-spacer>
           <v-btn small color="primary" class="text-none">
             <v-icon small left>mdi-plus</v-icon>
             Add plan
@@ -16,13 +17,12 @@
             <v-icon small left>mdi-refresh</v-icon>
             Refresh
           </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn small color="primary" outlined class="text-none mr-2">
+          <v-btn small color="primary" outlined class="text-none ml-2">
             <v-icon small left v-text="'$production'"></v-icon>
             Machine
             <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none" @click="drawer = true">
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="drawer = true">
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>

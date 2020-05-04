@@ -193,7 +193,7 @@ export default {
       if (this.missingTags && this.missingTags.length) {
         this.error = true;
         this.reviewType = 'column';
-        this.message = `Missing required colunms -${this.missingTags[0]}
+        this.message = `Missing required columns -${this.missingTags[0]}
         ${this.missingTags.length > 1 ? 'and more' : ''}!`;
         this.$emit('on-validation', !this.error);
       } else if (matchedTags.length !== uniqueTags.length) {

@@ -48,24 +48,42 @@
       </v-card-title>
       <v-card-text class="pa-0">
         <review-column
-          @save="columnReviewed"
+          ref="reviewColumnCard"
           :masterTags="masterTags"
           :missingTags="missingTags"
-          @cancel="dialog = false"
-          v-if="reviewType === 'column' || showColumnMappings"
           :matchedColumns="matchedColumns"
+          v-if="reviewType === 'column' || showColumnMappings"
         />
         <review-data
           :tags="tags"
           :records="records"
-          @save="dataReviewed"
+          ref="reviewDataCard"
           :missingData="missingData"
-          @cancel="dialog = false"
-          v-else-if="reviewType === 'data' && !showColumnMappings"
           :invalidDataTypes="invalidDataTypes"
           :duplicateColumnData="duplicateColumnData"
+          v-else-if="reviewType === 'data' && !showColumnMappings"
         />
       </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          @click="dialog = false"
+          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        >
+          {{ $t('planning.setup.importMaster.cancel') }}
+        </v-btn>
+        <v-btn
+          @click="onSave"
+          color="primary"
+          class="text-none"
+          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+        >
+          {{ $t('planning.setup.importMaster.save') }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -148,6 +166,13 @@ export default {
     dataReviewed(data) {
       this.$emit('data-reviewed', data);
       this.dialog = false;
+    },
+    onSave() {
+      if (this.reviewType === 'column' || this.showColumnMappings) {
+        this.$refs.reviewColumnCard.save();
+      } else if (this.reviewType === 'data' && !this.showColumnMappings) {
+        this.$refs.reviewDataCard.save();
+      }
     },
   },
 };

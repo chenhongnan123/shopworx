@@ -33,8 +33,20 @@ class ElementService {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
   }
   
-  deleteRecord(elementName, id) {
+  deleteRecordById(elementName, id) {
     return this.request.delete(`/server/elements/${elementName}/records/${id}`);
+  }
+  
+  deleteRecordByQuery(elementName, queryParam) {
+    return this.request.delete(`/server/elements/${elementName}/records${queryParam}`);
+  }
+  
+  updateRecordById(elementName, id, payload) {
+    return this.request.put(`/server/elements/${elementName}/records/${id}`, payload);
+  }
+  
+  updateRecordByQuery(elementName, queryParam, payload) {
+    return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
   }
 }
 

@@ -1,16 +1,16 @@
 <template>
   <plan-widget
-    :plans="plans"
     :error="error"
     :addPlan="true"
     :loading="loading"
-    :title="'Plans yet to start'"
     @refresh-widget="fetchPlans"
+    :title="'Plans yet to start'"
+    :groupedPlans="notStartedPlans"
   ></plan-widget>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import PlanWidget from '../PlanWidget.vue';
 
 export default {
@@ -20,7 +20,6 @@ export default {
   },
   data() {
     return {
-      plans: [],
       error: false,
       loading: false,
     };
@@ -28,17 +27,14 @@ export default {
   created() {
     this.fetchPlans();
   },
+  computed: {
+    ...mapState('planning', ['notStartedPlans']),
+  },
   methods: {
-    ...mapActions('planning', ['getPlanningRecords']),
-    ...mapMutations('planning', ['setNotStartedPlanCount']),
+    ...mapActions('planning', ['getNotStartedPlans']),
     async fetchPlans() {
       this.loading = true;
-      this.plans = await this.getPlanningRecords('?query=status=="notStarted"%26%26starred==false');
-      if (!this.plans) {
-        this.error = true;
-      } else {
-        this.setNotStartedPlanCount(this.plans.length);
-      }
+      await this.getNotStartedPlans();
       this.loading = false;
     },
   },
