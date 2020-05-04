@@ -29,12 +29,17 @@ export default {
   methods: {
     ...mapActions('planning', ['deletePlan']),
     async deletePlans() {
-      await Promise.all([
-        this.planIds.forEach((id) => {
-          this.deletePlan(id);
-        }),
-      ]);
-      this.$emit('on-delete');
+      if (await this.$root.$confirm.open(
+        'Delete plans',
+        'Are you you want to delete the plans?',
+      )) {
+        await Promise.all([
+          this.planIds.forEach((id) => {
+            this.deletePlan(id);
+          }),
+        ]);
+        this.$emit('on-delete');
+      }
     },
   },
 };

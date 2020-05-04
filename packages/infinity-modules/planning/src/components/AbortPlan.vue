@@ -29,17 +29,22 @@ export default {
   methods: {
     ...mapActions('planning', ['updatePlan']),
     async updatePlans() {
-      await Promise.all([
-        this.planIds.forEach((id) => {
-          this.updatePlan({
-            id,
-            payload: {
-              status: 'aborted',
-            },
-          });
-        }),
-      ]);
-      this.$emit('on-abort');
+      if (await this.$root.$confirm.open(
+        'Abort plans',
+        'Are you you want to abort the plans?',
+      )) {
+        await Promise.all([
+          this.planIds.forEach((id) => {
+            this.updatePlan({
+              id,
+              payload: {
+                status: 'aborted',
+              },
+            });
+          }),
+        ]);
+        this.$emit('on-abort');
+      }
     },
   },
 };

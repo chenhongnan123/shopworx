@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <infinity-snackbar />
+    <infinity-confirm ref="confirm" />
     <infinity-loading v-if="infinityLoading" />
     <router-view v-else />
   </v-app>
@@ -9,11 +10,13 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import InfinitySnackbar from '@/components/core/InfinitySnackbar.vue';
+import InfinityConfirm from '@/components/core/InfinityConfirm.vue';
 import InfinityLoading from '@/components/core/InfinityLoading.vue';
 
 export default {
   components: {
     InfinitySnackbar,
+    InfinityConfirm,
     InfinityLoading,
   },
   computed: {
@@ -26,6 +29,9 @@ export default {
     if (!this.sessionId) {
       this.initAuth();
     }
+  },
+  mounted() {
+    this.$root.$confirm = this.$refs.confirm;
   },
   watch: {
     isDark() {
