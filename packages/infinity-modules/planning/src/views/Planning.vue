@@ -33,7 +33,6 @@
         </v-tab>
       </v-tabs>
     </portal>
-    <add-plan />
     <planning-loading v-if="loading" />
     <template v-else>
       <plan-setup v-if="!onboarded" />
@@ -55,7 +54,6 @@ import PlanDashboard from './PlanDashboard.vue';
 import PlanScheduleView from './PlanScheduleView.vue';
 import PlanCalendarView from './PlanCalendarView.vue';
 import PlanSetup from './PlanSetup.vue';
-import AddPlan from '../components/AddPlan.vue';
 
 export default {
   name: 'Planning',
@@ -65,7 +63,6 @@ export default {
     PlanScheduleView,
     PlanCalendarView,
     PlanSetup,
-    AddPlan,
   },
   data() {
     return {
