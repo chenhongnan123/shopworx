@@ -9,7 +9,6 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.8.7",
     "@shopworx/admin": "^4.1.0-beta.9",
     "@shopworx/assets": "^4.1.0-beta.9",
     "@shopworx/machine-dashboard": "^4.1.0-beta.9",
