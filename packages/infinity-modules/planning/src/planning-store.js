@@ -7,8 +7,8 @@ export default ({
   state: {
     parts: [],
     assets: [],
+    machine: null,
     onboarded: false,
-    addPlanDialog: false,
     planningMaster: null,
     partMatrixMaster: [],
     partMatrixRecords: [],
@@ -25,8 +25,8 @@ export default ({
   mutations: {
     setParts: set('parts'),
     setAssets: set('assets'),
+    setMachine: set('machine'),
     setOnboarded: set('onboarded'),
-    setAddPlanDialog: set('addPlanDialog'),
     setPlanningMaster: set('planningMaster'),
     setPartMatrixMaster: set('partMatrixMaster'),
     setPartMatrixRecords: set('partMatrixRecords'),
@@ -408,6 +408,16 @@ export default ({
       const plans = await dispatch(
         'getPlanningRecords',
         `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
+      );
+      return plans;
+    },
+
+    getMachineSchedule: async ({ state, dispatch }) => {
+      const { machine } = state;
+      const machinename = machine ? machine.machinename : '';
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26machinename=="${machinename}"`,
       );
       return plans;
     },
