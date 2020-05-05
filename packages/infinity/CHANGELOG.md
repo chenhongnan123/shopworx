@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
+
+
+### Features
+
+* **core:** Added confirmation box to Infinity ([9445dae](https://bitbucket.org/entrib/shopworx/commits/9445dae570be09670088d58aaecaa9ea49e96716))
+
+
+
+
+
 # [4.1.0-beta.9](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2020-05-04)
 
 
