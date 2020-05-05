@@ -7,6 +7,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+    <template #activator="{ on }">
+      <slot :on="on">
+      </slot>
+    </template>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -190,6 +194,7 @@ export default {
   data() {
     return {
       plan: {},
+      dialog: false,
       assetId: null,
       filters: {},
       isFamily: false,
@@ -210,7 +215,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('planning', ['parts', 'addPlanDialog', 'primaryMatrixTags']),
+    ...mapState('planning', ['parts', 'primaryMatrixTags']),
     ...mapGetters('planning', [
       'selectedAsset',
       'planningTags',
@@ -232,14 +237,6 @@ export default {
       }
       return result;
     },
-    dialog: {
-      get() {
-        return this.addPlanDialog;
-      },
-      set(val) {
-        this.setAddPlanDialog(val);
-      },
-    },
   },
   async created() {
     this.loadingParts = true;
@@ -248,7 +245,6 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('planning', ['setAddPlanDialog']),
     ...mapActions('planning', [
       'getParts',
       'createPlan',
@@ -258,7 +254,6 @@ export default {
       'getPartMatrixRecords',
       'getPrimaryMatrixTags',
       'getScheduledEnd',
-      'getNotStartedPlans',
     ]),
     async onPartSelection() {
       this.plan = {};
@@ -424,8 +419,7 @@ export default {
           type: 'success',
           message: 'PLAN_CREATED',
         });
-        await this.getNotStartedPlans();
-        this.dialog = false;
+        this.$emit('on-add');
         this.selectedPart = null;
         this.assetId = null;
         this.partMatrix = {};
@@ -433,6 +427,7 @@ export default {
         this.showFamilyParts = false;
         this.displayPlanningFields = false;
         this.familyPlan = [];
+        this.dialog = false;
       } else {
         this.setAlert({
           show: true,

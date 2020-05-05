@@ -1,6 +1,37 @@
-import { differenceInMilliseconds } from 'date-fns';
+import {
+  differenceInMilliseconds,
+  isWithinInterval,
+  startOfDay,
+  endOfDay,
+  format,
+} from 'date-fns';
 
 export const now = () => new Date().getTime();
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const formatDate = (date, form) => format(date, form);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const dayStart = (date) => startOfDay(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const dayEnd = (date) => endOfDay(date);
+
+/**
+ * 
+ * @param {Date} date
+ * @param {Object} interval in { start: <Date>, end: <Date> }
+ */
+export const isWithinRange = (date, interval) => isWithinInterval(date, interval);
 
 /**
  * 
