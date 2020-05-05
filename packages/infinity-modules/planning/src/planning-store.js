@@ -1,13 +1,14 @@
 import HourService from '@shopworx/services/api/hour.service';
 import { set } from '@shopworx/services/util/store.helper';
+import { now } from '@shopworx/services/util/date.service';
 
 export default ({
   namespaced: true,
   state: {
     parts: [],
     assets: [],
+    machine: null,
     onboarded: false,
-    addPlanDialog: false,
     planningMaster: null,
     partMatrixMaster: [],
     partMatrixRecords: [],
@@ -24,8 +25,8 @@ export default ({
   mutations: {
     setParts: set('parts'),
     setAssets: set('assets'),
+    setMachine: set('machine'),
     setOnboarded: set('onboarded'),
-    setAddPlanDialog: set('addPlanDialog'),
     setPlanningMaster: set('planningMaster'),
     setPartMatrixMaster: set('partMatrixMaster'),
     setPartMatrixRecords: set('partMatrixRecords'),
@@ -360,9 +361,7 @@ export default ({
         'getPlanningRecords',
         '?query=starred==true',
       );
-      if (plans) {
-        commit('setStarredPlans', plans);
-      }
+      commit('setStarredPlans', plans);
     },
 
     getNotStartedPlans: async ({ commit, dispatch }) => {
@@ -370,9 +369,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="notStarted"',
       );
-      if (plans) {
-        commit('setNotStartedPlans', plans);
-      }
+      commit('setNotStartedPlans', plans);
     },
 
     getInProgressPlans: async ({ commit, dispatch }) => {
@@ -380,9 +377,7 @@ export default ({
         'getPlanningRecords',
         '?query=status=="inProgress"',
       );
-      if (plans) {
-        commit('setInProgressPlans', plans);
-      }
+      commit('setInProgressPlans', plans);
     },
 
     getPausedPlans: async ({ commit, dispatch }) => {
@@ -390,29 +385,41 @@ export default ({
         'getPlanningRecords',
         '?query=status=="paused"',
       );
-      if (plans) {
-        commit('setPausedPlans', plans);
-      }
+      commit('setPausedPlans', plans);
     },
 
     getOnTimePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        '?query=status=="inProgress"',
+        `?query=(status=="inProgress"%7C%7Cstatus=="paused")%26%26${now()}<scheduledend`,
       );
-      if (plans) {
-        commit('setOnTimePlans', plans);
-      }
+      commit('setOnTimePlans', plans);
     },
 
     getOverduePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        '?query=status=="paused"',
+        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26${now()}>scheduledend`,
       );
-      if (plans) {
-        commit('setOverduePlans', plans);
-      }
+      commit('setOverduePlans', plans);
+    },
+
+    getPlansBetweenDateRange: async ({ dispatch }, { min, max }) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
+      );
+      return plans;
+    },
+
+    getMachineSchedule: async ({ state, dispatch }) => {
+      const { machine } = state;
+      const machinename = machine ? machine.machinename : '';
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26machinename=="${machinename}"`,
+      );
+      return plans;
     },
 
     updatePlan: async ({ dispatch }, { id, payload }) => {

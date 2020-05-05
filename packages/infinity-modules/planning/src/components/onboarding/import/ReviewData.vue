@@ -128,6 +128,9 @@ export default {
         field: tag.tagName,
       }));
     },
+    save() {
+      this.$emit('save', this.rowData);
+    },
   },
 };
 </script>

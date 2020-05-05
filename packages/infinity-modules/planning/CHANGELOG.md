@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
+
+
+### Bug Fixes
+
+* **onboarding:** fixed error on review button ([11825ea](https://bitbucket.org/entrib/shopworx/commits/11825ea8a331bfb9cbc96c099fc2b78d41a9a388))
+* **planning:** added confirmation before delete and abort plan ([3d945ee](https://bitbucket.org/entrib/shopworx/commits/3d945eed1b06362ab5381f0b81a0883c52191199))
+* **planning:** fixed fetch plan query for dashboard and calendar ([0c869c9](https://bitbucket.org/entrib/shopworx/commits/0c869c9244fb55949cb539e5cfbf459b3e624b9e))
+
+
+### Features
+
+* **planning:** added schedule view to planning app ([13bb653](https://bitbucket.org/entrib/shopworx/commits/13bb653b303e12eb8b7e8a9362e7635c23d0816a))
+
+
+
+
+
 # [4.1.0-beta.9](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2020-05-04)
 
 

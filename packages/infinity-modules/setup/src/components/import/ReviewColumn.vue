@@ -93,6 +93,9 @@ export default {
         this.items[index].tagName = null;
       }
     },
+    save() {
+      this.$emit('save', this.items);
+    },
   },
 };
 </script>

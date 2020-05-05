@@ -44,17 +44,37 @@
             </v-list>
           </v-menu>
           <v-spacer></v-spacer>
-          <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
-            <v-icon small left>mdi-plus</v-icon>
-            Add plan
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2"
+          <add-plan
+            #default="{ on }"
+            @on-add="updateRange({ start, end })"
+          >
+            <v-btn
+              small
+              v-on="on"
+              color="primary"
+              class="text-none"
+            >
+              <v-icon small left>mdi-plus</v-icon>
+              Add plan
+            </v-btn>
+          </add-plan>
+          <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
             @click="updateRange({ start, end })"
           >
             <v-icon small left>mdi-refresh</v-icon>
             Refresh
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="drawer = true">
+          <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="drawer = true"
+          >
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>
@@ -77,10 +97,14 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
+import AddPlan from '../components/AddPlan.vue';
 
 export default {
   name: 'PlanCalendarView',
+  components: {
+    AddPlan,
+  },
   data() {
     return {
       focus: '',
@@ -136,8 +160,7 @@ export default {
     this.$refs.calendar.checkChange();
   },
   methods: {
-    ...mapMutations('planning', ['setAddPlanDialog']),
-    ...mapActions('planning', ['getPlanningRecords']),
+    ...mapActions('planning', ['getPlansBetweenDateRange']),
     viewDay({ date }) {
       this.focus = date;
       this.type = 'day';
@@ -156,9 +179,9 @@ export default {
     },
     async updateRange({ start, end }) {
       let events = [];
-      /* const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime(); */
-      const groupedPlans = await this.getPlanningRecords('?query=status=="notStarted"');
+      const min = new Date(`${start.date}T00:00:00`).getTime();
+      const max = new Date(`${end.date}T23:59:59`).getTime();
+      const groupedPlans = await this.getPlansBetweenDateRange({ min, max });
       if (groupedPlans) {
         events = Object
           .keys(groupedPlans)

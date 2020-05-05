@@ -13,12 +13,18 @@
         <v-btn icon @click="$emit('refresh-widget')">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
-        <!-- <v-btn icon>
-          <v-icon>mdi-filter-variant</v-icon>
-        </v-btn> -->
-        <v-btn icon v-if="addPlan" @click="setAddPlanDialog(true)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <add-plan
+          #default="{ on }"
+          @on-add="$emit('refresh-widget')"
+        >
+          <v-btn
+            icon
+            v-on="on"
+            v-if="addPlan"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </add-plan>
       </template>
       <template v-else>
         <toggle-star
@@ -36,12 +42,6 @@
         />
       </template>
     </v-toolbar>
-    <template v-if="loading">
-    </template>
-    <template v-else-if="error">
-    </template>
-    <template >
-    </template>
     <perfect-scrollbar style="max-height: 400px;">
       <v-card outlined>
         <v-fade-transition mode="out-in">
@@ -107,10 +107,10 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
 import AbortPlan from '../AbortPlan.vue';
+import AddPlan from '../AddPlan.vue';
 
 export default {
   name: 'PlanWidget',
@@ -118,6 +118,7 @@ export default {
     ToggleStar,
     DeletePlan,
     AbortPlan,
+    AddPlan,
   },
   props: {
     groupedPlans: {
@@ -184,7 +185,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('planning', ['setAddPlanDialog']),
     onSelectionChanged(plan) {
       if (plan.selected) {
         this.selectedPlans.push(plan);
