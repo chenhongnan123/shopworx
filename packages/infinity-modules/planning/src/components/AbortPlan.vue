@@ -17,11 +17,12 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { now } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'AbortPlan',
   props: {
-    planIds: {
+    plans: {
       type: Array,
       required: true,
     },
@@ -34,12 +35,17 @@ export default {
         'Are you you want to abort the plans?',
       )) {
         await Promise.all([
-          this.planIds.forEach((id) => {
+          this.plans.forEach((plan) => {
+            let payload = {
+              status: 'aborted',
+              actualend: now(),
+            };
+            if (plan.status === 'notStarted') {
+              payload = { ...payload, actualstart: now() };
+            }
             this.updatePlan({
-              id,
-              payload: {
-                status: 'aborted',
-              },
+              id: plan.planid,
+              payload,
             });
           }),
         ]);

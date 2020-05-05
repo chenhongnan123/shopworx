@@ -28,7 +28,7 @@ import { mapActions } from 'vuex';
 export default {
   name: 'ToggleStar',
   props: {
-    planIds: {
+    plans: {
       type: Array,
       required: true,
     },
@@ -41,9 +41,9 @@ export default {
     ...mapActions('planning', ['updatePlan', 'getStarredPlans']),
     async updatePlans() {
       await Promise.all([
-        this.planIds.forEach((id) => {
+        this.plans.forEach((plan) => {
           this.updatePlan({
-            id,
+            id: plan.planid,
             payload: {
               starred: !this.starred,
             },

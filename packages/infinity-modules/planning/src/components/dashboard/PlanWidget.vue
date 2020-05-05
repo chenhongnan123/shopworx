@@ -29,15 +29,15 @@
       <template v-else>
         <toggle-star
           :starred="starredPlans"
-          :planIds="selectedPlanIds"
+          :plans="selectedPlans"
           @on-update="$emit('refresh-widget')"
         />
         <abort-plan
-          :planIds="selectedPlanIds"
+          :plans="selectedPlans"
           @on-abort="$emit('refresh-widget')"
         />
         <delete-plan
-          :planIds="selectedPlanIds"
+          :plans="selectedPlans"
           @on-delete="$emit('refresh-widget')"
         />
       </template>
@@ -157,9 +157,6 @@ export default {
     },
   },
   computed: {
-    selectedPlanIds() {
-      return this.selectedPlans.map((plan) => plan.planid);
-    },
     plans() {
       if (this.groupedPlans) {
         const items = Object
