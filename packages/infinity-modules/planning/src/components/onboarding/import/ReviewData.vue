@@ -31,6 +31,7 @@
     </v-expansion-panels>
     <ag-grid-vue
       v-model="rowData"
+      rowSelection="multiple"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
       class="ag-theme-balham mt-2"

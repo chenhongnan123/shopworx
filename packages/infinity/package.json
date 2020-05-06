@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/infinity",
-  "version": "4.1.0-beta.10",
+  "version": "4.1.0-beta.11",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,16 +9,16 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@shopworx/admin": "^4.1.0-beta.10",
-    "@shopworx/assets": "^4.1.0-beta.10",
-    "@shopworx/machine-dashboard": "^4.1.0-beta.10",
-    "@shopworx/masters": "^4.1.0-beta.10",
-    "@shopworx/planning": "^4.1.0-beta.10",
-    "@shopworx/production-log": "^4.1.0-beta.10",
-    "@shopworx/report-viewer": "^4.1.0-beta.10",
-    "@shopworx/services": "^4.1.0-beta.10",
-    "@shopworx/setup": "^4.1.0-beta.10",
-    "@shopworx/user-dashboard": "^4.1.0-beta.10",
+    "@shopworx/admin": "^4.1.0-beta.11",
+    "@shopworx/assets": "^4.1.0-beta.11",
+    "@shopworx/machine-dashboard": "^4.1.0-beta.11",
+    "@shopworx/masters": "^4.1.0-beta.11",
+    "@shopworx/planning": "^4.1.0-beta.11",
+    "@shopworx/production-log": "^4.1.0-beta.11",
+    "@shopworx/report-viewer": "^4.1.0-beta.11",
+    "@shopworx/services": "^4.1.0-beta.11",
+    "@shopworx/setup": "^4.1.0-beta.11",
+    "@shopworx/user-dashboard": "^4.1.0-beta.11",
     "ag-grid-community": "^23.1.0",
     "ag-grid-enterprise": "^23.1.0",
     "ag-grid-vue": "^23.1.0",
@@ -36,7 +36,7 @@
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.1.6",
     "vue2-perfect-scrollbar": "^1.5.0",
-    "vuetify": "^2.2.26",
+    "vuetify": "^2.2.27",
     "vuex": "^3.3.0"
   },
   "devDependencies": {

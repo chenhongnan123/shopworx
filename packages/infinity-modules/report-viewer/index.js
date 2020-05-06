@@ -1,3 +1,4 @@
+import 'ag-grid-enterprise';
 import routes from './src/report-viewer-routes';
 import store from './src/report-viewer-store';
 

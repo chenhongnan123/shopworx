@@ -21,7 +21,7 @@ import { mapActions } from 'vuex';
 export default {
   name: 'DeletePlan',
   props: {
-    planIds: {
+    plans: {
       type: Array,
       required: true,
     },
@@ -34,8 +34,8 @@ export default {
         'Are you you want to delete the plans?',
       )) {
         await Promise.all([
-          this.planIds.forEach((id) => {
-            this.deletePlan(id);
+          this.plans.forEach((plan) => {
+            this.deletePlan(plan.planid);
           }),
         ]);
         this.$emit('on-delete');

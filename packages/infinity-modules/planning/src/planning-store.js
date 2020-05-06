@@ -399,7 +399,7 @@ export default ({
     getOverduePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26${now()}>scheduledend`,
+        `?query=status!="completed"%26%26status!="aborted"%26%26${now()}>scheduledend`,
       );
       commit('setOverduePlans', plans);
     },
@@ -417,7 +417,7 @@ export default ({
       const machinename = machine ? machine.machinename : '';
       const plans = await dispatch(
         'getPlanningRecords',
-        `?query=(status!="completed"%7C%7Cstatus!="aborted")%26%26machinename=="${machinename}"`,
+        `?query=status!="completed"%26%26status!="aborted"%26%26machinename=="${machinename}"`,
       );
       return plans;
     },

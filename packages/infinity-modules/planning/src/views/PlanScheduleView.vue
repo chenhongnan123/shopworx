@@ -141,9 +141,11 @@ export default {
         nextweek,
         later,
       };
-      this.plans.now = plans.filter((plan) => (
-        plan.status === 'inProgress' || plan.status === 'paused'
-      ));
+      this.plans.now = plans.filter((plan) => {
+        const runningPlan = plan.status === 'inProgress' || plan.status === 'paused';
+        const overduePlan = plan.status === 'notStarted' && plan.scheduledstart < start.getTime();
+        return runningPlan || overduePlan;
+      });
       Object.keys(interval).forEach((key) => {
         if (key !== 'later') {
           this.plans[key] = plans.filter((plan) => isWithinRange(
