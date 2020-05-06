@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
+
+
+### Bug Fixes
+
+* **onboarding:** fixed save changes option ([a97cd21](https://bitbucket.org/entrib/shopworx/commits/a97cd21fbf2e16733d224190e2c80a03c579a2d3))
+* **planning:** update aborted plans actualend ([ef1aab2](https://bitbucket.org/entrib/shopworx/commits/ef1aab2e2e97951be5b4e7653d1ad192f4fc10ae))
+* **planning:** updated 'now' tab to include overdue plans ([4bf9bb7](https://bitbucket.org/entrib/shopworx/commits/4bf9bb7ab22aa3fc145c572910d225a96d32be39))
+* **planning:** updated overdue and scheduled plans query ([27f8916](https://bitbucket.org/entrib/shopworx/commits/27f8916fe6cdff340009ab674e3d72572b86d61e))
+
+
+
+
+
 # [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
 
 

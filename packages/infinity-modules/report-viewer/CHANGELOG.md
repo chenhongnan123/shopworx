@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
+
+
+### Bug Fixes
+
+* **report-viewer:** disable save if new name equals current name ([128e7c0](https://bitbucket.org/entrib/shopworx/commits/128e7c004d93656dfb699e62d931ea4ff653f524))
+* **report-viewer:** fixed update report with same title ([17a1d20](https://bitbucket.org/entrib/shopworx/commits/17a1d20506c8bd0258e5407fa0d1b4458233f765))
+
+
+### Features
+
+* **report-viewer:** save and update report view ([725f461](https://bitbucket.org/entrib/shopworx/commits/725f46182a30250c8ddd85c3f94a8ce72940cf9c))
+
+
+
+
+
 # [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
 
 **Note:** Version bump only for package @shopworx/report-viewer
