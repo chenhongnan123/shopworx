@@ -2,6 +2,7 @@
   <highcharts
     v-if="chartType && chartType.value"
     :options="options"
+    style="height: 300px;"
     ref="chart"
   ></highcharts>
 </template>

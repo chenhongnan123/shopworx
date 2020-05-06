@@ -17,6 +17,10 @@ class ReportService {
     return this.request.post('/server/reportview', payload);
   }
 
+  updateReportView(payload) {
+    return this.request.put('/server/reportview', payload);
+  }
+
   getReportMappings(reportViewId) {
     return this.request.get(`/server/reportviewmapping/reportview/${reportViewId}`);
   }
