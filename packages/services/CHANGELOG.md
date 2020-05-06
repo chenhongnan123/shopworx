@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
+
+
+### Features
+
+* **report-viewer:** save and update report view ([725f461](https://bitbucket.org/entrib/shopworx/commits/725f46182a30250c8ddd85c3f94a8ce72940cf9c))
+
+
+
+
+
 # [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
 
 
