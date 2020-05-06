@@ -26,38 +26,54 @@
     <v-btn
       small
       icon
-      class="ml-2 mb-1"
+      class="mx-2 mb-1"
       @click="onEdit"
       v-if="!edit && !isBaseReport"
     >
       <v-icon small>mdi-pencil</v-icon>
     </v-btn>
+    <!-- <v-btn
+      icon
+      small
+      class="mb-1"
+    >
+      <v-icon>mdi-refresh</v-icon>
+    </v-btn> -->
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ReportTitle',
   data() {
     return {
-      reportName: '',
       edit: false,
     };
   },
   computed: {
+    ...mapState('reports', ['newReportTitle']),
     ...mapGetters('reports', ['reportTitle', 'isBaseReport']),
+    reportName: {
+      get() {
+        return this.newReportTitle;
+      },
+      set(val) {
+        this.setNewReportTitle(val);
+      },
+    },
   },
   created() {
-    this.reportName = this.reportTitle;
+    this.setNewReportTitle(this.reportTitle);
   },
   watch: {
     reportTitle(val) {
-      this.reportName = val;
+      this.setNewReportTitle(val);
     },
   },
   methods: {
+    ...mapMutations('reports', ['setNewReportTitle']),
     onEdit() {
       this.edit = true;
       this.$nextTick(() => {

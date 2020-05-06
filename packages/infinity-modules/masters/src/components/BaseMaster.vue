@@ -6,10 +6,12 @@
   >
     <ag-grid-vue
       v-model="rowData"
+      rowSelection="multiple"
+      class="ag-theme-balham"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
-      class="ag-theme-balham"
       :defaultColDef="defaultColDef"
+      :suppressRowClickSelection="true"
       style="width: 100%; height: 400px;"
       @selection-changed="onSelectionChanged"
     ></ag-grid-vue>
@@ -78,6 +80,7 @@ export default {
       filter: true,
       editable: true,
       resizable: true,
+      floatingFilter: true,
       checkboxSelection: this.isFirstColumn,
       headerCheckboxSelection: this.isFirstColumn,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,

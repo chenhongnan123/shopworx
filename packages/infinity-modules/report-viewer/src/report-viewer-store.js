@@ -6,6 +6,7 @@ export default ({
   state: {
     reportViews: [],
     reportView: null,
+    newReportTitle: '',
     reportMappings: [],
     reportMapping: null,
     chartType: null,
@@ -14,17 +15,18 @@ export default ({
       end: null,
     },
     report: null,
-    gridObject: '',
+    gridState: '',
   },
   mutations: {
     setReportViews: set('reportViews'),
     setReportView: set('reportView'),
+    setNewReportTitle: set('newReportTitle'),
     setReportMappings: set('reportMappings'),
     setReportMapping: set('reportMapping'),
     setChartType: set('chartType'),
     setDateRange: set('dateRange'),
     setReport: set('report'),
-    setGridObject: set('gridObject'),
+    setGridState: set('gridState'),
   },
   actions: {
     getReportViews: async ({ commit }, reportCategoryId) => {
@@ -75,10 +77,10 @@ export default ({
         const {
           reportView,
           reportMapping,
-          gridObject,
+          gridState,
         } = state;
         const payload = {
-          gridObject,
+          gridObject: gridState,
           reportViewName,
           reportId: reportMapping.reportId,
           reportsCategoryId: reportView.reportsCategoryId,
@@ -88,6 +90,45 @@ export default ({
           const views = await dispatch('getReportViews', reportView.reportsCategoryId);
           if (views && views.length) {
             const view = views.find((report) => report.id === data.reportViewId);
+            commit('setReportView', view);
+            return true;
+          }
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    updateReport: async ({
+      state,
+      dispatch,
+      commit,
+      getters,
+    }) => {
+      try {
+        const {
+          reportView,
+          gridState,
+          newReportTitle,
+        } = state;
+        const { reportTitle } = getters;
+        let payload = {
+          reportViewId: reportView.id,
+          reportViewName: newReportTitle,
+          gridObject: gridState,
+        };
+        if (reportTitle === newReportTitle) {
+          payload = {
+            reportViewId: reportView.id,
+            gridObject: gridState,
+          };
+        }
+        const { data } = await ReportService.updateReportView(payload);
+        if (data && data.updated) {
+          const views = await dispatch('getReportViews', reportView.reportsCategoryId);
+          if (views && views.length) {
+            const view = views.find((report) => report.id === reportView.id);
             commit('setReportView', view);
             return true;
           }
@@ -124,7 +165,6 @@ export default ({
     gridObject: ({ reportView }) => {
       if (reportView) {
         return reportView.gridObject;
-        // return JSON.parse(reportView.gridObject);
       }
       return null;
     },

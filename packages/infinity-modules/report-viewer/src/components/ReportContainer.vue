@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <report-chart />
-        <report-grid />
+        <report-grid ref="reportGrid" />
       </v-col>
     </v-row>
   </v-container>
@@ -43,6 +43,7 @@ export default {
     async runReport() {
       this.loading = true;
       await this.executeReport();
+      this.$refs.reportGrid.restoreState();
       this.loading = false;
     },
   },

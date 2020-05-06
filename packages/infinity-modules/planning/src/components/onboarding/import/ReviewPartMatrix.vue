@@ -48,6 +48,7 @@
       </v-card-title>
       <v-card-text class="pa-0">
         <review-column
+          @save="columnReviewed"
           ref="reviewColumnCard"
           :masterTags="masterTags"
           :missingTags="missingTags"
@@ -58,6 +59,7 @@
           :tags="tags"
           :records="records"
           ref="reviewDataCard"
+          @save="dataReviewed"
           :missingData="missingData"
           :invalidDataTypes="invalidDataTypes"
           :duplicateColumnData="duplicateColumnData"

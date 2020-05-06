@@ -41,7 +41,7 @@
           color="primary"
           class="text-none"
           :loading="saving"
-          :disabled="!title"
+          :disabled="!title || title === reportTitle"
           @click="saveReport"
         >
           Save
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SaveReportAs',
@@ -62,6 +62,9 @@ export default {
       saving: false,
       dialog: false,
     };
+  },
+  computed: {
+    ...mapGetters('reports', ['reportTitle']),
   },
   methods: {
     ...mapActions('reports', ['saveAsNewReport']),
