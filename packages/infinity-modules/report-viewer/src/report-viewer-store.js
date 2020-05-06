@@ -100,18 +100,30 @@ export default ({
       return false;
     },
 
-    updateReport: async ({ state, dispatch, commit }) => {
+    updateReport: async ({
+      state,
+      dispatch,
+      commit,
+      getters,
+    }) => {
       try {
         const {
           reportView,
           gridState,
           newReportTitle,
         } = state;
-        const payload = {
+        const { reportTitle } = getters;
+        let payload = {
           reportViewId: reportView.id,
           reportViewName: newReportTitle,
           gridObject: gridState,
         };
+        if (reportTitle === newReportTitle) {
+          payload = {
+            reportViewId: reportView.id,
+            gridObject: gridState,
+          };
+        }
         const { data } = await ReportService.updateReportView(payload);
         if (data && data.updated) {
           const views = await dispatch('getReportViews', reportView.reportsCategoryId);
