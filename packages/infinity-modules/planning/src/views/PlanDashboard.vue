@@ -1,5 +1,13 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container
+    fluid
+    class="py-0"
+    :class="[
+      $vuetify.theme.dark ? '#121212' : 'white',
+      isFullScreen ? 'pa-4' : '',
+    ]"
+    id="planning-dashboard"
+  >
     <v-row justify="center">
       <v-col cols="12" md="4" xl="2">
         <in-progress-stats />
@@ -49,6 +57,11 @@ export default {
     InProgressStats,
     NotStartedStats,
     PausedStats,
+  },
+  props: {
+    isFullScreen: {
+      type: Boolean,
+    },
   },
 };
 </script>

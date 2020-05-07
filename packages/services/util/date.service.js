@@ -1,12 +1,30 @@
 import {
   differenceInMilliseconds,
+  formatDistanceToNow,
   isWithinInterval,
+  formatDistance,
   startOfDay,
   endOfDay,
   format,
 } from 'date-fns';
 
 export const now = () => new Date().getTime();
+
+/**
+ * 
+ * @param {Date} date
+ * @param {Date} baseDate
+ * @param {Object} options
+ */
+export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(date, baseDate, optoins);
+
+/**
+ * 
+ * @param {Date} date
+ * @param {Date} baseDate
+ * @param {Object} options
+ */
+export const distanceInWordsToNow = (date, optoins = {}) => formatDistanceToNow(date, optoins);
 
 /**
  * 

@@ -42,7 +42,7 @@ export default {
     lightMode: 'mdi-weather-sunny',
     darkMode: 'mdi-weather-night',
     logout: 'mdi-logout-variant',
-    settings: 'mdi-settings-outline',
+    settings: 'mdi-cog-outline',
     info: 'mdi-information-outline',
     fullscreen: 'mdi-fullscreen',
     back: 'mdi-undo-variant',

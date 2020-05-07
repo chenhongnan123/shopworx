@@ -12,6 +12,17 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
+      <v-btn
+        icon
+        small
+        v-if="planView === 0"
+        class="ml-2 mb-1"
+        @click="enterFullscreen"
+      >
+        <v-icon
+          v-text="'$fullscreen'"
+        ></v-icon>
+      </v-btn>
     </portal>
     <portal
       to="app-extension"
@@ -38,7 +49,10 @@
       <plan-setup v-if="!onboarded" />
       <v-fade-transition mode="out-in" v-else>
         <keep-alive>
-          <plan-dashboard v-if="planView === 0" />
+          <plan-dashboard
+            :isFullScreen="isFullScreen"
+            v-if="planView === 0"
+          />
           <plan-calendar-view v-else-if="planView === 1" />
           <plan-schedule-view v-else-if="planView === 2" />
         </keep-alive>
@@ -68,6 +82,7 @@ export default {
     return {
       planView: 0,
       loading: false,
+      isFullScreen: false,
     };
   },
   computed: {
@@ -100,6 +115,20 @@ export default {
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('planning', ['getPlanningElement']),
+    enterFullscreen() {
+      const elem = document.querySelector('#planning-dashboard');
+      elem.onfullscreenchange = (event) => {
+        const e = event.target;
+        this.isFullScreen = document.fullscreenElement === e;
+      };
+      if (document.fullscreenEnabled) {
+        if (!this.isFullScreen) {
+          elem.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    },
   },
 };
 </script>
