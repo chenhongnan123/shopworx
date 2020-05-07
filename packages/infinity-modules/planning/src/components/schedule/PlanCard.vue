@@ -11,7 +11,7 @@
     </v-card-title>
     <v-card-text>
       <v-row no-gutters>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="4" lg="3">
           <div>
             <span>Part</span>
             <span>: {{ plan.partname }}</span>
@@ -25,7 +25,7 @@
             <span>: {{ plan.assetid === 2 ? plan.moldname : plan.toolname }}</span>
           </div>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="plan.status === 'notStarted'">
+        <v-col cols="12" sm="6" md="4" lg="4" v-if="plan.status === 'notStarted'">
           <div>
             <v-icon>mdi-clock-check-outline</v-icon>
             <span class="ml-2">Scheduled start</span>
@@ -36,7 +36,7 @@
             <span>: {{ formattedDate(plan.scheduledend) }}</span>
           </div>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-else>
+        <v-col cols="12" sm="6" md="4" lg="4" v-else>
           <div>
             <v-icon>mdi-clock-check-outline</v-icon>
             <span class="ml-2">Started at</span>
@@ -48,7 +48,7 @@
           </div>
         </v-col>
         <v-divider vertical class="mr-2" v-if="$vuetify.breakpoint.msAndUp"></v-divider>
-        <v-col cols="12" sm="6" md="3" class="my-auto">
+        <v-col cols="12" sm="6" md="3" lg="4" offset-lg="1" class="my-auto">
           <v-progress-linear
             :value="plan.actualquantity || 0"
             :height="20"
