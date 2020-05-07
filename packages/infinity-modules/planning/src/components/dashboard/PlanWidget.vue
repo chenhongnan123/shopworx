@@ -8,6 +8,12 @@
         class="title font-weight-regular"
         v-text="title"
       ></span>
+      <span
+        v-if="plans.length"
+        class="title font-weight-regular"
+      >
+        ({{ plans.length }})
+      </span>
       <v-spacer></v-spacer>
       <template v-if="!selectedPlans.length">
         <v-btn icon @click="$emit('refresh-widget')">
@@ -77,13 +83,32 @@
                     ></v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>
-                      <span v-text="plan.planid"></span>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      <div v-text="plan.machinename"></div>
-                      <div v-text="plan.partname"></div>
-                    </v-list-item-subtitle>
+                    <v-row justify="left">
+                      <v-col cols="12" md="6" xl="5">
+                        <v-list-item-title>
+                          <span v-text="plan.planid"></span>
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          <div v-text="plan.machinename"></div>
+                          <div v-text="plan.partname"></div>
+                        </v-list-item-subtitle>
+                      </v-col>
+                      <v-col cols="12" md="6" xl="6" class="my-auto">
+                        <v-list-item-subtitle>
+                          {{ getScheduledStart(plan) }}
+                        </v-list-item-subtitle>
+                        <v-progress-linear
+                          :height="20"
+                          class="mt-2"
+                          color="secondary"
+                          :value="plan.actualquantity || 0"
+                        >
+                          <span class="font-weight-medium">
+                            {{plan.actualquantity || 0}}/{{plan.plannedquantity}}
+                          </span>
+                        </v-progress-linear>
+                      </v-col>
+                    </v-row>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-checkbox
@@ -107,6 +132,7 @@
 </template>
 
 <script>
+import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
 import AbortPlan from '../AbortPlan.vue';
@@ -182,6 +208,12 @@ export default {
     },
   },
   methods: {
+    getScheduledStart(plan) {
+      return `Scheduled start ${distanceInWordsToNow(
+        new Date(plan.scheduledstart),
+        { addSuffix: true },
+      )}`;
+    },
     onSelectionChanged(plan) {
       if (plan.selected) {
         this.selectedPlans.push(plan);
