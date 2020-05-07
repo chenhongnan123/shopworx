@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import AddPlan from '../components/AddPlan.vue';
 
 export default {
@@ -122,6 +122,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('planning', ['planStatusClass']),
     title() {
       const { start, end } = this;
       if (!start || !end) {
@@ -199,16 +200,6 @@ export default {
       this.start = start;
       this.end = end;
       this.events = events;
-    },
-    planStatusClass(planstatus) {
-      switch (planstatus) {
-        case 'inProgress': return 'success';
-        case 'paused': return 'warning';
-        case 'notStarted': return 'info';
-        case 'aborted': return 'error';
-        case 'complete': return 'accent';
-        default: return '';
-      }
     },
     nth(d) {
       return d > 3 && d < 21

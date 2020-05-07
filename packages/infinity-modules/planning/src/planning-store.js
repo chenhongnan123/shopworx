@@ -535,5 +535,16 @@ export default ({
       }
       return records;
     },
+
+    planStatusClass: (status) => {
+      switch (status) {
+        case 'inProgress': return 'success';
+        case 'paused': return 'warning';
+        case 'notStarted': return 'info';
+        case 'aborted': return 'error';
+        case 'complete': return 'accent';
+        default: return '';
+      }
+    },
   },
 });

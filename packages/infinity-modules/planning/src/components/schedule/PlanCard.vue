@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
@@ -75,19 +76,12 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapGetters('planning', ['planStatusClass']),
+  },
   methods: {
     formattedDate(date) {
       return formatDate(new Date(date), 'PPp');
-    },
-    planStatusClass(planstatus) {
-      switch (planstatus) {
-        case 'inProgress': return 'success';
-        case 'paused': return 'warning';
-        case 'notStarted': return 'info';
-        case 'aborted': return 'error';
-        case 'complete': return 'accent';
-        default: return '';
-      }
     },
   },
 };

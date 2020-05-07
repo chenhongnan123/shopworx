@@ -132,6 +132,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
@@ -183,6 +184,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('planning', ['planStatusClass']),
     plans() {
       if (this.groupedPlans) {
         const items = Object
@@ -220,16 +222,6 @@ export default {
       } else {
         const index = this.selectedPlans.findIndex((p) => p._id === plan._id);
         this.selectedPlans.splice(index, 1);
-      }
-    },
-    planStatusClass(planstatus) {
-      switch (planstatus) {
-        case 'inProgress': return 'success';
-        case 'paused': return 'warning';
-        case 'notStarted': return 'info';
-        case 'aborted': return 'error';
-        case 'complete': return 'accent';
-        default: return '';
       }
     },
   },
