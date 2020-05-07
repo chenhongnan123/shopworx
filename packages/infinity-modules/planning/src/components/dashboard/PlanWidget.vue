@@ -83,7 +83,7 @@
                     ></v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-row justify="left">
+                    <v-row>
                       <v-col cols="12" md="6" xl="5">
                         <v-list-item-title>
                           <span v-text="plan.planid"></span>
