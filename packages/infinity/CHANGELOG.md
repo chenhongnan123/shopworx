@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
+
+
+### Features
+
+* **core:** added version to help menu and mobile account page ([c0339ed](https://bitbucket.org/entrib/shopworx/commits/c0339ed60bc200b6b2c42adc3516a5709b1acb91))
+
+
+
+
+
 # [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
 
 **Note:** Version bump only for package @shopworx/infinity
