@@ -7,16 +7,17 @@
           <v-progress-linear :indeterminate="true"></v-progress-linear>
         </template>
         <template v-else>
-          <template v-for="timeSlot in timeSlots">
+          <template v-for="(timeSlot, n) in timeSlots">
             <div
-              class="headline pl-2 mb-2 font-weight-medium"
               :key="timeSlot.value"
               style="border-left: 4px solid"
+              class="headline pl-2 font-weight-medium"
+              :class="n !== 0 ? 'my-4' : 'mb-4'"
             >
               {{ timeSlot.text }}
             </div>
             <template v-if="!plans[timeSlot.value].length">
-              <span class="mb-1" :key="`no-plan-${timeSlot.value}`">
+              <span class="mb-2 px-4" :key="`no-plan-${timeSlot.value}`">
                 No plans
               </span>
             </template>
@@ -25,7 +26,7 @@
                 <plan-card
                   :plan="plan"
                   :key="plan._id"
-                  class="mb-1"
+                  class="mb-2 mx-4"
                 />
               </template>
             </template>
