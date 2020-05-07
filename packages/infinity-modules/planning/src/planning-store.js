@@ -536,7 +536,7 @@ export default ({
       return records;
     },
 
-    planStatusClass: (status) => {
+    planStatusClass: () => (status) => {
       switch (status) {
         case 'inProgress': return 'success';
         case 'paused': return 'warning';
