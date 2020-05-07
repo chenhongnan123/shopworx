@@ -21,8 +21,8 @@
             <span>: {{ plan.machinename }}</span>
           </div>
           <div>
-            <span>{{ plan.assetId === 2 ? 'Mold' : 'Tool' }}</span>
-            <span>: {{ plan.assetId === 2 ? plan.moldname : plan.toolname }}</span>
+            <span>{{ plan.assetid === 2 ? 'Mold' : 'Tool' }}</span>
+            <span>: {{ plan.assetid === 2 ? plan.moldname : plan.toolname }}</span>
           </div>
         </v-col>
         <v-col cols="12" sm="6" md="4" v-if="plan.status === 'notStarted'">
