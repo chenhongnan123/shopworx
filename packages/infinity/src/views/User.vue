@@ -35,6 +35,9 @@
           >
             {{ $t('account.logout') }}
           </v-btn>
+          <div class="mt-2">
+            v{{ version }}
+          </div>
         </v-card-text>
       </v-card>
       <v-card
@@ -115,6 +118,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('helper', ['version']),
     ...mapState('user', ['activeSite']),
     ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer']),
   },
