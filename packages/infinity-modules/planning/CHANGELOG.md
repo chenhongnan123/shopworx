@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
+
+
+### Bug Fixes
+
+* **planning:** adjusted spacing in schedule view ([cb60caa](https://bitbucket.org/entrib/shopworx/commits/cb60caa238c8711c333210b39b24150be2780995))
+* **planning:** fixed asset based display ([886091f](https://bitbucket.org/entrib/shopworx/commits/886091f6df84376ef492814db9eb6466bbc3df88))
+* **planning:** fixed plan status class getter ([91a13ec](https://bitbucket.org/entrib/shopworx/commits/91a13ecd8290e469acb7ca863699e1a8a70463f7))
+* **planning:** updated plan card layout for large screens ([605b210](https://bitbucket.org/entrib/shopworx/commits/605b210f4f9a0be81e4b10096e075f3e994d94a2))
+
+
+### Features
+
+* **planning:** added fullscreen option to planning dashboard ([7a918a7](https://bitbucket.org/entrib/shopworx/commits/7a918a709b37e5a72dafc6fdf7da11e4f1478064))
+* **planning:** added scheduled start and actual qty to widget ([0ad1263](https://bitbucket.org/entrib/shopworx/commits/0ad1263cee05af7d2288c9893da4c5d960f9ce42))
+
+
+
+
+
 # [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
 
 

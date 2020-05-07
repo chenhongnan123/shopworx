@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
+
+
+### Features
+
+* **planning:** added scheduled start and actual qty to widget ([0ad1263](https://bitbucket.org/entrib/shopworx/commits/0ad1263cee05af7d2288c9893da4c5d960f9ce42))
+
+
+
+
+
 # [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
 
 
