@@ -46,10 +46,22 @@
         </v-list-item>
       </template>
     </v-list>
+    <v-list dense class="py-0">
+      <v-subheader class="mb-0 pb-0 text-uppercase">
+        {{ $t('help.version') }}
+      </v-subheader>
+      <v-list-item>
+        <v-list-item-title>
+          v{{ version }}
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
   </v-menu>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'InfinityHelp',
   data() {
@@ -82,8 +94,14 @@ export default {
           title: 'privacy',
           action: 'openPrivacy',
         },
+        {
+          divider: true,
+        },
       ],
     };
+  },
+  computed: {
+    ...mapState('helper', ['version']),
   },
 };
 </script>

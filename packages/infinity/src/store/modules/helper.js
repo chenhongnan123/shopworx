@@ -2,6 +2,7 @@ import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
   state: {
+    version: process.env.VUE_APP_VERSION || '0',
     alert: {
       show: false,
       type: null,
