@@ -307,7 +307,12 @@ export default {
           }
         } else if (t.emgTagType.toLowerCase() === 'boolean') {
           const truthyValues = ['true', 'false', true, false];
-          const invalid = matchedRecords.some((rec) => !truthyValues.includes(rec.toLowerCase()));
+          const invalid = matchedRecords.some((rec) => {
+            if (rec) {
+              return !truthyValues.includes(rec.toLowerCase());
+            }
+            return true;
+          });
           if (invalid) {
             res.push(`${t.tagDescription}(Boolean)`);
           }
