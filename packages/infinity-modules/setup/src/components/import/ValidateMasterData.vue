@@ -301,7 +301,7 @@ export default {
           t.emgTagType.toLowerCase() === 'float'
           || t.emgTagType.toLowerCase() === 'double'
         ) {
-          const invalid = matchedRecords.some((rec) => Number.isNaN(rec));
+          const invalid = matchedRecords.some((rec) => Number.isNaN(parseFloat(rec)));
           if (invalid) {
             res.push(`${t.tagDescription}(Decimal)`);
           }
