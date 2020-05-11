@@ -244,7 +244,7 @@ export default {
       } else if (this.duplicateColumnData && this.duplicateColumnData.length) {
         this.error = true;
         this.reviewType = 'data';
-        this.message = `Duplicate data for ${this.duplicateColumnData[0].tag}
+        this.message = `Duplicate data for ${this.duplicateColumnData[0]}
           ${this.duplicateColumnData.length > 1 ? 'and more' : ''}!`;
         this.$emit('on-validation', !this.error);
       } else if (this.invalidDataTypes && this.invalidDataTypes.length) {
@@ -274,10 +274,10 @@ export default {
     duplicateData() {
       const res = [];
       this.tags.forEach((t) => {
-        if (t.unique) {
+        if (t.tagName === this.masterElement.uniqueTagName) {
           const matchedRecords = this.records.map((rec) => rec[t.tagName]);
           const uniqueRecords = [...new Set(matchedRecords)];
-          if (matchedRecords.length !== uniqueRecords) {
+          if (matchedRecords.length !== uniqueRecords.length) {
             res.push(t.tagDescription);
           }
         }
