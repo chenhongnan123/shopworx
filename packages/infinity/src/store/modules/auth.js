@@ -20,8 +20,10 @@ export default ({
       ApiService.setSessionHeader(sessionId);
     },
 
-    authenticate: async ({ commit, dispatch }, payload) => {
+    authenticate: async ({ state, commit, dispatch }, payload) => {
       try {
+        const { loginType } = state;
+        ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticate(payload);
         if (data && data.sessionId) {
           commit('setSessionId', data.sessionId);
@@ -49,8 +51,10 @@ export default ({
       return false;
     },
 
-    authenticateWithOtp: async ({ commit, dispatch }, payload) => {
+    authenticateWithOtp: async ({ state, commit, dispatch }, payload) => {
       try {
+        const { loginType } = state;
+        ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticateWithOtp(payload);
         if (data && data.sessionId) {
           commit('setSessionId', data.sessionId);

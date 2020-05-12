@@ -21,6 +21,32 @@
       <v-card-title primary-title>
         {{ $t('setup.importMaster.reviewTitle', { title }) }}
         <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text class="pa-0">
+        <review-column
+          @save="columnReviewed"
+          ref="reviewColumnCard"
+          :masterTags="masterTags"
+          :missingTags="missingTags"
+          :matchedColumns="matchedColumns"
+          v-if="reviewType === 'column' || showColumnMappings"
+        />
+        <review-data
+          :tags="tags"
+          :records="records"
+          ref="reviewDataCard"
+          @save="dataReviewed"
+          :missingData="missingData"
+          @row-selected="toggleDelete"
+          :invalidDataTypes="invalidDataTypes"
+          :duplicateColumnData="duplicateColumnData"
+          v-else-if="reviewType === 'data' && !showColumnMappings"
+        />
+      </v-card-text>
+      <v-card-actions>
         <v-btn
           text
           color="primary"
@@ -45,37 +71,15 @@
           class="d-none"
           @change="onFileChanged"
         >
-      </v-card-title>
-      <v-card-text class="pa-0">
-        <review-column
-          @save="columnReviewed"
-          ref="reviewColumnCard"
-          :masterTags="masterTags"
-          :missingTags="missingTags"
-          :matchedColumns="matchedColumns"
-          v-if="reviewType === 'column' || showColumnMappings"
-        />
-        <review-data
-          :tags="tags"
-          :records="records"
-          ref="reviewDataCard"
-          @save="dataReviewed"
-          :missingData="missingData"
-          :invalidDataTypes="invalidDataTypes"
-          :duplicateColumnData="duplicateColumnData"
-          v-else-if="reviewType === 'data' && !showColumnMappings"
-        />
-      </v-card-text>
-      <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
           text
-          color="primary"
+          color="error"
           class="text-none"
-          @click="dialog = false"
-          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+          @click="onDelete"
+          v-if="rowsSelected && reviewType === 'data' && !showColumnMappings"
         >
-          {{ $t('setup.importMaster.cancel') }}
+          {{ $t('setup.importMaster.delete') }}
         </v-btn>
         <v-btn
           @click="onSave"
@@ -145,6 +149,7 @@ export default {
   data() {
     return {
       dialog: false,
+      rowsSelected: false,
       showColumnMappings: false,
     };
   },
@@ -168,6 +173,12 @@ export default {
     dataReviewed(data) {
       this.$emit('data-reviewed', data);
       this.dialog = false;
+    },
+    toggleDelete(e) {
+      this.rowsSelected = e;
+    },
+    onDelete() {
+      this.$refs.reviewDataCard.deleteSelectedRows();
     },
     onSave() {
       if (this.reviewType === 'column' || this.showColumnMappings) {

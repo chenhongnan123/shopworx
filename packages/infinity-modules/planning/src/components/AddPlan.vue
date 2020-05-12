@@ -188,6 +188,7 @@ import {
   mapGetters,
   mapMutations,
 } from 'vuex';
+import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'AddPlan',
@@ -342,6 +343,7 @@ export default {
           this.partMatrix[key] = this.partMatrixRecords[0][key];
         });
         this.plan.activecavity = this.partMatrix.cavity;
+        this.plan.scheduledstart = formatDate(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
         this.message = null;
         this.displayPlanningFields = true;
         this.plan = { ...this.plan, ...this.partMatrix };

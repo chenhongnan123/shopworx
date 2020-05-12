@@ -36,7 +36,9 @@
       :gridOptions="gridOptions"
       class="ag-theme-balham mt-2"
       :defaultColDef="defaultColDef"
+      :suppressRowClickSelection="true"
       style="width: 100%; height: 70%;"
+      @selection-changed="onSelectionChanged"
     ></ag-grid-vue>
   </v-card-text>
 </template>
@@ -47,7 +49,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
-  name: 'ReviewColumn',
+  name: 'ReviewData',
   props: {
     records: {
       type: Array,
@@ -89,6 +91,9 @@ export default {
       filter: true,
       editable: true,
       resizable: true,
+      checkboxSelection: this.isFirstColumn,
+      headerCheckboxSelection: this.isFirstColumn,
+      headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
     };
     this.rowData = this.records;
     this.setColumnDef();
@@ -124,10 +129,31 @@ export default {
   },
   methods: {
     setColumnDef() {
-      this.columnDefs = this.tags.map((tag) => ({
+      const columns = this.tags.map((tag) => ({
         headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
         field: tag.tagName,
       }));
+      this.columnDefs = [
+        {
+          headerName: 'Row',
+          valueGetter: 'node.rowIndex + 1',
+          maxWidth: 80,
+        },
+        ...columns,
+      ];
+    },
+    isFirstColumn(params) {
+      const displayedColumns = params.columnApi.getAllDisplayedColumns();
+      const thisIsFirstColumn = displayedColumns[0] === params.column;
+      return thisIsFirstColumn;
+    },
+    onSelectionChanged(event) {
+      this.$emit('row-selected', event.api.getSelectedRows().length > 0);
+    },
+    deleteSelectedRows() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      this.gridApi.updateRowData({ remove: selectedRows });
+      this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
     save() {
       this.$emit('save', this.rowData);

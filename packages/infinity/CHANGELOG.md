@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
+
+
+### Bug Fixes
+
+* **auth:** fixed invalid error of login type ([7026bf5](https://bitbucket.org/entrib/shopworx/commits/7026bf58ae6ddd5529e8d7a324bbfe2c1de69c19))
+
+
+
+
+
 # [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
 
 
