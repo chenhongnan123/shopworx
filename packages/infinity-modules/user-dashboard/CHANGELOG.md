@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
 # [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
 
 **Note:** Version bump only for package @shopworx/user-dashboard
