@@ -244,7 +244,7 @@ export default {
       } else if (this.duplicateColumnData && this.duplicateColumnData.length) {
         this.error = true;
         this.reviewType = 'data';
-        this.message = `Duplicate data for ${this.duplicateColumnData[0].tag}
+        this.message = `Duplicate data for ${this.duplicateColumnData[0]}
           ${this.duplicateColumnData.length > 1 ? 'and more' : ''}!`;
         this.$emit('on-validation', !this.error);
       } else if (this.invalidDataTypes && this.invalidDataTypes.length) {
@@ -274,10 +274,10 @@ export default {
     duplicateData() {
       const res = [];
       this.tags.forEach((t) => {
-        if (t.unique) {
+        if (t.tagName === this.masterElement.uniqueTagName) {
           const matchedRecords = this.records.map((rec) => rec[t.tagName]);
           const uniqueRecords = [...new Set(matchedRecords)];
-          if (matchedRecords.length !== uniqueRecords) {
+          if (matchedRecords.length !== uniqueRecords.length) {
             res.push(t.tagDescription);
           }
         }
@@ -301,13 +301,18 @@ export default {
           t.emgTagType.toLowerCase() === 'float'
           || t.emgTagType.toLowerCase() === 'double'
         ) {
-          const invalid = matchedRecords.some((rec) => Number.isNaN(rec));
+          const invalid = matchedRecords.some((rec) => Number.isNaN(rec - parseFloat(rec)));
           if (invalid) {
             res.push(`${t.tagDescription}(Decimal)`);
           }
         } else if (t.emgTagType.toLowerCase() === 'boolean') {
           const truthyValues = ['true', 'false', true, false];
-          const invalid = matchedRecords.some((rec) => !truthyValues.includes(rec.toLowerCase()));
+          const invalid = matchedRecords.some((rec) => {
+            if (rec) {
+              return !truthyValues.includes(rec.toLowerCase());
+            }
+            return true;
+          });
           if (invalid) {
             res.push(`${t.tagDescription}(Boolean)`);
           }

@@ -348,10 +348,10 @@ export default ({
     },
 
     getScheduledEnd: async (_, { start, end }) => {
-      let scheduledEnd = 0;
+      let scheduledEnd = end;
       const { data } = await HourService.getNonWorkingTime(start, end);
       if (data && data.results) {
-        scheduledEnd = end + data.results;
+        scheduledEnd += data.results;
       }
       return scheduledEnd;
     },

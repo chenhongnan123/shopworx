@@ -21,22 +21,8 @@
       <v-card-title primary-title>
         {{ $t('planning.setup.importMaster.reviewTitle', { title }) }}
         <v-spacer></v-spacer>
-        <v-btn
-          text
-          color="primary"
-          class="text-none"
-          @click="showColumnMappings = true"
-          v-if="reviewType === 'data' && !showColumnMappings"
-        >
-          {{ $t('planning.setup.importMaster.updateColumns') }}
-        </v-btn>
-        <v-btn
-          text
-          color="primary"
-          class="text-none"
-          @click="uploadFile"
-        >
-          {{ $t('planning.setup.importMaster.reimport') }}
+        <v-btn icon @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
         </v-btn>
         <input
           type="file"
@@ -61,21 +47,39 @@
           ref="reviewDataCard"
           @save="dataReviewed"
           :missingData="missingData"
+          @row-selected="toggleDelete"
           :invalidDataTypes="invalidDataTypes"
           :duplicateColumnData="duplicateColumnData"
           v-else-if="reviewType === 'data' && !showColumnMappings"
         />
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
         <v-btn
           text
           color="primary"
           class="text-none"
-          @click="dialog = false"
-          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+          @click="showColumnMappings = true"
+          v-if="reviewType === 'data' && !showColumnMappings"
         >
-          {{ $t('planning.setup.importMaster.cancel') }}
+          {{ $t('planning.setup.importMaster.updateColumns') }}
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          @click="uploadFile"
+        >
+          {{ $t('planning.setup.importMaster.reimport') }}
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          text
+          color="error"
+          class="text-none"
+          @click="onDelete"
+          v-if="rowsSelected && reviewType === 'data' && !showColumnMappings"
+        >
+          {{ $t('planning.setup.importMaster.delete') }}
         </v-btn>
         <v-btn
           @click="onSave"
@@ -145,6 +149,7 @@ export default {
   data() {
     return {
       dialog: false,
+      rowsSelected: false,
       showColumnMappings: false,
     };
   },
@@ -168,6 +173,12 @@ export default {
     dataReviewed(data) {
       this.$emit('data-reviewed', data);
       this.dialog = false;
+    },
+    toggleDelete(e) {
+      this.rowsSelected = e;
+    },
+    onDelete() {
+      this.$refs.reviewDataCard.deleteSelectedRows();
     },
     onSave() {
       if (this.reviewType === 'column' || this.showColumnMappings) {
