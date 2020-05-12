@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
+
+
+### Bug Fixes
+
+* **onboarding:** fixed Boolean data validation ([5919162](https://bitbucket.org/entrib/shopworx/commits/5919162b29676d093521e0ff0edc6a54a88d95aa))
+* **onboarding:** fixed decimal validation ([350a932](https://bitbucket.org/entrib/shopworx/commits/350a932169c79379b67e7812a281d6b00193af35))
+* **onboarding:** fixed duplicate data validation ([a5b67f8](https://bitbucket.org/entrib/shopworx/commits/a5b67f8f7b54c6068b3c8a15711136b2500f3539))
+* **onboarding:** fixed float and double tag type data onboarding ([d29ff78](https://bitbucket.org/entrib/shopworx/commits/d29ff780118e8e7b77095f81b0f9c3afcbcf708b))
+* **planning:** add current date time whlie adding plan ([91c2b33](https://bitbucket.org/entrib/shopworx/commits/91c2b336aa71cc8ed2100f5086e235ce72fbd8a7))
+* **planning:** added check for zero non working time ([1fb8068](https://bitbucket.org/entrib/shopworx/commits/1fb8068f72108770deb0f2e6267a28c6fbee9289))
+
+
+### Features
+
+* **onboarding:** added delete in review data dialog ([f994645](https://bitbucket.org/entrib/shopworx/commits/f994645fa17da8f96b26290b45cd7309c1ecc312))
+
+
+
+
+
 # [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
 
 
