@@ -1,6 +1,6 @@
 <template>
   <div style="height:100%">
-    <portal to="app-header">
+    <portal to="app-header" v-if="!id">
       <span>Production Log</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
@@ -13,31 +13,22 @@
         ></v-icon>
       </v-btn>
     </portal>
-    <portal
-      to="app-extension"
-      v-if="onboarded && !loading"
-    >
-      <v-tabs
-        dense
-        center-active
-        v-model="logView"
+    <portal to="app-header" v-else>
+      <v-btn
+        icon
+        v-if="!$vuetify.breakpoint.mdAndDown"
+        @click="$router.back()"
       >
-        <v-tab class="text-none">
-          Production
-        </v-tab>
-        <v-tab class="text-none">
-          Downtime
-        </v-tab>
-      </v-tabs>
+        <v-icon v-text="'$left'"></v-icon>
+      </v-btn>
+      <span class="ml-2">{{ id }}</span>
+      <selected-machine-status />
     </portal>
     <production-log-loading v-if="loading" />
     <template v-else>
       <production-log-setup v-if="!onboarded" />
       <v-fade-transition mode="out-in" v-else>
-        <keep-alive>
-          <production-log-production-view v-if="logView === 0" />
-          <production-log-downtime-view v-else-if="logView === 1" />
-        </keep-alive>
+        <router-view />
       </v-fade-transition>
     </template>
   </div>
@@ -45,18 +36,16 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
+import SelectedMachineStatus from '../components/SelectedMachineStatus.vue';
 import ProductionLogSetup from './ProductionLogSetup.vue';
 import ProductionLogLoading from './ProductionLogLoading.vue';
-import ProductionLogDowntimeView from './ProductionLogDowntimeView.vue';
-import ProductionLogProductionView from './ProductionLogProductionView.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
+    SelectedMachineStatus,
     ProductionLogSetup,
     ProductionLogLoading,
-    ProductionLogDowntimeView,
-    ProductionLogProductionView,
   },
   data() {
     return {
@@ -66,32 +55,30 @@ export default {
   },
   computed: {
     ...mapState('productionLog', ['onboarded']),
+    id() {
+      return this.$route.params.id;
+    },
   },
   async created() {
     this.loading = true;
-    const view = localStorage.getItem('logView');
-    this.logView = view ? JSON.parse(view) : 0;
     await this.getOnboardingState();
     if (this.onboarded) {
-      this.setExtendedHeader(true);
       await this.getAppSchema();
+      this.setExtendedHeader(true);
     }
     this.loading = false;
   },
-  watch: {
+  methods: {
+    ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('productionLog', ['getOnboardingState']),
+  },
+  watch: {
     onboarded(val) {
       if (val) {
         this.setExtendedHeader(true);
       }
     },
-    logView(val) {
-      localStorage.setItem('logView', val);
-    },
-  },
-  methods: {
-    ...mapMutations('helper', ['setExtendedHeader']),
   },
 };
 </script>
