@@ -108,7 +108,6 @@ export default {
     onChangeStation() {
     },
     btnApply() {
-      debugger;
       if (this.sublines != null) {
         this.setFilterSubLine(this.sublines);
         const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
