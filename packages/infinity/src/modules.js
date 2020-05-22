@@ -4,6 +4,7 @@ import MachineDashboard from '@shopworx/machine-dashboard';
 import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
+import RecipeManagement from '@shopworx/recipe-management';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
 import UserDashboard from '@shopworx/user-dashboard';
@@ -19,6 +20,12 @@ Vue.use(Admin, {
 });
 
 Vue.use(MachineDashboard, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(RecipeManagement, {
   router,
   store,
   i18n,
