@@ -154,11 +154,7 @@ export default {
     },
     async updateRange({ start, end }) {
       const events = [];
-      /* const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime();
-      ?query=orderstatus=="notStarted" */
       const plans = await this.getOrderRecords('');
-      debugger;
       if (plans && plans.length) {
         for (let i = 0; i < plans.length; i += 1) {
           const object = {};
@@ -180,20 +176,7 @@ export default {
           }
           events.push(object);
         }
-        // events = plans.map((plan) => ({
-        //   name: plan.ordername,
-        //   start: this.formatDate(plan.scheduledstart),
-        //   end: this.formatDate(plan.scheduledend),
-        //   color: this.planStatusClass(plan.orderstatus),
-        // }));
-        // else if (plans[i].orderstatus === 'Running') {
-        //     object.start = this.formatDate(plans[i].orderruntime);
-        //     const expCycleTime = 23456;
-        //     const targetCount = plans[i].targetcount * expCycleTime;
-        //   object.end = this.formatDate(new Date(plans[i].orderruntime).getTime() + targetCount);
-        //   }
       }
-      debugger;
       this.start = start;
       this.end = end;
       this.events = events;
