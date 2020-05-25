@@ -1,0 +1,12 @@
+{
+  "productionLog": "Production Log",
+  "error": {
+    "ROADMAP_NAME_EMPTY": "Roadmap name is empty.",
+    "ALREADY_EXSIST_ROADMAP": "Roadmap name already exsist.",
+    "ERROR_CREATING_ROADMAP": "Error creating Roadmap",
+    "SELECT_ROADMAP_FIRST": "Please select Roadmap first"
+  },
+  "success": {
+    "ROADMAP_CREATED": "Roadmap created."
+  }
+}

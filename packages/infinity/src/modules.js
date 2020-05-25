@@ -4,6 +4,7 @@ import MachineDashboard from '@shopworx/machine-dashboard';
 import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
+import RoadmapManagement from '@shopworx/roadmap-management';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
 import UserDashboard from '@shopworx/user-dashboard';
@@ -13,6 +14,12 @@ import router from './router';
 import i18n from './i18n';
 
 Vue.use(Admin, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(RoadmapManagement, {
   router,
   store,
   i18n,

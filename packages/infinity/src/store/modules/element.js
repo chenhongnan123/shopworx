@@ -197,6 +197,24 @@ export default ({
       return true;
     },
 
+    putRecord: async ({ commit }, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.putRecord(elementName, payload);
+        if (data && data.errors) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorMessage,
+          }, {
+            root: true,
+          });
+        }
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+
     postRecord: async (_, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postRecord(elementName, payload);
