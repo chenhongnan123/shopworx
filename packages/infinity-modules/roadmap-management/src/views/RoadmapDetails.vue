@@ -309,7 +309,11 @@ export default {
     await this.getSubLineList('');
   },
   computed: {
-    ...mapState('roadmapManagement', ['roadmapDetails', 'subStationList', 'stationList', 'subLineList']),
+    ...mapState('roadmapManagement', ['roadmapDetails',
+      'subStationList',
+      'stationList',
+      'subLineList',
+      'productList']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -325,7 +329,9 @@ export default {
       'getSubLineList',
       'updateRoadmap',
       'deleteRoadmapDetails',
-      'updateRoadmapDetails']),
+      'updateRoadmapDetails',
+      'createProductDetails',
+      'getProductListFromRoadmapName']),
     ...mapMutations('helper', ['setAlert']),
     addNewRoadmapDetails() {
       this.dialog = true;
@@ -353,10 +359,40 @@ export default {
           assetid: 4,
           roadmapid: this.$route.params.id.id,
         };
-        await this.createRoadmapDetails(this.roadmapDetail);
+        const created = await this.createRoadmapDetails(this.roadmapDetail);
         await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
-        this.dialog = false;
-        this.roadmapDetail = {};
+        if (created) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'ROADMAP_DETAILS_CREATED',
+          });
+          this.dialog = false;
+          // this.roadmapDetail = {};
+          await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
+          if (this.productList.length) {
+            this.productList.forEach(async (products) => {
+              const object = {
+                productname: products.productname,
+                productnumber: products.productnumber,
+                sublinename: this.roadmapDetail.sublinename,
+                sublineid: this.roadmapDetail.sublineid,
+                stationname: this.roadmapDetail.machinename,
+                stationid: this.roadmapDetail.stationid,
+                roadmapname: this.$route.params.id.name,
+                roadmapid: this.$route.params.id.id,
+                assetid: 4,
+              };
+              await this.createProductDetails(object);
+            });
+          }
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_CREATING_ROADMAP_DETAILS',
+          });
+        }
       }
       const roadmap = {
         editedby: this.userName,

@@ -11,6 +11,7 @@ export default ({
     stationList: [],
     subLineList: [],
     createdRoadmap: {},
+    productList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -22,6 +23,7 @@ export default ({
     setStationList: set('stationList'),
     setSubLineList: set('subLineList'),
     setCreatedRoadmap: set('createdRoadmap'),
+    setProductList: set('productList'),
   },
   actions: {
     getRecords: async ({ dispatch, commit }, query) => {
@@ -56,6 +58,32 @@ export default ({
       );
       commit('setRoadmapTypeList', roadmap);
       return roadmap;
+    },
+    getProductListFromRoadmapName: async ({ dispatch, commit }, query) => {
+      const products = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'part',
+          query,
+        },
+        { root: true },
+      );
+      commit('setProductList', products);
+      return products;
+    },
+    createProductDetails: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'productdetails',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
     },
     getSubStationList: async ({ dispatch, commit }, query) => {
       const roadmap = await dispatch(
