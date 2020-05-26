@@ -103,38 +103,6 @@ export default ({
       }
     },
 
-    isFamilyMold: async ({ dispatch }, query) => {
-      const payload = {
-        elementName: 'mold',
-        query,
-      };
-      const molds = await dispatch(
-        'element/getRecords',
-        payload,
-        { root: true },
-      );
-      if (molds && molds.length === 1) {
-        return molds[0].isfamilymold;
-      }
-      return false;
-    },
-
-    getFamilyParts: async ({ dispatch }, query) => {
-      const payload = {
-        elementName: 'partmatrix',
-        query,
-      };
-      const partMatrixRecords = await dispatch(
-        'element/getRecords',
-        payload,
-        { root: true },
-      );
-      if (partMatrixRecords && partMatrixRecords.length) {
-        return partMatrixRecords;
-      }
-      return [];
-    },
-
     getPrimaryMatrixTags: async ({ commit, getters, dispatch }, assetId) => {
       const partMatrixElements = getters.partMatrixComposition(assetId);
       const partMatrixTags = await Promise.all(
@@ -188,23 +156,10 @@ export default ({
     },
 
     updateOrder: async ({ dispatch }, payload) => {
-      debugger;
       const created = await dispatch(
         'element/putRecord',
         {
           elementName: 'order',
-          payload,
-        },
-        { root: true },
-      );
-      return created;
-    },
-
-    createFamilyPlan: async ({ dispatch }, payload) => {
-      const created = await dispatch(
-        'element/postBulkRecords',
-        {
-          elementName: 'planning',
           payload,
         },
         { root: true },
@@ -237,16 +192,18 @@ export default ({
       if (roadmap) {
         list = roadmap;
         commit('setRoadmapList', list);
-        const details = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'roadmapdetails',
-            query: `?query=roadmapid=="${list[0].id}"`,
-          },
-          { root: true },
-        );
-        if (details) {
-          commit('setRoadmapDetails', details);
+        if (list.length > 0) {
+          const details = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'roadmapdetails',
+              query: `?query=roadmapid=="${list[0].id}"`,
+            },
+            { root: true },
+          );
+          if (details) {
+            commit('setRoadmapDetails', details);
+          }
         }
       }
     },
@@ -264,16 +221,18 @@ export default ({
       if (product) {
         list = product;
         commit('setProductList', list);
-        const details = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'productdetails',
-            query: `?query=productnumber=="${list[0].productnumber}"`,
-          },
-          { root: true },
-        );
-        if (details) {
-          commit('setProductDetails', details);
+        if (list.length > 0) {
+          const details = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'productdetails',
+              query: `?query=productnumber=="${list[0].productnumber}"`,
+            },
+            { root: true },
+          );
+          if (details) {
+            commit('setProductDetails', details);
+          }
         }
       }
     },
@@ -305,84 +264,6 @@ export default ({
     }, */
   },
   getters: {
-    planningSchema: (_, __, rootState, rootGetters) => {
-      const { appSchema } = rootState.webApp;
-      const licensedAssets = rootGetters['user/licensedAssets'];
-      if (appSchema) {
-        return appSchema.filter((schema) => licensedAssets.includes(schema.assetId));
-      }
-      return [];
-    },
-
-    partMatrixComposition: (_, { planningSchema }) => (assetId) => {
-      if (planningSchema && planningSchema.length) {
-        return planningSchema
-          .find((schema) => schema.assetId === assetId)
-          .partMatrixComposition;
-      }
-      return [];
-    },
-
-    primaryDisplayTag: (_, { planningSchema }) => (assetId) => {
-      if (planningSchema && planningSchema.length) {
-        return planningSchema
-          .find((schema) => schema.assetId === assetId)
-          .primaryDisplayTag;
-      }
-      return 'planid';
-    },
-
-    optionalPlanMasterFields: ({ planningMaster }) => (assetId) => {
-      if (planningMaster) {
-        return planningMaster.masterTags
-          .filter((tag) => (
-            tag.assetId === assetId
-            && !tag.hide
-            && !tag.required
-          ));
-      }
-      return [];
-    },
-
-    requiredPlanMasterFields: ({ planningMaster }) => (assetId) => {
-      if (planningMaster) {
-        return planningMaster.masterTags
-          .filter((tag) => (
-            tag.assetId === assetId
-            && !tag.hide
-            && tag.required
-          ));
-      }
-      return [];
-    },
-
-    selectedAsset: ({ assets }) => (assetId) => {
-      let asset = null;
-      if (assets && assets.length && assetId) {
-        asset = assets.find((a) => a.id === assetId);
-        if (asset) {
-          asset = asset.assetName;
-        }
-      }
-      return asset;
-    },
-
-    partMatrixTags: ({ partMatrixElement }) => (assetId) => {
-      let tags = [];
-      if (partMatrixElement && assetId) {
-        tags = partMatrixElement.tags.filter((tag) => tag.assetId === assetId && !tag.hide);
-      }
-      return tags;
-    },
-
-    planningTags: ({ planningElement }) => (assetId) => {
-      let tags = [];
-      if (planningElement && assetId) {
-        tags = planningElement.tags.filter((tag) => tag.assetId === assetId && !tag.hide);
-      }
-      return tags;
-    },
-
     filteredPartMatrixRecords: ({ partMatrixRecords }) => (filters = null) => {
       let records = partMatrixRecords;
       if (filters) {

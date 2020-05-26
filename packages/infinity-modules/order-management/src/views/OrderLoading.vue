@@ -20,6 +20,6 @@
 
 <script>
 export default {
-  name: 'PlanningLoading',
+  name: 'OrderLoading',
 };
 </script>

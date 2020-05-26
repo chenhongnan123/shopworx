@@ -12,7 +12,7 @@ import { mapState } from 'vuex';
 import StatsWidget from '../StatsWidget.vue';
 
 export default {
-  name: 'PausedStats',
+  name: 'ReleasedStats',
   components: {
     StatsWidget,
   },

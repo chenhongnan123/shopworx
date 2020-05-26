@@ -3,7 +3,7 @@
     :plans="plans"
     :error="error"
     :loading="loading"
-    :title="'Orders running on time'"
+    :title="'Running orders'"
     @refresh-widget="fetchPlans"
   ></order-widget>
 </template>
@@ -13,7 +13,7 @@ import { mapActions, mapMutations } from 'vuex';
 import OrderWidget from '../OrderWidget.vue';
 
 export default {
-  name: 'OnTimePlans',
+  name: 'RunningOrders',
   components: {
     OrderWidget,
   },

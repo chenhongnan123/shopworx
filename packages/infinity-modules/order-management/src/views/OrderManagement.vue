@@ -109,7 +109,7 @@
     </portal>
     <order-filter></order-filter>
     <add-order />
-    <planning-loading v-if="loading" />
+    <order-loading v-if="loading" />
     <template v-else>
       <v-fade-transition mode="out-in">
         <order-dashboard v-if="planView === 0" />
@@ -122,7 +122,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
-import PlanningLoading from './PlanningLoading.vue';
+import OrderLoading from './OrderLoading.vue';
 import OrderDashboard from './OrderDashboard.vue';
 import OrderScheduleView from './OrderScheduleView.vue';
 import OrderCalendarView from './OrderCalendarView.vue';
@@ -132,7 +132,7 @@ import OrderFilter from '../components/OrderFilter.vue';
 export default {
   name: 'orderManagement',
   components: {
-    PlanningLoading,
+    OrderLoading,
     OrderDashboard,
     OrderScheduleView,
     OrderCalendarView,

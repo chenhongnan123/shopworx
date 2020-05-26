@@ -14,7 +14,7 @@ import { mapActions, mapMutations } from 'vuex';
 import OrderWidget from '../OrderWidget.vue';
 
 export default {
-  name: 'StarredPlans',
+  name: 'ReleasedOrders',
   components: {
     OrderWidget,
   },

@@ -72,28 +72,6 @@
             </span>
           </template>
           <template v-else>
-            <template v-for="(matrixTag, index) in essentialMatrixTags">
-              <v-autocomplete
-                :key="index"
-                class="ml-8"
-                clearable
-                :disabled="saving"
-                :items="partMatrixRecords"
-                :item-text="matrixTag.tagName"
-                :item-value="matrixTag.tagName"
-                @change="updatePartMatrixRecords({
-                  name: matrixTag.tagName,
-                  value: partMatrix[matrixTag.tagName]
-                })"
-                v-model="partMatrix[matrixTag.tagName]"
-                :label="matrixTag.tagDescription"
-              ></v-autocomplete>
-            </template>
-            <template v-if="message">
-              <span class="ml-8">
-                {{ message }}
-              </span>
-            </template>
             <template v-if="displayPlanningFields">
               <v-text-field
                 :disabled="true"
@@ -107,7 +85,6 @@
                 label="Target quantity"
                 prepend-icon="mdi-tray-plus"
                 v-model="plan.targetcount"
-                @change="onPlannedQtyChange"
               ></v-text-field>
               <v-text-field
                 type="datetime-local"
@@ -115,67 +92,12 @@
                 label="Scheduled start"
                 prepend-icon="mdi-clock-start"
               ></v-text-field>
-              <template v-if="isFamily">
-                <div class="ml-8">
-                  This is a family mold. Please select other parts to add to the plan.
-                </div>
-                <v-row
-                  no-gutters
-                  :key="`family-${n}`"
-                  v-for="(family, n) in familyPlan"
-                >
-                  <v-col cols="12">
-                    <v-checkbox
-                      hide-details
-                      :disabled="saving"
-                      v-model="family.selected"
-                      :label="family[partTag.tagName]"
-                    ></v-checkbox>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      type="number"
-                      class="ml-8"
-                      :disabled="saving"
-                      v-model="family.activecavity"
-                      @change="onCavityChange(n)"
-                      label="Active cavity"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      disabled
-                      class="ml-2"
-                      type="number"
-                      v-model="family.plannedquantity"
-                      label="Quantity"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </template>
-              <!-- <template v-if="showMore">
-                <v-checkbox
-                  hide-details
-                  v-model="plan.starred"
-                  label="Mark as star?"
-                ></v-checkbox>
-              </template> -->
             </template>
           </template>
         </template>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <!-- <v-btn
-          text
-          color="primary"
-          class="text-none"
-          :disabled="saving"
-          v-if="displayPlanningFields"
-          @click="showMore = !showMore"
-        >
-          {{ showMore ? 'Less options': 'More options' }}
-        </v-btn> -->
         <v-btn
           color="primary"
           class="text-none"
@@ -227,26 +149,11 @@ export default {
   computed: {
     ...mapState('orderManagement', ['parts', 'orderTypeList', 'addPlanDialog', 'primaryMatrixTags', 'orderList']),
     ...mapGetters('orderManagement', [
-      'selectedAsset',
       'planningTags',
       'partMatrixTags',
       'filteredPartMatrixRecords',
       'partMatrixComposition',
     ]),
-    isInjectionMolding() {
-      let result = false;
-      if (this.assetId) {
-        result = this.selectedAsset(this.assetId) === 'injectionmolding';
-      }
-      return result;
-    },
-    isPress() {
-      let result = false;
-      if (this.assetId) {
-        result = this.selectedAsset(this.assetId) === 'press';
-      }
-      return result;
-    },
     dialog: {
       get() {
         return this.addPlanDialog;
@@ -300,84 +207,6 @@ export default {
         this.plan.customername = this.partMatrixRecords[0].customername;
         this.plan.producttype = this.partMatrixRecords[0].producttype;
         this.displayPlanningFields = true;
-      }
-    },
-    async updatePartMatrixRecords({ name, value }) {
-      if (value) {
-        this.filters[name] = value;
-        this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
-      } else {
-        delete this.filters[name];
-        this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
-      }
-      if (this.partMatrixRecords.length === 1) {
-        if (this.isInjectionMolding) {
-          const uniqueMoldTagName = this.primaryMatrixTags
-            .find((t) => t.element === 'mold')
-            .tag.tagName;
-          const uniqueMachineTagName = this.primaryMatrixTags
-            .find((t) => t.element === 'machine')
-            .tag.tagName;
-          this.message = 'Checking if family mold...';
-          this.isFamily = await this.isFamilyMold(
-            `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"`,
-          );
-          if (this.isFamily) {
-            this.message = 'Fetching family parts...';
-            this.familyParts = await this.getFamilyParts(
-              `?query=${uniqueMoldTagName}=="${this.partMatrix[uniqueMoldTagName]}"%26%26${uniqueMachineTagName}=="${this.partMatrix[uniqueMachineTagName]}"%26%26${this.partTag.tagName}!="${this.partMatrix[this.partTag.tagName]}"`,
-            );
-            if (this.familyParts && this.familyParts.length) {
-              this.showFamilyParts = true;
-              this.familyPlan = this.familyParts.map((part) => ({
-                selected: true,
-                cavity: part.cavity,
-                activecavity: part.cavity,
-                [this.partTag.tagName]: part[this.partTag.tagName],
-                plannedquantity: part.cavity * this.plan.plannedquantity,
-              }));
-            }
-          }
-          this.plan.activecavity = this.partMatrix.cavity;
-        }
-        const matrixKeys = Object.keys(this.partMatrix);
-        matrixKeys.forEach((key) => {
-          this.partMatrix[key] = this.partMatrixRecords[0][key];
-        });
-        this.plan.activecavity = this.partMatrix.cavity;
-        this.message = null;
-        this.displayPlanningFields = true;
-        this.plan = { ...this.plan, ...this.partMatrix };
-      } else {
-        this.displayPlanningFields = false;
-      }
-    },
-    onCavityChange(index) {
-      const shots = this.plan.plannedquantity / this.plan.activecavity;
-      this.familyPlan = this.familyPlan.map((p, n) => {
-        let { plannedquantity } = p;
-        if (n === index) {
-          plannedquantity = p.activecavity * shots;
-        }
-        return { ...p, plannedquantity };
-      });
-    },
-    onPlannedQtyChange() {
-      if (this.showFamilyParts) {
-        const shots = this.plan.plannedquantity / this.plan.activecavity;
-        this.familyPlan = this.familyPlan.map((p) => ({
-          ...p,
-          plannedquantity: p.activecavity * shots,
-        }));
-      }
-    },
-    onActiveCavityChange() {
-      if (this.showFamilyParts) {
-        const shots = this.plan.plannedquantity / this.plan.activecavity;
-        this.familyPlan = this.familyPlan.map((p) => ({
-          ...p,
-          plannedquantity: p.activecavity * shots,
-        }));
       }
     },
     isExpired(expiryDate) {

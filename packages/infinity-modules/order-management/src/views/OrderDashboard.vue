@@ -5,7 +5,7 @@
         <in-progress-stats />
       </v-col>
       <v-col cols="12" md="3" xl="2">
-        <paused-stats />
+        <released-stats />
       </v-col>
       <v-col cols="12" md="3" xl="2">
         <interrupted-stats />
@@ -19,7 +19,7 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" md="6" xl="5">
-        <on-time-plans />
+        <running-orders />
       </v-col>
       <v-col cols="12" md="6" xl="5">
         <running-late-order />
@@ -27,7 +27,7 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" md="6" xl="5">
-        <starred-plans />
+        <released-orders />
       </v-col>
       <v-col cols="12" md="6" xl="5">
         <overdue-plans />
@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import StarredPlans from '../components/dashboard/list/StarredPlans.vue';
-import OnTimePlans from '../components/dashboard/list/OnTimePlans.vue';
+import ReleasedOrders from '../components/dashboard/list/ReleasedOrders.vue';
+import RunningOrders from '../components/dashboard/list/RunningOrders.vue';
 import OverduePlans from '../components/dashboard/list/OverduePlans.vue';
 import NotStartedPlans from '../components/dashboard/list/NotStartedPlans.vue';
 import CompletedOrders from '../components/dashboard/list/CompletedOrders.vue';
@@ -55,20 +55,20 @@ import InProgressStats from '../components/dashboard/stats/InProgressStats.vue';
 import NotStartedStats from '../components/dashboard/stats/NotStartedStats.vue';
 import InterruptedStats from '../components/dashboard/stats/InterruptedStats.vue';
 import CompletedStats from '../components/dashboard/stats/CompletedStats.vue';
-import PausedStats from '../components/dashboard/stats/PausedStats.vue';
+import ReleasedStats from '../components/dashboard/stats/ReleasedStats.vue';
 
 export default {
   name: 'OrderScheduleView',
   components: {
-    StarredPlans,
-    OnTimePlans,
+    ReleasedOrders,
+    RunningOrders,
     OverduePlans,
     CompletedOrders,
     RunningLateOrder,
     NotStartedPlans,
     InProgressStats,
     NotStartedStats,
-    PausedStats,
+    ReleasedStats,
     InterruptedStats,
     CompletedStats,
   },
