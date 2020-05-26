@@ -368,7 +368,6 @@ export default {
             this.roadmap = {};
             // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(`?query=roadmapid=="${this.roadmaps[0].id}"`);
-            debugger;
             const payloadDetails = [];
             roadmapDetailsList.forEach((roadmapDetail) => {
               payloadDetails.push({
