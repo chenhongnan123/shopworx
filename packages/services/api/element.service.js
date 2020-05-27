@@ -32,6 +32,10 @@ class ElementService {
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
   }
+
+  putRecord(elementName, payload) {
+    return this.request.put(`/server/elements/${elementName}/records${payload.query}`, payload.payload);
+  }
   
   deleteRecordById(elementName, id) {
     return this.request.delete(`/server/elements/${elementName}/records/${id}`);
