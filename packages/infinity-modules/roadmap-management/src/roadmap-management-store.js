@@ -140,10 +140,11 @@ export default ({
     },
     updateRoadmap: async ({ dispatch }, payload) => {
       const created = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'roadmaplist',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
@@ -158,10 +159,11 @@ export default ({
 
     updateRoadmapDetails: async ({ dispatch }, payload) => {
       const created = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'roadmapdetails',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
