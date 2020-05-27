@@ -151,10 +151,15 @@
     "updated": "Your ShopWorx account is updated!"
   },
   "modules": {
+    "apps": "Apps",
     "home": "Home",
     "machineDashboard": "Machine Dashboard",
+    "orderManagement": "Order Management",
     "productionLog": "Production Log",
     "planning": "Planning",
+    "roadmapManagement": "Roadmap Management",
+    "recipeManagement": "Recipe Management",
+    "productManagement": "Product Management",
     "reports": "Report",
     "production": "Production",
     "downtime": "Downtime",

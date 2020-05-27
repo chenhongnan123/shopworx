@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
+
+
+### Features
+
+* **production-log:** added production log base ([3ca6933](https://bitbucket.org/entrib/shopworx/commits/3ca6933b7b837ed0ba4f203e95bcb910397e1f68))
+
+
+
+
+
 # [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
 
 **Note:** Version bump only for package @shopworx/production-log

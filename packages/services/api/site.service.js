@@ -16,6 +16,10 @@ class SiteService {
   getApp(roleId, appId) {
     return this.request.get(`/server/webappaccess/${roleId}/${appId}`);
   }
+
+  getMasterSolutions() {
+    return this.request.get('/server/solution/getallforsite');
+  }
 }
 
 export default new SiteService();

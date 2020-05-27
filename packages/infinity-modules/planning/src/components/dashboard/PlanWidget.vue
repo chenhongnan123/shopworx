@@ -73,18 +73,15 @@
             v-else
             class="pa-0"
           >
-            <v-list>
+            <v-list class="py-0">
               <template v-for="(plan, i) in plans">
-                <v-list-item :key="i">
-                  <v-list-item-avatar>
-                    <v-avatar
-                      size="24"
-                      :color="planStatusClass(plan.status)"
-                    ></v-avatar>
-                  </v-list-item-avatar>
+                <v-list-item
+                  :key="i"
+                  :style="`border-left: 6px solid var(--v-${planStatusClass(plan.status)}-base)`"
+                >
                   <v-list-item-content>
                     <v-row>
-                      <v-col cols="12" md="6" xl="5">
+                      <v-col cols="12" md="5">
                         <v-list-item-title>
                           <span v-text="plan.planid"></span>
                         </v-list-item-title>
@@ -93,7 +90,7 @@
                           <div v-text="plan.partname"></div>
                         </v-list-item-subtitle>
                       </v-col>
-                      <v-col cols="12" md="6" xl="6" class="my-auto">
+                      <v-col cols="12" md="7" class="my-auto">
                         <v-list-item-subtitle>
                           {{ getScheduledStart(plan) }}
                         </v-list-item-subtitle>
