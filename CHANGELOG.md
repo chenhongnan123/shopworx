@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
+
+
+### Bug Fixes
+
+* **layout:** settings layout updated ([e3a0008](https://bitbucket.org/entrib/shopworx/commits/e3a0008e45a2ffd2f44c9cf68170a6a53211be8a))
+* **planning:** updated plan status denotation from avatar to bar ([d2f1f95](https://bitbucket.org/entrib/shopworx/commits/d2f1f957d922ddf4f06167e3598cc73a5d6a8381))
+
+
+### Features
+
+* **product-management:** Added product management ([c178a58](https://bitbucket.org/entrib/shopworx/commits/c178a58f3aaa90fe1fbc9f5c2faff277794e3bca))
+* **user-roles:** added user roles to admin console ([a1df78e](https://bitbucket.org/entrib/shopworx/commits/a1df78e4da1544f24848c72069144cc200a81f42))
+* Removed debugger from RecipeFilter screen ([2c930ac](https://bitbucket.org/entrib/shopworx/commits/2c930ac667688091eb4e8b1c860208a3969b5329))
+* **production-log:** added production log base ([3ca6933](https://bitbucket.org/entrib/shopworx/commits/3ca6933b7b837ed0ba4f203e95bcb910397e1f68))
+
+
+
+
+
 # [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
 
 
