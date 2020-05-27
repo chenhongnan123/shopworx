@@ -169,10 +169,11 @@ export default ({
     },
     updateRecipe: async ({ dispatch }, payload) => {
       const created = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'recipelist',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
@@ -184,10 +185,11 @@ export default ({
     },
     updateRecipeDetails: async ({ dispatch }, payload) => {
       const created = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'recipedetails',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
