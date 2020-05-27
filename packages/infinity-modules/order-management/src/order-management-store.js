@@ -157,10 +157,11 @@ export default ({
 
     updateOrder: async ({ dispatch }, payload) => {
       const created = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'order',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
