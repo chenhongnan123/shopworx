@@ -25,10 +25,6 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-      </span>
-    </portal>
-    <portal to="settings-header-secondary">
-      <span>
         <v-btn
           small
           outlined
