@@ -1,11 +1,10 @@
 <template>
-  <v-card outlined>
+  <v-card
+    outlined
+    :style="`border-left: 8px solid var(--v-${planStatusClass(plan.status)}-base)`"
+  >
     <v-card-title primary-title>
-      <v-avatar
-        size="24"
-        :color="planStatusClass(plan.status)"
-      ></v-avatar>
-      <span class="ml-2">
+      <span>
         {{ plan.planid }}
       </span>
     </v-card-title>

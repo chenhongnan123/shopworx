@@ -44,9 +44,8 @@
           >
             <v-card-title primary-title>
               {{ $t(`${selectedTitle}`) }}
-              <portal-target name="settings-header"></portal-target>
               <v-spacer></v-spacer>
-              <portal-target name="settings-header-secondary"></portal-target>
+              <portal-target name="settings-header"></portal-target>
             </v-card-title>
             <v-card-text>
               <v-fade-transition mode="out-in">

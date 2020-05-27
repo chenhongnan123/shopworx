@@ -25,10 +25,6 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-      </span>
-    </portal>
-    <portal to="settings-header-secondary">
-      <span>
         <v-btn
           small
           outlined
@@ -72,7 +68,7 @@
                 :items="roles"
                 v-model="item.role"
                 item-value="roleId"
-                :id="`role-${index}`"
+                :id="`user-${item.id}`"
                 item-text="roleDescription"
               ></v-select>
             </template>
@@ -135,7 +131,7 @@
               :items="roles"
               v-model="item.role"
               item-value="roleId"
-              :id="`role-${index}`"
+              :id="`user-${item.id}`"
               item-text="roleDescription"
             ></v-select>
           </template>
@@ -229,7 +225,10 @@ export default {
       let users = [];
       if (this.users && this.users.length) {
         users = this.users
-          .filter((user) => user.userState !== 'REGISTERED')
+          .filter((user) => (
+            user.userState !== 'REGISTERED'
+            && user.loginType.toUpperCase() === 'INFINITY'
+          ))
           .map((user) => {
             const fullName = user.firstname ? `${user.firstname} ${user.lastname}` : '';
             return {
@@ -248,7 +247,10 @@ export default {
       let users = [];
       if (this.users && this.users.length) {
         users = this.users
-          .filter((user) => user.userState === 'REGISTERED')
+          .filter((user) => (
+            user.userState === 'REGISTERED'
+            && user.loginType.toUpperCase() === 'INFINITY'
+          ))
           .map((user) => ({
             id: user.id,
             role: user.roleId,

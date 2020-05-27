@@ -37,6 +37,7 @@ export default {
     success: 'mdi-check-circle-outline',
     error: 'mdi-alert-circle-outline',
     invite: 'mdi-account-multiple-plus-outline',
+    addRole: 'mdi-shield-plus-outline',
     location: 'mdi-map-marker-circle',
     profile: 'mdi-account-badge-outline',
     lightMode: 'mdi-weather-sunny',

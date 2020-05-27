@@ -151,6 +151,7 @@
     "updated": "Your ShopWorx account is updated!"
   },
   "modules": {
+    "apps": "Apps",
     "home": "Home",
     "machineDashboard": "Machine Dashboard",
     "orderManagement": "Order Management",
