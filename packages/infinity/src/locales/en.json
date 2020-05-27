@@ -153,8 +153,10 @@
   "modules": {
     "home": "Home",
     "machineDashboard": "Machine Dashboard",
+    "orderManagement": "Order Management",
     "productionLog": "Production Log",
     "planning": "Planning",
+    "roadmapManagement": "Roadmap Management",
     "reports": "Report",
     "production": "Production",
     "downtime": "Downtime",

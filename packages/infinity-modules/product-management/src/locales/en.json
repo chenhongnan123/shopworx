@@ -1,0 +1,44 @@
+{
+  "appTitle": "Product Type Management",
+  "displayTags": {
+    "lineName" : "Line",
+    "sublineName": "Subline Name",
+    "stationName": "Station Name",
+    "sublineId": "Subline ID",
+    "recipeName": "Recipe Name",
+    "recipeId": "Recipe ID",
+    "productTypeName" : "Product Type Name",
+    "productTypeDescription": "Product Type Description",
+    "productTypeNumber": "Product Type Number",
+    "customer": "Customer",
+    "roadmap": "Roadmap",
+    "bom": "BOM",
+    "version": "Version",
+    "lastEditedBy": "Last Editted By",
+    "lastEditedOn": "Last Editted On",
+    "createProductType": "Create Product Type",
+    "productTypeCategory": "Product Type Category",
+    "productType": "Product Type",
+    "duplicateDialogTitle": "Duplicate Product Type",
+    "actions": "Actions",
+    "updateDialog": "Edit Product Type",
+    "deleteHeader": "Alert",
+    "deleteConfirmMeaasge": "Are you sure you want to delete this product type and product type details ?",
+    "placeHolders": {
+      "selectLineName": "Select Line Name",
+      "selectRoadmap": "Select Roadmap",
+      "selectRecipe": "Select Recipe",
+      "selectBom": "Select BOM",
+      "selectProductTypeCategory": "Select Product Type Category"
+    },
+    "buttons":{
+      "addProductType": "Add",
+      "duplicateProductType": "Duplicate",
+      "refresh": "Refresh",
+      "filters": "Filters",
+      "save" : "Save",
+      "confirm": "Confirm",
+      "update": "Update"
+    }
+  }
+}
