@@ -145,7 +145,6 @@ export default ({
           { root: true },
         );
         if (orders) {
-          debugger;
           list = orders;
           list = list.sort((a, b) => b.indexno - a.indexno);
           commit('setOrderList', list);
