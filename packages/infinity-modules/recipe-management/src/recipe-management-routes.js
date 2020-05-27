@@ -1,7 +1,7 @@
 const routes = [
   {
     path: 'recipe-management',
-    component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/Index.vue'),
+    component: () => import(/* webpackChunkName: "recipe-management" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
     },
@@ -9,12 +9,12 @@ const routes = [
       {
         path: '',
         name: 'recipeManagement',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/RecipeManagement.vue'),
+        component: () => import(/* webpackChunkName: "recipe-management" */ './views/RecipeManagement.vue'),
       },
       {
         path: ':id',
         name: 'recipe-details',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/RecipeDetails.vue'),
+        component: () => import(/* webpackChunkName: "recipe-management" */ './views/RecipeDetails.vue'),
         props: true,
       },
     ],

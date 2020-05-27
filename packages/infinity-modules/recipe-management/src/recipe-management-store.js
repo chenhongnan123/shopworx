@@ -30,7 +30,7 @@ export default ({
   },
   actions: {
     getRecipeListRecords: async ({ dispatch, commit }, query) => {
-      const recipe = await dispatch(
+      const list = await dispatch(
         'element/getRecords',
         {
           elementName: 'recipelist',
@@ -38,6 +38,15 @@ export default ({
         },
         { root: true },
       );
+      let recipe = [];
+      if (list && list.length) {
+        recipe = list.map((l, index) => ({
+          ...l,
+          selected: false,
+          actions: '',
+          numberIndex: index + 1,
+        }));
+      }
       commit('setRecipeList', recipe);
       commit('setFilterBackupList', recipe);
       return recipe;
@@ -53,7 +62,7 @@ export default ({
       );
       return orders;
     },
-    deleteRecipeByRecipeNumber: async ({ dispatch, commit }, id) => {
+    deleteRecipeByRecipeNumber: async ({ dispatch }, id) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
@@ -63,24 +72,12 @@ export default ({
         { root: true },
       );
       if (deleted) {
-        const query = '';
-        const recipe = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'recipelist',
-            query,
-          },
-          { root: true },
-        );
-        if (recipe) {
-          commit('setRecipeList', recipe);
-          commit('setFilterBackupList', recipe);
-          return recipe;
-        }
+        dispatch('getRecipeListRecords');
+        return true;
       }
       return deleted;
     },
-    deleteRecipeDetails: async ({ dispatch, commit }, id) => {
+    deleteRecipeDetails: async ({ dispatch }, id) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
@@ -90,19 +87,8 @@ export default ({
         { root: true },
       );
       if (deleted) {
-        const query = '';
-        const recipe = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'recipedetails',
-            query,
-          },
-          { root: true },
-        );
-        if (recipe) {
-          commit('setRecipeListDetails', recipe);
-          return recipe;
-        }
+        dispatch('getRecipeDetailListRecords');
+        return true;
       }
       return deleted;
     },
@@ -166,7 +152,7 @@ export default ({
       commit('setRecipeListDetails', recipeDetails);
       return recipeDetails;
     },
-    createRecipe: async ({ dispatch, commit }, payload) => {
+    createRecipe: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postRecord',
         {
@@ -176,24 +162,12 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const recipe = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'recipelist',
-            query,
-          },
-          { root: true },
-        );
-        if (recipe) {
-          commit('setRecipeList', recipe);
-          commit('setFilterBackupList', recipe);
-          return recipe;
-        }
+        dispatch('getRecipeListRecords');
+        return true;
       }
       return created;
     },
-    updateRecipe: async ({ dispatch, commit }, payload) => {
+    updateRecipe: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/putRecord',
         {
@@ -203,24 +177,12 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const recipe = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'recipelist',
-            query,
-          },
-          { root: true },
-        );
-        if (recipe) {
-          commit('setRecipeList', recipe);
-          commit('setFilterBackupList', recipe);
-          return recipe;
-        }
+        dispatch('getRecipeListRecords');
+        return true;
       }
       return created;
     },
-    updateRecipeDetails: async ({ dispatch, commit }, payload) => {
+    updateRecipeDetails: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/putRecord',
         {
@@ -230,19 +192,8 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const recipe = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'recipedetails',
-            query,
-          },
-          { root: true },
-        );
-        if (recipe) {
-          commit('setRecipeListDetails', recipe);
-          return recipe;
-        }
+        dispatch('getRecipeDetailListRecords');
+        return true;
       }
       return created;
     },

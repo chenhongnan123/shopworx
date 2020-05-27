@@ -35,7 +35,7 @@
             <v-icon small left>mdi-plus</v-icon>
             {{ $t('displayTags.buttons.addNewRecipe') }}
           </v-btn>
-          <v-btn v-if="visible"
+          <v-btn v-if="recipes.length"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}
@@ -54,32 +54,18 @@
         :headers="headers"
         :items="recipeList"
         item-key="recipenumber"
+        :single-select="true"
         show-select
         >
-        <template v-slot:item="{ item, index }">
-          <tr>
-          <td>
-            <v-checkbox
-            v-model="recipes"
-            :value ="item"
-            primary
-            hide-details
-            @change="check($event)"
-            ></v-checkbox>
-          </td>
-          <td>{{ index+1 }}</td>
-          <td>{{ item.line }}</td>
-          <td>{{ item.subline }}</td>
-          <td>{{ item.machinename }}</td>
-          <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td>
-          <td>{{ item.recipenumber}}</td>
-          <td>{{ item.versionnumber }}</td>
-          <td>{{ item.createdTimestamp }}</td>
-          <td>{{ item.createdby }}</td>
-          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
-          <td v-else></td>
-          <td>{{ item.editedby }}</td>
-          <td><v-row><v-btn
+        <template v-slot:item.recipename="{ item }">
+          <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
+        </template>
+        <template v-slot:item.editedtime="{ item }">
+          <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
+          <span v-else></span>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-row><v-btn
               icon
               small
               color="primary"
@@ -96,8 +82,7 @@
               :loading="deleting"
             >
               <v-icon v-text="'$delete'"></v-icon>
-            </v-btn></v-row></td>
-          </tr>
+            </v-btn></v-row>
         </template>
       </v-data-table>
       </v-col>
@@ -273,7 +258,7 @@ export default {
       headers: [
         {
           text: 'No.',
-          value: 'number',
+          value: 'numberIndex',
         },
         {
           text: 'Line',
@@ -347,13 +332,6 @@ export default {
       set(val) {
         this.setFilter(val);
       },
-    },
-    check(event) {
-      if (event.length > 0) {
-        this.visible = true;
-      } else {
-        this.visible = false;
-      }
     },
     addNewRecipe() {
       this.dialog = true;

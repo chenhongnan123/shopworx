@@ -21,18 +21,6 @@
     <v-card flat>
       <perfect-scrollbar>
         <v-card-text style="height:calc(100vh - 220px)">
-          <!-- <v-autocomplete
-          outlined
-          dense
-          hide-details
-          label="Select Line"
-          :items="lineList"
-          return-object
-          item-text="name"
-          v-model="lines"
-          @change="onChangeLine(lines)"
-          ></v-autocomplete>
-          <div class="subheading font-weight-regular mt-4"></div> -->
           <v-autocomplete
             v-model="sublines"
             :items="subLineList"
