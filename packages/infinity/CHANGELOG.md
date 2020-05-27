@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
+
+
+### Bug Fixes
+
+* **layout:** settings layout updated ([e3a0008](https://bitbucket.org/entrib/shopworx/commits/e3a0008e45a2ffd2f44c9cf68170a6a53211be8a))
+
+
+### Features
+
+* **product-management:** Added product management ([c178a58](https://bitbucket.org/entrib/shopworx/commits/c178a58f3aaa90fe1fbc9f5c2faff277794e3bca))
+* **production-log:** added production log base ([3ca6933](https://bitbucket.org/entrib/shopworx/commits/3ca6933b7b837ed0ba4f203e95bcb910397e1f68))
+
+
+
+
+
 # [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
 
 

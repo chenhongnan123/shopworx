@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
+
+
+### Bug Fixes
+
+* **planning:** updated plan status denotation from avatar to bar ([d2f1f95](https://bitbucket.org/entrib/shopworx/commits/d2f1f957d922ddf4f06167e3598cc73a5d6a8381))
+
+
+
+
+
 # [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
 
 

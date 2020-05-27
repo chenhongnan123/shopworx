@@ -166,7 +166,6 @@ export default {
       }
     },
     orderDetails(plan) {
-      console.log(plan);
       this.$router.push({ name: 'order-details', params: { id: plan } });
     },
   },

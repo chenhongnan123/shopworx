@@ -252,16 +252,6 @@ export default ({
       commit('setOrderList', list);
       return orders;
     },
-
-    /* getScheduledEnd: async (_, { start, end }) => {
-      let scheduledEnd = 0;
-      console.log({ start, end });
-      const { data } = await HourService.getNonWorkingTime(start, end);
-      if (data && data.results) {
-        scheduledEnd = end + data.results.nonWorkingTime;
-      }
-      return scheduledEnd;
-    }, */
   },
   getters: {
     filteredPartMatrixRecords: ({ partMatrixRecords }) => (filters = null) => {

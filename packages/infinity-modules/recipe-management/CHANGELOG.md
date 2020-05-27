@@ -5,12 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
 
-**Note:** Version bump only for package @shopworx/roadmap-management
 
+### Features
 
-
-
-
-# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
-
-**Note:** Version bump only for package @shopworx/production-log
+* Removed debugger from RecipeFilter screen ([2c930ac](https://bitbucket.org/entrib/shopworx/commits/2c930ac667688091eb4e8b1c860208a3969b5329))

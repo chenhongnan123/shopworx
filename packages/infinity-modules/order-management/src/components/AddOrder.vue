@@ -198,9 +198,7 @@ export default {
         this.assetId = assetid;
         this.fetchingPartMatrix = true;
         await this.getPorductRecords(this.selectedPart);
-        // this.fetchingPartMatrix = false;
         this.partMatrixRecords = this.filteredPartMatrixRecords();
-        console.log(this.partMatrixRecords[0].createdby);
         this.fetchingPartMatrix = false;
         this.plan.productname = productname;
         this.plan.roadmapname = this.partMatrixRecords[0].roadmapname;
@@ -213,7 +211,6 @@ export default {
       return Date.now() < (new Date(expiryDate).getTime());
     },
     async saveOrder() {
-      console.log(this.plan.ordername);
       if (!this.plan.ordername) {
         this.setAlert({
           show: true,
@@ -261,17 +258,8 @@ export default {
             scheduledstart: new Date(this.plan.scheduledstart).getTime(),
             ordercreatedtime: new Date().getTime(),
           };
-          /* const runTime = this.plan.plannedquantity * (this.plan.stdcycletime * 1000);
-          const scheduledEnd = await this.getScheduledEnd({
-            start: this.plan.scheduledstart,
-            end: (this.plan.scheduledstart + runTime),
-          });
-          this.plan.scheduledend = scheduledEnd; */
           let created = false;
           const payload = this.plan;
-          console.log(payload);
-          debugger;
-          // await this.createOrder(payload)
           created = await this.createOrder(payload);
           if (created) {
             this.setAlert({
