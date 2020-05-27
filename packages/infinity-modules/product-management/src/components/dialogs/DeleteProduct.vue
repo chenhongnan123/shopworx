@@ -69,7 +69,6 @@ export default {
     ...mapMutations('productManagement', ['setDeleteDialog']),
     ...mapActions('productManagement', ['delectByQuery', 'getProductListRecords']),
     async deleteProduct() {
-      console.log('PD', this.productToDelete);
       await this.delectByQuery({
         elementName: 'productdetails',
         productName: this.productToDelete.productname,

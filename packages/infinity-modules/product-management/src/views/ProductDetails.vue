@@ -164,7 +164,6 @@ export default {
             recipeDetails: recipeList,
             selectedRecipe: selectedRecipe[0],
           });
-          console.log(this.stationRecipeList);
         });
       }
     },
@@ -269,7 +268,6 @@ export default {
           assetid: 4,
         });
       });
-      console.log(payload);
       await this.createProductDetails(payload);
       // if (created) {
       //   this.setAlert({
