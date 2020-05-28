@@ -195,12 +195,14 @@ export default {
       if (this.selectedPart) {
         const { assetid } = this.selectedPart;
         const { productname } = this.selectedPart;
+        const { productnumber } = this.selectedPart;
         this.assetId = assetid;
         this.fetchingPartMatrix = true;
         await this.getPorductRecords(this.selectedPart);
         this.partMatrixRecords = this.filteredPartMatrixRecords();
         this.fetchingPartMatrix = false;
         this.plan.productname = productname;
+        this.plan.productid = productnumber;
         this.plan.roadmapname = this.partMatrixRecords[0].roadmapname;
         this.plan.customername = this.partMatrixRecords[0].customername;
         this.plan.producttype = this.partMatrixRecords[0].producttype;

@@ -21,9 +21,11 @@
     "RECIPE_NAME_EMPTY": "Recipe name is Empty.",
     "ALREADY_EXSIST_RECIPE": "Recipe Name already present",
     "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
+    "ERROR_UPDATING_RECIPE": "Error while updating recipe, please retry.",
     "SELECT_RECIPE_FIRST": "Please select the Recipe first."
   },
   "success": {
-    "RECIPE_CREATED": "Recipe created!"
+    "RECIPE_CREATED": "Recipe created!",
+    "RECIPE_UPDATED": "Recipe updated!"
   }
 }
