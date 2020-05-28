@@ -14,7 +14,7 @@ const routes = [
       {
         path: ':id',
         name: 'order-details',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/OrderDetails.vue'),
+        component: () => import(/* webpackChunkName: "order-management" */ './views/OrderDetails.vue'),
         props: true,
       },
     ],
