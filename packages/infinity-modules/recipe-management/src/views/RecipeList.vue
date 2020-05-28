@@ -464,7 +464,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'RECIPE_CREATED',
+              message: 'RECIPE_UPDATED',
             });
             this.dialog = false;
             this.recipe = {};
@@ -472,7 +472,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'ERROR_CREATING_RECIPE',
+              message: 'ERROR_UPDATING_RECIPE',
             });
           }
           this.saving = false;
