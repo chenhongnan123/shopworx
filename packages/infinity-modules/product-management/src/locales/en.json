@@ -6,12 +6,14 @@
     "ERROR_UPDATING_PRODUCT": "Error updating Roadmap",
     "ERROR_CREATING_PRODUCT": "Error creating Roadmap",
     "ERROR_CREATING_ROADMAP_DETAILS": "Error creating Roadmap details",
-    "SELECT_ROADMAP_FIRST": "Please select Roadmap first"
+    "SELECT_ROADMAP_FIRST": "Please select Roadmap first",
+    "PRODUCT_DETAILS_UPDAT_ERROR": "Error updating Product details."
   },
   "success": {
     "PRODUCT_CREATED": "Product created.",
     "PRODUCT_UPDATED": "Product updated.",
-    "ROADMAP_DETAILS_CREATED" : "Roadmap details created."
+    "ROADMAP_DETAILS_CREATED" : "Roadmap details created.",
+    "PRODUCT_DETAILS_UPDATED": "Product details updated."
   },
   "displayTags": {
     "lineName" : "Line",

@@ -267,7 +267,7 @@ export default ({
           queryParam,
           payload,
         );
-        if (data && data.Success) {
+        if (data && data.updated) {
           return true;
         }
       } catch (e) {
