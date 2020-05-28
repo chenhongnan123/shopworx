@@ -1,7 +1,7 @@
 const routes = [
   {
     path: 'roadmap-management',
-    component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/Index.vue'),
+    component: () => import(/* webpackChunkName: "roadmap-management" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
     },
@@ -9,12 +9,12 @@ const routes = [
       {
         path: '',
         name: 'roadmapManagement',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/RoadmapManagement.vue'),
+        component: () => import(/* webpackChunkName: "roadmap-management" */ './views/RoadmapManagement.vue'),
       },
       {
         path: ':id',
         name: 'roadmap-details',
-        component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/RoadmapDetails.vue'),
+        component: () => import(/* webpackChunkName: "roadmap-management" */ './views/RoadmapDetails.vue'),
         props: true,
       },
     ],
