@@ -17,6 +17,7 @@
     "@shopworx/planning": "^4.1.0-beta.15",
     "@shopworx/product-management": "^4.1.0-beta.15",
     "@shopworx/parameter-configuration": "^4.1.0-beta.15",
+    "@shopworx/production-layout": "^4.1.0-beta.14",
     "@shopworx/production-log": "^4.1.0-beta.15",
     "@shopworx/recipe-management": "^4.1.0-beta.15",
     "@shopworx/report-viewer": "^4.1.0-beta.15",
