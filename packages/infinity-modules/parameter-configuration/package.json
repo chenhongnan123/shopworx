@@ -1,9 +1,9 @@
 {
 	"name": "@shopworx/parameter-configuration",
-	"version": "4.1.0-beta.14",
+	"version": "4.1.0-beta.15",
 	"private": true,
 	"dependencies": {
-	  "@shopworx/services": "^4.1.0-beta.14",
+	  "@shopworx/services": "^4.1.0-beta.15",
 	  "vuex": "^3.3.0"
 	},
 	"devDependencies": {
