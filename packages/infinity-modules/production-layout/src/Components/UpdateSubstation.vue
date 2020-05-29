@@ -71,7 +71,6 @@ export default {
     };
   },
   created() {
-    console.log(this.substation);
     this.newSubstation = { ...this.substation };
     this.disabled = true;
   },
@@ -105,10 +104,8 @@ export default {
       if (this.payload !== {}) {
         this.disabled = false;
       }
-      console.log(this.payload);
     },
     async validateInitsst() {
-      debugger;
       const initialSubstationFlag = this.subStations
         .filter((item) => item.sublineid === this.newSubstation.sublineid
         && item.initialsubstation === true);
@@ -196,7 +193,6 @@ export default {
     async saveSubstation() {
       this.saving = true;
       let created = false;
-      debugger;
       const payload = {
         query: `?query=id=="${this.substation.id}"`,
         payload: this.payload,
@@ -223,7 +219,6 @@ export default {
   watch: {
     newSubstation: {
       handler(val) {
-        console.log('changed');
         this.compareValues(val);
       },
       deep: true,
