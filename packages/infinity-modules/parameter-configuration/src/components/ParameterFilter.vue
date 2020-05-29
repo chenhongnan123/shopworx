@@ -304,7 +304,6 @@ export default {
         query += `startadress=="${this.selectedParameterStartAdress}"&`;
       }
       query += `substationid=="${this.substationValue || null}"`;
-      console.log(this.selectedParameterDatatype, 'datatype');
       // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getParameterListRecords(query);
     },

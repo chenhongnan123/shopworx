@@ -8,20 +8,6 @@
             dense
             :color="$vuetify.theme.dark ? '#121212': ''"
           >
-            <v-btn
-            small
-            color="primary"
-            class="text-none"
-            :disabled="isAddButtonOK"
-            @click="setAddParameterDialog(true)"
-            >
-              <v-icon small left>mdi-plus</v-icon>
-              Add parameter
-            </v-btn>
-            <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-              <v-icon small left>mdi-refresh</v-icon>
-              Refresh
-            </v-btn>
             <span v-if="lineList.length && !!lineValue" class="ml-2">
               line:
               <v-btn
@@ -71,14 +57,36 @@
               </v-btn>
             </span>
             <v-spacer></v-spacer>
-            <v-icon
+            <v-btn
+            small
+            color="primary"
+            class="text-none"
+            :disabled="isAddButtonOK"
+            @click="setAddParameterDialog(true)"
+            >
+              <v-icon small left>mdi-plus</v-icon>
+              Add parameter
+            </v-btn>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+              <v-icon small left>mdi-refresh</v-icon>
+              Refresh
+            </v-btn>
+            <v-btn small color="error"
+              outlined
+              class="text-none ml-2"
+              @click="confirmDialog = true"
+              v-if="parameterSelected.length">
+              <v-icon small left>mdi-delete</v-icon>
+              Delete
+            </v-btn>
+            <!-- <v-icon
             normal
             color="primary"
             left
             @click="confirmDialog = true"
             :disabled="parameterSelected.length === 0">
               mdi-delete
-            </v-icon>
+            </v-icon> -->
             <v-btn
             small
             color="primary"
@@ -86,7 +94,6 @@
             outlined
             class="text-none ml-2"
             @click="exportData">
-              <v-icon small left>mdi-filter-variant</v-icon>
               Export
             </v-btn>
             <v-btn
@@ -96,7 +103,6 @@
             class="text-none ml-2"
             :disabled="isAddButtonOK"
             @click="importData">
-              <v-icon small left>mdi-filter-variant</v-icon>
               Import
             </v-btn>
             <input
@@ -119,66 +125,6 @@
               Filters
             </v-btn>
           </v-toolbar>
-          <!-- <v-toolbar
-            flat
-            dense
-            class="stick"
-            :color="$vuetify.theme.dark ? '#121212': ''"
-          >
-            <div>
-              <span class="mx-4">Line:</span>
-              <v-select
-                v-model="lineValue"
-                :items="lineList"
-                item-text="name"
-                item-value="id"
-                solo
-                :dense="true"
-                style="display:inline-block;"
-                placeholder="select Line"
-              ></v-select>
-            </div>
-            <div>
-              <span class="mx-4">Subline:</span>
-              <v-select
-                v-model="sublineValue"
-                :items="sublineList"
-                item-text="name"
-                item-value="id"
-                solo
-                :dense="true"
-                style="display:inline-block;"
-                placeholder="select Subline"
-              ></v-select>
-            </div>
-            <div>
-              <span class="mx-4">Station:</span>
-              <v-select
-                v-model="stationValue"
-                :items="stationList"
-                item-text="name"
-                item-value="id"
-                solo
-                :dense="true"
-                style="display:inline-block;"
-                placeholder="select station"
-              ></v-select>
-            </div>
-            <div>
-              <span class="mx-4">Substation:</span>
-              <v-select
-                v-model="substationValue"
-                :items="substationList"
-                item-text="name"
-                item-value="id"
-                solo
-                :dense="true"
-                style="display:inline-block;"
-                placeholder="select substation"
-                clearable
-              ></v-select>
-            </div>
-          </v-toolbar> -->
         </div>
         <v-data-table
         v-model="parameterSelected"
@@ -186,7 +132,6 @@
         item-key="_id"
         :items="parameterList"
         show-select
-        height="500"
         >
           <template v-slot:item.name="props">
             <v-edit-dialog
@@ -391,7 +336,6 @@ export default {
     this.zipService = ZipService;
     await this.getPageDataList();
     // await this.getParameterListRecords('?query=stationid=="11"');
-    console.log(this.parameterList);
   },
   computed: {
     ...mapState('parameterConfiguration', ['parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
@@ -431,16 +375,12 @@ export default {
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
-    parameterSelected(parameterSelected) {
-      console.log(parameterSelected);
-    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList']),
     async saveTableParameter(item, type) {
-      console.log(item, 'save', type);
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
       if (!value) {
@@ -452,7 +392,6 @@ export default {
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
         return;
       }
-      console.log(parameterListSave);
       if (type === 'name') {
         if (parameterListSave.some((parameter) => value === parameter.name)) {
           this.setAlert({
@@ -517,7 +456,6 @@ export default {
       if (type === 'datatype') {
         [selectedDatatypeItem] = this.datatypeList.filter((datatype) => value === datatype.id);
         query = `?query=name=="${parameterItem.name}"&${type}=="${value}"&isbigendian==${selectedDatatypeItem.isbigendian === 1}&isswapped==${selectedDatatypeItem.isswapped === 1}`;
-        console.log(value, this.datatypeList, selectedDatatypeItem);
         payload.isbigendian = selectedDatatypeItem.isbigendian === 1;
         payload.isswapped = selectedDatatypeItem.isswapped === 1;
         if (selectedDatatypeItem.name !== 'Boolean' && selectedDatatypeItem.name !== 'String') {
@@ -526,7 +464,6 @@ export default {
       }
       payload[type] = value;
       const updateResult = await this.updateParameter({ query, payload });
-      console.log(updateResult, 'updateResult');
       if (updateResult) {
         this.setAlert({
           show: true,
@@ -544,7 +481,6 @@ export default {
       // this.parameterListSave = this.parameterList.map((itemSave) => ({ ...itemSave }));
     },
     async handleDeleteParameter() {
-      console.log(this.parameterSelected);
       const results = await Promise.all(this.parameterSelected.map(
         (parameter) => this.deleteParameter(parameter._id),
       ));
@@ -552,7 +488,6 @@ export default {
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
         this.confirmDialog = false;
         this.parameterSelected = [];
-        console.log(this.parameterSelected, 'parameterSelected');
         // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
         this.setAlert({
           show: true,
@@ -566,7 +501,6 @@ export default {
           message: 'delete_parameter',
         });
       }
-      console.log(results, 'results');
     },
     async RefreshUI() {
       const query = `?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`;
@@ -574,8 +508,6 @@ export default {
       // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     async exportData() {
-      console.log(this.lineValue, this.sublineValue, this.stationValue, this.substationValue);
-      console.log(this.lineList, this.sublineList, this.stationList, this.substationList);
       const lineName = this.lineList.filter((item) => this.lineValue === item.id).length
         ? this.lineList.filter((item) => this.lineValue === item.id)[0].name : 'None';
       const sublineName = this.sublineList.filter((item) => this.sublineValue === item.id).length
@@ -586,7 +518,6 @@ export default {
         (item) => this.substationValue === item.id,
       ).length
         ? this.substationList.filter((item) => this.substationValue === item.id)[0].name : 'None';
-      console.log(lineName, sublineName, stationName, substationName);
       const fileName = `${lineName}-${sublineName}-${stationName}-${substationName}`;
       const parameterSelected = this.parameterSelected.map((item) => ({ ...item }));
       const column = parameterSelected[0].questions;
@@ -618,7 +549,6 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      console.log(data, 'data');
       data.forEach((item) => {
         item.substationid = this.substationValue;
         delete item.monitor;
@@ -626,7 +556,6 @@ export default {
       });
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
-      console.log(dataList, nameList);
       if (new Set(nameList).size === nameList.length) {
         for (let i = 0; i < dataList.length; i += 1) {
           for (let k = i + 1; k < dataList.length; k += 1) {
@@ -647,7 +576,6 @@ export default {
         await this.createParameterList(data);
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
         document.getElementById('uploadFiles').value = null;
-        console.log(e.target.files);
       } else {
         this.setAlert({
           show: true,
@@ -655,7 +583,6 @@ export default {
           message: 'duplicate_parameter_name',
         });
         document.getElementById('uploadFiles').value = null;
-        console.log(e.target.files);
       }
     },
     addToZip(file) {

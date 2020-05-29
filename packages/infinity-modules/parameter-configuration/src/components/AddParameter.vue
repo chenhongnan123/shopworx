@@ -329,9 +329,7 @@ export default {
     ...mapActions('parameterConfiguration', ['getPageDataList', 'createParameter', 'getParameterListRecords']),
     async saveParameter() {
       const { parameterObj } = this;
-      console.log(this.parameterObj);
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate());
         const { name, dbaddress, startaddress } = parameterObj;
         if (this.parameterList.some((parameter) => name === parameter.name)) {
           this.setAlert({
@@ -359,7 +357,6 @@ export default {
           });
           return;
         }
-        console.log(parameterObj, 'parameterObj');
         const payload = {
           ...parameterObj,
           assetid: 4,
@@ -377,9 +374,7 @@ export default {
         if (payload.datatype === 'Boolean' || payload.datatype === 'String') {
           payload.size = parameterObj.size;
         }
-        console.log(payload);
         const parameterList = await this.createParameter(payload);
-        console.log(parameterList);
         if (parameterList) {
           this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
           this.setAlert({
