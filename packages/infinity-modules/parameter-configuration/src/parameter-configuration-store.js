@@ -18,6 +18,7 @@ export default ({
     stationValue: '',
     substationValue: '',
     filter: false,
+    dataTypeList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -35,6 +36,7 @@ export default ({
     setSublineValue: set('sublineValue'),
     setStationValue: set('stationValue'),
     setSubstationValue: set('substationValue'),
+    setDatatypes: set('dataTypeList'),
   },
   actions: {
     getPageDataList: async ({ commit, dispatch }) => {
@@ -58,10 +60,6 @@ export default ({
         { elementName: 'line' },
         { root: true },
       );
-      console.log(directionList, 'directionList');
-      console.log(categoryList, 'categoryList');
-      console.log(datatypeList, 'datatypeList');
-      console.log(lineList, 'lineList');
       if (directionList && directionList.length) {
         commit('setDirectionList', directionList);
       }
@@ -75,13 +73,28 @@ export default ({
         commit('setLineList', lineList);
       }
     },
+    getDataTypes: async ({ commit, dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'datatypes', query },
+        { root: true },
+      );
+      let datatypes = [];
+      if (list && list.length) {
+        datatypes = list.map((l) => ({
+          ...l,
+          plc: 'Siemens',
+          protocol: 'SNAP7',
+        }));
+      }
+      commit('setDatatypes', datatypes);
+    },
     getSublineList: async ({ commit, dispatch }, query) => {
       const sublineList = await dispatch(
         'element/getRecords',
         { elementName: 'subline', query },
         { root: true },
       );
-      console.log(sublineList, 'sublineList');
       if (sublineList) {
         commit('setSublineList', sublineList);
       }
@@ -92,7 +105,6 @@ export default ({
         { elementName: 'station', query },
         { root: true },
       );
-      console.log(stationList, 'stationList');
       if (stationList) {
         commit('setStationList', stationList);
       }
@@ -103,7 +115,6 @@ export default ({
         { elementName: 'substation', query },
         { root: true },
       );
-      console.log(substationList, 'substationList');
       if (substationList) {
         commit('setSubstationList', substationList);
       }
@@ -169,7 +180,6 @@ export default ({
         },
         { root: true },
       );
-      console.log(deleteParameter, 'deleteParameter');
       return deleteParameter;
     },
   },
