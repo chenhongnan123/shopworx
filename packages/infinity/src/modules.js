@@ -5,6 +5,7 @@ import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
 import RecipeManagement from '@shopworx/recipe-management';
+import ParameterConfiguration from '@shopworx/parameter-configuration';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import ProductManagement from '@shopworx/product-management';
 import ReportViewer from '@shopworx/report-viewer';
@@ -22,6 +23,12 @@ Vue.use(Admin, {
 });
 
 Vue.use(RoadmapManagement, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ParameterConfiguration, {
   router,
   store,
   i18n,
