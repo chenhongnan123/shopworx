@@ -216,7 +216,6 @@ export default {
       selectedParameterStartAdress: null,
     };
   },
-  // props: ['station', 'substation'],
   computed: {
     ...mapState('parameterConfiguration', ['filter', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'directionList', 'categoryList', 'datatypeList']),
     showFilter: {
@@ -251,10 +250,6 @@ export default {
     },
     async substation(val) {
       await this.setSubstationValue(val);
-      // const query = `?query=substationid=="${val || null}"`;
-      // query += `${this.substationValue ? 'sub' : ''}stationid==
-      // "${this.substationValue || this.stationValue}"`;
-      // this.getParameterListRecords(query);
     },
     lineValue(val) {
       if (!val) {
@@ -304,17 +299,11 @@ export default {
         query += `startadress=="${this.selectedParameterStartAdress}"&`;
       }
       query += `substationid=="${this.substationValue || null}"`;
-      // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getParameterListRecords(query);
     },
     btnReset() {
       this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
       this.toggleFilter();
-      // this.selectedParameterName = '';
-      // this.selectedParameterDirection = '';
-      // this.selectedParameterCategory = '';
-      // this.selectedParameterDatatype = '';
-      // this.selectedParameterStartAdress = '';
       this.line = '';
       this.subline = '';
       this.station = '';

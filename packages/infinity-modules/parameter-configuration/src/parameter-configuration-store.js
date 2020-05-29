@@ -1,4 +1,3 @@
-// import HourService from '@shopworx/services/api/hour.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -141,7 +140,6 @@ export default ({
       );
       return created;
     },
-    // getParameterListRecords: async ({ dispatch, commit }, query) => {
     getParameterListRecords: async ({ dispatch, commit }, query) => {
       const parameterList = await dispatch(
         'element/getRecords',

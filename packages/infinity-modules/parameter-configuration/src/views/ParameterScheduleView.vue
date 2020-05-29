@@ -79,14 +79,6 @@
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
-            <!-- <v-icon
-            normal
-            color="primary"
-            left
-            @click="confirmDialog = true"
-            :disabled="parameterSelected.length === 0">
-              mdi-delete
-            </v-icon> -->
             <v-btn
             small
             color="primary"
@@ -308,10 +300,6 @@ export default {
   name: 'PlanScheduleView',
   data() {
     return {
-      // lineValue: '',
-      // sublineValue: '',
-      // stationValue: '',
-      // substationValue: '',
       parameterSelected: [],
       headers: [
         { text: 'Number', value: 'number' },
@@ -335,7 +323,6 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
-    // await this.getParameterListRecords('?query=stationid=="11"');
   },
   computed: {
     ...mapState('parameterConfiguration', ['parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
@@ -368,8 +355,6 @@ export default {
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        // const query = '?query=substationid===null';
-        // this.getParameterListRecords(query);
       }
     },
     parameterList(parameterList) {
@@ -478,7 +463,6 @@ export default {
         });
       }
       await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
-      // this.parameterListSave = this.parameterList.map((itemSave) => ({ ...itemSave }));
     },
     async handleDeleteParameter() {
       const results = await Promise.all(this.parameterSelected.map(
@@ -488,7 +472,6 @@ export default {
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
         this.confirmDialog = false;
         this.parameterSelected = [];
-        // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
         this.setAlert({
           show: true,
           type: 'success',
@@ -505,7 +488,6 @@ export default {
     async RefreshUI() {
       const query = `?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`;
       await this.getParameterListRecords(query);
-      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     async exportData() {
       const lineName = this.lineList.filter((item) => this.lineValue === item.id).length
@@ -612,7 +594,6 @@ export default {
 .planScheduleView .green {
   background-color: green;
 }
-/* .planScheduleView .v-data-table__wrapper{height:calc(100vh - 150px) !important;} */
 .planScheduleView .v-select{
   height: 30px;
 }

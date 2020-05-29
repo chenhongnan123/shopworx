@@ -9,15 +9,6 @@
             :color="$vuetify.theme.dark ? '#121212': ''"
           >
             <v-spacer></v-spacer>
-            <!-- <v-btn
-            small
-            color="primary"
-            class="text-none"
-            @click="setAddParameterDialog(true)"
-            >
-              <v-icon small left>mdi-plus</v-icon>
-              Add datatype
-            </v-btn> -->
             <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
               Refresh

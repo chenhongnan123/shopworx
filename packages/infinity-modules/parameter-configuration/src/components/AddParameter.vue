@@ -97,16 +97,6 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
-          <!-- <v-text-field
-              v-if = "parameterObj.datatype && parameterObj.datatype.name === 'Boolean'
-              || parameterObj.datatype.name === 'String'"
-              :disabled="saving"
-              :rules="rules.size"
-              label="Size"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.size"
-              type="number"
-          ></v-text-field> -->
           <v-text-field
               :disabled="saving"
               label="DB Address"
@@ -129,42 +119,6 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.protocol"
           ></v-text-field>
-          <!-- <v-autocomplete
-            clearable
-            label="Is Big Endian"
-            :items="boolList"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            prepend-icon="$production"
-            v-model="parameterObj.isbigendian"
-            :rules="rules.isbigendian"
-          >
-            <template v-slot:item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
-          <v-autocomplete
-            clearable
-            label="Is Swapped"
-            :items="boolList"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            prepend-icon="$production"
-            v-model="parameterObj.isswapped"
-            :rules="rules.isswapped"
-          >
-            <template v-slot:item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete> -->
           <v-autocomplete
             clearable
             label="Is Conversion"
@@ -278,12 +232,6 @@ export default {
           (v) => v % 1 === 0 || 'Size is Integer',
           (v) => v > 0 || 'Size is greater than zero',
         ],
-        // isbigendian: [
-        //   (v) => !!v || 'Is Big Endian is required',
-        // ],
-        // isswapped: [
-        //   (v) => !!v || 'Is Swapped is required',
-        // ],
         isconversion: [
           (v) => !!v || 'Is Conversion is required',
         ],
@@ -319,9 +267,6 @@ export default {
         this.setAddParameterDialog(val);
       },
     },
-  },
-  async created() {
-    // await this.getPageDataList();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

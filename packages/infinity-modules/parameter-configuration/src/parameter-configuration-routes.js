@@ -2,7 +2,7 @@ const routes = [
   {
     path: 'parameter-configuration',
     name: 'parameterConfiguration',
-    component: () => import(/* webpackChunkName: "production-log" */ './views/ParameterConfiguration.vue'),
+    component: () => import(/* webpackChunkName: "parameter-configuration" */ './views/ParameterConfiguration.vue'),
     meta: {
       permissionRequired: true,
     },
