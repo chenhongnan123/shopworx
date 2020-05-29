@@ -325,13 +325,13 @@ export default {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'create parameter success',
+            message: 'CREATE_PARAMETER',
           });
         } else {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'network error',
+            message: 'CREATE_PARAMETER',
           });
         }
         this.dialog = false;
