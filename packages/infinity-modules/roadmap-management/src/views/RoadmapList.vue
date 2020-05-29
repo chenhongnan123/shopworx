@@ -440,7 +440,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'ROADMAP_CREATED',
+              message: 'ROADMAP_UPDATED',
             });
             this.dialog = false;
             this.recipe = {};
