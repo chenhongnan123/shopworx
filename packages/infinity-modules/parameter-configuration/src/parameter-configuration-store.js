@@ -88,6 +88,21 @@ export default ({
       }
       commit('setDatatypes', datatypes);
     },
+    addDataType: async ({ dispatch }, payload) => {
+      const list = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'datatypes',
+          payload,
+        },
+        { root: true },
+      );
+      if (list) {
+        dispatch('getDataTypes');
+        return true;
+      }
+      return false;
+    },
     getSublineList: async ({ commit, dispatch }, query) => {
       const sublineList = await dispatch(
         'element/getRecords',
@@ -171,10 +186,10 @@ export default ({
     },
     deleteParameter: async ({ dispatch }, id) => {
       const deleteParameter = await dispatch(
-        'element/deleteRecord',
+        'element/deleteRecordByQuery',
         {
           elementName: 'parameters',
-          id,
+          queryParam: `?query=id=="${id}"`,
         },
         { root: true },
       );

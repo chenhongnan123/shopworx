@@ -466,7 +466,7 @@ export default {
     },
     async handleDeleteParameter() {
       const results = await Promise.all(this.parameterSelected.map(
-        (parameter) => this.deleteParameter(parameter._id),
+        (parameter) => this.deleteParameter(parameter.id),
       ));
       if (results.every((bool) => bool === true)) {
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
