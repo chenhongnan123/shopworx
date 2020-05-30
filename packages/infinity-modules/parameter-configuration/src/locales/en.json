@@ -1,0 +1,11 @@
+{
+  "parameterConfiguration": "Parameter Configuration",
+  "success": {
+    "delete_parameter": "Parameter is deleted.",
+    "CREATE_PARAMETER": "Parameter created"
+  },
+  "error": {
+    "delete_parameter": "Error in deleteing parameter.",
+    "CREATE_PARAMETER": "Error in creating parameter"
+  }
+}
