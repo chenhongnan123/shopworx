@@ -465,11 +465,9 @@ export default {
       await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
     },
     async handleDeleteParameter() {
-      console.log(this.parameterSelected);
       const results = await Promise.all(this.parameterSelected.map(
         (parameter) => this.deleteParameter(parameter.id),
       ));
-      debugger;
       if (results.every((bool) => bool === true)) {
         await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
         this.confirmDialog = false;

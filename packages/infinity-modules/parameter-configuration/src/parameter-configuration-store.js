@@ -185,7 +185,6 @@ export default ({
       return putParameter;
     },
     deleteParameter: async ({ dispatch }, id) => {
-      debugger;
       const deleteParameter = await dispatch(
         'element/deleteRecordByQuery',
         {
