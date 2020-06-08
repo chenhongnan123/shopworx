@@ -24,20 +24,20 @@
           <v-row>
             <v-col cols="12" md="12">
               <v-select
-              label="Sub Station"
+              label="Sub Station *"
               :items="subStations"
               item-text="name"
               return-object
               v-model="selectedSubstationLine"
             >
             </v-select>
-              <v-text-field label="Name"
+              <v-text-field label="Name *"
                 hint="For example, Process_01"
                 v-model="newProcess.name"
                 :rules="nameRules"
                 counter="15"
                  required type="text" ></v-text-field>
-              <v-text-field label="Number" type="number"
+              <v-text-field label="Number *" type="number"
               hint="For example, 11111"
               :rules="numberRules"
               counter="10"

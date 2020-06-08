@@ -24,19 +24,19 @@
           <v-row>
             <v-col cols="6" md="6">
               <v-select
-              label="Select Subline"
+              label="Select Subline *"
               :items="sublines"
               item-text="name"
               return-object
               v-model="selectedSubLine"
             >
             </v-select>
-              <v-text-field label="Name"
+              <v-text-field label="Name *"
                 hint="For example, STATION-01"
                 v-model="newStation.name"
                 counter="15"
                 :rules ="nameRules" required type="text" ></v-text-field>
-              <v-text-field label="Number"
+              <v-text-field label="Number *"
                 type="number"
                 hint="For example, 111"
                 v-model="newStation.numbers"

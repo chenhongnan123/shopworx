@@ -21,13 +21,13 @@
         </v-btn>
     </v-card-title>
     <v-card-text>
-        <v-text-field label="Name"
+        <v-text-field label="Name *"
         hint="For example, SUBLINE-01"
          v-model="newSubLine.name"
         :rules="nameRules"
         :counter="15"
          required></v-text-field>
-        <v-text-field label="Number"
+        <v-text-field label="Number *"
           type="number"
           hint="For example, 11"
           v-model="newSubLine.numbers"

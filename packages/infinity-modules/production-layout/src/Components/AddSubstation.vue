@@ -22,20 +22,20 @@
     </v-card-title>
     <v-card-text>
         <v-select
-              label="Select Station"
+              label="Select Station *"
               :items="stations"
               item-text="name"
               return-object
               v-model="selectedSubstationLine"
             >
             </v-select>
-        <v-text-field label="Name"
+        <v-text-field label="Name *"
         hint="For example, SST-01"
         v-model="newSubstation.name"
         :rules ="nameRules"
         counter="15"
          required></v-text-field>
-         <v-text-field label="Number" type="number"
+         <v-text-field label="Number *" type="number"
          hint="For example, 1111"
          v-model="newSubstation.numbers"
          :rules ="numberRules"
