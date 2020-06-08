@@ -8,11 +8,15 @@
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Add Process</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
@@ -28,8 +32,11 @@
             >
             </v-select>
               <v-text-field label="Name"
-                v-model="newProcess.name" required type="text" ></v-text-field>
+                v-model="newProcess.name"
+                :rules="nameRules"
+                 required type="text" ></v-text-field>
               <v-text-field label="Number" type="number"
+              :rules="numberRules"
                 v-model="newProcess.numbers" required></v-text-field>
               <v-text-field label="Description" type="text"
                 v-model="newProcess.description" required></v-text-field>
@@ -40,9 +47,11 @@
         <v-spacer></v-spacer>
         <v-btn color="primary"
         class="text-none"
+        :disabled="!valid"
          @click="saveProcess">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -54,12 +63,18 @@ export default {
       newProcess: {},
       assetId: 4,
       dialog: false,
+      selectedSubstationLine: null,
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(v) => v.length > 0 || 'number required'],
+      nameRules: [(v) => !!v || 'Name required'],
     };
   },
   props: {
   },
   created() {
-    this.getSubStations('');
+    // this.getSubStations('');
   },
   computed: {
     ...mapState('productionLayout', ['processes', 'addProcessDialog', 'subStations']),
@@ -69,6 +84,7 @@ export default {
     ...mapActions('productionLayout',
       ['createSubline', 'getAllSublines', 'createProcess']),
     async saveProcess() {
+      this.$refs.form.validate();
       const processNameFlag2 = this.processes
         .filter((o) => o.numbers === this.newProcess.numbers);
       const stationNameFlag = this.processes
@@ -107,6 +123,7 @@ export default {
           this.dialog = false;
           this.assetId = 4;
           this.newProcess = {};
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -116,6 +133,9 @@ export default {
         }
         this.saving = false;
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };

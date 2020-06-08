@@ -8,18 +8,26 @@
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Add Subline</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
     <v-card-text>
-        <v-text-field label="Name" v-model="newSubLine.name" required></v-text-field>
+        <v-text-field label="Name" v-model="newSubLine.name"
+        :rules="nameRules"
+         required></v-text-field>
         <v-text-field label="Number"
-         type="number" v-model="newSubLine.numbers" required></v-text-field>
+         type="number" v-model="newSubLine.numbers"
+          :rules="numberRules"
+          required></v-text-field>
         <v-text-field label="Description"
          type="text" v-model="newSubLine.description"></v-text-field>
     </v-card-text>
@@ -27,9 +35,11 @@
         <v-spacer></v-spacer>
         <v-btn color="primary"
         class="text-none"
+        :disabled="!valid"
          @click="saveSubline">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -40,10 +50,13 @@ export default {
     return {
       newSubLine: {},
       assetId: 4,
-      // myResult: [],
-      // getLastInserTedData: [],
       default: false,
       dialog: false,
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(v) => v.length > 0 || 'number required'],
+      nameRules: [(v) => !!v || 'Name required'],
     };
   },
   props: {
@@ -57,12 +70,9 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    // ...mapMutations('productionLayout', ['setAddSublineDialog']),
     ...mapActions('productionLayout', ['createSubline', 'getSublines']),
-    // close() {
-    //   this.$emit('update:dialog', false);
-    // },
     async saveSubline() {
+      this.$refs.form.validate();
       const sublineNameFlag1 = this.sublines
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubLine.name.toLowerCase().split(' ').join(''));
       const sublineNameFlag2 = this.sublines
@@ -103,6 +113,7 @@ export default {
           this.dialog = false;
           this.assetId = 4;
           this.newSubLine = {};
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -112,6 +123,9 @@ export default {
         }
         this.saving = false;
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };

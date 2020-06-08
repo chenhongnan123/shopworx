@@ -8,11 +8,15 @@
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Add Station</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
@@ -69,9 +73,11 @@
         <!-- <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn> -->
         <v-btn color="primary"
         class="text-none"
+        :disabled="!valid"
          @click="saveStation">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -82,19 +88,19 @@ export default {
     return {
       newStation: {},
       assetId: 4,
+      selectedSubLine: null,
       default: false,
       dialog: false,
-      numberRules: [(value) => !!value || 'Number required'],
-      nameRules: [(value) => !!value || 'Name required'],
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(v) => v.length > 0 || 'number required'],
+      nameRules: [(v) => !!v || 'Name required'],
     };
   },
   props: {
     lineid: {
       type: String,
-      required: true,
-    },
-    subline: {
-      type: [Number, String],
       required: true,
     },
   },
@@ -108,6 +114,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation']),
     async saveStation() {
+      this.$refs.form.validate();
       const stationNameFlag = this.stations
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
       const stationNameFlag2 = this.stations
@@ -146,6 +153,7 @@ export default {
           this.dialog = false;
           this.assetId = 4;
           this.newStation = {};
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -155,6 +163,9 @@ export default {
         }
         this.saving = false;
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };

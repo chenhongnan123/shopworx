@@ -8,11 +8,15 @@
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Add Substation</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
@@ -28,7 +32,9 @@
         <v-text-field label="Name" v-model="newSubstation.name"
         :rules ="nameRules" required></v-text-field>
          <v-text-field label="Number" type="number"
-         v-model="newSubstation.numbers" required></v-text-field>
+         v-model="newSubstation.numbers"
+         :rules ="numberRules"
+          required></v-text-field>
         <v-text-field label="Description"
          type="text" v-model="newSubstation.description"></v-text-field>
          <v-switch
@@ -44,9 +50,11 @@
         <v-spacer></v-spacer>
         <v-btn color="primary"
         class="text-none"
+        :disabled="!valid"
          @click="saveSubstation">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -57,22 +65,21 @@ export default {
     return {
       newSubstation: {},
       assetId: 4,
-      myResult: [],
-      getLastInserTedData: [],
-      formValidity: false,
+      selectedSubstationLine: null,
       default: false,
       dialog: false,
-      nameRules: [(value) => !!value || 'Name is required'],
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(v) => v.length > 0 || 'number required'],
+      nameRules: [(v) => !!v || 'Name required'],
     };
   },
   props: {
-    stationid: {
-      type: [Number, String],
-      required: true,
-    },
   },
   created() {
     this.getAllStations('');
+    this.newSubstation = { ...this.substation };
   },
   computed: {
     ...mapState('productionLayout', ['sublines', 'allStations', 'stations', 'subStations']),
@@ -81,6 +88,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubstation', 'getSubStations', 'getAllStations']),
     async saveSubstation() {
+      this.$refs.form.validate();
       const initialSubstationFlag = this.subStations
         .filter((item) => item.sublineid === this.selectedSubstationLine.sublineid
         && item.initialsubstation === true
@@ -144,6 +152,7 @@ export default {
           this.dialog = false;
           this.assetId = 4;
           this.newSubstation = {};
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -153,6 +162,9 @@ export default {
         }
         this.saving = false;
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };
