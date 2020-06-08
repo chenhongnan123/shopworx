@@ -288,7 +288,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <AddParameter :station="stationValue" :substation="substationValue"/>
+    <AddParameter :station="stationValue" :substation="substationValue" v-if="addParameterDialog"/>
     <ParameterFilter :station="stationValue"  :substation="substationValue"/>
   </v-container>
 </template>
@@ -333,7 +333,7 @@ export default {
     await this.getPageDataList();
   },
   computed: {
-    ...mapState('parameterConfiguration', ['parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
     isAddButtonOK() {
       if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
         return false;

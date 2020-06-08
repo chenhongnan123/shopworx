@@ -322,6 +322,9 @@ export default {
         const parameterList = await this.createParameter(payload);
         if (parameterList) {
           this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
+          Object.keys(this.parameterObj).forEach((k) => {
+            this.parameterObj[k] = '';
+          });
           this.setAlert({
             show: true,
             type: 'success',
