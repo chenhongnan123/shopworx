@@ -175,10 +175,11 @@ export default ({
     },
     updateParameter: async ({ dispatch }, payload) => {
       const putParameter = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'parameters',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
