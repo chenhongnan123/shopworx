@@ -281,7 +281,7 @@ export default {
   methods: {
     ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue']),
     ...mapActions('parameterConfiguration', ['getParameterListRecords', 'getSublineList', 'getStationList', 'getSubstationList']),
-    btnApply() {
+    async btnApply() {
       let query = '?query=';
       if (this.selectedParameterName) {
         query += `name=="${this.selectedParameterName}"&`;
@@ -299,7 +299,8 @@ export default {
         query += `startadress=="${this.selectedParameterStartAdress}"&`;
       }
       query += `substationid=="${this.substationValue || null}"`;
-      this.getParameterListRecords(query);
+      await this.getParameterListRecords(query);
+      this.toggleFilter();
     },
     btnReset() {
       this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
