@@ -102,12 +102,12 @@ export default {
         && item.finalsubstation === this.newSubstation.finalsubstation);
       // const initialSubstationCompare = this.initialSubstationFlag
       //   .filter((o) => o.initialsubstation === this.newSubstation.initialsubstation);
-      const substationNameFlag2 = this.subStations
+      const substationNumberFlag = this.subStations
         .filter((o) => o.numbers === parseInt(this.newSubstation.numbers, 10));
       const substationNameFlag = this.subStations
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubstation.name.toLowerCase().split(' ').join(''));
-      if (substationNameFlag2.length > 0) {
-        this.newSubLine = {};
+      if (substationNumberFlag.length > 0) {
+        this.newSubstation.numbers = '';
         this.setAlert({
           show: true,
           type: 'error',
@@ -126,7 +126,7 @@ export default {
           message: 'ALREADY_EXSIST_FINAL_SUBSTATION',
         });
       } else if (substationNameFlag.length > 0) {
-        this.newSubstation = {};
+        this.newSubstation.name = '';
         this.setAlert({
           show: true,
           type: 'error',

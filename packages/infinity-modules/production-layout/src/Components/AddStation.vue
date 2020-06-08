@@ -117,10 +117,10 @@ export default {
       this.$refs.form.validate();
       const stationNameFlag = this.stations
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
-      const stationNameFlag2 = this.stations
+      const stationNumberFlag = this.stations
         .filter((o) => o.numbers === parseInt(this.newStation.numbers, 10));
-      if (stationNameFlag2.length > 0) {
-        this.newSubLine = {};
+      if (stationNumberFlag.length > 0) {
+        this.newStation.numbers = '';
         this.setAlert({
           show: true,
           type: 'error',

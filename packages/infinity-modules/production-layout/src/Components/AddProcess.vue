@@ -85,19 +85,19 @@ export default {
       ['createSubline', 'getAllSublines', 'createProcess']),
     async saveProcess() {
       this.$refs.form.validate();
-      const processNameFlag2 = this.processes
+      const processNumberFlag = this.processes
         .filter((o) => o.numbers === this.newProcess.numbers);
-      const stationNameFlag = this.processes
+      const processNameFlag = this.processes
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newProcess.name.toLowerCase().split(' ').join(''));
-      if (processNameFlag2.length > 0) {
-        this.newSubLine = {};
+      if (processNumberFlag.length > 0) {
+        this.newProcess.numbers = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ALREADY_EXSIST_NO',
         });
-      } else if (stationNameFlag.length > 0) {
-        this.newProcess.stationname = '';
+      } else if (processNameFlag.length > 0) {
+        this.newProcess.name = '';
         this.setAlert({
           show: true,
           type: 'error',

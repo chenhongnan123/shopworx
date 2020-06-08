@@ -73,19 +73,19 @@ export default {
     ...mapActions('productionLayout', ['createSubline', 'getSublines']),
     async saveSubline() {
       this.$refs.form.validate();
-      const sublineNameFlag1 = this.sublines
+      const sublineNameFlag = this.sublines
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubLine.name.toLowerCase().split(' ').join(''));
-      const sublineNameFlag2 = this.sublines
+      const sublineNumberFlag = this.sublines
         .filter((o) => o.numbers === parseInt(this.newSubLine.numbers, 10));
-      if (sublineNameFlag2.length > 0) {
-        this.newSubLine = {};
+      if (sublineNumberFlag.length > 0) {
+        this.newSubLine.numbers = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ALREADY_EXSIST_NO',
         });
-      } else if (sublineNameFlag1.length > 0) {
-        this.newSubLine = {};
+      } else if (sublineNameFlag.length > 0) {
+        this.newSubLine.name = '';
         this.setAlert({
           show: true,
           type: 'error',
