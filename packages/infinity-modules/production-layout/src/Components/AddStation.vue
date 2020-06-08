@@ -45,7 +45,7 @@
                 v-model="newStation.expectedoee" ></v-text-field>
               <v-text-field label="Expected CT Sec" type="number"
                 v-model="newStation.expectedcycletime" ></v-text-field>
-              <v-text-field label="Manuf Date" type="date"
+              <v-text-field label="Manufacturing Date" type="date"
               v-model="newStation.manufacturingdate" ></v-text-field>
             </v-col>
             <v-col cols="6" md="6">
@@ -59,7 +59,7 @@
               v-model="newStation.power"   dense></v-text-field>
               <v-text-field label="Supplier" type="text"
               v-model="newStation.supplier"   dense></v-text-field>
-              <v-text-field label="Usg StartDate" type="date"
+              <v-text-field label="Manufacturing Date" type="date"
               v-model="newStation.usagestartdate"   dense></v-text-field>
               <v-text-field label="Life time" type="text"
               v-model="newStation.lifetime"   dense></v-text-field>
