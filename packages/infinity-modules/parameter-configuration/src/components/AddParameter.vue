@@ -256,7 +256,7 @@ export default {
       ],
     };
   },
-  props: ['station', 'substation'],
+  props: ['station', 'substation', 'line', 'subline'],
   computed: {
     ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList']),
     dialog: {
@@ -313,6 +313,8 @@ export default {
           isconversion: parameterObj.isconversion.id,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),
+          lineid: this.line,
+          sublineid: this.subline,
           stationid: this.station,
           substationid: this.substation,
         };

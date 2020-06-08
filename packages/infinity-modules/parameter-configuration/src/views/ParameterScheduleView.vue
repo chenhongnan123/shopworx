@@ -288,7 +288,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <AddParameter :station="stationValue" :substation="substationValue" v-if="addParameterDialog"/>
+    <AddParameter
+    :station="stationValue"
+    :substation="substationValue"
+    :line="lineValue"
+    :subline="sublineValue"
+    v-if="addParameterDialog"/>
     <ParameterFilter :station="stationValue"  :substation="substationValue"/>
   </v-container>
 </template>
@@ -528,6 +533,11 @@ export default {
       });
       const zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'export_parameter_list',
+      });
       return content;
     },
     importData() {
@@ -538,7 +548,11 @@ export default {
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       data.forEach((item) => {
+        item.lineid = this.lineValue;
+        item.sublineid = this.sublineValue;
+        item.stationid = this.stationValue;
         item.substationid = this.substationValue;
+        item.assetid = 4;
         delete item.monitor;
         delete item.status;
       });
@@ -561,8 +575,16 @@ export default {
             }
           }
         }
-        await this.createParameterList(data);
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        const createResult = await this.createParameterList(data);
+        console.log(createResult, 'createResult');
+        if (createResult) {
+          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'import_parameter_list',
+          });
+        }
         document.getElementById('uploadFiles').value = null;
       } else {
         this.setAlert({
