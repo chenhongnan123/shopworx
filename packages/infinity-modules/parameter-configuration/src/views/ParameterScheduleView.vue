@@ -137,7 +137,14 @@
             <v-edit-dialog
               :return-value.sync="props.item.name"
               @save="saveTableParameter(props.item, 'name')"
-            > {{ props.item.name }}
+            >
+              {{ props.item.name }}
+              <v-icon
+                small
+                color="primary"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -153,6 +160,12 @@
               :return-value.sync="props.item.description"
               @save="saveTableParameter(props.item, 'description')"
             > {{ props.item.description }}
+              <v-icon
+                small
+                color="primary"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -227,6 +240,12 @@
               :return-value.sync="props.item.startaddress"
               @save="saveTableParameter(props.item, 'startaddress')"
             > {{ props.item.startaddress }}
+              <v-icon
+                small
+                color="primary"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -243,6 +262,12 @@
               :return-value.sync="props.item.dbaddress"
               @save="saveTableParameter(props.item, 'dbaddress')"
             > {{ props.item.dbaddress }}
+              <v-icon
+                small
+                color="primary"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
