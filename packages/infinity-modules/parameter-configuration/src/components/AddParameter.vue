@@ -81,7 +81,7 @@
           </v-autocomplete>
           <v-autocomplete
             clearable
-            label="Date Type"
+            label="Date type"
             :items="datatypeList"
             return-object
             :disabled="saving"
@@ -106,7 +106,7 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              label="Start adress"
+              label="Start address"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.startaddress"
               :rules="rules.startaddress"

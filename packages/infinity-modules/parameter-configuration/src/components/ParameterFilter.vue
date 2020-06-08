@@ -48,7 +48,7 @@
             hide-details
             v-model="subline"
             name="name"
-            label="Select Subine"
+            label="Select Subline"
             item-text="name"
             item-value="id"
             clearable
