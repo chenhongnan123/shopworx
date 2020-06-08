@@ -123,6 +123,7 @@ export default {
             ...this.newProcess,
             lineid: this.lineid,
             substationid: this.selectedSubstationLine.id,
+            sublineid: this.selectedSubstationLine.sublineid,
             assetid: this.assetId,
           };
           let created = false;

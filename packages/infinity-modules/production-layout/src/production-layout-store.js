@@ -394,6 +394,36 @@ export default ({
         { root: true },
       );
       if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'station',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'substation',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
         const query = `?query=lineid==${object.lineid}`;
         const sublines = await dispatch(
           'element/getRecords',
