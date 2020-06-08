@@ -14,10 +14,12 @@
               small
               color="normal"
               outlined
-              class="text-none ml-2"
+              class="text-none ml-2 text-truncate"
               @click="setLineValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{lineList.filter((item) => item.id === lineValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="sublineList.length && !!sublineValue" class="ml-2">
@@ -29,7 +31,9 @@
               class="text-none ml-2"
               @click="setSublineValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{sublineList.filter((item) => item.id === sublineValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="stationList.length && !!stationValue" class="ml-2">
@@ -41,7 +45,9 @@
               class="text-none ml-2"
               @click="setStationValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{stationList.filter((item) => item.id === stationValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="substationList.length && !!substationValue" class="ml-2">
@@ -53,7 +59,9 @@
               class="text-none ml-2"
               @click="setSubstationValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{substationList.filter((item) => item.id === substationValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <v-spacer></v-spacer>
@@ -580,9 +588,9 @@ export default {
 
 <style>
 .planScheduleView .stick {
-  position: sticky;
+  /* position: sticky;
   position: -webkit-sticky;
-  top: 60px;
+  top: 60px; */
   z-index: 1;
 }
 .planScheduleView .card-border {
