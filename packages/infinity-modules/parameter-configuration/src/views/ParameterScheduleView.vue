@@ -83,7 +83,7 @@
               outlined
               class="text-none ml-2"
               @click="confirmDialog = true"
-              v-if="parameterSelected.length">
+              v-if="parameterList.length && parameterSelected.length">
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
@@ -400,6 +400,7 @@ export default {
       }
     },
     parameterList(parameterList) {
+      console.log(parameterList, 'parameterList');
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
   },
