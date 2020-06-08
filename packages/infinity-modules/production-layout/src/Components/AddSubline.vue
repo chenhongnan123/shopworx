@@ -23,10 +23,12 @@
     <v-card-text>
         <v-text-field label="Name" v-model="newSubLine.name"
         :rules="nameRules"
+        :counter="15"
          required></v-text-field>
         <v-text-field label="Number"
          type="number" v-model="newSubLine.numbers"
           :rules="numberRules"
+          :counter="10"
           required></v-text-field>
         <v-text-field label="Description"
          type="text" v-model="newSubLine.description"></v-text-field>
@@ -55,8 +57,10 @@ export default {
       valid: true,
       name: '',
       numbers: '',
-      numberRules: [(v) => v.length > 0 || 'number required'],
-      nameRules: [(v) => !!v || 'Name required'],
+      numberRules: [(v) => v.length > 0 || 'number required',
+        (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
+      nameRules: [(v) => !!v || 'Name required',
+        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
     };
   },
   props: {
