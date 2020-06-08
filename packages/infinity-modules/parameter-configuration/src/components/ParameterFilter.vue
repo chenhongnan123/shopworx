@@ -303,8 +303,13 @@ export default {
       this.toggleFilter();
     },
     btnReset() {
-      this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
+      this.getParameterListRecords('?query=stationid==null');
       this.toggleFilter();
+      this.selectedParameterName = '';
+      this.selectedParameterDirection = '';
+      this.selectedParameterCategory = '';
+      this.selectedParameterDatatype = '';
+      this.selectedParameterStartAdress = '';
       this.line = '';
       this.subline = '';
       this.station = '';
