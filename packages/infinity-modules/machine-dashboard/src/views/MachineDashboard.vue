@@ -1,50 +1,88 @@
 <template>
-  <div
-    id="machine-dashboard"
+  <v-container
+    fluid
+    class="py-0"
     :class="[
       $vuetify.theme.dark ? '#121212' : 'white',
-      isFullScreen ? 'pa-4' : '',
     ]"
+    id="machine-dashboard"
   >
-    <portal to="app-header">
-      Machine Dashboard
-      <v-icon
-        class="ml-4 mb-1"
-        v-text="'$info'"
-      ></v-icon>
-      <v-icon
-        class="ml-2 mb-1"
-        v-text="'$fullscreen'"
-        @click="enterFullscreen"
-      ></v-icon>
-    </portal>
-    Coming soon!
-  </div>
+    <template v-if="loading">
+      Loading...
+    </template>
+    <template v-else-if="filteredMachines && filteredMachines.length">
+      <dashboard-toolbar-extension />
+      <machine-slides
+        :row="currentDimension.row"
+        :col="currentDimension.col"
+        :len="currentDimension.len"
+      />
+    </template>
+  </v-container>
 </template>
 
 <script>
+import { mapMutations, mapActions, mapGetters } from 'vuex';
+import DashboardToolbarExtension from '../components/dashboard/DashboardToolbarExtension.vue';
+import MachineSlides from '../components/dashboard/MachineSlides.vue';
+
 export default {
   name: 'MachineDashboard',
+  components: {
+    DashboardToolbarExtension,
+    MachineSlides,
+  },
   data() {
     return {
-      isFullScreen: false,
+      loading: false,
+      dimensions: [{
+        name: 'xl',
+        row: 3,
+        col: 3,
+      }, {
+        name: 'lg',
+        row: 2,
+        col: 3,
+      }, {
+        name: 'md',
+        row: 2,
+        col: 3,
+      }, {
+        name: 'sm',
+        row: 4,
+        col: 2,
+      }, {
+        name: 'xs',
+        row: 3,
+        col: 1,
+      }],
     };
   },
-  methods: {
-    enterFullscreen() {
-      const elem = document.querySelector('#machine-dashboard');
-      elem.onfullscreenchange = (event) => {
-        const e = event.target;
-        this.isFullScreen = document.fullscreenElement === e;
+  async created() {
+    this.loading = true;
+    const machines = await this.getMachines();
+    if (machines) {
+      this.setExtendedHeader(true);
+    }
+    this.loading = false;
+  },
+  computed: {
+    ...mapGetters('machineDashboard', ['filteredMachines']),
+    currentDimension() {
+      const { row, col } = this.dimensions.find(
+        (dimension) => dimension.name === this.$vuetify.breakpoint.name,
+      );
+      const totalMachines = this.filteredMachines.length;
+      return {
+        row,
+        col,
+        len: Math.ceil(totalMachines / (row * col)),
       };
-      if (document.fullscreenEnabled) {
-        if (!this.isFullScreen) {
-          elem.requestFullscreen();
-        } else {
-          document.exitFullscreen();
-        }
-      }
     },
+  },
+  methods: {
+    ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapActions('machineDashboard', ['getMachines']),
   },
 };
 </script>
