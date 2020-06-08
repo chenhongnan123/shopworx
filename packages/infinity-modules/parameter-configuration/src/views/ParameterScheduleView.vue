@@ -347,22 +347,26 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     sublineValue(val) {
       if (!val) {
         this.setStationValue('');
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     stationValue(val) {
       if (!val) {
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     parameterList(parameterList) {
