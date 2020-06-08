@@ -303,7 +303,7 @@ export default {
       parameterSelected: [],
       headers: [
         { text: 'Number', value: 'number' },
-        { text: 'Protocol', value: 'protocol', sortable: false },
+        { text: 'Protocol', value: 'protocol' },
         { text: 'Parameter', value: 'name' },
         { text: 'Parameter Description', value: 'description' },
         { text: 'Parameter ID', value: 'id' },
