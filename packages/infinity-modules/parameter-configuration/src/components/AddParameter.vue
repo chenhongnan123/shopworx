@@ -330,12 +330,6 @@ export default {
             type: 'success',
             message: 'CREATE_PARAMETER',
           });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'CREATE_PARAMETER',
-          });
         }
         this.dialog = false;
       }

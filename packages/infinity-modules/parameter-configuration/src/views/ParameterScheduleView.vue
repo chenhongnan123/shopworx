@@ -467,12 +467,6 @@ export default {
           type: 'success',
           message: `update_${type}`,
         });
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'network',
-        });
       }
       await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
     },

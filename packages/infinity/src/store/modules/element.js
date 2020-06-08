@@ -185,10 +185,19 @@ export default ({
       return upsert;
     },
 
-    postBulkRecords: async (_, { elementName, payload }) => {
+    postBulkRecords: async ({ commit }, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postBulkRecords(elementName, payload);
-        if (data && data.errors) {
+        if (data && data.errors && data.errors.errorMessage) {
+          commit(
+            'helper/setAlert',
+            {
+              show: true,
+              type: 'error',
+              message: data.errors.errorMessage,
+            },
+            { root: true },
+          );
           return false;
         }
       } catch (e) {
@@ -197,10 +206,19 @@ export default ({
       return true;
     },
 
-    postRecord: async (_, { elementName, payload }) => {
+    postRecord: async ({ commit }, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postRecord(elementName, payload);
-        if (data && data.errors) {
+        if (data && data.errors && data.errors.errorMessage) {
+          commit(
+            'helper/setAlert',
+            {
+              show: true,
+              type: 'error',
+              message: data.errors.errorMessage,
+            },
+            { root: true },
+          );
           return false;
         }
       } catch (e) {
@@ -260,7 +278,7 @@ export default ({
       return false;
     },
 
-    updateRecordByQuery: async (_, { elementName, queryParam, payload }) => {
+    updateRecordByQuery: async ({ commit }, { elementName, queryParam, payload }) => {
       try {
         const { data } = await ElementService.updateRecordByQuery(
           elementName,
@@ -269,6 +287,18 @@ export default ({
         );
         if (data && data.updated) {
           return true;
+        }
+        if (data && data.errors && data.errors.errorMessage) {
+          commit(
+            'helper/setAlert',
+            {
+              show: true,
+              type: 'error',
+              message: data.errors.errorMessage,
+            },
+            { root: true },
+          );
+          return false;
         }
       } catch (e) {
         return false;
