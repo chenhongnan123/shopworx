@@ -91,54 +91,62 @@ export default {
     ...mapActions('productionLayout',
       ['createSubline', 'getAllSublines', 'createProcess']),
     async saveProcess() {
-      this.$refs.form.validate();
-      const processNumberFlag = this.processes
-        .filter((o) => o.numbers === this.newProcess.numbers);
-      const processNameFlag = this.processes
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newProcess.name.toLowerCase().split(' ').join(''));
-      if (processNumberFlag.length > 0) {
-        this.newProcess.numbers = '';
+      if (this.newProcess.numbers === undefined) {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
-      } else if (processNameFlag.length > 0) {
-        this.newProcess.name = '';
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
+          message: 'Number Required',
         });
       } else {
-        this.saving = true;
-        this.newProcess = {
-          ...this.newProcess,
-          lineid: this.lineid,
-          substationid: this.selectedSubstationLine.id,
-          assetid: this.assetId,
-        };
-        let created = false;
-        const payload = this.newProcess;
-        created = this.createProcess(payload);
-        if (created) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'PROCESS_CREATED',
-          });
-          this.dialog = false;
-          this.assetId = 4;
-          this.newProcess = {};
-          this.$refs.form.reset();
-        } else {
+        this.$refs.form.validate();
+        const processNumberFlag = this.processes
+          .filter((o) => o.numbers === this.newProcess.numbers);
+        const processNameFlag = this.processes
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newProcess.name.toLowerCase().split(' ').join(''));
+        if (processNumberFlag.length > 0) {
+          this.newProcess.numbers = '';
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_PROCESS_STATION',
+            message: 'ALREADY_EXSIST_NO',
           });
+        } else if (processNameFlag.length > 0) {
+          this.newProcess.name = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.saving = true;
+          this.newProcess = {
+            ...this.newProcess,
+            lineid: this.lineid,
+            substationid: this.selectedSubstationLine.id,
+            assetid: this.assetId,
+          };
+          let created = false;
+          const payload = this.newProcess;
+          created = this.createProcess(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'PROCESS_CREATED',
+            });
+            this.dialog = false;
+            this.assetId = 4;
+            this.newProcess = {};
+            this.$refs.form.reset();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_PROCESS_STATION',
+            });
+          }
+          this.saving = false;
         }
-        this.saving = false;
       }
     },
     async dialogReset() {

@@ -81,56 +81,61 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getSublines']),
     async saveSubline() {
-      this.$refs.form.validate();
-      const sublineNameFlag = this.sublines
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubLine.name.toLowerCase().split(' ').join(''));
-      const sublineNumberFlag = this.sublines
-        .filter((o) => o.numbers === parseInt(this.newSubLine.numbers, 10));
-      if (sublineNumberFlag.length > 0) {
-        this.newSubLine.numbers = '';
+      if (this.newSubLine.numbers === undefined) {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
-      } else if (sublineNameFlag.length > 0) {
-        this.newSubLine.name = '';
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
+          message: 'Number Required',
         });
       } else {
-        this.saving = true;
-        this.newSubLine = {
-          ...this.newSubLine,
-          lineid: this.lineid,
-          assetid: this.assetId,
-          // id: autoIncrementId,
-          // usagestartdate: new Date(this.plan.usagestartdate).getTime(),
-          // manufacturingdate: new Date().getTime(),
-        };
-        let created = false;
-        const payload = this.newSubLine;
-        created = this.createSubline(payload);
-        if (created) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'SUBLINE_CREATED',
-          });
-          this.dialog = false;
-          this.assetId = 4;
-          this.newSubLine = {};
-          this.$refs.form.reset();
-        } else {
+        this.$refs.form.validate();
+        const sublineNameFlag = this.sublines
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubLine.name.toLowerCase().split(' ').join(''));
+        const sublineNumberFlag = this.sublines
+          .filter((o) => o.numbers === parseInt(this.newSubLine.numbers, 10));
+        if (sublineNumberFlag.length > 0) {
+          this.newSubLine.numbers = '';
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_CREATING_SUBLINE',
+            message: 'ALREADY_EXSIST_NO',
           });
+        } else if (sublineNameFlag.length > 0) {
+          this.newSubLine.name = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.saving = true;
+          this.newSubLine = {
+            ...this.newSubLine,
+            lineid: this.lineid,
+            assetid: this.assetId,
+          };
+          let created = false;
+          const payload = this.newSubLine;
+          created = this.createSubline(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'SUBLINE_CREATED',
+            });
+            this.dialog = false;
+            this.assetId = 4;
+            this.newSubLine = {};
+            this.$refs.form.reset();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_SUBLINE',
+            });
+          }
+          this.saving = false;
         }
-        this.saving = false;
       }
     },
     async dialogReset() {

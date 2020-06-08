@@ -137,54 +137,62 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation']),
     async saveStation() {
-      this.$refs.form.validate();
-      const stationNameFlag = this.stations
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
-      const stationNumberFlag = this.stations
-        .filter((o) => o.numbers === parseInt(this.newStation.numbers, 10));
-      if (stationNumberFlag.length > 0) {
-        this.newStation.numbers = '';
+      if (this.newStation.numbers === undefined) {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
-      } else if (stationNameFlag.length > 0) {
-        this.newStation.name = '';
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
+          message: 'Number Required',
         });
       } else {
-        this.saving = true;
-        this.newStation = {
-          ...this.newStation,
-          lineid: this.lineid,
-          sublineid: this.selectedSubLine.id,
-          assetid: this.assetId,
-        };
-        let created = false;
-        const payload = this.newStation;
-        created = this.createStation(payload);
-        if (created) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'STATION_CREATED',
-          });
-          this.dialog = false;
-          this.assetId = 4;
-          this.newStation = {};
-          this.$refs.form.reset();
-        } else {
+        this.$refs.form.validate();
+        const stationNameFlag = this.stations
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
+        const stationNumberFlag = this.stations
+          .filter((o) => o.numbers === parseInt(this.newStation.numbers, 10));
+        if (stationNumberFlag.length > 0) {
+          this.newStation.numbers = '';
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_CREATING_STATION',
+            message: 'ALREADY_EXSIST_NO',
           });
+        } else if (stationNameFlag.length > 0) {
+          this.newStation.name = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.saving = true;
+          this.newStation = {
+            ...this.newStation,
+            lineid: this.lineid,
+            sublineid: this.selectedSubLine.id,
+            assetid: this.assetId,
+          };
+          let created = false;
+          const payload = this.newStation;
+          created = this.createStation(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'STATION_CREATED',
+            });
+            this.dialog = false;
+            this.assetId = 4;
+            this.newStation = {};
+            this.$refs.form.reset();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_STATION',
+            });
+          }
+          this.saving = false;
         }
-        this.saving = false;
       }
     },
     async dialogReset() {
