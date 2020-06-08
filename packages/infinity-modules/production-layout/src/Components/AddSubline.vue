@@ -21,16 +21,21 @@
         </v-btn>
     </v-card-title>
     <v-card-text>
-        <v-text-field label="Name" v-model="newSubLine.name"
+        <v-text-field label="Name"
+        hint="For example, SUBLINE-01"
+         v-model="newSubLine.name"
         :rules="nameRules"
         :counter="15"
          required></v-text-field>
         <v-text-field label="Number"
-         type="number" v-model="newSubLine.numbers"
+          type="number"
+          hint="For example, 11"
+          v-model="newSubLine.numbers"
           :rules="numberRules"
           :counter="10"
           required></v-text-field>
         <v-text-field label="Description"
+         hint="For example, added by Manager"
          type="text" v-model="newSubLine.description"></v-text-field>
     </v-card-text>
     <v-card-actions>

@@ -32,15 +32,18 @@
             >
             </v-select>
               <v-text-field label="Name"
+                hint="For example, Process_01"
                 v-model="newProcess.name"
                 :rules="nameRules"
                 counter="15"
                  required type="text" ></v-text-field>
               <v-text-field label="Number" type="number"
+              hint="For example, 11111"
               :rules="numberRules"
               counter="10"
                 v-model="newProcess.numbers" required></v-text-field>
               <v-text-field label="Description" type="text"
+                hint="For example, added by Manager"
                 v-model="newProcess.description" required></v-text-field>
             </v-col>
       </v-row>

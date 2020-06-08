@@ -24,7 +24,7 @@
           <v-row>
             <v-col cols="6" md="6">
               <v-select
-              label="Subline"
+              label="Select Subline"
               :items="sublines"
               item-text="name"
               return-object
@@ -32,40 +32,57 @@
             >
             </v-select>
               <v-text-field label="Name"
+                hint="For example, STATION-01"
                 v-model="newStation.name"
                 counter="15"
                 :rules ="nameRules" required type="text" ></v-text-field>
-              <v-text-field label="Number" type="number"
+              <v-text-field label="Number"
+                type="number"
+                hint="For example, 111"
                 v-model="newStation.numbers"
                 counter="10"
                 :rules ="numberRules" required></v-text-field>
               <v-text-field label="Description" type="text"
+                hint="For example, Station added by Manager"
                 v-model="newStation.description" ></v-text-field>
               <v-text-field label="Expected OEE %" type="number"
+                hint="For example, 42"
                 v-model="newStation.expectedoee" ></v-text-field>
               <v-text-field label="Expected CT Sec" type="number"
+                hint="For example, 45"
                 v-model="newStation.expectedcycletime" ></v-text-field>
               <v-text-field label="Manufacturing Date" type="date"
+              hint="select Date"
               v-model="newStation.manufacturingdate" ></v-text-field>
             </v-col>
             <v-col cols="6" md="6">
               <v-text-field label="Weight" type="number"
-              v-model="newStation.weight" ></v-text-field>
-              <v-text-field label="Size"
-              v-model="newStation.size"   dense></v-text-field>
+              v-model="newStation.weight"
+              hint="For example, 36" ></v-text-field>
+              <v-text-field label="Size" type="number"
+              v-model="newStation.size"
+              hint="For example, 40"   dense></v-text-field>
               <v-text-field label="Voltage" type="number"
-              v-model="newStation.voltage"   dense></v-text-field>
+              v-model="newStation.voltage"
+              hint="For example, 49"   dense></v-text-field>
               <v-text-field label="Power" type="number"
-              v-model="newStation.power"   dense></v-text-field>
+              v-model="newStation.power"
+              hint="For example, 42"   dense></v-text-field>
               <v-text-field label="Supplier" type="text"
-              v-model="newStation.supplier"   dense></v-text-field>
-              <v-text-field label="Manufacturing Date" type="date"
-              v-model="newStation.usagestartdate"   dense></v-text-field>
+              v-model="newStation.supplier"
+              placeholder="For example, Entrib Analytics Solution"   dense></v-text-field>
+              <v-text-field label="Usg Start Date" type="date"
+              v-model="newStation.usagestartdate"
+              hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
               <v-text-field label="Life time" type="text"
-              v-model="newStation.lifetime"   dense></v-text-field>
+              v-model="newStation.lifetime"
+              hint="For example, 4"   dense></v-text-field>
               <v-text-field label="Process" type="text"
-              v-model="newStation.process"  dense></v-text-field>
-              <v-text-field label="PLC Ip Address" type="text"
+              v-model="newStation.process"
+              hint="For example, Night Shift"  dense></v-text-field>
+              <v-text-field label="PLC Ip Address"
+              :rules ="plcRules" required
+              hint="Hint: 127.168.1.1"
               v-model="newStation.plcipaddress"  dense></v-text-field>
             </v-col>
       </v-row>
