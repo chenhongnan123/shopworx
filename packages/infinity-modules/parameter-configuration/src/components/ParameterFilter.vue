@@ -103,7 +103,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedParameterName"
+            v-model="parameterName"
             name="name"
             label="Parameter Name"
             item-text="name"
@@ -121,7 +121,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedParameterDirection"
+            v-model="parameterDirection"
             name="name"
             label="Parameter Direction"
             item-text="name"
@@ -140,7 +140,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedParameterCategory"
+            v-model="parameterCategory"
             name="name"
             label="Parameter Category"
             item-text="name"
@@ -159,7 +159,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedParameterDatatype"
+            v-model="parameterDatatype"
             name="name"
             label="Parameter Datatype"
             item-text="name"
@@ -209,21 +209,48 @@ export default {
       subline: null,
       station: null,
       substation: null,
-      selectedParameterName: null,
-      selectedParameterDirection: null,
-      selectedParameterCategory: null,
-      selectedParameterDatatype: null,
-      selectedParameterStartAdress: null,
     };
   },
   computed: {
-    ...mapState('parameterConfiguration', ['filter', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'directionList', 'categoryList', 'datatypeList']),
+    ...mapState('parameterConfiguration', ['filter', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'directionList', 'categoryList', 'datatypeList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype']),
     showFilter: {
       get() {
         return this.filter;
       },
       set(val) {
         this.setFilter(val);
+      },
+    },
+    parameterName: {
+      get() {
+        return this.selectedParameterName;
+      },
+      set(val) {
+        this.setSelectedParameterName(val);
+      },
+    },
+    parameterDirection: {
+      get() {
+        return this.selectedParameterDirection;
+      },
+      set(val) {
+        this.setSelectedParameterDirection(val);
+      },
+    },
+    parameterCategory: {
+      get() {
+        return this.selectedParameterCategory;
+      },
+      set(val) {
+        this.setSelectedParameterCategory(val);
+      },
+    },
+    parameterDatatype: {
+      get() {
+        return this.selectedParameterDatatype;
+      },
+      set(val) {
+        this.setSelectedParameterDatatype(val);
       },
     },
   },
@@ -279,24 +306,21 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue']),
+    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSselectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getParameterListRecords', 'getSublineList', 'getStationList', 'getSubstationList']),
     async btnApply() {
       let query = '?query=';
       if (this.selectedParameterName) {
-        query += `name=="${this.selectedParameterName}"&`;
+        query += `name=="${this.selectedParameterName}"%26%26`;
       }
       if (this.selectedParameterDirection) {
-        query += `parameterdirection=="${this.selectedParameterDirection}"&`;
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
       }
       if (this.selectedParameterCategory) {
-        query += `parametercategory=="${this.selectedParameterCategory}"&`;
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
       }
       if (this.selectedParameterDatatype) {
-        query += `datatype=="${this.selectedParameterDatatype}"&`;
-      }
-      if (this.selectedParameterStartAdress) {
-        query += `startadress=="${this.selectedParameterStartAdress}"&`;
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
       }
       query += `substationid=="${this.substationValue || null}"`;
       await this.getParameterListRecords(query);

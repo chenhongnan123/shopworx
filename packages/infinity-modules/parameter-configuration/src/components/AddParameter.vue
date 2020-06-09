@@ -273,7 +273,7 @@ export default {
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -287,6 +287,23 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'createParameter', 'getParameterListRecords']),
+    getQuery() {
+      let query = '?query=';
+      if (this.selectedParameterName) {
+        query += `name=="${this.selectedParameterName}"%26%26`;
+      }
+      if (this.selectedParameterDirection) {
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
+      }
+      if (this.selectedParameterCategory) {
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
+      }
+      if (this.selectedParameterDatatype) {
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
+      }
+      query += `substationid=="${this.substation || null}"`;
+      return query;
+    },
     async saveParameter() {
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
@@ -340,7 +357,7 @@ export default {
         const parameterList = await this.createParameter(payload);
         this.saving = false;
         if (parameterList) {
-          this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
+          this.getParameterListRecords(this.getQuery());
           Object.keys(this.parameterObj).forEach((k) => {
             this.parameterObj[k] = '';
           });

@@ -360,7 +360,9 @@ export default {
     await this.getPageDataList();
   },
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
+    ...mapState('parameterConfiguration', [
+      'addParameterDialog', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
+    ]),
     isAddButtonOK() {
       if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
         return false;
@@ -403,7 +405,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue']),
+    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList']),
     async saveTableParameter(item, type) {
       const value = item[type];
@@ -414,7 +416,7 @@ export default {
           type: 'error',
           message: `${type}_can_not_be_empty`,
         });
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        await this.getParameterListRecords(this.getQuery());
         return;
       }
       if (type === 'name') {
@@ -424,7 +426,7 @@ export default {
             type: 'error',
             message: 'parameter_name_is_present',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
       }
@@ -435,7 +437,7 @@ export default {
             type: 'error',
             message: 'Size is Integer',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
         if (item.datatype === 12 && value > 8) {
@@ -444,7 +446,7 @@ export default {
             type: 'error',
             message: 'Size is less than 9',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
       }
@@ -456,7 +458,7 @@ export default {
               type: 'error',
               message: 'parameter_dbadress_is_present',
             });
-            await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+            await this.getParameterListRecords(this.getQuery());
             return;
           }
         }
@@ -469,7 +471,7 @@ export default {
               type: 'error',
               message: 'parameter_startaddress_is_present',
             });
-            await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+            await this.getParameterListRecords(`substationid=="${this.substationValue || null}"`);
             return;
           }
         }
@@ -496,14 +498,21 @@ export default {
           message: `update_${type}`,
         });
       }
-      await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+      await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
       const results = await Promise.all(this.parameterSelected.map(
         (parameter) => this.deleteParameter(parameter.id),
       ));
       if (results.every((bool) => bool === true)) {
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        const parameterList = await this.getParameterListRecords(this.getQuery());
+        if (parameterList.length === 0) {
+          this.setSelectedParameterName('');
+          this.setSelectedParameterDirection('');
+          this.setSelectedParameterCategory('');
+          this.setSelectedParameterDatatype('');
+          await this.getParameterListRecords(this.getQuery());
+        }
         this.confirmDialog = false;
         this.parameterSelected = [];
         this.setAlert({
@@ -520,8 +529,24 @@ export default {
       }
     },
     async RefreshUI() {
-      const query = `?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`;
-      await this.getParameterListRecords(query);
+      await this.getParameterListRecords(this.getQuery());
+    },
+    getQuery() {
+      let query = '?query=';
+      if (this.selectedParameterName) {
+        query += `name=="${this.selectedParameterName}"%26%26`;
+      }
+      if (this.selectedParameterDirection) {
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
+      }
+      if (this.selectedParameterCategory) {
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
+      }
+      if (this.selectedParameterDatatype) {
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
+      }
+      query += `substationid=="${this.substationValue || null}"`;
+      return query;
     },
     async exportData() {
       const lineName = this.lineList.filter((item) => this.lineValue === item.id).length
@@ -601,7 +626,7 @@ export default {
         const createResult = await this.createParameterList(data);
         console.log(createResult, 'createResult');
         if (createResult) {
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           this.setAlert({
             show: true,
             type: 'success',
