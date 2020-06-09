@@ -173,6 +173,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
+            :disabled="Object.keys(parameterObj).some((k) => !parameterObj[k]) || saving"
             @click="saveParameter"
           >
             Save
@@ -195,9 +196,23 @@ export default {
     return {
       saving: false,
       parameterObj: {
-        datatype: {},
+        name: null,
+        id: null,
+        description: null,
+        parameterdirection: null,
+        parametercategory: null,
+        datatype: null,
+        dbaddress: null,
+        startaddress: null,
+        protocol: null,
+        isconversion: null,
+        multiplicationfactor: null,
+        divisionfactor: null,
+        currentvalue: null,
+        parameterunit: null,
       },
       valid: true,
+      isSaveValid: false,
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
@@ -294,7 +309,7 @@ export default {
             return;
           }
         }
-        if (parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
+        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
           this.setAlert({
             show: true,
             type: 'error',
@@ -321,7 +336,9 @@ export default {
         if (payload.datatype === 'Boolean' || payload.datatype === 'String') {
           payload.size = parameterObj.size;
         }
+        this.saving = true;
         const parameterList = await this.createParameter(payload);
+        this.saving = false;
         if (parameterList) {
           this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
           Object.keys(this.parameterObj).forEach((k) => {
