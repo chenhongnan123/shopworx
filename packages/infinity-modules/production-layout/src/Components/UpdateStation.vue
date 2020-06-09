@@ -46,8 +46,8 @@
          v-model="newStation.usagestartdate"   dense></v-text-field>
         <v-text-field label="Life time" type="text"
         v-model="newStation.lifetime"   dense></v-text-field>
-        <v-text-field label="Process" type="text"
-        v-model="newStation.process"  dense></v-text-field>
+        <!-- <v-text-field label="Process" type="text"
+        v-model="newStation.process"  dense></v-text-field> -->
         <v-text-field label="PLC Ip Address" type="text"
         v-model="newStation.plcipaddress"  dense></v-text-field>
       </v-col>

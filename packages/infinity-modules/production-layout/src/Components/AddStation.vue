@@ -77,9 +77,9 @@
               <v-text-field label="Life time" type="text"
               v-model="newStation.lifetime"
               hint="For example, 4"   dense></v-text-field>
-              <v-text-field label="Process" type="text"
+              <!-- <v-text-field label="Process" type="text"
               v-model="newStation.process"
-              hint="For example, Night Shift"  dense></v-text-field>
+              hint="For example, Night Shift"  dense></v-text-field> -->
               <v-text-field label="PLC Ip Address"
               :rules ="plcRules" required
               hint="Hint: 127.168.1.1"
@@ -178,7 +178,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'STATION_CREATED',
+              message: 'STATION_CREATED, Now Next you can Add SUBSTATION',
             });
             this.dialog = false;
             this.assetId = 4;
