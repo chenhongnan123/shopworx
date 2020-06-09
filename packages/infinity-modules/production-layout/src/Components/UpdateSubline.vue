@@ -5,11 +5,15 @@
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Update Subline</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); resetDialog();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
@@ -17,12 +21,21 @@
       <!-- {{subline}} -->
       <v-row>
       <v-col cols="12" md="12">
-        <v-text-field label="Name" v-model="sublineNew.name" required
+        <v-text-field label="Name" v-model="sublineNew.name"
+        :rules="nameRules"
+        :counter="15"
+         required
+         hint="For example, Subline_01"
         @keyup="validName"></v-text-field>
         <v-text-field label="Number"
-         type="number" v-model="sublineNew.numbers" required
+         type="number" v-model="sublineNew.numbers"
+         :rules="numberRules"
+         :counter="10"
+         hint="For example, 12"
+          required
          @keyup="validNumber"></v-text-field>
         <v-text-field label="Description" type="Description"
+        hint="For example, Updated by Manager"
          v-model="sublineNew.description"></v-text-field>
       </v-col>
       </v-row>
@@ -36,6 +49,7 @@
         @click="saveSubline">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -53,9 +67,19 @@ export default {
       dialog: false,
       sublineNew: {},
       btnDisable: false,
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(value) => !!value || 'Number required',
+        (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
+      ],
+      nameRules: [(value) => !!value || 'Name required',
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+      ],
     };
   },
   created() {
+    console.log(this.subline);
     this.sublineNew = { ...this.subline };
   },
   computed: {
@@ -69,31 +93,39 @@ export default {
     //   this.$emit('update:dialog', false);
     // },
     async validName() {
-      const sublineNameFlag = this.sublines
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.sublineNew.name.toLowerCase().split(' ').join(''));
-      if (sublineNameFlag.length > 0) {
+      if (this.sublineNew.name === '' || this.sublineNew.name.length > 15) {
         this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
-        });
       } else {
-        this.btnDisable = false;
+        const sublineNameFlag = this.sublines
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.sublineNew.name.toLowerCase().split(' ').join(''));
+        if (sublineNameFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.btnDisable = false;
+        }
       }
     },
     async validNumber() {
-      const sublineNumberFlag = this.sublines
-        .filter((o) => o.numbers === parseInt(this.sublineNew.numbers, 10));
-      if (sublineNumberFlag.length > 0) {
+      if (this.sublineNew.numbers === '' || this.sublineNew.numbers.length > 10) {
         this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
       } else {
-        this.btnDisable = false;
+        const sublineNumberFlag = this.sublines
+          .filter((o) => o.numbers === parseInt(this.sublineNew.numbers, 10));
+        if (sublineNumberFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_NO',
+          });
+        } else {
+          this.btnDisable = false;
+        }
       }
     },
     async saveSubline() {
@@ -109,6 +141,7 @@ export default {
         payload: this.newSubLine,
         lineid: this.subline.lineid,
       };
+      console.log(payload);
       created = this.updateSubline(payload);
       if (created) {
         this.setAlert({
@@ -118,7 +151,6 @@ export default {
         });
         this.dialog = false;
         this.assetId = 4;
-        // this.newSubLine = {};
       } else {
         this.setAlert({
           show: true,
@@ -127,6 +159,10 @@ export default {
         });
       }
       this.saving = false;
+    },
+    async resetDialog() {
+      this.$refs.form.resetValidation();
+      this.sublineNew = { ...this.subline };
     },
   },
 };
