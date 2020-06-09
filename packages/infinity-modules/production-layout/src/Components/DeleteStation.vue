@@ -46,7 +46,7 @@ export default {
   },
   props: {
     station: {
-      type: [Number, String],
+      type: Object,
       required: true,
     },
   },
