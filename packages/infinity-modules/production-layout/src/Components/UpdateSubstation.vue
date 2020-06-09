@@ -1,36 +1,50 @@
-<template>
+ <template>
 <v-dialog v-model="dialog"  max-width="700px">
     <template v-slot:activator="{ on }">
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Update Sub-Station</span>
          <v-spacer></v-spacer>
-          <v-btn icon small @click="dialog = false">
+          <v-btn icon small @click="(dialog = false); resetDialog();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
     <v-card-text>
       <v-row>
       <v-col cols="12" md="12">
-        <v-text-field label="Name" v-model="newSubstation.name" :rules ="nameRules" required
+        <v-text-field label="Name" v-model="newSubstation.name"
+         :rules ="nameRules"
+         :counter="15"
+          required
+          hint="For example, SST_01"
          @keyup="validateName"></v-text-field>
          <v-text-field label="Number" type="number"
-         v-model="newSubstation.numbers" :rules ="numberRules" required
+         v-model="newSubstation.numbers" :rules ="numberRules"
+         :counter="10"
+          required
+          hint="For example, 123"
          @keyup="validateNumber"></v-text-field>
         <v-text-field label="Description" type="Description"
+        hint="For example, Updated by Manager"
          v-model="newSubstation.description"></v-text-field>
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
          @click="validateInitsst"
+         :disabled="btnInitdisable"
         ></v-switch>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
          @click="validateFinalsst"
+         :disabled="btnFindisable"
         ></v-switch>
       </v-col>
       </v-row>
@@ -47,6 +61,7 @@
         </v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -66,11 +81,21 @@ export default {
       newSubstation: {},
       payload: {},
       btnDisable: false,
-      numberRules: [(value) => !!value || 'Number required'],
-      nameRules: [(value) => !!value || 'Name required'],
+      btnInitdisable: false,
+      btnFindisable: false,
+      valid: true,
+      name: '',
+      numbers: '',
+      numberRules: [(value) => !!value || 'Number required',
+        (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
+      ],
+      nameRules: [(value) => !!value || 'Name required',
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+      ],
     };
   },
   created() {
+    console.log(this.substation);
     this.newSubstation = { ...this.substation };
     this.disabled = true;
   },
@@ -104,90 +129,120 @@ export default {
       if (this.payload !== {}) {
         this.disabled = false;
       }
+      console.log(this.payload);
+      if (val.initialsubstation === true) {
+        this.btnFindisable = true;
+      } else {
+        this.btnFindisable = false;
+      }
+      if (val.finalsubstation === true) {
+        this.btnInitdisable = true;
+      } else {
+        this.btnInitdisable = false;
+      }
     },
     async validateInitsst() {
-      const initialSubstationFlag = this.subStations
-        .filter((item) => item.sublineid === this.newSubstation.sublineid
-        && item.initialsubstation === true);
-      const changeInitFlag = this.subStations
-        .filter((o) => o.initialsubstation === this.newSubstation.initialsubstation === true);
-      if (initialSubstationFlag.length > 0) {
-        this.newSubstation.initialsubstation = '';
-        // this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST_INITIAL_SUBSTATION',
-        });
-        this.btnDisable = true;
-        this.saving = false;
-      } else if (changeInitFlag.length > 0) {
+      if (this.newSubstation.initialsubstation === true) {
+        const initialSubstationFlag = this.subStations
+          .filter((item) => item.sublineid === this.newSubstation.sublineid
+          && item.initialsubstation === true);
+        const changeInitFlag = this.subStations
+          .filter((o) => o.initialsubstation
+           === this.newSubstation.initialsubstation === true);
+        if (initialSubstationFlag.length > 0) {
+          this.newSubstation.initialsubstation = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_INITIAL_SUBSTATION',
+          });
+        } else if (changeInitFlag.length > 0) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'INITIAL_SUBSTATION_ASSIGNED',
+          });
+        } else {
+          this.btnDisable = false;
+          this.saving = true;
+        }
+      } else {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'INITIAL_SUBSTATION_ASSIGNED',
+          message: 'INITIAL_SUBSTATION_REMOVED',
         });
-      } else {
-        this.btnDisable = false;
-        this.saving = true;
       }
     },
     async validateFinalsst() {
-      const finalSubstationFlag = this.subStations
-        .filter((item) => item.sublineid === this.newSubstation.sublineid
-        && item.finalsubstation === true);
-      const changeFinalFlag = this.subStations
-        .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
-      if (finalSubstationFlag.length > 0) {
-        this.newSubstation.finalsubstation = '';
-        // this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST_FINAL_SUBSTATION',
-        });
-        this.btnDisable = true;
-        this.saving = false;
-      } else if (changeFinalFlag.length > 0) {
+      if (this.newSubstation.finalsubstation === true) {
+        const finalSubstationFlag = this.subStations
+          .filter((item) => item.sublineid === this.newSubstation.sublineid
+          && item.finalsubstation === true);
+        const changeFinalFlag = this.subStations
+          .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
+        if (finalSubstationFlag.length > 0) {
+          this.newSubstation.finalsubstation = '';
+          // this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_FINAL_SUBSTATION',
+          });
+        } else if (changeFinalFlag.length > 0) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'FINAL_SUBSTATION_ASSIGNED',
+          });
+        } else {
+          this.btnDisable = false;
+          this.saving = true;
+        }
+      } else {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'FINAL_SUBSTATION_ASSIGNED',
+          message: 'FINAL_SUBSTATION_REMOVED',
         });
-      } else {
-        this.btnDisable = false;
-        this.saving = true;
       }
     },
     async validateName() {
-      const substationNameFlag = this.subStations
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubstation.name.toLowerCase().split(' ').join(''));
-      if (substationNameFlag.length > 0) {
-        // this.newSubstation.name = '';
+      if (this.newSubstation.name === '' || this.newSubstation.name.length > 15) {
         this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
-        });
       } else {
-        this.btnDisable = false;
-        this.saving = true;
+        const substationNameFlag = this.subStations
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newSubstation.name.toLowerCase().split(' ').join(''));
+        if (substationNameFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.btnDisable = false;
+          this.saving = true;
+        }
       }
     },
     async validateNumber() {
-      const substationNumberFlag = this.subStations
-        .filter((o) => o.numbers === parseInt(this.newSubstation.numbers, 10));
-      if (substationNumberFlag.length > 0) {
+      if (this.newSubstation.numbers === '' || this.newSubstation.numbers.length > 10) {
         this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
       } else {
-        this.btnDisable = false;
-        this.saving = true;
+        const substationNumberFlag = this.subStations
+          .filter((o) => o.numbers === parseInt(this.newSubstation.numbers, 10));
+        if (substationNumberFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_NO',
+          });
+        } else {
+          this.btnDisable = false;
+          this.saving = true;
+        }
       }
     },
     async saveSubstation() {
@@ -215,10 +270,15 @@ export default {
         this.saving = false;
       }
     },
+    async resetDialog() {
+      this.$refs.form.resetValidation();
+      this.sublineNew = { ...this.subline };
+    },
   },
   watch: {
     newSubstation: {
       handler(val) {
+        console.log('changed');
         this.compareValues(val);
       },
       deep: true,
@@ -226,3 +286,6 @@ export default {
   },
 };
 </script>
+
+<style>
+</style>
