@@ -3,11 +3,7 @@
     <div justify="center" class="planScheduleView">
       <div class="py-0">
         <div class="stick">
-          <v-toolbar
-            flat
-            dense
-            :color="$vuetify.theme.dark ? '#121212': ''"
-          >
+          <div style="float:left;margin-bottom:10px;">
             <span v-if="lineList.length && !!lineValue" class="ml-2">
               line:
               <v-btn
@@ -64,7 +60,8 @@
                 </div>
               </v-btn>
             </span>
-            <v-spacer></v-spacer>
+          </div>
+          <div style="float:right;">
             <v-btn
             small
             color="primary"
@@ -124,7 +121,7 @@
               <v-icon small left>mdi-filter-variant</v-icon>
               Filters
             </v-btn>
-          </v-toolbar>
+          </div>
         </div>
         <v-data-table
         v-model="parameterSelected"
@@ -637,6 +634,9 @@ export default {
   /* position: sticky;
   position: -webkit-sticky;
   top: 60px; */
+  width: 100%;
+  padding: 20px 0;
+  overflow: hidden;
   z-index: 1;
 }
 .planScheduleView .card-border {
