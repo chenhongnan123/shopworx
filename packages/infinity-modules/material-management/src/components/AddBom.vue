@@ -142,15 +142,12 @@ export default {
     ...mapMutations('bomManagement', ['setaddBomDialog']),
     ...mapActions('bomManagement', ['getBomListRecords', 'createBom', 'getSublineList']),
     handleChangeLine(obj) {
-      console.log(obj);
       const query = `?query=lineid==${obj}`;
       this.getSublineList(query);
     },
     async saveBom() {
       const { bomObj } = this;
-      console.log(this.bomObj);
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate());
         const { name, bomnumber } = bomObj;
         if (this.bomList.length) {
           if (this.bomList.some((bom) => name === bom.name)) {
@@ -170,16 +167,13 @@ export default {
             return;
           }
         }
-        console.log(bomObj, 'bomObj');
         const payload = {
           ...bomObj,
           assetid: 4,
         };
-        console.log(payload);
         this.saving = true;
         const bomList = await this.createBom(payload);
         this.saving = false;
-        console.log(bomList);
         if (bomList) {
           this.getBomListRecords('');
           this.setAlert({

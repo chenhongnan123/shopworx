@@ -247,7 +247,6 @@ export default {
           }
         });
         if (Object.keys(fetchObj).length) {
-          console.log(fetchObj);
           if (fetchObj.name) {
             if (this.bomList.some((bom) => name === bom.name)) {
               this.setAlert({

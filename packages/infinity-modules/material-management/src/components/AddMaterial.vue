@@ -193,15 +193,12 @@ export default {
     ...mapMutations('materialManagement', ['setaddMaterialDialog']),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'createMaterial', 'getSublineList']),
     handleChangeLine(obj) {
-      console.log(obj);
       const query = `?query=lineid==${obj}`;
       this.getSublineList(query);
     },
     async saveMaterial() {
       const { materialObj } = this;
-      console.log(this.materialObj);
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate());
         const { name, materialnumber } = materialObj;
         if (this.materialList.length) {
           if (this.materialList.some((material) => name === material.name)) {

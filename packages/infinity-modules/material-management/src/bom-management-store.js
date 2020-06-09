@@ -167,7 +167,6 @@ export default ({
         },
         { root: true },
       );
-      console.log(deleteBomdetail, 'deleteBomdetail');
       return deleteBomdetail;
     },
   },

@@ -303,7 +303,6 @@ export default {
           }
         });
         if (Object.keys(fetchObj).length) {
-          console.log(fetchObj);
           if (fetchObj.name) {
             if (this.materialList.some((material) => name === material.name)) {
               this.setAlert({
@@ -334,7 +333,6 @@ export default {
         this.saving = true;
         const updateResult = await this.updateMaterial({ query, payload });
         this.saving = false;
-        console.log(updateResult);
         if (updateResult) {
           this.getMaterialListRecords('');
           this.setAlert({
@@ -353,25 +351,20 @@ export default {
       }
     },
     editItem(item) {
-      console.log(item);
       this.materialObjDefault = item;
       this.editDialog = true;
       Object.keys(this.materialObj).forEach((k) => {
         this.materialObj[k] = item[k];
       });
-      console.log(this.materialObj);
     },
     deleteItem(item) {
-      console.log(123);
       this.confirmDialog = true;
-      console.log(this.confirmDialog);
       this.materialObjDefault = item;
     },
     async handleDeleteItem() {
       this.saving = true;
       const deleteResult = await this.deleteMaterial(this.materialObjDefault.id);
       this.saving = false;
-      console.log(deleteResult);
       if (deleteResult) {
         this.getMaterialListRecords('');
         this.setAlert({

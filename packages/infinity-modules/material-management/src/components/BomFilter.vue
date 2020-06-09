@@ -135,7 +135,6 @@ export default {
     ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
     showFilter: {
       get() {
-        console.log(this.filter);
         return this.filter;
       },
       set(val) {

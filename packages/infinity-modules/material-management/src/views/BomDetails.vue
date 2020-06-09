@@ -212,7 +212,6 @@ export default {
         materialcategory: materialItem.category,
       };
       this.saving = true;
-      debugger;
       const updateResult = await this.updateBomDetail({ query, payload });
       this.saving = false;
       if (updateResult) {
