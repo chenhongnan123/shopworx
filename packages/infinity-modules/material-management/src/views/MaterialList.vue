@@ -55,11 +55,11 @@
         v-model="materialSelected"
         :headers="headers"
         :items="materialList"
-        item-key="materialnumber"
+        item-key="id"
         >
-        <template v-slot:item.materilcategory="props" v-if="categoryList.length">
-        {{categoryList.filter((category) => props.item.materilcategory === category.id)[0]
-        && categoryList.filter((category) => props.item.materilcategory === category.id)[0].name}}
+        <template v-slot:item.category="props" v-if="categoryList.length">
+        {{categoryList.filter((category) => props.item.category === category.name)[0]
+        && categoryList.filter((category) => props.item.category === category.name)[0].name}}
         </template>
         <template v-slot:top>
         <v-dialog
@@ -103,9 +103,9 @@
                   label="Category"
                   :items="categoryList"
                   item-text="name"
-                  item-value="id"
+                  item-value="name"
                   prepend-icon="$production"
-                  v-model="materialObj.materilcategory"
+                  v-model="materialObj.category"
                   :rules="rules.materilcategory"
                 >
                   <template v-slot:item="{ item }">
@@ -225,7 +225,7 @@ export default {
           text: 'Material Number',
           value: 'materialnumber',
         },
-        { text: 'Category', value: 'materilcategory' },
+        { text: 'Category', value: 'category' },
         { text: 'Lifetime(days)', value: 'lifetime' },
         { text: 'Material TypeID', value: 'materialtype' },
         { text: 'Manufacturer', value: 'manufacturer' },

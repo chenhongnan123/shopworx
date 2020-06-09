@@ -44,7 +44,7 @@
             disabled
           ></v-text-field>
         </v-col>
-        <v-col cols="2">
+        <!-- <v-col cols="2">
           <v-text-field
             v-if="!!sublineList.filter((item) => item.id === query.sublineid)[0]"
             :value="sublineList.filter((item) => item.id === query.sublineid)[0].name"
@@ -56,7 +56,7 @@
             label="Subline"
             disabled
           ></v-text-field>
-        </v-col>
+        </v-col> -->
         <v-col cols="2">
           <v-text-field
             :value="query.name"
@@ -167,9 +167,8 @@ export default {
       saving: false,
     };
   },
-  created() {
-    console.log(this.query);
-    this.getMaterialListRecords(`?query=sublineid=="${this.query.sublineid || null}"`);
+  async created() {
+    await this.getMaterialListRecords('');
     this.handleGetDetails();
   },
   methods: {
@@ -177,11 +176,11 @@ export default {
     ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail']),
     ...mapActions('materialManagement', ['getMaterialListRecords']),
     async handleGetDetails() {
-      const bomdetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
+      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid=="${this.query.id}"&lineid=="${this.query.lineid || null}"`);
       this.bomDetailList = bomdetailList;
     },
     async handleGetData() {
-      await this.getParameterList(`?query=sublineid=="${this.query.sublineid || null}"`);
+      await this.getParameterList(`?query=lineid==${this.query.lineid || null}`);
       // await this.getParameterList('');
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
@@ -191,6 +190,7 @@ export default {
       }
       this.bomDetailList = this.parameterList.map((parameter) => ({
         substationid: parameter.substationid,
+        bomid: this.query.id,
         name: this.query.name,
         parametername: parameter.name,
         materialname: '',
@@ -205,26 +205,27 @@ export default {
       const { materialname } = item;
       const materialItem = this.materialList
         .filter((material) => materialname === material.name)[0];
-      const query = `?query=parametername=="${item.parametername}"`;
+      const query = `?query=parametername=="${item.parametername}"&bomid=="${this.query.id}"`;
       const payload = {
         materialname: item.materialname,
         materialtype: materialItem.materialtype,
-        materialcategory: materialItem.materilcategory,
+        materialcategory: materialItem.category,
       };
       this.saving = true;
+      debugger;
       const updateResult = await this.updateBomDetail({ query, payload });
       this.saving = false;
       if (updateResult) {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'update_material',
+          message: 'UPDATE_MATERIAL',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'network',
+          message: 'ERROR_UPDATING_MATERIAL',
         });
       }
       this.bomDetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
@@ -255,7 +256,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList', 'materialList']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList']),
     ...mapState('materialManagement', ['materialList']),
   },
   props: ['query'],

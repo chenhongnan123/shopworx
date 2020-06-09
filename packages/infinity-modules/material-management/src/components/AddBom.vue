@@ -16,12 +16,49 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-        <v-card-text style="height: 200px;">
+        <v-card-text>
         <v-form
           ref="form"
           v-model="valid"
           lazy-validation
         >
+        <v-autocomplete
+            clearable
+            label="Line"
+            :items="lineList"
+            :disabled="saving"
+            item-text="name"
+            item-value="id"
+            prepend-icon="$production"
+            v-model="bomObj.lineid"
+            :rules="rules.line"
+            @change="handleChangeLine"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
+          <!-- <v-autocomplete
+            clearable
+            label="Subine"
+            :items="sublineList"
+            :disabled="saving"
+            item-text="name"
+            item-value="id"
+            prepend-icon="$production"
+            v-model="bomObj.sublineid"
+            :rules="rules.subline"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
@@ -106,7 +143,7 @@ export default {
     ...mapActions('bomManagement', ['getBomListRecords', 'createBom', 'getSublineList']),
     handleChangeLine(obj) {
       console.log(obj);
-      const query = `?query=lineid==${obj.id}`;
+      const query = `?query=lineid==${obj}`;
       this.getSublineList(query);
     },
     async saveBom() {
@@ -137,8 +174,6 @@ export default {
         const payload = {
           ...bomObj,
           assetid: 4,
-          lineid: this.lineValue,
-          sublineid: this.sublineValue,
         };
         console.log(payload);
         this.saving = true;

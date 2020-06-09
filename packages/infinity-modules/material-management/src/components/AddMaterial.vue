@@ -22,15 +22,15 @@
           v-model="valid"
           lazy-validation
         >
-          <v-autocomplete
+          <!-- <v-autocomplete
             clearable
             label="Line"
             :items="lineList"
-            return-object
             :disabled="saving"
             item-text="name"
+            item-value="id"
             prepend-icon="$production"
-            v-model="materialObj.line"
+            v-model="materialObj.lineid"
             :rules="rules.line"
             @change="handleChangeLine"
           >
@@ -40,16 +40,16 @@
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
-          <v-autocomplete
+          </v-autocomplete> -->
+          <!-- <v-autocomplete
             clearable
             label="Subine"
             :items="sublineList"
-            return-object
             :disabled="saving"
             item-text="name"
+            item-value="id"
             prepend-icon="$production"
-            v-model="materialObj.subline"
+            v-model="materialObj.sublineid"
             :rules="rules.subline"
           >
             <template v-slot:item="{ item }">
@@ -58,7 +58,7 @@
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
@@ -194,7 +194,7 @@ export default {
     ...mapActions('materialManagement', ['getMaterialListRecords', 'createMaterial', 'getSublineList']),
     handleChangeLine(obj) {
       console.log(obj);
-      const query = `?query=lineid==${obj.id}`;
+      const query = `?query=lineid==${obj}`;
       this.getSublineList(query);
     },
     async saveMaterial() {
@@ -224,7 +224,8 @@ export default {
         const payload = {
           ...materialObj,
           assetid: 4,
-          materilcategory: materialObj.materilcategory.id,
+          category: materialObj.materilcategory.name,
+          categoryid: materialObj.materilcategory.id,
         };
         this.saving = true;
         const materialList = await this.createMaterial(payload);

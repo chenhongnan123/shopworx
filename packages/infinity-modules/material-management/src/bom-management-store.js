@@ -124,6 +124,17 @@ export default ({
       );
       return deleteParameter;
     },
+    deleteAllBomDetails: async ({ dispatch }, id) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'bomdetails',
+          queryParam: `?query=bomid==${id}`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
     createBomdetailList: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postBulkRecords',
@@ -137,10 +148,11 @@ export default ({
     },
     updateBomDetail: async ({ dispatch }, payload) => {
       const putParameter = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'bomdetails',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );

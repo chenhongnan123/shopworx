@@ -80,7 +80,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-card-title>
-              <v-card-text style="height: 200px;">
+              <v-card-text>
               <v-form
                 ref="form"
                 v-model="valid"
@@ -235,7 +235,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
-    ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom']),
+    ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom', 'deleteAllBomDetails']),
     async handleUpdateBom() {
       if (this.$refs.form.validate()) {
         const { bomObj, bomObjDefault } = this;
@@ -311,6 +311,7 @@ export default {
       const deleteResult = await this.deleteBom(this.bomObjDefault.id);
       this.saving = false;
       if (deleteResult) {
+        await this.deleteAllBomDetails(this.bomObjDefault.id);
         this.getBomListRecords('');
         this.setAlert({
           show: true,
