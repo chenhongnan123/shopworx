@@ -19,25 +19,26 @@
           <template v-if="selectedLine">
             <v-col cols="2" md="2" lg="2">
               <v-text-field
-                readonly
                 label="Line Name"
                 v-model="selectedLine.name"
               ></v-text-field>
             </v-col>
-            <v-col cols="3" md="3" lg="3">
+            <v-col cols="2" md="2" lg="2">
               <v-text-field
-                readonly
                 label="Line Description"
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">
               <v-text-field label="Expected OEE"
-                v-model="selectedLine.expectedoee" readonly></v-text-field>
+                v-model="selectedLine.expectedoee"></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">
               <v-text-field label="Expected CT"
-                v-model="selectedLine.expectedcycletime" readonly></v-text-field>
+                v-model="selectedLine.expectedcycletime"></v-text-field>
+            </v-col>
+            <v-col cols="1" md="1" lg="1">
+              <SelectedLineUpdate />
             </v-col>
           </template>
         </v-row>
@@ -180,6 +181,7 @@ import DeleteSubline from '../Components/DeleteSubline.vue';
 import DeleteStation from '../Components/DeleteStation.vue';
 import DeleteSubstation from '../Components/DeleteSubstation.vue';
 import DeleteProcess from '../Components/DeleteProcess.vue';
+import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
 
 export default {
   name: 'ProductionLayout',
@@ -196,6 +198,7 @@ export default {
     DeleteStation,
     DeleteSubstation,
     DeleteProcess,
+    SelectedLineUpdate,
   },
   data() {
     return {

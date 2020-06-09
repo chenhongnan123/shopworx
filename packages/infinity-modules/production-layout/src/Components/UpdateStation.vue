@@ -57,8 +57,8 @@
         v-model="newStation.supplier"   dense></v-text-field>
         <v-text-field label="Life time" type="text"
         v-model="newStation.lifetime"   dense></v-text-field>
-        <v-text-field label="Process" type="text"
-        v-model="newStation.process"  dense></v-text-field>
+        <!-- <v-text-field label="Process" type="text"
+        v-model="newStation.process"  dense></v-text-field> -->
         <v-text-field label="PLC Ip Address" mask="###.###.###-##"
         :rules ="plcRules" required
         class="mb-3"

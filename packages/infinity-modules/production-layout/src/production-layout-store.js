@@ -250,6 +250,32 @@ export default ({
       }
       return created;
     },
+    updateLine: async ({ dispatch, commit }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'line',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = `?query=id==${payload.id}`;
+        const lines = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'line',
+            query,
+          },
+          { root: true },
+        );
+        if (lines) {
+          commit('setLines', lines);
+          // return sublines;
+        }
+      }
+    },
     updateSubline: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
