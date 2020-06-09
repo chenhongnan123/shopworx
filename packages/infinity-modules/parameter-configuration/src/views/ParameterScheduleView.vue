@@ -87,11 +87,20 @@
             <v-btn
             small
             color="primary"
-            :disabled="!substationValue || parameterSelected.length === 0"
+            v-if="substationValue && parameterSelected.length > 0"
             outlined
             class="text-none ml-2"
             @click="exportData">
               Export
+            </v-btn>
+            <v-btn
+            small
+            color="primary"
+            v-if="!(substationValue && parameterSelected.length > 0)"
+            outlined
+            class="text-none ml-2"
+            @click="exportSampleData">
+              Export Sample File
             </v-btn>
             <v-btn
             small
@@ -358,6 +367,7 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
+    this.getParameterListRecords();
   },
   computed: {
     ...mapState('parameterConfiguration', [
@@ -572,6 +582,73 @@ export default {
         });
         csvContent.push(arr);
       });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'export_parameter_list',
+      });
+      return content;
+    },
+    async exportSampleData() {
+      const fileName = 'sample-file';
+      const column = [
+        'name',
+        'id',
+        'description',
+        'protocol',
+        'datatype',
+        'dbaddress',
+        'startaddress',
+        'size',
+        'isbigendian',
+        'isswapped',
+        'isconversion',
+        'multiplicationfactor',
+        'divisionfactor',
+        'currentvalue',
+        'parameterunit',
+        'parametercategory',
+        'parameterdirection',
+        'substationid',
+        'lineid',
+        'sublineid',
+      ];
+      const csvContent = [];
+      const arr = [
+        'parametername',
+        '82',
+        '2',
+        '2',
+        12,
+        '6',
+        '2',
+        12,
+        false,
+        false,
+        false,
+        2,
+        2,
+        '2',
+        '2',
+        2,
+        2,
+        'substation',
+        'line',
+        'subline',
+      ];
+      csvContent.push(arr);
+      console.log(csvContent);
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,

@@ -112,13 +112,24 @@
               :rules="rules.startaddress"
               type="number"
           ></v-text-field>
-          <v-text-field
-              :disabled="saving"
-              :rules="rules.protocol"
-              label="Protocol"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.protocol"
-          ></v-text-field>
+          <v-autocomplete
+            clearable
+            label="Protocol"
+            :items="protocolList"
+            return-object
+            :disabled="saving"
+            item-text="name"
+            prepend-icon="$production"
+            v-model="parameterObj.protocol"
+            :rules="rules.protocol"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
           <v-autocomplete
             clearable
             label="Is Conversion"
@@ -269,6 +280,9 @@ export default {
         { name: 'Yes', id: 1 },
         { name: 'No', id: 0 },
       ],
+      protocolList: [
+        { name: 'SNAP7', id: 'SNAP7' },
+      ],
     };
   },
   props: ['station', 'substation', 'line', 'subline'],
@@ -343,6 +357,7 @@ export default {
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
           isconversion: parameterObj.isconversion.id,
+          protocol: parameterObj.protocol.id,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),
           lineid: this.line,
