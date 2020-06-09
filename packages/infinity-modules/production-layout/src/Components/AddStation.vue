@@ -70,20 +70,21 @@
               hint="For example, 42"   dense></v-text-field>
               <v-text-field label="Supplier" type="text"
               v-model="newStation.supplier"
-              placeholder="For example, Entrib Analytics Solution"   dense></v-text-field>
-              <v-text-field label="Usg Start Date" type="date"
-              v-model="newStation.usagestartdate"
-              hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
+              hint="For example, Entrib Analytics Solution"   dense></v-text-field>
               <v-text-field label="Life time" type="text"
               v-model="newStation.lifetime"
               hint="For example, 4"   dense></v-text-field>
+              <v-spacer></v-spacer>
               <!-- <v-text-field label="Process" type="text"
               v-model="newStation.process"
               hint="For example, Night Shift"  dense></v-text-field> -->
               <v-text-field label="PLC Ip Address"
-              :rules ="plcRules" required
+              :rules ="plcRules" required class="mb-3"
               hint="Hint: 127.168.1.1"
               v-model="newStation.plcipaddress"  dense></v-text-field>
+                <v-text-field label="Usg Start Date" type="date"
+                v-model="newStation.usagestartdate"
+                hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
             </v-col>
       </v-row>
     </v-card-text>
