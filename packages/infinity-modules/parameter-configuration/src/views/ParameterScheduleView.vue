@@ -451,29 +451,31 @@ export default {
         }
       }
       if (type === 'dbaddress') {
-        if (parameterListSave.some((parameter) => item.startaddress === parameter.startaddress)) {
-          if (parameterListSave.some((parameter) => item.dbaddress === parameter.dbaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter_dbadress_is_present',
-            });
-            await this.getParameterListRecords(this.getQuery());
-            return;
-          }
+        const isRepeat = parameterListSave
+          .some((parameter) => item.dbaddress === parameter.dbaddress
+          && item.startaddress === parameter.startaddress);
+        if (isRepeat) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter_dbaddress_is_present',
+          });
+          await this.getParameterListRecords(this.getQuery());
+          return;
         }
       }
       if (type === 'startaddress') {
-        if (parameterListSave.some((parameter) => item.dbaddress === parameter.dbaddress)) {
-          if (parameterListSave.some((parameter) => item.startaddress === parameter.startaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter_startaddress_is_present',
-            });
-            await this.getParameterListRecords(`substationid=="${this.substationValue || null}"`);
-            return;
-          }
+        const isRepeat = parameterListSave
+          .some((parameter) => item.dbaddress === parameter.dbaddress
+          && item.startaddress === parameter.startaddress);
+        if (isRepeat) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter_startaddress_is_present',
+          });
+          await this.getParameterListRecords(this.getQuery());
+          return;
         }
       }
       let selectedDatatypeItem = {};

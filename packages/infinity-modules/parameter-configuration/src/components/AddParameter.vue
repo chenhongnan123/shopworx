@@ -316,15 +316,15 @@ export default {
           });
           return;
         }
-        if (this.parameterList.some((parameter) => dbaddress === parameter.dbaddress)) {
-          if (this.parameterList.some((parameter) => startaddress === parameter.startaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter startaddress is present',
-            });
-            return;
-          }
+        if (this.parameterList
+          .some((parameter) => dbaddress === parameter.dbaddress
+          && startaddress === parameter.startaddress)) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter startaddress is present',
+          });
+          return;
         }
         if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
           this.setAlert({
