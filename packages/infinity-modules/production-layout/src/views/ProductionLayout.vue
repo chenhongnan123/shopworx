@@ -243,6 +243,7 @@ export default {
       'setStations',
       'setSubStations',
       'setProcesses',
+      'setSelectedLine',
     ]),
     setStation(station) {
       this.selectedStation = station;
@@ -256,6 +257,7 @@ export default {
       await this.getStations('');
       await this.getSubStations('');
       await this.getProcesses('');
+      this.setSelectedLine(this.selectedLine);
     },
   },
 };

@@ -23,10 +23,11 @@
     <v-card-text>
         <v-select
               label="Select Station *"
-              :items="stations"
+              :items="stationsbylines"
               item-text="name"
               return-object
               v-model="selectedSubstationLine"
+              @click="getfilteredStations"
             >
             </v-select>
         <v-text-field label="Name *"
@@ -91,15 +92,15 @@ export default {
   props: {
   },
   created() {
-    this.getAllStations('');
+    // this.getAllStations('');
     this.newSubstation = { ...this.substation };
   },
   computed: {
-    ...mapState('productionLayout', ['sublines', 'allStations', 'stations', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getSubStations', 'getAllStations']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -111,6 +112,9 @@ export default {
       } else {
         this.btnInitdisable = false;
       }
+    },
+    async getfilteredStations() {
+      this.getStationbyline(`?query=lineid==${this.selectedLine.id}`);
     },
     async saveSubstation() {
       if (this.newSubstation.numbers === undefined) {
@@ -165,6 +169,8 @@ export default {
             ...this.newSubstation,
             stationid: this.selectedSubstationLine.id,
             sublineid: this.selectedSubstationLine.sublineid,
+            lineid: this.selectedSubstationLine.lineid,
+            // lineid: this.lineid,
             assetid: this.assetId,
           };
           let created = false;

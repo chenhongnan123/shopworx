@@ -18,8 +18,12 @@ export default ({
     updateProcessDialog: false,
     allSublines: [],
     allStations: [],
+    stationsbylines: [],
+    substationsbylines: [],
+    selectedLine: {},
   },
   mutations: {
+    setSelectedLine: set('selectedLine'),
     setLines: set('lines'),
     setSublines: set('sublines'),
     setStations: set('stations'),
@@ -35,6 +39,8 @@ export default ({
     setUpdateProcessDialog: set('updateProcessDialog'),
     setAllSublines: set('allSublines'),
     setAllStations: set('allStations'),
+    setStationsbyline: set('stationsbylines'),
+    setSubStationsbyline: set('substationsbylines'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {
@@ -83,6 +89,32 @@ export default ({
       // }
       stations.push(...localStations);
       commit('setStations', stations);
+      return true;
+    },
+    getStationbyline: async ({ dispatch, commit }, query) => {
+      // const query = `?query=lineid==${this.selectedLine.id}`;
+      const stationsbylines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationsbyline', stationsbylines);
+      return true;
+    },
+    getSubStationbyline: async ({ dispatch, commit }, query) => {
+      // const query = `?query=lineid==${this.selectedLine.id}`;
+      const substationsbylines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationsbyline', substationsbylines);
       return true;
     },
     getAllSublines: async ({ dispatch, commit }, query) => {
@@ -174,7 +206,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = `?query=lineid==${payload.lineid}`;
         const stations = await dispatch(
           'element/getRecords',
           {
@@ -203,7 +235,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = `?query=lineid==${payload.lineid}`;
         const substations = await dispatch(
           'element/getRecords',
           {

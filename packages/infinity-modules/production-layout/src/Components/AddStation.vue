@@ -129,7 +129,7 @@ export default {
     },
   },
   created() {
-    this.getAllSublines('');
+    // this.getAllSublines('');
   },
   computed: {
     ...mapState('productionLayout', ['stations', 'sublines', 'allSublines']),

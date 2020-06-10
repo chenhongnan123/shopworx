@@ -25,10 +25,11 @@
             <v-col cols="12" md="12">
               <v-select
               label="Sub Station *"
-              :items="subStations"
+              :items="substationsbylines"
               item-text="name"
               return-object
               v-model="selectedSubstationLine"
+              @click="getfilteredSubStations"
             >
             </v-select>
               <v-text-field label="Name *"
@@ -84,12 +85,15 @@ export default {
     // this.getSubStations('');
   },
   computed: {
-    ...mapState('productionLayout', ['processes', 'addProcessDialog', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'substationsbylines', 'processes', 'addProcessDialog', 'subStations']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout',
-      ['createSubline', 'getAllSublines', 'createProcess']),
+      ['createSubline', 'getAllSublines', 'createProcess', 'getSubStationbyline']),
+    async getfilteredSubStations() {
+      this.getSubStationbyline(`?query=lineid==${this.selectedLine.id}`);
+    },
     async saveProcess() {
       if (this.newProcess.numbers === undefined) {
         this.setAlert({
@@ -121,9 +125,10 @@ export default {
           this.saving = true;
           this.newProcess = {
             ...this.newProcess,
-            lineid: this.lineid,
+            // lineid: this.lineid,
             substationid: this.selectedSubstationLine.id,
             sublineid: this.selectedSubstationLine.sublineid,
+            lineid: this.selectedSubstationLine.lineid,
             assetid: this.assetId,
           };
           let created = false;
