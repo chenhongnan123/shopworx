@@ -498,15 +498,35 @@ export default ({
       }
       return deleted;
     },
-    deleteStation: async ({ dispatch, commit }, id) => {
+    deleteStation: async ({ dispatch, commit }, object) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
           elementName: 'station',
-          queryParam: `?query=id=="${id}"`,
+          queryParam: `?query=id=="${object.id}"`,
         },
         { root: true },
       );
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'substation',
+            queryParam: `?query=stationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=substationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
       if (deleted) {
         const query = '';
         const stations = await dispatch(
@@ -524,15 +544,25 @@ export default ({
       }
       return deleted;
     },
-    deleteSubstation: async ({ dispatch, commit }, id) => {
+    deleteSubstation: async ({ dispatch, commit }, object) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
           elementName: 'substation',
-          queryParam: `?query=id=="${id}"`,
+          queryParam: `?query=id=="${object.id}"`,
         },
         { root: true },
       );
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=substationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
       if (deleted) {
         const query = '';
         const substations = await dispatch(

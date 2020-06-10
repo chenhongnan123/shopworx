@@ -55,12 +55,12 @@ export default {
     ...mapActions('productionLayout', ['deleteSubstation']),
     async btnDeleteSubstation() {
       // const deleted = false;
-      // const subStationObject = {
-      //   id: this.substation.id,
-      //   sublineid: this.substation.sublineid,
-      //   lineid: this.substation.lineid,
-      // };
-      await this.deleteSubstation(this.substation.id);
+      const subStationObject = {
+        id: this.substation.id,
+        sublineid: this.substation.sublineid,
+        lineid: this.substation.lineid,
+      };
+      await this.deleteSubstation(subStationObject);
       // if (deleted) {
       //   this.setAlert({
       //     show: true,

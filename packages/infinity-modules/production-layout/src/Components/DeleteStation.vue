@@ -49,12 +49,21 @@ export default {
       type: Object,
       required: true,
     },
+    subline: {
+      type: Object,
+      required: true,
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['deleteStation']),
     async btnDeleteStation() {
-      await this.deleteStation(this.station.id);
+      const sutationObject = {
+        id: this.station.id,
+        lineid: this.station.lineid,
+        sublineid: this.station.sublineid,
+      };
+      await this.deleteStation(sutationObject);
       // if (deleted) {
       //   this.setAlert({
       //     show: true,
