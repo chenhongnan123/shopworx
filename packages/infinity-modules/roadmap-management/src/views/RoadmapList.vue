@@ -1,0 +1,487 @@
+<template>
+  <v-container fluid class="py-0">
+    <v-row justify="center">
+      <v-col cols="12" xl="10" class="py-0">
+        <v-toolbar
+          flat
+          dense
+          class="stick"
+          :color="$vuetify.theme.dark ? '#121212': ''"
+        >
+        <v-spacer></v-spacer>
+        <v-btn small color="primary" class="text-none" @click="addNewRoadmap">
+            <v-icon small left>mdi-plus</v-icon>
+            Add roadmap
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
+            <v-icon small left>mdi-content-duplicate</v-icon>
+            Duplicate
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+            <v-icon small left>mdi-filter-variant</v-icon>
+            Filters
+          </v-btn>
+        </v-toolbar>
+        <v-data-table
+        v-model="roadmaps"
+        :headers="headers"
+        :items="roadmapList"
+        :single-select="true"
+        item-key="id"
+        show-select
+        >
+        <template v-slot:item.name="{ item }">
+          <span @click="handleClick(item)"><a>{{ item.name }}</a></span>
+        </template>
+        <template v-slot:item.editedtime="{ item }">
+          <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
+          <span v-else></span>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-row justify="center"><v-btn
+              icon
+              small
+              color="primary"
+              @click="fnUpdateRoadmap(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$edit'"></v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              color="error"
+              @click="deleteRoadmapItem(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$delete'"></v-icon>
+            </v-btn></v-row>
+        </template>
+        <!-- <template v-slot:item="{ item, index }">
+          <tr>
+          <td>{{ index+1 }}</td>
+          <td>{{ item.id}}</td>
+          <td>{{ item.roadmaptype }}</td>
+          <td>{{ item.versionnumber }}</td>
+          <td>{{ item.createdTimestamp }}</td>
+          <td>{{ item.createdby }}</td>
+          <td>{{ item.editedby }}</td>
+          <td><v-row justify="center"><v-btn
+              icon
+              small
+              color="primary"
+              @click="fnUpdateRoadmap(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$edit'"></v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              color="error"
+              @click="deleteRoadmapItem(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$delete'"></v-icon>
+            </v-btn></v-row></td>
+          </tr>
+        </template> -->
+      </v-data-table>
+      </v-col>
+    </v-row>
+    <v-dialog
+    scrollable
+    persistent
+    v-model="dialog"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Create Roadmap
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+            :disabled="saving"
+            label="Roadmap name"
+            prepend-icon="mdi-tray-plus"
+            v-model="roadmap.name"
+        ></v-text-field>
+        <v-select
+          hide-details
+          label="Select Roadmap type"
+          :items="roadmapTypeList"
+          item-text="name"
+          prepend-icon="$production"
+          v-model="roadmap.roadmaptype"/>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="saveRoadmap"
+        >
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog
+    scrollable
+    persistent
+    v-model="dialogDup"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Create Duplicate roadmap
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialogDup = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+            :disabled="saving"
+            label="roadmap Name"
+            prepend-icon="mdi-tray-plus"
+            v-model="dupRoadmapName"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="fnSaveDuplicateRoadmap"
+        >
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog
+    scrollable
+    persistent
+    v-model="dialogConfirm"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Alert
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialogConfirm = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <span>Are you sure you want to delete?</span>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="fnDeleteOnYes"
+        >
+          Yes
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  </v-container>
+</template>
+
+<script>
+import { mapActions, mapState, mapMutations } from 'vuex';
+
+export default {
+  name: 'RoadmapList',
+  data() {
+    return {
+      headers: [
+        {
+          text: 'No.',
+          value: 'numberIndex',
+        },
+        {
+          text: 'Roadmap name',
+          value: 'name',
+        },
+        {
+          text: 'Roadmap number',
+          value: 'id',
+        },
+        {
+          text: 'Roadmap type',
+          value: 'roadmaptype',
+        },
+        {
+          text: 'Version',
+          value: 'versionnumber',
+        },
+        { text: 'Created time', value: 'createdTimestamp' },
+        { text: 'Created By', value: 'createdby' },
+        { text: 'Edited time', value: 'editedtime' },
+        { text: 'Edited By', value: 'editedby' },
+        {
+          text: 'Actions',
+          align: 'center',
+          sortable: false,
+          value: 'actions',
+        },
+      ],
+      deleting: false,
+      dialog: false,
+      dialogConfirm: false,
+      dialogDup: false,
+      dupRoadmapName: null,
+      roadmap: {},
+      roadmaps: [],
+      saving: false,
+      hover: true,
+      lineSelected: null,
+      subLineSelected: null,
+      stationSelected: null,
+      showLineFilter: true,
+      itemForDelete: null,
+      flagNewUpdate: false,
+      updateRoadmapId: 0,
+      editedVersionNumber: 0,
+    };
+  },
+  async created() {
+    await this.getRecords('');
+    await this.getRoadmapTypeList('');
+  },
+  computed: {
+    ...mapState('roadmapManagement', ['roadmapList', 'roadmapTypeList', 'createdRoadmap']),
+    ...mapState('user', ['me']),
+    userName: {
+      get() {
+        return this.me.user.firstname;
+      },
+    },
+  },
+  methods: {
+    ...mapActions('roadmapManagement', ['getRecords',
+      'createRoadmap',
+      'getRoadmapTypeList',
+      'deleteRoadmapById',
+      'updateRoadmap',
+      'getDetailsRecords',
+      'createBulkRoadmapDetails']),
+    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('roadmapManagement', ['toggleFilter']),
+    showFilter: {
+      get() {
+        return this.filter;
+      },
+      set(val) {
+        this.setFilter(val);
+      },
+    },
+    deleteRoadmapItem(item) {
+      this.dialogConfirm = true;
+      this.itemForDelete = item;
+    },
+    fnDeleteOnYes() {
+      this.deleteRoadmapById(this.itemForDelete.id);
+      this.dialogConfirm = false;
+    },
+    fnUpdateRoadmap(item) {
+      this.dialog = true;
+      // this.saving = true;
+      this.updateRoadmapId = item.id;
+      this.flagNewUpdate = true;
+      this.roadmap.name = item.name;
+      this.editedVersionNumber = item.versionnumber;
+      this.roadmap.roadmaptype = item.roadmaptype;
+    },
+    addNewRoadmap() {
+      this.dialog = true;
+      this.flagNewUpdate = false;
+    },
+    async RefreshUI() {
+      await this.getRecords('');
+    },
+    handleClick(value) {
+      this.$router.push({ name: 'roadmap-details', params: { id: value } });
+    },
+    fnLineModel() {
+      this.showLineFilter = false;
+    },
+    async fnSaveDuplicateRoadmap() {
+      if (!this.dupRoadmapName) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ROADMAP_NAME_EMPTY',
+        });
+      } else {
+        const recipeFlag = this.roadmapList.filter((o) => o.name === this.dupRoadmapName);
+        if (recipeFlag.length > 0) {
+          this.roadmap.name = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_ROADMAP',
+          });
+        } else {
+          this.roadmap = {
+            name: this.dupRoadmapName,
+            roadmaptype: this.roadmaps[0].roadmaptype,
+            versionnumber: 1,
+            assetid: 4,
+            createdby: this.userName,
+          };
+          let created = false;
+          const payload = this.roadmap;
+          created = await this.createRoadmap(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'ROADMAP_CREATED',
+            });
+            this.dialogDup = false;
+            this.roadmap = {};
+            // duplicate also the details of selected row
+            const roadmapDetailsList = await this.getDetailsRecords(`?query=roadmapid=="${this.roadmaps[0].id}"`);
+            const payloadDetails = [];
+            roadmapDetailsList.forEach((roadmapDetail) => {
+              payloadDetails.push({
+                sublinename: roadmapDetail.sublinename,
+                machinename: roadmapDetail.machinename,
+                substationname: roadmapDetail.substationname,
+                process: roadmapDetail.process,
+                amtpresubstation: roadmapDetail.amtpresubstation,
+                prestationname: roadmapDetail.prestationname,
+                presubstationname: roadmapDetail.presubstationname,
+                assetid: 4,
+                roadmapid: this.roadmapList[0].id,
+                familyName: roadmapDetail.machinename,
+              });
+            });
+            await this.createBulkRoadmapDetails(payloadDetails);
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_ROADMAP',
+            });
+          }
+        }
+      }
+    },
+    fnCreateDupRecipe() {
+      if (this.roadmaps.length > 0) {
+        this.dialogDup = true;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_ROADMAP_FIRST',
+        });
+      }
+    },
+    async saveRoadmap() {
+      if (!this.roadmap.name) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ROADMAP_NAME_EMPTY',
+        });
+      } else {
+        const roadmapFlag = this.roadmapList.filter((o) => o.name === this.roadmap.name);
+        if (roadmapFlag.length > 0) {
+          this.roadmap.name = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_ROADMAP',
+          });
+        } else if (this.flagNewUpdate) {
+          this.saving = true;
+          this.roadmap = {
+            ...this.roadmap,
+            editedby: this.userName,
+            editedtime: new Date().getTime(),
+            versionnumber: this.editedVersionNumber + 1,
+          };
+          let created = false;
+          const request = this.roadmap;
+          const object = {
+            payload: request,
+            query: `?query=id=="${this.updateRoadmapId}"`,
+          };
+          created = await this.updateRoadmap(object);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'ROADMAP_UPDATED',
+            });
+            this.dialog = false;
+            this.recipe = {};
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_ROADMAP',
+            });
+          }
+          this.saving = false;
+        } else {
+          this.saving = true;
+          this.roadmap = {
+            ...this.roadmap,
+            versionnumber: 1,
+            assetid: 4,
+            createdby: this.userName,
+          };
+          let created = false;
+          const payload = this.roadmap;
+          created = await this.createRoadmap(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'ROADMAP_CREATED',
+            });
+            this.dialog = false;
+            this.roadmap = {};
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_ROADMAP',
+            });
+          }
+          this.saving = false;
+        }
+      }
+    },
+  },
+};
+</script>

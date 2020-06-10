@@ -409,7 +409,6 @@ export default {
       }
     },
     parameterList(parameterList) {
-      console.log(parameterList, 'parameterList');
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
   },
@@ -648,7 +647,6 @@ export default {
         'subline',
       ];
       csvContent.push(arr);
-      console.log(csvContent);
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,
@@ -703,7 +701,6 @@ export default {
           }
         }
         const createResult = await this.createParameterList(data);
-        console.log(createResult, 'createResult');
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
           this.setAlert({
