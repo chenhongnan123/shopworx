@@ -69,5 +69,6 @@ export default {
     tick: 'mdi-check-circle-outline',
     locale: 'mdi-translate',
     delete: 'mdi-delete-circle-outline',
+    save: 'mdi-content-save',
   },
 };

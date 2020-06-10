@@ -5,12 +5,14 @@
     "ALREADY_EXSIST_NO": "Number already exists",
     "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub station Already Assigned",
     "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Station Already Assigned",
-    "ERROR_UPDATING_SUBSTATION": "Error updating substation."
+    "STATION_CREATED": "STATION CREATED, Now Next you can Add SUBSTATION",
+    "Number Required": "Number Required"
   },
   "success": {
     "No_CHANGE_EXSIST_NO": "Again Saved with Existing Number",
     "INITIAL_SUBSTATION_ASSIGNED": "This Substation is Updated as Initial Substation",
     "FINAL_SUBSTATION_ASSIGNED": "This Substation is Updated as Final Substation",
-    "SUBSTATION_UPDATED": "Substation updated."
+    "INITIAL_SUBSTATION_REMOVED": "This is not Initial Sub Station Now",
+    "FINAL_SUBSTATION_REMOVED": "This is not Final Sub Station Now"
   }
 }
