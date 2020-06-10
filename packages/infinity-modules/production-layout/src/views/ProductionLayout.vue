@@ -21,6 +21,7 @@
               <v-text-field
                 label="Line Name"
                 v-model="selectedLine.name"
+                readonly
               ></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">

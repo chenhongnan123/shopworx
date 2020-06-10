@@ -2,32 +2,41 @@
   <v-btn
   color="primary"
   @click="saveline"
+  :disabled="btndisable"
   >Save
   </v-btn>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'SelectedLineUpdate',
+  data() {
+    return {
+      btndisable: false,
+    };
+  },
   props: {
-    lineid: {
-      type: Object,
-      required: true,
-    },
+    // selectedLine: {
+    //   type: Object,
+    //   required: true,
+    // },
   },
   created() {
-    console.log(this.lineid);
-    this.selectedLine = { ...this.lineid };
+    this.selectedLineNew = { ...this.selectedLine };
+  },
+  computed: {
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['updateLine']),
     async saveline() {
       this.saving = true;
+      this.selectedLineNew = { ...this.selectedLine };
       this.newSaveLine = {
-        name: this.selectedLine.name,
+        // name: this.selectedLine.name,
         description: this.selectedLine.description,
         expectedoee: this.selectedLine.expectedoee,
         expectedcycletime: this.selectedLine.expectedcycletime,
@@ -38,7 +47,6 @@ export default {
         payload: this.newSaveLine,
         id: this.selectedLine.id,
       };
-      console.log(payload);
       created = this.updateLine(payload);
       if (created) {
         this.setAlert({
@@ -59,6 +67,22 @@ export default {
     },
     async resetDialog() {
       this.$refs.form.resetValidation();
+    },
+    compareValues(val) {
+      if (val.description === this.selectedLineNew.description) {
+        this.btndisable = true;
+        // alert('sdsd');
+      } else {
+        this.btndisable = false;
+      }
+    },
+  },
+  watch: {
+    selectedLine: {
+      handler(val) {
+        this.compareValues(val);
+      },
+      deep: true,
     },
   },
 };
