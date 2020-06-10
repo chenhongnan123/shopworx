@@ -107,4 +107,3 @@ Vue.use(UserDashboard, {
   store,
   i18n,
 });
-
