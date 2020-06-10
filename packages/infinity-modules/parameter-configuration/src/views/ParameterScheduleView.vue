@@ -148,6 +148,7 @@
               <v-icon
                 small
                 color="primary"
+                :disabled="substationValue ? false : true"
               >
                 mdi-pencil
               </v-icon>
@@ -169,6 +170,7 @@
               <v-icon
                 small
                 color="primary"
+                :disabled="substationValue ? false : true"
               >
                 mdi-pencil
               </v-icon>
@@ -229,6 +231,14 @@
               :return-value.sync="props.item.size"
               @save="saveTableParameter(props.item, 'size')"
             > {{ props.item.size }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="!substationValue
+                || (props.item.datatype !== 12 && props.item.datatype !== 11)"
+              >
+              mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="!substationValue
@@ -249,6 +259,7 @@
               <v-icon
                 small
                 color="primary"
+                :disabled="substationValue ? false : true"
               >
                 mdi-pencil
               </v-icon>
@@ -271,6 +282,7 @@
               <v-icon
                 small
                 color="primary"
+                :disabled="substationValue ? false : true"
               >
                 mdi-pencil
               </v-icon>
@@ -346,19 +358,19 @@ export default {
     return {
       parameterSelected: [],
       headers: [
-        { text: 'Number', value: 'number' },
-        { text: 'Protocol', value: 'protocol' },
-        { text: 'Parameter', value: 'name' },
-        { text: 'Parameter Description', value: 'description' },
-        { text: 'Parameter ID', value: 'id' },
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Protocol', value: 'protocol', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Parameter ID', value: 'id', width: 150 },
         { text: 'Direction', value: 'parameterdirection' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
-        { text: 'Size', value: 'size' },
-        { text: 'DB Address', value: 'dbaddress' },
-        { text: 'Start Address', value: 'startaddress' },
-        { text: 'Monitor', value: 'monitor' },
-        { text: 'Status', value: 'status' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'DB Address', value: 'dbaddress', width: 130 },
+        { text: 'Start Address', value: 'startaddress', width: 140 },
+        { text: 'Monitor', value: 'monitor', width: 130 },
+        { text: 'Status', value: 'status', width: 130 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -557,7 +569,9 @@ export default {
       if (this.selectedParameterDatatype) {
         query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
       }
-      query += `substationid=="${this.substationValue || null}"`;
+      if (this.substationValue) {
+        query += `substationid=="${this.substationValue || ''}"`;
+      }
       return query;
     },
     async exportData() {
