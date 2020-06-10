@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
+
+
+### Bug Fixes
+
+* **ra-i127:** data types for every field in popup should be defined ([7a0bfc1](https://bitbucket.org/entrib/shopworx/commits/7a0bfc1fbd9a60c67e23f81f1308d44c95d9dfc3))
+
+
+### Features
+
+* for starting parameter-configuration ([1702685](https://bitbucket.org/entrib/shopworx/commits/170268515c2c7ab57715845ab37b7c9998d84329))
+* **Material Management:** Added new module Material Management ([3a1e239](https://bitbucket.org/entrib/shopworx/commits/3a1e239e89e0e6f4627f28d8e9523dcdc5b2d89f))
+
+
+
+
+
 # [4.1.0-beta.16](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.15...v4.1.0-beta.16) (2020-05-30)
 
 
