@@ -7,6 +7,7 @@
     "ERROR_CREATING_PRODUCT": "Error creating Roadmap",
     "ERROR_CREATING_ROADMAP_DETAILS": "Error creating Roadmap details",
     "SELECT_ROADMAP_FIRST": "Please select Roadmap first",
+    "SELECT_SINGLE_PRODUCT_TYPE": "Select product first",
     "PRODUCT_DETAILS_UPDAT_ERROR": "Error updating Product details."
   },
   "success": {
