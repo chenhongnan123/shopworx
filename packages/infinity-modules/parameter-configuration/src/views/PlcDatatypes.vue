@@ -131,7 +131,7 @@ export default {
         assetid: 4,
       };
       this.addDataType(this.parameterObj);
-      this.dialog = true;
+      this.dialog = false;
     },
   },
   components: {

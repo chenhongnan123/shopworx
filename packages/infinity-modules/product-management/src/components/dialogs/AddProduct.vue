@@ -110,7 +110,6 @@
             class="text-none"
             :disabled="!lineSelected ||
             !selectedRoadmap ||
-            !selectedBom ||
             !selectedProductTypeCategory ||
             !product"
             @click="saveProduct"
@@ -189,6 +188,10 @@ export default {
           });
         } else {
           this.saving = true;
+          if (this.selectedBom) {
+            this.product.bomname = this.selectedBom.name;
+            this.product.bomid = this.selectedBom.id;
+          }
           this.product = {
             ...this.product,
             linename: this.lineSelected.name,
@@ -198,8 +201,6 @@ export default {
             productversionnumber: 1,
             createdby: this.userName,
             editedby: this.userName,
-            bomname: this.selectedBom.name,
-            bomid: this.selectedBom.id,
             producttypecategory: this.selectedProductTypeCategory.name,
             productTypecategoryid: this.selectedProductTypeCategory.id,
             // TODO asset, check editedtime on value and datatype
