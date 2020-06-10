@@ -1,7 +1,7 @@
 {
   "parameterConfiguration": "Parameter Configuration",
   "success": {
-    "delete_parameter": "Parameter is deleted.",
+    "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created"
   },
   "error": {

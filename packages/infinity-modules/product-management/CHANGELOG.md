@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
+
+
+### Bug Fixes
+
+* **RA-I139:** Remove BOM validation while adding new product. ([54468e1](https://bitbucket.org/entrib/shopworx/commits/54468e1c28fd36f0f2adcb15ee08c2f0577339ff))
+
+
+
+
+
 # [4.1.0-beta.16](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.15...v4.1.0-beta.16) (2020-05-30)
 
 **Note:** Version bump only for package @shopworx/product-management

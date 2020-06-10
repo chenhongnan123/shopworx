@@ -46,7 +46,7 @@ export default {
   },
   props: {
     substation: {
-      type: [Number, String],
+      type: Object,
       required: true,
     },
   },
@@ -55,7 +55,12 @@ export default {
     ...mapActions('productionLayout', ['deleteSubstation']),
     async btnDeleteSubstation() {
       // const deleted = false;
-      await this.deleteSubstation(this.substation.id);
+      const subStationObject = {
+        id: this.substation.id,
+        sublineid: this.substation.sublineid,
+        lineid: this.substation.lineid,
+      };
+      await this.deleteSubstation(subStationObject);
       // if (deleted) {
       //   this.setAlert({
       //     show: true,

@@ -5,11 +5,15 @@
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>
+    <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
     <v-card-title>
         <span class="headline">Update Station</span>
          <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); resetDialog();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-card-title>
@@ -17,18 +21,27 @@
       <!-- {{station}} -->
       <v-row>
       <v-col cols="6" md="6">
-        <v-text-field label="Name" v-model="newStation.name" required
+        <v-text-field label="Name" v-model="newStation.name"
+        :rules="nameRules"
+        :counter="15"
+         required
+         hint="For example, ST_01"
         @keyup="nameValid" ></v-text-field>
         <v-text-field label="Number" type="number"
-         v-model="newStation.numbers" required
+         v-model="newStation.numbers"
+         :rules="numberRules"
+         :counter="10"
+          required
+          hint="For example, 122"
          @keyup="numberValid"></v-text-field>
         <v-text-field label="Description" type="Description"
+        hint="For example, Updated by Manager"
          v-model="newStation.description" ></v-text-field>
         <v-text-field label="Expected OEE %" type="number"
          v-model="newStation.expectedoee" ></v-text-field>
         <v-text-field label="Expected CT Sec"
          v-model="newStation.expectedcycletime" ></v-text-field>
-        <v-text-field label="Manuf Date" type="date"
+        <v-text-field label="Manufacturing Date" type="date"
          v-model="newStation.manufacturingdate"  dense></v-text-field>
       </v-col>
       <v-col cols="6" md="6">
@@ -42,14 +55,17 @@
         v-model="newStation.power"   dense></v-text-field>
         <v-text-field label="Supplier" type="Description"
         v-model="newStation.supplier"   dense></v-text-field>
-        <v-text-field label="Usg StartDate" type="date"
-         v-model="newStation.usagestartdate"   dense></v-text-field>
         <v-text-field label="Life time" type="text"
         v-model="newStation.lifetime"   dense></v-text-field>
-        <v-text-field label="Process" type="text"
-        v-model="newStation.process"  dense></v-text-field>
-        <v-text-field label="PLC Ip Address" type="text"
+        <!-- <v-text-field label="Process" type="text"
+        v-model="newStation.process"  dense></v-text-field> -->
+        <v-text-field label="PLC Ip Address" mask="###.###.###-##"
+        :rules ="plcRules" required
+        class="mb-3"
+        hint="Hint: 127.168.1.1"
         v-model="newStation.plcipaddress"  dense></v-text-field>
+        <v-text-field label="Usg Start Date" type="date"
+         v-model="newStation.usagestartdate"   dense></v-text-field>
       </v-col>
       </v-row>
     </v-card-text>
@@ -61,6 +77,7 @@
         @click="saveStation">Save</v-btn>
     </v-card-actions>
     </v-card>
+    </v-form>
 </v-dialog>
 </template>
 <script>
@@ -78,6 +95,17 @@ export default {
       dialog: false,
       newStation: {},
       btnDisable: false,
+      valid: true,
+      name: '',
+      numbers: '',
+      plcipaddress: '',
+      numberRules: [(value) => !!value || 'Number required',
+        (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
+      ],
+      nameRules: [(value) => !!value || 'Name required',
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+      ],
+      plcRules: [(v) => !!v || 'Required', (v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
   created() {
@@ -90,32 +118,39 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['updateStation']),
     async nameValid() {
-      const stationNameFlag = this.stations
-        .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
-      if (stationNameFlag.length > 0) {
+      if (this.newStation.name === '' || this.newStation.name.length > 15) {
         this.btnDisable = true;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST',
-        });
       } else {
-        this.btnDisable = false;
+        const stationNameFlag = this.stations
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.newStation.name.toLowerCase().split(' ').join(''));
+        if (stationNameFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST',
+          });
+        } else {
+          this.btnDisable = false;
+        }
       }
     },
     async numberValid() {
-      const stationNumberFlag = this.stations
-        .filter((o) => o.numbers === parseInt(this.newStation.numbers, 10));
-      if (stationNumberFlag.length > 0) {
+      if (this.newStation.numbers === '' || this.newStation.numbers.length > 10) {
         this.btnDisable = true;
-        // this.newSubLine = {};
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ALREADY_EXSIST_NO',
-        });
       } else {
-        this.btnDisable = false;
+        const stationNumberFlag = this.stations
+          .filter((o) => o.numbers === parseInt(this.newStation.numbers, 10));
+        if (stationNumberFlag.length > 0) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ALREADY_EXSIST_NO',
+          });
+        } else {
+          this.btnDisable = false;
+        }
       }
     },
     async saveStation() {
@@ -126,6 +161,7 @@ export default {
         numbers: this.newStation.numbers,
         expectedoee: this.newStation.expectedoee,
         expectedcycletime: this.newStation.expectedcycletime,
+        manufacturingdate: this.newStation.manufacturingdate,
         weight: this.newStation.weight,
         size: this.newStation.size,
         voltage: this.newStation.voltage,
@@ -150,7 +186,6 @@ export default {
           message: 'SUBSTATION_UPDATED',
         });
         this.dialog = false;
-        // this.newStation = {};
       } else {
         this.setAlert({
           show: true,
@@ -159,6 +194,10 @@ export default {
         });
       }
       this.saving = false;
+    },
+    async resetDialog() {
+      this.$refs.form.resetValidation();
+      this.sublineNew = { ...this.subline };
     },
   },
 };

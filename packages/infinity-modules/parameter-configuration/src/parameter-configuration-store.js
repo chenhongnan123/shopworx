@@ -18,6 +18,10 @@ export default ({
     substationValue: '',
     filter: false,
     dataTypeList: [],
+    selectedParameterName: '',
+    selectedParameterDirection: '',
+    selectedParameterCategory: '',
+    selectedParameterDatatype: '',
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -36,6 +40,10 @@ export default ({
     setStationValue: set('stationValue'),
     setSubstationValue: set('substationValue'),
     setDatatypes: set('dataTypeList'),
+    setSelectedParameterName: set('selectedParameterName'),
+    setSelectedParameterDirection: set('selectedParameterDirection'),
+    setSelectedParameterCategory: set('selectedParameterCategory'),
+    setSelectedParameterDatatype: set('selectedParameterDatatype'),
   },
   actions: {
     getPageDataList: async ({ commit, dispatch }) => {
@@ -175,10 +183,11 @@ export default ({
     },
     updateParameter: async ({ dispatch }, payload) => {
       const putParameter = await dispatch(
-        'element/putRecord',
+        'element/updateRecordByQuery',
         {
           elementName: 'parameters',
-          payload,
+          queryParam: payload.query,
+          payload: payload.payload,
         },
         { root: true },
       );
