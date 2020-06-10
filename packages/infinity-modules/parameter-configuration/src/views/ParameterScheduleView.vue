@@ -3,21 +3,19 @@
     <div justify="center" class="planScheduleView">
       <div class="py-0">
         <div class="stick">
-          <v-toolbar
-            flat
-            dense
-            :color="$vuetify.theme.dark ? '#121212': ''"
-          >
+          <div style="float:left;margin-bottom:10px;">
             <span v-if="lineList.length && !!lineValue" class="ml-2">
               line:
               <v-btn
               small
               color="normal"
               outlined
-              class="text-none ml-2"
+              class="text-none ml-2 text-truncate"
               @click="setLineValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{lineList.filter((item) => item.id === lineValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="sublineList.length && !!sublineValue" class="ml-2">
@@ -29,7 +27,9 @@
               class="text-none ml-2"
               @click="setSublineValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{sublineList.filter((item) => item.id === sublineValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="stationList.length && !!stationValue" class="ml-2">
@@ -41,7 +41,9 @@
               class="text-none ml-2"
               @click="setStationValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{stationList.filter((item) => item.id === stationValue)[0].name}}
+                </div>
               </v-btn>
             </span>
             <span v-if="substationList.length && !!substationValue" class="ml-2">
@@ -53,10 +55,13 @@
               class="text-none ml-2"
               @click="setSubstationValue('')">
                 <v-icon small left>mdi-close</v-icon>
+                <div class="text-truncate" style="max-width: 100px;">
                 {{substationList.filter((item) => item.id === substationValue)[0].name}}
+                </div>
               </v-btn>
             </span>
-            <v-spacer></v-spacer>
+          </div>
+          <div style="float:right;">
             <v-btn
             small
             color="primary"
@@ -75,18 +80,27 @@
               outlined
               class="text-none ml-2"
               @click="confirmDialog = true"
-              v-if="parameterSelected.length">
+              v-if="parameterList.length && parameterSelected.length">
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
             <v-btn
             small
             color="primary"
-            :disabled="!substationValue || parameterSelected.length === 0"
+            v-if="substationValue && parameterSelected.length > 0"
             outlined
             class="text-none ml-2"
             @click="exportData">
               Export
+            </v-btn>
+            <v-btn
+            small
+            color="primary"
+            v-if="!(substationValue && parameterSelected.length > 0)"
+            outlined
+            class="text-none ml-2"
+            @click="exportSampleData">
+              Export Sample File
             </v-btn>
             <v-btn
             small
@@ -116,7 +130,7 @@
               <v-icon small left>mdi-filter-variant</v-icon>
               Filters
             </v-btn>
-          </v-toolbar>
+          </div>
         </div>
         <v-data-table
         v-model="parameterSelected"
@@ -129,7 +143,15 @@
             <v-edit-dialog
               :return-value.sync="props.item.name"
               @save="saveTableParameter(props.item, 'name')"
-            > {{ props.item.name }}
+            >
+              {{ props.item.name }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="substationValue ? false : true"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -145,6 +167,13 @@
               :return-value.sync="props.item.description"
               @save="saveTableParameter(props.item, 'description')"
             > {{ props.item.description }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="substationValue ? false : true"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -202,6 +231,14 @@
               :return-value.sync="props.item.size"
               @save="saveTableParameter(props.item, 'size')"
             > {{ props.item.size }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="!substationValue
+                || (props.item.datatype !== 12 && props.item.datatype !== 11)"
+              >
+              mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="!substationValue
@@ -219,6 +256,13 @@
               :return-value.sync="props.item.startaddress"
               @save="saveTableParameter(props.item, 'startaddress')"
             > {{ props.item.startaddress }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="substationValue ? false : true"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -235,6 +279,13 @@
               :return-value.sync="props.item.dbaddress"
               @save="saveTableParameter(props.item, 'dbaddress')"
             > {{ props.item.dbaddress }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="substationValue ? false : true"
+              >
+                mdi-pencil
+              </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
@@ -280,7 +331,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <AddParameter :station="stationValue" :substation="substationValue"/>
+    <AddParameter
+    :station="stationValue"
+    :substation="substationValue"
+    :line="lineValue"
+    :subline="sublineValue"
+    v-if="addParameterDialog"/>
     <ParameterFilter :station="stationValue"  :substation="substationValue"/>
   </v-container>
 </template>
@@ -302,19 +358,19 @@ export default {
     return {
       parameterSelected: [],
       headers: [
-        { text: 'Number', value: 'number' },
-        { text: 'Protocol', value: 'protocol', sortable: false },
-        { text: 'Parameter', value: 'name' },
-        { text: 'Parameter Description', value: 'description' },
-        { text: 'Parameter ID', value: 'id' },
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Protocol', value: 'protocol', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Parameter ID', value: 'id', width: 150 },
         { text: 'Direction', value: 'parameterdirection' },
         { text: 'Category', value: 'parametercategory' },
-        { text: 'Data Type', value: 'datatype' },
-        { text: 'Size', value: 'size' },
-        { text: 'DB Adress', value: 'dbaddress' },
-        { text: 'Start Adress', value: 'startaddress' },
-        { text: 'Monitor', value: 'monitor' },
-        { text: 'Status', value: 'status' },
+        { text: 'Data type', value: 'datatype' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'DB Address', value: 'dbaddress', width: 130 },
+        { text: 'Start Address', value: 'startaddress', width: 140 },
+        { text: 'Monitor', value: 'monitor', width: 130 },
+        { text: 'Status', value: 'status', width: 130 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -323,9 +379,12 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
+    this.getParameterListRecords();
   },
   computed: {
-    ...mapState('parameterConfiguration', ['parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue']),
+    ...mapState('parameterConfiguration', [
+      'addParameterDialog', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
+    ]),
     isAddButtonOK() {
       if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
         return false;
@@ -339,22 +398,26 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     sublineValue(val) {
       if (!val) {
         this.setStationValue('');
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     stationValue(val) {
       if (!val) {
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
+        this.getParameterListRecords('?query=stationid==null');
       }
     },
     parameterList(parameterList) {
@@ -363,7 +426,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue']),
+    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList']),
     async saveTableParameter(item, type) {
       const value = item[type];
@@ -374,7 +437,7 @@ export default {
           type: 'error',
           message: `${type}_can_not_be_empty`,
         });
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        await this.getParameterListRecords(this.getQuery());
         return;
       }
       if (type === 'name') {
@@ -384,7 +447,7 @@ export default {
             type: 'error',
             message: 'parameter_name_is_present',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
       }
@@ -395,7 +458,7 @@ export default {
             type: 'error',
             message: 'Size is Integer',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
         if (item.datatype === 12 && value > 8) {
@@ -404,34 +467,36 @@ export default {
             type: 'error',
             message: 'Size is less than 9',
           });
-          await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+          await this.getParameterListRecords(this.getQuery());
           return;
         }
       }
       if (type === 'dbaddress') {
-        if (parameterListSave.some((parameter) => item.startaddress === parameter.startaddress)) {
-          if (parameterListSave.some((parameter) => item.dbaddress === parameter.dbaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter_dbadress_is_present',
-            });
-            await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
-            return;
-          }
+        const isRepeat = parameterListSave
+          .some((parameter) => item.dbaddress === parameter.dbaddress
+          && item.startaddress === parameter.startaddress);
+        if (isRepeat) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter_dbaddress_is_present',
+          });
+          await this.getParameterListRecords(this.getQuery());
+          return;
         }
       }
       if (type === 'startaddress') {
-        if (parameterListSave.some((parameter) => item.dbaddress === parameter.dbaddress)) {
-          if (parameterListSave.some((parameter) => item.startaddress === parameter.startaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter_startaddress_is_present',
-            });
-            await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
-            return;
-          }
+        const isRepeat = parameterListSave
+          .some((parameter) => item.dbaddress === parameter.dbaddress
+          && item.startaddress === parameter.startaddress);
+        if (isRepeat) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter_startaddress_is_present',
+          });
+          await this.getParameterListRecords(this.getQuery());
+          return;
         }
       }
       let selectedDatatypeItem = {};
@@ -455,21 +520,22 @@ export default {
           type: 'success',
           message: `update_${type}`,
         });
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'network',
-        });
       }
-      await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+      await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
       const results = await Promise.all(this.parameterSelected.map(
         (parameter) => this.deleteParameter(parameter.id),
       ));
       if (results.every((bool) => bool === true)) {
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        const parameterList = await this.getParameterListRecords(this.getQuery());
+        if (parameterList.length === 0) {
+          this.setSelectedParameterName('');
+          this.setSelectedParameterDirection('');
+          this.setSelectedParameterCategory('');
+          this.setSelectedParameterDatatype('');
+          await this.getParameterListRecords(this.getQuery());
+        }
         this.confirmDialog = false;
         this.parameterSelected = [];
         this.setAlert({
@@ -486,8 +552,26 @@ export default {
       }
     },
     async RefreshUI() {
-      const query = `?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`;
-      await this.getParameterListRecords(query);
+      await this.getParameterListRecords(this.getQuery());
+    },
+    getQuery() {
+      let query = '?query=';
+      if (this.selectedParameterName) {
+        query += `name=="${this.selectedParameterName}"%26%26`;
+      }
+      if (this.selectedParameterDirection) {
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
+      }
+      if (this.selectedParameterCategory) {
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
+      }
+      if (this.selectedParameterDatatype) {
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
+      }
+      if (this.substationValue) {
+        query += `substationid=="${this.substationValue || ''}"`;
+      }
+      return query;
     },
     async exportData() {
       const lineName = this.lineList.filter((item) => this.lineValue === item.id).length
@@ -522,6 +606,77 @@ export default {
       });
       const zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'export_parameter_list',
+      });
+      return content;
+    },
+    async exportSampleData() {
+      const fileName = 'sample-file';
+      const column = [
+        'name',
+        'id',
+        'description',
+        'protocol',
+        'datatype',
+        'dbaddress',
+        'startaddress',
+        'size',
+        'isbigendian',
+        'isswapped',
+        'isconversion',
+        'multiplicationfactor',
+        'divisionfactor',
+        'currentvalue',
+        'parameterunit',
+        'parametercategory',
+        'parameterdirection',
+        'substationid',
+        'lineid',
+        'sublineid',
+      ];
+      const csvContent = [];
+      const arr = [
+        'parametername',
+        '82',
+        '2',
+        '2',
+        12,
+        '6',
+        '2',
+        12,
+        false,
+        false,
+        false,
+        2,
+        2,
+        '2',
+        '2',
+        2,
+        2,
+        'substation',
+        'line',
+        'subline',
+      ];
+      csvContent.push(arr);
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'export_parameter_list',
+      });
       return content;
     },
     importData() {
@@ -532,7 +687,11 @@ export default {
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       data.forEach((item) => {
+        item.lineid = this.lineValue;
+        item.sublineid = this.sublineValue;
+        item.stationid = this.stationValue;
         item.substationid = this.substationValue;
+        item.assetid = 4;
         delete item.monitor;
         delete item.status;
       });
@@ -555,8 +714,15 @@ export default {
             }
           }
         }
-        await this.createParameterList(data);
-        await this.getParameterListRecords(`?query=${this.substationValue ? 'sub' : ''}stationid=="${this.substationValue || this.stationValue}"`);
+        const createResult = await this.createParameterList(data);
+        if (createResult) {
+          await this.getParameterListRecords(this.getQuery());
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'import_parameter_list',
+          });
+        }
         document.getElementById('uploadFiles').value = null;
       } else {
         this.setAlert({
@@ -580,9 +746,12 @@ export default {
 
 <style>
 .planScheduleView .stick {
-  position: sticky;
+  /* position: sticky;
   position: -webkit-sticky;
-  top: 60px;
+  top: 60px; */
+  width: 100%;
+  padding: 20px 0;
+  overflow: hidden;
   z-index: 1;
 }
 .planScheduleView .card-border {

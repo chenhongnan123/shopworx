@@ -81,7 +81,7 @@
           </v-autocomplete>
           <v-autocomplete
             clearable
-            label="Date Type"
+            label="Date type"
             :items="datatypeList"
             return-object
             :disabled="saving"
@@ -106,19 +106,30 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              label="Start adress"
+              label="Start address"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.startaddress"
               :rules="rules.startaddress"
               type="number"
           ></v-text-field>
-          <v-text-field
-              :disabled="saving"
-              :rules="rules.protocol"
-              label="Protocol"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.protocol"
-          ></v-text-field>
+          <v-autocomplete
+            clearable
+            label="Protocol"
+            :items="protocolList"
+            return-object
+            :disabled="saving"
+            item-text="name"
+            prepend-icon="$production"
+            v-model="parameterObj.protocol"
+            :rules="rules.protocol"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
           <v-autocomplete
             clearable
             label="Is Conversion"
@@ -173,6 +184,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
+            :disabled="Object.keys(parameterObj).some((k) => !parameterObj[k]) || saving"
             @click="saveParameter"
           >
             Save
@@ -195,9 +207,23 @@ export default {
     return {
       saving: false,
       parameterObj: {
-        datatype: {},
+        name: null,
+        id: null,
+        description: null,
+        parameterdirection: null,
+        parametercategory: null,
+        datatype: null,
+        dbaddress: null,
+        startaddress: null,
+        protocol: null,
+        isconversion: null,
+        multiplicationfactor: null,
+        divisionfactor: null,
+        currentvalue: null,
+        parameterunit: null,
       },
       valid: true,
+      isSaveValid: false,
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
@@ -254,11 +280,14 @@ export default {
         { name: 'Yes', id: 1 },
         { name: 'No', id: 0 },
       ],
+      protocolList: [
+        { name: 'SNAP7', id: 'SNAP7' },
+      ],
     };
   },
-  props: ['station', 'substation'],
+  props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -272,6 +301,23 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'createParameter', 'getParameterListRecords']),
+    getQuery() {
+      let query = '?query=';
+      if (this.selectedParameterName) {
+        query += `name=="${this.selectedParameterName}"%26%26`;
+      }
+      if (this.selectedParameterDirection) {
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
+      }
+      if (this.selectedParameterCategory) {
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
+      }
+      if (this.selectedParameterDatatype) {
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
+      }
+      query += `substationid=="${this.substation || null}"`;
+      return query;
+    },
     async saveParameter() {
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
@@ -284,17 +330,17 @@ export default {
           });
           return;
         }
-        if (this.parameterList.some((parameter) => dbaddress === parameter.dbaddress)) {
-          if (this.parameterList.some((parameter) => startaddress === parameter.startaddress)) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter startaddress is present',
-            });
-            return;
-          }
+        if (this.parameterList
+          .some((parameter) => dbaddress === parameter.dbaddress
+          && startaddress === parameter.startaddress)) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'parameter startaddress is present',
+          });
+          return;
         }
-        if (parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
+        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
           this.setAlert({
             show: true,
             type: 'error',
@@ -311,26 +357,28 @@ export default {
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
           isconversion: parameterObj.isconversion.id,
+          protocol: parameterObj.protocol.id,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),
+          lineid: this.line,
+          sublineid: this.subline,
           stationid: this.station,
           substationid: this.substation,
         };
         if (payload.datatype === 'Boolean' || payload.datatype === 'String') {
           payload.size = parameterObj.size;
         }
+        this.saving = true;
         const parameterList = await this.createParameter(payload);
+        this.saving = false;
         if (parameterList) {
-          this.getParameterListRecords(`?query=${this.substation ? 'sub' : ''}stationid=="${this.substation || this.station}"`);
+          this.getParameterListRecords(this.getQuery());
+          Object.keys(this.parameterObj).forEach((k) => {
+            this.parameterObj[k] = '';
+          });
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'CREATE_PARAMETER',
-          });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
             message: 'CREATE_PARAMETER',
           });
         }
