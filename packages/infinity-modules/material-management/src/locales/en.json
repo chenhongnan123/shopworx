@@ -1,0 +1,71 @@
+{
+  "error": {
+    "MATERIAL_NAME_PRESENT": "Material name already present",
+    "MATERIAL_NUMBER_PRESENT": "Material number already present",
+    "ERROR_CREATING_MATERIAL": "Error in creating material",
+    "ERROR_UPDATING_MATERIAL": "Error in updating material",
+    "ERROR_UPDATING_BOM": "Error in updating BOM",
+    "ERROR_DELETING_MATERIAL": "Error in deleting material",
+    "ERROR_DELETING_BOM": "Error in deleting BOM",
+    "ERROR_CREATING_BOM": "Error in creating BOM.",
+    "BOM_NAME_PRESENT": "BOM name already present",
+    "BOM_NUMBER_PRESENT": "BOM number already present"
+  },
+  "success": {
+    "CREATED_MATERIAL": "Material created.",
+    "CREATED_BOM": "BOM created.",
+    "UPDATE_MATERIAL": "Material updated.",
+    "UPDATE_BOM": "BOM updated.",
+    "MATERIAL_DELETED": "Material deleted.",
+    "BOM_DELETED": "BOM deleted."
+  },
+  "planning": {
+    "setup": {
+      "counter": "Step {current} of {total}",
+      "importMaster": {
+        "title": "Import part matrix",
+        "title1": "Upload part matrix to ShopWorx to better",
+        "title2": "plan",
+        "title3": "your production on the shopfloor.",
+        "import": "Import part matrix",
+        "downloading": "Generating templates...",
+        "downloadError": "Could not download the part matrix templates.",
+        "retryDownload": "Retry download.",
+        "download": "You can download the part matrix templates",
+        "downloadLink": "here.",
+        "fetchMaster": "Fetching part matrix from ShopWorx servers...",
+        "fetchError": "We couldn't fetch part matrix from ShopWorx servers.",
+        "retryFetch": "Please retry.",
+        "importFile": "Import file",
+        "recordsExist": "1 record already exist! | {count} records already exist!",
+        "starting": "Starting...",
+        "parsing": "Parsing...",
+        "mapping": "Mapping...",
+        "importing": "Importing...",
+        "recordsImported": "1 record imported! | {count} records imported!",
+        "recordsNotCreated": "Cannot reach ShopWorx servers!",
+        "missingHeaders": "Please include headers in the first row!",
+        "missingData": "Please have atleast one data row!",
+        "fileUnparsable": "Cannot parse file!",
+        "fileNotFound": "File {file} not found!",
+        "review": "Review",
+        "updateColumns": "Update columns",
+        "reimport": "Re-import",
+        "reviewTitle": "Review {title}",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "missingMapping": "Missing required mappings:",
+        "requiredData": "Missing required data:",
+        "duplicateData": "Duplicate data for:",
+        "invalidDataType": "Invalid data type for:"
+      },
+      "complete": {
+        "title": "Complete setup",
+        "title1": "Great! you are all set. Welcome to the",
+        "title2": "planning",
+        "title3": "app. Other settings are available in the app for you to change.",
+        "next": "Let's go"
+      }
+    }
+  }
+}
