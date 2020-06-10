@@ -109,7 +109,6 @@ export default {
     };
   },
   created() {
-    console.log(this.station);
     this.newStation = { ...this.station };
   },
   computed: {
@@ -179,7 +178,6 @@ export default {
         payload: this.newStation,
         stationid: this.station.stationid,
       };
-      console.log(payload);
       created = this.updateStation(payload);
       if (created) {
         this.setAlert({

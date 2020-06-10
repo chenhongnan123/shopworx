@@ -76,7 +76,6 @@ export default {
     };
   },
   created() {
-    console.log(this.process);
     this.processNew = { ...this.process };
   },
   computed: {
@@ -134,7 +133,6 @@ export default {
         payload: this.newProcess,
         substationid: this.process.substationid,
       };
-      console.log(payload);
       created = this.updateProcess(payload);
       if (created) {
         this.setAlert({

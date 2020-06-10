@@ -175,7 +175,6 @@ export default {
           };
           let created = false;
           const payload = this.newSubstation;
-          console.log(payload);
           created = this.createSubstation(payload);
           if (created) {
             this.setAlert({
@@ -205,7 +204,6 @@ export default {
   watch: {
     newSubstation: {
       handler(val) {
-        console.log('changed');
         this.compareValues(val);
       },
       deep: true,

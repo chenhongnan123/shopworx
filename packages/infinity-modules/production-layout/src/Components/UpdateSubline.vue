@@ -79,7 +79,6 @@ export default {
     };
   },
   created() {
-    console.log(this.subline);
     this.sublineNew = { ...this.subline };
   },
   computed: {
@@ -141,7 +140,6 @@ export default {
         payload: this.newSubLine,
         lineid: this.subline.lineid,
       };
-      console.log(payload);
       created = this.updateSubline(payload);
       if (created) {
         this.setAlert({
