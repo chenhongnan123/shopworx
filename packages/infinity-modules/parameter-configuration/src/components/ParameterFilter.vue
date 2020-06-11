@@ -205,10 +205,6 @@ export default {
   },
   data() {
     return {
-      line: null,
-      subline: null,
-      station: null,
-      substation: null,
     };
   },
   computed: {
@@ -253,56 +249,48 @@ export default {
         this.setSelectedParameterDatatype(val);
       },
     },
-  },
-  watch: {
-    line(val) {
-      this.setLineValue(val);
-      const query = `?query=lineid==${val}`;
-      this.getSublineList(query);
-      this.setSublineValue('');
-      this.setStationValue('');
-      this.setSubstationValue('');
+    line: {
+      get() {
+        return this.lineValue;
+      },
+      set(val) {
+        this.setLineValue(val);
+        const query = `?query=lineid==${val}`;
+        this.getSublineList(query);
+        this.setSublineValue('');
+        this.setStationValue('');
+        this.setSubstationValue('');
+      },
     },
-    subline(val) {
-      this.setSublineValue(val);
-      const query = `?query=sublineid=="${val}"`;
-      this.getStationList(query);
-      this.setStationValue('');
-      this.setSubstationValue('');
+    subline: {
+      get() {
+        return this.sublineValue;
+      },
+      set(val) {
+        this.setSublineValue(val);
+        const query = `?query=sublineid=="${val}"`;
+        this.getStationList(query);
+        this.setStationValue('');
+        this.setSubstationValue('');
+      },
     },
-    async station(val) {
-      this.setStationValue(val);
-      await this.getSubstationList(`?query=stationid=="${val}"`);
-      this.setSubstationValue('');
+    station: {
+      get() {
+        return this.stationValue;
+      },
+      set(val) {
+        this.setStationValue(val);
+        this.getSubstationList(`?query=stationid=="${val}"`);
+        this.setSubstationValue('');
+      },
     },
-    async substation(val) {
-      await this.setSubstationValue(val);
-    },
-    lineValue(val) {
-      if (!val) {
-        this.line = '';
-        this.subline = '';
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    sublineValue(val) {
-      if (!val) {
-        this.subline = '';
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    stationValue(val) {
-      if (!val) {
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    substationValue(val) {
-      if (!val) {
-        this.substation = '';
-      }
+    substation: {
+      get() {
+        return this.substationValue;
+      },
+      set(val) {
+        this.setSubstationValue(val);
+      },
     },
   },
   methods: {

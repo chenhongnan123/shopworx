@@ -379,7 +379,7 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getParameterListRecords();
+    this.getParameterListRecords(this.getQuery());
   },
   computed: {
     ...mapState('parameterConfiguration', [
