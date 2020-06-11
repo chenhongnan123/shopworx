@@ -53,13 +53,14 @@
                 v-model="newStation.expectedcycletime" ></v-text-field>
               <v-text-field label="Manufacturing Date" type="date"
               hint="select Date"
-              v-model="newStation.manufacturingdate" ></v-text-field>
+              v-model="newStation.manufacturingdate"
+              ></v-text-field>
             </v-col>
             <v-col cols="6" md="6">
               <v-text-field label="Weight" type="number"
               v-model="newStation.weight"
               hint="For example, 36" ></v-text-field>
-              <v-text-field label="Size" type="number"
+              <v-text-field label="Size" type="text"
               v-model="newStation.size"
               hint="For example, 40"   dense></v-text-field>
               <v-text-field label="Voltage" type="number"
@@ -71,7 +72,7 @@
               <v-text-field label="Supplier" type="text"
               v-model="newStation.supplier"
               hint="For example, Entrib Analytics Solution"   dense></v-text-field>
-              <v-text-field label="Life time" type="text"
+              <v-text-field label="Life time" type="number"
               v-model="newStation.lifetime"
               hint="For example, 4"   dense></v-text-field>
               <v-spacer></v-spacer>
@@ -84,6 +85,7 @@
               v-model="newStation.plcipaddress"  dense></v-text-field>
                 <v-text-field label="Usg Start Date" type="date"
                 v-model="newStation.usagestartdate"
+                :disabled="fieldDisabled"
                 hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
             </v-col>
       </v-row>
@@ -94,7 +96,7 @@
         <v-btn color="primary"
         class="text-none"
         :disabled="!valid"
-         @click="saveStation">Save</v-btn>
+         @on="saveStation">Save</v-btn>
     </v-card-actions>
     </v-card>
     </v-form>
@@ -109,6 +111,7 @@ export default {
       newStation: {},
       assetId: 4,
       selectedSubLine: null,
+      fieldDisabled: false,
       default: false,
       dialog: false,
       valid: true,
@@ -130,6 +133,7 @@ export default {
   },
   created() {
     // this.getAllSublines('');
+    this.newStation = { ...this.station };
   },
   computed: {
     ...mapState('productionLayout', ['stations', 'sublines', 'allSublines']),
@@ -137,6 +141,13 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation']),
+    compareValues(val) {
+      if (val.manufacturingdate === undefined) {
+        this.fieldDisabled = true;
+      } else {
+        this.fieldDisabled = false;
+      }
+    },
     async saveStation() {
       if (this.newStation.numbers === undefined) {
         this.setAlert({
@@ -179,7 +190,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'STATION_CREATED, Now Next you can Add SUBSTATION',
+              message: 'STATION_CREATED',
             });
             this.dialog = false;
             this.assetId = 4;
@@ -198,6 +209,14 @@ export default {
     },
     async dialogReset() {
       this.$refs.form.reset();
+    },
+  },
+  watch: {
+    newStation: {
+      handler(val) {
+        this.compareValues(val);
+      },
+      deep: true,
     },
   },
 };
