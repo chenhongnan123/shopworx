@@ -59,21 +59,22 @@ export default {
         lineid: this.station.lineid,
         sublineid: this.station.sublineid,
       };
-      await this.deleteStation(sutationObject);
-      // if (deleted) {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'success',
-      //     message: 'PROCESS_DELETED',
-      //   });
-      //   this.dialog = false;
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'ERROR_DELETING_PROCESS',
-      //   });
-      // }
+      let deleted = false;
+      deleted = this.deleteStation(sutationObject);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'STATION_DELETED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_STATION',
+        });
+      }
       this.dialog = false;
     },
   },
