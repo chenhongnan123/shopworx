@@ -49,13 +49,13 @@
          v-model="newStation.weight"  dense></v-text-field>
         <v-text-field label="Size"
         v-model="newStation.size"   dense></v-text-field>
-        <v-text-field label="Voltage" type="number"
+        <v-text-field label="Voltage" type="text"
         v-model="newStation.voltage"   dense></v-text-field>
-        <v-text-field label="Power" type="Description"
+        <v-text-field label="Power" type="number"
         v-model="newStation.power"   dense></v-text-field>
         <v-text-field label="Supplier" type="Description"
         v-model="newStation.supplier"   dense></v-text-field>
-        <v-text-field label="Life time" type="text"
+        <v-text-field label="Life time" type="number"
         v-model="newStation.lifetime"   dense></v-text-field>
         <!-- <v-text-field label="Process" type="text"
         v-model="newStation.process"  dense></v-text-field> -->
@@ -169,7 +169,7 @@ export default {
         supplier: this.newStation.supplier,
         usagestartdate: this.newStation.usagestartdate,
         lifetime: this.newStation.lifetime,
-        process: this.newStation.process,
+        // process: this.newStation.process,
         plcipaddress: this.newStation.plcipaddress,
       };
       let created = false;
