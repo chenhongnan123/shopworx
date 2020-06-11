@@ -68,7 +68,7 @@
                   class="pa-2"
                   tile
                   outlined>
-                  <span class="ml-4">SubStation</span>
+                  <span class="ml-0">SubStation</span>
                   <AddSubstation/>
                   </v-card>
                 </v-col>
@@ -77,7 +77,7 @@
                   class="pa-2"
                   tile
                   outlined>
-                  <span class="ml-5">Process</span>
+                  <span class="ml-0">Process</span>
                   <AddProcess />
                   </v-card>
                 </v-col>
