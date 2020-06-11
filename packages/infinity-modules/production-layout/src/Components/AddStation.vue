@@ -96,7 +96,7 @@
         <v-btn color="primary"
         class="text-none"
         :disabled="!valid"
-         @on="saveStation">Save</v-btn>
+         @click="saveStation">Save</v-btn>
     </v-card-actions>
     </v-card>
     </v-form>
