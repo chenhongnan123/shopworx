@@ -49,10 +49,6 @@ export default {
       type: Object,
       required: true,
     },
-    subline: {
-      type: Object,
-      required: true,
-    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
