@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
+
+
+### Bug Fixes
+
+* **(production-layout):** empty number field cant allowed ([a750e6c](https://bitbucket.org/entrib/shopworx/commits/a750e6c98847457e794cb643b59b50002c5ea3a9))
+* **(production-layout): issue ra-i97:** deletedependent elements on deletion of Subline ([8240da2](https://bitbucket.org/entrib/shopworx/commits/8240da228260e3c61499196a0041c1621b3545e6))
+* **addstation.vue:** add ipv4 validation on dialog for valid format ([9ee2a58](https://bitbucket.org/entrib/shopworx/commits/9ee2a5820e80cb307bebe01332054c2c19f2eb31))
+* **addstation.vue:** spelling mistake ([b2c0a34](https://bitbucket.org/entrib/shopworx/commits/b2c0a340c5b9b2733c46112203250b689b4a0e46))
+* **addsubstation.vue:** switch button validation while creating sub station ([be22649](https://bitbucket.org/entrib/shopworx/commits/be2264939bc70233b62d3f1d1f78f5f27c86894b))
+* **all elements:** add astrisk symbol to mandetory fields ([033bb62](https://bitbucket.org/entrib/shopworx/commits/033bb62cb0f911df03cd4e64aba610d02b9987ee))
+* **fix(production-layout):** bind the station, substation and process with selected line ([25bbbee](https://bitbucket.org/entrib/shopworx/commits/25bbbeeed12325fc42ef2a046b59f86381f52887))
+* **production-layout:** on deleting subline parameter related with that subline also deleted ([47ca452](https://bitbucket.org/entrib/shopworx/commits/47ca45236067f7d2a930b311193138cdc6d9a56d))
+* **ra-i96 to reset the previous selected data:** reset the data which is previously seleted options ([078421b](https://bitbucket.org/entrib/shopworx/commits/078421bf1ff8e55c46130b1ac44db2cb594fed2a))
+* **subline, station, substation and process all elements:** sample entries or placeholder ([2c81a96](https://bitbucket.org/entrib/shopworx/commits/2c81a9630c67beea287cab6bf82559e33f600eed))
+* **while aading subline,station, substation and process clear only those field whos have error:** vl ([54519f4](https://bitbucket.org/entrib/shopworx/commits/54519f44847090bde45a5e12554b472188887a9b))
+
+
+### Features
+
+* **all four component subline, station, substation and process:** max limit for name and num limit ([2355554](https://bitbucket.org/entrib/shopworx/commits/235555423d510e787c4806f5c2b557a783c39691))
+* **production-layout:** edit selected line and saved ([55fdf7c](https://bitbucket.org/entrib/shopworx/commits/55fdf7ca8b8c8368f8894e4e348c666ab12f5fd6))
+
+
+### BREAKING CHANGES
+
+* **(production-layout):** add if and else block
+
+no
+* **subline, station, substation and process all elements:** add place holderto every fields
+
+RA-I108
+
+
+
+
+
 # [4.1.0-beta.16](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.15...v4.1.0-beta.16) (2020-05-30)
 
 
