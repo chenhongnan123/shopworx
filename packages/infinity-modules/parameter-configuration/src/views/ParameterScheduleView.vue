@@ -226,6 +226,31 @@
               depressed
             ></v-select>
           </template>
+          <template v-slot:item.booleanbit="props">
+            <v-edit-dialog
+              :return-value.sync="props.item.booleanbit"
+              @save="saveTableParameter(props.item, 'booleanbit')"
+            > {{ props.item.booleanbit }}
+              <v-icon
+                small
+                color="primary"
+                :disabled="!substationValue
+                || props.item.datatype !== 12"
+              >
+              mdi-pencil
+              </v-icon>
+              <template v-slot:input>
+                <v-text-field
+                  :disabled="!substationValue
+                  || props.item.datatype !== 12"
+                  v-model="props.item.booleanbit"
+                  label="Edit"
+                  single-line
+                  type='number'
+                ></v-text-field>
+              </template>
+            </v-edit-dialog>
+          </template>
           <template v-slot:item.size="props">
             <v-edit-dialog
               :return-value.sync="props.item.size"
@@ -363,10 +388,10 @@ export default {
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Parameter ID', value: 'id', width: 150 },
-        { text: 'Direction', value: 'parameterdirection' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
+        { text: 'Boolean Bit', value: 'booleanbit', width: 120 },
         { text: 'DB Address', value: 'dbaddress', width: 130 },
         { text: 'Start Address', value: 'startaddress', width: 140 },
         { text: 'Monitor', value: 'monitor', width: 130 },

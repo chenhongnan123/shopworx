@@ -92,6 +92,16 @@
           </v-autocomplete>
           <v-text-field
               v-if="parameterObj.datatype
+              && parameterObj.datatype.name === 'Boolean'"
+              :disabled="saving"
+              label="Boolean Bit"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.booleanbit"
+              :rules="rules.booleanbit"
+              type="number"
+          ></v-text-field>
+          <v-text-field
+              v-if="parameterObj.datatype
               && (parameterObj.datatype.name === 'Boolean'
               || parameterObj.datatype.name === 'String')"
               :disabled="saving"
@@ -215,6 +225,7 @@ export default {
         // parameterdirection: null,
         parametercategory: null,
         datatype: null,
+        booleanbit: null,
         size: null,
         dbaddress: null,
         startaddress: null,
@@ -256,6 +267,10 @@ export default {
         size: [
           (v) => !!v || 'Size is required',
           (v) => v % 1 === 0 || 'Size is Integer',
+          (v) => v > 0 || 'Size is greater than zero',
+        ],
+        booleanbit: [
+          (v) => !!v || 'Boolean Bit is required',
           (v) => v > 0 || 'Size is greater than zero',
         ],
         isconversion: [
@@ -302,6 +317,9 @@ export default {
       handler(parameterObj) {
         if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean' && parameterObj.datatype.name !== 'String') {
           parameterObj.size = parameterObj.datatype.size;
+          delete this.parameterObj.booleanbit;
+        } else if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
+          this.parameterObj.booleanbit = null;
         }
       },
       deep: true,
