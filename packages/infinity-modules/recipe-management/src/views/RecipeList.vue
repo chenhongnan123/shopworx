@@ -95,6 +95,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -143,6 +147,7 @@
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
+            :rules="nameRules"
         ></v-text-field>
         <!-- <v-autocomplete
           clearable
@@ -167,12 +172,14 @@
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!valid"
           @click="saveRecipe"
         >
           {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -309,6 +316,10 @@ export default {
       updateRecipeNumber: '',
       editedVersionNumber: 0,
       itemForDelete: null,
+      valid: true,
+      recipename: '',
+      nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
+        (v) => !!v || 'Name required'],
       input: {
         sublinename: '',
         machinename: '',
