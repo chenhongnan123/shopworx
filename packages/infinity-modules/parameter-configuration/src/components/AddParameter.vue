@@ -403,7 +403,7 @@ export default {
           sublineid: this.subline,
           stationid: this.station,
           substationid: this.substation,
-          plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcaddress,
+          plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcipaddress,
         };
         if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
           payload.size = parameterObj.size;
