@@ -31,8 +31,8 @@
           </v-btn>
         </div>
         <v-spacer></v-spacer>
-        <v-btn small color="primary" class="text-none ml-2" @click="addNewRecipe">
-            <v-icon small left>mdi-plus</v-icon>
+        <v-btn small color="primary" class="text-none ml-2">
+                        <AddRecipe />
             {{ $t('displayTags.buttons.addNewRecipe') }}
           </v-btn>
           <v-btn v-if="recipes.length"
@@ -87,100 +87,7 @@
       </v-data-table>
       </v-col>
     </v-row>
-    <v-dialog
-    scrollable
-    persistent
-    v-model="dialog"
-    max-width="500px"
-    transition="dialog-transition"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
-  >
-  <v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation>
-    <v-card>
-      <v-card-title primary-title>
-        <span>
-          Recipe
-        </span>
-        <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <v-select
-          v-model="input.sublinename"
-          :items="subLineList"
-          :disabled="saving"
-          item-value="name"
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Sub-Line name"/>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Sub-Line name"
-          :items="subLineList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="subLineSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-        <v-select
-          v-model="input.machinename"
-          :items="stationList"
-          :disabled="saving"
-          item-value="name"
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Station name"/>
-        <v-text-field
-            label="Recipe Name"
-            prepend-icon="mdi-tray-plus"
-            v-model="recipe.recipename"
-            :rules="nameRules"
-        ></v-text-field>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Station name"
-          :items="stationList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="stationSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          :disabled="!valid"
-          @click="saveRecipe"
-        >
-          {{ $t('displayTags.buttons.save') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
-  </v-dialog>
+    <!-- <AddRecipe /> -->
   <v-dialog
     scrollable
     persistent
@@ -257,9 +164,13 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
+import AddRecipe from '../components/Addrecipe.vue';
 
 export default {
   name: 'RecipeList',
+  components: {
+    AddRecipe,
+  },
   data() {
     return {
       headers: [
