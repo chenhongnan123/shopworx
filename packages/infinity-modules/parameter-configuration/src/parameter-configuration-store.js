@@ -175,8 +175,6 @@ export default ({
       parameterList.forEach((item, key) => {
         item.number = key + 1;
         item.datatype = Number(item.datatype);
-        item.parametercategory = Number(item.parametercategory);
-        item.parameterdirection = Number(item.parameterdirection);
       });
       commit('setParameterList', parameterList);
       return parameterList;

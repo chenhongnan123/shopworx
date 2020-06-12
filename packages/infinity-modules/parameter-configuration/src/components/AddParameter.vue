@@ -31,19 +31,12 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              :rules="rules.id"
-              label="Parameter ID"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.id"
-          ></v-text-field>
-          <v-text-field
-              :disabled="saving"
               :rules="rules.description"
               label="Parameter Description"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.description"
           ></v-text-field>
-           <v-autocomplete
+           <!-- <v-autocomplete
             clearable
             label="Direction"
             :items="directionList"
@@ -60,7 +53,7 @@
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
           <v-autocomplete
             clearable
             label="Category"
@@ -97,6 +90,16 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
+          <v-text-field
+              v-if="parameterObj.datatype
+              && (parameterObj.datatype.name === 'Boolean'
+              || parameterObj.datatype.name === 'String')"
+              :disabled="saving"
+              label="Size"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.size"
+              :rules="rules.size"
+          ></v-text-field>
           <v-text-field
               :disabled="saving"
               label="DB Address"
@@ -162,13 +165,13 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.divisionfactor"
           ></v-text-field>
-          <v-text-field
+          <!-- <v-text-field
               :disabled="saving"
               :rules="rules.currentvalue"
               label="Parameter Current Value"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.currentvalue"
-          ></v-text-field>
+          ></v-text-field> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.parameterunit"
@@ -208,18 +211,18 @@ export default {
       saving: false,
       parameterObj: {
         name: null,
-        id: null,
         description: null,
-        parameterdirection: null,
+        // parameterdirection: null,
         parametercategory: null,
         datatype: null,
+        size: null,
         dbaddress: null,
         startaddress: null,
         protocol: null,
         isconversion: null,
         multiplicationfactor: null,
         divisionfactor: null,
-        currentvalue: null,
+        // currentvalue: null,
         parameterunit: null,
       },
       valid: true,
@@ -228,15 +231,12 @@ export default {
         name: [
           (v) => !!v || 'Parameter Name is required',
         ],
-        id: [
-          (v) => !!v || 'Parameter ID is required',
-        ],
         description: [
           (v) => !!v || 'Parameter Description is required',
         ],
-        parameterdirection: [
-          (v) => !!v || 'Direction is required',
-        ],
+        // parameterdirection: [
+        //   (v) => !!v || 'Direction is required',
+        // ],
         parametercategory: [
           (v) => !!v || 'Category is required',
         ],
@@ -269,9 +269,9 @@ export default {
           (v) => !!v || 'Division Factor is required',
           (v) => v % 1 === 0 || 'Division Factor is Integer',
         ],
-        currentvalue: [
-          (v) => !!v || 'Parameter Current Value',
-        ],
+        // currentvalue: [
+        //   (v) => !!v || 'Parameter Current Value',
+        // ],
         parameterunit: [
           (v) => !!v || 'Parameter Unit',
         ],
@@ -295,6 +295,16 @@ export default {
       set(val) {
         this.setAddParameterDialog(val);
       },
+    },
+  },
+  watch: {
+    parameterObj: {
+      handler(parameterObj) {
+        if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean' && parameterObj.datatype.name !== 'String') {
+          parameterObj.size = parameterObj.datatype.size;
+        }
+      },
+      deep: true,
     },
   },
   methods: {
@@ -351,7 +361,7 @@ export default {
         const payload = {
           ...parameterObj,
           assetid: 4,
-          parameterdirection: parameterObj.parameterdirection.id,
+          // parameterdirection: parameterObj.parameterdirection.id,
           parametercategory: parameterObj.parametercategory.id,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
@@ -365,7 +375,7 @@ export default {
           stationid: this.station,
           substationid: this.substation,
         };
-        if (payload.datatype === 'Boolean' || payload.datatype === 'String') {
+        if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
           payload.size = parameterObj.size;
         }
         this.saving = true;

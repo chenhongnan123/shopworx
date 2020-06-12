@@ -184,7 +184,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.parameterdirection="props">
+          <!-- <template v-slot:item.parameterdirection="props">
             <v-select
               :disabled="substationValue ? false : true"
               :items="directionList"
@@ -197,7 +197,7 @@
               dense
               depressed
             ></v-select>
-          </template>
+          </template> -->
           <template v-slot:item.parametercategory="props">
             <v-select
               :disabled="substationValue ? false : true"
@@ -587,13 +587,28 @@ export default {
         ? this.substationList.filter((item) => this.substationValue === item.id)[0].name : 'None';
       const fileName = `${lineName}-${sublineName}-${stationName}-${substationName}`;
       const parameterSelected = this.parameterSelected.map((item) => ({ ...item }));
-      const column = parameterSelected[0].questions;
       const csvContent = [];
+      const column = [
+        'name',
+        'description',
+        'protocol',
+        'datatype',
+        'dbaddress',
+        'startaddress',
+        'size',
+        'isconversion',
+        'multiplicationfactor',
+        'divisionfactor',
+        'currentvalue',
+        'parameterunit',
+        'parametercategory',
+      ];
       parameterSelected.forEach((parameter) => {
         const arr = [];
         column.forEach((key) => {
           arr.push(parameter[key]);
         });
+        // console.log(arr);
         csvContent.push(arr);
       });
       const csvParser = new CSVParser();
@@ -618,7 +633,6 @@ export default {
       const fileName = 'sample-file';
       const column = [
         'name',
-        'id',
         'description',
         'protocol',
         'datatype',
@@ -633,15 +647,10 @@ export default {
         'currentvalue',
         'parameterunit',
         'parametercategory',
-        'parameterdirection',
-        'substationid',
-        'lineid',
-        'sublineid',
       ];
       const csvContent = [];
       const arr = [
         'parametername',
-        '82',
         '2',
         '2',
         12,
@@ -693,11 +702,13 @@ export default {
         item.sublineid = this.sublineValue;
         item.stationid = this.stationValue;
         item.substationid = this.substationValue;
+        item.protocol = this.protocol.toUpperCase();
         item.assetid = 4;
         delete item.monitor;
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
+      console.log(dataList, 'dataList');
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
         for (let i = 0; i < dataList.length; i += 1) {
