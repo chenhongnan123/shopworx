@@ -585,12 +585,10 @@ export default {
       this.downloadFromPLC();
     },
     async downloadFromPLC() {
-      const { plcaddress } = this.stationList.filter((item) => item.id === this.stationValue)[0];
       const object = {
         lineid: this.lineValue,
         sublineid: this.sublineValue,
         stationid: this.stationValue,
-        plcaddress,
       };
       await this.downloadToPLC(object);
       const socket = socketioclient.connect();

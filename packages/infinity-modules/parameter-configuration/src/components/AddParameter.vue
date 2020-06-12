@@ -313,7 +313,7 @@ export default {
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -403,6 +403,7 @@ export default {
           sublineid: this.subline,
           stationid: this.station,
           substationid: this.substation,
+          plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcaddress,
         };
         if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
           payload.size = parameterObj.size;
