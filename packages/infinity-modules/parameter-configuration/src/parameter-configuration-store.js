@@ -18,6 +18,7 @@ export default ({
     substationValue: '',
     filter: false,
     dataTypeList: [],
+    categoryDataList: [],
     selectedParameterName: '',
     selectedParameterDirection: '',
     selectedParameterCategory: '',
@@ -40,6 +41,7 @@ export default ({
     setStationValue: set('stationValue'),
     setSubstationValue: set('substationValue'),
     setDatatypes: set('dataTypeList'),
+    setCategoryData: set('categoryDataList'),
     setSelectedParameterName: set('selectedParameterName'),
     setSelectedParameterDirection: set('selectedParameterDirection'),
     setSelectedParameterCategory: set('selectedParameterCategory'),
@@ -96,6 +98,22 @@ export default ({
       }
       commit('setDatatypes', datatypes);
     },
+    getCategory: async ({ commit, dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'category', query },
+        { root: true },
+      );
+      let category = [];
+      if (list && list.length) {
+        category = list.map((l) => ({
+          ...l,
+          plc: 'Siemens',
+          protocol: 'SNAP7',
+        }));
+      }
+      commit('setCategoryData', category);
+    },
     addDataType: async ({ dispatch }, payload) => {
       const list = await dispatch(
         'element/postRecord',
@@ -107,6 +125,21 @@ export default ({
       );
       if (list) {
         dispatch('getDataTypes');
+        return true;
+      }
+      return false;
+    },
+    addCategory: async ({ dispatch }, payload) => {
+      const list = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'category',
+          payload,
+        },
+        { root: true },
+      );
+      if (list) {
+        dispatch('getCategory');
         return true;
       }
       return false;
@@ -213,11 +246,34 @@ export default ({
       );
       return deleteParameter;
     },
+    deleteCategory: async ({ dispatch }, id) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'category',
+          queryParam: `?query=id==${id}`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
     updateDataType: async ({ dispatch }, payload) => {
       const putParameter = await dispatch(
         'element/updateRecordByQuery',
         {
           elementName: 'datatypes',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
+    updateCategory: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'category',
           queryParam: payload.query,
           payload: payload.payload,
         },
