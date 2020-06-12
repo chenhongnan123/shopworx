@@ -743,7 +743,7 @@ export default {
         item.sublineid = this.sublineValue;
         item.stationid = this.stationValue;
         item.substationid = this.substationValue;
-        item.protocol = this.protocol.toUpperCase();
+        item.protocol = item.protocol.toUpperCase();
         item.assetid = 4;
         delete item.monitorvalue;
         delete item.status;

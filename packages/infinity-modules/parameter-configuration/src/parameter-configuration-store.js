@@ -208,6 +208,7 @@ export default ({
       parameterList.forEach((item, key) => {
         item.number = key + 1;
         item.datatype = Number(item.datatype);
+        item.parametercategory = Number(item.parametercategory);
         if (socketData && item.name === socketData[item.name]) {
           item.monitorvalue = socketData.monitorvalue;
         }
