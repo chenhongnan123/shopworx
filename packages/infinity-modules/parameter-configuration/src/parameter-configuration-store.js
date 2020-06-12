@@ -202,6 +202,29 @@ export default ({
       );
       return deleteParameter;
     },
+    deleteDatatype: async ({ dispatch }, id) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'datatypes',
+          queryParam: `?query=id==${id}`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
+    updateDataType: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'datatypes',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
   },
   getters: {
   },

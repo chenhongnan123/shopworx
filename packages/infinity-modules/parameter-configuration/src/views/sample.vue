@@ -1,0 +1,358 @@
+<template>
+  <v-container fluid class="py-0">
+    <v-row>
+      <v-col cols="12" xl="12" class="py-0">
+        <v-toolbar
+          flat
+          dense
+          class="stick"
+          :color="$vuetify.theme.dark ? '#121212': ''"
+        >
+          <v-btn
+          small
+          color="primary"
+          class="text-none"
+          :disabled="!this.sublineValue"
+          @click="setaddBomDialog(true)"
+          >
+            <v-icon small left>mdi-plus</v-icon>
+            Add parameter
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <span v-if="lineList.length && !!lineValue" class="ml-2">
+            line:
+            <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setLineValue('')">
+              <v-icon small left>mdi-close</v-icon>
+              {{lineList.filter((item) => item.id === lineValue)[0].name}}
+            </v-btn>
+          </span>
+          <span v-if="sublineList.length && !!sublineValue" class="ml-2">
+            subline:
+            <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setSublineValue('')">
+              <v-icon small left>mdi-close</v-icon>
+              {{sublineList.filter((item) => item.id === sublineValue)[0].name}}
+            </v-btn>
+          </span>
+          <v-spacer></v-spacer>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+            <v-icon small left>mdi-filter-variant</v-icon>
+            Filters
+          </v-btn>
+        </v-toolbar>
+        <v-data-table
+        v-model="bomSelected"
+        :headers="headers"
+        :items="bomList"
+        item-key="bomnumber"
+        >
+        <template v-slot:item.name="props" >
+          <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
+            <span style="cursor:pointer;">{{props.item.name}}</span>
+          </router-link>
+        </template>
+        <template v-slot:top>
+        <v-dialog
+          persistent
+          scrollable
+          v-model="editDialog"
+          max-width="500px"
+          transition="dialog-transition"
+        >
+          <v-card>
+            <v-card-title primary-title>
+              <span>
+                Update Bom
+              </span>
+              <v-spacer></v-spacer>
+              <v-btn icon small @click="editDialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+              <v-card-text style="height: 200px;">
+              <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+              >
+                <v-text-field
+                    :rules="rules.name"
+                    label="Bom"
+                    prepend-icon="mdi-tray-plus"
+                    v-model="bomObj.name"
+                ></v-text-field>
+                <v-text-field
+                    :rules="rules.bomnumber"
+                    type="number"
+                    label="Bom Number"
+                    prepend-icon="mdi-tray-plus"
+                    v-model="bomObj.bomnumber"
+                ></v-text-field>
+              </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  class="text-none"
+                  :loading="saving"
+                  @click="handleUpdateBom"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog
+          persistent
+          scrollable
+          v-model="confirmDialog"
+          max-width="500px"
+          transition="dialog-transition"
+        >
+          <v-card>
+            <v-card-title primary-title>
+              <span>
+                Please confirm
+              </span>
+              <v-spacer></v-spacer>
+              <v-btn icon small @click="confirmDialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text>
+              Are you sure to delete the item?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                class="text-none"
+                :loading="saving"
+                @click="handleDeleteItem"
+              >
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-row>
+            <v-btn
+              icon
+              small
+              color="primary"
+              @click="editItem(item)"
+            >
+              <v-icon v-text="'$edit'"></v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              color="error"
+              @click="deleteItem(item)"
+            >
+              <v-icon v-text="'$delete'"></v-icon>
+            </v-btn>
+          </v-row>
+        </template>
+      </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import { mapActions, mapMutations, mapState } from 'vuex';
+
+export default {
+  name: 'BOMList',
+  data() {
+    return {
+      bomSelected: [],
+      headers: [
+        {
+          text: 'BOM name',
+          value: 'name',
+        },
+        {
+          text: 'BOM Number',
+          value: 'bomnumber',
+        },
+        { text: 'Last Edited By', value: 'editedby' },
+        { text: 'Last Edited On', value: 'modifiedtimestamp' },
+        { text: 'Actions', value: 'actions', sortable: false },
+      ],
+      bomObj: {
+        name: null,
+        bomnumber: null,
+        materilcategory: null,
+        lifetime: null,
+        bomtype: null,
+        manufacturer: null,
+      },
+      bomObjDefault: null,
+      editDialog: false,
+      confirmDialog: false,
+      valid: true,
+      saving: false,
+      rules: {
+        name: [
+          (v) => !!v || 'Bom is required',
+        ],
+        bomnumber: [
+          (v) => !!v || 'Bom Number is required',
+          (v) => v >= 0 || 'Bom Number is bigger than 0',
+        ],
+      },
+    };
+  },
+  async created() {
+    // await this.getBomListRecords('');
+    this.getDefaultList();
+  },
+  computed: {
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+  },
+  methods: {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
+    ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom']),
+    async handleUpdateBom() {
+      if (this.$refs.form.validate()) {
+        const { bomObj, bomObjDefault } = this;
+        const { name, bomnumber } = bomObj;
+        const fetchObj = {};
+        Object.keys(bomObj).forEach((k) => {
+          if (bomObj[k] !== bomObjDefault[k]) {
+            fetchObj[k] = bomObj[k];
+          }
+        });
+        if (Object.keys(fetchObj).length) {
+          console.log(fetchObj);
+          if (fetchObj.name) {
+            if (this.bomList.some((bom) => name === bom.name)) {
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'bom name is present',
+              });
+              return;
+            }
+          }
+          if (fetchObj.bomnumber) {
+            if (this.bomList.some((bom) => bomnumber === bom.bomnumber)) {
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'Bom Number name is present',
+              });
+              return;
+            }
+          }
+        } else {
+          this.editDialog = false;
+          return;
+        }
+        const query = `?query=name=="${bomObjDefault.name}"`;
+        const payload = fetchObj;
+        this.saving = true;
+        const updateResult = await this.updateBom({ query, payload });
+        this.saving = false;
+        if (updateResult) {
+          this.getBomListRecords(`?query=sublineid=="${this.sublineValue || null}"`);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'update bom success',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'network error',
+          });
+        }
+        this.editDialog = false;
+      }
+    },
+    editItem(item) {
+      this.bomObjDefault = item;
+      this.editDialog = true;
+      Object.keys(this.bomObj).forEach((k) => {
+        this.bomObj[k] = item[k];
+      });
+    },
+    deleteItem(item) {
+      this.confirmDialog = true;
+      this.bomObjDefault = item;
+    },
+    async handleDeleteItem() {
+      this.saving = true;
+      const deleteResult = await this.deleteBom(this.bomObjDefault._id);
+      this.saving = false;
+      if (deleteResult) {
+        this.getBomListRecords(`?query=sublineid=="${this.sublineValue || null}"`);
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'update bom success',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'network error',
+        });
+      }
+      this.confirmDialog = false;
+    },
+    handleClick(value) {
+      this.$router.push({ name: 'order-details', params: { id: value } });
+    },
+    RefreshUI() {
+      this.getBomListRecords(`?query=sublineid=="${this.sublineValue || null}"`);
+      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
+    },
+    btnSaveData() {
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'DATA_SAVED',
+      });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.stick {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 104px;
+  z-index: 1;
+}
+.card-border {
+  border-left: 4px solid green;
+}
+.orange {
+  text-emphasis-color: orange;
+}
+.green {
+  background-color: green;
+}
+.v-data-table__wrapper{height:calc(100vh - 150px) !important;}
+</style>
