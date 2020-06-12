@@ -196,7 +196,7 @@ export default ({
       );
       return created;
     },
-    getParameterListRecords: async ({ dispatch, commit }, query) => {
+    getParameterListRecords: async ({ dispatch, commit }, query, socketData) => {
       const parameterList = await dispatch(
         'element/getRecords',
         {
@@ -208,6 +208,9 @@ export default ({
       parameterList.forEach((item, key) => {
         item.number = key + 1;
         item.datatype = Number(item.datatype);
+        if (socketData && item.name === socketData[item.name]) {
+          item.monitorvalue = socketData.monitorvalue;
+        }
       });
       commit('setParameterList', parameterList);
       return parameterList;
@@ -280,6 +283,17 @@ export default ({
         { root: true },
       );
       return putParameter;
+    },
+    downloadToPLC: async ({ dispatch }, postdata) => {
+      const orders = await dispatch(
+        'element/postSocket',
+        {
+          functionName: 'parameter',
+          postdata,
+        },
+        { root: true },
+      );
+      return orders;
     },
   },
   getters: {

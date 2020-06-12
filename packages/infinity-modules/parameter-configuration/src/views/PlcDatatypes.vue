@@ -245,8 +245,6 @@ export default {
       Object.keys(this.parameterObj).forEach((k) => {
         this.parameterObj[k] = item[k].toString();
       });
-      console.log(item, 'item');
-      console.log(this.parameterObj, 'parameterObj');
     },
     deleteItem(item) {
       this.confirmDialog = true;
@@ -326,7 +324,6 @@ export default {
             }
           });
           if (Object.keys(fetchObj).length) {
-            console.log(fetchObj);
             if (fetchObj.name) {
               if (this.dataTypeList.some((datatype) => name === datatype.name)) {
                 this.setAlert({
@@ -368,7 +365,6 @@ export default {
             });
           }
         }
-        console.log(parameterObj);
         this.getDataTypes();
         this.parameterObj = {
           name: null,

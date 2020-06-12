@@ -72,7 +72,10 @@
               <v-icon small left>mdi-plus</v-icon>
               Add parameter
             </v-btn>
-            <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-btn
+            small
+            color="primary"
+            outlined class="text-none ml-2" :disabled="!stationValue" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
               Refresh
             </v-btn>
@@ -372,6 +375,7 @@ import {
   mapMutations,
   mapState,
 } from 'vuex';
+import socketioclient from 'socket.io-client';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
 import AddParameter from '../components/AddParameter.vue';
@@ -394,7 +398,7 @@ export default {
         { text: 'Boolean Bit', value: 'booleanbit', width: 120 },
         { text: 'DB Address', value: 'dbaddress', width: 130 },
         { text: 'Start Address', value: 'startaddress', width: 140 },
-        { text: 'Monitor', value: 'monitor', width: 130 },
+        { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
       ],
       parameterListSave: [],
@@ -446,14 +450,13 @@ export default {
       }
     },
     parameterList(parameterList) {
-      console.log(parameterList, 'parameterList');
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
-    ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList']),
+    ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC']),
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -577,8 +580,25 @@ export default {
         });
       }
     },
-    async RefreshUI() {
-      await this.getParameterListRecords(this.getQuery());
+    RefreshUI() {
+      // await this.getParameterListRecords(this.getQuery());
+      this.downloadFromPLC();
+    },
+    async downloadFromPLC() {
+      const { plcaddress } = this.stationList.filter((item) => item.id === this.stationValue)[0];
+      const object = {
+        lineid: this.lineValue,
+        sublineid: this.sublineValue,
+        stationid: this.stationValue,
+        plcaddress,
+      };
+      await this.downloadToPLC(object);
+      const socket = socketioclient.connect();
+      socket.on(`parameter_"${object.lineid}"_"${object.sublineid}"_"${object.stationid}"`, (data) => {
+        if (data) {
+          this.getParameterListRecords(this.getQuery(), data);
+        }
+      });
     },
     getQuery() {
       let query = '?query=';
@@ -633,7 +653,6 @@ export default {
         column.forEach((key) => {
           arr.push(parameter[key]);
         });
-        // console.log(arr);
         csvContent.push(arr);
       });
       const csvParser = new CSVParser();
@@ -696,7 +715,6 @@ export default {
         'subline',
       ];
       csvContent.push(arr);
-      console.log(csvContent);
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,
@@ -729,11 +747,10 @@ export default {
         item.substationid = this.substationValue;
         item.protocol = this.protocol.toUpperCase();
         item.assetid = 4;
-        delete item.monitor;
+        delete item.monitorvalue;
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
-      console.log(dataList, 'dataList');
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
         for (let i = 0; i < dataList.length; i += 1) {
@@ -753,7 +770,6 @@ export default {
           }
         }
         const createResult = await this.createParameterList(data);
-        console.log(createResult, 'createResult');
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
           this.setAlert({

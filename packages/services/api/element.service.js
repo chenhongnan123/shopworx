@@ -48,6 +48,10 @@ class ElementService {
   updateRecordByQuery(elementName, queryParam, payload) {
     return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
   }
+
+  postSocket(functionName, postData) {
+    return this.request.post(`/socket.io/linemes/${functionName}`, postData);
+  }
 }
 
 export default new ElementService();

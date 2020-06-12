@@ -189,6 +189,13 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.parameterunit"
           ></v-text-field>
+          <v-text-field
+              :disabled="saving"
+              :rules="rules.paid"
+              label="PAID"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.paid"
+          ></v-text-field>
         </v-form>
         </v-card-text>
         <v-card-actions>
@@ -235,6 +242,7 @@ export default {
         divisionfactor: null,
         // currentvalue: null,
         parameterunit: null,
+        paid: null,
       },
       valid: true,
       isSaveValid: false,
@@ -288,7 +296,10 @@ export default {
         //   (v) => !!v || 'Parameter Current Value',
         // ],
         parameterunit: [
-          (v) => !!v || 'Parameter Unit',
+          (v) => !!v || 'Parameter Unit is required',
+        ],
+        paid: [
+          (v) => !!v || 'PAID is required',
         ],
       },
       boolList: [
