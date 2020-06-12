@@ -8,8 +8,11 @@
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
   <template v-slot:activator="{ on }">
-    <v-icon v-on="on" v-text="'$plus'"
+    <v-btn v-on="on" small color="primary" class="text-none ml-2">
+    <v-icon  v-text="'$plus'"
     class="float-right"></v-icon>
+    {{ $t('displayTags.buttons.addNewRecipe') }}
+    </v-btn>
     </template>
   <v-form
     ref="form"

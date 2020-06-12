@@ -31,10 +31,10 @@
           </v-btn>
         </div>
         <v-spacer></v-spacer>
-        <v-btn small color="primary" class="text-none ml-2">
+        <!-- <v-btn small color="primary" class="text-none ml-2"> -->
                         <AddRecipe />
-            {{ $t('displayTags.buttons.addNewRecipe') }}
-          </v-btn>
+            <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
+          <!-- </v-btn> -->
           <v-btn v-if="recipes.length"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
