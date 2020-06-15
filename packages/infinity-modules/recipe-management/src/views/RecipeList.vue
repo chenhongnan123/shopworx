@@ -18,20 +18,42 @@
           </v-btn>
         </div>
         <div v-if="filterSubLine.name != null" class="text-none ml-2">
-          {{ $t('displayTags.sublineName') }}
-        <v-btn small color="info" outlined class="text-none ml-1">
-            <v-icon small left
-            @click="btnReset"
-            >mdi-close</v-icon>
-            {{filterSubLine.name}}
-          </v-btn>
+          <v-btn text
+          v-if="chipforSubline"
+         >
+         {{ $t('displayTags.sublineName') }}
+         </v-btn>
+          <v-chip
+            v-if="chipforSubline"
+            class="ma-2"
+            close
+            close-icon="mdi-close"
+            color="info"
+            label
+            outlined
+            @click:close="(chipforSubline = false); btnReset();"
+           >
+           {{filterSubLine.name}}
+         </v-chip>
         </div>
         <div v-if="filterStation.name != null" class="text-none ml-2">
-          {{ $t('displayTags.stationName') }}
-        <v-btn small color="info" outlined class="text-none ml-1">
-            <v-icon small left>mdi-close</v-icon>
-            {{filterStation.name}}
-          </v-btn>
+          <v-btn text
+          v-if="chipforStation"
+         >
+           {{ $t('displayTags.stationName') }}
+         </v-btn>
+          <v-chip
+            v-if="chipforStation"
+            class="ma-2"
+            close
+            close-icon="mdi-close"
+            color="info"
+            label
+            outlined
+            @click:close="(chipforStation = false); btnReset();"
+           >
+           {{filterStation.name}}
+         </v-chip>
         </div>
         <v-spacer></v-spacer>
         <!-- <v-btn small color="primary" class="text-none ml-2"> -->
@@ -213,6 +235,8 @@ export default {
           value: 'actions',
         },
       ],
+      chipforSubline: true,
+      chipforStation: true,
       visible: false,
       dialog: false,
       dialogDup: false,
@@ -247,7 +271,7 @@ export default {
     ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation']),
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber']),
+    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     showFilter: {
@@ -450,6 +474,14 @@ export default {
     //     }
     //   }
     // },
+    async btnReset() {
+      await this.getRecipeListRecords('');
+      // this.setRecipeList(this.filterBList);
+      this.sublines = [];
+      this.stations = [];
+      this.setFilterSubLine(this.sublines);
+      this.setFilterStation(this.stations);
+    },
   },
 };
 </script>
