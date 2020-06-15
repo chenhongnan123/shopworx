@@ -7,24 +7,28 @@
           dense
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
+          :close-on-content-click='false'
         >
         <div v-if="filterLine.name != null">
           <span :style="{ cursor: 'pointer'}" @click="toggleFilter">
           {{ $t('displayTags.lineName') }}</span>
         <v-btn small color="info" outlined class="text-none ml-1" @click="fnLineModel">
-            <v-icon small left>mdi-close</v-icon>
+            <v-icon small left
+            >mdi-close</v-icon>
             {{filterLine.name}}
           </v-btn>
         </div>
         <div v-if="filterSubLine.name != null" class="text-none ml-2">
-          {{ $t('displayTags.stationName') }}
+          {{ $t('displayTags.sublineName') }}
         <v-btn small color="info" outlined class="text-none ml-1">
-            <v-icon small left>mdi-close</v-icon>
+            <v-icon small left
+            @click="btnReset"
+            >mdi-close</v-icon>
             {{filterSubLine.name}}
           </v-btn>
         </div>
         <div v-if="filterStation.name != null" class="text-none ml-2">
-          {{ $t('displayTags.sublineName') }}
+          {{ $t('displayTags.stationName') }}
         <v-btn small color="info" outlined class="text-none ml-1">
             <v-icon small left>mdi-close</v-icon>
             {{filterStation.name}}
@@ -342,7 +346,22 @@ export default {
       this.itemForDelete = item;
     },
     fnDeleteOnYes() {
-      this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
+      let deleted = false;
+      deleted = this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'RECIPE_RECORD_DELETED',
+        });
+        this.dialogConfirm = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_RECIPE',
+        });
+      }
       this.dialogConfirm = false;
     },
     async saveRecipe() {
@@ -431,6 +450,14 @@ export default {
           this.saving = false;
         }
       }
+    },
+    async btnReset() {
+      await this.getRecipeListRecords('');
+      // this.setRecipeList(this.filterBList);
+      this.sublines = [];
+      this.stations = [];
+      this.setFilterSubLine(this.sublines);
+      this.setFilterStation(this.stations);
     },
   },
 };

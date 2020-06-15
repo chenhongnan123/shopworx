@@ -22,10 +22,12 @@
     "ALREADY_EXSIST_RECIPE": "Recipe Name already present",
     "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
     "ERROR_UPDATING_RECIPE": "Error while updating recipe, please retry.",
-    "SELECT_RECIPE_FIRST": "Please select the Recipe first."
+    "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
+    "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
-    "RECIPE_UPDATED": "Recipe updated!"
+    "RECIPE_UPDATED": "Recipe updated!",
+    "RECIPE_RECORD_DELETED": "Recipe Record DELETED."
   }
 }
