@@ -24,7 +24,7 @@
           Recipe
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -35,6 +35,8 @@
           :disabled="saving"
           item-value="name"
           item-text="name"
+          :rules="sublineSelect"
+          required
           prepend-icon="$production"
           label="Select Sub-Line name"/>
         <!-- <v-autocomplete
@@ -60,6 +62,8 @@
           :disabled="saving"
           item-value="name"
           item-text="name"
+          :rules="stationSelect"
+          required
           prepend-icon="$production"
           label="Select Station name"/>
         <v-text-field
@@ -126,9 +130,12 @@ export default {
       editedVersionNumber: 0,
       itemForDelete: null,
       valid: true,
+      sublinename: '',
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
         (v) => !!v || 'Name required'],
+      sublineSelect: [(v) => !!v || 'required'],
+      stationSelect: [(v) => !!v || 'required'],
       input: {
         sublinename: '',
         machinename: '',
@@ -143,11 +150,24 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
+      this.$refs.form.validate();
       if (!this.recipe.recipename) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'RECIPE_NAME_EMPTY',
+        });
+      } else if (!this.input.sublinename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'RECIPE_SUBLINE_NAME_EMPTY',
+        });
+      } else if (!this.input.machinename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'RECIPE_STATION_NAME_EMPTY',
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
@@ -229,6 +249,9 @@ export default {
           this.saving = false;
         }
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };

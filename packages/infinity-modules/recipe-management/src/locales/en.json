@@ -23,7 +23,9 @@
     "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
     "ERROR_UPDATING_RECIPE": "Error while updating recipe, please retry.",
     "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
-    "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record"
+    "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record",
+    "RECIPE_SUBLINE_NAME_EMPTY": "Select Subline Name from DropDown",
+    "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
