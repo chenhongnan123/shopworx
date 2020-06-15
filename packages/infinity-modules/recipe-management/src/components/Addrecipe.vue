@@ -218,6 +218,7 @@ export default {
             });
             this.dialog = false;
             this.recipe = {};
+            this.$refs.form.reset();
           } else {
             this.setAlert({
               show: true,
