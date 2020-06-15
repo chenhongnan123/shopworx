@@ -391,7 +391,6 @@ export default {
         { text: 'Protocol', value: 'protocol', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
-        { text: 'Parameter ID', value: 'id', width: 150 },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
@@ -636,6 +635,7 @@ export default {
         'description',
         'protocol',
         'datatype',
+        'booleanbit',
         'dbaddress',
         'startaddress',
         'size',
@@ -645,6 +645,8 @@ export default {
         'currentvalue',
         'parameterunit',
         'parametercategory',
+        'plcaddress',
+        'paid',
       ];
       parameterSelected.forEach((parameter) => {
         const arr = [];
@@ -678,6 +680,7 @@ export default {
         'description',
         'protocol',
         'datatype',
+        'booleanbit',
         'dbaddress',
         'startaddress',
         'size',
@@ -689,6 +692,8 @@ export default {
         'currentvalue',
         'parameterunit',
         'parametercategory',
+        'plcaddress',
+        'paid',
       ];
       const csvContent = [];
       const arr = [
@@ -696,6 +701,7 @@ export default {
         '2',
         '2',
         12,
+        '6',
         '6',
         '2',
         12,
@@ -708,9 +714,6 @@ export default {
         '2',
         2,
         2,
-        'substation',
-        'line',
-        'subline',
       ];
       csvContent.push(arr);
       const csvParser = new CSVParser();
@@ -738,6 +741,7 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
+      console.log(data, 'data');
       data.forEach((item) => {
         item.lineid = this.lineValue;
         item.sublineid = this.sublineValue;
