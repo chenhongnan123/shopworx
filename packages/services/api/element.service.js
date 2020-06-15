@@ -49,8 +49,8 @@ class ElementService {
     return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
   }
 
-  postSocket(functionName, postData) {
-    return this.request.post(`/socket.io/linemes/${functionName}`, postData);
+  postSocket(functionName, payload) {
+    return this.request.post(`/socket.io/linemes/${functionName}`, payload);
   }
 }
 

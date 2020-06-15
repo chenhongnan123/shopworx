@@ -320,12 +320,12 @@ export default ({
       );
       return putParameter;
     },
-    downloadToPLC: async ({ dispatch }, postdata) => {
+    downloadToPLC: async ({ dispatch }, payload) => {
       const orders = await dispatch(
         'element/postSocket',
         {
-          functionName: 'parameter',
-          postdata,
+          functionName: 'parameterupload',
+          payload,
         },
         { root: true },
       );

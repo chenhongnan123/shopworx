@@ -406,12 +406,17 @@ export default {
       ],
       parameterListSave: [],
       confirmDialog: false,
+      socket: null,
     };
   },
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
     this.getParameterListRecords(this.getQuery());
+    this.socket = socketioclient.connect('http://192.168.20.107:10190');
+    this.socket.on('connect', () => {
+      console.log('connected to socketwebhook');
+    });
   },
   computed: {
     ...mapState('parameterConfiguration', [
@@ -647,17 +652,21 @@ export default {
     },
     async downloadFromPLC() {
       const object = {
-        lineid: this.lineValue,
+        lineid: Number(this.lineValue),
         sublineid: this.sublineValue,
-        stationid: this.stationValue,
+        substationid: this.substationValue,
       };
-      await this.downloadToPLC(object);
-      const socket = socketioclient.connect();
-      socket.on(`parameter_"${object.lineid}"_"${object.sublineid}"_"${object.stationid}"`, (data) => {
+      this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
+        console.log('event received');
         if (data) {
-          this.getParameterListRecords(this.getQuery(), data);
+          this.parameterList.forEach((element) => {
+            if (data[element.name]) {
+              this.$set(element, 'monitorvalue', data[element.name]);
+            }
+          });
         }
       });
+      await this.downloadToPLC(object);
     },
     getQuery() {
       let query = '?query=';
