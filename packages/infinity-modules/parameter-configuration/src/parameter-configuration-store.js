@@ -213,10 +213,26 @@ export default ({
       return created;
     },
     getParameterListRecords: async ({ dispatch, commit }, query, socketData) => {
-      const lineList = await dispatch('getLineList');
-      const subLineList = await dispatch('getSublineList');
-      const stationList = await dispatch('getStationList');
-      const sunStationList = await dispatch('getSubstationList');
+      const lineList = await dispatch(
+        'element/getRecords',
+        { elementName: 'line', query },
+        { root: true },
+      );
+      const subLineList = await dispatch(
+        'element/getRecords',
+        { elementName: 'subline', query },
+        { root: true },
+      );
+      const stationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'station', query },
+        { root: true },
+      );
+      const sunStationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'substation', query },
+        { root: true },
+      );
       const parameterList = await dispatch(
         'element/getRecords',
         {
