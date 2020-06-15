@@ -140,6 +140,7 @@
         :headers="headers"
         item-key="_id"
         :items="parameterList"
+        :options="{itemsPerPage:5}"
         show-select
         >
           <template v-slot:item.name="props">
@@ -388,15 +389,18 @@ export default {
       parameterSelected: [],
       headers: [
         { text: 'Number', value: 'number', width: 120 },
-        { text: 'Protocol', value: 'protocol', width: 120 },
+        { text: 'Line', value: 'line', width: 120 },
+        { text: 'subline', value: 'subline', width: 120 },
+        { text: 'station', value: 'station', width: 120 },
+        { text: 'substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
-        { text: 'Boolean Bit', value: 'booleanbit', width: 120 },
         { text: 'DB Address', value: 'dbaddress', width: 130 },
         { text: 'Start Address', value: 'startaddress', width: 140 },
+        { text: 'Boolean Bit', value: 'booleanbit', width: 120 },
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
       ],
@@ -411,10 +415,14 @@ export default {
   },
   computed: {
     ...mapState('parameterConfiguration', [
-      'addParameterDialog', 'parameterList', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
+      'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
     ]),
     isAddButtonOK() {
-      if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+      if (this.lineValue
+        && this.sublineValue
+        && this.stationValue
+        && this.substationValue
+        && this.isApply) {
         return false;
       }
       return true;

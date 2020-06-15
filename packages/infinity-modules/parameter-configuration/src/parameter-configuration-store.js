@@ -17,6 +17,7 @@ export default ({
     stationValue: '',
     substationValue: '',
     filter: false,
+    isApply: false,
     dataTypeList: [],
     categoryDataList: [],
     selectedParameterName: '',
@@ -27,6 +28,7 @@ export default ({
   mutations: {
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
+    setApply: set('isApply'),
     setAddParameterDialog: set('addParameterDialog'),
     setParameterList: set('parameterList'),
     setDirectionList: set('directionList'),
@@ -144,6 +146,17 @@ export default ({
       }
       return false;
     },
+    getLineList: async ({ commit, dispatch }, query) => {
+      const lineList = await dispatch(
+        'element/getRecords',
+        { elementName: 'line', query },
+        { root: true },
+      );
+      if (lineList) {
+        commit('setLineList', lineList);
+      }
+      return lineList;
+    },
     getSublineList: async ({ commit, dispatch }, query) => {
       const sublineList = await dispatch(
         'element/getRecords',
@@ -153,6 +166,7 @@ export default ({
       if (sublineList) {
         commit('setSublineList', sublineList);
       }
+      return sublineList;
     },
     getStationList: async ({ commit, dispatch }, query) => {
       const stationList = await dispatch(
@@ -163,6 +177,7 @@ export default ({
       if (stationList) {
         commit('setStationList', stationList);
       }
+      return stationList;
     },
     getSubstationList: async ({ commit, dispatch }, query) => {
       const substationList = await dispatch(
@@ -173,6 +188,7 @@ export default ({
       if (substationList) {
         commit('setSubstationList', substationList);
       }
+      return substationList;
     },
     createParameter: async ({ dispatch }, payload) => {
       const created = await dispatch(
@@ -197,6 +213,10 @@ export default ({
       return created;
     },
     getParameterListRecords: async ({ dispatch, commit }, query, socketData) => {
+      const lineList = await dispatch('getLineList');
+      const subLineList = await dispatch('getSublineList');
+      const stationList = await dispatch('getStationList');
+      const sunStationList = await dispatch('getSubstationList');
       const parameterList = await dispatch(
         'element/getRecords',
         {
@@ -205,9 +225,24 @@ export default ({
         },
         { root: true },
       );
-      parameterList.forEach((item, key) => {
+      parameterList.forEach(async (item, key) => {
         item.number = key + 1;
         item.datatype = Number(item.datatype);
+        if (lineList.length) {
+          item.line = lineList.filter((line) => Number(line.id) === item.lineid)[0].name;
+        }
+        if (subLineList.length) {
+          item.subline = subLineList
+            .filter((subline) => subline.id === item.sublineid)[0].name;
+        }
+        if (stationList.length) {
+          item.station = stationList
+            .filter((station) => station.id === item.stationid)[0].name;
+        }
+        if (sunStationList.length) {
+          item.substation = sunStationList
+            .filter((substation) => substation.id === item.substationid)[0].name;
+        }
         item.parametercategory = Number(item.parametercategory);
         if (socketData && item.name === socketData[item.name]) {
           item.monitorvalue = socketData.monitorvalue;

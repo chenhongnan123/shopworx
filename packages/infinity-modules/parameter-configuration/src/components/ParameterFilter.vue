@@ -286,15 +286,17 @@ export default {
     },
     substation: {
       get() {
+        this.setApply(false);
         return this.substationValue;
       },
       set(val) {
+        this.setApply(false);
         this.setSubstationValue(val);
       },
     },
   },
   methods: {
-    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSselectedParameterDatatype']),
+    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setApply', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSselectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getParameterListRecords', 'getSublineList', 'getStationList', 'getSubstationList']),
     async btnApply() {
       let query = '?query=';
@@ -313,6 +315,7 @@ export default {
       query += `substationid=="${this.substationValue || null}"`;
       await this.getParameterListRecords(query);
       this.toggleFilter();
+      this.setApply(true);
     },
     btnReset() {
       this.getParameterListRecords('?query=stationid==null');
