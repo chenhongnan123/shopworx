@@ -809,6 +809,8 @@ export default {
         item.sublineid = this.sublineValue;
         item.stationid = this.stationValue;
         item.substationid = this.substationValue;
+        item.plcaddress = this.stationList
+          .filter((station) => this.stationValue === station.id)[0].plcipaddress;
         item.protocol = item.protocol.toUpperCase();
         item.assetid = 4;
         delete item.monitorvalue;
