@@ -204,7 +204,6 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            :disabled="Object.keys(parameterObj).some((k) => !parameterObj[k]) || saving"
             @click="saveParameter"
           >
             Save
@@ -328,9 +327,9 @@ export default {
       handler(parameterObj) {
         if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean' && parameterObj.datatype.name !== 'String') {
           parameterObj.size = parameterObj.datatype.size;
-          delete this.parameterObj.booleanbit;
+          // delete this.parameterObj.booleanbit;
         } else if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
-          this.parameterObj.booleanbit = null;
+          // this.parameterObj.booleanbit = null;
         }
       },
       deep: true,
@@ -360,7 +359,12 @@ export default {
     async saveParameter() {
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
-        const { name, dbaddress, startaddress } = parameterObj;
+        const {
+          name,
+          dbaddress,
+          startaddress,
+          booleanbit,
+        } = parameterObj;
         if (this.parameterList.some((parameter) => name === parameter.name)) {
           this.setAlert({
             show: true,
@@ -369,23 +373,37 @@ export default {
           });
           return;
         }
-        if (this.parameterList
-          .some((parameter) => dbaddress === parameter.dbaddress
-          && startaddress === parameter.startaddress)) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter startaddress is present',
-          });
-          return;
-        }
-        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter size is less than 9',
-          });
-          return;
+        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
+          if (parameterObj.size > 8) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter size is less than 9',
+            });
+            return;
+          }
+          if (this.parameterList
+            .some((parameter) => Number(dbaddress) === parameter.dbaddress
+            && Number(startaddress) === parameter.startaddress
+            && Number(booleanbit) === Number(parameter.booleanbit))) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'Boolean Bit is present',
+            });
+            return;
+          }
+        } else if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean') {
+          if (this.parameterList
+            .some((parameter) => Number(dbaddress) === parameter.dbaddress
+            && Number(startaddress) === parameter.startaddress)) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter startaddress is present',
+            });
+            return;
+          }
         }
         const payload = {
           ...parameterObj,

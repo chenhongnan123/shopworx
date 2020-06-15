@@ -507,32 +507,86 @@ export default {
           return;
         }
       }
-      if (type === 'dbaddress') {
-        const isRepeat = parameterListSave
-          .some((parameter) => item.dbaddress === parameter.dbaddress
-          && item.startaddress === parameter.startaddress);
-        if (isRepeat) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter_dbaddress_is_present',
-          });
-          await this.getParameterListRecords(this.getQuery());
-          return;
+      if (item.datatype !== 12) {
+        if (type === 'dbaddress') {
+          const isRepeat = parameterListSave
+            .some((parameter) => parameter.datatype !== 12
+            && Number(item.dbaddress) === parameter.dbaddress
+            && Number(item.startaddress) === parameter.startaddress);
+          if (isRepeat) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter_dbaddress_is_present',
+            });
+            await this.getParameterListRecords(this.getQuery());
+            return;
+          }
         }
-      }
-      if (type === 'startaddress') {
-        const isRepeat = parameterListSave
-          .some((parameter) => item.dbaddress === parameter.dbaddress
-          && item.startaddress === parameter.startaddress);
-        if (isRepeat) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter_startaddress_is_present',
-          });
-          await this.getParameterListRecords(this.getQuery());
-          return;
+        if (type === 'startaddress') {
+          const isRepeat = parameterListSave
+            .some((parameter) => parameter.datatype !== 12
+            && Number(item.dbaddress) === parameter.dbaddress
+            && Number(item.startaddress) === parameter.startaddress);
+          console.log(item.dbaddres, item.startaddress, 'isRepeat');
+          if (isRepeat) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter_startaddress_is_present',
+            });
+            await this.getParameterListRecords(this.getQuery());
+            return;
+          }
+        }
+      } else {
+        if (type === 'dbaddress') {
+          const isRepeat = parameterListSave
+            .some((parameter) => parameter.datatype === 12
+            && Number(item.dbaddress) === parameter.dbaddress
+            && Number(item.startaddress) === parameter.startaddress
+            && item.booleanbit === parameter.booleanbit);
+          if (isRepeat) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter_dbaddress_is_present',
+            });
+            await this.getParameterListRecords(this.getQuery());
+            return;
+          }
+        }
+        if (type === 'startaddress') {
+          const isRepeat = parameterListSave
+            .some((parameter) => parameter.datatype === 12
+            && Number(item.dbaddress) === parameter.dbaddress
+            && Number(item.startaddress) === parameter.startaddress
+            && item.booleanbit === parameter.booleanbit);
+          if (isRepeat) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter_startaddress_is_present',
+            });
+            await this.getParameterListRecords(this.getQuery());
+            return;
+          }
+        }
+        if (type === 'booleanbit') {
+          const isRepeat = parameterListSave
+            .some((parameter) => parameter.datatype === 12
+            && Number(item.dbaddress) === parameter.dbaddress
+            && Number(item.startaddress) === parameter.startaddress
+            && item.booleanbit === parameter.booleanbit);
+          if (isRepeat) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'Boolean_Bit_is_present',
+            });
+            await this.getParameterListRecords(this.getQuery());
+            return;
+          }
         }
       }
       let selectedDatatypeItem = {};
@@ -763,19 +817,43 @@ export default {
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
-        for (let i = 0; i < dataList.length; i += 1) {
-          for (let k = i + 1; k < dataList.length; k += 1) {
-            if (
-              dataList[i].dbaddress === dataList[k].dbaddress
-              && dataList[i].startaddress === dataList[k].startaddress
-            ) {
-              this.setAlert({
-                show: true,
-                type: 'error',
-                message: 'duplicate_parameter_startaddress',
-              });
-              document.getElementById('uploadFiles').value = null;
-              return;
+        const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
+        const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
+        console.log(isBooleanList, 'isBooleanItem');
+        if (isBooleanList.length) {
+          for (let i = 0; i < isBooleanList.length; i += 1) {
+            for (let k = i + 1; k < isBooleanList.length; k += 1) {
+              if (
+                Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
+                && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
+                && Number(isBooleanList[i].booleanbit) === Number(isBooleanList[k].booleanbit)
+              ) {
+                this.setAlert({
+                  show: true,
+                  type: 'error',
+                  message: 'duplicate_parameter_Boolean_Bit',
+                });
+                document.getElementById('uploadFiles').value = null;
+                return;
+              }
+            }
+          }
+        }
+        if (noBooleanList.length) {
+          for (let i = 0; i < noBooleanList.length; i += 1) {
+            for (let k = i + 1; k < noBooleanList.length; k += 1) {
+              if (
+                Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
+                && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
+              ) {
+                this.setAlert({
+                  show: true,
+                  type: 'error',
+                  message: 'duplicate_parameter_startaddress',
+                });
+                document.getElementById('uploadFiles').value = null;
+                return;
+              }
             }
           }
         }
