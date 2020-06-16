@@ -75,7 +75,7 @@
             <v-btn
             small
             color="primary"
-            outlined class="text-none ml-2" :disabled="!stationValue" @click="RefreshUI">
+            outlined class="text-none ml-2" :disabled="!substationValue" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
               Refresh
             </v-btn>
@@ -169,8 +169,13 @@
           <template v-slot:item.description="props">
             <v-edit-dialog
               :return-value.sync="props.item.description"
+              large
               @save="saveTableParameter(props.item, 'description')"
-            > {{ props.item.description }}
+            >
+              <span>
+                {{ props.item.description.length > 10
+                  ? props.item.description.substr(0,9) + '...' :  props.item.description}}
+              </span>
               <v-icon
                 small
                 color="primary"
@@ -179,32 +184,18 @@
                 mdi-pencil
               </v-icon>
               <template v-slot:input>
-                <v-text-field
+                <v-textarea
                   :disabled="substationValue ? false : true"
                   v-model="props.item.description"
                   label="Edit"
                   single-line
-                ></v-text-field>
+                ></v-textarea>
               </template>
             </v-edit-dialog>
           </template>
-          <!-- <template v-slot:item.parameterdirection="props">
-            <v-select
-              :disabled="substationValue ? false : true"
-              :items="directionList"
-              v-model="props.item.parameterdirection"
-              label="-"
-              @change="saveTableParameter(props.item, 'parameterdirection')"
-              item-text="name"
-              item-value="id"
-              solo
-              dense
-              depressed
-            ></v-select>
-          </template> -->
           <template v-slot:item.parametercategory="props">
             <v-select
-              :disabled="substationValue ? false : true"
+              :disabled="(substationValue ? false : true) || saving"
               :items="categoryList"
               v-model="props.item.parametercategory"
               label="-"
@@ -218,7 +209,7 @@
           </template>
           <template v-slot:item.datatype="props">
             <v-select
-              :disabled="substationValue ? false : true"
+              :disabled="(substationValue ? false : true) || saving"
               :items="datatypeList"
               v-model="props.item.datatype"
               label="-"
@@ -407,6 +398,7 @@ export default {
       parameterListSave: [],
       confirmDialog: false,
       socket: null,
+      saving: false,
     };
   },
   async created() {
@@ -533,7 +525,6 @@ export default {
             .some((parameter) => parameter.datatype !== 12
             && Number(item.dbaddress) === parameter.dbaddress
             && Number(item.startaddress) === parameter.startaddress);
-          console.log(item.dbaddres, item.startaddress, 'isRepeat');
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -608,7 +599,9 @@ export default {
         }
       }
       payload[type] = value;
+      this.saving = true;
       const updateResult = await this.updateParameter({ query, payload });
+      this.saving = false;
       if (updateResult) {
         this.setAlert({
           show: true,
@@ -755,8 +748,6 @@ export default {
         'dbaddress',
         'startaddress',
         'size',
-        'isbigendian',
-        'isswapped',
         'isconversion',
         'multiplicationfactor',
         'divisionfactor',
@@ -776,8 +767,6 @@ export default {
         '6',
         '2',
         12,
-        false,
-        false,
         false,
         2,
         2,
@@ -818,8 +807,16 @@ export default {
         item.sublineid = this.sublineValue;
         item.stationid = this.stationValue;
         item.substationid = this.substationValue;
-        item.plcaddress = this.stationList
-          .filter((station) => this.stationValue === station.id)[0].plcipaddress;
+        if (this.stationList.length > 0) {
+          item.plcaddress = this.stationList
+            .filter((station) => this.stationValue === station.id)[0].plcipaddress;
+        }
+        if (this.datatypeList.length > 0) {
+          item.isbigendian = this.datatypeList
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian;
+          item.isswapped = this.datatypeList
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped;
+        }
         item.protocol = item.protocol.toUpperCase();
         item.assetid = 4;
         delete item.monitorvalue;

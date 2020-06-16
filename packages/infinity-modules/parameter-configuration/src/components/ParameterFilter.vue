@@ -180,7 +180,8 @@
           color="primary"
           @click="btnApply"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-          :disabled="!substationValue"
+          :disabled="!stationValue"
+          :loading="saving"
         >
           Apply
         </v-btn>
@@ -205,6 +206,7 @@ export default {
   },
   data() {
     return {
+      saving: false,
     };
   },
   computed: {
@@ -312,8 +314,14 @@ export default {
       if (this.selectedParameterDatatype) {
         query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
       }
-      query += `substationid=="${this.substationValue || null}"`;
+      if (this.substationValue) {
+        query += `substationid=="${this.substationValue}"`;
+      } else {
+        query += `stationid=="${this.stationValue || null}"`;
+      }
+      this.saving = true;
       await this.getParameterListRecords(query);
+      this.saving = false;
       this.toggleFilter();
       this.setApply(true);
     },

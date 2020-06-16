@@ -422,6 +422,7 @@ export default {
           stationid: this.station,
           substationid: this.substation,
           plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcipaddress,
+          booleanbit: parameterObj.booleanbit || '',
         };
         if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
           payload.size = parameterObj.size;
