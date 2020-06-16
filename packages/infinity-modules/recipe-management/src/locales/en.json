@@ -25,7 +25,8 @@
     "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
     "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record",
     "RECIPE_SUBLINE_NAME_EMPTY": "Select Subline Name from DropDown",
-    "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown"
+    "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown",
+    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name All ready Exist"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",

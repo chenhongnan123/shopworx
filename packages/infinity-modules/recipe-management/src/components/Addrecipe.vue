@@ -153,11 +153,20 @@ export default {
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
       this.$refs.form.validate();
+      const recipeNameFlag = this.recipeList
+        .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join(''));
       if (!this.recipe.recipename) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'RECIPE_NAME_EMPTY',
+        });
+      } else if (recipeNameFlag.length > 0) {
+        this.recipe.recipename = '';
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'RECIPE_NAME_ALLREADY_EXISIST',
         });
       } else if (!this.input.sublinename) {
         this.setAlert({
