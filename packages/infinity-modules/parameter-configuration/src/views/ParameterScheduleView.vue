@@ -344,6 +344,7 @@
           <v-btn
             color="primary"
             class="text-none"
+            :loading="saving"
             @click="handleDeleteParameter"
           >
             Yes
@@ -607,6 +608,7 @@ export default {
         (parameter) => this.deleteParameter(parameter.id),
       ));
       if (results.every((bool) => bool === true)) {
+        this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
         if (parameterList.length === 0) {
           this.setSelectedParameterName('');
@@ -615,6 +617,7 @@ export default {
           this.setSelectedParameterDatatype('');
           await this.getParameterListRecords(this.getQuery());
         }
+        this.saving = false;
         this.confirmDialog = false;
         this.parameterSelected = [];
         this.setAlert({
@@ -808,9 +811,11 @@ export default {
         }
         if (this.datatypeList.length > 0) {
           item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian;
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
+            .isbigendian === 1;
           item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped;
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
+            .isswapped === 1;
           if (Number(item.datatypeList) === 11) {
             item.size = this.datatypeList
               .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].stringsize;
