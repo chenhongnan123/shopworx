@@ -5,7 +5,8 @@
     "ALREADY_EXSIST_ROADMAP": "Roadmap name already exsist.",
     "ERROR_CREATING_ROADMAP": "Error creating Roadmap",
     "ERROR_CREATING_ROADMAP_DETAILS": "Error creating Roadmap details",
-    "SELECT_ROADMAP_FIRST": "Please select Roadmap first"
+    "SELECT_ROADMAP_FIRST": "Please select Roadmap first",
+    "ROADMAP_TYPE_NOT_SELECTED": "Please Select Roadmap Type"
   },
   "success": {
     "ROADMAP_CREATED": "Roadmap created.",

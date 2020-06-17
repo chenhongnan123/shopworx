@@ -131,6 +131,7 @@
           :items="roadmapTypeList"
           item-text="name"
           prepend-icon="$production"
+          :rules="roadmapTyperule"
           v-model="roadmap.roadmaptype"/>
       </v-card-text>
       <v-card-actions>
@@ -279,8 +280,10 @@ export default {
       editedVersionNumber: 0,
       valid: true,
       name: '',
+      roadmaptype: '',
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
+      roadmapTyperule: [(v) => !!v || 'Selection Required'],
     };
   },
   async created() {
@@ -427,8 +430,16 @@ export default {
           type: 'error',
           message: 'ROADMAP_NAME_EMPTY',
         });
+      } else if (!this.roadmap.roadmaptype) {
+        this.roadmap.roadmaptype = '';
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ROADMAP_TYPE_NOT_SELECTED',
+        });
       } else {
-        const roadmapFlag = this.roadmapList.filter((o) => o.name === this.roadmap.name);
+        const roadmapFlag = this.roadmapList
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
         if (roadmapFlag.length > 0) {
           this.roadmap.name = '';
           this.setAlert({
