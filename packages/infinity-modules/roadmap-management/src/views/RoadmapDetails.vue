@@ -163,10 +163,12 @@
             v-model="roadmapDetail.process"
         ></v-text-field>
         <v-text-field
+            type="number"
             :disabled="saving"
             label="Pre-SubStations before"
             prepend-icon="mdi-tray-plus"
             v-model="roadmapDetail.amtpresubstation"
+            @keyup="checkProcessCode"
         ></v-text-field>
         <!-- <v-text-field
             :disabled="saving"
@@ -188,6 +190,7 @@
           :items="subStationList"
           item-text="name"
           prepend-icon="$production"
+          :disabled="fieldDisabled"
           v-model="roadmapDetail.presubstationname"/>
         <!-- <v-text-field
             :disabled="saving"
@@ -292,6 +295,7 @@ export default {
       roadmapDetail: {},
       saving: false,
       line: null,
+      valid: true,
       roadmapnumber: null,
       roadmaptype: null,
       dialogConfirm: false,
@@ -300,6 +304,7 @@ export default {
       itemToUpdate: {},
       itemForDelete: null,
       flagEdit: false,
+      fieldDisabled: false,
     };
   },
   async created() {
@@ -338,6 +343,16 @@ export default {
       'createProductDetails',
       'getProductListFromRoadmapName']),
     ...mapMutations('helper', ['setAlert']),
+    async checkProcessCode() {
+      debugger;
+      const preSubstBefor = this.roadmapDetail.amtpresubstation;
+      const zero = '0';
+      if (preSubstBefor === zero) {
+        this.fieldDisabled = true;
+      } else {
+        this.fieldDisabled = false;
+      }
+    },
     addNewRoadmapDetails() {
       this.dialog = true;
       this.flagEdit = false;
