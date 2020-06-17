@@ -112,13 +112,17 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
           Add details
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -209,6 +213,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -384,6 +389,7 @@ export default {
                 assetid: 4,
               };
               await this.createProductDetails(object);
+              this.$refs.form.reset();
             });
           }
         } else {
@@ -438,6 +444,9 @@ export default {
       };
       await this.updateRoadmap(object);
       this.dialogConfirm = false;
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };
