@@ -101,13 +101,17 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
           Create Roadmap
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -117,6 +121,9 @@
             label="Roadmap name"
             prepend-icon="mdi-tray-plus"
             v-model="roadmap.name"
+            :rules="updateRnamerule"
+            required
+            :counter="10"
         ></v-text-field>
         <v-select
           hide-details
@@ -132,11 +139,13 @@
           color="primary"
           class="text-none"
           @click="saveRoadmap"
+          :disabled="!valid"
         >
           Save
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -152,7 +161,7 @@
           Create Duplicate roadmap
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialogDup = false">
+        <v-btn icon small @click="(dialog = false)">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -268,6 +277,10 @@ export default {
       flagNewUpdate: false,
       updateRoadmapId: 0,
       editedVersionNumber: 0,
+      valid: true,
+      name: '',
+      updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
     };
   },
   async created() {
@@ -332,6 +345,7 @@ export default {
       this.showLineFilter = false;
     },
     async fnSaveDuplicateRoadmap() {
+      this.$refs.form.validate();
       if (!this.dupRoadmapName) {
         this.setAlert({
           show: true,
@@ -366,6 +380,7 @@ export default {
             });
             this.dialogDup = false;
             this.roadmap = {};
+            this.$refs.form.reset();
             // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(`?query=roadmapid=="${this.roadmaps[0].id}"`);
             const payloadDetails = [];
@@ -481,6 +496,9 @@ export default {
           this.saving = false;
         }
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };
