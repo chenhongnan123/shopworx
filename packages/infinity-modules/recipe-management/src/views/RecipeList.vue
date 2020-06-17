@@ -271,7 +271,7 @@ export default {
     ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation']),
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset']),
+    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset', 'btnApply']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     showFilter: {
@@ -287,7 +287,8 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
-      await this.getRecipeListRecords('');
+      // await this.getRecipeListRecords('');
+      await this.btnApply();
     },
     handleClick(value) {
       this.$router.push({ name: 'recipe-details', params: { id: value } });
@@ -482,6 +483,21 @@ export default {
       this.setFilterSubLine(this.sublines);
       this.setFilterStation(this.stations);
     },
+  },
+  async btnApply() {
+    if (this.sublines != null) {
+      this.setFilterSubLine(this.sublines);
+      const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
+      this.setRecipeList(newarray);
+      if (this.stations != null) {
+        this.setFilterStation(this.stations);
+        this.setRecipeList(this.newarray.filter((o) => o.machinename === this.stations.name));
+      }
+    } else if (this.stations != null) {
+      this.setFilterStation(this.stations);
+      this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
+    }
+    this.toggleFilter();
   },
 };
 </script>
