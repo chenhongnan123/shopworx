@@ -255,14 +255,14 @@
                 small
                 color="primary"
                 :disabled="!substationValue
-                || (props.item.datatype !== 12 && props.item.datatype !== 11)"
+                || props.item.datatype !== 11"
               >
               mdi-pencil
               </v-icon>
               <template v-slot:input>
                 <v-text-field
                   :disabled="!substationValue
-                  || (props.item.datatype !== 12 && props.item.datatype !== 11)"
+                  || props.item.datatype !== 11"
                   v-model="props.item.size"
                   label="Edit"
                   single-line
@@ -494,15 +494,6 @@ export default {
           await this.getParameterListRecords(this.getQuery());
           return;
         }
-        if (item.datatype === 12 && value > 8) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'Size is less than 9',
-          });
-          await this.getParameterListRecords(this.getQuery());
-          return;
-        }
       }
       if (item.datatype !== 12) {
         if (type === 'dbaddress') {
@@ -702,7 +693,7 @@ export default {
         'booleanbit',
         'dbaddress',
         'startaddress',
-        'size',
+        'stringsize',
         'isconversion',
         'multiplicationfactor',
         'divisionfactor',
@@ -715,7 +706,11 @@ export default {
       parameterSelected.forEach((parameter) => {
         const arr = [];
         column.forEach((key) => {
-          arr.push(parameter[key]);
+          if (key === 'stringsize') {
+            arr.push(parameter.size);
+          } else {
+            arr.push(parameter[key]);
+          }
         });
         csvContent.push(arr);
       });
@@ -747,7 +742,7 @@ export default {
         'booleanbit',
         'dbaddress',
         'startaddress',
-        'size',
+        'stringsize',
         'isconversion',
         'multiplicationfactor',
         'divisionfactor',
@@ -816,6 +811,10 @@ export default {
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian;
           item.isswapped = this.datatypeList
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped;
+          if (Number(item.datatypeList) === 11) {
+            item.size = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].stringsize;
+          }
         }
         item.protocol = item.protocol.toUpperCase();
         item.assetid = 4;

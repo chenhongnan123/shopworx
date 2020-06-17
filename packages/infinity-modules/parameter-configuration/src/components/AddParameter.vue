@@ -374,14 +374,6 @@ export default {
           return;
         }
         if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
-          if (parameterObj.size > 8) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'parameter size is less than 9',
-            });
-            return;
-          }
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
             && Number(startaddress) === parameter.startaddress
@@ -424,7 +416,7 @@ export default {
           plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcipaddress,
           booleanbit: parameterObj.booleanbit || '',
         };
-        if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
+        if (parameterObj.datatype && parameterObj.datatype.name === 'String') {
           payload.size = parameterObj.size;
         }
         this.saving = true;
