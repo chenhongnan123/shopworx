@@ -171,14 +171,19 @@
       </v-data-table>
       </v-col>
     </v-row>
+    <add-bom v-if="addBomDialog"/>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import AddBom from '../components/AddBom.vue';
 
 export default {
   name: 'BOMList',
+  components: {
+    AddBom,
+  },
   data() {
     return {
       bomSelected: [],
@@ -224,7 +229,7 @@ export default {
     this.getDefaultList();
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addBomDialog']),
     ...mapState('user', ['me']),
     userName: {
       get() {

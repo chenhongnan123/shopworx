@@ -12,7 +12,7 @@
           Create Material
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="handleCloseDialog()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -241,8 +241,13 @@ export default {
             message: 'ERROR_CREATING_MATERIAL',
           });
         }
+        this.materialObj = {};
         this.dialog = false;
       }
+    },
+    handleCloseDialog() {
+      this.materialObj = {};
+      this.dialog = false;
     },
   },
 };

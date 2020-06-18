@@ -205,11 +205,13 @@
       </v-data-table>
       </v-col>
     </v-row>
+    <add-material v-if="addMaterialDialog"/>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import AddMaterial from '../components/AddMaterial.vue';
 
 export default {
   name: 'MaterialList',
@@ -280,13 +282,16 @@ export default {
     this.getDefaultList();
   },
   computed: {
-    ...mapState('materialManagement', ['materialList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+    ...mapState('materialManagement', ['materialList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addMaterialDialog']),
     ...mapState('user', ['me']),
     userName: {
       get() {
         return this.me.user.firstname;
       },
     },
+  },
+  components: {
+    AddMaterial,
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

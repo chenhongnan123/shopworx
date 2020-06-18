@@ -100,6 +100,8 @@
           >
             <v-icon v-text="'$delete'"></v-icon>
           </v-btn>
+        </template>
+        <template v-slot:top>
           <v-dialog
             persistent
             scrollable
@@ -149,8 +151,20 @@ export default {
       bomDetailList: [],
       headers: [
         {
+          text: 'Line',
+          value: 'line',
+        },
+        {
+          text: 'Subline',
+          value: 'subline',
+        },
+        {
+          text: 'Station',
+          value: 'station',
+        },
+        {
           text: 'Substation',
-          value: 'substationid',
+          value: 'substation',
         },
         {
           text: 'Parameter Name',
@@ -168,51 +182,62 @@ export default {
     };
   },
   async created() {
+    console.log(this.query, 'query');
     await this.getMaterialListRecords('');
     this.handleGetDetails();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail']),
+    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail', 'updateRecordById']),
     ...mapActions('materialManagement', ['getMaterialListRecords']),
     async handleGetDetails() {
-      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid=="${this.query.id}"&lineid=="${this.query.lineid || null}"`);
+      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       this.bomDetailList = bomdetailList;
     },
     async handleGetData() {
-      await this.getParameterList(`?query=lineid==${this.query.lineid || null}`);
-      // await this.getParameterList('');
+      const parameterList = (await this.getParameterList(`?query=lineid==${this.query.lineid || null}`))
+        .filter((parameter) => Number(parameter.parametercategory) === 25
+        || Number(parameter.parametercategory) === 27);
+      console.log(parameterList, 'parameterList');
+
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
           (bomdetail) => this.deleteBomDetail(bomdetail._id),
         ));
         this.bomDetailList = [];
       }
-      this.bomDetailList = this.parameterList.map((parameter) => ({
-        substationid: parameter.substationid,
-        bomid: this.query.id,
-        name: this.query.name,
-        parametername: parameter.name,
-        materialname: '',
-        materialtype: '',
-        materialcategory: '',
-        sublineid: this.query.sublineid,
-        assetid: '4',
-      }));
-      this.createBomdetailList(this.bomDetailList);
+      if (parameterList.length > 0) {
+        const bomDetailList = parameterList.map((parameter) => ({
+          lineid: parameter.lineid,
+          sublineid: parameter.sublineid,
+          stationid: parameter.stationid,
+          substationid: parameter.substationid,
+          bomid: this.query.id,
+          name: this.query.name,
+          parametername: parameter.name,
+          materialname: '',
+          materialtype: '',
+          materialcategory: '',
+          assetid: '4',
+        }));
+        await this.createBomdetailList(bomDetailList);
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+      }
     },
     async handleChangeMaterial(item) {
       const { materialname } = item;
       const materialItem = this.materialList
         .filter((material) => materialname === material.name)[0];
-      const query = `?query=parametername=="${item.parametername}"&bomid=="${this.query.id}"`;
       const payload = {
-        materialname: item.materialname,
-        materialtype: materialItem.materialtype,
-        materialcategory: materialItem.category,
+        id: item._id,
+        payload: {
+          materialname,
+          materialtype: materialItem.materialtype,
+          materialcategory: materialItem.category,
+        },
       };
       this.saving = true;
-      const updateResult = await this.updateBomDetail({ query, payload });
+      const updateResult = await this.updateRecordById(payload);
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -227,7 +252,7 @@ export default {
           message: 'ERROR_UPDATING_MATERIAL',
         });
       }
-      this.bomDetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
+      this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
     },
     deleteItem(item) {
       this.confirmDialog = true;
@@ -238,7 +263,7 @@ export default {
       const deleteResult = await this.deleteBomDetail(this.bomdetailObjDefault._id);
       this.saving = false;
       if (deleteResult) {
-        this.bomDetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
         this.setAlert({
           show: true,
           type: 'success',

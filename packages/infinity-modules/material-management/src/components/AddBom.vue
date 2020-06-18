@@ -12,7 +12,7 @@
           Create Bom
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="handleBomDialog()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -188,8 +188,13 @@ export default {
             message: 'ERROR_CREATING_BOM',
           });
         }
+        this.bomObj = {};
         this.dialog = false;
       }
+    },
+    handleBomDialog() {
+      this.bomObj = {};
+      this.dialog = false;
     },
   },
 };
