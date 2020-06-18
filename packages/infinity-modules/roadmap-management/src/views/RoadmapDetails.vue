@@ -139,6 +139,8 @@
           :items="subLineList"
           item-text="name"
           prepend-icon="$production"
+          :rules="rmdetailName"
+          required
           v-model="roadmapDetail.sublinename"/>
         <v-select
           class="mt-2"
@@ -147,6 +149,8 @@
           :items="stationList"
           item-text="name"
           prepend-icon="$production"
+          :rules="rmdetailStName"
+          required
           v-model="roadmapDetail.machinename"/>
         <v-select
           class="mt-2"
@@ -155,12 +159,16 @@
           :items="subStationList"
           item-text="name"
           prepend-icon="$production"
+          :rules="rmdetailSstName"
+          required
           v-model="roadmapDetail.substationname"/>
         <v-text-field
             :disabled="saving"
             label="Process code"
             prepend-icon="mdi-tray-plus"
             v-model="roadmapDetail.process"
+            :rules="rmdProcesscode"
+            :counter="6"
         ></v-text-field>
         <v-text-field
             type="number"
@@ -210,6 +218,7 @@
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!valid"
           @click="fnAddRoadmapDetails"
         >
           Save
@@ -305,6 +314,15 @@ export default {
       itemForDelete: null,
       flagEdit: false,
       fieldDisabled: false,
+      sublinename: '',
+      machinename: '',
+      substationname: '',
+      process: '',
+      rmdetailName: [(v) => !!v || 'Subline Name Required'],
+      rmdetailStName: [(v) => !!v || 'Station Name Required'],
+      rmdetailSstName: [(v) => !!v || 'Sub-Station Name Required'],
+      rmdProcesscode: [(v) => !!v || 'Process Code Required',
+        (v) => (v && v.length <= 6) || 'Name must be less than 10 characters'],
     };
   },
   async created() {
@@ -361,7 +379,33 @@ export default {
       await this.getRecipeDetailListRecords('');
     },
     async fnAddRoadmapDetails() {
-      if (this.flagEdit) {
+      debugger;
+      this.$refs.form.validate();
+      if (!this.roadmapDetail.sublinename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SUBLINE_NOT_SELECTED_ROADMAPDETAILS',
+        });
+      } else if (!this.roadmapDetail.machinename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'STATION_NOT_SELECTED_ROADMAPDETAILS',
+        });
+      } else if (!this.roadmapDetail.substationname) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SUBSTATION_NOT_SELECTED_ROADMAPDETAILS',
+        });
+      } else if (!this.roadmapDetail.process) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PROCESS_CODE_EMPTY',
+        });
+      } else if (this.flagEdit) {
         this.roadmapDetail = {
           ...this.roadmapDetail,
           editedtime: new Date().getTime(),
@@ -372,47 +416,61 @@ export default {
         });
         await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
         this.dialog = false;
-        this.roadmapDetail = {};
       } else {
-        this.roadmapDetail = {
-          ...this.roadmapDetail,
-          assetid: 4,
-          roadmapid: this.$route.params.id.id,
-        };
-        const created = await this.createRoadmapDetails(this.roadmapDetail);
-        await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
-        if (created) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'ROADMAP_DETAILS_CREATED',
-          });
-          this.dialog = false;
-          // this.roadmapDetail = {};
-          await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
-          if (this.productList.length) {
-            this.productList.forEach(async (products) => {
-              const object = {
-                productname: products.productname,
-                productnumber: products.productnumber,
-                sublinename: this.roadmapDetail.sublinename,
-                sublineid: this.roadmapDetail.sublineid,
-                stationname: this.roadmapDetail.machinename,
-                stationid: this.roadmapDetail.stationid,
-                roadmapname: this.$route.params.id.name,
-                roadmapid: this.$route.params.id.id,
-                assetid: 4,
-              };
-              await this.createProductDetails(object);
-              this.$refs.form.reset();
-            });
-          }
-        } else {
+        const processcodeFlag = this.roadmapDetails
+          .filter((o) => o.process.toLowerCase().split(' ').join('')
+        === this.roadmapDetail.process.toLowerCase().split(' ').join(''));
+        if (processcodeFlag.length > 0) {
+          this.roadmapDetail.process = '';
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_CREATING_ROADMAP_DETAILS',
+            message: 'PROCESS_CODE_EXISTS',
           });
+        } else {
+        // this.roadmapDetail = {};
+          this.roadmapDetail = {
+            ...this.roadmapDetail,
+            assetid: 4,
+            roadmapid: this.$route.params.id.id,
+          };
+          let created = false;
+          const payload = this.roadmapDetail;
+          created = await this.createRoadmapDetails(payload);
+          await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'ROADMAP_DETAILS_CREATED',
+            });
+            this.dialog = false;
+            // this.roadmapDetail = {};
+            await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
+            if (this.productList.length) {
+              this.productList.forEach(async (products) => {
+                const object = {
+                  productname: products.productname,
+                  productnumber: products.productnumber,
+                  sublinename: this.roadmapDetail.sublinename,
+                  sublineid: this.roadmapDetail.sublineid,
+                  stationname: this.roadmapDetail.machinename,
+                  stationid: this.roadmapDetail.stationid,
+                  roadmapname: this.$route.params.id.name,
+                  roadmapid: this.$route.params.id.id,
+                  assetid: 4,
+                };
+                await this.createProductDetails(object);
+                this.$refs.form.reset();
+              });
+            }
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_CREATING_ROADMAP_DETAILS',
+            });
+          }
         }
       }
       const roadmap = {
