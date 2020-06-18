@@ -145,6 +145,10 @@ export default {
       materialObj: {
       },
       valid: true,
+      categoryList: [
+        { name: 'BatchID', id: 27 },
+        { name: 'ComponentID', id: 25 },
+      ],
       rules: {
         line: [
           (v) => !!v || 'Line is required',
@@ -175,7 +179,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'categoryList', 'lineValue', 'sublineValue']),
+    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
     dialog: {
       get() {
         return this.addMaterialDialog;
@@ -221,8 +225,7 @@ export default {
         const payload = {
           ...materialObj,
           assetid: 4,
-          category: materialObj.materilcategory.name,
-          categoryid: materialObj.materilcategory.id,
+          materilcategory: materialObj.materilcategory.id,
         };
         this.saving = true;
         const materialList = await this.createMaterial(payload);

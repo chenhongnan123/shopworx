@@ -91,6 +91,11 @@
             depressed
           ></v-select>
         </template>
+        <template v-slot:item.materialcategory="props" v-if="categoryList.length">
+        {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
+        && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
+        [0].name}}
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-btn
             icon
@@ -233,9 +238,10 @@ export default {
         payload: {
           materialname,
           materialtype: materialItem.materialtype,
-          materialcategory: materialItem.category,
+          materialcategory: materialItem.materilcategory,
         },
       };
+      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateRecordById(payload);
       this.saving = false;

@@ -58,8 +58,9 @@
         item-key="id"
         >
         <template v-slot:item.category="props" v-if="categoryList.length">
-        {{categoryList.filter((category) => props.item.category === category.name)[0]
-        && categoryList.filter((category) => props.item.category === category.name)[0].name}}
+        {{categoryList.filter((category) => Number(props.item.materilcategory) === category.id)[0]
+        && categoryList.filter((category) => Number(props.item.materilcategory) === category.id)
+        [0].name}}
         </template>
         <template v-slot:top>
         <v-dialog
@@ -103,9 +104,9 @@
                   label="Category"
                   :items="categoryList"
                   item-text="name"
-                  item-value="name"
+                  item-value="id"
                   prepend-icon="$production"
-                  v-model="materialObj.category"
+                  v-model="materialObj.materilcategory"
                   :rules="rules.materilcategory"
                 >
                   <template v-slot:item="{ item }">
@@ -248,6 +249,10 @@ export default {
       confirmDialog: false,
       valid: true,
       saving: false,
+      categoryList: [
+        { name: 'BatchID', id: 27 },
+        { name: 'ComponentID', id: 25 },
+      ],
       rules: {
         line: [
           (v) => !!v || 'Line is required',
@@ -265,15 +270,15 @@ export default {
         materilcategory: [
           (v) => !!v || 'Category is required',
         ],
-        lifetime: [
-          (v) => !!v || 'lifetime is required',
-        ],
-        materialtype: [
-          (v) => !!v || 'Materialtype Typeid is required',
-        ],
-        manufacturer: [
-          (v) => !!v || 'Manufacturer is required',
-        ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
@@ -282,7 +287,7 @@ export default {
     this.getDefaultList();
   },
   computed: {
-    ...mapState('materialManagement', ['materialList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addMaterialDialog']),
+    ...mapState('materialManagement', ['materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addMaterialDialog']),
     ...mapState('user', ['me']),
     userName: {
       get() {

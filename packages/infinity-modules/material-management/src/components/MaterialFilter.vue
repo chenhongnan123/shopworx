@@ -97,19 +97,21 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialList"
+            :items="categoryList"
             outlined
             dense
             hide-details
             v-model="materialncategory"
             name="name"
             label="Category"
-            item-text="materialncategory"
+            item-text="name"
+            item-value="id"
             clearable
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
-              <v-list-item-title v-text="item.materialncategory"></v-list-item-title>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+              <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
             </v-list-item-content>
           </template>
           </v-autocomplete>
@@ -186,10 +188,14 @@ export default {
       materialncategory: null,
       materialtype: null,
       manufacturer: null,
+      categoryList: [
+        { name: 'BatchID', id: 27 },
+        { name: 'ComponentID', id: 25 },
+      ],
     };
   },
   computed: {
-    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList']),
+    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList']),
     showFilter: {
       get() {
         return this.filter;
@@ -208,10 +214,10 @@ export default {
         query += `name=="${this.materialname}"&`;
       }
       if (this.materialnumber) {
-        query += `materialnumber=="${this.materialnumber}"&`;
+        query += `materialnumber==${this.materialnumber}&`;
       }
       if (this.materialncategory) {
-        query += `materialncategory=="${this.materialncategory}"&`;
+        query += `materilcategory==${this.materialncategory}&`;
       }
       if (this.materialtype) {
         query += `materialtype=="${this.materialtype}"&`;

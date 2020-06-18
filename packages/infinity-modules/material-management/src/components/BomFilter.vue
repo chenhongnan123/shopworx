@@ -147,7 +147,6 @@ export default {
       },
       set(val) {
         this.setLineValue(val);
-        this.setLineValue('');
         // console.log(val);
         // const query = `?query=lineid==${val}`;
         // this.getSublineList(query);
@@ -165,7 +164,7 @@ export default {
       if (this.bomnumber) {
         query += `bomnumber=="${this.bomnumber}"&`;
       }
-      query += `lineid=="${this.lineValue || null}"`;
+      query += `lineid=="${this.line || null}"`;
       // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getBomListRecords(query);
     },

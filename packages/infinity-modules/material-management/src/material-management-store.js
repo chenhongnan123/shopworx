@@ -44,13 +44,13 @@ export default ({
         { elementName: 'line' },
         { root: true },
       );
-      const categoryList = await dispatch(
-        'element/getRecords',
-        { elementName: 'category' },
-        { root: true },
-      );
+      // const categoryList = await dispatch(
+      //   'element/getRecords',
+      //   { elementName: 'category' },
+      //   { root: true },
+      // );
       commit('setLineList', lineList);
-      commit('setCategoryList', categoryList);
+      // commit('setCategoryList', categoryList);
     },
     getSublineList: async ({ commit, dispatch }, query) => {
       const sublineList = await dispatch(
