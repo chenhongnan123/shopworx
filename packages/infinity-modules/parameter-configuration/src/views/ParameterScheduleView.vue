@@ -406,7 +406,7 @@ export default {
     this.zipService = ZipService;
     await this.getPageDataList();
     this.getParameterListRecords(this.getQuery());
-    this.socket = socketioclient.connect('http://192.168.20.107:10190');
+    this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
       console.log('connected to socketwebhook');
     });
