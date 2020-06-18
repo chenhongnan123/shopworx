@@ -108,7 +108,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Create Roadmap
+          Edit Roadmap
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="(dialog = false); dialogReset();">
@@ -162,7 +162,7 @@
           Create Duplicate roadmap
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="(dialog = false)">
+        <v-btn icon small @click="(dialogDup = false)">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -342,7 +342,18 @@ export default {
       await this.getRecords('');
     },
     handleClick(value) {
-      this.$router.push({ name: 'roadmap-details', params: { id: value } });
+      console.log(value);
+      this.$router.push(
+        {
+          name: 'roadmap-details',
+          params: {
+            id: value.id,
+            roadmaptype: value.roadmaptype,
+            name: value.name,
+            line: value.line,
+          },
+        },
+      );
     },
     fnLineModel() {
       this.showLineFilter = false;
