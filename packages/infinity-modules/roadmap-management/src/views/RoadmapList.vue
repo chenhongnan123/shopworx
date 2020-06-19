@@ -214,6 +214,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="validDuplicate"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -230,6 +234,9 @@
             label="roadmap Name"
             prepend-icon="mdi-tray-plus"
             v-model="dupRoadmapName"
+            :rules="dupRoadmapNameRule"
+            required
+            :counter="10"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -237,12 +244,14 @@
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!validDuplicate"
           @click="fnSaveDuplicateRoadmap"
         >
           Save
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -339,8 +348,12 @@ export default {
       editedVersionNumber: 0,
       valid: true,
       validupdate: true,
+      validDuplicate: true,
       name: '',
       roadmaptype: '',
+      dupRoadmapNameRule: [(v) => !!v || 'Required RoadMap Name',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
@@ -439,7 +452,7 @@ export default {
       this.showLineFilter = false;
     },
     async fnSaveDuplicateRoadmap() {
-      this.$refs.form.validate();
+      this.$refs.formduplicate.validate();
       if (!this.dupRoadmapName) {
         this.setAlert({
           show: true,
@@ -447,7 +460,8 @@ export default {
           message: 'ROADMAP_NAME_EMPTY',
         });
       } else {
-        const recipeFlag = this.roadmapList.filter((o) => o.name === this.dupRoadmapName);
+        const recipeFlag = this.roadmapList
+          .filter((o) => o.name.toLowerCase().split(' ').join('') === this.dupRoadmapName.toLowerCase().split(' ').join(''));
         if (recipeFlag.length > 0) {
           this.roadmap.name = '';
           this.setAlert({
