@@ -92,6 +92,7 @@ export default {
       this.setRoadmapList(this.roadmapList.filter((r) => r.roadmaptype === this.selectedRoadType));
     },
     async btnReset() {
+      this.selectedRoadType = '';
       await this.getRecords('');
       this.toggleFilter();
     },
