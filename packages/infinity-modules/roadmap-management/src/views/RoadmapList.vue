@@ -322,7 +322,22 @@ export default {
       this.itemForDelete = item;
     },
     fnDeleteOnYes() {
-      this.deleteRoadmapById(this.itemForDelete.id);
+      let deleted = false;
+      deleted = this.deleteRoadmapById(this.itemForDelete.id);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'ROADMAP_RECORD_DELETED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_ROADMAP',
+        });
+      }
       this.dialogConfirm = false;
     },
     fnUpdateRoadmap(item) {
