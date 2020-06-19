@@ -39,7 +39,7 @@
         </template>
         <template v-slot:item.editedtime="{ item }">
           <span v-if="item.editedtime">{{ new Date(item.editedtime)
-            .toLocaleString() }}</span>
+            .toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
         <template v-slot:item.actions="{ item }">

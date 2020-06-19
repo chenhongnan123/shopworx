@@ -79,7 +79,7 @@
           <td>{{ item.prestationname }}</td>
           <td>{{ item.presubstationname }}</td>
           <td>{{ item.presubline }}</td>
-          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
+          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("en-gb") }}</td>
           <td v-else></td>
           <td><v-row justify="center"><v-btn
               icon
