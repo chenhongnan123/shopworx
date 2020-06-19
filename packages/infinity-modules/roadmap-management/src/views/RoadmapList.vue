@@ -282,7 +282,8 @@ export default {
       name: '',
       roadmaptype: '',
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
-        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
       roadmapTyperule: [(v) => !!v || 'Selection Required'],
     };
   },
