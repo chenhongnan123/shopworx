@@ -44,13 +44,14 @@ export default ({
         { elementName: 'line' },
         { root: true },
       );
-      // const categoryList = await dispatch(
-      //   'element/getRecords',
-      //   { elementName: 'category' },
-      //   { root: true },
-      // );
+      const categoryList = await dispatch(
+        'element/getRecords',
+        { elementName: 'category' },
+        { root: true },
+      );
+      const categoryListFilter = categoryList.filter((category) => category.name === 'BatchID' || category.name === 'ComponentID');
       commit('setLineList', lineList);
-      // commit('setCategoryList', categoryList);
+      commit('setCategoryList', categoryListFilter);
     },
     getSublineList: async ({ commit, dispatch }, query) => {
       const sublineList = await dispatch(

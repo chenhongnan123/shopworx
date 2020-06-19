@@ -8,19 +8,6 @@
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
-          <v-btn
-          small
-          color="primary"
-          class="text-none"
-          @click="setaddBomDialog(true)"
-          >
-            <v-icon small left>mdi-plus</v-icon>
-            Add BOM
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-            <v-icon small left>mdi-refresh</v-icon>
-            Refresh
-          </v-btn>
           <span v-if="lineList.length && !!lineValue" class="ml-2">
             line:
             <v-btn
@@ -46,12 +33,34 @@
             </v-btn>
           </span>
           <v-spacer></v-spacer>
+          <v-btn
+          small
+          color="primary"
+          class="text-none"
+          @click="setaddBomDialog(true)"
+          >
+            <v-icon small left>mdi-plus</v-icon>
+            Add BOM
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <v-btn small color="error"
+            outlined
+            class="text-none ml-2"
+            @click="confirmListDialog = true"
+            v-if="bomList.length && bomSelected.length">
+            <v-icon small left>mdi-delete</v-icon>
+            Delete
+          </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>
         </v-toolbar>
         <v-data-table
+        show-select
         v-model="bomSelected"
         :headers="headers"
         :items="bomList"
@@ -171,6 +180,39 @@
       </v-data-table>
       </v-col>
     </v-row>
+    <v-dialog
+      persistent
+      scrollable
+      v-model="confirmListDialog"
+      max-width="500px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-title primary-title>
+          <span>
+            Please confirm
+          </span>
+          <v-spacer></v-spacer>
+          <v-btn icon small @click="confirmListDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          Are you sure to delete the items?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            @click="handleDeleteItemList"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <add-bom v-if="addBomDialog"/>
   </v-container>
 </template>
@@ -189,6 +231,10 @@ export default {
       bomSelected: [],
       headers: [
         {
+          text: 'Line',
+          value: 'line',
+        },
+        {
           text: 'BOM name',
           value: 'name',
         },
@@ -203,7 +249,7 @@ export default {
       bomObj: {
         name: null,
         bomnumber: null,
-        materilcategory: null,
+        materialcategory: null,
         lifetime: null,
         bomtype: null,
         manufacturer: null,
@@ -211,6 +257,7 @@ export default {
       bomObjDefault: null,
       editDialog: false,
       confirmDialog: false,
+      confirmListDialog: false,
       valid: true,
       saving: false,
       rules: {
@@ -225,8 +272,8 @@ export default {
     };
   },
   async created() {
-    await this.getBomListRecords('');
-    this.getDefaultList();
+    await this.getDefaultList();
+    this.getBomListRecords('');
   },
   computed: {
     ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addBomDialog']),
@@ -330,6 +377,29 @@ export default {
         });
       }
       this.confirmDialog = false;
+    },
+    async handleDeleteItemList() {
+      this.saving = true;
+      const results = await Promise.all(this.bomSelected.map(
+        (bom) => this.deleteBom(bom.id),
+      ));
+      if (results.every((bool) => bool === true)) {
+        this.getBomListRecords('');
+        this.bomSelected = [];
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'BOM_DELETED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_BOM',
+        });
+      }
+      this.saving = false;
+      this.confirmListDialog = false;
     },
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });

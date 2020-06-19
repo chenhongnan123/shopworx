@@ -82,8 +82,8 @@
             :disabled="saving"
             item-text="name"
             prepend-icon="$production"
-            v-model="materialObj.materilcategory"
-            :rules="rules.materilcategory"
+            v-model="materialObj.materialcategory"
+            :rules="rules.materialcategory"
           >
             <template v-slot:item="{ item }">
               <v-list-item-content>
@@ -145,10 +145,6 @@ export default {
       materialObj: {
       },
       valid: true,
-      categoryList: [
-        { name: 'BatchID', id: 27 },
-        { name: 'ComponentID', id: 25 },
-      ],
       rules: {
         line: [
           (v) => !!v || 'Line is required',
@@ -163,7 +159,7 @@ export default {
           (v) => !!v || 'Material Number is required',
           (v) => v >= 0 || 'Material Number is bigger than 0',
         ],
-        materilcategory: [
+        materialcategory: [
           (v) => !!v || 'Category is required',
         ],
         // lifetime: [
@@ -179,7 +175,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
     dialog: {
       get() {
         return this.addMaterialDialog;
@@ -225,7 +221,7 @@ export default {
         const payload = {
           ...materialObj,
           assetid: 4,
-          materilcategory: materialObj.materilcategory.id,
+          materialcategory: materialObj.materialcategory.id,
         };
         this.saving = true;
         const materialList = await this.createMaterial(payload);

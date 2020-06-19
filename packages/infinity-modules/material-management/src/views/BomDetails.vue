@@ -29,6 +29,14 @@
           <v-icon small left>mdi-refresh</v-icon>
           Get Data
         </v-btn>
+        <v-btn small color="error"
+          outlined
+          class="text-none ml-2"
+          @click="confirmListDialog = true"
+          v-if="bomDetailList.length && bomDetailSelected.length">
+          <v-icon small left>mdi-delete</v-icon>
+          Delete
+        </v-btn>
       </v-toolbar>
       <v-row>
         <v-col cols="2">
@@ -73,9 +81,11 @@
         </v-col>
       </v-row>
       <v-data-table
+        show-select
+        v-model="bomDetailSelected"
         :headers="headers"
         :items="bomDetailList"
-        item-key="bomnumber"
+        item-key="id"
         class="tableContainer"
         >
         <template v-slot:item.materialname="props">
@@ -142,6 +152,39 @@
           </v-dialog>
         </template>
       </v-data-table>
+      <v-dialog
+        persistent
+        scrollable
+        v-model="confirmListDialog"
+        max-width="500px"
+        transition="dialog-transition"
+      >
+        <v-card>
+          <v-card-title primary-title>
+            <span>
+              Please confirm
+            </span>
+            <v-spacer></v-spacer>
+            <v-btn icon small @click="confirmListDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text>
+            Are you sure to delete the items?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              class="text-none"
+              :loading="saving"
+              @click="handleDeleteItemList"
+            >
+              Yes
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -154,34 +197,41 @@ export default {
   data() {
     return {
       bomDetailList: [],
+      bomDetailSelected: [],
       headers: [
         {
           text: 'Line',
           value: 'line',
+          width: 120,
         },
         {
           text: 'Subline',
           value: 'subline',
+          width: 120,
         },
         {
           text: 'Station',
           value: 'station',
+          width: 120,
         },
         {
           text: 'Substation',
           value: 'substation',
+          width: 120,
         },
         {
           text: 'Parameter Name',
           value: 'parametername',
+          width: 180,
         },
-        { text: 'Material', value: 'materialname' },
-        { text: 'Material TypeID', value: 'materialtype' },
-        { text: 'Category', value: 'materialcategory' },
-        { text: 'Actions', value: 'actions' },
+        { text: 'Material', value: 'materialname', width: 120 },
+        { text: 'Material TypeID', value: 'materialtype', width: 180 },
+        { text: 'Category', value: 'materialcategory', width: 120 },
+        { text: 'Actions', value: 'actions', width: 120 },
       ],
       materialname: '',
       confirmDialog: false,
+      confirmListDialog: false,
       bomdetailObjDefault: null,
       saving: false,
     };
@@ -238,7 +288,7 @@ export default {
         payload: {
           materialname,
           materialtype: materialItem.materialtype,
-          materialcategory: materialItem.materilcategory,
+          materialcategory: materialItem.materialcategory,
         },
       };
       console.log(payload, 'payload');
@@ -273,16 +323,39 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'update BOM Details success',
+          message: 'BOM_DETAIL_DELETED',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'network error',
+          message: 'ERROR_DELETING_BOM_DETAIL',
         });
       }
       this.confirmDialog = false;
+    },
+    async handleDeleteItemList() {
+      this.saving = true;
+      const results = await Promise.all(this.bomDetailSelected.map(
+        (bomDetail) => this.deleteBomDetail(bomDetail._id),
+      ));
+      if (results.every((bool) => bool === true)) {
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+        this.bomDetailSelected = [];
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'BOM_DETAIL_DELETED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_BOM_DETAIL',
+        });
+      }
+      this.saving = false;
+      this.confirmListDialog = false;
     },
   },
   computed: {

@@ -31,8 +31,9 @@ export default ({
     setParameterList: set('parameterList'),
   },
   actions: {
-    getBomListRecords: async ({ dispatch, commit }, query) => {
-      const bomlist = await dispatch(
+    getBomListRecords: async ({ dispatch, commit, state }, query) => {
+      const { lineList } = state;
+      let bomlist = await dispatch(
         'element/getRecords',
         {
           elementName: 'bomlist',
@@ -40,6 +41,13 @@ export default ({
         },
         { root: true },
       );
+      if (lineList.length > 0) {
+        bomlist = bomlist.map((bom) => ({
+          ...bom,
+          line: lineList.filter((line) => line.id === bom.lineid)[0]
+          && lineList.filter((line) => line.id === bom.lineid)[0].name,
+        }));
+      }
       commit('setBomList', bomlist);
     },
     getBomDetailsListRecords: async ({ dispatch, commit }, query) => {

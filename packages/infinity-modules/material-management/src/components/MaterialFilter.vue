@@ -188,14 +188,10 @@ export default {
       materialncategory: null,
       materialtype: null,
       manufacturer: null,
-      categoryList: [
-        { name: 'BatchID', id: 27 },
-        { name: 'ComponentID', id: 25 },
-      ],
     };
   },
   computed: {
-    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList']),
+    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList']),
     showFilter: {
       get() {
         return this.filter;
@@ -217,7 +213,7 @@ export default {
         query += `materialnumber==${this.materialnumber}&`;
       }
       if (this.materialncategory) {
-        query += `materilcategory==${this.materialncategory}&`;
+        query += `materialcategory==${this.materialncategory}&`;
       }
       if (this.materialtype) {
         query += `materialtype=="${this.materialtype}"&`;
