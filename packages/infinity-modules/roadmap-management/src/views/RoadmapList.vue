@@ -9,10 +9,11 @@
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
         <v-spacer></v-spacer>
-        <v-btn small color="primary" class="text-none" @click="addNewRoadmap">
+        <!-- <v-btn small color="primary" class="text-none" @click="addNewRoadmap">
             <v-icon small left>mdi-plus</v-icon>
             Add roadmap
-          </v-btn>
+          </v-btn> -->
+          <AddRoadmapList />
           <v-btn small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             Duplicate
@@ -94,62 +95,6 @@
       </v-data-table>
       </v-col>
     </v-row>
-    <v-dialog
-    scrollable
-    persistent
-    v-model="dialog"
-    max-width="500px"
-    transition="dialog-transition"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
-  >
-  <v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation>
-    <v-card>
-      <v-card-title primary-title>
-        <span>
-          Create Roadmap
-        </span>
-        <v-spacer></v-spacer>
-        <v-btn icon small @click="(dialog = false); dialogReset();">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <v-text-field
-            :disabled="saving"
-            label="Roadmap name"
-            prepend-icon="mdi-tray-plus"
-            v-model="roadmap.name"
-            :rules="updateRnamerule"
-            required
-            :counter="10"
-            @keyup="validName"
-        ></v-text-field>
-        <v-select
-          hide-details
-          label="Select Roadmap type"
-          :items="roadmapTypeList"
-          item-text="name"
-          prepend-icon="$production"
-          :rules="roadmapTyperule"
-          v-model="roadmap.roadmaptype"/>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          @click="saveRoadmap"
-          :disabled="!valid"
-        >
-          Save
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
-  </v-dialog>
   <v-dialog
     scrollable
     persistent
@@ -160,7 +105,7 @@
   >
   <v-form
     ref="formUpdate"
-    v-model="validupdate"
+    v-model="validUpdate"
     lazy-validation>
     <v-card>
       <v-card-title primary-title>
@@ -168,7 +113,7 @@
           Edit Roadmap
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="(dialogUpdate = false); dialogReset();">
+        <v-btn icon small @click="(dialogUpdate = false); updateDialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -198,7 +143,7 @@
           color="primary"
           class="text-none"
           @click="updatesaveRoadmap"
-          :disabled="!validupdate"
+          :disabled="!validUpdate"
         >
           Save
         </v-btn>
@@ -215,7 +160,7 @@
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
   <v-form
-    ref="form"
+    ref="formduplicate"
     v-model="validDuplicate"
     lazy-validation>
     <v-card>
@@ -224,7 +169,7 @@
           Create Duplicate roadmap
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="(dialogDup = false)">
+        <v-btn icon small @click="(dialogDup = false); duplicateDialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -292,8 +237,13 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
 
+import AddRoadmapList from '../components/AddRoadmapList.vue';
+
 export default {
   name: 'RoadmapList',
+  components: {
+    AddRoadmapList,
+  },
   data() {
     return {
       headers: [
@@ -333,7 +283,6 @@ export default {
       dialogUpdate: false,
       dialogConfirm: false,
       dialogDup: false,
-      dupRoadmapName: null,
       roadmap: {},
       roadmaps: [],
       saving: false,
@@ -346,9 +295,11 @@ export default {
       flagNewUpdate: false,
       updateRoadmapId: 0,
       editedVersionNumber: 0,
+      validUpdate: true,
       valid: true,
       validupdate: true,
       validDuplicate: true,
+      dupRoadmapName: '',
       name: '',
       roadmaptype: '',
       dupRoadmapNameRule: [(v) => !!v || 'Required RoadMap Name',
@@ -361,7 +312,7 @@ export default {
       updateRoadmNamerule: [(v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
-      rdMapTyperule: [(v) => !!v || 'Selection Required'],
+      rMapTyperule: [(v) => !!v || 'Selection Required'],
     };
   },
   async created() {
@@ -427,10 +378,10 @@ export default {
       this.editedVersionNumber = item.versionnumber;
       this.roadmap.roadmaptype = item.roadmaptype;
     },
-    addNewRoadmap() {
-      this.dialog = true;
-      this.flagNewUpdate = false;
-    },
+    // addNewRoadmap() {
+    //   this.dialog = true;
+    //   this.flagNewUpdate = false;
+    // },
     async RefreshUI() {
       await this.getRecords('');
     },
@@ -488,7 +439,7 @@ export default {
             });
             this.dialogDup = false;
             this.roadmap = {};
-            this.$refs.form.reset();
+            this.$refs.formduplicate.reset();
             // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(`?query=roadmapid=="${this.roadmaps[0].id}"`);
             const payloadDetails = [];
@@ -526,51 +477,6 @@ export default {
           type: 'error',
           message: 'SELECT_ROADMAP_FIRST',
         });
-      }
-    },
-    async saveRoadmap() {
-      this.$refs.form.validate();
-      if (!this.roadmap.name) {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ROADMAP_NAME_EMPTY',
-        });
-      } else if (!this.roadmap.roadmaptype) {
-        this.roadmap.roadmaptype = '';
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ROADMAP_TYPE_NOT_SELECTED',
-        });
-      } else {
-        this.saving = true;
-        this.roadmap = {
-          ...this.roadmap,
-          versionnumber: 1,
-          assetid: 4,
-          createdby: this.userName,
-        };
-        let created = false;
-        const payload = this.roadmap;
-        created = await this.createRoadmap(payload);
-        if (created) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'ROADMAP_CREATED',
-          });
-          this.dialog = false;
-          this.roadmap = {};
-          this.$refs.form.reset();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_CREATING_ROADMAP',
-          });
-        }
-        this.saving = false;
       }
     },
     async updatesaveRoadmap() {
@@ -624,23 +530,26 @@ export default {
         this.saving = false;
       }
     },
-    async dialogReset() {
-      this.$refs.form.reset();
+    async updateDialogReset() {
+      this.$refs.formUpdate.reset();
+    },
+    async duplicateDialogReset() {
+      this.$refs.formduplicate.reset();
     },
     async validName() {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        this.valid = false;
-        this.validupdate = false;
+        this.roadmap.name = '';
+        // this.validUpdate = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ALREADY_EXSIST',
         });
       } else {
-        this.valid = true;
-        this.validupdate = true;
+        // this.valid = true;
+        this.validupdate = false;
       }
     },
   },
