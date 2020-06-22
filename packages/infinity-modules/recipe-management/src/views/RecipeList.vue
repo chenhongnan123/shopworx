@@ -60,7 +60,7 @@
                         <AddRecipe />
             <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
           <!-- </v-btn> -->
-          <v-btn v-if="recipes.length"
+          <v-btn
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}
@@ -266,6 +266,11 @@ export default {
   },
   async created() {
     await this.getRecipeListRecords('');
+  },
+  async beforeDestroy() {
+    console.log('beforeDestroy');
+    await this.btnReset();
+    this.chipforSubline = false;
   },
   computed: {
     ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation']),
