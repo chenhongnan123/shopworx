@@ -384,6 +384,7 @@ export default {
           message: 'RECIPE_RECORD_DELETED',
         });
         this.dialogConfirm = false;
+        this.recipes = {};
       } else {
         this.setAlert({
           show: true,
