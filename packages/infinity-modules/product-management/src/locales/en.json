@@ -32,6 +32,8 @@
     "version": "Version",
     "lastEditedBy": "Last Editted By",
     "lastEditedOn": "Last Editted On",
+    "createdBy": "Created By",
+    "createdAt": "Created At",
     "createProductType": "Create Product Type",
     "productTypeCategory": "Product Type Category",
     "productType": "Product Type",
