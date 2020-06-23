@@ -128,7 +128,7 @@ export default {
         });
       } else {
         const duplicateName = this.productList.filter(
-          (o) => o.productname === this.duplicateProductName,
+          (o) => o.productname.toLowerCase().split(' ').join('') === this.duplicateProductName.toLowerCase().split(' ').join(''),
         );
         if (duplicateName.length > 0) {
           this.duplicateProductName = '';
