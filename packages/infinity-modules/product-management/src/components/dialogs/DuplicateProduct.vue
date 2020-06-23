@@ -7,13 +7,17 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
           {{ $t('displayTags.duplicateDialogTitle') }}
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -23,6 +27,9 @@
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
             v-model="duplicateProductName"
+            :rules="productNameRule"
+            required
+            :counter="10"
         ></v-text-field>
         <v-text-field
             :disabled="saving"
@@ -38,6 +45,8 @@
             :disabled="saving"
             item-text="name"
             v-model="selectedProductTypeCategory"
+            :rules="selectProductTypeRule"
+            required
             prepend-icon="mdi-road-variant"
             >
             <template v-slot:item="{ item }">
@@ -54,13 +63,14 @@
           class="text-none"
           :disabled="!selectedProductTypeCategory ||
           !duplicateProductName ||
-          !duplicateProductDescription"
+          !valid"
           @click="saveDuplicate"
         >
           {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -87,6 +97,11 @@ export default {
       selectedProductTypeCategory: null,
       duplicateProductName: null,
       duplicateProductDescription: null,
+      valid: true,
+      productNameRule: [(v) => !!v || 'Product Name Required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
+      selectProductTypeRule: [(v) => !!v || 'Product Type selection Required'],
     };
   },
   props: {
@@ -120,6 +135,7 @@ export default {
     ...mapMutations('productManagement', ['setDuplicateDialog']),
     ...mapActions('productManagement', ['createProduct']),
     async saveDuplicate() {
+      this.$refs.form.validate();
       if (!this.duplicateProductName) {
         this.setAlert({
           show: true,
@@ -168,6 +184,7 @@ export default {
             });
             this.dialog = false;
             this.product = {};
+            this.$refs.form.reset();
           } else {
             this.setAlert({
               show: true,
@@ -177,6 +194,9 @@ export default {
           }
         }
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };
