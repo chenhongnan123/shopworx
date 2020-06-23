@@ -7,11 +7,15 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
         <v-card-title primary-title>
           <span v-text="$t('displayTags.createProductType')"></span>
           <v-spacer></v-spacer>
-          <v-btn icon small @click="dialog = false">
+          <v-btn icon small @click="(dialog = false); dialogReset();">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -25,6 +29,8 @@
             item-text="name"
             v-model="lineSelected"
             :loading="loadingProducts"
+            :rules="selectLineRule"
+            required
             prepend-icon="mdi-chart-timeline"
             >
             <template v-slot:item="{ item }">
@@ -38,6 +44,9 @@
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
             v-model="product.productname"
+            :rules="productNameRule"
+            required
+            :counter="10"
           ></v-text-field>
           <v-text-field
             :disabled="saving"
@@ -50,6 +59,8 @@
             :label="$t('displayTags.customer')"
             prepend-icon="mdi-account"
             v-model="product.customername"
+            :rules="customerNameRule"
+            :counter="15"
           ></v-text-field>
           <v-autocomplete
             clearable
@@ -78,6 +89,8 @@
             v-model="selectedBom"
             :loading="loadingProducts"
             prepend-icon="mdi-road-variant"
+            :rules="selectBomRule"
+            required
             >
             <template v-slot:item="{ item }">
                 <v-list-item-content>
@@ -94,6 +107,8 @@
             item-text="name"
             v-model="selectedProductTypeCategory"
             :loading="loadingProducts"
+            :rules="selectProductTypeRule"
+            required
             prepend-icon="mdi-road-variant"
             >
             <template v-slot:item="{ item }">
@@ -111,13 +126,15 @@
             :disabled="!lineSelected ||
             !selectedRoadmap ||
             !selectedProductTypeCategory ||
-            !product"
+            !product ||
+            !valid"
             @click="saveProduct"
             >
             {{ $t('displayTags.buttons.save') }}
             </v-btn>
         </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -142,6 +159,16 @@ export default {
       selectedRoadmap: null,
       selectedBom: null,
       selectedProductTypeCategory: null,
+      valid: true,
+      productname: '',
+      customername: '',
+      productNameRule: [(v) => !!v || 'Product Name Required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
+      selectLineRule: [(v) => !!v || 'Line selection Required'],
+      selectProductTypeRule: [(v) => !!v || 'Roadmap selection Required'],
+      selectBomRule: [(v) => !!v || 'BOM selection Required'],
+      customerNameRule: [(v) => (v && v.length <= 15) || 'Name must be less than 15 characters'],
     };
   },
   computed: {
@@ -169,6 +196,7 @@ export default {
     ...mapMutations('productManagement', ['setAddProductDialog']),
     ...mapActions('productManagement', ['createProduct']),
     async saveProduct() {
+      this.$refs.form.validate();
       if (!this.product.productname) {
         this.setAlert({
           show: true,
@@ -217,6 +245,7 @@ export default {
             });
             this.dialog = false;
             this.product = {};
+            this.$refs.form.reset();
           } else {
             this.setAlert({
               show: true,
@@ -227,6 +256,9 @@ export default {
           this.saving = false;
         }
       }
+    },
+    async dialogReset() {
+      this.$refs.form.reset();
     },
   },
 };
