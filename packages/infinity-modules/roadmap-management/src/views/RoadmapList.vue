@@ -540,8 +540,8 @@ export default {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        this.roadmap.name = '';
-        // this.validUpdate = false;
+        // this.roadmap.name = '';
+        this.validUpdate = false;
         this.setAlert({
           show: true,
           type: 'error',
@@ -549,7 +549,7 @@ export default {
         });
       } else {
         // this.valid = true;
-        this.validupdate = false;
+        this.validUpdate = true;
       }
     },
   },

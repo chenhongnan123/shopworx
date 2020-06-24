@@ -171,7 +171,7 @@ export default {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        // this.valid = false;
+        this.valid = false;
         this.roadmap.name = '';
         this.validupdate = false;
         this.setAlert({
@@ -180,8 +180,8 @@ export default {
           message: 'ALREADY_EXSIST',
         });
       } else {
-        // this.valid = true;
-        this.valid = false;
+        this.valid = true;
+        this.saving = false;
       }
     },
   },
