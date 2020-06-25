@@ -386,7 +386,6 @@ export default {
       await this.getRecords('');
     },
     handleClick(value) {
-      console.log(value);
       this.$router.push(
         {
           name: 'roadmap-details',

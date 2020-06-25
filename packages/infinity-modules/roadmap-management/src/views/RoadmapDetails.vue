@@ -138,6 +138,7 @@
           label="Select Subline name"
           :items="subLineList"
           item-text="name"
+          return-object
           prepend-icon="$production"
           :rules="rmdetailName"
           required
@@ -148,6 +149,7 @@
           label="Select Station name"
           :items="stationList"
           item-text="name"
+          return-object
           prepend-icon="$production"
           :rules="rmdetailStName"
           required
@@ -158,6 +160,7 @@
           label="Select Sub-Station name"
           :items="subStationList"
           item-text="name"
+          return-object
           prepend-icon="$production"
           :rules="rmdetailSstName"
           required
@@ -326,7 +329,6 @@ export default {
     };
   },
   async created() {
-    console.log(JSON.stringify(this.$route.params.id));
     await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
     this.roadmaptype = this.$route.params.roadmaptype;
     this.roadmapname = this.$route.params.name;
@@ -363,7 +365,6 @@ export default {
       'getProductListFromRoadmapName']),
     ...mapMutations('helper', ['setAlert', 'setCurrentPath']),
     async checkProcessCode() {
-      debugger;
       const preSubstBefor = this.roadmapDetail.amtpresubstation;
       const zero = '0';
       if (preSubstBefor === zero) {
@@ -431,6 +432,12 @@ export default {
         // this.roadmapDetail = {};
           this.roadmapDetail = {
             ...this.roadmapDetail,
+            sublinename: this.roadmapDetail.sublinename.name,
+            sublineid: this.roadmapDetail.sublinename.id,
+            machinename: this.roadmapDetail.machinename.name,
+            stationid: this.roadmapDetail.machinename.id,
+            substationname: this.roadmapDetail.substationname.name,
+            substationid: this.roadmapDetail.substationname.id,
             assetid: 4,
             roadmapid: this.$route.params.id,
           };
@@ -454,8 +461,10 @@ export default {
                   productnumber: products.productnumber,
                   sublinename: this.roadmapDetail.sublinename,
                   sublineid: this.roadmapDetail.sublineid,
-                  stationname: this.roadmapDetail.machinename,
+                  machinename: this.roadmapDetail.machinename,
                   stationid: this.roadmapDetail.stationid,
+                  substationname: this.roadmapDetail.substationname,
+                  substationid: this.roadmapDetail.substationid,
                   roadmapname: this.$route.params.name,
                   roadmapid: this.$route.params.id,
                   assetid: 4,
