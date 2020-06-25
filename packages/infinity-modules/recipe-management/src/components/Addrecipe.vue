@@ -29,67 +29,78 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <v-select
-          v-model="input.sublinename"
-          :items="subLineList"
+        <v-autocomplete
+          clearable
+          label="Select Line name"
+          :items="lineList"
+          return-object
           :disabled="saving"
           item-value="name"
           item-text="name"
           :rules="sublineSelect"
           required
+          v-model="input.linename"
+          :loading="loadingParts"
           prepend-icon="$production"
-          label="Select Sub-Line name"/>
-        <!-- <v-autocomplete
+          @change="handleLineClick"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+       </v-autocomplete>
+        <v-autocomplete
           clearable
           label="Select Sub-Line name"
           :items="subLineList"
           return-object
           :disabled="saving"
           item-text="name"
-          v-model="subLineSelected"
+          v-model="input.sublinename"
           :loading="loadingParts"
           prepend-icon="$production"
+           @change="handleSubLineClick"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete> -->
-        <v-select
-          v-model="input.machinename"
-          :items="stationList"
-          :disabled="saving"
-          item-value="name"
-          item-text="name"
-          :rules="stationSelect"
-          required
-          prepend-icon="$production"
-          label="Select Station name"/>
-        <v-text-field
-            label="Recipe Name"
-            prepend-icon="mdi-tray-plus"
-            v-model="recipe.recipename"
-            :rules="nameRules"
-            :counter="10"
-        ></v-text-field>
-        <!-- <v-autocomplete
+        </v-autocomplete>
+        <v-autocomplete
           clearable
           label="Select Station name"
           :items="stationList"
           return-object
           :disabled="saving"
           item-text="name"
-          v-model="stationSelected"
+          v-model="input.stationname"
           :loading="loadingParts"
           prepend-icon="$production"
+           @change="handleStationClick"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete> -->
+        </v-autocomplete>
+        <v-autocomplete>
+        <v-select
+          v-model="input.substationname"
+          :items="subStationList"
+          :disabled="saving"
+          return-object
+          item-text="name"
+          prepend-icon="$production"
+          label="Select Sub-Station name"/>
+        <v-text-field
+            label="Recipe Name"
+            prepend-icon="mdi-tray-plus"
+            v-model="recipe.recipename"
+       ></v-text-field>
+        </v-autocomplete>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -182,7 +193,7 @@ export default {
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-        && o.machinename === this.input.machinename);
+        && o.stationname === this.input.stationname);
         //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';
@@ -196,10 +207,7 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            line: 'Line1',
-            subline: this.input.sublinename,
-            machinename: this.input.machinename,
-            editedby: 'admin',
+            editedby: this.userName,
             editedtime: new Date().getTime(),
             versionnumber: this.editedVersionNumber + 1,
           };
@@ -231,12 +239,18 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            line: 'Line1',
             subline: this.input.sublinename,
+            linename: this.input.linename.name,
+            lineid: this.input.linename.id,
+            sublinename: this.input.sublinename.name,
+            sublineid: this.input.sublinename.id,
+            stationid: this.input.stationname.id,
+            stationname: this.input.stationname.name,
+            substationid: this.input.substationname.id,
+            substationname: this.input.substationname.name,
             versionnumber: 1,
             assetid: 4,
-            machinename: this.input.machinename,
-            createdby: 'admin',
+            createdby: this.userName,
           };
           let created = false;
           const payload = this.recipe;

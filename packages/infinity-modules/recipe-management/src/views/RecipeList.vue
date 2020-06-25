@@ -205,13 +205,14 @@ export default {
         },
         {
           text: 'Line',
-          value: 'line',
+          value: 'linename',
         },
         {
           text: 'Sub-Line',
-          value: 'subline',
+          value: 'sublinename',
         },
-        { text: 'Station name', value: 'machinename' },
+        { text: 'Station name', value: 'stationname' },
+        { text: 'Sub-Station name', value: 'substationname' },
         {
           text: 'Recipe',
           value: 'recipename',
@@ -259,8 +260,10 @@ export default {
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
         (v) => !!v || 'Name required'],
       input: {
+        linename: '',
         sublinename: '',
-        machinename: '',
+        stationname: '',
+        substationname: '',
       },
     };
   },
@@ -273,10 +276,26 @@ export default {
     this.chipforSubline = false;
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation']),
+    ...mapState('recipeManagement', ['recipeList', 'stationList',
+      'lineList', 'subLineList', 'filterLine', 'filterSubLine',
+      'filterStation', 'subStationList']),
+    ...mapState('user', ['me']),
+    userName: {
+      get() {
+        return this.me.user.firstname;
+      },
+    },
   },
   methods: {
     ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset', 'btnApply']),
+    ...mapActions('recipeManagement',
+      ['getRecipeListRecords',
+        'createRecipe',
+        'updateRecipe',
+        'deleteRecipeByRecipeNumber',
+        'getSubLines',
+        'getStations',
+        'getSubStations']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     showFilter: {
@@ -286,6 +305,18 @@ export default {
       set(val) {
         this.setFilter(val);
       },
+    },
+    async handleLineClick(item) {
+      const query = `?query=lineid==${item.id}`;
+      await this.getSubLines(query);
+    },
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getStations(query);
+    },
+    async handleStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getSubStations(query);
     },
     addNewRecipe() {
       this.dialog = true;
@@ -324,7 +355,7 @@ export default {
             subline: this.recipes[0].subline,
             versionnumber: 1,
             assetid: 4,
-            machinename: this.recipes[0].machinename,
+            stationname: this.recipes[0].stationname,
             createdby: 'admin',
           };
           let created = false;
@@ -364,11 +395,14 @@ export default {
       this.saving = true;
       this.flagNewUpdate = true;
       this.input.sublinename = item.subline;
+      this.input.linename = item.linename;
+      this.input.sublinename = item.sublinename;
       this.updateRecipeNumber = item.recipenumber;
       this.lineSelected = this.lineList;
       this.editedVersionNumber = item.versionnumber;
       this.recipe.recipename = item.recipename;
-      this.input.machinename = item.machinename;
+      this.input.stationname = item.stationname;
+      this.input.substationname = item.substationname;
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;

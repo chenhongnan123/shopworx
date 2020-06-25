@@ -27,5 +27,8 @@
     "cz-conventional-changelog": "^3.2.0",
     "husky": "^4.2.5",
     "lerna": "^3.22.0"
+  },
+  "dependencies": {
+    "socket.io-client": "^2.3.0"
   }
 }
