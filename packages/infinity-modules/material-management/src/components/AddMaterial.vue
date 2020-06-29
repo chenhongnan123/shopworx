@@ -6,6 +6,11 @@
     max-width="500px"
     transition="dialog-transition"
   >
+  <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+  >
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -17,11 +22,6 @@
         </v-btn>
       </v-card-title>
         <v-card-text>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
           <!-- <v-autocomplete
             clearable
             label="Line"
@@ -65,6 +65,7 @@
               label="Material"
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.name"
+              required
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -73,6 +74,7 @@
               label="Material Number"
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.materialnumber"
+              required
           ></v-text-field>
           <v-autocomplete
             clearable
@@ -84,6 +86,7 @@
             prepend-icon="$production"
             v-model="materialObj.materialcategory"
             :rules="rules.materialcategory"
+            required
           >
             <template v-slot:item="{ item }">
               <v-list-item-content>
@@ -113,7 +116,6 @@
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.manufacturer"
           ></v-text-field>
-        </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -122,11 +124,13 @@
             class="text-none"
             :loading="saving"
             @click="saveMaterial"
+            :disabled="!valid"
           >
             Save
           </v-btn>
         </v-card-actions>
     </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
@@ -242,11 +246,13 @@ export default {
         }
         this.materialObj = {};
         this.dialog = false;
+        this.$refs.form.reset();
       }
     },
     handleCloseDialog() {
       this.materialObj = {};
       this.dialog = false;
+      this.$refs.form.reset();
     },
   },
 };
