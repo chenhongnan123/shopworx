@@ -262,7 +262,7 @@ export default {
       saving: false,
       rules: {
         name: [
-          (v) => !!v || 'Bom is required',
+          (v) => !!v || 'Bom Name is required',
         ],
         bomnumber: [
           (v) => !!v || 'Bom Number is required',

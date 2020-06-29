@@ -120,7 +120,7 @@ export default {
           (v) => !!v || 'Subline is required',
         ],
         name: [
-          (v) => !!v || 'Bom is required',
+          (v) => !!v || 'Bom Name is required',
           (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
           (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
@@ -160,7 +160,9 @@ export default {
       if (this.$refs.form.validate()) {
         const { name, bomnumber } = bomObj;
         if (this.bomList.length) {
-          if (this.bomList.some((bom) => name === bom.name)) {
+          if (this.bomList.some(
+            (bom) => name.toLowerCase().split(' ').join('') === bom.name.toLowerCase().split(' ').join(''),
+          )) {
             this.setAlert({
               show: true,
               type: 'error',
