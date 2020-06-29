@@ -6,6 +6,10 @@
     max-width="500px"
     transition="dialog-transition"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -17,11 +21,6 @@
         </v-btn>
       </v-card-title>
         <v-card-text>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
         <v-autocomplete
             clearable
             label="Line"
@@ -65,6 +64,8 @@
               label="Bom"
               prepend-icon="mdi-tray-plus"
               v-model="bomObj.name"
+              required
+              :counter="10"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -73,8 +74,9 @@
               label="Bom Number"
               prepend-icon="mdi-tray-plus"
               v-model="bomObj.bomnumber"
+              required
+              :counter="10"
           ></v-text-field>
-        </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -83,11 +85,13 @@
             class="text-none"
             :loading="saving"
             @click="saveBom"
+            :disabled="!valid"
           >
             Save
           </v-btn>
         </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -103,6 +107,8 @@ export default {
   data() {
     return {
       saving: false,
+      name: '',
+      bomnumber: '',
       bomObj: {
       },
       valid: true,
@@ -115,10 +121,13 @@ export default {
         ],
         name: [
           (v) => !!v || 'Bom is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         bomnumber: [
           (v) => !!v || 'Bom Number is required',
           (v) => v >= 0 || 'Bom Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Number must be less than 10 digit',
         ],
       },
     };
@@ -146,6 +155,7 @@ export default {
       this.getSublineList(query);
     },
     async saveBom() {
+      this.$refs.form.validate();
       const { bomObj } = this;
       if (this.$refs.form.validate()) {
         const { name, bomnumber } = bomObj;
@@ -190,11 +200,13 @@ export default {
         }
         this.bomObj = {};
         this.dialog = false;
+        this.$refs.form.reset();
       }
     },
     handleBomDialog() {
       this.bomObj = {};
       this.dialog = false;
+      this.$refs.form.reset();
     },
   },
 };
