@@ -167,6 +167,7 @@ export default {
       query += `lineid=="${this.line || null}"`;
       // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getBomListRecords(query);
+      this.toggleFilter();
     },
     btnReset() {
       this.getBomListRecords('');
