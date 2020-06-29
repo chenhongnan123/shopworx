@@ -66,6 +66,7 @@
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.name"
               required
+              :counter="10"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -75,6 +76,7 @@
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.materialnumber"
               required
+              :counter="10"
           ></v-text-field>
           <v-autocomplete
             clearable
@@ -158,10 +160,13 @@ export default {
         ],
         name: [
           (v) => !!v || 'Material Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         materialnumber: [
           (v) => !!v || 'Material Number is required',
           (v) => v >= 0 || 'Material Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Number must be less than 10 digit',
         ],
         materialcategory: [
           (v) => !!v || 'Category is required',
