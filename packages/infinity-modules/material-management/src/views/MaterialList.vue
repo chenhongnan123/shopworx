@@ -82,7 +82,7 @@
           <v-card>
             <v-card-title primary-title>
               <span>
-                Update Material
+                Edit Material
               </span>
               <v-spacer></v-spacer>
               <v-btn icon small @click="editDialog = false">
