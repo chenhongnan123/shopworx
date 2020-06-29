@@ -97,7 +97,7 @@
               >
                 <v-text-field
                     :rules="rules.name"
-                    label="Material"
+                    label="Material Name"
                     prepend-icon="mdi-tray-plus"
                     v-model="materialObj.name"
                 ></v-text-field>
@@ -302,7 +302,7 @@ export default {
           (v) => !!v || 'Subline is required',
         ],
         name: [
-          (v) => !!v || 'Material is required',
+          (v) => !!v || 'Material Name is required',
         ],
         materialnumber: [
           (v) => !!v || 'Material Number is required',
