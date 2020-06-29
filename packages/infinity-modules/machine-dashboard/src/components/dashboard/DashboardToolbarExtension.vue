@@ -10,6 +10,14 @@
           {{ shift }} - {{ date }}
         </span>
       </div>
+      <div class="ml-4">
+        <v-icon color="success">mdi-checkbox-blank-circle</v-icon>
+        <span> - RUNNING</span>
+      </div>
+      <div class="ml-2">
+        <v-icon color="error">mdi-checkbox-blank-circle</v-icon>
+        <span> - DOWN</span>
+      </div>
       <v-spacer></v-spacer>
       <time-selection />
       <cell-selection class="ml-2" />

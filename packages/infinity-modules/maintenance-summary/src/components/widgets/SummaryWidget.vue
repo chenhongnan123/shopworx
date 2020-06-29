@@ -23,30 +23,72 @@
       v-if="isConfigured"
       :class="title === null ? 'mt-8' : ''"
     >
-      <v-card-text v-if="streamData && streamData.length">
-        <div
-          :key="index"
-          class="error--text"
-          v-for="(data, index) in streamData"
-        >
-          {{ data }}
-        </div>
-      </v-card-text>
-    <v-card-text v-else>
-      <v-container fill-height>
-        <v-row
-          align="center"
-          justify="center"
-          :no-gutters="$vuetify.breakpoint.smAndDown"
-        >
-          <v-col cols="12" align="center">
-            <span class="headline">
-              No {{ title }} for {{ machine }}
-            </span>
+      <v-card-text>
+        <v-row>
+          <v-col cols="7" class="py-0">
+            <v-row v-if="currentParam != 4">
+              <v-col cols="6">
+                <div class="caption text-uppercase">
+                  <span>
+                    Plan
+                  </span>
+                </div>
+                <div class="display-1 success--text">
+                  {{ tabs[currentParam].plan }}
+                </div>
+              </v-col>
+              <v-divider vertical></v-divider>
+              <v-col>
+                <div class="caption text-uppercase">
+                  <span>
+                    Actual
+                  </span>
+                </div>
+                <div class="display-1 info--text">
+                  {{ tabs[currentParam].actual }}
+                </div>
+              </v-col>
+            </v-row>
+            <v-row v-else>
+              <v-col cols="6">
+                <div class="caption text-uppercase">
+                  <span>
+                    Detected
+                  </span>
+                </div>
+                <div class="display-1 success--text">
+                  {{ tabs[currentParam].detected }}
+                </div>
+              </v-col>
+              <v-divider vertical></v-divider>
+              <v-col>
+                <div class="caption text-uppercase">
+                  <span>
+                    Corrected
+                  </span>
+                </div>
+                <div class="display-1 info--text">
+                  {{ tabs[currentParam].corrected }}
+                </div>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col cols="4" class="my-auto text-center py-0">
+            <div class="caption text-uppercase">Adherence</div>
+            <v-progress-circular
+              size="120"
+              width="15"
+              :value="tabs[currentParam].adherence"
+              :color="tabs[currentParam].adherence >= 80 ? 'success' : 'warning'"
+              :rotate="270"
+            >
+              <span class="headline">
+                {{ tabs[currentParam].adherence }}
+              </span>
+            </v-progress-circular>
           </v-col>
         </v-row>
-      </v-container>
-    </v-card-text>
+      </v-card-text>
     </v-card>
     <v-card v-else>
       <v-card-text class="text-center my-auto">
@@ -84,7 +126,7 @@
             item-value="val"
             :items="allParameters"
             v-model="selectedParam"
-            label="Select text stream to display"
+            label="Select summary to display"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -103,33 +145,40 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
-  name: 'StatusWidget',
-  props: {
-    widget: {
-      type: Object,
-      default: null,
-    },
-    customizeMode: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  name: 'SummaryWidget',
   data() {
     return {
-      selectedParam: null,
       dialog: false,
+      selectedParam: null,
+      tabs: [
+        {
+          plan: 5,
+          actual: 4,
+          adherence: 80,
+        },
+        {
+          plan: 27,
+          actual: 21,
+          adherence: 78,
+        },
+        {
+          plan: 132,
+          actual: 98,
+          adherence: 74,
+        },
+        {
+          plan: 860,
+          actual: 734,
+          adherence: 85,
+        },
+        {
+          detected: 12,
+          corrected: 10,
+          adherence: 83,
+        },
+      ],
     };
-  },
-  created() {
-    this.selectedParam = this.currentParam;
-  },
-  watch: {
-    currentParam(val) {
-      this.selectedParam = val;
-    },
   },
   computed: {
     config() {
@@ -154,30 +203,15 @@ export default {
       }
       return null;
     },
-    values() {
-      if (this.config) {
-        if (this.isConfigured) {
-          const param = this.config.availableParameters[this.config.selectedParameter];
-          return param.values;
-        }
-      }
-      return [];
+  },
+  props: {
+    widget: {
+      type: Object,
+      default: null,
     },
-    machine() {
-      return this.$route.params.id;
-    },
-    ...mapState('machineDashboard', ['assetData']),
-    assetState() {
-      return this.assetData && this.assetData[this.machine];
-    },
-    streamData() {
-      let data = [];
-      if (this.values && this.values.length) {
-        data = this.values
-          .filter((value) => this.assetState && this.assetState[value.key])
-          .map((value) => value.text.replace(`##${value.val}##`, this.assetState[value.val]));
-      }
-      return data;
+    customizeMode: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

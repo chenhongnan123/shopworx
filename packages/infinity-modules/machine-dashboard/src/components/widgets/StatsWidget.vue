@@ -19,6 +19,7 @@
     <v-card>
       <v-card-text
         style="height:100%"
+        v-if="assetState"
         :class="$vuetify.theme.dark ? 'white--text' : 'black--text'"
       >
         <v-row style="height:100%">
@@ -31,7 +32,7 @@
                   </span>
                 </div>
                 <div class="headline">
-                  M1
+                  {{ assetState.machinename }}
                 </div>
               </v-col>
               <v-col cols="12">
@@ -41,7 +42,7 @@
                   </span>
                 </div>
                 <div class="headline">
-                  Top Spout Flat Sachet
+                  {{ assetState.partname }}
                 </div>
               </v-col>
               <v-col cols="12">
@@ -51,7 +52,7 @@
                   </span>
                 </div>
                 <div class="headline">
-                  10
+                  {{ assetState.productioncount }}
                 </div>
               </v-col>
             </v-row>
@@ -83,22 +84,39 @@
             <v-progress-circular
               size="120"
               width="15"
-              :value="98.4"
+              :value="assetState.availability"
               color="success"
               :rotate="270"
             >
-              98.4
+              {{ assetState.availability }}
             </v-progress-circular>
           </v-col>
         </v-row>
       </v-card-text>
+    <v-card-text v-else>
+      <v-container fill-height>
+        <v-row
+          align="center"
+          justify="center"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="12" align="center">
+            <span class="headline">
+              Waiting for {{ machine }} events...
+            </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-  name: 'MachineCard',
+  name: 'StatsWidget',
   props: {
     widget: {
       type: Object,
@@ -112,6 +130,13 @@ export default {
   computed: {
     title() {
       return this.widget && this.widget.definition.title;
+    },
+    machine() {
+      return this.$route.params.id;
+    },
+    ...mapState('machineDashboard', ['assetData']),
+    assetState() {
+      return this.assetData && this.assetData[this.machine];
     },
   },
 };

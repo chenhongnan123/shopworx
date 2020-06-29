@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header" v-if="!id">
-      <span>Machine Dashboard</span>
+      Shopfloor Dashboard
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -44,12 +44,15 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex';
 import CustomizeToggle from '../components/details/CustomizeToggle.vue';
+import MachineDashboardLoading from './MachineDashboardLoading.vue';
 
 export default {
   name: 'MachineDashboardIndex',
   components: {
     CustomizeToggle,
+    MachineDashboardLoading,
   },
   data() {
     return {
@@ -58,11 +61,59 @@ export default {
     };
   },
   computed: {
+    ...mapState('machineDashboard', ['selectedTime']),
     id() {
       return this.$route.params.id;
     },
   },
+  async created() {
+    this.loading = true;
+    await this.getAppSchema();
+    this.loading = false;
+  },
+  beforeMount() {
+    this.startStream();
+    this.listenStream();
+  },
+  beforeDestroy() {
+    this.closeStream();
+  },
+  watch: {
+    selectedTime() {
+      this.listenStream();
+    },
+  },
   methods: {
+    ...mapMutations('machineDashboard', ['setAssetData']),
+    ...mapActions('webApp', ['getAppSchema']),
+    startStream() {
+      this.evtSource = new EventSource('/sse/asm');
+    },
+    listenStream() {
+      this.evtSource.addEventListener(this.getTimeGranularity(), (evt) => {
+        try {
+          let eventData = JSON.parse(JSON.parse(evt.data));
+          eventData = { ...eventData, key: eventData.machinename };
+          this.setAssetData(eventData);
+        } catch (err) {
+          console.log('Something went wrong');
+          console.error(err);
+        }
+      });
+    },
+    closeStream() {
+      this.evtSource.close();
+    },
+    getTimeGranularity() {
+      switch (this.selectedTime) {
+        case 0:
+          return 'hourly';
+        case 1:
+          return 'shift';
+        default:
+          return 'hourly';
+      }
+    },
     enterFullscreen() {
       const elem = document.querySelector('#machine-dashboard');
       elem.onfullscreenchange = (event) => {

@@ -13,6 +13,7 @@
     "@shopworx/assets": "^4.1.0-beta.17",
     "@shopworx/machine-dashboard": "^4.1.0-beta.17",
     "@shopworx/masters": "^4.1.0-beta.17",
+    "@shopworx/maintenance-summary": "^4.1.0-beta.17",
     "@shopworx/material-management": "^4.1.0-beta.17",
     "@shopworx/order-management": "^4.1.0-beta.17",
     "@shopworx/parameter-configuration": "^4.1.0-beta.17",

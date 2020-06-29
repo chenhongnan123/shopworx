@@ -23,30 +23,19 @@
       v-if="isConfigured"
       :class="title === null ? 'mt-8' : ''"
     >
-      <v-card-text v-if="streamData && streamData.length">
-        <div
-          :key="index"
-          class="error--text"
-          v-for="(data, index) in streamData"
-        >
-          {{ data }}
-        </div>
-      </v-card-text>
-    <v-card-text v-else>
-      <v-container fill-height>
-        <v-row
-          align="center"
-          justify="center"
-          :no-gutters="$vuetify.breakpoint.smAndDown"
-        >
-          <v-col cols="12" align="center">
-            <span class="headline">
-              No {{ title }} for {{ machine }}
-            </span>
+      <v-card-text>
+        <v-row v-for="(plan, index) in tabs[currentParam].plans" :key="index">
+          <v-col cols="4" class="title">
+            {{ plan.part }}
+          </v-col>
+          <v-col cols="4" class="mt-1">
+            {{ plan.machine }}
+          </v-col>
+          <v-col cols="4" class="mt-1">
+            {{ plan.sapNo }}
           </v-col>
         </v-row>
-      </v-container>
-    </v-card-text>
+      </v-card-text>
     </v-card>
     <v-card v-else>
       <v-card-text class="text-center my-auto">
@@ -84,7 +73,7 @@
             item-value="val"
             :items="allParameters"
             v-model="selectedParam"
-            label="Select text stream to display"
+            label="Select plans to display"
           ></v-select>
         </v-card-text>
         <v-card-actions>
@@ -103,33 +92,63 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
-  name: 'StatusWidget',
-  props: {
-    widget: {
-      type: Object,
-      default: null,
-    },
-    customizeMode: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  name: 'PlanWidget',
   data() {
     return {
-      selectedParam: null,
       dialog: false,
+      selectedParam: null,
+      tabs: [
+        {
+          plans: [
+            {
+              part: 'BIW SHOP',
+              machine: 'AGV Conveyor',
+              sapNo: 'SAP10',
+            },
+            {
+              part: 'H-2',
+              machine: 'Air Wash',
+              sapNo: 'SAP4',
+            },
+            {
+              part: 'CRANK SHAFT',
+              machine: 'Abro Balancing',
+              sapNo: 'SAP105',
+            },
+            {
+              part: 'CRANK SHAFT',
+              machine: 'Abro Balancing',
+              sapNo: 'SAP105',
+            },
+            {
+              part: 'UTILITY',
+              machine: 'Air Compressor',
+              sapNo: 'SAP45',
+            },
+          ],
+        },
+        {
+          plans: [
+            {
+              part: 'MACHINING',
+              machine: 'VNC-007',
+              sapNo: 'SAP64',
+            },
+            {
+              part: 'MACHINING',
+              machine: 'HONING-002',
+              sapNo: 'SAP109',
+            },
+            {
+              part: 'UTILITY',
+              machine: 'D.G. 3',
+              sapNo: 'SAP48',
+            },
+          ],
+        },
+      ],
     };
-  },
-  created() {
-    this.selectedParam = this.currentParam;
-  },
-  watch: {
-    currentParam(val) {
-      this.selectedParam = val;
-    },
   },
   computed: {
     config() {
@@ -154,30 +173,15 @@ export default {
       }
       return null;
     },
-    values() {
-      if (this.config) {
-        if (this.isConfigured) {
-          const param = this.config.availableParameters[this.config.selectedParameter];
-          return param.values;
-        }
-      }
-      return [];
+  },
+  props: {
+    widget: {
+      type: Object,
+      default: null,
     },
-    machine() {
-      return this.$route.params.id;
-    },
-    ...mapState('machineDashboard', ['assetData']),
-    assetState() {
-      return this.assetData && this.assetData[this.machine];
-    },
-    streamData() {
-      let data = [];
-      if (this.values && this.values.length) {
-        data = this.values
-          .filter((value) => this.assetState && this.assetState[value.key])
-          .map((value) => value.text.replace(`##${value.val}##`, this.assetState[value.val]));
-      }
-      return data;
+    customizeMode: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

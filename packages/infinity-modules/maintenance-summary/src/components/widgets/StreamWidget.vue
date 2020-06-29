@@ -166,7 +166,7 @@ export default {
     machine() {
       return this.$route.params.id;
     },
-    ...mapState('machineDashboard', ['assetData']),
+    ...mapState('maintenanceSummary', ['assetData']),
     assetState() {
       return this.assetData && this.assetData[this.machine];
     },

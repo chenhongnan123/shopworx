@@ -1,32 +1,40 @@
 <template>
-  <v-card
-    hover
-    outlined
-    style="height:100%; border-radius: 8px"
-    @click="$router.push({ name: 'machine-detail', params: { id: machine.machinename } })"
-  >
-    <v-card-title
-      class="py-0"
-      v-if="$route.query.id === 'productionDashboard'"
-      :class="assetState && !assetState.isdown ? 'success' : 'error'"
-    >
-      {{ machine.machinename }}
-    </v-card-title>
-    <v-card-title
-      v-else
-      class="py-0 success"
-    >
-      {{ machine.machinename }}
-    </v-card-title>
-    <template v-if="$route.query.id === 'productionDashboard'">
+  <div>
+    <span
+      class="title font-weight-regular"
+      v-if="title"
+      v-text="title"
+    ></span>
+    <span class="float-right">
+      <v-btn
+        small
+        color="error"
+        icon
+        v-if="customizeMode"
+        @click="$emit('remove-widget', widget.i)"
+      >
+        <v-icon>mdi-minus-circle</v-icon>
+      </v-btn>
+    </span>
+    <v-card>
       <v-card-text
-        v-if="assetState"
         style="height:100%"
+        v-if="assetState"
         :class="$vuetify.theme.dark ? 'white--text' : 'black--text'"
       >
         <v-row style="height:100%">
-          <v-col cols="7" class="my-auto">
+          <v-col cols="7">
             <v-row>
+              <v-col cols="12">
+                <div class="caption text-uppercase">
+                  <span>
+                    Machine Name
+                  </span>
+                </div>
+                <div class="headline">
+                  {{ assetState.machinename }}
+                </div>
+              </v-col>
               <v-col cols="12">
                 <div class="caption text-uppercase">
                   <span>
@@ -80,64 +88,55 @@
               color="success"
               :rotate="270"
             >
-              <div>
-                {{ assetState.availability }}
-              </div>
+              {{ assetState.availability }}
             </v-progress-circular>
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-text v-else>
-        <v-container fill-height>
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
-          >
-            <v-col cols="12" align="center">
-              <span class="headline">
-                Waiting for {{ machine.machinename }} events...
-              </span>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card-text>
-    </template>
-    <template v-else>
-      <v-card-text>
-        <v-container fill-height>
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
-          >
-            <v-col cols="12" align="center">
-              <span class="headline">
-                No scheduled maintenance for {{ machine.machinename }}
-              </span>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card-text>
-    </template>
-  </v-card>
+    <v-card-text v-else>
+      <v-container fill-height>
+        <v-row
+          align="center"
+          justify="center"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="12" align="center">
+            <span class="headline">
+              Waiting for {{ machine }} events...
+            </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
 export default {
-  name: 'MachineCard',
+  name: 'StatsWidget',
   props: {
-    machine: {
+    widget: {
       type: Object,
-      required: true,
+      default: null,
+    },
+    customizeMode: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
-    ...mapState('machineDashboard', ['assetData']),
+    title() {
+      return this.widget && this.widget.definition.title;
+    },
+    machine() {
+      return this.$route.params.id;
+    },
+    ...mapState('maintenanceSummary', ['assetData']),
     assetState() {
-      return this.assetData && this.assetData[this.machine.machinename];
+      return this.assetData && this.assetData[this.machine];
     },
   },
 };

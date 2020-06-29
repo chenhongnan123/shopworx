@@ -1,4 +1,4 @@
-import { set, toggle } from '@shopworx/services/util/store.helper';
+import { set, toggle, reactiveSet } from '@shopworx/services/util/store.helper';
 
 export default ({
   namespaced: true,
@@ -55,16 +55,17 @@ export default ({
           availableParameters: [
             {
               title: 'Horizontal Temperature (°C)',
-              key: 'htemp',
+              key: 'horizontaltemp',
               val: 0,
             },
             {
-              title: 'Machine Speed',
-              key: 'mspeed',
+              title: 'Motor Speed',
+              key: 'motorspeed',
               val: 1,
             },
             {
               title: 'Vertical Temperature (°C)',
+              key: 'verticaltemp',
               val: 2,
             },
           ],
@@ -84,7 +85,33 @@ export default ({
           availableParameters: [
             {
               title: 'Alarms',
-              key: 'alarm',
+              values: [
+                {
+                  key: 'horztemplowalarm',
+                  val: 'horizontaltemp',
+                  text: 'Horizontal temp low: ##horizontaltemp##',
+                },
+                {
+                  key: 'horztemphighalarm',
+                  val: 'horizontaltemp',
+                  text: 'Horizontal temp high: ##horizontaltemp##',
+                },
+                {
+                  key: 'verttemplowalarm',
+                  val: 'verticaltemp',
+                  text: 'Vertical temp low: ##verticaltemp##',
+                },
+                {
+                  key: 'verttemphighalarm',
+                  val: 'verticaltemp',
+                  text: 'Vertical temp high: ##verticaltemp##',
+                },
+                {
+                  key: 'motoroverspeedalarm',
+                  val: 'motorspeed',
+                  text: 'Motor over-speed: ##motorspeed##',
+                },
+              ],
               val: 0,
             },
             {
@@ -127,28 +154,11 @@ export default ({
           config: null,
           configured: true,
         },
-      },
-      {
-        x: 4,
-        y: 0,
-        w: 8,
-        h: 10,
-        i: 1,
-        definition: {
-          component: 'tabbed-widget',
-          title: 'Machine performance',
-          maxCount: 1,
-          minWidth: 6,
-          minHeight: 8,
-          maxWidth: 8,
-          maxHeight: 14,
-          config: null,
-          configured: true,
-        },
+        moved: false,
       },
       {
         x: 0,
-        y: 5,
+        y: 10,
         w: 4,
         h: 5,
         i: 2,
@@ -163,11 +173,12 @@ export default ({
           config: null,
           configured: true,
         },
+        moved: false,
       },
       {
         x: 4,
-        y: 8,
-        w: 7,
+        y: 10,
+        w: 8,
         h: 6,
         i: 3,
         definition: {
@@ -182,16 +193,17 @@ export default ({
             availableParameters: [
               {
                 title: 'Horizontal Temperature (°C)',
-                key: 'htemp',
+                key: 'horizontaltemp',
                 val: 0,
               },
               {
-                title: 'Machine Speed',
-                key: 'mspeed',
+                title: 'Motor Speed',
+                key: 'motorspeed',
                 val: 1,
               },
               {
                 title: 'Vertical Temperature (°C)',
+                key: 'verticaltemp',
                 val: 2,
               },
             ],
@@ -199,8 +211,126 @@ export default ({
           },
           configured: true,
         },
+        moved: false,
+      },
+      {
+        x: 0,
+        y: 15,
+        w: 4,
+        h: 4,
+        i: 4,
+        definition: {
+          component: 'stream-widget',
+          title: 'Text stream',
+          maxCount: 10,
+          minWidth: 3,
+          minHeight: 3,
+          maxWidth: 4,
+          maxHeight: 5,
+          config: {
+            availableParameters: [
+              {
+                title: 'Alarms',
+                values: [
+                  {
+                    key: 'horztemplowalarm',
+                    val: 'horizontaltemp',
+                    text: 'Horizontal templo: ##horizontaltemp##',
+                  },
+                  {
+                    key: 'horztemphighalarm',
+                    val: 'horizontaltemp',
+                    text: 'Horizontal temphig: ##horizontaltemp##',
+                  },
+                  {
+                    key: 'verttemplowalarm',
+                    val: 'verticaltemp',
+                    text: 'Vertical templo: ##verticaltemp##',
+                  },
+                  {
+                    key: 'verttemphighalarm',
+                    val: 'verticaltemp',
+                    text: 'Vertical temphig: ##verticaltemp##',
+                  },
+                  {
+                    key: 'motoroverspeedalarm',
+                    val: 'motorspeed',
+                    text: 'Motor overspee: ##motorspeed##',
+                  },
+                ],
+                val: 0,
+              },
+              {
+                title: 'Maintenance',
+                key: 'maintenance',
+                val: 1,
+              },
+            ],
+            selectedParameter: 0,
+          },
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 4,
+        y: 0,
+        w: 8,
+        h: 10,
+        i: 5,
+        definition: {
+          component: 'timeline-widget',
+          title: 'Machine timeline',
+          maxCount: 1,
+          minWidth: 6,
+          minHeight: 8,
+          maxWidth: 8,
+          maxHeight: 14,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 4,
+        y: 16,
+        w: 8,
+        h: 6,
+        i: 6,
+        definition: {
+          component: 'parameter-widget',
+          title: 'Parameter visualization',
+          maxCount: 10,
+          minWidth: 5,
+          minHeight: 6,
+          maxWidth: 8,
+          maxHeight: 7,
+          config: {
+            availableParameters: [
+              {
+                title: 'Horizontal Temperature (°C)',
+                key: 'horizontaltemp',
+                val: 0,
+              },
+              {
+                title: 'Motor Speed',
+                key: 'motorspeed',
+                val: 1,
+              },
+              {
+                title: 'Vertical Temperature (°C)',
+                key: 'verticaltemp',
+                val: 2,
+              },
+            ],
+            selectedParameter: 2,
+          },
+          configured: true,
+        },
+        moved: false,
       },
     ],
+    assetData: {},
   },
   mutations: {
     setPage: set('page'),
@@ -212,6 +342,7 @@ export default ({
     toggleCustomizeMode: toggle('customizeMode'),
     setAllWidgets: set('allWidgets'),
     setWidgets: set('widgets'),
+    setAssetData: reactiveSet('assetData'),
   },
   actions: {
     getMachines: async ({ commit, dispatch }) => {

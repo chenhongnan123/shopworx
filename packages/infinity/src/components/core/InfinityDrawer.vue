@@ -66,7 +66,7 @@
             exact
             :key="index"
             v-else-if="item.to ===  'reports'"
-            :title="$t(`reports.${item.title}`)"
+            :title="$t(`modules.${item.title}`)"
             :to="{ name: item.to, query: { id: item.title } }"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
@@ -81,6 +81,7 @@
             :key="index"
             :to="{ name: item.title }"
             @click="setActiveApp(item)"
+            :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
