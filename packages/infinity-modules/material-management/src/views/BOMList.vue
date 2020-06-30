@@ -79,27 +79,29 @@
           max-width="500px"
           transition="dialog-transition"
         >
-          <v-card>
-            <v-card-title primary-title>
-              <span>
-                Update Bom
-              </span>
-              <v-spacer></v-spacer>
-              <v-btn icon small @click="editDialog = false">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-card-title>
-              <v-card-text>
-              <v-form
+        <v-form
                 ref="form"
                 v-model="valid"
                 lazy-validation
               >
+          <v-card>
+            <v-card-title primary-title>
+              <span>
+                Edit Bom
+              </span>
+              <v-spacer></v-spacer>
+              <v-btn icon small @click="(editDialog = false); editDialogReset();">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+              <v-card-text>
                 <v-text-field
                     :rules="rules.name"
                     label="Bom"
                     prepend-icon="mdi-tray-plus"
                     v-model="bomObj.name"
+                    required
+                    :counter="10"
                 ></v-text-field>
                 <v-text-field
                     :rules="rules.bomnumber"
@@ -107,8 +109,9 @@
                     label="Bom Number"
                     prepend-icon="mdi-tray-plus"
                     v-model="bomObj.bomnumber"
+                    required
+                    :counter="10"
                 ></v-text-field>
-              </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -117,11 +120,13 @@
                   class="text-none"
                   :loading="saving"
                   @click="handleUpdateBom"
+                  :disabled="!valid"
                 >
                   Save
                 </v-btn>
               </v-card-actions>
           </v-card>
+          </v-form>
         </v-dialog>
         <v-dialog
           persistent
@@ -260,13 +265,18 @@ export default {
       confirmListDialog: false,
       valid: true,
       saving: false,
+      name: '',
+      bomnumber: '',
       rules: {
         name: [
           (v) => !!v || 'Bom Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         bomnumber: [
           (v) => !!v || 'Bom Number is required',
           (v) => v >= 0 || 'Bom Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
       },
     };
@@ -289,6 +299,7 @@ export default {
     ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
     ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom', 'deleteAllBomDetails']),
     async handleUpdateBom() {
+      this.$refs.form.validate();
       if (this.$refs.form.validate()) {
         const { bomObj, bomObjDefault } = this;
         const { name, bomnumber } = bomObj;
@@ -336,6 +347,7 @@ export default {
             type: 'success',
             message: 'UPDATE_BOM',
           });
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -415,6 +427,9 @@ export default {
         message: 'DATA_SAVED',
       });
     },
+  },
+  editDialogReset() {
+    this.$refs.form.reset();
   },
 };
 </script>
