@@ -12,6 +12,8 @@ export default ({
     subLineList: [],
     createdRoadmap: {},
     productList: [],
+    stationNamebySubline: [],
+    subStationNamebyStation: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -24,8 +26,34 @@ export default ({
     setSubLineList: set('subLineList'),
     setCreatedRoadmap: set('createdRoadmap'),
     setProductList: set('productList'),
+    setStationNamebySubline: set('stationNamebySubline'),
+    setSubStationNamebyStation: set('subStationNamebyStation'),
   },
   actions: {
+    getStationNamesbysubline: async ({ dispatch, commit }, query) => {
+      const stationNamebySubline = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationNamebySubline', stationNamebySubline);
+      return true;
+    },
+    getSubStationNamesbyStation: async ({ dispatch, commit }, query) => {
+      const subStationNamebyStation = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationNamebyStation', subStationNamebyStation);
+      return true;
+    },
     getRecords: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',

@@ -142,23 +142,25 @@
           prepend-icon="$production"
           :rules="rmdetailName"
           required
-          v-model="roadmapDetail.sublinename"/>
+          v-model="roadmapDetail.sublinename"
+          @change="getfilteredStationNames"/>
         <v-select
           class="mt-2"
           hide-details
           label="Select Station name"
-          :items="stationList"
+          :items="stationNamebySubline"
           item-text="name"
           return-object
           prepend-icon="$production"
           :rules="rmdetailStName"
           required
-          v-model="roadmapDetail.machinename"/>
+          v-model="roadmapDetail.machinename"
+          @change="getfilteredSubStationNames"/>
         <v-select
           class="mt-2"
           hide-details
           label="Select Sub-Station name"
-          :items="subStationList"
+          :items="subStationNamebyStation"
           item-text="name"
           return-object
           prepend-icon="$production"
@@ -344,7 +346,9 @@ export default {
       'subStationList',
       'stationList',
       'subLineList',
-      'productList']),
+      'productList',
+      'stationNamebySubline',
+      'subStationNamebyStation']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -362,7 +366,9 @@ export default {
       'deleteRoadmapDetails',
       'updateRoadmapDetails',
       'createProductDetails',
-      'getProductListFromRoadmapName']),
+      'getProductListFromRoadmapName',
+      'getStationNamesbysubline',
+      'getSubStationNamesbyStation']),
     ...mapMutations('helper', ['setAlert', 'setCurrentPath']),
     async checkProcessCode() {
       const preSubstBefor = this.roadmapDetail.amtpresubstation;
@@ -529,6 +535,12 @@ export default {
     },
     async dialogReset() {
       this.$refs.form.reset();
+    },
+    async getfilteredStationNames(item) {
+      await this.getStationNamesbysubline(`?query=sublineid=="${item.id}"`);
+    },
+    async getfilteredSubStationNames(item) {
+      await this.getSubStationNamesbyStation(`?query=stationid=="${item.id}"`);
     },
   },
 };
