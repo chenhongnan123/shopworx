@@ -195,6 +195,7 @@
           </template>
           <template v-slot:item.parametercategory="props">
             <v-select
+              class="cagetory"
               :disabled="(substationValue ? false : true) || saving"
               :items="categoryList"
               v-model="props.item.parametercategory"
@@ -387,7 +388,7 @@ export default {
         { text: 'substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
-        { text: 'Category', value: 'parametercategory' },
+        { text: 'Category', value: 'parametercategory', width: 300 },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
         { text: 'DB Address', value: 'dbaddress', width: 130 },
@@ -926,5 +927,8 @@ export default {
 }
 .planScheduleView .v-text-field.v-text-field--solo.v-input--dense > .v-input__control{
   min-height: 30px;
+}
+.cagetory .v-input__slot{
+  width: 300px;
 }
 </style>
