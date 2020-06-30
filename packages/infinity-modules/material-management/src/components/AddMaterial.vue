@@ -210,7 +210,9 @@ export default {
       if (this.$refs.form.validate()) {
         const { name, materialnumber } = materialObj;
         if (this.materialList.length) {
-          if (this.materialList.some((material) => name === material.name)) {
+          if (this.materialList.some(
+            (material) => name.toLowerCase().split(' ').join('') === material.nametoLowerCase().split(' ').join(''),
+          )) {
             this.setAlert({
               show: true,
               type: 'error',
