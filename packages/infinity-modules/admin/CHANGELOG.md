@@ -1,0 +1,99 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.16](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.15...v4.1.0-beta.16) (2020-05-30)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.15](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.14...v4.1.0-beta.15) (2020-05-28)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.14](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.13...v4.1.0-beta.14) (2020-05-27)
+
+
+### Bug Fixes
+
+* **layout:** settings layout updated ([e3a0008](https://bitbucket.org/entrib/shopworx/commits/e3a0008e45a2ffd2f44c9cf68170a6a53211be8a))
+
+
+### Features
+
+* **user-roles:** added user roles to admin console ([a1df78e](https://bitbucket.org/entrib/shopworx/commits/a1df78e4da1544f24848c72069144cc200a81f42))
+
+
+
+
+
+# [4.1.0-beta.13](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.12...v4.1.0-beta.13) (2020-05-12)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.12](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2020-05-07)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.11](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2020-05-06)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.10](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2020-05-05)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.9](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2020-05-04)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.8](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2020-04-27)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+# [4.1.0-beta.6](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2020-04-05)
+
+
+### Bug Fixes
+
+* **router:** check access for app's children routes ([8595216](https://bitbucket.org/entrib/shopworx/commits/8595216b82b3b8626cd815e538e3f50d37716267))

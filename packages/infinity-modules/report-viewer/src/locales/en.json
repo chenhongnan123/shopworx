@@ -1,0 +1,10 @@
+{
+  "reports": {
+    "category": {
+      "production": "Production reports",
+      "downtime": "Downtime reports",
+      "rejection": "Rejection reports",
+      "oee": "OEE reports"
+    }
+  }
+}
