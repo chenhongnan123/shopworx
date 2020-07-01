@@ -27,9 +27,9 @@
             :items="lineList"
             :disabled="saving"
             item-text="name"
-            item-value="id"
+            return-object
             prepend-icon="$production"
-            v-model="bomObj.lineid"
+            v-model="selectedLine"
             :rules="rules.line"
             @change="handleChangeLine"
           >
@@ -106,11 +106,11 @@ import {
 export default {
   data() {
     return {
+      selectedLine: null,
       saving: false,
       name: '',
       bomnumber: '',
-      bomObj: {
-      },
+      bomObj: {},
       valid: true,
       rules: {
         line: [
@@ -181,6 +181,8 @@ export default {
         }
         const payload = {
           ...bomObj,
+          lineid: this.selectedLine.id,
+          linename: this.selectedLine.name,
           assetid: 4,
         };
         this.saving = true;

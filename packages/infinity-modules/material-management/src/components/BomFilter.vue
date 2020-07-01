@@ -31,8 +31,9 @@
             name="name"
             label="Select Line"
             item-text="name"
-            item-value="id"
+            return-object
             clearable
+            @change="getfilteredBomNames"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -61,7 +62,7 @@
           </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
-            :items="bomList"
+            :items="bomNamebylines"
             outlined
             dense
             hide-details
@@ -132,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
+    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList', 'bomNamebylines']),
     showFilter: {
       get() {
         return this.filter;
@@ -155,7 +156,7 @@ export default {
   },
   methods: {
     ...mapMutations('bomManagement', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue']),
-    ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList']),
+    ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList', 'getBomNamesbyline']),
     btnApply() {
       let query = '?query=';
       if (this.bomname) {
@@ -164,7 +165,7 @@ export default {
       if (this.bomnumber) {
         query += `bomnumber=="${this.bomnumber}"&`;
       }
-      query += `lineid=="${this.line || null}"`;
+      query += `lineid==${this.line.id || null}`;
       // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getBomListRecords(query);
       this.toggleFilter();
@@ -179,6 +180,9 @@ export default {
       this.manufacturer = '';
       this.line = '';
       this.subline = '';
+    },
+    async getfilteredBomNames(item) {
+      await this.getBomNamesbyline(`?query=lineid==${item.id}`);
     },
   },
 };

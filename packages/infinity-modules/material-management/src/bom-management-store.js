@@ -15,6 +15,7 @@ export default ({
     sublineValue: '',
     bomDetails: '',
     parameterList: '',
+    bomNamebylines: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -29,11 +30,11 @@ export default ({
     setSublineValue: set('sublineValue'),
     setBomDetailsList: set('bomDetailsList'),
     setParameterList: set('parameterList'),
+    setBomNamebyline: set('bomNamebylines'),
   },
   actions: {
-    getBomListRecords: async ({ dispatch, commit, state }, query) => {
-      const { lineList } = state;
-      let bomlist = await dispatch(
+    getBomNamesbyline: async ({ dispatch, commit }, query) => {
+      const bomNamebylines = await dispatch(
         'element/getRecords',
         {
           elementName: 'bomlist',
@@ -41,13 +42,26 @@ export default ({
         },
         { root: true },
       );
-      if (lineList.length > 0) {
-        bomlist = bomlist.map((bom) => ({
-          ...bom,
-          line: lineList.filter((line) => line.id === bom.lineid)[0]
-          && lineList.filter((line) => line.id === bom.lineid)[0].name,
-        }));
-      }
+      commit('setBomNamebyline', bomNamebylines);
+      return true;
+    },
+    getBomListRecords: async ({ dispatch, commit }, query) => {
+      // const { lineList } = state;
+      const bomlist = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'bomlist',
+          query,
+        },
+        { root: true },
+      );
+      // if (lineList.length > 0) {
+      //   bomlist = bomlist.map((bom) => ({
+      //     ...bom,
+      //     line: lineList.filter((line) => line.id === bom.lineid)[0]
+      //     && lineList.filter((line) => line.id === bom.lineid)[0].name,
+      //   }));
+      // }
       commit('setBomList', bomlist);
     },
     getBomDetailsListRecords: async ({ dispatch, commit }, query) => {

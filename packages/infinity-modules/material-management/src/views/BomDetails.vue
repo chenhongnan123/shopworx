@@ -237,7 +237,7 @@ export default {
     };
   },
   async created() {
-    console.log(this.query, 'query');
+    // console.log(this.query, 'query');
     await this.getMaterialListRecords('');
     this.handleGetDetails();
   },
@@ -253,7 +253,7 @@ export default {
       const parameterList = (await this.getParameterList(`?query=lineid==${this.query.lineid || null}`))
         .filter((parameter) => Number(parameter.parametercategory) === 25
         || Number(parameter.parametercategory) === 27);
-      console.log(parameterList, 'parameterList');
+      // console.log(parameterList, 'parameterList');
 
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
@@ -291,7 +291,7 @@ export default {
           materialcategory: materialItem.materialcategory,
         },
       };
-      console.log(payload, 'payload');
+      // console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateRecordById(payload);
       this.saving = false;

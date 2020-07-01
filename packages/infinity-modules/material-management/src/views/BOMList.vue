@@ -237,7 +237,7 @@ export default {
       headers: [
         {
           text: 'Line',
-          value: 'line',
+          value: 'linename',
         },
         {
           text: 'BOM name',
