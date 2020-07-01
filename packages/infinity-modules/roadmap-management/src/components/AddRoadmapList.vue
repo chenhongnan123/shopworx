@@ -172,7 +172,6 @@ export default {
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
         this.valid = false;
-        this.roadmap.name = '';
         this.validupdate = false;
         this.setAlert({
           show: true,
