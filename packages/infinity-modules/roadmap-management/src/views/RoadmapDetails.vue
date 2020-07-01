@@ -78,7 +78,7 @@
           <td>{{ item.amtpresubstation }}</td>
           <td>{{ item.prestationname }}</td>
           <td>{{ item.presubstationname }}</td>
-          <td>{{ item.presubline }}</td>
+          <td>{{ item.presublinename }}</td>
           <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("en-gb") }}</td>
           <td v-else></td>
           <td><v-row justify="center"><v-btn
@@ -190,6 +190,15 @@
             v-model="roadmapDetail.presubstationname"
         ></v-text-field> -->
         <v-select
+          class="mt-2"
+          hide-details
+          label="Select Pre-Subline name"
+          :items="subLineList"
+          item-text="name"
+          return-object
+          prepend-icon="$production"
+          v-model="roadmapDetail.presubline"/>
+          <v-select
           class="mt-2"
           hide-details
           label="Select Pre-Station name"
@@ -440,6 +449,8 @@ export default {
             ...this.roadmapDetail,
             sublinename: this.roadmapDetail.sublinename.name,
             sublineid: this.roadmapDetail.sublinename.id,
+            presublineid: this.roadmapDetail.presubline.id,
+            presublinename: this.roadmapDetail.presubline.name,
             machinename: this.roadmapDetail.machinename.name,
             stationid: this.roadmapDetail.machinename.id,
             substationname: this.roadmapDetail.substationname.name,
@@ -468,6 +479,7 @@ export default {
                   sublinename: this.roadmapDetail.sublinename,
                   sublineid: this.roadmapDetail.sublineid,
                   machinename: this.roadmapDetail.machinename,
+                  presubline: this.roadmapDetail.presubline,
                   stationid: this.roadmapDetail.stationid,
                   substationname: this.roadmapDetail.substationname,
                   substationid: this.roadmapDetail.substationid,
@@ -508,6 +520,7 @@ export default {
       this.roadmapDetail.substationname = item.substationname;
       this.roadmapDetail.process = item.process;
       this.roadmapDetail.amtpresubstation = item.amtpresubstation;
+      this.roadmapDetail.presubline = item.presubline;
       this.roadmapDetail.prestationname = item.prestationname;
       this.roadmapDetail.presubstationname = item.presubstationname;
       this.recipeValue = item.parametervalue;
