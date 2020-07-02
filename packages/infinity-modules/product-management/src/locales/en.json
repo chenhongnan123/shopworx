@@ -1,5 +1,6 @@
 {
   "appTitle": "Product Type Management",
+  "productDetails": "Product Type Details",
   "error": {
     "PRODUCT_NAME_EMPTY": "Product name is empty.",
     "ALREADY_EXSIST_PRODUCT": "Product name already exsist.",
