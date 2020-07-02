@@ -30,6 +30,7 @@
             name="name"
             label="BOM name"
             item-text="name"
+            clearable="true"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -47,6 +48,7 @@
             name="name"
             label="Roadmap name"
             item-text="name"
+            clearable="true"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -104,14 +106,26 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter']),
     ...mapActions('productManagement', ['getProductListRecords']),
     btnApply() {
-      if (this.selectedBOM) {
-        this.setProductList(this.productList.filter((r) => r.bomname === this.selectedBOM));
-      }
-      if (this.selectedRoadmap) {
-        this.setProductList(this.productList.filter((r) => r.roadmapname === this.selectedRoadmap));
+      if (this.selectedBOM && this.selectedRoadmap) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'COMBO_NOT_POSSIBLE',
+        });
+      } else {
+        let query = '?query=';
+        if (this.selectedBOM) {
+          query += `bomname=="${this.selectedBOM}"&`;
+        }
+        if (this.selectedRoadmap) {
+          query += `roadmapname=="${this.selectedRoadmap}"`;
+        }
+        this.getProductListRecords(query);
+        this.toggleFilter();
       }
     },
     async btnReset() {
