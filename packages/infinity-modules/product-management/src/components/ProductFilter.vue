@@ -106,27 +106,19 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter']),
     ...mapActions('productManagement', ['getProductListRecords']),
     btnApply() {
-      if (this.selectedBOM && this.selectedRoadmap) {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'COMBO_NOT_POSSIBLE',
-        });
-      } else {
-        let query = '?query=';
-        if (this.selectedBOM) {
-          query += `bomname=="${this.selectedBOM}"&`;
-        }
-        if (this.selectedRoadmap) {
-          query += `roadmapname=="${this.selectedRoadmap}"`;
-        }
-        this.getProductListRecords(query);
-        this.toggleFilter();
+      debugger;
+      let query = '?query=';
+      if (this.selectedBOM) {
+        query += `bomname=="${this.selectedBOM}"&`;
       }
+      if (this.selectedRoadmap) {
+        query += `roadmapname=="${this.selectedRoadmap}"`;
+      }
+      this.getProductListRecords(query);
+      this.toggleFilter();
     },
     async btnReset() {
       await this.getProductListRecords('');
