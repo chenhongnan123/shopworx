@@ -109,7 +109,6 @@ export default {
     ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter']),
     ...mapActions('productManagement', ['getProductListRecords']),
     btnApply() {
-      debugger;
       let query = '?query=';
       if (this.selectedBOM) {
         query += `bomname=="${this.selectedBOM}"&`;
