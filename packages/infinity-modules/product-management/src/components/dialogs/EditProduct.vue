@@ -26,7 +26,7 @@
             :disabled="saving"
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
-            v-model="productName"
+            v-model="productNew.productname"
             :rules="productNameRule"
             required
             :counter="10"
@@ -36,7 +36,7 @@
             :disabled="saving"
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
-            v-model="productDescription"
+            v-model="productNew.description"
         ></v-text-field>
         <v-autocomplete
             clearable
@@ -45,7 +45,7 @@
             return-object
             :disabled="saving"
             item-text="name"
-            v-model="selectedProductTypeCategory"
+            v-model="productNew.producttypecategory"
             :rules="selectProductTypeRule"
             required
             prepend-icon="mdi-road-variant"
@@ -62,8 +62,7 @@
         <v-btn
           color="primary"
           class="text-none"
-          :disabled="!selectedProductTypeCategory || !productName
-            || !valid"
+          :disabled="!valid"
           @click="updateProduct"
         >
           {{ $t('displayTags.buttons.save') }}
@@ -85,12 +84,13 @@ export default {
   name: 'EditProduct',
   data() {
     return {
+      productNew: {},
       saving: false,
       message: null,
       loadingProducts: false,
-      selectedProductTypeCategory: null,
-      productName: null,
-      productDescription: null,
+      producttypecategory: null,
+      productname: null,
+      description: null,
       valid: true,
       productNameRule: [(v) => !!v || 'Product Name Required',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -108,7 +108,11 @@ export default {
     product(val) {
       this.productName = val.productname;
       this.productDescription = val.description;
+      return val;
     },
+  },
+  created() {
+    this.productNew = { ...this.product };
   },
   computed: {
     ...mapState('productManagement', ['productTypeCategory', 'editProductDialog', 'productList']),
@@ -136,7 +140,7 @@ export default {
     ...mapActions('productManagement', ['updateProductType']),
     async updateProduct() {
       this.$refs.form.validate();
-      if (!this.productName) {
+      if (!this.productNew.productname) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -144,18 +148,18 @@ export default {
         });
       } else {
         const payload = {
-          productname: this.productName,
-          description: this.productDescription,
+          productname: this.productNew.productname,
+          description: this.productNew.description,
           editedby: this.userName,
-          producttypecategory: this.selectedProductTypeCategory.name,
-          productTypecategoryid: this.selectedProductTypeCategory.id,
-          productversionnumber: (this.product.productversionnumber + 1),
+          producttypecategory: this.productNew.producttypecategory.name,
+          productTypecategoryid: this.productNew.producttypecategory.id,
+          productversionnumber: (this.productNew.productversionnumber + 1),
           // TODO asset, check editedtime on value and datatype
           assetid: 4,
           editedtime: new Date().getTime(),
         };
         let update = false;
-        update = await this.updateProductType({ id: this.product._id, payload });
+        update = this.updateProductType({ id: this.productNew._id, payload });
         if (update) {
           this.setAlert({
             show: true,
@@ -175,7 +179,7 @@ export default {
     },
     async validName() {
       const duplicateName = this.productList.filter(
-        (o) => o.productname.toLowerCase().split(' ').join('') === this.productName.toLowerCase().split(' ').join(''),
+        (o) => o.productname.toLowerCase().split(' ').join('') === this.productNew.productname.toLowerCase().split(' ').join(''),
       );
       if (duplicateName.length > 0) {
         this.valid = false;
@@ -190,7 +194,8 @@ export default {
       }
     },
     async dialogReset() {
-      this.$refs.form.reset();
+      this.$refs.form.resetValidation();
+      this.productNew = { ...this.product };
     },
   },
 };
