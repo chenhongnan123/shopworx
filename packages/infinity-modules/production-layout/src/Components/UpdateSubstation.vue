@@ -37,13 +37,13 @@
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
-         @click="validateInitsst"
+         @change="validateInitsst"
          :disabled="btnInitdisable"
         ></v-switch>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
-         @click="validateFinalsst"
+         @change="validateFinalsst"
          :disabled="btnFindisable"
         ></v-switch>
       </v-col>
