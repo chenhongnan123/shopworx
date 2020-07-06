@@ -19,13 +19,13 @@
     <v-card-text>
       <v-row>
       <v-col cols="12" md="12">
-        <v-text-field label="Name" v-model="processNew.name"
+        <v-text-field label="Name *" v-model="processNew.name"
           :rules="nameRules"
           :counter="15"
            required
            hint="For example, Process_01"
           @keyup="nameValid" ></v-text-field>
-         <v-text-field label="Number" type="number"
+         <v-text-field label="Number *" type="number"
           v-model="processNew.numbers"
           :rules="numberRules"
           :counter="10"

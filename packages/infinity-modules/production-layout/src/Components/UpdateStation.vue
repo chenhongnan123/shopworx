@@ -21,13 +21,13 @@
       <!-- {{station}} -->
       <v-row>
       <v-col cols="6" md="6">
-        <v-text-field label="Name" v-model="newStation.name"
+        <v-text-field label="Name *" v-model="newStation.name"
         :rules="nameRules"
         :counter="15"
          required
          hint="For example, ST_01"
         @keyup="nameValid" ></v-text-field>
-        <v-text-field label="Number" type="number"
+        <v-text-field label="Number *" type="number"
          v-model="newStation.numbers"
          :rules="numberRules"
          :counter="10"
