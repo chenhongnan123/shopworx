@@ -78,7 +78,7 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="bomList"
             outlined
@@ -95,7 +95,7 @@
               <v-list-item-title v-text="item.bomnumber"></v-list-item-title>
             </v-list-item-content>
           </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
         </v-card-text>
       </perfect-scrollbar>
       <v-card-actions>
