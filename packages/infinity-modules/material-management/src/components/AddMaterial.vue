@@ -211,7 +211,7 @@ export default {
         const { name, materialnumber } = materialObj;
         if (this.materialList.length) {
           if (this.materialList.some(
-            (material) => name.toLowerCase().split(' ').join('') === material.nametoLowerCase().split(' ').join(''),
+            (material) => name.toLowerCase().split(' ').join('') === material.name.toLowerCase().split(' ').join(''),
           )) {
             this.setAlert({
               show: true,
