@@ -29,78 +29,68 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete
-          clearable
-          label="Select Line name"
-          :items="lineList"
-          return-object
+        <v-select
+          v-model="input.sublinename"
+          :items="subLineList"
           :disabled="saving"
-          item-value="name"
           item-text="name"
+          return-object
           :rules="sublineSelect"
           required
-          v-model="input.linename"
-          :loading="loadingParts"
           prepend-icon="$production"
-          @change="handleLineClick"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-       </v-autocomplete>
-        <v-autocomplete
+          label="Select Sub-Line name"
+          @change="getfilteredStationNames"/>
+        <!-- <v-autocomplete
           clearable
           label="Select Sub-Line name"
           :items="subLineList"
           return-object
           :disabled="saving"
           item-text="name"
-          v-model="input.sublinename"
+          v-model="subLineSelected"
           :loading="loadingParts"
           prepend-icon="$production"
-           @change="handleSubLineClick"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete>
-        <v-autocomplete
+        </v-autocomplete> -->
+        <v-select
+          v-model="input.machinename"
+          :items="stationNamebySubline"
+          :disabled="saving"
+          item-value="name"
+          item-text="name"
+          :rules="stationSelect"
+          required
+          prepend-icon="$production"
+          label="Select Station name"/>
+        <v-text-field
+            label="Recipe Name"
+            prepend-icon="mdi-tray-plus"
+            v-model="recipe.recipename"
+            :rules="nameRules"
+            :counter="10"
+        ></v-text-field>
+        <!-- <v-autocomplete
           clearable
           label="Select Station name"
           :items="stationList"
           return-object
           :disabled="saving"
           item-text="name"
-          v-model="input.stationname"
+          v-model="stationSelected"
           :loading="loadingParts"
           prepend-icon="$production"
-           @change="handleStationClick"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete>
-        <v-autocomplete>
-        <v-select
-          v-model="input.substationname"
-          :items="subStationList"
-          :disabled="saving"
-          return-object
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Sub-Station name"/>
-        <v-text-field
-            label="Recipe Name"
-            prepend-icon="mdi-tray-plus"
-            v-model="recipe.recipename"
-       ></v-text-field>
-        </v-autocomplete>
+        </v-autocomplete> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -156,10 +146,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation']),
+    ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation', 'stationNamebySubline']),
   },
   methods: {
-    ...mapActions('recipeManagement', ['createRecipe', 'updateRecipe']),
+    ...mapActions('recipeManagement', ['createRecipe', 'updateRecipe', 'getStationNamesbysubline']),
     ...mapMutations('helper', ['setAlert']),
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
@@ -193,7 +183,7 @@ export default {
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-        && o.stationname === this.input.stationname);
+        && o.machinename === this.input.machinename);
         //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';
@@ -207,7 +197,10 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            editedby: this.userName,
+            line: 'Line1',
+            subline: this.input.sublinename,
+            machinename: this.input.machinename,
+            editedby: 'admin',
             editedtime: new Date().getTime(),
             versionnumber: this.editedVersionNumber + 1,
           };
@@ -239,18 +232,12 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
+            line: 'Line1',
             subline: this.input.sublinename,
-            linename: this.input.linename.name,
-            lineid: this.input.linename.id,
-            sublinename: this.input.sublinename.name,
-            sublineid: this.input.sublinename.id,
-            stationid: this.input.stationname.id,
-            stationname: this.input.stationname.name,
-            substationid: this.input.substationname.id,
-            substationname: this.input.substationname.name,
             versionnumber: 1,
             assetid: 4,
-            createdby: this.userName,
+            machinename: this.input.machinename,
+            createdby: 'admin',
           };
           let created = false;
           const payload = this.recipe;
@@ -277,6 +264,9 @@ export default {
     },
     async dialogReset() {
       this.$refs.form.reset();
+    },
+    async getfilteredStationNames(item) {
+      await this.getStationNamesbysubline(`?query=sublineid=="${item.id}"`);
     },
   },
 };
