@@ -10,10 +10,8 @@ export default ({
     reportMappings: [],
     reportMapping: null,
     chartType: null,
-    dateRange: {
-      start: null,
-      end: null,
-    },
+    dateRange: [new Date().toISOString().substr(0, 10),
+      new Date().toISOString().substr(0, 10)],
     report: null,
     gridState: '',
   },
@@ -61,9 +59,20 @@ export default ({
       try {
         const { reportMapping, dateRange } = state;
         const reportName = reportMapping ? reportMapping.reportName : '';
-        const { data } = await ReportService.executeReport(reportName, dateRange);
+        const [start, end] = dateRange;
+        const [businessStartYear, businessStartMonth, businessStartDay] = start.split('-');
+        const [businessEndYear, businessEndMonth, businessEndDay] = end.split('-');
+        const payload = {
+          businessStartYear,
+          businessEndYear,
+          businessStartMonth,
+          businessEndMonth,
+          businessStartDay,
+          businessEndDay,
+        };
+        const { data } = await ReportService.executeReport(reportName, payload);
         if (data && data.reportData) {
-          commit('setReport', data.reportData);
+          commit('setReport', JSON.parse(data.reportData));
           return true;
         }
       } catch (e) {

@@ -4,6 +4,7 @@
       <v-btn
         icon
         v-on="on"
+        @click="toggleInsightsDrawer"
       >
         <v-icon
           v-text="'$insights'"
@@ -17,7 +18,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'InfinityInsights',
+  methods: {
+    ...mapMutations('helper', ['toggleInsightsDrawer']),
+  },
 };
 </script>

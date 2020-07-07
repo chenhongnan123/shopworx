@@ -422,12 +422,12 @@ export default ({
       return plans;
     },
 
-    updatePlan: async ({ dispatch }, { id, payload }) => {
+    updatePlanById: async ({ dispatch }, { id, payload }) => {
       const updated = await dispatch(
-        'element/updateRecordByQuery',
+        'element/updateRecordById',
         {
           elementName: 'planning',
-          queryParam: `?query=planid=="${id}"`,
+          id,
           payload,
         },
         { root: true },

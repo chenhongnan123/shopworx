@@ -11,23 +11,26 @@ export default ({
     setActiveAppId: set('activeAppId'),
   },
   actions: {
-    getAppSchema: async ({ commit, state, rootState }) => {
+    getAppSchema: async ({ commit, state, rootState }, appId = null) => {
       try {
         const { me } = rootState.user;
         const roleId = me.role.id;
-        const { activeAppId } = state;
+        let activeAppId = appId;
+        if (!appId) {
+          ({ activeAppId } = state);
+        }
         const { data } = await SiteService.getApp(roleId, activeAppId);
         if (data && data.results) {
           try {
             commit('setAppSchema', JSON.parse(data.results.schema));
           } catch (e) {
-            commit('helper/setAlert', {
+            /* commit('helper/setAlert', {
               show: true,
               type: 'error',
               message: 'INVALID_APP_SCHEMA',
             }, {
               root: true,
-            });
+            }); */
           }
         }
       } catch (e) {

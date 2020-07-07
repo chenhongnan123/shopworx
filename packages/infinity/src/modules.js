@@ -9,6 +9,7 @@ import ParameterConfiguration from '@shopworx/parameter-configuration';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import ProductionLayout from '@shopworx/production-layout';
 import MaterialManagement from '@shopworx/material-management';
+import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
@@ -37,6 +38,12 @@ Vue.use(ParameterConfiguration, {
 });
 
 Vue.use(MaterialManagement, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(MaintenanceSummary, {
   router,
   store,
   i18n,

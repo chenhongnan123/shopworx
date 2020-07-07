@@ -12,9 +12,9 @@
         <v-tab class="text-none">
           Downtime
         </v-tab>
-        <v-tab class="text-none">
+        <!-- <v-tab class="text-none">
           Operators
-        </v-tab>
+        </v-tab> -->
       </v-tabs>
     </portal>
     <production-log-production-view v-if="logView === 0" />
