@@ -13,7 +13,7 @@ module.exports = {
         },
       },
       '/sse': {
-        target: 'http://13.233.154.111/sse',
+        target: 'http://13.235.69.106/sse',
         changeOrigin: true,
         pathRewrite: {
           '^/sse': '',

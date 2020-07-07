@@ -19,8 +19,11 @@
     <v-card :class="title === null ? 'mt-8' : ''" :color="running ? 'success' : 'error'">
       <v-card-text class="text-center my-auto">
         <div class="display-2 white--text">{{ running ? 'RUNNING' : 'DOWN' }}</div>
-        <div class="headline">
+        <div class="headline" v-if="running">
           {{ time }}
+        </div>
+        <div class="headline" v-else-if="assetState && assetState.actualdowntimestart && !running">
+          {{ getDowntimeSince(assetState.actualdowntimestart) }}
         </div>
         <div class="headline">
           Shift 1
@@ -31,6 +34,7 @@
 </template>
 
 <script>
+import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import { mapState } from 'vuex';
 
 export default {
@@ -72,10 +76,15 @@ export default {
       return this.assetData && this.assetData[this.machine];
     },
     running() {
-      return this.assetData && !this.assetData.isdown;
+      return this.assetState && !this.assetState.isdown;
     },
   },
   methods: {
+    getDowntimeSince(datetime) {
+      return `since ${distanceInWordsToNow(
+        new Date(datetime),
+      )}`;
+    },
     updateTime() {
       this.time = new Date().toLocaleString();
     },

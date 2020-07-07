@@ -28,7 +28,7 @@ export default {
     phone: 'mdi-phone-outline',
     updateAccount: 'mdi-account-check-outline',
     passwordReset: 'mdi-lock-reset',
-    next: 'mdi-chevron-triple-right',
+    forward: 'mdi-chevron-triple-right',
     skip: 'mdi-skip-next-circle-outline',
     add: 'mdi-plus-circle-outline',
     remove: 'mdi-minus-circle-outline',

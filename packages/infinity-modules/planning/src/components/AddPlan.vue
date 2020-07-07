@@ -13,11 +13,14 @@
     </template>
     <v-card>
       <v-card-title primary-title>
-        <span>
+        <span v-if="!edit">
           Create plan
         </span>
+        <span v-else>
+          Edit plan {{ planToEdit.planid }}
+        </span>
         <v-spacer></v-spacer>
-        <v-btn icon @click="dialog = false">
+        <v-btn icon @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -173,8 +176,18 @@
           class="text-none"
           :loading="saving"
           @click="savePlan"
+          v-if="!edit"
         >
           Save
+        </v-btn>
+        <v-btn
+          color="primary"
+          class="text-none"
+          :loading="saving"
+          @click="updatePlan"
+          v-else
+        >
+          Update
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -192,6 +205,16 @@ import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'AddPlan',
+  props: {
+    edit: {
+      type: Boolean,
+      default: false,
+    },
+    planToEdit: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       plan: {},
@@ -214,6 +237,13 @@ export default {
       fetchingPartMatrix: false,
       displayPlanningFields: false,
     };
+  },
+  watch: {
+    edit(val) {
+      if (val) {
+        this.setPlan();
+      }
+    },
   },
   computed: {
     ...mapState('planning', ['parts', 'primaryMatrixTags']),
@@ -250,6 +280,7 @@ export default {
       'getParts',
       'createPlan',
       'createFamilyPlan',
+      'updatePlanById',
       'isFamilyMold',
       'getFamilyParts',
       'getPartMatrixRecords',
@@ -422,14 +453,7 @@ export default {
           message: 'PLAN_CREATED',
         });
         this.$emit('on-add');
-        this.selectedPart = null;
-        this.assetId = null;
-        this.partMatrix = {};
-        this.plan = {};
-        this.showFamilyParts = false;
-        this.displayPlanningFields = false;
-        this.familyPlan = [];
-        this.dialog = false;
+        this.close();
       } else {
         this.setAlert({
           show: true,
@@ -438,6 +462,66 @@ export default {
         });
       }
       this.saving = false;
+    },
+    async updatePlan() {
+      this.saving = true;
+      this.plan = {
+        ...this.plan,
+        assetid: this.assetId,
+        scheduledstart: new Date(this.plan.scheduledstart).getTime(),
+      };
+      const runTime = (this.plan.plannedquantity / this.plan.activecavity)
+        * (this.plan.stdcycletime * 1000);
+      const scheduledEnd = await this.getScheduledEnd({
+        start: this.plan.scheduledstart,
+        end: (this.plan.scheduledstart + runTime),
+      });
+      this.plan.scheduledend = scheduledEnd;
+      let updated = false;
+      const payload = this.plan;
+      /* eslint-disable no-underscore-dangle */
+      updated = await this.updatePlanById({ id: this.planToEdit._id, payload });
+      if (updated) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_UPDATED',
+        });
+        this.$emit('on-add');
+        this.close();
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_UPDATING_PLAN',
+        });
+      }
+      this.saving = false;
+    },
+    close() {
+      this.selectedPart = null;
+      this.assetId = null;
+      this.partMatrix = {};
+      this.plan = {};
+      this.showFamilyParts = false;
+      this.displayPlanningFields = false;
+      this.familyPlan = [];
+      this.dialog = false;
+    },
+    async setPlan() {
+      console.log(this.planToEdit);
+      this.selectedPart = this.parts.find((part) => part.partname === this.planToEdit.partname);
+      await this.onPartSelection();
+      await this.updatePartMatrixRecords({ name: 'machinename', value: this.planToEdit.machinename });
+      if (this.isInjectionMolding) {
+        await this.updatePartMatrixRecords({ name: 'moldname', value: this.planToEdit.moldname });
+      } else if (this.isPress) {
+        await this.updatePartMatrixRecords({ name: 'toolname', value: this.planToEdit.toolname });
+      }
+      this.plan.plannedquantity = this.planToEdit.plannedquantity;
+      this.plan.activecavity = this.planToEdit.activecavity;
+      this.plan.status = this.planToEdit.status;
+      this.plan.scheduledstart = formatDate(this.planToEdit.scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
     },
   },
 };

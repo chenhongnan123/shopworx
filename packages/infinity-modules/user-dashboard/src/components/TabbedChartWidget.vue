@@ -1,21 +1,10 @@
 <template>
-    <div v-if="widget" style="height:100%">
+    <div>
       <span
         class="title font-weight-regular"
         v-if="title"
         v-text="title"
       ></span>
-      <span class="float-right">
-        <v-btn
-          small
-          color="error"
-          icon
-          v-if="customizeMode"
-          @click="$emit('remove-widget', widget.i)"
-        >
-          <v-icon>mdi-minus-circle</v-icon>
-        </v-btn>
-      </span>
       <v-card :class="title === null ? 'mt-8' : ''">
         <v-card-title class="py-0">
           <v-item-group
@@ -61,10 +50,7 @@
           </v-item-group>
         </v-card-title>
         <v-card-text>
-          <highcharts
-            ref="tabbedChart"
-            :options="tabs[currentTab].options"
-          ></highcharts>
+          <highcharts :options="tabs[currentTab].options" ref="tabbedChart"></highcharts>
         </v-card-text>
         <v-divider v-if="action !== null"></v-divider>
         <v-card-actions class="pa-0">
@@ -75,10 +61,8 @@
             single-line
             v-model="filter"
             hide-details
-            item-text="text"
-            item-value="value"
             v-if="showDateFilter"
-            :items="timeFilters"
+            :items="['Today', 'Yesterday', 'Last 7 days']"
           ></v-select>
           <v-spacer></v-spacer>
           <v-btn
@@ -97,30 +81,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
-  name: 'TabbedWidget',
+  name: 'TabbedChartWidget',
   data() {
     return {
       currentTab: 0,
-      showDateFilter: true,
-      filter: 'today',
-      action: {
-        route: '',
-        text: 'Performance overview',
-      },
-      chartReport: 'hourlymachineperformance',
-      tabReport: 'dailymachineperformance',
-      timeFilters: [{
-        text: 'Today',
-        value: 'today',
-        timestamp: new Date().getTime(),
-      }, {
-        text: 'Yesterday',
-        value: 'yesterday',
-        timestamp: new Date().getTime() - 86400000,
-      }],
+      filter: 'Last 7 days',
       tabs: [
         {
           name: 'Availability',
@@ -132,13 +100,13 @@ export default {
           options: {
             chart: {
               type: 'line',
-              height: 200,
+              height: '50%',
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              categories: ['28/01', '29/01', '30/01', '31/01', '01/02', '02/02', '03/02'],
               title: {
                 text: null,
               },
@@ -172,13 +140,13 @@ export default {
           options: {
             chart: {
               type: 'line',
-              height: 200,
+              height: '50%',
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              categories: ['28/01', '29/01', '30/01', '31/01', '01/02', '02/02', '03/02'],
               title: {
                 text: null,
               },
@@ -212,13 +180,13 @@ export default {
           options: {
             chart: {
               type: 'line',
-              height: 200,
+              height: '50%',
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              categories: ['28/01', '29/01', '30/01', '31/01', '01/02', '02/02', '03/02'],
               title: {
                 text: null,
               },
@@ -252,13 +220,13 @@ export default {
           options: {
             chart: {
               type: 'line',
-              height: 200,
+              height: '50%',
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              categories: ['28/01', '29/01', '30/01', '31/01', '01/02', '02/02', '03/02'],
               title: {
                 text: null,
               },
@@ -287,80 +255,30 @@ export default {
   },
   computed: {
     ...mapState('helper', ['isDark']),
-    ...mapState('calendar', ['businessTime']),
-    title() {
-      return this.widget && this.widget.definition.title;
-    },
   },
-  /* async created() {
-    await this.executeTabReport();
-    await this.executeChartReport();
+  created() {
     this.updateSeriesColor(this.isDark);
-  }, */
+  },
   watch: {
     isDark(val) {
       this.updateSeriesColor(val);
     },
-    /* async filter() {
-      await this.executeTabReport();
-      await this.executeChartReport();
-    }, */
   },
   props: {
-    widget: {
+    title: {
+      type: String,
+      default: null,
+    },
+    action: {
       type: Object,
       default: null,
     },
-    customizeMode: {
+    showDateFilter: {
       type: Boolean,
       default: false,
     },
   },
   methods: {
-    ...mapActions('calendar', ['getBusinessTime']),
-    ...mapActions('report', ['executeReport']),
-    /* async executeChartReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentChartData, comparisionChartData });
-    },
-    async executeTabReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentTabData, comparisionTabData });
-    }, */
-    async getPayload(timestamp) {
-      await this.getBusinessTime(timestamp);
-      return {
-        businessStartYear: this.businessTime.businessyear,
-        businessEndYear: this.businessTime.businessyear,
-        businessStartMonth: this.businessTime.businessmonth,
-        businessEndMonth: this.businessTime.businessmonth,
-        businessStartDay: this.businessTime.businessday,
-        businessEndDay: this.businessTime.businessday,
-        machineVal: `{${this.$route.params.id}}`,
-      };
-    },
     updateSeriesColor(val) {
       this.tabs.forEach((tab) => {
         tab.options.series.forEach((s) => {

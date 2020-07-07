@@ -24,13 +24,13 @@ export default ({
           try {
             commit('setAppSchema', JSON.parse(data.results.schema));
           } catch (e) {
-            commit('helper/setAlert', {
+            /* commit('helper/setAlert', {
               show: true,
               type: 'error',
               message: 'INVALID_APP_SCHEMA',
             }, {
               root: true,
-            });
+            }); */
           }
         }
       } catch (e) {

@@ -65,7 +65,7 @@
           <v-list-item
             exact
             :key="index"
-            v-else-if="item.to ===  'reports'"
+            v-else-if="item.to === 'reports'"
             :title="$t(`modules.${item.title}`)"
             :to="{ name: item.to, query: { id: item.title } }"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"

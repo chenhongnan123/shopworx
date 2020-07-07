@@ -52,7 +52,7 @@
                   </span>
                 </div>
                 <div class="headline">
-                  {{ assetState.productioncount }}
+                  {{ assetState.qty }}
                 </div>
               </v-col>
             </v-row>

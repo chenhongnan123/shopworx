@@ -30,7 +30,7 @@
                 DOWNTIME
               </div>
               <div class="headline">
-                00:00:00
+                {{ downtime }}
               </div>
             </v-col>
             <v-divider vertical></v-divider>
@@ -39,13 +39,13 @@
                 Maintenance
               </div>
               <div class="headline">
-                00:00:00
+                -
               </div>
               <div>
                 No work
               </div>
               <div class="headline">
-                00:00:00
+                -
               </div>
             </v-col>
           </v-row>
@@ -55,19 +55,34 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'TimelineWidget',
+  props: {
+    widget: {
+      type: Object,
+      default: null,
+    },
+    customizeMode: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
+      chart: null,
+      interval: null,
       options: {
         chart: {
-          type: 'bar',
+          type: 'xrange',
           height: 200,
         },
         title: {
           text: null,
         },
         xAxis: {
+          type: 'datetime',
           title: {
             text: null,
           },
@@ -76,33 +91,8 @@ export default {
           },
         },
         yAxis: {
-          categories: [
-            '08:00',
-            '09:00',
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00',
-            '19:00',
-            '20:00',
-            '21:00',
-            '22:00',
-            '23:00',
-            '00:00',
-            '01:00',
-            '02:00',
-            '03:00',
-            '04:00',
-            '05:00',
-            '06:00',
-            '07:00',
-            '08:00',
-          ],
+          categories: ['Uptime', 'Downtime'],
+          reversed: true,
           title: {
             text: null,
           },
@@ -113,27 +103,66 @@ export default {
           },
         },
         series: [{
-          name: 'Running',
-          data: [100],
-          color: '#4CAF50',
+          name: 'Timeline',
+          data: [],
           showInLegend: false,
         }],
       },
     };
   },
+  mounted() {
+    this.chart = this.$refs.timelineChart.chart;
+    this.interval = setInterval(() => {
+      this.updateTime();
+    }, 3000);
+    this.updateTime();
+  },
+  destroyed() {
+    clearInterval(this.interval);
+  },
   computed: {
     title() {
       return this.widget && this.widget.definition.title;
     },
-  },
-  props: {
-    widget: {
-      type: Object,
-      default: null,
+    machine() {
+      return this.$route.params.id;
     },
-    customizeMode: {
-      type: Boolean,
-      default: false,
+    ...mapState('machineDashboard', ['assetData']),
+    assetState() {
+      return this.assetData && this.assetData[this.machine];
+    },
+    running() {
+      return this.assetState && !this.assetState.isdown;
+    },
+    downtime() {
+      if (this.assetState && this.assetState.downtimeinterval) {
+        const d = Number(this.assetState.downtimeinterval / 1000);
+        const h = Math.floor(d / 3600);
+        const m = Math.floor((d % 3600) / 60);
+        const s = Math.floor((d % 3600) % 60);
+        return `${h}:${m}:${s}`;
+      }
+      return '00:00:00';
+    },
+  },
+  methods: {
+    updateTime() {
+      const series = this.chart.series[0];
+      let point = {
+        x: new Date().getTime(),
+        x2: new Date().getTime() + 3000,
+        y: 0,
+        color: '#4CAF50',
+      };
+      if (!this.running) {
+        point = {
+          x: new Date().getTime(),
+          x2: new Date().getTime() + 3000,
+          y: 1,
+          color: '#FF5252',
+        };
+      }
+      series.addPoint(point);
     },
   },
 };

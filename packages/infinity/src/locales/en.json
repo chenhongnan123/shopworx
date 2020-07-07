@@ -51,7 +51,8 @@
     "OTP_SENT": "One time password sent on registered email/phone.",
     "PASSWORD_RESET": "New password sent on registered email/phone.",
     "UPDATED": "Updated!",
-    "PLAN_CREATED": "Plan created!"
+    "PLAN_CREATED": "Plan created!",
+    "PLAN_UPDATED": "Plan updated!"
   },
   "error": {
     "NOT_VALID": "{_field_} is not valid.",
@@ -65,7 +66,8 @@
     "INVALID_OTP": "Login failed: Incorrect OTP.",
     "MISSING_BUSINESS_HOUR": "Hours should be provisioned in sequence. Please verify your data.",
     "INVALID_HOURS_SUM": "Total sum of your provisioned hours should be 24. Please verify your data.",
-    "ERROR_CREATING_PLAN": "Error while creating plan, please retry."
+    "ERROR_CREATING_PLAN": "Error while creating plan, please retry.",
+    "ERROR_UPDATING_PLAN": "Error while updating plan, please retry."
   },
   "fields": {
     "email": "Email",
@@ -170,7 +172,7 @@
     "downtime": "Downtime",
     "rejection": "Rejection",
     "oee": "Oee",
-    "masters": "Master Data",
+    "masters": "Master Data (view only)",
     "admin": "Admin Console",
     "search": "Search",
     "insights": "Insights"

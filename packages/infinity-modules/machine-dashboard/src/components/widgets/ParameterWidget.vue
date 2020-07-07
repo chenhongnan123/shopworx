@@ -26,7 +26,7 @@
       <v-card-text>
         <v-row>
           <v-col cols="9">
-            <highcharts :options="tabs[currentParam].options"></highcharts>
+            <highcharts :options="tabs[currentParam].options" ref="spline"></highcharts>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col :class="`text-center ${tabs[currentParam].color}--text`" align-self="center">
@@ -127,6 +127,7 @@ export default {
   name: 'ParameterWidget',
   data() {
     return {
+      chart: null,
       showDateFilter: true,
       dialog: false,
       action: null,
@@ -156,7 +157,9 @@ export default {
               text: null,
             },
             xAxis: {
-              categories: ['08 am', '09 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -168,7 +171,7 @@ export default {
             },
             series: [{
               name: 'Horizontal Temperature',
-              data: [42, 38.4, 46, 42, 47, 48, 45.3],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
@@ -187,7 +190,9 @@ export default {
               text: null,
             },
             xAxis: {
-              categories: ['08 am', '09 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -199,7 +204,7 @@ export default {
             },
             series: [{
               name: 'Machine Speed',
-              data: [110, 140, 90, 92.3, 160, 145, 189],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
@@ -218,7 +223,9 @@ export default {
               text: null,
             },
             xAxis: {
-              categories: ['08 am', '09 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -230,7 +237,7 @@ export default {
             },
             series: [{
               name: 'Vertical Temperature',
-              data: [42, 38.4, 46, 42, 47, 48, 45.3],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
@@ -299,6 +306,9 @@ export default {
     filter() {
       this.runReport();
     },
+    realtimeValue(val) {
+      this.addNewData(val);
+    },
   },
   props: {
     widget: {
@@ -310,7 +320,15 @@ export default {
       default: false,
     },
   },
+  mounted() {
+    this.chart = this.$refs.spline.chart;
+  },
   methods: {
+    addNewData(val) {
+      const shift = this.chart.series[0].data.length > 20;
+      const x = new Date().getTime();
+      this.chart.series[0].addPoint([x, val], true, shift);
+    },
     ...mapActions('calendar', ['getBusinessTime']),
     ...mapActions('report', ['executeReport']),
     async runReport() {

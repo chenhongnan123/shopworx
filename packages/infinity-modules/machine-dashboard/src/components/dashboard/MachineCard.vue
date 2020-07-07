@@ -7,18 +7,15 @@
   >
     <v-card-title
       class="py-0"
-      v-if="$route.query.id === 'productionDashboard'"
       :class="assetState && !assetState.isdown ? 'success' : 'error'"
     >
       {{ machine.machinename }}
+      <v-spacer></v-spacer>
+      <span v-if="assetState && assetState.isdown">
+        {{ getDowntimeSince(assetState.actualdowntimestart) }}
+      </span>
     </v-card-title>
-    <v-card-title
-      v-else
-      class="py-0 success"
-    >
-      {{ machine.machinename }}
-    </v-card-title>
-    <template v-if="$route.query.id === 'productionDashboard'">
+    <template>
       <v-card-text
         v-if="assetState"
         style="height:100%"
@@ -103,27 +100,11 @@
         </v-container>
       </v-card-text>
     </template>
-    <template v-else>
-      <v-card-text>
-        <v-container fill-height>
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
-          >
-            <v-col cols="12" align="center">
-              <span class="headline">
-                No scheduled maintenance for {{ machine.machinename }}
-              </span>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card-text>
-    </template>
   </v-card>
 </template>
 
 <script>
+import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import { mapState } from 'vuex';
 
 export default {
@@ -138,6 +119,13 @@ export default {
     ...mapState('machineDashboard', ['assetData']),
     assetState() {
       return this.assetData && this.assetData[this.machine.machinename];
+    },
+  },
+  methods: {
+    getDowntimeSince(datetime) {
+      return `Down since ${distanceInWordsToNow(
+        new Date(datetime),
+      )}`;
     },
   },
 };

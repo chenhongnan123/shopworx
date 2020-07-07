@@ -293,18 +293,18 @@ export default {
     },
   },
   async created() {
-    await this.executeTabReport();
-    await this.executeChartReport();
+    /* await this.executeTabReport();
+    await this.executeChartReport(); */
     this.updateSeriesColor(this.isDark);
   },
   watch: {
     isDark(val) {
       this.updateSeriesColor(val);
     },
-    async filter() {
+    /* async filter() {
       await this.executeTabReport();
       await this.executeChartReport();
-    },
+    }, */
   },
   props: {
     widget: {
@@ -319,7 +319,7 @@ export default {
   methods: {
     ...mapActions('calendar', ['getBusinessTime']),
     ...mapActions('report', ['executeReport']),
-    async executeChartReport() {
+    /* async executeChartReport() {
       const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
       const timestamp = currentFilter && currentFilter.timestamp;
       const currentPayload = await this.getPayload(timestamp);
@@ -360,7 +360,7 @@ export default {
         businessEndDay: this.businessTime.businessday,
         machineVal: `{${this.$route.params.id}}`,
       };
-    },
+    }, */
     updateSeriesColor(val) {
       this.tabs.forEach((tab) => {
         tab.options.series.forEach((s) => {

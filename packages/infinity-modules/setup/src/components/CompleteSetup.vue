@@ -18,7 +18,7 @@
     >
       <v-icon
         left
-        v-text="'$next'"
+        v-text="'$forward'"
       ></v-icon>
       {{ $t('setup.complete.next') }}
     </v-btn>

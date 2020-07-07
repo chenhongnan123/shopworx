@@ -9,7 +9,7 @@
     :is-mirrored="false"
     :vertical-compact="true"
     :margin="[14, 14]"
-    :responsive="false"
+    :responsive="true"
     :use-css-transforms="true"
     :class="[
       $vuetify.theme.dark ? '#121212' : 'white',
