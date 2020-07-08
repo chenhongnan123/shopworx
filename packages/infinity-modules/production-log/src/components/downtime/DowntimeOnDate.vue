@@ -29,7 +29,7 @@
           class="text-center"
           v-else-if="plans.length === 0"
         >
-          No production...
+          No downtime...
         </v-card-text>
         <v-card-text
           v-else

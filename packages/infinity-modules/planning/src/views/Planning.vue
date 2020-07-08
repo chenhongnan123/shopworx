@@ -90,7 +90,8 @@ export default {
     this.loading = true;
     const view = localStorage.getItem('planView');
     this.planView = view ? JSON.parse(view) : 0;
-    await this.getAppSchema();
+    const appId = localStorage.getItem('appId');
+    await this.getAppSchema(appId);
     const element = await this.getPlanningElement();
     if (element) {
       this.setOnboarded(true);

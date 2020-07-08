@@ -1,5 +1,5 @@
 <template>
-  <v-content :class="$vuetify.theme.dark ? '#121212' : 'white'">
+  <v-main :class="$vuetify.theme.dark ? '#121212' : 'white'">
     <auth-header />
     <v-container fill-height>
       <v-row
@@ -21,7 +21,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

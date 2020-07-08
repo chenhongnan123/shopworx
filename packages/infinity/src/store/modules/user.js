@@ -300,6 +300,16 @@ export default ({
               });
             });
           }
+          if (module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
+              });
+            });
+          }
           if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
             modules.items.push({ header: module.moduleName });
             module.details.forEach((detail) => {

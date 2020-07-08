@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <auth-header />
     <v-container fill-height>
       <v-row
@@ -32,7 +32,7 @@
               >
                 <v-icon
                   left
-                  v-text="'$next'"
+                  v-text="'$forward'"
                 ></v-icon>
                 {{ $t('helper.next') }}
               </v-btn>
@@ -47,7 +47,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

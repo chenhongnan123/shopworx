@@ -38,14 +38,30 @@
           :plans="selectedPlans"
           @on-update="$emit('refresh-widget')"
         />
-        <abort-plan
+        <!-- <abort-plan
           :plans="selectedPlans"
           @on-abort="$emit('refresh-widget')"
-        />
+        /> -->
         <delete-plan
           :plans="selectedPlans"
           @on-delete="$emit('refresh-widget')"
         />
+        <add-plan
+          #default="{ on }"
+          edit
+          :planToEdit="selectedPlans[0]"
+          v-if="selectedPlans.length === 1"
+          @on-add="$emit('refresh-widget')"
+        >
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>
+              mdi-pencil-outline
+            </v-icon>
+          </v-btn>
+        </add-plan>
       </template>
     </v-toolbar>
     <perfect-scrollbar style="max-height: 400px;">
@@ -133,7 +149,7 @@ import { mapGetters } from 'vuex';
 import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
-import AbortPlan from '../AbortPlan.vue';
+// import AbortPlan from '../AbortPlan.vue';
 import AddPlan from '../AddPlan.vue';
 
 export default {
@@ -141,7 +157,7 @@ export default {
   components: {
     ToggleStar,
     DeletePlan,
-    AbortPlan,
+    // AbortPlan,
     AddPlan,
   },
   props: {

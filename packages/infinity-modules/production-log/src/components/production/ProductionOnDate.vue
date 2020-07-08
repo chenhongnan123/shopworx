@@ -295,14 +295,14 @@ export default {
     this.fetchPlans();
   },
   computed: {
-    ...mapState('productionLog', ['plansOnDate']),
+    ...mapState('productionLog', ['notStartedPlans']),
     ...mapGetters('planning', ['planStatusClass']),
     plans() {
-      if (this.plansOnDate) {
+      if (this.notStartedPlans) {
         const items = Object
-          .keys(this.plansOnDate)
+          .keys(this.notStartedPlans)
           .map((planId) => {
-            const plans = this.plansOnDate[planId];
+            const plans = this.notStartedPlans[planId];
             let { partname } = plans[0];
             if (plans.length > 1) {
               partname = plans

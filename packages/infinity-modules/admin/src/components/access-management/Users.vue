@@ -2,19 +2,7 @@
   <div>
     <portal to="settings-header">
       <span>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'$invite'"
-          ></v-icon>
-          Invite users
-        </v-btn>
+        <invite-users @invited="onInvited" />
         <v-btn
           small
           outlined
@@ -161,9 +149,13 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
+import InviteUsers from './InviteUsers.vue';
 
 export default {
   name: 'Users',
+  components: {
+    InviteUsers,
+  },
   data() {
     return {
       search: null,
@@ -273,6 +265,9 @@ export default {
       this.loading = true;
       await this.getAllUsers();
       this.loading = false;
+    },
+    async onInvited() {
+      await this.fetchUsers();
     },
     async resendInvite(user) {
       this.inviteLoading = true;

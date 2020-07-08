@@ -29,7 +29,7 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
-import { mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'ReportGrid',
@@ -60,16 +60,18 @@ export default {
     };
   },
   beforeMount() {
-    this.columnDefs = [
-      { headerName: 'Make', field: 'make' },
-      { headerName: 'Model', field: 'model' },
-      { headerName: 'Price', field: 'price', filter: 'agNumberColumnFilter' },
-    ];
-    this.rowData = [
-      { make: 'Toyota', model: 'Celica', price: 35000 },
-      { make: 'Ford', model: 'Mondeo', price: 32000 },
-      { make: 'Porsche', model: 'Boxter', price: 72000 },
-    ];
+    if (this.report && this.report.cols) {
+      this.columnDefs = this.report.cols.map((col) => ({
+        headerName: col.description,
+        field: col.name,
+        filter: col.type === 'long' || col.type === 'number'
+          ? 'agNumberColumnFilter'
+          : '',
+      }));
+    }
+    if (this.report && this.report.reportData) {
+      this.rowData = this.report.reportData;
+    }
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
@@ -77,7 +79,24 @@ export default {
     this.restoreState();
   },
   computed: {
+    ...mapState('reports', ['report']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject']),
+  },
+  watch: {
+    report(val) {
+      if (val && val.cols) {
+        this.columnDefs = val.cols.map((col) => ({
+          headerName: col.description,
+          field: col.name,
+          filter: col.type === 'long' || col.type === 'number'
+            ? 'agNumberColumnFilter'
+            : undefined,
+        }));
+      }
+      if (val && val.reportData) {
+        this.rowData = val.reportData;
+      }
+    },
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
@@ -109,7 +128,7 @@ export default {
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
       } else {
-        this.resetState();
+        // this.resetState();
       }
     },
     resetState() {
