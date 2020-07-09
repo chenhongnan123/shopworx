@@ -103,7 +103,7 @@ export default ({
       return recordsCreated;
     },
 
-    upsertRecord: async ({ dispatch }, {
+    upsertRecordWithElement: async ({ dispatch }, {
       element,
       tags,
       record,
@@ -144,7 +144,7 @@ export default ({
       return upsert;
     },
 
-    upsertBulkRecords: async ({ dispatch }, {
+    upsertBulkRecordsWithElement: async ({ dispatch }, {
       element,
       tags,
       records,
@@ -179,6 +179,58 @@ export default ({
             });
           }
         }
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
+    upsertRecord: async ({ dispatch }, { elementName, record, assetId = 0 }) => {
+      let upsert = false;
+      try {
+        const payload = {
+          ...record,
+          assetid: assetId,
+        };
+        const rec = await dispatch('getRecords', { elementName });
+        if (rec && rec.length) {
+          await Promise.all([rec.forEach((r) => {
+            dispatch('deleteRecordById', {
+              elementName,
+              id: r._id,
+            });
+          })]);
+        }
+        upsert = await dispatch('postRecord', {
+          elementName,
+          payload,
+        });
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
+    upsertBulkRecords: async ({ dispatch }, { elementName, records, assetId = 0 }) => {
+      let upsert = false;
+      try {
+        const payload = records.map((record) => ({
+          ...record,
+          assetid: assetId,
+        }));
+        const rec = await dispatch('getRecords', { elementName });
+        if (rec && rec.length) {
+          await Promise.all([rec.forEach((r) => {
+            dispatch('deleteRecordById', {
+              elementName,
+              id: r._id,
+            });
+          })]);
+        }
+        upsert = await dispatch('postBulkRecords', {
+          elementName,
+          payload,
+        });
       } catch (e) {
         return false;
       }
