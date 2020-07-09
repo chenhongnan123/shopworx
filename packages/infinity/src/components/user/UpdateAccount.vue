@@ -13,7 +13,7 @@
           >
             <v-text-field
               type="text"
-              id="firstName"
+              id="first_name_input"
               v-model="firstName"
               :disabled="loading"
               :error-messages="errors"
@@ -29,7 +29,7 @@
           >
             <v-text-field
               type="text"
-              id="lastName"
+              id="last_name_input"
               v-model="lastName"
               :disabled="loading"
               :error-messages="errors"
@@ -44,7 +44,7 @@
             #default="{ errors }"
           >
             <v-text-field
-              id="email"
+              id="email_input"
               type="email"
               v-model="email"
               v-if="showEmail"
@@ -62,7 +62,7 @@
           >
             <v-text-field
               type="tel"
-              id="phone"
+              id="phone_input"
               prefix="+91"
               v-model="phone"
               v-if="showPhone"
@@ -81,7 +81,7 @@
             type="submit"
             color="primary"
             class="text-none"
-            id="updateAccount"
+            id="update_account_btn"
             :loading="loading"
           >
             <v-icon
@@ -151,11 +151,15 @@ export default {
       this.loading = true;
       const payload = {
         userState: 'RESET',
-        emailId: this.email,
-        phoneNumber: `91${this.phone}`,
         lastname: this.lastName,
         firstname: this.firstName,
       };
+      if (this.email) {
+        payload.emailId = this.email;
+      }
+      if (this.phone) {
+        payload.phoneNumber = `91${this.phone}`;
+      }
       await this.updateUser(payload);
       this.loading = false;
     },

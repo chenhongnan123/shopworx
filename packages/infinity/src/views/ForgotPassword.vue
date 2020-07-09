@@ -8,6 +8,7 @@
       <v-form @submit.prevent="passes(onResetPassword)">
         <v-card-text>
           <identifier-input
+            id="identifier_input"
             :loading="loading"
             v-model="identifier"
             @on-update="setIdentifier"
@@ -20,7 +21,7 @@
             type="submit"
             color="primary"
             class="text-none"
-            id="resetPassword"
+            id="reset_password_btn"
             :loading="loading"
           >
             <v-icon
@@ -41,7 +42,7 @@
             color="primary"
             class="text-none"
             :disabled="loading"
-            id="loginWithPassword"
+            id="login_password_btn"
           >
             {{ $t('login.loginWithPassword') }}
           </v-btn>

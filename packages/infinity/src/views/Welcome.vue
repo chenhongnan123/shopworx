@@ -22,7 +22,7 @@
             <v-btn
               block
               rounded
-              id="start"
+              id="next-btn"
               color="primary"
               class="text-none"
               @click="createAccount"
