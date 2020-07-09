@@ -151,11 +151,15 @@ export default {
       this.loading = true;
       const payload = {
         userState: 'RESET',
-        emailId: this.email,
-        phoneNumber: `91${this.phone}`,
         lastname: this.lastName,
         firstname: this.firstName,
       };
+      if (this.email) {
+        payload.emailId = this.email;
+      }
+      if (this.phone) {
+        payload.phoneNumber = `91${this.phone}`;
+      }
       await this.updateUser(payload);
       this.loading = false;
     },
