@@ -31,18 +31,17 @@
     <v-chip-group
       v-else
       column
-      multiple
       mandatory
       class="my-2"
-      v-model="workingDays"
+      v-model="monthStart"
       active-class="primary"
     >
       <v-chip
         large
         :key="index"
-        :id="`day-${index}`"
-        v-for="(day, index) in days"
-        v-text="$t(`setup.onboardCalendar.days.${day}`)"
+        :id="`month-${index}`"
+        v-for="(month, index) in months"
+        v-text="$t(`setup.onboardCalendar.month.${month}`)"
       ></v-chip>
     </v-chip-group>
   </div>
@@ -52,57 +51,52 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'BusinessWorkingDays',
+  name: 'BusinessStartMonth',
   data() {
     return {
       loading: false,
       saving: false,
-      days: [
-        'sun',
-        'mon',
-        'tue',
-        'wed',
-        'thu',
-        'fri',
-        'sat',
+      months: [
+        'jan',
+        'feb',
+        'mar',
+        'apr',
+        'may',
+        'jun',
+        'jul',
+        'aug',
+        'sep',
+        'oct',
+        'nov',
+        'dec',
       ],
-      workingDays: [1, 2, 3, 4, 5, 6],
+      monthStart: 0,
     };
   },
   created() {
     this.fetchRecords();
   },
   methods: {
-    ...mapActions('element', ['getRecords', 'upsertBulkRecords']),
+    ...mapActions('element', ['getRecords', 'upsertRecord']),
     async fetchRecords() {
       this.loading = true;
       const records = await this.getRecords({
-        elementName: 'businessworkingdays',
+        elementName: 'businessyear',
       });
       if (records && records.length) {
-        this.workingDays = records
-          .filter((rec) => rec.isWorking)
-          .map((rec) => rec.day);
+        this.monthStart = records[0].startmonth - 1;
       }
       this.loading = false;
     },
     async save() {
       this.saving = true;
-      const records = this.days.map((day, index) => {
-        let isWorking = false;
-        if (this.workingDays.includes(index)) {
-          isWorking = true;
-        }
-        return {
-          day: index,
-          isWorking,
-        };
-      });
       const payload = {
-        elementName: 'businessworkingdays',
-        records,
+        elementName: 'businessyear',
+        record: {
+          startmonth: this.monthStart + 1,
+        },
       };
-      await this.upsertBulkRecords(payload);
+      await this.upsertRecord(payload);
       this.saving = false;
     },
   },

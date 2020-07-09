@@ -16,7 +16,7 @@ import CustomerAccount from '../components/CustomerAccount.vue';
 import AlertConfiguration from '../components/AlertConfiguration.vue';
 import UserRoles from '../components/access-management/UserRoles.vue';
 import Users from '../components/access-management/Users.vue';
-import BusinessMonthStart from '../components/calendar/BusinessMonthStart.vue';
+import BusinessMonthStart from '../components/calendar/BusinessStartMonth.vue';
 import BusinessWorkingDays from '../components/calendar/BusinessWorkingDays.vue';
 import BusinessHours from '../components/calendar/BusinessHours.vue';
 import BusinessHolidays from '../components/calendar/BusinessHolidays.vue';

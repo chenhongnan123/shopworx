@@ -3,6 +3,7 @@
     <v-form @submit.prevent="passes(onSubmit)">
       <v-card-text>
         <identifier-input
+          id="identifier_input"
           :loading="loading || loadingOtp"
           v-model="identifier"
           @on-update="setIdentifier"
@@ -14,7 +15,7 @@
           #default="{ errors }"
         >
           <v-text-field
-            id="otp"
+            id="otp_input"
             type="number"
             v-model="otp"
             :disabled="loading"
@@ -32,7 +33,7 @@
           <v-btn
             text
             small
-            id="resendOtp"
+            id="resend_otp_btn"
             color="primary"
             v-if="!otpSent"
             :disabled="loading"
@@ -58,7 +59,7 @@
         <v-btn
           block
           rounded
-          id="sendOtp"
+          id="send_otp_btn"
           type="submit"
           color="primary"
           class="text-none"
@@ -75,6 +76,7 @@
           block
           v-else
           rounded
+          id="login_btn"
           type="submit"
           color="primary"
           class="text-none"
@@ -97,7 +99,7 @@
           color="primary"
           class="text-none"
           :disabled="loading"
-          id="loginWithPassword"
+          id="login_password_btn"
           @click="$emit('login-with-password')"
         >
           {{ $t('login.loginWithPassword') }}
