@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+
+### Bug Fixes
+
+* **core:** updated HTML element IDs ([3695c41](https://bitbucket.org/entrib/shopworx/commits/3695c41b88ca84794700dafc57673b705df3af6e))
+* **update-account:** fixed user already exists error ([fbf3d5a](https://bitbucket.org/entrib/shopworx/commits/fbf3d5a6fe6dca7522930cfdbbee64bc9892e3a6))
+
+
+### Features
+
+* **admin:** added calendar ([7163a81](https://bitbucket.org/entrib/shopworx/commits/7163a81ef5996edc5238e0255ee448d80d523395))
+
+
+
+
+
 # [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
 
 
