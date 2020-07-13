@@ -27,7 +27,17 @@ export default ({
       }
       return false;
     },
-
+    deleteRecord: async ({ dispatch }, { id, name }) => {
+      const deleteBomdetail = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: name,
+          id,
+        },
+        { root: true },
+      );
+      return deleteBomdetail;
+    },
     getAssets: async ({ commit, dispatch }) => {
       const assets = await dispatch(
         'industry/getAssets',

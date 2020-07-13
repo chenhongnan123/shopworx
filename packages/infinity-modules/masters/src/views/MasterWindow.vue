@@ -29,6 +29,16 @@
         <v-btn
           small
           outlined
+          color="error"
+          class="text-none"
+          @click="deleteEntry"
+          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
+        >
+          Delete
+        </v-btn>
+        <v-btn
+          small
+          outlined
           color="primary"
           class="text-none ml-2"
         >
@@ -93,10 +103,33 @@ export default {
     };
   },
   methods: {
-    ...mapActions('masters', ['postBuldRecords']),
+    ...mapActions('masters', ['postBuldRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
     addNewEntry() {
       this.$refs.base.addRow();
+    },
+    async deleteEntry() {
+      if (this.$refs.base.gridApi.getSelectedRows()) {
+        const selectedRow = this.$refs.base.gridApi.getSelectedRows();
+        const id = selectedRow[0]._id;
+        // elementName
+        const name = this.$refs.base.id;
+        const deleted = await this.deleteRecord({ id, name });
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DELETE_RECORD',
+          });
+          this.$refs.base.deleteSelectedRows();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETE_RECORD',
+          });
+        }
+      }
     },
     async saveNewEntry() {
       const name = this.$refs.base.id;
