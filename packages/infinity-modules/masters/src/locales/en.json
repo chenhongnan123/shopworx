@@ -1,3 +1,9 @@
 {
-  "masters": "Master Data"
+  "masters": "Master Data",
+  "success": {
+    "CREATED_RECORD": "Record added successfully."
+  },
+  "error": {
+    "ERROR_CREATING_RECORD": "Error in adding record."
+  }
 }
