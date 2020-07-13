@@ -8,7 +8,7 @@ export default {
     account: 'mdi-account-outline',
     search: 'mdi-magnify',
     home: 'mdi-home-outline',
-    planning: 'mdi-calendar-text-outline',
+    productionPlanning: 'mdi-calendar-text-outline',
     productionLayout: 'mdi-file-tree-outline',
     materialManagement: 'mdi-cart-minus',
     parameterManagement: 'mdi-tune',

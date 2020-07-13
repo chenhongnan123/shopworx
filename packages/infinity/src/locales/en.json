@@ -169,7 +169,7 @@
     "productionLog": "Production Log",
     "maintenanceSummary": "Maintenance Summary",
     "parameterConfiguration": "Parameter Configuration",
-    "planning": "Production Planning",
+    "productionPlanning": "Production Planning",
     "roadmapManagement": "Roadmap",
     "recipeManagement": "Recipe",
     "productManagement": "Product Type",
@@ -183,7 +183,7 @@
     "oee": "Oee",
     "masters": "Master Data",
     "admin": "Admin Console",
-    "search": "Search",
+    "search": "Search reports & insights (This is dummy for 4.1.0-rc.1)",
     "insights": "Insights"
   },
   "account": {

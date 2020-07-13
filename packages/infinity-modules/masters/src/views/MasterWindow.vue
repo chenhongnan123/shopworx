@@ -19,7 +19,7 @@
         <v-btn
           small
           outlined
-          color="primary"
+          color="success"
           class="text-none"
           @click="saveNewEntry"
           :class="'ml-2'"
@@ -76,6 +76,7 @@
         <base-master
           :assetId="asset.id"
           :id="id"
+          ref="base"
         />
       </v-tab-item>
     </v-tabs>
@@ -102,17 +103,19 @@ export default {
       tab: 0,
     };
   },
+  mounted() {
+    this.base = this.$refs.base;
+  },
   methods: {
     ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
     addNewEntry() {
-      this.$refs.base.addRow();
+      this.base.addRow();
     },
     async deleteEntry() {
-      if (this.$refs.base.gridApi.getSelectedRows()) {
-        const selectedRow = this.$refs.base.gridApi.getSelectedRows();
-        // elementName
-        const name = this.$refs.base.id;
+      if (this.base.gridApi.getSelectedRows()) {
+        const selectedRow = this.base.gridApi.getSelectedRows();
+        const name = this.id;
         let deleted = '';
         await Promise.all([
           selectedRow.forEach((row) => {
@@ -126,7 +129,7 @@ export default {
             type: 'success',
             message: 'DELETE_RECORD',
           });
-          this.$refs.base.deleteSelectedRows();
+          this.base.deleteSelectedRows();
         } else {
           this.setAlert({
             show: true,
@@ -137,9 +140,9 @@ export default {
       }
     },
     async saveNewEntry() {
-      const name = this.$refs.base.id;
+      const name = this.id;
       const payload = [];
-      this.$refs.base.rowData.forEach((data) => {
+      this.base.rowData.forEach((data) => {
         if (!data.elementName) {
           payload.push({
             ...data,
@@ -154,7 +157,7 @@ export default {
           type: 'success',
           message: 'CREATED_RECORD',
         });
-        this.$refs.base.fetchRecords();
+        this.base.fetchRecords();
       } else {
         this.setAlert({
           show: true,

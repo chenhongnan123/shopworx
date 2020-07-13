@@ -9,11 +9,11 @@
   >
     <template v-if="!customizeMode">
       <v-icon left small>mdi-pencil</v-icon>
-      Customize
+      {{ $t('shopfloorDashboard.customize') }}
     </template>
     <template v-else>
       <v-icon left small>mdi-check</v-icon>
-      Done
+      {{ $t('shopfloorDashboard.done') }}
     </template>
   </v-btn>
 </template>

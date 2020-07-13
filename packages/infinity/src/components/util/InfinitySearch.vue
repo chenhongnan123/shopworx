@@ -16,7 +16,7 @@
         ref="search"
         class="mr-2"
         hide-details
-        label="Search reports & insights (This is dummy for 4.1.0-rc.1)"
+        :label="$t('modules.search')"
         @blur="onBlur"
         v-model="search"
         @focus="onFocus"
