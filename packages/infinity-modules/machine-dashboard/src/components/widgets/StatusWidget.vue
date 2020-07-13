@@ -18,7 +18,9 @@
     </span>
     <v-card :class="title === null ? 'mt-8' : ''" :color="running ? 'success' : 'error'">
       <v-card-text class="text-center my-auto">
-        <div class="display-2 white--text">{{ running ? 'RUNNING' : 'DOWN' }}</div>
+        <div class="display-2 white--text">{{ running
+          ? $t('shopfloorDashboard.up') : $t('shopfloorDashboard.down') }}
+        </div>
         <div class="headline" v-if="running">
           {{ time }}
         </div>

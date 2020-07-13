@@ -12,11 +12,11 @@
       </div>
       <div class="ml-4">
         <v-icon color="success">mdi-checkbox-blank-circle</v-icon>
-        <span> - RUNNING</span>
+        <span> - {{ $t('shopfloorDashboard.up') }}</span>
       </div>
       <div class="ml-2">
         <v-icon color="error">mdi-checkbox-blank-circle</v-icon>
-        <span> - DOWN</span>
+        <span> - {{ $t('shopfloorDashboard.down') }}</span>
       </div>
       <v-spacer></v-spacer>
       <time-selection />
