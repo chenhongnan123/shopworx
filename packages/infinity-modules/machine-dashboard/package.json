@@ -1,13 +1,13 @@
 {
   "name": "@shopworx/machine-dashboard",
-  "version": "4.1.0-rc.1-patch.1",
+  "version": "4.1.0-rc.1-patch.2",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.1.0-rc.1-patch.1",
-    "@shopworx/ui-components": "^4.1.0-rc.1-patch.1",
+    "@shopworx/services": "^4.1.0-rc.1-patch.2",
+    "@shopworx/ui-components": "^4.1.0-rc.1-patch.2",
     "vue-grid-layout": "^2.3.7",
     "vuex": "^3.4.0"
   },

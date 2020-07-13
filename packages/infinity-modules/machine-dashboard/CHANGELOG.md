@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **locale:** fixed zhHans translations ([a67d008](https://bitbucket.org/entrib/shopworx/commits/a67d0083cc5aa476714baf284b85a888bb81f77a))
+
+
+
+
+
 # [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
 
 **Note:** Version bump only for package @shopworx/machine-dashboard
