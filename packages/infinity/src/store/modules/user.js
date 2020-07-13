@@ -289,8 +289,10 @@ export default ({
         adminItems: [],
       };
       if (mySolutions && mySolutions.length) {
+        mySolutions[0].modules = mySolutions[0].modules.sort((a, b) => b.id - a.id);
         mySolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS') {
+          if (module.moduleName.toUpperCase().trim() === 'APPS'
+          || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
             module.details.forEach((detail) => {
               modules.items.push({
                 id: detail.id,
@@ -299,18 +301,7 @@ export default ({
                 title: detail.webAppName,
               });
             });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
-            module.details.forEach((detail) => {
-              modules.items.push({
-                id: detail.id,
-                icon: detail.iconURL,
-                to: detail.webAppLink,
-                title: detail.webAppName,
-              });
-            });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
             modules.items.push({ header: module.moduleName });
             module.details.forEach((detail) => {
               modules.items.push({
@@ -320,21 +311,29 @@ export default ({
                 title: detail.reportsCategoryName,
               });
             });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
+          } else if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
             modules.adminItems.push({
               id: module.id,
               to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
             });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
+          } else if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
             modules.adminItems.push({
               id: module.id,
               to: module.moduleLink,
               title: module.moduleName,
               icon: `$${module.moduleName}`,
+            });
+          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+            modules.items.push({ header: module.moduleName });
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
+              });
             });
           }
           return modules;
