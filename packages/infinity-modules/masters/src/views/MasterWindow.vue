@@ -110,7 +110,6 @@ export default {
         }
       });
       const postData = await this.postBuldRecords({ payload, name });
-      console.log(postData);
       if (postData) {
         this.setAlert({
           show: true,

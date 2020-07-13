@@ -289,8 +289,20 @@ export default ({
         adminItems: [],
       };
       if (mySolutions && mySolutions.length) {
+        mySolutions[0].modules = mySolutions[0].modules.sort((a, b) => b.id - a.id);
         mySolutions.forEach((solution) => solution.modules.map((module) => {
           if (module.moduleName.toUpperCase().trim() === 'APPS') {
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
+              });
+            });
+          }
+          if (module.moduleName.toUpperCase().trim() === 'ORDER') {
+            modules.items.push({ header: module.moduleName });
             module.details.forEach((detail) => {
               modules.items.push({
                 id: detail.id,
@@ -318,6 +330,39 @@ export default ({
                 icon: detail.iconUrl,
                 to: module.moduleName,
                 title: detail.reportsCategoryName,
+              });
+            });
+          }
+          if (module.moduleName.toUpperCase().trim() === 'CONFIGURATION') {
+            modules.items.push({ header: module.moduleName });
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
+              });
+            });
+          }
+          if (module.moduleName.toUpperCase().trim() === 'MANAGEMENT') {
+            modules.items.push({ header: module.moduleName });
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
+              });
+            });
+          }
+          if (module.moduleName.toUpperCase().trim() === 'DATACONFIGURATION') {
+            modules.items.push({ header: module.moduleName });
+            module.details.forEach((detail) => {
+              modules.items.push({
+                id: detail.id,
+                icon: detail.iconURL,
+                to: detail.webAppLink,
+                title: detail.webAppName,
               });
             });
           }
