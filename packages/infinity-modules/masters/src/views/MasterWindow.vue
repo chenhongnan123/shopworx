@@ -18,10 +18,11 @@
         </v-btn>
         <v-btn
           small
+          outlined
           color="primary"
           class="text-none"
           @click="saveNewEntry"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
+          :class="'ml-2'"
         >
           Save
         </v-btn>
@@ -31,7 +32,7 @@
           color="error"
           class="text-none"
           @click="deleteEntry"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
+          :class="'ml-2'"
         >
           Delete
         </v-btn>
