@@ -111,10 +111,15 @@ export default {
     async deleteEntry() {
       if (this.$refs.base.gridApi.getSelectedRows()) {
         const selectedRow = this.$refs.base.gridApi.getSelectedRows();
-        const id = selectedRow[0]._id;
         // elementName
         const name = this.$refs.base.id;
-        const deleted = await this.deleteRecord({ id, name });
+        let deleted = '';
+        await Promise.all([
+          selectedRow.forEach((row) => {
+            const id = row._id;
+            deleted = this.deleteRecord({ id, name });
+          }),
+        ]);
         if (deleted) {
           this.setAlert({
             show: true,
