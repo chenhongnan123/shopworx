@@ -127,11 +127,11 @@ export default {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
     },
     addRow() {
-      this.gridApi.updateRowData({ add: [this.getNewRowItem()] });
+      this.gridApi.applyTransaction({ add: [this.getNewRowItem()] });
     },
     deleteSelectedRows() {
       const selectedRows = this.gridApi.getSelectedRows();
-      this.gridApi.updateRowData({ remove: selectedRows });
+      this.gridApi.applyTransaction({ remove: selectedRows });
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
   },
