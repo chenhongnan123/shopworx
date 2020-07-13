@@ -1,11 +1,3 @@
 {
-  "masters": "Master Data",
-  "success": {
-    "CREATED_RECORD": "Record added successfully.",
-    "DELETE_RECORD": "Record deleted successfully."
-  },
-  "error": {
-    "ERROR_CREATING_RECORD": "Error in adding record.",
-    "ERROR_DELETE_RECORD": "Error in deleting record."
-  }
+  "masters": "Master Data"
 }

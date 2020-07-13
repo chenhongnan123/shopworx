@@ -15,7 +15,6 @@
             v-text="'mdi-plus'"
           ></v-icon>
           Add new
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
         </v-btn>
         <v-btn
           small
@@ -103,7 +102,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('masters', ['postBuldRecords', 'deleteRecord']),
+    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
     addNewEntry() {
       this.$refs.base.addRow();
@@ -147,7 +146,7 @@ export default {
           });
         }
       });
-      const postData = await this.postBuldRecords({ payload, name });
+      const postData = await this.postBulkRecords({ payload, name });
       if (postData) {
         this.setAlert({
           show: true,

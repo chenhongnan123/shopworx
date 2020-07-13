@@ -52,9 +52,13 @@
     "PASSWORD_RESET": "New password sent on registered email/phone.",
     "UPDATED": "Updated!",
     "PLAN_CREATED": "Plan created!",
-    "PLAN_UPDATED": "Plan updated!"
+    "PLAN_UPDATED": "Plan updated!",
+    "CREATED_RECORD": "Record added successfully.",
+    "DELETE_RECORD": "Record deleted successfully."
   },
   "error": {
+    "ERROR_CREATING_RECORD": "Error in adding record.",
+    "ERROR_DELETE_RECORD": "Error in deleting record.",
     "NOT_VALID": "{_field_} is not valid.",
     "NO_LICENSE": "You do not have an active licence. Please contact ShopWorx support.",
     "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licence. Please try again.",

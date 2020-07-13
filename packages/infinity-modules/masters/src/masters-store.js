@@ -13,7 +13,7 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
-    postBuldRecords: async ({ dispatch }, { payload, name }) => {
+    postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
         'element/postBulkRecords',
         {
