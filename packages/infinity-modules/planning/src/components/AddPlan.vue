@@ -13,11 +13,14 @@
     </template>
     <v-card>
       <v-card-title primary-title>
-        <span v-if="!edit">
+        <span v-if="!edit && !duplicate">
           Create plan
         </span>
-        <span v-else>
+        <span v-else-if="edit">
           Edit plan {{ planToEdit.planid }}
+        </span>
+        <span v-else-if="duplicate">
+          Duplicate plan {{ planToEdit.planid }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon @click="close">
@@ -176,7 +179,7 @@
           class="text-none"
           :loading="saving"
           @click="savePlan"
-          v-if="!edit"
+          v-if="!edit && !duplicate"
         >
           Save
         </v-btn>
@@ -185,9 +188,18 @@
           class="text-none"
           :loading="saving"
           @click="updatePlan"
-          v-else
+          v-else-if="edit"
         >
           Update
+        </v-btn>
+        <v-btn
+          color="primary"
+          class="text-none"
+          :loading="saving"
+          @click="savePlan"
+          v-else-if="duplicate"
+        >
+          Duplicate
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -207,6 +219,10 @@ export default {
   name: 'AddPlan',
   props: {
     edit: {
+      type: Boolean,
+      default: false,
+    },
+    duplicate: {
       type: Boolean,
       default: false,
     },
@@ -240,6 +256,11 @@ export default {
   },
   watch: {
     edit(val) {
+      if (val) {
+        this.setPlan();
+      }
+    },
+    duplicate(val) {
       if (val) {
         this.setPlan();
       }
@@ -509,7 +530,6 @@ export default {
       this.dialog = false;
     },
     async setPlan() {
-      console.log(this.planToEdit);
       this.selectedPart = this.parts.find((part) => part.partname === this.planToEdit.partname);
       await this.onPartSelection();
       await this.updatePartMatrixRecords({ name: 'machinename', value: this.planToEdit.machinename });
