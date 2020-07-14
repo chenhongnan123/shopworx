@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **core:** updated sidebar module display ([575d27a](https://bitbucket.org/entrib/shopworx/commits/575d27ac3d4f87d93a31ca782a4f14615f2bd8bf))
+* **locale:** fixed zhHans translations ([a67d008](https://bitbucket.org/entrib/shopworx/commits/a67d0083cc5aa476714baf284b85a888bb81f77a))
+
+
+### Features
+
+* **master data:** add button to add new entry, and save button to save the entries to database ([39f1158](https://bitbucket.org/entrib/shopworx/commits/39f1158b7f522665b32af353a238d9944039e23a))
+
+
+
+
+
 # [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
 
 
