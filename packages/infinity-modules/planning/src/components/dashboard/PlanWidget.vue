@@ -62,6 +62,22 @@
             </v-icon>
           </v-btn>
         </add-plan>
+        <add-plan
+          #default="{ on }"
+          duplicate
+          :planToEdit="selectedPlans[0]"
+          v-if="selectedPlans.length === 1"
+          @on-add="$emit('refresh-widget')"
+        >
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>
+              mdi-content-copy
+            </v-icon>
+          </v-btn>
+        </add-plan>
       </template>
     </v-toolbar>
     <perfect-scrollbar style="max-height: 400px;">
