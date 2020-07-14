@@ -13,7 +13,7 @@
       :color="$vuetify.theme.dark ? '#212121' : 'white'"
     >
       <v-toolbar-title>
-        Add Widgets
+        {{ $t('shopfloorDashboard.addWidgets') }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="toggleCustomizeMode">
