@@ -255,13 +255,8 @@ export default {
     };
   },
   watch: {
-    edit(val) {
-      if (val) {
-        this.setPlan();
-      }
-    },
-    duplicate(val) {
-      if (val) {
+    dialog(val) {
+      if (val && (this.edit || this.duplicate)) {
         this.setPlan();
       }
     },
