@@ -76,7 +76,7 @@ export default ({
         payload,
         { root: true },
       );
-      if (records && records.length) {
+      if (records) {
         commit('setRecords', records);
       }
     },

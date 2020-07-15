@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+
+### Bug Fixes
+
+* **planning:** toggle star plans ([d2e098f](https://bitbucket.org/entrib/shopworx/commits/d2e098fd6ef8b4f377a1fb4fb6d62210b1ac36bc))
+
+
+### Features
+
+* **planning:** added duplicate plan feature on dashboard ([1839075](https://bitbucket.org/entrib/shopworx/commits/183907530672958f1ffce43275e0a5ded5bc3b37))
+
+
+
+
+
 # [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
 
 **Note:** Version bump only for package @shopworx/planning
