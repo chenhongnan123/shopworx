@@ -31,7 +31,6 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              :rules="rules.description"
               label="Parameter Description"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.description"
@@ -162,6 +161,7 @@
             </template>
           </v-autocomplete>
           <v-text-field
+              v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.multiplicationfactor"
               label="Multiplication Factor"
@@ -169,19 +169,13 @@
               v-model="parameterObj.multiplicationfactor"
           ></v-text-field>
           <v-text-field
+              v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.divisionfactor"
               label="Division Factor"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.divisionfactor"
           ></v-text-field>
-          <!-- <v-text-field
-              :disabled="saving"
-              :rules="rules.currentvalue"
-              label="Parameter Current Value"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.currentvalue"
-          ></v-text-field> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.parameterunit"
@@ -237,8 +231,8 @@ export default {
         startaddress: null,
         protocol: null,
         isconversion: null,
-        multiplicationfactor: null,
-        divisionfactor: null,
+        // multiplicationfactor: null,
+        // divisionfactor: null,
         // currentvalue: null,
         parameterunit: null,
         paid: null,
@@ -249,9 +243,9 @@ export default {
         name: [
           (v) => !!v || 'Parameter Name is required',
         ],
-        description: [
-          (v) => !!v || 'Parameter Description is required',
-        ],
+        // description: [
+        //   (v) => !!v || 'Parameter Description is required',
+        // ],
         // parameterdirection: [
         //   (v) => !!v || 'Direction is required',
         // ],

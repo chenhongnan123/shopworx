@@ -174,7 +174,8 @@
             >
               <span>
                 {{ props.item.description.length > 10
-                  ? props.item.description.substr(0,9) + '...' :  props.item.description}}
+                  ? props.item.description.substr(0,19) + '...' :
+                  (props.item.description === 'null' ? '-' : props.item.description)}}
               </span>
               <v-icon
                 small
@@ -381,7 +382,7 @@ export default {
     return {
       parameterSelected: [],
       headers: [
-        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Number', value: 'number', width: 100 },
         { text: 'Line', value: 'line', width: 120 },
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
