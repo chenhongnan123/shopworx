@@ -8,6 +8,8 @@ export default ({
     notStartedPlans: null,
     plansOnDate: null,
     machines: [],
+    shifts: [],
+    selectedMachine: null,
     selectedCell: null,
     selectedShift: null,
     selectedDate: null,
@@ -18,7 +20,9 @@ export default ({
     setNotStartedPlans: set('notStartedPlans'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
+    setShift: set('shifts'),
     setSelectedCell: set('selectedCell'),
+    setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
   },
@@ -75,6 +79,23 @@ export default ({
       );
       return !!element;
     },
+    fetchBusinessHours: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'businesshours' },
+        { root: true },
+      );
+      if (records) {
+        debugger;
+        if (records.length) {
+          let shifts = records.filter((rec) => rec.type === 'shift');
+          shifts = [...new Set(shifts.map((item) => item.name))];
+          commit('setShift', shifts);
+          return true;
+        }
+      }
+      return false;
+    },
 
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
@@ -120,7 +141,21 @@ export default ({
       }
       return cells;
     },
-
+    machineList: ({ machines }) => {
+      let machineList = [];
+      if (machines && machines.length) {
+        machineList = machines.map((mac) => mac.machinename);
+        machineList = ['All Machines', ...machineList];
+      }
+      return machineList;
+    },
+    shiftList: ({ shifts }) => {
+      let shiftList = [];
+      if (shifts && shifts.length) {
+        shiftList = ['All Shift', ...shifts];
+      }
+      return shiftList;
+    },
     filteredMachines: ({ machines, selectedCell }) => {
       let filteredMachines = machines;
       if (selectedCell && selectedCell.value && machines && machines.length) {

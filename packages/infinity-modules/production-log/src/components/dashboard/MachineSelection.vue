@@ -12,17 +12,17 @@
         class="text-none ml-2"
       >
         <v-icon small left v-text="'mdi-crosshairs'"></v-icon>
-        {{ selectedShift ? selectedShift : '' }}
+        {{ selectedMachine ? selectedMachine : '' }}
         <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
       </v-btn>
     </template>
     <v-list dense>
       <v-list-item
         :key="n"
-        v-for="(shift, n) in shiftList"
-        @click="setSelectedShift(shift)"
+        v-for="(machine, n) in machineList"
+        @click="setSelectedMachine(machine)"
       >
-        <v-list-item-title>{{ shift }}</v-list-item-title>
+        <v-list-item-title>{{ machine }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -32,26 +32,26 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ShiftSelection',
+  name: 'MachineSelection',
   computed: {
-    ...mapGetters('productionLog', ['shiftList']),
-    ...mapState('productionLog', ['selectedShift']),
+    ...mapGetters('productionLog', ['machineList']),
+    ...mapState('productionLog', ['selectedMachine']),
   },
   methods: {
-    ...mapMutations('productionLog', ['setSelectedShift']),
+    ...mapMutations('productionLog', ['setSelectedMachine']),
   },
   created() {
-    if (this.shiftList && this.shiftList.length) {
-      if (!this.selectedShift) {
-        this.setSelectedShift(this.shiftList[0]);
+    if (this.machineList && this.machineList.length) {
+      if (!this.selectedMachine) {
+        this.setSelectedMachine(this.machineList[0]);
       }
     }
   },
   watch: {
-    shiftList(val) {
+    machineList(val) {
       if (val && val.length) {
-        if (!this.selectedShift) {
-          this.setSelectedShift(val[0]);
+        if (!this.selectedMachine) {
+          this.setSelectedMachine(val[0]);
         }
       }
     },

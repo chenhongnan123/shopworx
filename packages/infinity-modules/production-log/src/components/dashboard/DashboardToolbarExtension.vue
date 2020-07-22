@@ -8,11 +8,11 @@
       <v-spacer></v-spacer>
       <div class="mt-1" v-show="!edit">
         <span class="title">
-          {{ cell }} | {{ shift }} - {{ date }}
+          {{ machine }} | {{ shift }} - {{ date }}
         </span>
       </div>
       <div v-show="edit">
-        <cell-selection />
+        <machine-selection />
         <shift-selection />
         <date-selection />
       </div>
@@ -33,14 +33,14 @@
 <script>
 import { mapState } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import CellSelection from './CellSelection.vue';
+import MachineSelection from './MachineSelection.vue';
 import ShiftSelection from './ShiftSelection.vue';
 import DateSelection from './DateSelection.vue';
 
 export default {
   name: 'DashboardToolbarExtension',
   components: {
-    CellSelection,
+    MachineSelection,
     ShiftSelection,
     DateSelection,
   },
@@ -51,12 +51,12 @@ export default {
   },
   computed: {
     ...mapState('productionLog', [
-      'selectedCell',
+      'selectedMachine',
       'selectedShift',
       'selectedDate',
     ]),
-    cell() {
-      return this.selectedCell ? this.selectedCell.name : '';
+    machine() {
+      return this.selectedMachine ? this.selectedMachine : '';
     },
     shift() {
       return 'Shift 1';

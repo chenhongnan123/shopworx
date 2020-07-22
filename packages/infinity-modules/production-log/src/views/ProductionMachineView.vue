@@ -1,6 +1,9 @@
 <template>
   <div>
-    <portal to="app-extension">
+    <template v-if="loading">
+      Loading...
+    </template>
+    <!-- <portal to="app-extension">
       <v-tabs
         dense
         center-active
@@ -12,39 +15,45 @@
         <v-tab class="text-none">
           Downtime
         </v-tab>
-        <!-- <v-tab class="text-none">
+        <v-tab class="text-none">
           Operators
-        </v-tab> -->
+        </v-tab>
       </v-tabs>
-    </portal>
-    <production-log-production-view v-if="logView === 0" />
-    <production-log-downtime-view v-else-if="logView === 1" />
-    <production-log-operator-view v-if="logView === 2" />
+    </portal> -->
+    <dashboard-toolbar-extension/>
+    <production-log-production-view/>
+    <!-- <production-log-downtime-view v-else-if="logView === 1" /> -->
+    <!-- <production-log-operator-view v-if="logView === 2" /> -->
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
+import DashboardToolbarExtension from '../components/dashboard/DashboardToolbarExtension.vue';
 import ProductionLogProductionView from '../components/ProductionLogProductionView.vue';
-import ProductionLogDowntimeView from '../components/ProductionLogDowntimeView.vue';
-import ProductionLogOperatorView from '../components/ProductionLogOperatorView.vue';
+
 
 export default {
   name: 'ProductionMachineView',
   components: {
-    ProductionLogOperatorView,
     ProductionLogProductionView,
-    ProductionLogDowntimeView,
+    DashboardToolbarExtension,
   },
   data() {
     return {
-      logView: 0,
+      loading: false,
+      // logView: 0,
     };
   },
-  created() {
-    const view = localStorage.getItem('logView');
-    this.logView = view ? JSON.parse(view) : 0;
-    this.setExtendedHeader(true);
+  async created() {
+    // const view = localStorage.getItem('logView');
+    // this.logView = view ? JSON.parse(view) : 0;
+    await this.fetchBusinessHours();
+    const machines = await this.fetchMachines();
+    if (machines) {
+      this.setExtendedHeader(true);
+    }
+    this.loading = false;
   },
   watch: {
     logView(val) {
@@ -53,6 +62,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapActions('productionLog', ['fetchMachines', 'fetchBusinessHours']),
   },
 };
 </script>
