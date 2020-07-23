@@ -1,132 +1,234 @@
 {
   "$vuetify": {
-    "badge": "徽章",
+    "badge": "标识",
     "close": "关闭",
     "dataIterator": {
-      "noResultsText": "没有符合条件的结果",
-      "loadingText": "加载中……"
+      "noResultsText": "无匹配数据",
+      "loadingText": "载入中"
     },
     "dataTable": {
-      "itemsPerPageText": "每页数目：",
+      "itemsPerPageText": "每页行数",
       "ariaLabel": {
-        "sortDescending": "：降序排列。点击以移除排序。",
-        "sortAscending": "：升序排列。点击以降序排列。",
-        "sortNone": "：未排序。点击以升序排列。"
+        "sortDescending": "：降序.点击取消排序.",
+        "sortAscending": "：升序.点击改为降序.",
+        "sortNone": "：未排序.点击以升序排列."
       },
-      "sortBy": "排序方式"
+      "sortBy": "排列方式"
     },
     "dataFooter": {
-      "itemsPerPageText": "每页数目：",
+      "itemsPerPageText": "每页项目数",
       "itemsPerPageAll": "全部",
       "nextPage": "下一页",
       "prevPage": "上一页",
       "firstPage": "首页",
-      "lastPage": "尾页",
-      "pageText": "{0}-{1} 共 {2}"
+      "lastPage": "末页",
+      "pageText": "{0}-{1} of {2}"
     },
     "datePicker": {
-      "itemsSelected": "已选择 {0}"
+      "itemsSelected": "已选定{0}"
     },
-    "noDataText": "没有数据",
+    "noDataText": "无数据",
     "carousel": {
-      "prev": "上一张",
-      "next": "下一张",
+      "prev": "上一页面",
+      "next": "下一页面",
       "ariaLabel": {
-        "delimiter": "Carousel slide {0} of {1}"
+        "delimiter": "轮播{0}共{1}页"
       }
     },
     "calendar": {
-      "moreEvents": "还有 {0} 项"
+      "moreEvents": "{0}更多"
     },
     "fileInput": {
-      "counter": "{0} 个文件",
-      "counterSize": "{0} 个文件（共 {1}）"
+      "counter": "{0}页",
+      "counterSize": "{0}页（共{1}页）"
     },
     "timePicker": {
-      "am": "AM",
-      "pm": "PM"
+      "am": "上午",
+      "pm": "下午"
     }
   },
   "success": {
-    "OTP_SENT": "One time password sent on registered email/phone.",
-    "PASSWORD_RESET": "New password sent on registered email/phone."
+    "OTP_SENT": "发送一次性密码到邮件/手机.",
+    "PASSWORD_RESET": "发送新密码到邮箱/手机.",
+    "UPDATED": "刷新!",
+    "PLAN_CREATED": "计划已创建！",
+    "PLAN_UPDATED": "计划已更新！",
+    "CREATED_RECORD": "记录添加成功.",
+    "DELETE_RECORD": "记录删除成功."
   },
   "error": {
-    "USER_NOT_FOUND": "User account not found.",
-    "EMAIL_NOT_FOUND": "User account not found.",
-    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
-    "INVALID_OTP": "Login failed: Incorrect OTP."
+    "ERROR_CREATING_RECORD": "记录添加失败.",
+    "ERROR_DELETE_RECORD": "记录删除失败.",
+    "NOT_VALID": "{_字段_}无效.",
+    "NO_LICENSE": "缺少有效许可证。请联系Shopworx技术支持。.",
+    "CANNOT_FETCH_LICENSE": "无法获取有效许可证。请再试一次。.",
+    "INVALID_SESSION": "Session expired: Please login again.",
+    "USER_ALREADY_EXIST": "用户已存在.",
+    "USER_NOT_FOUND": "用户不存在.",
+    "EMAIL_NOT_FOUND": "用户不存在.",
+    "INCORRECT_PASSWORD": "登录失败：密码错误.",
+    "INVALID_OTP": "登录失败：一次性密码错误.",
+    "MISSING_BUSINESS_HOUR": "应按顺序添加小时数。请检查数据。.",
+    "INVALID_HOURS_SUM": "您所提供的总小时数应为24。请检查数据。.",
+    "ERROR_CREATING_PLAN": "创建计划错误，请再试一次。.",
+    "ERROR_UPDATING_PLAN": "更新计划错误，请再试一次。."
+  },
+  "fields": {
+    "email": "邮件",
+    "phone": "手机",
+    "password": "密码",
+    "otp": "一次性密码",
+    "firstName":"姓氏",
+    "lastName":"名称",
+    "name": "姓名",
+    "type": "类型",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "date": "日期",
+    "shift": "班次",
+    "role": "角色"
   },
   "snackbar": {
-    "close": "Close",
-    "redirectToLogin": "Redirecting in {time}"
+    "close": "关闭",
+    "redirectToLogin": "重新校准{time}"
   },
   "helper": {
-    "or": "or",
-    "next": "Next",
-    "skip": "Skip"
+    "or": "或者",
+    "help": "帮助",
+    "next": "下一个",
+    "skip": "暂时跳过",
+    "loading": "登录中"
+  },
+  "notFound": {
+    "title": "错误！",
+    "subTitle1": "访问的地址",
+    "subTitle2": "{url}",
+    "subTitle3": "未能在服务器中找到.",
+    "goHome": "返回主页"
+  },
+  "forbidden": {
+    "title": "禁止访问！",
+    "subTitle1": "您正访问新的页面",
+    "subTitle2": "授权",
+    "subTitle3": "对于.",
+    "goHome": "返回主页"
   },
   "login": {
-    "title": "Log in to Infinity",
-    "subTitle": "Use your ShopWorx Account",
-    "identifier": "Email or phone",
-    "password": "Password",
-    "otp": "OTP",
-    "resendOtp": "Resend otp?",
-    "resendOtpIn": "Resend otp in {time}",
-    "sendOtp": "Send OTP",
-    "forgotPassword": "Forgot password?",
-    "login": "Login securely",
-    "loginWithOtp": "Login with otp",
-    "loginWithPassword": "Login with password"
+    "title": "登录到Infinity",
+    "subTitle": "使用ShopWorx账号登录",
+    "identifier": "邮箱或手机",
+    "password": "密码",
+    "otp": "一次性密码",
+    "resendOtp": "重新发送一次性密码？",
+    "resendOtpIn": "在{时间}内重新发送一次性密码",
+    "sendOtp": "发送一次性密码",
+    "forgotPassword": "忘记密码？",
+    "login": "安全登录",
+    "loginWithOtp": "用一次性密码登录",
+    "loginWithPassword": "用密码登录"
   },
   "forgotPassword": {
-    "title": "Reset password?",
-    "subTitle": "Enter your email or phone number",
-    "reset": "Reset password"
+    "title": "重设密码？",
+    "subTitle": "输入你的邮箱或手机号",
+    "reset": "重设密码？"
   },
   "welcome": {
-    "title": "Welcome! We have been expecting you.",
-    "subTitle1": "First things first, let's start by",
-    "subTitle2": "creating your account.",
-    "subTitle3": "It will take less than a minute.",
-    "start": "Let's get started"
+    "title": "欢迎！我们一直期待您的到来.",
+    "subTitle1": "首先，让我们从···开始",
+    "subTitle2": "创建账号.",
+    "subTitle3": "这可能会花费一点时间.",
+    "start": "让我们开始吧"
   },
   "register": {
     "account": {
-      "title": "Update your ShopWorx Account",
-      "update": "Update account",
-      "firstName": "First name",
-      "lastName": "Last name",
-      "email": "Email",
-      "phone": "Phone"
+      "title": "更新您的Shopworx账号",
+      "update": "更新账号",
+      "firstName": "姓氏",
+      "lastName": "名字",
+      "email": "邮件",
+      "phone": "手机"
     },
     "password": {
-      "title": "Update your ShopWorx Password",
-      "newPassword": "New password",
-      "confirmPassword": "Confirm password",
-      "update": "Update password"
+      "title": "更新您的ShopWorx密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "update": "更新密码"
     },
-    "updated": "Your ShopWorx account is updated!"
+    "updated": "你的ShopWorx账户已经更新完毕！"
   },
   "modules": {
-    "home": "Home",
-    "machineDashboard": "Machine Dashboard",
-    "planning": "Planning",
-    "reports": "Report",
-    "production": "Production",
-    "downtime": "Downtime",
-    "rejection": "Rejection",
+    "apps": "应用程序",
+    "home": "首页",
+    "order": "订单",
+    "configuration": "配置",
+    "dataconfiguration": "数据配置",
+    "traceability": "追溯",
+    "management": "管理",
+    "shopfloorDashboard": "车间看板",
+    "orderManagement": "订单",
+    "productionLog": "生产日志",
+    "maintenanceSummary": "维护概要",
+    "parameterConfiguration": "参数配置",
+    "productionPlanning": "生产计划",
+    "roadmapManagement": "路径",
+    "recipeManagement": "配方",
+    "productManagement": "产品类型",
+    "productionLayout": "生产布局配置",
+    "materialManagement": "物料",
+    "reports": "报表",
+    "production": "生产",
+    "maintenance": "维护",
+    "downtime": "停机时间",
+    "rejection": "不合格",
     "oee": "Oee",
-    "masters": "Masters",
-    "admin": "Admin"
+    "masters": "主数据",
+    "admin": "管理员操控台",
+    "search": "搜索报表和分析（假设为4.1.0-rc.1）",
+    "insights": "分析"
   },
   "account": {
-    "account": "Account",
-    "sites": "Sites",
-    "profile": "Profile",
-    "logout": "Logout",
-    "lightMode": "Light mode",
-    "darkMode": "Dark mode"
+    "account": "账户",
+    "sites": "位置",
+    "profile": "配置文件设置",
+    "logout": "退出",
+    "lightMode": "浅色模式",
+    "darkMode": "深色模式"
+  },
+  "help": {
+    "help": "帮助",
+    "legal": "法律声明",
+    "version": "版本",
+    "keyboardShortcuts": "快捷键",
+    "support": "支持",
+    "terms": "服务条款",
+    "privacy": "隐私政策"
+  },
+  "user": {
+    "general": "普通",
+    "security": "安全",
+    "profile": {
+      "title": "简况",
+      "firstName": "姓氏",
+      "lastName":"名字",
+      "email": "邮件",
+      "phone": "手机",
+      "reset": "重设",
+      "update": "更新简况"
+    },
+    "preferences": {
+      "title": "优先级",
+      "display": "显示设置",
+      "language": "语言",
+      "darkMode": "深色模式"
+    },
+    "password": {
+      "title": "密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "update": "更新密码"
+    },
+    "auditLog": {
+      "title": "检查日志"
+    }
   }
 }
