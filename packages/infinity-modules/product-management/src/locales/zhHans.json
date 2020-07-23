@@ -1,26 +1,65 @@
 {
-  "appTitle": "Product Type Management",
+  "appTitle": "产品类型管理",
+  "productDetails": "Product Type Details",
+  "error": {
+    "PRODUCT_NAME_EMPTY": "产品名称为空.",
+    "ALREADY_EXSIST_PRODUCT": "产品名称已存在.",
+    "ERROR_UPDATING_PRODUCT": "更新流程路径时出错",
+    "ERROR_CREATING_PRODUCT": "创建流程路径时出错",
+    "ERROR_CREATING_ROADMAP_DETAILS": "创建流程路径详细信息时出错",
+    "SELECT_ROADMAP_FIRST": "请先选择流程路径",
+    "SELECT_SINGLE_PRODUCT_TYPE": "首先选择产品",
+    "PRODUCT_DETAILS_UPDAT_ERROR": "更新产品详细信息时出错."
+  },
+  "success": {
+    "PRODUCT_CREATED": "产品创建.",
+    "PRODUCT_UPDATED": "产品更新.",
+    "ROADMAP_DETAILS_CREATED" : "路径详细信息已创建.",
+    "PRODUCT_DETAILS_UPDATED": "产品详细信息已更新."
+  },
   "displayTags": {
-    "lineName": "Line",
-    "productTypeName": "Product Type Name",
-    "productTypeNumber": "Product Type Number",
-    "customer": "Customer",
-    "roadmap": "Roadmap",
-    "bom": "BOM",
-    "version": "Version",
-    "lastEditedBy": "Last Editted By",
-    "lastEditedOn": "Last Editted On",
-    "createProductType": "Create Product Type",
-    "productTypeCategory": "Product Type Category",
+    "lineName" : "产线名",
+    "sublineName": "子线名称",
+    "stationName": "工站名",
+    "sublineId": "子线ID",
+    "recipeName": "配方名称",
+    "recipeId": "配方ID",
+    "productTypeName" : "产品类型名称*",
+    "productTypeNameHeader" : "Product Type Name",
+    "productTypeDescription": "产品类型编号",
+    "productTypeNumber": "产品类型编号",
+    "customer": "客户 *",
+    "customerHeader": "Customer ",
+    "roadmap": "流程路径",
+    "bom": "物料清单",
+    "version": "版本",
+    "lastEditedBy": "最后编辑者",
+    "lastEditedOn": "最后编辑日期",
+    "createdBy": "Created By",
+    "createdAt": "Created At",
+    "createProductType": "创建产品类型",
+    "productTypeCategory": "产品种类分类",
+    "productType": "产品类型",
+    "duplicateDialogTitle": "重复的产品类型",
+    "actions": "操作",
+    "updateDialog": "编辑产品类型",
+    "deleteHeader": "警报",
+    "deleteConfirmMeaasge": "您确定要删除此产品类型和产品类型详细信息吗？",
     "placeHolders": {
-      "selectLineName": "Select Line Name",
-      "selectRoadmap": "Select Roadmap"
+      "selectLineName": "选择产线 *",
+      "selectRoadmap": "选择流程路径 *",
+      "selectRecipe": "选择配方",
+      "selectBom": "选择物料清单 *",
+      "selectProductTypeCategory": "选择产品类别 *"
     },
-    "buttons": {
-      "addProductType": "Add Product Type",
-      "refresh": "Refresh",
-      "filters": "Filters",
-      "save": "Save"
+    "buttons":{
+      "addProductType": "新建",
+      "duplicateProductType": "复制",
+      "refresh": "刷新",
+      "filters": "筛选",
+      "save" : "保存",
+      "confirm": "确认",
+      "update": "更新"
     }
   }
 }
