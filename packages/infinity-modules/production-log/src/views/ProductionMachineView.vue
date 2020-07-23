@@ -29,7 +29,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import DashboardToolbarExtension from '../components/dashboard/DashboardToolbarExtension.vue';
+import DashboardToolbarExtension from '../components/core/DashboardToolbarExtension.vue';
 import ProductionLogProductionView from '../components/ProductionLogProductionView.vue';
 
 

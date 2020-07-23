@@ -19,7 +19,7 @@
     <v-list dense>
       <v-list-item
         :key="n"
-        v-for="(shift, n) in shiftList"
+        v-for="(shift, n) in shifts"
         @click="setSelectedShift(shift)"
       >
         <v-list-item-title>{{ shift }}</v-list-item-title>
@@ -34,21 +34,21 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 export default {
   name: 'ShiftSelection',
   computed: {
-    ...mapGetters('productionLog', ['shiftList']),
+    ...mapGetters('productionLog', ['shifts']),
     ...mapState('productionLog', ['selectedShift']),
   },
   methods: {
     ...mapMutations('productionLog', ['setSelectedShift']),
   },
   created() {
-    if (this.shiftList && this.shiftList.length) {
+    if (this.shifts && this.shifts.length) {
       if (!this.selectedShift) {
-        this.setSelectedShift(this.shiftList[0]);
+        this.setSelectedShift(this.shifts[0]);
       }
     }
   },
   watch: {
-    shiftList(val) {
+    shifts(val) {
       if (val && val.length) {
         if (!this.selectedShift) {
           this.setSelectedShift(val[0]);

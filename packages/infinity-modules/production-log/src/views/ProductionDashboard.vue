@@ -26,8 +26,8 @@
 
 <script>
 import { mapMutations, mapActions, mapGetters } from 'vuex';
-import DashboardToolbarExtension from '../components/dashboard/DashboardToolbarExtension.vue';
-import MachineWidget from '../components/dashboard/MachineWidget.vue';
+import DashboardToolbarExtension from '../components/core/DashboardToolbarExtension.vue';
+import MachineWidget from '../components/core/MachineWidget.vue';
 
 export default {
   name: 'ProductionDashboard',

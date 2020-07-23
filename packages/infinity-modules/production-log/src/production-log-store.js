@@ -8,7 +8,8 @@ export default ({
     notStartedPlans: null,
     plansOnDate: null,
     machines: [],
-    shifts: [],
+    allShifts: [],
+    shiftList: [],
     selectedMachine: null,
     selectedCell: null,
     selectedShift: null,
@@ -20,7 +21,8 @@ export default ({
     setNotStartedPlans: set('notStartedPlans'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
-    setShift: set('shifts'),
+    setShift: set('allShifts'),
+    setShiftList: set('shiftList'),
     setSelectedCell: set('selectedCell'),
     setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
@@ -82,15 +84,15 @@ export default ({
     fetchBusinessHours: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        { elementName: 'businesshours' },
+        { elementName: 'businesshours', query: '?sortquery=sortindex==1' },
         { root: true },
       );
       if (records) {
-        debugger;
         if (records.length) {
-          let shifts = records.filter((rec) => rec.type === 'shift');
-          shifts = [...new Set(shifts.map((item) => item.name))];
-          commit('setShift', shifts);
+          const allShifts = records.filter((rec) => rec.type === 'shift');
+          commit('setShift', allShifts);
+          const shiftList = [...new Set(allShifts.map((item) => item.name))];
+          commit('setShiftList', shiftList);
           return true;
         }
       }
@@ -105,6 +107,79 @@ export default ({
       );
       if (records) {
         commit('setMachines', records);
+        return true;
+      }
+      return false;
+    },
+
+    getRejections: async ({ commit, dispatch }) => {
+      // const { selectedShift, selectedMachine, allShifts } = state;
+      // TODO get start and end date (shift/day)
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rejection',
+          // query: `&query=datefrom==${}&dateto==${}`,
+        },
+        { root: true },
+      );
+      if (records) {
+        commit('setRejections', records);
+        return true;
+      }
+      return false;
+    },
+    addRejection: async ({ dispatch }, rejectionData) => {
+      const records = await dispatch(
+        'element/postRecord', {
+          elementName: 'rejection',
+          payload: rejectionData,
+        }, {
+          root: true,
+        },
+      );
+      if (records) {
+        //  TODO  - Success toast - append data to rejectionDetails(Display)
+        return true;
+      }
+      return false;
+    },
+    updateRejection: async ({ dispatch }, rejectionData) => {
+      const { id } = rejectionData;
+      const records = await dispatch(
+        'element/updateRecordById', {
+          elementName: 'rejection',
+          id,
+          payload: rejectionData,
+        }, {
+          root: true,
+        },
+      );
+      if (records) {
+        //  TODO  - Success toast
+        return true;
+      }
+      return false;
+    },
+    getProductionReport: async ({ state, commit, dispatch }) => {
+      const { selectedMachine, selectedShift } = state;
+      // TODO get report start and end date (shift/day)
+      // const reportDate =
+      const records = await dispatch(
+        'report/executeReport', {
+          reportName: 'productionbyshift',
+          payload: {
+            machineVal: selectedMachine,
+            shiftVal: selectedShift,
+            // startDate: starDate,
+            // endDate: endDate
+          },
+        }, {
+          root: true,
+        },
+      );
+      if (records) {
+        commit('setRejections', records);
         return true;
       }
       return false;
@@ -149,12 +224,12 @@ export default ({
       }
       return machineList;
     },
-    shiftList: ({ shifts }) => {
-      let shiftList = [];
-      if (shifts && shifts.length) {
-        shiftList = ['All Shift', ...shifts];
+    shifts: ({ shiftList }) => {
+      let shifts = [];
+      if (shiftList && shiftList.length) {
+        shifts = ['All Shift', ...shiftList];
       }
-      return shiftList;
+      return shifts;
     },
     filteredMachines: ({ machines, selectedCell }) => {
       let filteredMachines = machines;

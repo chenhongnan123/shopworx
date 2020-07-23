@@ -1,10 +1,10 @@
 <template>
   <v-container fluid class="py-0">
     <v-row justify="center">
-      <v-col cols="12" md="6" xl="5">
+      <v-col cols="12" md="12" xl="12">
         <production-on-date />
       </v-col>
-      <v-col cols="12" md="6" xl="5">
+      <v-col style="display:hidden">
         <upcoming-production />
       </v-col>
     </v-row>
