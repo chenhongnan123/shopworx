@@ -21,6 +21,7 @@ export default ({
     stationsbylines: [],
     substationsbylines: [],
     selectedLine: {},
+    assets: {},
   },
   mutations: {
     setSelectedLine: set('selectedLine'),
@@ -41,8 +42,22 @@ export default ({
     setAllStations: set('allStations'),
     setStationsbyline: set('stationsbylines'),
     setSubStationsbyline: set('substationsbylines'),
+    setAssets: set('assets'),
   },
   actions: {
+    getAssets: async ({ commit, dispatch }) => {
+      debugger;
+      const assets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (assets && assets.length) {
+        commit('setAssets', assets);
+        return true;
+      }
+      return false;
+    },
     getLines: async ({ dispatch, commit }, query) => {
       const lineList = await dispatch(
         'element/getRecords',
@@ -142,7 +157,7 @@ export default ({
       return true;
     },
     getSubStations: async ({ dispatch, commit }, query) => {
-      const subStations = await dispatch(
+      const list = await dispatch(
         'element/getRecords',
         {
           elementName: 'substation',
@@ -150,6 +165,15 @@ export default ({
         },
         { root: true },
       );
+      let subStations = [];
+      debugger;
+      if (list && list.length) {
+        subStations = list.map((l) => ({
+          ...l,
+          textcolor: 0,
+          // numberIndex: index + 1,
+        }));
+      }
       commit('setSubStations', subStations);
       return true;
     },
