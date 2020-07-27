@@ -55,6 +55,13 @@
         label="Final Sub Station"
         :disabled="btnFindisable"
         ></v-switch>
+        <v-checkbox
+        @change="isParamFlag = true"
+         v-model="isParamConfig"
+         class="mx-2"
+         label="this Substation have Parameter Configuration"
+         >
+         </v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -74,8 +81,12 @@ export default {
   data() {
     return {
       newSubstation: {},
-      assetId: 4,
+      // assetId: 4,
       selectedSubstationLine: null,
+      isParamConfig: false,
+      isParamFlag: false,
+      assetId: null,
+      getAssetId: '',
       default: false,
       dialog: false,
       btnInitdisable: false,
@@ -93,14 +104,15 @@ export default {
   },
   created() {
     // this.getAllStations('');
+    this.getAssets();
     this.newSubstation = { ...this.substation };
   },
   computed: {
-    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'getAssets']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -165,6 +177,9 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          console.log(getAssetId);
+          this.assetId = getAssetId;
           this.newSubstation = {
             ...this.newSubstation,
             stationid: this.selectedSubstationLine.id,
@@ -182,9 +197,14 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
+            const isParamFlagchanged = this.isParamFlag;
+            if (isParamFlagchanged) {
+              alert('execute code...');
+            }
+            this.isParamFlag = this.isParamConfig;
             this.newSubstation = {};
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.$refs.form.reset();
           } else {
             this.setAlert({
