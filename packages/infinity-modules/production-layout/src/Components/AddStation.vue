@@ -109,7 +109,8 @@ export default {
   data() {
     return {
       newStation: {},
-      assetId: 4,
+      assetId: null,
+      getAssetId: '',
       selectedSubLine: null,
       fieldDisabled: false,
       default: false,
@@ -132,15 +133,15 @@ export default {
     },
   },
   created() {
-    // this.getAllSublines('');
+    this.getAssets();
     this.newStation = { ...this.station };
   },
   computed: {
-    ...mapState('productionLayout', ['stations', 'sublines', 'allSublines']),
+    ...mapState('productionLayout', ['stations', 'sublines', 'allSublines', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation']),
+    ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
     compareValues(val) {
       if (val.manufacturingdate === undefined) {
         this.fieldDisabled = true;
@@ -177,6 +178,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newStation = {
             ...this.newStation,
             lineid: this.lineid,
@@ -193,7 +196,7 @@ export default {
               message: 'STATION_CREATED',
             });
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.newStation = {};
             this.$refs.form.reset();
           } else {

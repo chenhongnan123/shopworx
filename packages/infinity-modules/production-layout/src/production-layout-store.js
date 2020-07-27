@@ -166,7 +166,6 @@ export default ({
         { root: true },
       );
       let subStations = [];
-      debugger;
       if (list && list.length) {
         subStations = list.map((l) => ({
           ...l,
