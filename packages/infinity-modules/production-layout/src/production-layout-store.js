@@ -45,8 +45,15 @@ export default ({
     setAssets: set('assets'),
   },
   actions: {
+    createElement: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/createElement',
+        payload,
+        { root: true },
+      );
+      return created;
+    },
     getAssets: async ({ commit, dispatch }) => {
-      debugger;
       const assets = await dispatch(
         'industry/getAssets',
         null,

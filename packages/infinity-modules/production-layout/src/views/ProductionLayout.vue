@@ -142,7 +142,7 @@
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
-              <div v-if="substation.textcolor == 0" style="color: red">{{ substation.name }}
+              <div>{{ substation.name }}
                 <DeleteSubstation :substation="substation" />
                 <UpdateSubstation :substation="substation" />
               </div>

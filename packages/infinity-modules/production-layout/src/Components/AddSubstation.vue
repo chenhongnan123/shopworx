@@ -56,8 +56,7 @@
         :disabled="btnFindisable"
         ></v-switch>
         <v-checkbox
-        @change="isParamFlag = true"
-         v-model="isParamConfig"
+         v-model="checked"
          class="mx-2"
          label="this Substation have Parameter Configuration"
          >
@@ -83,9 +82,8 @@ export default {
       newSubstation: {},
       // assetId: 4,
       selectedSubstationLine: null,
-      isParamConfig: false,
-      isParamFlag: false,
       assetId: null,
+      checked: false,
       getAssetId: '',
       default: false,
       dialog: false,
@@ -112,7 +110,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'getAssets']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'getAssets', 'createElement']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -197,15 +195,42 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            const isParamFlagchanged = this.isParamFlag;
-            if (isParamFlagchanged) {
-              alert('execute code...');
+            const checkedPlc = this.checked;
+            if (checkedPlc) {
+              this.newSubstation = {};
+              this.dialog = false;
+              this.assetId = 4;
+              this.$refs.form.reset();
+              const substationid = this.subStations[0].id;
+              const object = {
+                customerId: 195,
+                siteId: 197,
+                categoryType: 'ASSET',
+                collectionName: 'provisioning',
+                elementName: substationid,
+                elementDescription: this.subStations[0].name,
+                dateCreated: 1590647154882,
+                dateModified: 1590647154882,
+                status: 'ACTIVE',
+                elementType: 'PROVISIONING',
+                uniqueTagName: '',
+                uniqueTagValue: 0,
+                uniqueTagStartValue: 0,
+                uniqueTagValuePrefix: '',
+                uniqueTagValueSuffix: '',
+                businessTimeTagsRequired: false,
+                optional: false,
+                assetBased: true,
+                uniqueTag: false,
+              };
+              this.createElement(object);
+            } else {
+              this.newSubstation = {};
+              this.dialog = false;
+              this.assetId = this.getAssetId;
+              this.checked = false;
+              this.$refs.form.reset();
             }
-            this.isParamFlag = this.isParamConfig;
-            this.newSubstation = {};
-            this.dialog = false;
-            this.assetId = this.getAssetId;
-            this.$refs.form.reset();
           } else {
             this.setAlert({
               show: true,
