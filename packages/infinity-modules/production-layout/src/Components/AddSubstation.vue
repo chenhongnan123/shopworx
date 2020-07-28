@@ -55,12 +55,8 @@
         label="Final Sub Station"
         :disabled="btnFindisable"
         ></v-switch>
-        <v-checkbox
-         v-model="checked"
-         class="mx-2"
-         label="this Substation have Parameter Configuration"
-         >
-         </v-checkbox>
+        <v-checkbox v-model="checked" class="mx-2"
+         label="this Substation have Parameter Configuration"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -81,10 +77,10 @@ export default {
     return {
       newSubstation: {},
       // assetId: 4,
-      selectedSubstationLine: null,
       assetId: null,
-      checked: false,
       getAssetId: '',
+      checked: false,
+      selectedSubstationLine: null,
       default: false,
       dialog: false,
       btnInitdisable: false,
@@ -110,7 +106,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'getAssets', 'createElement']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName', 'getAssets']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -176,7 +172,6 @@ export default {
         } else {
           this.saving = true;
           const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
-          console.log(getAssetId);
           this.assetId = getAssetId;
           this.newSubstation = {
             ...this.newSubstation,
@@ -188,7 +183,7 @@ export default {
           };
           let created = false;
           const payload = this.newSubstation;
-          created = this.createSubstation(payload);
+          created = await this.createSubstation(payload);
           if (created) {
             this.setAlert({
               show: true,
@@ -199,7 +194,7 @@ export default {
             if (checkedPlc) {
               this.newSubstation = {};
               this.dialog = false;
-              this.assetId = 4;
+              this.assetId = this.getAssetId;
               this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
@@ -227,8 +222,8 @@ export default {
             } else {
               this.newSubstation = {};
               this.dialog = false;
-              this.assetId = this.getAssetId;
               this.checked = false;
+              this.assetId = this.getAssetId;
               this.$refs.form.reset();
             }
           } else {
