@@ -11,6 +11,7 @@
   "dependencies": {
     "@shopworx/admin": "^4.1.0-rc.1-patch.3",
     "@shopworx/assets": "^4.1.0-rc.1-patch.3",
+    "@shopworx/downtime-log": "^4.1.0-rc.1-patch.3",
     "@shopworx/machine-dashboard": "^4.1.0-rc.1-patch.3",
     "@shopworx/maintenance-summary": "^4.1.0-rc.1-patch.3",
     "@shopworx/masters": "^4.1.0-rc.1-patch.3",

@@ -136,9 +136,10 @@ export default ({
       return false;
     },
 
-    updatePassword: async ({ commit, dispatch }, payload) => {
+    updatePassword: async ({ commit, dispatch, state }, payload) => {
       try {
         const { data } = await UserService.updatePassword(payload);
+        const { me } = state;
         if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -149,7 +150,10 @@ export default ({
           });
           return false;
         }
-        const updatedMe = await dispatch('updateUser', { userState: 'ACTIVE' });
+        const updatedMe = await dispatch('updateUser', {
+          userId: me.user.id,
+          userState: 'ACTIVE',
+        });
         if (updatedMe) {
           return true;
         }
@@ -258,6 +262,13 @@ export default ({
     fullName: ({ me }) => {
       if (me && me.user) {
         return `${me.user.firstname} ${me.user.lastname}`;
+      }
+      return '';
+    },
+
+    role: ({ me }) => {
+      if (me && me.user) {
+        return me.role.roleDescription;
       }
       return '';
     },

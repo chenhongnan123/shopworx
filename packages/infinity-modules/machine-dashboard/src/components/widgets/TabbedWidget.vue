@@ -41,19 +41,8 @@
                     ></div>
                     <div
                       class="subheading mt-1"
-                      v-text="tab.value"
+                      v-text="`${tab.value} %`"
                     ></div>
-                    <div :class="`${getType(tab.comparision.type).color}--text`">
-                      <v-icon
-                        small
-                        :color="getType(tab.comparision.type).color"
-                        v-text="getType(tab.comparision.type).icon"
-                      ></v-icon>
-                      <span
-                        class="body-2"
-                        v-text="tab.comparision.value"
-                      ></span>
-                    </div>
                   </v-card>
                 </v-item>
               </v-col>
@@ -62,83 +51,39 @@
         </v-card-title>
         <v-card-text>
           <highcharts
-            ref="tabbedChart"
+            ref="spline"
             :options="tabs[currentTab].options"
           ></highcharts>
         </v-card-text>
-        <v-divider v-if="action !== null"></v-divider>
-        <v-card-actions class="pa-0">
-          <v-select
-            solo
-            flat
-            dense
-            single-line
-            v-model="filter"
-            hide-details
-            item-text="text"
-            item-value="value"
-            v-if="showDateFilter"
-            :items="timeFilters"
-          ></v-select>
-          <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            class="text-none"
-            v-if="action !== null"
-            @click="$router.push(action.route)"
-          >
-            <span v-text="action.text"></span>
-            <v-icon right>mdi-chevron-right</v-icon>
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'TabbedWidget',
   data() {
     return {
       currentTab: 0,
-      showDateFilter: true,
-      filter: 'today',
-      action: {
-        route: '',
-        text: 'Performance overview',
-      },
-      chartReport: 'hourlymachineperformance',
-      tabReport: 'dailymachineperformance',
-      timeFilters: [{
-        text: 'Today',
-        value: 'today',
-        timestamp: new Date().getTime(),
-      }, {
-        text: 'Yesterday',
-        value: 'yesterday',
-        timestamp: new Date().getTime() - 86400000,
-      }],
+      chart: null,
       tabs: [
         {
+          value: '-',
           name: 'Availability',
-          value: '92%',
-          comparision: {
-            type: 'DOWN',
-            value: '5.2%',
-          },
           options: {
             chart: {
-              type: 'line',
+              type: 'spline',
               height: 200,
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -150,35 +95,27 @@ export default {
             },
             series: [{
               name: 'Availability',
-              data: [94, 93.4, 96, 92, 97, 88, 91],
-              color: '#354493',
-              showInLegend: false,
-            }, {
-              name: 'Availability',
-              dashStyle: 'Dash',
-              data: [91, 88.6, 96, 92, 93, 90, 89.5],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
           },
         },
         {
+          value: '-',
           name: 'Performance',
-          value: '88%',
-          comparision: {
-            type: 'UP',
-            value: '3%',
-          },
           options: {
             chart: {
-              type: 'line',
+              type: 'spline',
               height: 200,
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -190,35 +127,27 @@ export default {
             },
             series: [{
               name: 'Performance',
-              data: [82, 87, 86, 92.3, 91.7, 88.4, 88],
-              color: '#354493',
-              showInLegend: false,
-            }, {
-              name: 'Performance',
-              dashStyle: 'Dash',
-              data: [91, 88.6, 96, 92, 93, 90, 89.5],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
           },
         },
         {
+          value: '-',
           name: 'Quality',
-          value: '93.4%',
-          comparision: {
-            type: 'NEUTRAL',
-            value: '0%',
-          },
           options: {
             chart: {
-              type: 'line',
+              type: 'spline',
               height: 200,
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -230,35 +159,27 @@ export default {
             },
             series: [{
               name: 'Quality',
-              data: [84, 83.4, 86, 82, 87, 88, 91],
-              color: '#354493',
-              showInLegend: false,
-            }, {
-              name: 'Quality',
-              dashStyle: 'Dash',
-              data: [91, 88.6, 96, 92, 93, 90, 89.5],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
           },
         },
         {
+          value: '-',
           name: 'Oee',
-          value: '98%',
-          comparision: {
-            type: 'DOWN',
-            value: '8.3%',
-          },
           options: {
             chart: {
-              type: 'line',
+              type: 'spline',
               height: 200,
             },
             title: {
               text: null,
             },
             xAxis: {
-              categories: ['28/05', '29/05', '30/05', '31/05', '01/06', '02/06', '03/06'],
+              type: 'datetime',
+              tickPixelInterval: 150,
+              maxZoom: 20 * 1000,
               title: {
                 text: null,
               },
@@ -270,13 +191,7 @@ export default {
             },
             series: [{
               name: 'Oee',
-              data: [88, 93.4, 96.4, 92.2, 91, 88, 91],
-              color: '#354493',
-              showInLegend: false,
-            }, {
-              name: 'Oee',
-              dashStyle: 'Dash',
-              data: [91, 88.6, 96, 92, 93, 90, 89.5],
+              data: [],
               color: '#354493',
               showInLegend: false,
             }],
@@ -285,26 +200,35 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.chart = this.$refs.spline.chart;
+  },
   computed: {
     ...mapState('helper', ['isDark']),
-    ...mapState('calendar', ['businessTime']),
     title() {
       return this.widget && this.widget.definition.title;
     },
+    key() {
+      return this.tabs[this.currentTab].key;
+    },
+    machine() {
+      return this.$route.params.id;
+    },
+    ...mapState('machineDashboard', ['assetData']),
+    assetState() {
+      return this.assetData && this.assetData[this.machine];
+    },
   },
   async created() {
-    /* await this.executeTabReport();
-    await this.executeChartReport(); */
     this.updateSeriesColor(this.isDark);
   },
   watch: {
     isDark(val) {
       this.updateSeriesColor(val);
     },
-    /* async filter() {
-      await this.executeTabReport();
-      await this.executeChartReport();
-    }, */
+    assetState(val) {
+      this.addNewData(val);
+    },
   },
   props: {
     widget: {
@@ -317,50 +241,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions('calendar', ['getBusinessTime']),
-    ...mapActions('report', ['executeReport']),
-    /* async executeChartReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentChartData, comparisionChartData });
+    addNewData(val) {
+      this.tabs[0].value = val.availability;
+      this.tabs[1].value = val.performance;
+      this.tabs[2].value = val.quality;
+      this.tabs[3].value = val.oee;
+      const shift = this.chart.series[0].data.length > 20;
+      const x = new Date().getTime();
+      this.chart.series[0].addPoint([x, this.tabs[this.currentTab].value], true, shift);
     },
-    async executeTabReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentTabData, comparisionTabData });
-    },
-    async getPayload(timestamp) {
-      await this.getBusinessTime(timestamp);
-      return {
-        businessStartYear: this.businessTime.businessyear,
-        businessEndYear: this.businessTime.businessyear,
-        businessStartMonth: this.businessTime.businessmonth,
-        businessEndMonth: this.businessTime.businessmonth,
-        businessStartDay: this.businessTime.businessday,
-        businessEndDay: this.businessTime.businessday,
-        machineVal: `{${this.$route.params.id}}`,
-      };
-    }, */
     updateSeriesColor(val) {
       this.tabs.forEach((tab) => {
         tab.options.series.forEach((s) => {
