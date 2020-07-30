@@ -158,6 +158,7 @@
     "shopfloorDashboard": "车间仪表板",
     "orderManagement": "订单管理",
     "productionLog": "生产日志",
+    "downtimeLog": "停机日志",
     "maintenanceSummary": "维护摘要",
     "parameterConfiguration": "参数配置",
     "productionPlanning": "计划生产",
