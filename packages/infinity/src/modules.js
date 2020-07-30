@@ -4,6 +4,7 @@ import MachineDashboard from '@shopworx/machine-dashboard';
 import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
+import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import ParameterConfiguration from '@shopworx/parameter-configuration';
 import RoadmapManagement from '@shopworx/roadmap-management';
@@ -92,6 +93,12 @@ Vue.use(Planning, {
 });
 
 Vue.use(ProductionLog, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(DowntimeLog, {
   router,
   store,
   i18n,
