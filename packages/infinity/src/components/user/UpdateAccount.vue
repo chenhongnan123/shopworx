@@ -150,6 +150,7 @@ export default {
     async onUpdateAccount() {
       this.loading = true;
       const payload = {
+        userId: this.me.user.id,
         userState: 'RESET',
         lastname: this.lastName,
         firstname: this.firstName,
