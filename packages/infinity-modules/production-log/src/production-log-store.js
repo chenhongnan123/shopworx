@@ -3,7 +3,7 @@ import { set } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
-    isPlanningSet: false,
+    isRejectionSet: false,
     onboarded: false,
     notStartedPlans: null,
     plansOnDate: null,
@@ -14,10 +14,14 @@ export default ({
     selectedCell: null,
     selectedShift: null,
     selectedDate: null,
+    planningMaster: null,
+    rejectionReasonsMaster: null,
+    rejectionMaster: null,
+    masterData: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
-    setIsPlanningSet: set('isPlanningSet'),
+    setIsRejectionSet: set('isRejectionSet'),
     setNotStartedPlans: set('notStartedPlans'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
@@ -27,21 +31,19 @@ export default ({
     setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
+    setPlanningMaster: set('planningMaster'),
+    setRejectionReasonsMaster: set('rejectionReasonsMaster'),
+    setRejectionMaster: set('rejectionMaster'),
+    setMasterData: set('masterData'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
-      const planning = await dispatch('getPlanningElement');
-      if (planning) {
-        commit('setIsPlanningSet', true);
-        const rejectionReason = await dispatch('getRejectionReasonElement');
-        if (rejectionReason) {
-          const downtimeReason = await dispatch('getDowntimeReasonElement');
-          if (downtimeReason) {
-            const operator = await dispatch('getOperatorElement');
-            if (operator) {
-              commit('setOnboarded', true);
-            }
-          }
+      const rejectionElement = await dispatch('getRejectionElement');
+      if (rejectionElement) {
+        commit('setIsRejectionSet', true);
+        const rejectionReasonElement = await dispatch('getRejectionReasonElement');
+        if (rejectionReasonElement) {
+          commit('setOnboarded', true);
         }
       }
     },
@@ -63,23 +65,161 @@ export default ({
       );
       return !!element;
     },
-
-    getDowntimeReasonElement: async ({ dispatch }) => {
+    getRejectionElement: async ({ dispatch }) => {
       const element = await dispatch(
         'element/getElement',
-        'downtimereasons',
+        'rejection',
         { root: true },
       );
       return !!element;
     },
-
-    getOperatorElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'operator',
+    getMasterData: async ({ commit, dispatch, rootGetters }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
         { root: true },
       );
-      return !!element;
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => (
+            elem.masterElement.onboardingRequired
+          ))
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
+    },
+    // createRejectionReasonsElement: async ({ dispatch, state }) => {
+    //   const { rejectionReasonsMaster } = state;
+    //   if (rejectionReasonsMaster) {
+    //     const element = rejectionReasonsMaster.masterElement;
+    //     const tags = [...rejectionReasonsMaster.masterTags];
+    //     const payload = {
+    //       element,
+    //       tags,
+    //     };
+    //     const success = await dispatch(
+    //       'element/createElementAndTags',
+    //       payload,
+    //       { root: true },
+    //     );
+    //     return success;
+    //   }
+    //   return false;
+    // },
+    // createRejectionElement: async ({ dispatch, state }) => {
+    //   const { rejectionMaster } = state;
+    //   if (rejectionMaster) {
+    //     const element = rejectionMaster.masterElement;
+    //     const tags = [...rejectionMaster.masterTags];
+    //     const payload = {
+    //       element,
+    //       tags,
+    //     };
+    //     const success = await dispatch(
+    //       'element/createElementAndTags',
+    //       payload,
+    //       { root: true },
+    //     );
+    //     return success;
+    //   }
+    //   return false;
+    // },
+    getMasterElements: async ({ commit, dispatch, rootState }) => {
+      const { id } = rootState.user.me.industry;
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        id,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        let planningMaster = null;
+        let rejectionReasonsMaster = [];
+        let rejectionMaster = [];
+        masterElements
+          .forEach((elem) => {
+            if (elem.masterElement.elementName === 'planning') {
+              planningMaster = elem;
+            }
+            if (elem.masterElement.elementName === 'rejectionreasons') {
+              rejectionReasonsMaster = elem;
+            }
+            if (elem.masterElement.elementName === 'rejection') {
+              rejectionMaster = elem;
+            }
+            return elem;
+          });
+        commit('setPlanningMaster', planningMaster);
+        commit('setRejectionReasonsMaster', rejectionReasonsMaster);
+        commit('setRejectionMaster', rejectionMaster);
+        return true;
+      }
+      return false;
+    },
+    createRejectionElement: async ({ dispatch, state }) => {
+      debugger;
+      const { planningMaster, rejectionReasonsMaster, rejectionMaster } = state;
+      if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
+        debugger;
+        const element = rejectionMaster.masterElement;
+        const tags = [
+          ...rejectionReasonsMaster.masterTags,
+          ...planningMaster.masterTags,
+          ...rejectionMaster.masterTags,
+        ];
+        const payload = {
+          element,
+          tags,
+        };
+        const success = await dispatch(
+          'element/createElementAndTags',
+          payload,
+          { root: true },
+        );
+        return success;
+      }
+      return false;
     },
     fetchBusinessHours: async ({ commit, dispatch }) => {
       const records = await dispatch(
