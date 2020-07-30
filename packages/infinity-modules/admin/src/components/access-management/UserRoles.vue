@@ -6,6 +6,7 @@
           small
           color="primary"
           class="text-none"
+          disabled
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
         >
           <v-icon
@@ -19,12 +20,13 @@
           small
           outlined
           color="primary"
+          @click="fetchRoles"
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           small
           outlined
           color="primary"
@@ -33,7 +35,7 @@
           <v-icon small v-text="'$download'" left></v-icon>
           Export roles
           <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn>
+        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
@@ -65,13 +67,14 @@
           </v-col>
         </v-row>
         <v-data-table
-          item-key="id"
+          item-key="roleId"
           class="transparent"
           :search="search"
           :items="userRoles"
           :headers="headers"
           show-expand
           single-expand
+          :expanded.sync="expanded"
           disable-pagination
           hide-default-footer
         >
@@ -80,12 +83,14 @@
               value
               dense
               :input-value="item.roleType === roleTypes.admin"
+              @change="updateRoleType(item)"
             ></v-switch>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn
               icon
               small
+              disabled
               color="error"
               @click="deleteRole(item)"
               :loading="deleting"
@@ -96,7 +101,6 @@
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-card-text>
-                {{ item.permissions }}
                 <v-treeview
                   dense
                   rounded
@@ -114,6 +118,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   text
+                  disabled
                   color="primary"
                   class="text-none"
                 >
@@ -121,6 +126,7 @@
                 </v-btn>
                 <v-btn
                   color="primary"
+                  disabled
                   class="text-none"
                 >
                   Update permissions
@@ -141,6 +147,7 @@ export default {
   name: 'UserRoles',
   data() {
     return {
+      expanded: [],
       roleTypes: {
         admin: 'ADMINISTRATOR',
         user: 'USER',
@@ -177,7 +184,7 @@ export default {
       if (this.roles && this.roles.length) {
         return this.roles.map((role) => ({
           ...role,
-          permissions: [],
+          permissions: this.getRolePermissions(role),
         }));
       }
       return [];
@@ -206,7 +213,7 @@ export default {
       const modules = [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS') {
+          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
             modules.push({
               id: module.id,
               name: this.$i18n.t(`modules.${module.moduleName}`),
@@ -224,7 +231,7 @@ export default {
                 name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
               })),
             });
-          } else {
+          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
             modules.push({
               ...module,
               name: this.$i18n.t(`modules.${module.moduleName}`),
@@ -236,60 +243,94 @@ export default {
       return modules;
     },
   },
-  async created() {
-    this.loading = true;
-    await this.getMasterSolutions();
-    await this.getUserRoles();
-    this.loading = false;
+  created() {
+    this.fetchRoles();
   },
   methods: {
     ...mapActions('user', ['getUserRoles']),
-    ...mapActions('admin', ['getMasterSolutions']),
+    ...mapActions('admin', ['getMasterSolutions', 'updateRole']),
     deleteRole() {},
+    async fetchRoles() {
+      this.loading = true;
+      await this.getMasterSolutions();
+      await this.getUserRoles();
+      this.loading = false;
+    },
     removeDuplicates(myArr, prop) {
       return myArr
         .filter((obj, pos, arr) => arr
           .map((mapObj) => mapObj[prop])
           .indexOf(obj[prop]) === pos);
     },
+    async updateRoleType(role) {
+      let roleType = '';
+      if (role.roleType === this.roleTypes.admin) {
+        roleType = this.roleTypes.user;
+      } else {
+        roleType = this.roleTypes.admin;
+      }
+      const payload = {
+        roleName: role.roleName,
+        roleDescription: role.roleDescription,
+        roleType,
+      };
+      const success = await this.updateRole(payload);
+      if (success) {
+        await this.fetchRoles();
+      }
+    },
     getRolePermissions(role) {
       const modules = [];
       const roleModules = role.modules;
       const roleModulesIds = roleModules.map((mod) => mod.id);
-      const roleAppIds = roleModules
-        .find((mod) => mod.moduleName.toUpperCase().trim() === 'APPS')
-        .details.map((detail) => detail.id);
-      const roleReportCategoryIds = roleModules
-        .find((mod) => mod.moduleName.toUpperCase().trim() === 'REPORTS')
-        .details.map((detail) => detail.id);
+      const webAppModule = roleModules
+        .find((mod) => mod.moduleName.toUpperCase().trim() === 'APPS' || mod.moduleName.toUpperCase().trim() === 'DASHBOARDS');
+      const roleAppIds = webAppModule
+        ? webAppModule.details.map((detail) => detail.id)
+        : [];
+      const reportModule = roleModules.find((mod) => mod.moduleName.toUpperCase().trim() === 'REPORTS');
+      const roleReportCategoryIds = reportModule
+        ? reportModule.details.map((detail) => detail.id)
+        : [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS') {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: module.details.map((detail) => ({
-                ...detail,
-                selected: roleAppIds.includes(detail.id),
-                name: this.$i18n.t(`modules.${detail.webAppName}`),
-              })),
-            });
+          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            if (module.details.filter((detail) => roleAppIds.includes(detail.id)).length) {
+              modules.push({
+                id: module.id,
+                name: this.$i18n.t(`modules.${module.moduleName}`),
+                children: module.details
+                  .filter((detail) => roleAppIds.includes(detail.id))
+                  .map((detail) => ({
+                    ...detail,
+                    name: this.$i18n.t(`modules.${detail.webAppName}`),
+                  })),
+              });
+            }
           } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            if (module.details
+              .filter((detail) => roleReportCategoryIds.includes(detail.id)).length) {
+              modules.push({
+                id: module.id,
+                name: this.$i18n.t(`modules.${module.moduleName}`),
+                children: this.removeDuplicates(module.details, 'id')
+                  .filter((detail) => roleReportCategoryIds.includes(detail.id))
+                  .map((detail) => ({
+                    ...detail,
+                    name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
+                  })),
+              });
+            }
+          } else if (roleModulesIds.includes(module.id)) {
             modules.push({
               id: module.id,
               name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: this.removeDuplicates(module.details, 'id').map((detail) => ({
-                ...detail,
-                selected: roleReportCategoryIds.includes(detail.id),
-                name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
-              })),
-            });
-          } else {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              selected: roleModulesIds.includes(module.id),
-              children: [],
+              children: module.details
+                .filter((detail) => roleAppIds.includes(detail.id))
+                .map((detail) => ({
+                  ...detail,
+                  name: this.$i18n.t(`modules.${detail.webAppName}`),
+                })),
             });
           }
           return modules;
