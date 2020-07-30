@@ -1,7 +1,7 @@
 <template>
   <ag-grid-vue
     :sideBar="true"
-    v-model="rowData"
+    :rowData="rowData"
     multiSortKey="ctrl"
     :animateRows="true"
     :enableCharts="true"
@@ -59,24 +59,9 @@ export default {
       floatingFilter: true,
     };
   },
-  beforeMount() {
-    if (this.report && this.report.cols) {
-      this.columnDefs = this.report.cols.map((col) => ({
-        headerName: col.description,
-        field: col.name,
-        filter: col.type === 'long' || col.type === 'number'
-          ? 'agNumberColumnFilter'
-          : '',
-      }));
-    }
-    if (this.report && this.report.reportData) {
-      this.rowData = this.report.reportData;
-    }
-  },
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    this.restoreState();
   },
   computed: {
     ...mapState('reports', ['report']),
@@ -88,6 +73,7 @@ export default {
         this.columnDefs = val.cols.map((col) => ({
           headerName: col.description,
           field: col.name,
+          colId: col.name,
           filter: col.type === 'long' || col.type === 'number'
             ? 'agNumberColumnFilter'
             : undefined,
@@ -121,15 +107,17 @@ export default {
     },
     restoreState() {
       if (!this.isBaseReport) {
-        this.setGridState(this.gridObject);
         const state = JSON.parse(this.gridObject);
-        this.gridColumnApi.setColumnState(state.colState);
-        this.gridColumnApi.setColumnGroupState(state.groupState);
-        this.gridApi.setSortModel(state.sortState);
-        this.gridApi.setFilterModel(state.filterState);
+        this.setState(state);
       } else {
-        // this.resetState();
+        this.resetState();
       }
+    },
+    setState(state) {
+      this.gridColumnApi.setColumnState(state.colState);
+      this.gridColumnApi.setColumnGroupState(state.groupState);
+      this.gridApi.setSortModel(state.sortState);
+      this.gridApi.setFilterModel(state.filterState);
     },
     resetState() {
       this.gridColumnApi.resetColumnState();
