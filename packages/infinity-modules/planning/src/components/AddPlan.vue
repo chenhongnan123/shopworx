@@ -225,7 +225,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            :disabled="invalid"
             type="submit"
             v-if="!edit && !duplicate"
           >
@@ -235,7 +235,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            :disabled="invalid"
             type="submit"
             v-else-if="edit"
           >
@@ -245,7 +245,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            :disabled="invalid"
             type="submit"
             v-else-if="duplicate"
           >
