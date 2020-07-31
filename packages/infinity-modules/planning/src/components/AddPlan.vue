@@ -1,6 +1,5 @@
 <template>
   <v-dialog
-    scrollable
     persistent
     v-model="dialog"
     max-width="500px"
@@ -27,181 +26,234 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-text>
-        <v-autocomplete
-          clearable
-          label="Part"
-          :items="parts"
-          return-object
-          :disabled="saving"
-          item-text="partname"
-          v-model="selectedPart"
-          :loading="loadingParts"
-          prepend-icon="$production"
-          @change="onPartSelection(selectedPart)"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.partname"></v-list-item-title>
-              <v-list-item-subtitle v-text="item.partnumber"></v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete>
-        <template v-if="selectedPart">
-          <template v-if="fetchingPartMatrix">
-            <span class="ml-8">
-              Fetching part matrix records...
-            </span>
-          </template>
-          <template v-else>
-            <span class="ml-8 mb-2">
-              Did not find the matching part matrix? Add new <a>here</a>.
-            </span>
-            <template v-for="(matrixTag, index) in essentialMatrixTags">
-              <v-autocomplete
-                :key="index"
-                class="ml-8"
-                clearable
-                :disabled="saving"
-                :items="partMatrixRecords"
-                :item-text="matrixTag.tagName"
-                :item-value="matrixTag.tagName"
-                @change="updatePartMatrixRecords({
-                  name: matrixTag.tagName,
-                  value: partMatrix[matrixTag.tagName]
-                })"
-                v-model="partMatrix[matrixTag.tagName]"
-                :label="matrixTag.tagDescription"
-              ></v-autocomplete>
-            </template>
-            <template v-if="message">
+    <validation-observer ref="form" #default="{ passes, invalid }">
+      <v-form @submit.prevent="passes(onSubmit)">
+        <v-card-text>
+          <validation-provider
+            name="partname"
+            rules="required"
+            #default="{ errors }"
+          >
+            <v-autocomplete
+              clearable
+              label="Part name"
+              :items="parts"
+              return-object
+              :error-messages="errors"
+              :disabled="saving"
+              item-text="partname"
+              v-model="selectedPart"
+              :loading="loadingParts"
+              prepend-icon="$production"
+              @change="onPartSelection(selectedPart)"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.partname"></v-list-item-title>
+                  <v-list-item-subtitle v-text="item.partnumber"></v-list-item-subtitle>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+          </validation-provider>
+          <template v-if="selectedPart">
+            <template v-if="fetchingPartMatrix">
               <span class="ml-8">
-                {{ message }}
+                Fetching part matrix records...
               </span>
             </template>
-            <template v-if="displayPlanningFields">
-              <v-text-field
-                type="number"
-                :disabled="saving"
-                label="Planned quantity"
-                prepend-icon="mdi-plus-minus"
-                v-model="plan.plannedquantity"
-                @change="onPlannedQtyChange"
-              ></v-text-field>
-              <v-text-field
-                type="number"
-                :disabled="saving"
-                v-model="plan.activecavity"
-                label="Active cavity"
-                prepend-icon="$mold"
-                @change="onActiveCavityChange"
-              ></v-text-field>
-              <template v-if="isFamily">
-                <div class="ml-8">
-                  This is a family mold. Please select other parts to add to the plan.
-                </div>
-                <v-row
-                  no-gutters
-                  :key="`family-${n}`"
-                  v-for="(family, n) in familyPlan"
+            <template v-else>
+              <span class="ml-8 mb-2">
+                Did not find the matching part matrix? Add new <a>here</a>.
+              </span>
+              <template v-for="(matrixTag, index) in essentialMatrixTags">
+                <validation-provider
+                  :key="index"
+                  :name="matrixTag.tagName"
+                  rules="required"
+                  #default="{ errors }"
                 >
-                  <v-col cols="12">
-                    <v-checkbox
-                      hide-details
-                      :disabled="saving"
-                      v-model="family.selected"
-                      :label="family[partTag.tagName]"
-                    ></v-checkbox>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      type="number"
-                      class="ml-8"
-                      :disabled="saving"
-                      v-model="family.activecavity"
-                      @change="onCavityChange(n)"
-                      label="Active cavity"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      disabled
-                      class="ml-2"
-                      type="number"
-                      v-model="family.plannedquantity"
-                      label="Quantity"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+                  <v-autocomplete
+                    class="ml-8"
+                    clearable
+                    :disabled="saving"
+                    :error-messages="errors"
+                    :items="partMatrixRecords"
+                    :item-text="matrixTag.tagName"
+                    :item-value="matrixTag.tagName"
+                    @change="updatePartMatrixRecords({
+                      name: matrixTag.tagName,
+                      value: partMatrix[matrixTag.tagName]
+                    })"
+                    v-model="partMatrix[matrixTag.tagName]"
+                    :label="matrixTag.tagDescription"
+                  ></v-autocomplete>
+                </validation-provider>
               </template>
-              <v-text-field
-                type="datetime-local"
-                v-model="plan.scheduledstart"
-                label="Scheduled start"
-                prepend-icon="mdi-clock-start"
-              ></v-text-field>
-              <template v-if="showMore">
-                <v-text-field
-                  type="number"
-                  :disabled="saving"
-                  label="Work order number (Optional)"
-                  prepend-icon="mdi-file-document-outline"
-                ></v-text-field>
-                <v-checkbox
-                  hide-details
-                  v-model="plan.trial"
-                  label="Is this a trial plan?"
-                ></v-checkbox>
-                <v-checkbox
-                  hide-details
-                  v-model="plan.starred"
-                  label="Mark as star?"
-                ></v-checkbox>
+              <template v-if="message">
+                <span class="ml-8">
+                  {{ message }}
+                </span>
+              </template>
+              <template v-if="displayPlanningFields">
+                <validation-provider
+                  name="plannedQuantity"
+                  :rules="`required|numeric|min_value:1|multiple_of:${plan.activecavity}`"
+                  #default="{ errors }"
+                >
+                  <v-text-field
+                    type="number"
+                    :disabled="saving"
+                    label="Planned quantity"
+                    :error-messages="errors"
+                    prepend-icon="mdi-plus-minus"
+                    :hint="`Qty shuould be multiple of ${plan.activecavity} (active cavities)`"
+                    v-model="plan.plannedquantity"
+                    @change="onPlannedQtyChange"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  name="activeCavity"
+                  :rules="`required|numeric|max_value:${plan.cavity}|min_value:1`"
+                  #default="{ errors }"
+                >
+                  <v-text-field
+                    type="number"
+                    :disabled="saving"
+                    :error-messages="errors"
+                    v-model="plan.activecavity"
+                    label="Active cavity"
+                    prepend-icon="$mold"
+                    :hint="`Available cavities: ${plan.cavity}`"
+                    @change="onActiveCavityChange"
+                  ></v-text-field>
+                </validation-provider>
+                <template v-if="isFamily">
+                  <div class="ml-8">
+                    This is a family mold. Please select other parts to add to the plan.
+                  </div>
+                  <v-row
+                    no-gutters
+                    :key="`family-${n}`"
+                    v-for="(family, n) in familyPlan"
+                  >
+                    <v-col cols="12">
+                      <v-checkbox
+                        hide-details
+                        :disabled="saving"
+                        v-model="family.selected"
+                        :label="family[partTag.tagName]"
+                      ></v-checkbox>
+                    </v-col>
+                    <v-col cols="6">
+                      <validation-provider
+                        name="familyActiveCavity"
+                        :rules="`required|numeric|max_value:${family.cavity}|min_value:1`"
+                        #default="{ errors }"
+                      >
+                        <v-text-field
+                          type="number"
+                          class="ml-8"
+                          :disabled="saving"
+                          :error-messages="errors"
+                          v-model="family.activecavity"
+                          @change="onCavityChange(n)"
+                          :hint="`Available cavities: ${family.cavity}`"
+                          label="Active cavity"
+                        ></v-text-field>
+                      </validation-provider>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        disabled
+                        class="ml-2"
+                        type="number"
+                        v-model="family.plannedquantity"
+                        label="Quantity"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </template>
+                <validation-provider
+                  name="scheduledStart"
+                  rules="required|greater_than_now"
+                  #default="{ errors }"
+                >
+                  <v-text-field
+                    type="datetime-local"
+                    v-model="plan.scheduledstart"
+                    label="Scheduled start"
+                    :error-messages="errors"
+                    prepend-icon="mdi-clock-start"
+                  ></v-text-field>
+                </validation-provider>
+                <template v-if="showMore">
+                  <v-text-field
+                    type="text"
+                    :disabled="saving"
+                    v-model="plan.workordernumber"
+                    label="Work order number (Optional)"
+                    prepend-icon="mdi-file-document-outline"
+                  ></v-text-field>
+                  <v-checkbox
+                    hide-details
+                    v-model="plan.trial"
+                    label="Is this a trial plan?"
+                  ></v-checkbox>
+                  <v-checkbox
+                    hide-details
+                    v-model="plan.starred"
+                    label="Mark as star?"
+                  ></v-checkbox>
+                </template>
               </template>
             </template>
           </template>
-        </template>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          text
-          color="primary"
-          class="text-none"
-          :disabled="saving"
-          v-if="displayPlanningFields"
-          @click="showMore = !showMore"
-        >
-          {{ showMore ? 'Less options': 'More options' }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          class="text-none"
-          :loading="saving"
-          @click="savePlan"
-          v-if="!edit && !duplicate"
-        >
-          Save
-        </v-btn>
-        <v-btn
-          color="primary"
-          class="text-none"
-          :loading="saving"
-          @click="updatePlan"
-          v-else-if="edit"
-        >
-          Update
-        </v-btn>
-        <v-btn
-          color="primary"
-          class="text-none"
-          :loading="saving"
-          @click="savePlan"
-          v-else-if="duplicate"
-        >
-          Duplicate
-        </v-btn>
-      </v-card-actions>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            class="text-none"
+            :disabled="saving"
+            v-if="displayPlanningFields"
+            @click="showMore = !showMore"
+          >
+            {{ showMore ? 'Less options': 'More options' }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            type="submit"
+            v-if="!edit && !duplicate"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            type="submit"
+            v-else-if="edit"
+          >
+            Update
+          </v-btn>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            :disabled="invalid || fetchingPartMatrix || displayPlanningFields"
+            type="submit"
+            v-else-if="duplicate"
+          >
+            Duplicate
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </validation-observer>
     </v-card>
   </v-dialog>
 </template>
@@ -234,6 +286,7 @@ export default {
   data() {
     return {
       plan: {},
+      form: null,
       dialog: false,
       assetId: null,
       filters: {},
@@ -390,7 +443,7 @@ export default {
           this.partMatrix[key] = this.partMatrixRecords[0][key];
         });
         this.plan.activecavity = this.partMatrix.cavity;
-        this.plan.scheduledstart = formatDate(new Date(), 'yyyy-MM-dd\'T\'HH:mm');
+        this.plan.scheduledstart = formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm');
         this.message = null;
         this.displayPlanningFields = true;
         this.plan = { ...this.plan, ...this.partMatrix };
@@ -483,6 +536,7 @@ export default {
       this.saving = true;
       this.plan = {
         ...this.plan,
+        planid: this.planToEdit.planid,
         assetid: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
       };
@@ -514,6 +568,13 @@ export default {
       }
       this.saving = false;
     },
+    onSubmit() {
+      if (this.edit) {
+        this.updatePlan();
+      } else {
+        this.savePlan();
+      }
+    },
     close() {
       this.selectedPart = null;
       this.assetId = null;
@@ -522,6 +583,9 @@ export default {
       this.showFamilyParts = false;
       this.displayPlanningFields = false;
       this.familyPlan = [];
+      requestAnimationFrame(() => {
+        this.$refs.form.reset();
+      });
       this.dialog = false;
     },
     async setPlan() {

@@ -68,7 +68,7 @@
             <v-icon small left>mdi-refresh</v-icon>
             Refresh
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             small
             color="primary"
             outlined
@@ -77,7 +77,7 @@
           >
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
-          </v-btn>
+          </v-btn> -->
         </v-toolbar>
         <v-calendar
           ref="calendar"

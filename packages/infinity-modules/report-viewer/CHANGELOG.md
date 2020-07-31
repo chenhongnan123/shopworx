@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed report viewer grid display ([41e7656](https://bitbucket.org/entrib/shopworx/commits/41e765670041abd46d17e2ad43df11acf108d1c2))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 **Note:** Version bump only for package @shopworx/report-viewer
