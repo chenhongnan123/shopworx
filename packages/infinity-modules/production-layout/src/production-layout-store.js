@@ -176,7 +176,7 @@ export default ({
       if (list && list.length) {
         subStations = list.map((l) => ({
           ...l,
-          textcolor: 0,
+          stationcolor: 0,
           // numberIndex: index + 1,
         }));
       }

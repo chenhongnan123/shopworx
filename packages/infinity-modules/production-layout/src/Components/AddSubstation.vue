@@ -180,6 +180,7 @@ export default {
             lineid: this.selectedSubstationLine.lineid,
             // lineid: this.lineid,
             assetid: this.assetId,
+            stationcolor: 1,
           };
           let created = false;
           const payload = this.newSubstation;

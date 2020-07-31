@@ -142,7 +142,10 @@
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
-              <div>{{ substation.name }}
+              <!-- <div :class="{ 'my-text-style': substation.lineid===1}"> -->
+                <div v-bind:style="
+                 substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
+                {{ substation.name }}
                 <DeleteSubstation :substation="substation" />
                 <UpdateSubstation :substation="substation" />
               </div>
@@ -204,6 +207,8 @@ export default {
   data() {
     return {
       dialog: false,
+      isActive: 2,
+      hasError: 4,
       headersProductionLayout: [
         {
           text: 'Subline',
@@ -282,4 +287,10 @@ div .pa-1:nth-of-type(even) {
 .theme--light.v-application .row .pa-1:nth-of-type(odd) {
     background-color: #F5F5F5;
   }
+.my-text-style{
+  color: red;
+}
+.green--text{
+  color: green;
+}
 </style>
