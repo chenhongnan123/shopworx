@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+* **planning:** fixed edit and duplicate plan ([fbab973](https://bitbucket.org/entrib/shopworx/commits/fbab973dd8519caf3d8a5935b51007cab516fdb2))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 

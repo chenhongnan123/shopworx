@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **admin-console:** Fixed user role update ([d716807](https://bitbucket.org/entrib/shopworx/commits/d716807b1a677f18ce8d00bcf6c6efb87e86c28a))
+* **dashboard:** fixed APQ widget ([8edf28c](https://bitbucket.org/entrib/shopworx/commits/8edf28ceb6c6b0642f153880d1d271471c55b140))
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+* **planning:** fixed edit and duplicate plan ([fbab973](https://bitbucket.org/entrib/shopworx/commits/fbab973dd8519caf3d8a5935b51007cab516fdb2))
+* **report-viewer:** fixed report viewer grid display ([41e7656](https://bitbucket.org/entrib/shopworx/commits/41e765670041abd46d17e2ad43df11acf108d1c2))
+
+
+### Features
+
+* **account:** added role information for logged in user ([3a86f74](https://bitbucket.org/entrib/shopworx/commits/3a86f7415b4d4a498113d1f031c283b79fee6709))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 
