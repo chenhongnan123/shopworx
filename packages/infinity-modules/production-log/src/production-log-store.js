@@ -5,7 +5,7 @@ export default ({
   state: {
     isRejectionSet: false,
     onboarded: false,
-    notStartedPlans: null,
+    // notStartedPlans: null,
     plansOnDate: null,
     machines: [],
     allShifts: [],
@@ -18,11 +18,13 @@ export default ({
     rejectionReasonsMaster: null,
     rejectionMaster: null,
     masterData: [],
+    rejectionReasons: [],
+    productionDetails: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
     setIsRejectionSet: set('isRejectionSet'),
-    setNotStartedPlans: set('notStartedPlans'),
+    // setNotStartedPlans: set('notStartedPlans'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
     setShift: set('allShifts'),
@@ -35,6 +37,8 @@ export default ({
     setRejectionReasonsMaster: set('rejectionReasonsMaster'),
     setRejectionMaster: set('rejectionMaster'),
     setMasterData: set('masterData'),
+    setRejectionReasons: set('rejectionReasons'),
+    setProductionDetails: set('productionDetails'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -47,7 +51,7 @@ export default ({
         }
       }
     },
-
+    // TODO - make below 3 functions 1
     getPlanningElement: async ({ dispatch }) => {
       const element = await dispatch(
         'element/getElement',
@@ -73,6 +77,7 @@ export default ({
       );
       return !!element;
     },
+    // TODO - below 2 functions can be merged
     getMasterData: async ({ commit, dispatch, rootGetters }) => {
       const licensedAssets = rootGetters['user/licensedAssets'];
       const masterElements = await dispatch(
@@ -130,42 +135,6 @@ export default ({
       }
       return false;
     },
-    // createRejectionReasonsElement: async ({ dispatch, state }) => {
-    //   const { rejectionReasonsMaster } = state;
-    //   if (rejectionReasonsMaster) {
-    //     const element = rejectionReasonsMaster.masterElement;
-    //     const tags = [...rejectionReasonsMaster.masterTags];
-    //     const payload = {
-    //       element,
-    //       tags,
-    //     };
-    //     const success = await dispatch(
-    //       'element/createElementAndTags',
-    //       payload,
-    //       { root: true },
-    //     );
-    //     return success;
-    //   }
-    //   return false;
-    // },
-    // createRejectionElement: async ({ dispatch, state }) => {
-    //   const { rejectionMaster } = state;
-    //   if (rejectionMaster) {
-    //     const element = rejectionMaster.masterElement;
-    //     const tags = [...rejectionMaster.masterTags];
-    //     const payload = {
-    //       element,
-    //       tags,
-    //     };
-    //     const success = await dispatch(
-    //       'element/createElementAndTags',
-    //       payload,
-    //       { root: true },
-    //     );
-    //     return success;
-    //   }
-    //   return false;
-    // },
     getMasterElements: async ({ commit, dispatch, rootState }) => {
       const { id } = rootState.user.me.industry;
       const masterElements = await dispatch(
@@ -198,10 +167,8 @@ export default ({
       return false;
     },
     createRejectionElement: async ({ dispatch, state }) => {
-      debugger;
       const { planningMaster, rejectionReasonsMaster, rejectionMaster } = state;
       if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
-        debugger;
         const element = rejectionMaster.masterElement;
         const tags = [
           ...rejectionReasonsMaster.masterTags,
@@ -251,23 +218,39 @@ export default ({
       }
       return false;
     },
+    fetchRejectionReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'rejectionreasons' },
+        { root: true },
+      );
+      if (records) {
+        commit('setRejectionReasons', records);
+        return true;
+      }
+      return false;
+    },
 
-    getRejections: async ({ commit, dispatch }) => {
-      // const { selectedShift, selectedMachine, allShifts } = state;
-      // TODO get start and end date (shift/day)
+    getRejections: async ({ state, dispatch }, machinename) => {
+      const { selectedDate, selectedShift } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      let query = `?query=machinename=="${machinename}"%26%26date==${date}`;
+      // TODO - i18n check for "All"
+      if (!selectedShift.includes('All')) {
+        query = `?query=machinename=="${machinename}"%26%26date==${date}%26%26shift==${selectedShift}`;
+      }
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'rejection',
-          // query: `&query=datefrom==${}&dateto==${}`,
+          query,
         },
         { root: true },
       );
       if (records) {
-        commit('setRejections', records);
-        return true;
+        return records;
       }
-      return false;
+      return [];
     },
     addRejection: async ({ dispatch }, rejectionData) => {
       const records = await dispatch(
@@ -301,47 +284,77 @@ export default ({
       }
       return false;
     },
-    getProductionReport: async ({ state, commit, dispatch }) => {
-      const { selectedMachine, selectedShift } = state;
-      // TODO get report start and end date (shift/day)
-      // const reportDate =
-      const records = await dispatch(
+    executeProductionReport: async ({
+      state,
+      commit,
+      dispatch,
+      rootGetters,
+    }) => {
+      const sites = rootGetters['user/sites'];
+      const { selectedMachine, selectedShift, selectedDate } = state;
+      let machineFilter = null;
+      let shiftFilter = null;
+      if (!selectedDate || !selectedMachine || !selectedShift) {
+        return false;
+      }
+      // TODO - use common function
+      if (selectedMachine.includes('All ')) {
+        let machineList = rootGetters['productionLog/machineList'];
+        machineList = machineList.filter((machine) => !machine.includes('All ')).join();
+        machineFilter = `{${machineList}}`;
+      } else {
+        machineFilter = `{${selectedMachine}}`;
+      }
+      if (selectedShift.includes('All ')) {
+        let shifts = rootGetters['productionLog/shifts'];
+        shifts = shifts.filter((machine) => !machine.includes('All ')).join();
+        shiftFilter = `{${shifts}}`;
+      } else {
+        shiftFilter = `{${selectedShift}}`;
+      }
+      const reportData = await dispatch(
         'report/executeReport', {
-          reportName: 'productionbyshift',
+          reportName: 'productionlogreport',
           payload: {
-            machineVal: selectedMachine,
-            shiftVal: selectedShift,
-            // startDate: starDate,
-            // endDate: endDate
+            machineFilter,
+            shiftFilter,
+            start: parseInt(selectedDate.replace(/-/g, ''), 10),
+            end: parseInt(selectedDate.replace(/-/g, ''), 10),
+            siteid: sites[0].id,
           },
-        }, {
-          root: true,
         },
+        { root: true },
       );
-      if (records) {
-        commit('setRejections', records);
-        return true;
+      if (reportData) {
+        try {
+          commit('setProductionDetails', JSON.parse(reportData).reportData);
+          return true;
+        } catch (error) {
+          console.error(`Exception while parsing production report data : ${error}`);
+        }
       }
       return false;
     },
 
-    getPlansBetweenDateRange: async ({ commit, dispatch }, { min, max }) => {
-      const plans = await dispatch(
-        'planning/getPlanningRecords',
-        `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
-        { root: true },
-      );
-      commit('setPlansOnDate', plans);
-    },
+    // getPlansBetweenDateRange: async ({ commit, dispatch }, { min, max }) => {
+    //   const plans = await dispatch(
+    //     'planning/getPlanningRecords',
+    //     `?query=(actualstart<${max}%26%26actualend>${min})
+    //      %7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})
+    //      %7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
+    //     { root: true },
+    //   );
+    //   commit('setPlansOnDate', plans);
+    // },
 
-    getNotStartedPlans: async ({ commit, dispatch }) => {
-      const plans = await dispatch(
-        'planning/getPlanningRecords',
-        '?query=status=="notStarted"',
-        { root: true },
-      );
-      commit('setNotStartedPlans', plans);
-    },
+    // getNotStartedPlans: async ({ commit, dispatch }) => {
+    //   const plans = await dispatch(
+    //     'planning/getPlanningRecords',
+    //     '?query=status=="notStarted"',
+    //     { root: true },
+    //   );
+    //   commit('setNotStartedPlans', plans);
+    // },
   },
   getters: {
     cells: ({ machines }) => {

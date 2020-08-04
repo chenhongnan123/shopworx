@@ -45,14 +45,14 @@
                 {{ plan.planid }}
                 <v-spacer></v-spacer>
                 <span class="body-1 mb-2">
-                  10:30 to 14:30
+                  {{ plan.cyclestart }} to {{ plan.cycleend }}
                 </span>
               </v-card-title>
               <v-card-subtitle primary-title>
               </v-card-subtitle>
               <v-card-text>
                 <v-row no-gutters >
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" sm="8">
                     <div class="body-2">
                       Part
                     </div>
@@ -66,29 +66,29 @@
                       {{ plan.activecavity }}
                     </div>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" sm="2">
                     <div>
                       <div class="body-2">
                         Planned quantity
                       </div>
                       <div class="text-uppercase title font-weight-regular mb-2">
-                        {{ plan.plannedquantity }}
+                        {{ plan.planned }}
                       </div>
                       <div class="body-2 warning--text">
                         Produced
                       </div>
                       <div class="text-uppercase warning--text title font-weight-regular mb-2">
-                        2000
+                        {{ plan.produced }}
                       </div>
                     </div>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" sm="2">
                     <div class="error--text">
                       <div class="body-2">
                         Rejected
                       </div>
                       <div class="text-uppercase title font-weight-regular mb-2">
-                        10
+                        {{ plan.rejected }}
                       </div>
                     </div>
                     <div class="success--text">
@@ -96,7 +96,7 @@
                         Accepted
                       </div>
                       <div class="text-uppercase title font-weight-regular mb-2">
-                        1990
+                        {{ plan.accepted }}
                       </div>
                     </div>
                   </v-col>
@@ -109,7 +109,7 @@
                 >
                   <v-expansion-panel>
                     <v-expansion-panel-header class="pa-0 ma-0">
-                      REJECTIONS
+                      REJECTIONS {{plan}}
                       </v-expansion-panel-header>
                       <v-expansion-panel-content class="panel-padding">
                         <v-card class="mb-2">
@@ -165,7 +165,7 @@
                                   dense
                                   hide-details
                                   return-object
-                                  :items="reasons"
+                                  :items="rejectionReasons"
                                   item-text="name"
                                   item-value="code"
                                   label="Rejection reason"
@@ -236,11 +236,11 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 // import ProductionToolbar from '../ProductionToolbar.vue';
 
 export default {
-  name: 'ProductionOnDate',
+  name: 'ProductionDetails',
   components: {
     // ProductionToolbar,
   },
@@ -248,22 +248,6 @@ export default {
     return {
       error: false,
       loading: false,
-      reasons: [{
-        code: 'RT-01',
-        name: 'Machine breakdown',
-        category: 'Breakdown',
-        department: 'Production',
-      }, {
-        code: 'RT-02',
-        name: 'Oil change',
-        category: 'Maintenance',
-        department: 'Maintenance',
-      }, {
-        code: 'RT-03',
-        name: 'Power outage',
-        category: 'Power',
-        department: 'Management',
-      }],
       headers: [
         { text: 'Reason', value: 'reasonname' },
         { text: 'Quantity', value: 'quantity' },
@@ -294,46 +278,43 @@ export default {
     };
   },
   created() {
-    this.fetchPlans();
+    // setTimeout(() => {
+    //   this.executeProductionReport();
+    // }, 1000);
   },
   computed: {
-    ...mapState('productionLog', ['notStartedPlans']),
-    ...mapGetters('planning', ['planStatusClass']),
+    ...mapState('productionLog', ['rejectionReasons', 'selectedDate', 'selectedMachine', 'selectedShift', 'productionDetails']),
     plans() {
-      if (this.notStartedPlans) {
-        const items = Object
-          .keys(this.notStartedPlans)
-          .map((planId) => {
-            const plans = this.notStartedPlans[planId];
-            let { partname } = plans[0];
-            if (plans.length > 1) {
-              partname = plans
-                .map((plan) => plan.partname)
-                .join(', ');
-            }
-            return {
-              ...plans[0],
-              planid: planId,
-              status: 'inProgress',
-              partname,
-              selected: false,
-            };
-          });
-        return items;
+      if (this.productionDetails) {
+        this.productionDetails.forEach(async (plan) => {
+          plan.rejectionDetails = await this.getRejections(plan.machinename);
+          console.log('RD', plan.rejectionDetails);
+        });
+        debugger;
+        return this.productionDetails;
       }
       return [];
     },
   },
-  methods: {
-    ...mapActions('productionLog', ['getPlansBetweenDateRange', 'addRejection', 'updateRejection']),
-    async fetchPlans() {
-      this.loading = true;
-      await this.getPlansBetweenDateRange({
-        min: 1589308200000,
-        max: 1589370249371,
-      });
-      this.loading = false;
+  watch: {
+    selectedDate(val) {
+      if (val) {
+        this.executeProductionReport();
+      }
     },
+    selectedMachine(val) {
+      if (val) {
+        this.executeProductionReport();
+      }
+    },
+    selectedShift(val) {
+      if (val) {
+        this.executeProductionReport();
+      }
+    },
+  },
+  methods: {
+    ...mapActions('productionLog', ['executeProductionReport', 'addRejection', 'updateRejection', 'getRejections']),
     addRejectionData() {
       const rejectionData = {
         planid: '100-41',

@@ -49,10 +49,12 @@ export default {
     // const view = localStorage.getItem('logView');
     // this.logView = view ? JSON.parse(view) : 0;
     await this.fetchBusinessHours();
+    await this.fetchRejectionReasons();
     const machines = await this.fetchMachines();
     if (machines) {
       this.setExtendedHeader(true);
     }
+    // await this.getProductionReport();
     this.loading = false;
   },
   watch: {
@@ -62,7 +64,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapActions('productionLog', ['fetchMachines', 'fetchBusinessHours']),
+    ...mapActions('productionLog', ['fetchMachines', 'fetchBusinessHours', 'fetchRejectionReasons']),
   },
 };
 </script>
