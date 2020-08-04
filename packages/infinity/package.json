@@ -24,6 +24,8 @@
     "@shopworx/recipe-management": "^4.1.0-rc.1-patch.3",
     "@shopworx/report-viewer": "^4.1.0-rc.1-patch.3",
     "@shopworx/roadmap-management": "^4.1.0-rc.1-patch.3",
+    "@shopworx/rework-operation": "^4.1.0-rc.1-patch.3",
+    "@shopworx/ng-code-configuration": "^4.1.0-rc.1-patch.3",
     "@shopworx/services": "^4.1.0-rc.1-patch.3",
     "@shopworx/setup": "^4.1.0-rc.1-patch.3",
     "@shopworx/user-dashboard": "^4.1.0-rc.1-patch.3",

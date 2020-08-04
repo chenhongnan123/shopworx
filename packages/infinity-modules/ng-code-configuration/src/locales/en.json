@@ -1,0 +1,29 @@
+{
+  "title": "Rework Operation",
+  "headers": {
+    "list": "List",
+    "changeover": "Changeover"
+  },
+  "displayTags": {
+      "duplicate_title": "Create Duplicate Recipe",
+      "lineName": "Line",
+      "stationName": "Station",
+      "sublineName": "Subline",
+    "buttons" : {
+      "addNewRecipe" : "Add",
+      "duplicateRecipe": "Duplicate",
+      "refreshRecipe": "Refresh",
+      "filtersRecipe": "Filters",
+      "save": "Save"
+    }
+  },
+  "error": {
+    "RECIPE_NAME_EMPTY": "Recipe name is Empty.",
+    "ALREADY_EXSIST_RECIPE": "Recipe Name already present",
+    "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
+    "SELECT_RECIPE_FIRST": "Please select the Recipe first."
+  },
+  "success": {
+    "RECIPE_CREATED": "Recipe created!"
+  }
+}

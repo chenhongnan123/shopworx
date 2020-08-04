@@ -6,14 +6,14 @@ module.exports = {
   devServer: {
     proxy: {
       '/server': {
-        target: 'http://13.127.85.87/server',
+        target: 'http://35.154.51.34/server',
         changeOrigin: true,
         pathRewrite: {
           '^/server': '',
         },
       },
       '/sse': {
-        target: 'http://13.235.69.106/sse',
+        target: 'http://35.154.51.34/sse',
         changeOrigin: true,
         pathRewrite: {
           '^/sse': '',
