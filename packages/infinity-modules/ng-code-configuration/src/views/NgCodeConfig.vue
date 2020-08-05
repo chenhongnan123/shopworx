@@ -345,15 +345,15 @@ export default {
     };
   },
   async created() {
-    this.getSublines('');
-    this.getStationbyline();
+    this.getLines('');
+    // this.getStationbyline();
     // const success = await this.getLines();
     // if (success) {
     //   [this.selectedLine] = this.lines;
     // }
   },
   computed: {
-    ...mapState('reworkOperation', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine']),
+    ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

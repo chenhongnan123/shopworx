@@ -23,7 +23,7 @@ export default ({
   },
   actions: {
     getSublinebyline: async ({ dispatch, commit }, query) => {
-      const sublinesbylines = await dispatch(
+      const sublines = await dispatch(
         'element/getRecords',
         {
           elementName: 'subline',
@@ -32,7 +32,7 @@ export default ({
         { root: true },
       );
       debugger;
-      commit('setSublinesbyline', sublinesbylines);
+      commit('setSublinesbyline', sublines);
       return true;
     },
     getLines: async ({ dispatch, commit }, query) => {
