@@ -25,7 +25,7 @@
         <v-data-table
         v-model="recipes"
         :headers="headers"
-        :items="recipeList"
+        :items="ngCodeConfigRecord"
         item-key="recipenumber"
         show-select
         >
@@ -41,13 +41,14 @@
             ></v-checkbox>
           </td>
           <td>{{ index+1 }}</td>
-          <td>{{ item.line }}</td>
-          <td>{{ item.subline }}</td>
-          <td>{{ item.machinename }}</td>
-          <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td>
-          <td>{{ item.recipenumber}}</td>
-          <td>{{ item.versionnumber }}</td>
-          <td>{{ item.createdTimestamp }}</td>
+          <td>{{ item.ngcode }}</td>
+          <td>{{ item.substationname }}</td>
+          <td>{{ item.processNgcode }}</td>
+          <!-- <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td> -->
+          <td>{{ item.roadmap}}</td>
+          <td>{{ item.reworkroadmap }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.reworkDescription }}</td>
           <td>{{ item.createdby }}</td>
           <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
           <td v-else></td>
@@ -105,13 +106,15 @@
           label="Select Line"
           @change="getfilteredSubline"/>
         <v-select
-          v-model="input.sublinename"
+          v-model="ngConfigInput.sublinename"
           :items="sublinesbylines"
           :disabled="saving"
           item-value="name"
           item-text="name"
+          return-object
           prepend-icon="$production"
-          label="Select SubLine"/>
+          label="Select SubLine"
+          @change="getfilteredSubstation"/>
         <v-text-field
             label="NG Code"
             prepend-icon="mdi-tray-plus"
@@ -119,15 +122,15 @@
             v-model="ngConfigInput.ngcode"
         ></v-text-field>
         <v-select
-          v-model="input.subStationname"
-          :items="subStations"
+          v-model="ngConfigInput.subStationname"
+          :items="subStationbySubline"
           :disabled="saving"
           item-value="name"
           item-text="name"
           prepend-icon="$production"
           label="Select Sub-Station"/>
         <v-select
-          v-model="input.processNgcode"
+          v-model="ngConfigInput.processNgcode"
           :items="processNgcode"
           :disabled="saving"
           item-value="name"
@@ -152,7 +155,7 @@
           </template>
         </v-autocomplete> -->
         <v-select
-          v-model="input.machinename"
+          v-model="ngConfigInput.machinename"
           :items="roadMaps"
           :disabled="saving"
           item-value="name"
@@ -317,6 +320,8 @@ export default {
           value: 'actions',
         },
       ],
+      selectedLinenew: null,
+      assetId: 4,
       visible: false,
       dialog: false,
       dialogDup: false,
@@ -334,8 +339,8 @@ export default {
       updateRecipeNumber: '',
       editedVersionNumber: 0,
       itemForDelete: null,
-      ngConfigInput: {},
-      input: {
+      // ngConfigInput: {},
+      ngConfigInput: {
         sublinename: '',
         machinename: '',
         subStationname: '',
@@ -346,6 +351,9 @@ export default {
   },
   async created() {
     this.getLines('');
+    this.getNgCodeConfig('');
+    this.getroadMapsList('');
+    // this.getSubStations('');
     // this.getStationbyline();
     // const success = await this.getLines();
     // if (success) {
@@ -353,12 +361,12 @@ export default {
     // }
   },
   computed: {
-    ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine']),
+    ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine', 'subStationbySubline', 'ngCodeConfigRecord']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('ngCodeConfiguration', ['setSelectedLine', 'toggleFilter']),
-    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline']),
+    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline', 'getSubstationbySubline', 'createNgConfig', 'getNgCodeConfig', 'getroadMapsList']),
 
     addNewNGCode() {
       this.dialog = true;
@@ -366,7 +374,10 @@ export default {
     async getfilteredSubline(item) {
       debugger;
       await this.getSublinebyline(`?query=lineid==${item.id}`);
-      console.log(this.sublinesbylines);
+    },
+    async getfilteredSubstation(item) {
+      debugger;
+      await this.getSubstationbySubline(`?query=sublineid=="${item.id}"`);
     },
     async RefreshUI() {
       this.getLines('');
@@ -380,12 +391,14 @@ export default {
           message: 'Select Line',
         });
       } else {
+        debugger;
         this.saving = true;
         this.newNgConfig = {
           ...this.ngConfigInput,
-          ...this.input,
+          // ...this.input,
           lineid: this.selectedLinenew.id,
           assetid: this.assetId,
+          subStationname: this.subStationname,
         };
         let created = false;
         const payload = this.newNgConfig;
@@ -409,6 +422,12 @@ export default {
         }
         this.saving = false;
       }
+    },
+    async fnDeleteOnYes() {
+      console.log('write code for delete the record');
+    },
+    async fnSaveDuplicateRecipe() {
+      console.log('write code for create Duplicate the record');
     },
   },
 };
