@@ -59,7 +59,7 @@ export default {
       return this.selectedMachine ? this.selectedMachine : '';
     },
     shift() {
-      return 'Shift 1';
+      return this.selectedShift;
     },
     date() {
       return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
