@@ -354,7 +354,9 @@ export default ({
       if (productionDetails && productionDetails.length && allRejections) {
         productionDetails.forEach((plan) => {
           const rejection = allRejections.filter(
-            (rej) => rej.planid === plan.planid && rej.partname === plan.partname,
+            (rej) => rej.planid === plan.planid
+            && rej.partname === plan.partname
+            && rej.shift === plan.shift,
           );
           data.push({
             ...plan,
@@ -362,7 +364,20 @@ export default ({
           });
         });
       }
-      return data;
+      const res = data.reduce((acc, curr) => {
+        if (curr.firstcycle && curr.firstcycle !== '-') {
+          curr.firstcycle = new Date(curr.firstcycle).toISOString().substr(11, 5);
+        }
+        if (curr.lastcycle && curr.lastcycle !== '-') {
+          curr.lastcycle = new Date(curr.lastcycle).toISOString().substr(11, 5);
+        }
+        if (!acc[curr.machinename]) acc[curr.machinename] = [];
+        acc[curr.machinename].push(curr);
+        return acc;
+      }, {});
+
+      console.log(res);
+      return res;
     },
     cells: ({ machines }) => {
       let cells = [];

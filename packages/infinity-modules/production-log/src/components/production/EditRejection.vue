@@ -20,68 +20,81 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-row>
-            <v-col cols="12" sm="8">
-            <v-autocomplete
-                outlined
-                dense
-                hide-details
-                return-object
-                :items="rejectionReasons"
-                item-text="reasonname"
-                item-value="reasonname"
-                label="Rejection reason"
-                v-model="selectedReason"
-            >
-                <template #selection="data">
-                {{ data.item.reasonname }}
-                </template>
-                <template #item="data">
-                <v-list-item-content>
-                    <v-list-item-title>
-                    {{ data.item.reasonname }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle
-                    v-text="data.item.category"
-                    ></v-list-item-subtitle>
-                    <v-list-item-subtitle
-                    v-text="data.item.department"
-                    ></v-list-item-subtitle>
-                </v-list-item-content>
-                </template>
-            </v-autocomplete>
-            </v-col>
-            <v-col cols="12" sm="4">
-            <v-text-field
-                outlined
-                dense
-                hide-details
-                v-model="rejectedQuantity"
-                type="number"
-                label="Quantity"
-            ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-            <v-textarea
-                outlined
-                dense
-                label="Remarks"
-                v-model="remark"
-            ></v-textarea>
-            </v-col>
-        </v-row>
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-            color="primary"
-            class="text-none"
-            @click="saveEdit()"
-            >
-            <v-icon left>mdi-update</v-icon>
-            Update
-            </v-btn>
-        </v-card-actions>
-        </template>
+        <validation-observer ref="form" #default="{ passes, invalid }">
+          <v-form @submit.prevent="passes(onSubmit)">
+            <v-card-text>
+              <v-row>
+                <v-col cols="12" sm="8">
+                  <v-autocomplete
+                      outlined
+                      dense
+                      hide-details
+                      return-object
+                      :items="rejectionReasons"
+                      item-text="reasonname"
+                      item-value="reasonname"
+                      label="Rejection reason"
+                      v-model="selectedReason"
+                  >
+                      <template #selection="data">
+                      {{ data.item.reasonname }}
+                      </template>
+                      <template #item="data">
+                      <v-list-item-content>
+                          <v-list-item-title>
+                          {{ data.item.reasonname }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle
+                          v-text="data.item.category"
+                          ></v-list-item-subtitle>
+                          <v-list-item-subtitle
+                          v-text="data.item.department"
+                          ></v-list-item-subtitle>
+                      </v-list-item-content>
+                      </template>
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" sm="4">
+                  <validation-provider
+                    name="rejectedQuantity"
+                    :rules="`required|min_value:1|max_value:${plan.accepted}`"
+                    #default="{ errors }">
+                    <v-text-field
+                        outlined
+                        dense
+                        hide-details
+                        :error-messages="errors"
+                        v-model="rejectedQuantity"
+                        type="number"
+                        label="Quantity"
+                    ></v-text-field>
+                  </validation-provider>
+                </v-col>
+                <v-col cols="12">
+                  <v-textarea
+                      outlined
+                      dense
+                      label="Remarks"
+                      v-model="remark"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                :disabled="invalid"
+                color="primary"
+                class="text-none"
+                @click="saveEdit()"
+                >
+                <v-icon left>mdi-update</v-icon>
+                Update
+                </v-btn>
+            </v-card-actions>
+          </v-form>
+        </validation-observer>
+      </template>
     </v-card>
   </v-dialog>
 </template>
