@@ -1,16 +1,5 @@
 <template>
   <div>
-    <!-- <v-toolbar
-      flat
-      :color="$vuetify.theme.dark ? '#121212': ''"
-    >
-      <span
-        class="title font-weight-regular"
-        v-text="'Production'"
-      ></span>
-      <v-spacer></v-spacer>
-      <production-toolbar />
-    </v-toolbar> -->
     <v-card flat>
       <v-fade-transition mode="out-in">
         <v-card-text
@@ -19,18 +8,6 @@
         >
           <v-progress-linear :indeterminate="true"></v-progress-linear>
         </v-card-text>
-        <!-- <v-card-text
-          class="text-center"
-          v-else-if="error"
-        >
-          Error...
-        </v-card-text>
-        <v-card-text
-          class="text-center"
-          v-else-if="plans.length === 0"
-        >
-          No production...
-        </v-card-text> -->
         <v-card-text
           v-else
           class="pa-0"
@@ -140,7 +117,6 @@
                             </v-data-table>
                           </template>
                         </v-card>
-                        <!-- <v-divider></v-divider> -->
                         <v-card class="mt-2 pa-3">
                           <template>
                             <v-row>
@@ -192,11 +168,6 @@
                                   v-model="remark"
                                 ></v-textarea>
                               </v-col>
-                              <!-- <v-col cols="2">
-                                <v-btn small icon class="error--text mt-2">
-                                  <v-icon v-text="'$delete'"></v-icon>
-                                </v-btn>
-                              </v-col> -->
                             </v-row>
                             <v-card-actions>
                               <v-spacer></v-spacer>
@@ -232,12 +203,10 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import EditRejection from './EditRejection.vue';
-// import ProductionToolbar from '../ProductionToolbar.vue';
 
 export default {
   name: 'ProductionDetails',
   components: {
-    // ProductionToolbar,
     EditRejection,
   },
   data() {

@@ -347,26 +347,6 @@ export default ({
       }
       return false;
     },
-
-    // getPlansBetweenDateRange: async ({ commit, dispatch }, { min, max }) => {
-    //   const plans = await dispatch(
-    //     'planning/getPlanningRecords',
-    //     `?query=(actualstart<${max}%26%26actualend>${min})
-    //      %7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})
-    //      %7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
-    //     { root: true },
-    //   );
-    //   commit('setPlansOnDate', plans);
-    // },
-
-    // getNotStartedPlans: async ({ commit, dispatch }) => {
-    //   const plans = await dispatch(
-    //     'planning/getPlanningRecords',
-    //     '?query=status=="notStarted"',
-    //     { root: true },
-    //   );
-    //   commit('setNotStartedPlans', plans);
-    // },
   },
   getters: {
     planProductionData: ({ productionDetails, allRejections }) => {

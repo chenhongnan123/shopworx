@@ -106,7 +106,6 @@ export default {
   },
   data() {
     return {
-    //   dialog: false,
       saving: false,
       message: null,
       selectedReason: null,
