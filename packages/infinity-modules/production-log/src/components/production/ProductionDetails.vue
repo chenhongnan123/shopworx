@@ -36,7 +36,7 @@
           class="pa-0"
         >
           <template v-for="(plan, i) in plans">
-                   <v-card
+            <v-card
               :key="i"
               outlined
               class="mb-2"
@@ -105,54 +105,39 @@
                 <v-expansion-panels
                   flat
                   accordion
-                  expand
                 >
                   <v-expansion-panel>
                     <v-expansion-panel-header class="pa-0 ma-0">
-                      REJECTIONS {{plan}}
+                      REJECTIONS
                       </v-expansion-panel-header>
                       <v-expansion-panel-content class="panel-padding">
                         <v-card class="mb-2">
                           <template>
-                            <div>
-                              <v-data-table
-                                :headers="headers"
-                                :items="rejectionDetails"
-                              >
-                                <template v-slot:item.quantity="props">
-                                  <v-edit-dialog
-                                    :return-value.sync="props.item.quantity"
-                                    large
-                                    persistent
-                                    @save="save(props.item)"
-                                  >
-                                    <div>{{ props.item.quantity }}</div>
-                                    <template v-slot:input>
-                                      <div class="mt-4 title">Update Iron</div>
-                                    </template>
-                                    <template v-slot:input>
-                                      <v-text-field
-                                        v-model="props.item.quantity"
-                                        type="number"
-                                        label="Edit"
-                                        min="0"
-                                        single-line
-                                        counter
-                                        autofocus
-                                      ></v-text-field>
-                                    </template>
-                                  </v-edit-dialog>
-                                </template>
-                              </v-data-table>
-
-                              <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
-                                {{ snackText }}
-
-                                <template v-slot:action="{ attrs }">
-                                  <v-btn v-bind="attrs" text @click="snack = false">Close</v-btn>
-                                </template>
-                              </v-snackbar>
-                            </div>
+                            <v-data-table
+                              :headers="headers"
+                              :items="plan.rejectionDetails"
+                              hide-default-footer
+                            >
+                              <template v-slot:item.actions="{ item }">
+                                  <v-row>
+                                      <v-btn
+                                      icon
+                                      small
+                                      color="primary"
+                                      @click="openEdit(item, plan)"
+                                      >
+                                      <v-icon v-text="'$edit'"></v-icon>
+                                      </v-btn>
+                                      <v-btn
+                                      icon
+                                      small
+                                      color="error"
+                                      >
+                                      <v-icon v-text="'$delete'"></v-icon>
+                                      </v-btn>
+                                  </v-row>
+                              </template>
+                            </v-data-table>
                           </template>
                         </v-card>
                         <!-- <v-divider></v-divider> -->
@@ -166,17 +151,18 @@
                                   hide-details
                                   return-object
                                   :items="rejectionReasons"
-                                  item-text="name"
-                                  item-value="code"
+                                  item-text="reasonname"
+                                  item-value="reasonname"
                                   label="Rejection reason"
+                                  v-model="selectedReason"
                                 >
                                   <template #selection="data">
-                                    {{ data.item.code }} | {{ data.item.name }}
+                                    {{ data.item.reasonname }}
                                   </template>
                                   <template #item="data">
                                     <v-list-item-content>
                                       <v-list-item-title>
-                                        {{ data.item.code }} | {{ data.item.name }}
+                                        {{ data.item.reasonname }}
                                       </v-list-item-title>
                                       <v-list-item-subtitle
                                         v-text="data.item.category"
@@ -193,6 +179,7 @@
                                   outlined
                                   dense
                                   hide-details
+                                  v-model="rejectedQuantity"
                                   type="number"
                                   label="Quantity"
                                 ></v-text-field>
@@ -202,6 +189,7 @@
                                   outlined
                                   dense
                                   label="Remarks"
+                                  v-model="remark"
                                 ></v-textarea>
                               </v-col>
                               <!-- <v-col cols="2">
@@ -215,7 +203,7 @@
                               <v-btn
                                 color="primary"
                                 class="text-none"
-                                @click="addRejectionData"
+                                @click="addRejectionData(plan)"
                               >
                                 <v-icon left>mdi-plus</v-icon>
                                 Add new
@@ -232,66 +220,52 @@
         </v-card-text>
       </v-fade-transition>
     </v-card>
+    <edit-rejection :rejection="dataToEdit"
+    :plan="referencePlan"
+    v-if="editRejection"
+    :editRejection="editRejection"
+    @closeDialog="editRejection = false"/>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import EditRejection from './EditRejection.vue';
 // import ProductionToolbar from '../ProductionToolbar.vue';
 
 export default {
   name: 'ProductionDetails',
   components: {
     // ProductionToolbar,
+    EditRejection,
   },
   data() {
     return {
       error: false,
       loading: false,
       headers: [
+        { text: 'Department', value: 'department' },
+        { text: 'Category', value: 'category' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Quantity', value: 'quantity' },
+        { text: this.$i18n.t('displayTags.actions'), sortable: false, value: 'actions' },
       ],
-      rejectionDetails: [{
-        planid: '100-41',
-        machinename: '',
-        quantity: 10,
-        reasonname: 'Machine breakdown',
-        remark: 'Machine under maintainance.',
-      },
-      {
-        planid: '100-41',
-        machinename: '',
-        quantity: 5,
-        reasonname: 'Oil change',
-        remark: 'Scheduled task',
-      },
-      {
-        planid: '100-41',
-        machinename: '',
-        quantity: 6,
-        reasonname: 'Power outage',
-      }],
-      snack: false,
-      snackColor: '',
-      snackText: '',
+      selectedReason: null,
+      rejectedQuantity: null,
+      remark: '',
+      dataToEdit: null,
+      referencePlan: null,
+      editRejection: false,
     };
   },
   created() {
-    // setTimeout(() => {
-    //   this.executeProductionReport();
-    // }, 1000);
   },
   computed: {
-    ...mapState('productionLog', ['rejectionReasons', 'selectedDate', 'selectedMachine', 'selectedShift', 'productionDetails']),
+    ...mapState('productionLog', ['rejectionReasons', 'selectedDate', 'selectedMachine', 'selectedShift', 'allRejections']),
+    ...mapGetters('productionLog', ['planProductionData']),
     plans() {
-      if (this.productionDetails) {
-        this.productionDetails.forEach(async (plan) => {
-          plan.rejectionDetails = await this.getRejections(plan.machinename);
-          console.log('RD', plan.rejectionDetails);
-        });
-        debugger;
-        return this.productionDetails;
+      if (this.planProductionData) {
+        return this.planProductionData;
       }
       return [];
     },
@@ -315,26 +289,50 @@ export default {
   },
   methods: {
     ...mapActions('productionLog', ['executeProductionReport', 'addRejection', 'updateRejection', 'getRejections']),
-    addRejectionData() {
+    async addRejectionData(plan) {
+      const {
+        day, date, machinename, moldname, month, partname,
+        planid, planned, produced, shift, toolname, trial, year,
+      } = plan;
+      const {
+        assetid, category, department, reasoncode, reasonname, siteId,
+      } = this.selectedReason;
       const rejectionData = {
-        planid: '100-41',
-        machinename: 'M1',
-        partname: 'Part D',
-        reasonname: 'test',
-        quantity: 1,
-        remark: 'test remark',
+        shift,
+        day,
+        month,
+        year,
+        date,
+        planid,
+        machinename,
+        partname,
+        moldname,
+        planned,
+        produced,
+        toolname,
+        trial,
+        assetid,
+        category,
+        department,
+        reasoncode,
+        reasonname,
+        siteId,
+        quantity: +this.rejectedQuantity,
+        remark: this.remark,
       };
-      this.addRejection(rejectionData);
+      const recordAdded = await this.addRejection(rejectionData);
+      if (recordAdded) {
+        this.rejectedQuantity = null;
+        this.remark = null;
+        this.selectedReason = null;
+      } else {
+        console.error('Error while creating rejection record');
+      }
     },
-    save(rowData) {
-      const rejectionData = {
-        id: rowData._id,
-        quantity: 10,
-      };
-      this.updateRejection(rejectionData);
-      this.snack = true;
-      this.snackColor = 'success';
-      this.snackText = 'Data saved';
+    openEdit(rejData, plan) {
+      this.dataToEdit = rejData;
+      this.referencePlan = plan;
+      this.editRejection = true;
     },
   },
 };

@@ -20,6 +20,7 @@ export default ({
     masterData: [],
     rejectionReasons: [],
     productionDetails: [],
+    allRejections: null,
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -39,6 +40,7 @@ export default ({
     setMasterData: set('masterData'),
     setRejectionReasons: set('rejectionReasons'),
     setProductionDetails: set('productionDetails'),
+    setAllRejections: set('allRejections'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -231,13 +233,13 @@ export default ({
       return false;
     },
 
-    getRejections: async ({ state, dispatch }, machinename) => {
+    getRejections: async ({ state, commit, dispatch }) => {
       const { selectedDate, selectedShift } = state;
       const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-      let query = `?query=machinename=="${machinename}"%26%26date==${date}`;
+      let query = `?query=date==${date}`;
       // TODO - i18n check for "All"
       if (!selectedShift.includes('All')) {
-        query = `?query=machinename=="${machinename}"%26%26date==${date}%26%26shift==${selectedShift}`;
+        query = `?query=6date==${date}%26%26shift==${selectedShift}`;
       }
       const records = await dispatch(
         'element/getRecords',
@@ -248,11 +250,13 @@ export default ({
         { root: true },
       );
       if (records) {
-        return records;
+        commit('setAllRejections', records);
+        return true;
       }
-      return [];
+      return false;
     },
-    addRejection: async ({ dispatch }, rejectionData) => {
+    addRejection: async ({ dispatch, commit, state }, rejectionData) => {
+      const { allRejections } = state;
       const records = await dispatch(
         'element/postRecord', {
           elementName: 'rejection',
@@ -262,7 +266,11 @@ export default ({
         },
       );
       if (records) {
-        //  TODO  - Success toast - append data to rejectionDetails(Display)
+        //  TODO  - Success toast
+        rejectionData._id = records;
+        allRejections.unshift(rejectionData);
+        await dispatch('executeProductionReport');
+        commit('setAllRejections', allRejections);
         return true;
       }
       return false;
@@ -280,6 +288,8 @@ export default ({
       );
       if (records) {
         //  TODO  - Success toast
+        await dispatch('executeProductionReport');
+        await dispatch('getRejections');
         return true;
       }
       return false;
@@ -327,6 +337,7 @@ export default ({
       );
       if (reportData) {
         try {
+          await dispatch('getRejections');
           commit('setProductionDetails', JSON.parse(reportData).reportData);
           return true;
         } catch (error) {
@@ -357,6 +368,21 @@ export default ({
     // },
   },
   getters: {
+    planProductionData: ({ productionDetails, allRejections }) => {
+      const data = [];
+      if (productionDetails && productionDetails.length && allRejections && allRejections.length) {
+        productionDetails.forEach((plan) => {
+          const rejection = allRejections.filter(
+            (rej) => rej.planid === plan.planid && rej.partname === plan.partname,
+          );
+          data.push({
+            ...plan,
+            rejectionDetails: rejection,
+          });
+        });
+      }
+      return data;
+    },
     cells: ({ machines }) => {
       let cells = [];
       if (machines && machines.length) {
