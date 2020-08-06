@@ -201,6 +201,7 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
+                                :disabled="!rejectedQuantity || !selectedReason"
                                 color="primary"
                                 class="text-none"
                                 @click="addRejectionData(plan)"

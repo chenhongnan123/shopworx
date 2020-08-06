@@ -5,7 +5,6 @@ export default ({
   state: {
     isRejectionSet: false,
     onboarded: false,
-    // notStartedPlans: null,
     plansOnDate: null,
     machines: [],
     allShifts: [],
@@ -25,7 +24,6 @@ export default ({
   mutations: {
     setOnboarded: set('onboarded'),
     setIsRejectionSet: set('isRejectionSet'),
-    // setNotStartedPlans: set('notStartedPlans'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
     setShift: set('allShifts'),
@@ -234,12 +232,15 @@ export default ({
     },
 
     getRejections: async ({ state, commit, dispatch }) => {
-      const { selectedDate, selectedShift } = state;
+      const { selectedDate, selectedShift, selectedMachine } = state;
       const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       let query = `?query=date==${date}`;
       // TODO - i18n check for "All"
       if (!selectedShift.includes('All')) {
-        query = `?query=6date==${date}%26%26shift==${selectedShift}`;
+        query = `${query}%26%26shift==${selectedShift}`;
+      }
+      if (!selectedMachine.includes('All')) {
+        query = `${query}%26%26shift==${selectedMachine}`;
       }
       const records = await dispatch(
         'element/getRecords',
@@ -370,7 +371,7 @@ export default ({
   getters: {
     planProductionData: ({ productionDetails, allRejections }) => {
       const data = [];
-      if (productionDetails && productionDetails.length && allRejections && allRejections.length) {
+      if (productionDetails && productionDetails.length && allRejections) {
         productionDetails.forEach((plan) => {
           const rejection = allRejections.filter(
             (rej) => rej.planid === plan.planid && rej.partname === plan.partname,

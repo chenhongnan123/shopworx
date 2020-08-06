@@ -13,8 +13,12 @@
     </template>
     <v-card class="mt-2 pa-3">
       <template>
-        <v-card-title>
-            REJECTIONS
+         <v-card-title primary-title>
+          REJECTIONS
+          <v-spacer></v-spacer>
+          <v-btn icon small @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-row>
             <v-col cols="12" sm="8">
@@ -122,7 +126,9 @@ export default {
     },
   },
   created() {
-    this.selectedReason = this.rejection.reasonname;
+    this.selectedReason = this.rejectionReasons.find(
+      (reason) => reason.reasonname === this.rejection.reasonname,
+    );
     this.rejectedQuantity = this.rejection.quantity;
     this.remark = this.rejection.remark;
   },
