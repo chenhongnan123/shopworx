@@ -43,12 +43,12 @@
           <td>{{ index+1 }}</td>
           <td>{{ item.ngcode }}</td>
           <td>{{ item.substationname }}</td>
-          <td>{{ item.processNgcode }}</td>
+          <td>{{ item.processngcode }}</td>
           <!-- <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td> -->
           <td>{{ item.roadmap}}</td>
           <td>{{ item.reworkroadmap }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.reworkDescription }}</td>
+          <td>{{ item.ngdescription }}</td>
+          <td>{{ item.reworkdescription }}</td>
           <td>{{ item.createdby }}</td>
           <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
           <td v-else></td>
@@ -388,17 +388,37 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'Select Line',
+          message: 'SELECT_LINE',
+        });
+      } else if (!this.ngConfigInput.sublinename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_SUBLINE',
+        });
+      } else if (!this.ngConfigInput.subStationname) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_SUBSTATION',
         });
       } else {
         debugger;
         this.saving = true;
         this.newNgConfig = {
-          ...this.ngConfigInput,
+          // ...this.ngConfigInput,
           // ...this.input,
+          ngcode: this.ngConfigInput.ngcode,
+          processngcode: this.ngConfigInput.processNgcode,
           lineid: this.selectedLinenew.id,
+          linename: this.selectedLinenew.name,
           assetid: this.assetId,
-          subStationname: this.subStationname,
+          substationname: this.ngConfigInput.subStationname,
+          sublinename: this.ngConfigInput.sublinename.name,
+          sublineid: this.ngConfigInput.sublinename.id,
+          reworkroadmap: this.ngConfigInput.machinename,
+          ngdescription: this.ngConfigInput.description,
+          reworkdescription: this.ngConfigInput.reworkDescription,
         };
         let created = false;
         const payload = this.newNgConfig;
