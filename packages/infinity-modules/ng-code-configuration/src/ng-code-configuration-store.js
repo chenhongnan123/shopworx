@@ -59,7 +59,6 @@ export default ({
         },
         { root: true },
       );
-      debugger;
       commit('setSubstationbySubline', subStations);
       return true;
     },
@@ -138,9 +137,51 @@ export default ({
         }
       }
       return created;
-      // debugger;
-      // commit('setNgCodeConfigRecord', listNg);
-      // return true;
+    },
+    deleteNgCode: async ({ dispatch, commit }, id) => {
+      debugger;
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'ngcodeconfig',
+          id,
+        },
+        { root: true },
+      );
+      if (deleted) {
+        const query = '';
+        const ngcodeconfig = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'ngcodeconfig',
+            query,
+          },
+          { root: true },
+        );
+        if (ngcodeconfig) {
+          commit('setNgCodeConfigRecord', ngcodeconfig);
+          return ngcodeconfig;
+        }
+      }
+      return deleted;
+    },
+    updateNgConfig: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'ngcodeconfig',
+          id: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const records = await dispatch('getNgCodeConfig');
+        if (records) {
+          return true;
+        }
+      }
+      return created;
     },
   },
 });

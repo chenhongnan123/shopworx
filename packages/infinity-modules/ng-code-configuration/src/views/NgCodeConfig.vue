@@ -17,21 +17,20 @@
             <v-icon small left>mdi-refresh</v-icon>
             {{ $t('displayTags.buttons.refreshRecipe') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+          <!-- <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
             {{ $t('displayTags.buttons.filtersRecipe') }}
-          </v-btn>
+          </v-btn> -->
         </v-toolbar>
         <v-data-table
         v-model="recipes"
         :headers="headers"
         :items="ngCodeConfigRecord"
-        item-key="recipenumber"
-        show-select
+        item-key="id"
         >
         <template v-slot:item="{ item, index }">
           <tr>
-          <td>
+          <!-- <td>
             <v-checkbox
             v-model="recipes"
             :value ="item"
@@ -39,7 +38,7 @@
             hide-details
             @change="check($event)"
             ></v-checkbox>
-          </td>
+          </td> -->
           <td>{{ index+1 }}</td>
           <td>{{ item.ngcode }}</td>
           <td>{{ item.substationname }}</td>
@@ -57,12 +56,12 @@
               icon
               small
               color="primary"
-              @click="fnUpdateRecipe(item)"
+              @click="fnUpdateNgCode(item)"
               :loading="deleting"
             >
               <v-icon v-text="'$edit'"></v-icon>
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               icon
               small
               color="error"
@@ -70,7 +69,9 @@
               :loading="deleting"
             >
               <v-icon v-text="'$delete'"></v-icon>
-            </v-btn></v-row></td>
+            </v-btn> -->
+            <DeleteNgCode  :item="item" />
+            </v-row></td>
           </tr>
         </template>
       </v-data-table>
@@ -109,7 +110,6 @@
           v-model="ngConfigInput.sublinename"
           :items="sublinesbylines"
           :disabled="saving"
-          item-value="name"
           item-text="name"
           return-object
           prepend-icon="$production"
@@ -125,7 +125,7 @@
           v-model="ngConfigInput.subStationname"
           :items="subStationbySubline"
           :disabled="saving"
-          item-value="name"
+          return-object
           item-text="name"
           prepend-icon="$production"
           label="Select Sub-Station"/>
@@ -196,6 +196,97 @@
           color="primary"
           class="text-none"
           @click="saveNgConfig"
+        >
+          {{ $t('displayTags.buttons.save') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog
+    scrollable
+    persistent
+    v-model="updateDialog"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Update Ng Code
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="updateDialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-select
+          v-model="newNgCode.selectedLinenew"
+          :items="lines"
+          :disabled="saving"
+          item-value="name"
+          item-text="name"
+          return-object
+          prepend-icon="$production"
+          label="Select Line"
+          @change="getfilteredSubline"/>
+        <v-select
+          v-model="newNgCode.sublinename"
+          :items="sublinesbylines"
+          :disabled="saving"
+          item-text="name"
+          return-object
+          prepend-icon="$production"
+          label="Select SubLine"
+          @change="getfilteredSubstation"/>
+        <v-text-field
+            label="NG Code"
+            prepend-icon="mdi-tray-plus"
+            type="number"
+            v-model="newNgCode.ngcode"
+        ></v-text-field>
+        <v-select
+          v-model="newNgCode.subStationname"
+          :items="subStationbySubline"
+          :disabled="saving"
+          return-object
+          item-text="name"
+          prepend-icon="$production"
+          label="Select Sub-Station"/>
+        <v-select
+          v-model="newNgCode.processNgcode"
+          :items="processNgcode"
+          :disabled="saving"
+          item-value="name"
+          item-text="name"
+          prepend-icon="$production"
+          label="Process NG Code"/>
+        <v-select
+          v-model="newNgCode.machinename"
+          :items="roadMaps"
+          :disabled="saving"
+          item-value="name"
+          item-text="name"
+          prepend-icon="$production"
+          label="Select Rework roadmap"/>
+        <v-text-field
+            label="NG Description"
+            prepend-icon="mdi-tray-plus"
+            v-model="newNgCode.description"
+        ></v-text-field>
+        <v-text-field
+            label="Rework Description"
+            prepend-icon="mdi-tray-plus"
+            v-model="newNgCode.reworkDescription"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="updateSaveNgConfig"
         >
           {{ $t('displayTags.buttons.save') }}
         </v-btn>
@@ -278,9 +369,13 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
+import DeleteNgCode from '../components/DeleteNgCode.vue';
 
 export default {
   name: 'NgCodeConfig',
+  components: {
+    DeleteNgCode,
+  },
   data() {
     return {
       headers: [
@@ -323,10 +418,12 @@ export default {
       selectedLinenew: null,
       assetId: 4,
       visible: false,
+      updateDialog: false,
       dialog: false,
       dialogDup: false,
       dialogConfirm: false,
       dupRecipeName: null,
+      newNgCode: {},
       recipe: {},
       recipes: [],
       saving: false,
@@ -338,6 +435,7 @@ export default {
       flagNewUpdate: false,
       updateRecipeNumber: '',
       editedVersionNumber: 0,
+      updateNgCodeId: 0,
       itemForDelete: null,
       // ngConfigInput: {},
       ngConfigInput: {
@@ -351,14 +449,10 @@ export default {
   },
   async created() {
     this.getLines('');
+    this.getSublinebyline('');
+    this.getSubstationbySubline('');
     this.getNgCodeConfig('');
     this.getroadMapsList('');
-    // this.getSubStations('');
-    // this.getStationbyline();
-    // const success = await this.getLines();
-    // if (success) {
-    //   [this.selectedLine] = this.lines;
-    // }
   },
   computed: {
     ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine', 'subStationbySubline', 'ngCodeConfigRecord']),
@@ -366,13 +460,12 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('ngCodeConfiguration', ['setSelectedLine', 'toggleFilter']),
-    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline', 'getSubstationbySubline', 'createNgConfig', 'getNgCodeConfig', 'getroadMapsList']),
+    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline', 'getSubstationbySubline', 'createNgConfig', 'getNgCodeConfig', 'getroadMapsList', 'updateNgConfig']),
 
     addNewNGCode() {
       this.dialog = true;
     },
     async getfilteredSubline(item) {
-      debugger;
       await this.getSublinebyline(`?query=lineid==${item.id}`);
     },
     async getfilteredSubstation(item) {
@@ -380,7 +473,7 @@ export default {
       await this.getSubstationbySubline(`?query=sublineid=="${item.id}"`);
     },
     async RefreshUI() {
-      this.getLines('');
+      this.getNgCodeConfig('');
     },
     async saveNgConfig() {
       debugger;
@@ -403,7 +496,6 @@ export default {
           message: 'SELECT_SUBSTATION',
         });
       } else {
-        debugger;
         this.saving = true;
         this.newNgConfig = {
           // ...this.ngConfigInput,
@@ -413,7 +505,8 @@ export default {
           lineid: this.selectedLinenew.id,
           linename: this.selectedLinenew.name,
           assetid: this.assetId,
-          substationname: this.ngConfigInput.subStationname,
+          substationname: this.ngConfigInput.subStationname.name,
+          substationid: this.ngConfigInput.subStationname.id,
           sublinename: this.ngConfigInput.sublinename.name,
           sublineid: this.ngConfigInput.sublinename.id,
           reworkroadmap: this.ngConfigInput.machinename,
@@ -448,6 +541,72 @@ export default {
     },
     async fnSaveDuplicateRecipe() {
       console.log('write code for create Duplicate the record');
+    },
+    async fnUpdateNgCode(item) {
+      this.updateDialog = true;
+      this.updateNgCodeId = item._id;
+      this.newNgCode.selectedLinenew = item.linename;
+      console.log(item.lineid);
+      // await this.getfilteredSubline();
+      this.newNgCode.sublinename = item.sublinename;
+      this.newNgCode.subStationname = item.substationname;
+      this.newNgCode.processNgcode = item.processngcode;
+      this.newNgCode.ngcode = item.ngcode;
+      this.newNgCode.description = item.ngdescription;
+      this.newNgCode.reworkDescription = item.reworkdescription;
+      this.newNgCode.machinename = item.reworkroadmap;
+    },
+    async updateSaveNgConfig() {
+      debugger;
+      if (!this.newNgCode.selectedLinenew) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_LINE',
+        });
+      } else {
+        this.saving = true;
+        this.newNgConfig = {
+          // ...this.ngConfigInput,
+          // ...this.input,
+          ngcode: this.newNgCode.ngcode,
+          processngcode: this.newNgCode.processNgcode,
+          linename: this.newNgCode.selectedLinenew,
+          assetid: this.assetId,
+          substationname: this.newNgCode.subStationname.name,
+          // substationid: this.newNgCode.subStation.id,
+          sublinename: this.newNgCode.sublinename,
+          // sublineid: this.newNgCode.sublineid,
+          reworkroadmap: this.newNgCode.machinename,
+          ngdescription: this.newNgCode.description,
+          reworkdescription: this.newNgCode.reworkDescription,
+        };
+        let created = false;
+        const request = this.newNgConfig;
+        const object = {
+          payload: request,
+          query: this.updateNgCodeId,
+        };
+        created = this.updateNgConfig(object);
+        if (created) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'NG_CONFIGURATION_CREATED',
+          });
+          this.updateDialog = false;
+          this.assetId = 4;
+          this.newNgConfig = {};
+          // this.$refs.form.reset();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_CREATING_NG_CONFIG',
+          });
+        }
+        this.saving = false;
+      }
     },
   },
 };
