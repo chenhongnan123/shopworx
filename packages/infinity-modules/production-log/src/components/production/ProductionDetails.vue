@@ -12,396 +12,220 @@
           v-else
           class="pa-0"
         >
-          <template v-for="(value, name) in plans">
-            <div
-              :key="value.planid"
-              style="border-left: 4px solid"
-              class="headline pl-2 font-weight-medium"
-              :class="n !== 0 ? 'my-4' : 'mb-4'"
-            >
-              {{ name }}
-            </div>
-            <template>
-              <template v-for="plan in value">
-                <v-card
-                  :key="plan.id"
-                  outlined
-                  class="mb-2"
-                >
-                  <v-card-title primary-title>
-                    {{ plan.planid }}
-                    <v-spacer></v-spacer>
-                    <span class="body-1 mb-2">
-                      {{ plan.shift }}
-                    </span>
-                    <span class="body-1 mb-2"
-                    v-if="plan.firstcycle && plan.firstcycle != ''">
-                      , {{ plan.firstcycle }} to {{ plan.lastcycle }}
-                    </span>
-                  </v-card-title>
-                  <v-card-subtitle primary-title>
-                  </v-card-subtitle>
-                  <v-card-text>
-                    <v-row no-gutters >
-                      <v-col cols="12" sm="8">
-                        <div class="body-2">
-                          Part
-                        </div>
-                        <div class="text-uppercase title font-weight-regular mb-2">
-                          {{ plan.partname }}
-                        </div>
-                        <div class="body-2">
-                          Active cavity
-                        </div>
-                        <div class="text-uppercase title font-weight-regular mb-2">
-                          {{ plan.cavity }}
-                        </div>
-                      </v-col>
-                      <v-col cols="12" sm="2">
-                        <div>
+          <template v-if="plans" >
+            <v-flex v-for="(value, name) in plans" :key="value.planid">
+               <div
+                :key="value.planid"
+                style="border-left: 4px solid"
+                class="headline pl-2 font-weight-medium"
+                :class="n !== 0 ? 'my-4' : 'mb-4'"
+              >
+                {{ name }}
+              </div>
+              <template>
+                <template v-for="plan in value">
+                  // TODO - Move below segment to separate component/s (say PlanProductionView)
+                  <v-card
+                    :key="plan.id"
+                    outlined
+                    class="mb-2"
+                  >
+                    <v-card-title primary-title>
+                      {{ plan.planid }}
+                      <v-spacer></v-spacer>
+                      <span class="body-1 mb-2">
+                        {{ plan.shift }}
+                      </span>
+                      <span class="body-1 mb-2"
+                      v-if="plan.firstcycle && plan.firstcycle != ''">
+                        , {{ plan.firstcycle }} to {{ plan.lastcycle }}
+                      </span>
+                    </v-card-title>
+                    <v-card-subtitle primary-title>
+                    </v-card-subtitle>
+                    <v-card-text>
+                      <v-row no-gutters >
+                        <v-col cols="12" sm="8">
                           <div class="body-2">
-                            Planned quantity
+                            Part
                           </div>
                           <div class="text-uppercase title font-weight-regular mb-2">
-                            {{ plan.planned }}
+                            {{ plan.partname }}
                           </div>
-                          <div class="body-2 warning--text">
-                            Produced
-                          </div>
-                          <div class="text-uppercase warning--text title font-weight-regular mb-2">
-                            {{ plan.produced }}
-                          </div>
-                        </div>
-                      </v-col>
-                      <v-col cols="12" sm="2">
-                        <div class="error--text">
                           <div class="body-2">
-                            Rejected
+                            Active cavity
                           </div>
                           <div class="text-uppercase title font-weight-regular mb-2">
-                            {{ plan.rejected }}
+                            {{ plan.cavity }}
                           </div>
-                        </div>
-                        <div class="success--text">
-                          <div class="body-2">
-                            Accepted
+                        </v-col>
+                        <v-col cols="12" sm="2">
+                          <div>
+                            <div class="body-2">
+                              Planned quantity
+                            </div>
+                            <div class="text-uppercase title font-weight-regular mb-2">
+                              {{ plan.planned }}
+                            </div>
+                            <div class="body-2 warning--text">
+                              Produced
+                            </div>
+                            <div class="text-uppercase
+                            warning--text
+                            title font-weight-regular mb-2">
+                              {{ plan.produced }}
+                            </div>
                           </div>
-                          <div class="text-uppercase title font-weight-regular mb-2">
-                            {{ plan.accepted }}
+                        </v-col>
+                        <v-col cols="12" sm="2">
+                          <div class="error--text">
+                            <div class="body-2">
+                              Rejected
+                            </div>
+                            <div class="text-uppercase title font-weight-regular mb-2">
+                              {{ plan.rejected }}
+                            </div>
                           </div>
-                        </div>
-                      </v-col>
-                    </v-row>
-                    <v-divider></v-divider>
-                    <v-expansion-panels
-                      flat
-                      accordion
-                    >
-                      <v-expansion-panel>
-                        <v-expansion-panel-header class="pa-0 ma-0">
-                          REJECTIONS
-                          </v-expansion-panel-header>
-                          <v-expansion-panel-content class="panel-padding">
-                            <v-card class="mb-2">
-                              <template>
-                                <v-data-table
-                                  :headers="headers"
-                                  :items="plan.rejectionDetails"
-                                  hide-default-footer
-                                >
-                                  <template v-slot:item.actions="{ item }">
-                                      <v-row>
-                                          <v-btn
-                                          icon
-                                          small
-                                          color="primary"
-                                          @click="openEdit(item, plan)"
-                                          >
-                                          <v-icon v-text="'$edit'"></v-icon>
-                                          </v-btn>
-                                          <v-btn
-                                          icon
-                                          small
-                                          color="error"
-                                          >
-                                          <v-icon v-text="'$delete'"></v-icon>
-                                          </v-btn>
-                                      </v-row>
-                                  </template>
-                                </v-data-table>
-                              </template>
-                            </v-card>
-                            <validation-observer ref="form" #default="{ passes, invalid }">
-                              <v-form @submit.prevent="passes(onSubmit)">
-                                <v-card class="mt-2 pa-3">
-                                  <template>
-                                    <v-row>
-                                      <v-col cols="12" sm="8">
-                                        <v-autocomplete
-                                          outlined
-                                          dense
-                                          hide-details
-                                          return-object
-                                          :items="rejectionReasons"
-                                          item-text="reasonname"
-                                          item-value="reasonname"
-                                          label="Rejection reason"
-                                          v-model="selectedReason"
-                                        >
-                                          <template #selection="data">
-                                            {{ data.item.reasonname }}
-                                          </template>
-                                          <template #item="data">
-                                            <v-list-item-content>
-                                              <v-list-item-title>
-                                                {{ data.item.reasonname }}
-                                              </v-list-item-title>
-                                              <v-list-item-subtitle
-                                                v-text="data.item.category"
-                                              ></v-list-item-subtitle>
-                                              <v-list-item-subtitle
-                                                v-text="data.item.department"
-                                              ></v-list-item-subtitle>
-                                            </v-list-item-content>
-                                          </template>
-                                        </v-autocomplete>
-                                      </v-col>
-                                      <v-col cols="12" sm="4">
-                                        <validation-provider
-                                        name="rejectedQuantity"
-                                        :rules="`required|min_value:1|max_value:${plan.accepted}`"
-                                        #default="{ errors }">
-                                          <v-text-field
-                                              outlined
-                                              dense
-                                              hide-details
-                                              :error-messages="errors"
-                                              v-model="rejectedQuantity"
-                                              type="number"
-                                              label="Quantity"
-                                          ></v-text-field>
-                                        </validation-provider>
-                                      </v-col>
-                                      <v-col cols="12">
-                                        <v-textarea
-                                          outlined
-                                          dense
-                                          label="Remarks"
-                                          v-model="remark"
-                                        ></v-textarea>
-                                      </v-col>
-                                    </v-row>
-                                    <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn
-                                        :disabled="!selectedReason || invalid"
-                                        color="primary"
-                                        class="text-none"
-                                        @click="addRejectionData(plan)"
-                                      >
-                                        <v-icon left>mdi-plus</v-icon>
-                                        Add new
-                                      </v-btn>
-                                    </v-card-actions>
-                                  </template>
-                                </v-card>
-                              </v-form>
-                            </validation-observer>
-                          </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
-                  </v-card-text>
-                </v-card>
-              </template>
-            </template>
-          </template>
-          <!-- <template v-for="(plan, i) in plans">
-            <v-card
-              :key="i"
-              outlined
-              class="mb-2"
-            >
-              <v-card-title primary-title>
-                {{ plan.planid }}
-                <v-spacer></v-spacer>
-                <span class="body-1 mb-2">
-                  {{ plan.cyclestart }} to {{ plan.cycleend }}
-                </span>
-              </v-card-title>
-              <v-card-subtitle primary-title>
-              </v-card-subtitle>
-              <v-card-text>
-                <v-row no-gutters >
-                  <v-col cols="12" sm="8">
-                    <div class="body-2">
-                      Part
-                    </div>
-                    <div class="text-uppercase title font-weight-regular mb-2">
-                      {{ plan.partname }}
-                    </div>
-                    <div class="body-2">
-                      Active cavity
-                    </div>
-                    <div class="text-uppercase title font-weight-regular mb-2">
-                      {{ plan.activecavity }}
-                    </div>
-                  </v-col>
-                  <v-col cols="12" sm="2">
-                    <div>
-                      <div class="body-2">
-                        Planned quantity
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2">
-                        {{ plan.planned }}
-                      </div>
-                      <div class="body-2 warning--text">
-                        Produced
-                      </div>
-                      <div class="text-uppercase warning--text title font-weight-regular mb-2">
-                        {{ plan.produced }}
-                      </div>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" sm="2">
-                    <div class="error--text">
-                      <div class="body-2">
-                        Rejected
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2">
-                        {{ plan.rejected }}
-                      </div>
-                    </div>
-                    <div class="success--text">
-                      <div class="body-2">
-                        Accepted
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2">
-                        {{ plan.accepted }}
-                      </div>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-expansion-panels
-                  flat
-                  accordion
-                >
-                  <v-expansion-panel>
-                    <v-expansion-panel-header class="pa-0 ma-0">
-                      REJECTIONS
-                      </v-expansion-panel-header>
-                      <v-expansion-panel-content class="panel-padding">
-                        <v-card class="mb-2">
-                          <template>
-                            <v-data-table
-                              :headers="headers"
-                              :items="plan.rejectionDetails"
-                              hide-default-footer
-                            >
-                              <template v-slot:item.actions="{ item }">
-                                  <v-row>
-                                      <v-btn
-                                      icon
-                                      small
-                                      color="primary"
-                                      @click="openEdit(item, plan)"
-                                      >
-                                      <v-icon v-text="'$edit'"></v-icon>
-                                      </v-btn>
-                                      <v-btn
-                                      icon
-                                      small
-                                      color="error"
-                                      >
-                                      <v-icon v-text="'$delete'"></v-icon>
-                                      </v-btn>
-                                  </v-row>
-                              </template>
-                            </v-data-table>
-                          </template>
-                        </v-card>
-                        <validation-observer ref="form" #default="{ passes, invalid }">
-                          <v-form @submit.prevent="passes(onSubmit)">
-                            <v-card class="mt-2 pa-3">
-                              <template>
-                                <v-row>
-                                  <v-col cols="12" sm="8">
-                                    <v-autocomplete
-                                      outlined
-                                      dense
-                                      hide-details
-                                      return-object
-                                      :items="rejectionReasons"
-                                      item-text="reasonname"
-                                      item-value="reasonname"
-                                      label="Rejection reason"
-                                      v-model="selectedReason"
-                                    >
-                                      <template #selection="data">
-                                        {{ data.item.reasonname }}
-                                      </template>
-                                      <template #item="data">
-                                        <v-list-item-content>
-                                          <v-list-item-title>
-                                            {{ data.item.reasonname }}
-                                          </v-list-item-title>
-                                          <v-list-item-subtitle
-                                            v-text="data.item.category"
-                                          ></v-list-item-subtitle>
-                                          <v-list-item-subtitle
-                                            v-text="data.item.department"
-                                          ></v-list-item-subtitle>
-                                        </v-list-item-content>
-                                      </template>
-                                    </v-autocomplete>
-                                  </v-col>
-                                  <v-col cols="12" sm="4">
-                                    <validation-provider
-                                    name="rejectedQuantity"
-                                    :rules="`required|min_value:1|max_value:${plan.accepted}`"
-                                    #default="{ errors }">
-                                      <v-text-field
-                                          outlined
-                                          dense
-                                          hide-details
-                                          :error-messages="errors"
-                                          v-model="rejectedQuantity"
-                                          type="number"
-                                          label="Quantity"
-                                      ></v-text-field>
-                                    </validation-provider>
-                                  </v-col>
-                                  <v-col cols="12">
-                                    <v-textarea
-                                      outlined
-                                      dense
-                                      label="Remarks"
-                                      v-model="remark"
-                                    ></v-textarea>
-                                  </v-col>
-                                </v-row>
-                                <v-card-actions>
-                                  <v-spacer></v-spacer>
-                                  <v-btn
-                                    :disabled="!selectedReason || invalid"
-                                    color="primary"
-                                    class="text-none"
-                                    @click="addRejectionData(plan)"
+                          <div class="success--text">
+                            <div class="body-2">
+                              Accepted
+                            </div>
+                            <div class="text-uppercase title font-weight-regular mb-2">
+                              {{ plan.accepted }}
+                            </div>
+                          </div>
+                        </v-col>
+                      </v-row>
+                      <v-divider></v-divider>
+                       // TODO - Auto expand by default
+                      <v-expansion-panels
+                        flat
+                        accordion
+                      >
+                        <v-expansion-panel>
+                          <v-expansion-panel-header class="pa-0 ma-0">
+                            REJECTIONS
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content class="panel-padding">
+                              <!-- // TODO - Move below segment to separate component/s
+                               (say RejectionView and RejectionEntry) -->
+                              <v-card class="mb-2">
+                                <template>
+                                  <v-data-table
+                                    :headers="headers"
+                                    :items="plan.rejectionDetails"
+                                    hide-default-footer
                                   >
-                                    <v-icon left>mdi-plus</v-icon>
-                                    Add new
-                                  </v-btn>
-                                </v-card-actions>
-                              </template>
-                            </v-card>
-                          </v-form>
-                        </validation-observer>
-                      </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-card-text>
-            </v-card>
-          </template> -->
+                                    <template v-slot:item.actions="{ item }">
+                                        <v-row>
+                                            <v-btn
+                                            icon
+                                            small
+                                            color="primary"
+                                            @click="openEdit(item, plan)"
+                                            >
+                                            <v-icon v-text="'$edit'"></v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                            icon
+                                            small
+                                            color="error"
+                                            >
+                                            <v-icon v-text="'$delete'"></v-icon>
+                                            </v-btn>
+                                        </v-row>
+                                    </template>
+                                  </v-data-table>
+                                </template>
+                              </v-card>
+                              <validation-observer ref="form" #default="{ passes, invalid }">
+                                <v-form @submit.prevent="passes(onSubmit)" >
+                                  <v-card class="mt-2 pa-3" flat>
+                                    <template>
+                                      <v-row>
+                                        <v-col cols="12" sm="8">
+                                          <v-autocomplete
+                                            outlined
+                                            dense
+                                            hide-details
+                                            return-object
+                                            :items="rejectionReasons"
+                                            item-text="reasonname"
+                                            item-value="reasonname"
+                                            label="Rejection reason"
+                                            v-model="selectedReason"
+                                          >
+                                            <template #selection="data">
+                                              {{ data.item.reasonname }}
+                                            </template>
+                                            <template #item="data">
+                                              <v-list-item-content>
+                                                <v-list-item-title>
+                                                  {{ data.item.reasonname }}
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle
+                                                  v-text="data.item.category"
+                                                ></v-list-item-subtitle>
+                                                <v-list-item-subtitle
+                                                  v-text="data.item.department"
+                                                ></v-list-item-subtitle>
+                                              </v-list-item-content>
+                                            </template>
+                                          </v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" sm="4">
+                                           // TODO - fix validation error on reset
+                                          <validation-provider
+                                          name="rejectedQuantity"
+                                          :rules="`required|min_value:1|max_value:${plan.accepted}`"
+                                          #default="{ errors }">
+                                            <v-text-field
+                                                outlined
+                                                dense
+                                                :error-messages="errors"
+                                                v-model="rejectedQuantity"
+                                                type="number"
+                                                label="Quantity"
+                                            ></v-text-field>
+                                          </validation-provider>
+                                        </v-col>
+                                        <v-col cols="12">
+                                          <v-textarea
+                                            outlined
+                                            dense
+                                            label="Remarks"
+                                            v-model="remark"
+                                          ></v-textarea>
+                                        </v-col>
+                                      </v-row>
+                                      <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                          :disabled="!selectedReason || invalid"
+                                          color="primary"
+                                          class="text-none"
+                                          @click="addRejectionData(plan)"
+                                        >
+                                          <v-icon left>mdi-plus</v-icon>
+                                          Add new
+                                        </v-btn>
+                                      </v-card-actions>
+                                    </template>
+                                  </v-card>
+                                </v-form>
+                              </validation-observer>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+                    </v-card-text>
+                  </v-card>
+                </template>
+              </template>
+            </v-flex>
+          </template>
+          <template v-else>
+            <rejection-no-records></rejection-no-records>
+          </template>
         </v-card-text>
       </v-fade-transition>
     </v-card>
@@ -416,11 +240,13 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import EditRejection from './EditRejection.vue';
+import RejectionNoRecords from '../core/RejectionNoRecords.vue';
 
 export default {
   name: 'ProductionDetails',
   components: {
     EditRejection,
+    RejectionNoRecords,
   },
   data() {
     return {
@@ -508,6 +334,9 @@ export default {
         this.rejectedQuantity = null;
         this.remark = null;
         this.selectedReason = null;
+        requestAnimationFrame(() => {
+          this.$refs.form.reset();
+        });
       } else {
         console.error('Error while creating rejection record');
       }

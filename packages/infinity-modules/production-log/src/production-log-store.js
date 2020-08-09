@@ -42,37 +42,20 @@ export default ({
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
-      const rejectionElement = await dispatch('getRejectionElement');
+      const rejectionElement = await dispatch('getElement', 'rejection');
       if (rejectionElement) {
         commit('setIsRejectionSet', true);
-        const rejectionReasonElement = await dispatch('getRejectionReasonElement');
+        const rejectionReasonElement = await dispatch('getElement', 'rejectionreasons');
         if (rejectionReasonElement) {
           commit('setOnboarded', true);
         }
       }
     },
-    // TODO - make below 3 functions 1
-    getPlanningElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'planning',
-        { root: true },
-      );
-      return !!element;
-    },
 
-    getRejectionReasonElement: async ({ dispatch }) => {
+    getElement: async ({ dispatch }, elementName) => {
       const element = await dispatch(
         'element/getElement',
-        'rejectionreasons',
-        { root: true },
-      );
-      return !!element;
-    },
-    getRejectionElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'rejection',
+        elementName,
         { root: true },
       );
       return !!element;
@@ -268,7 +251,7 @@ export default ({
       );
       if (records) {
         //  TODO  - Success toast
-        rejectionData._id = records;
+        rejectionData._id = records.id;
         allRejections.unshift(rejectionData);
         await dispatch('executeProductionReport');
         commit('setAllRejections', allRejections);
@@ -338,8 +321,8 @@ export default ({
       );
       if (reportData) {
         try {
+          await commit('setProductionDetails', JSON.parse(reportData).reportData);
           await dispatch('getRejections');
-          commit('setProductionDetails', JSON.parse(reportData).reportData);
           return true;
         } catch (error) {
           console.error(`Exception while parsing production report data : ${error}`);
@@ -376,7 +359,7 @@ export default ({
         return acc;
       }, {});
 
-      console.log(res);
+      // console.log(res);
       return res;
     },
     cells: ({ machines }) => {

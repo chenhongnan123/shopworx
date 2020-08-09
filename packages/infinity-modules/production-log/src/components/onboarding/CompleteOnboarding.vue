@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     ...mapMutations('productionLog', ['setOnboarded']),
-    ...mapActions('productionLog', ['getMasterElements', 'createRejectionElement', 'getRejectionElement']),
+    ...mapActions('productionLog', ['getMasterElements', 'createRejectionElement', 'getElement']),
     async fetchMaster() {
       this.loading = true;
       const success = await this.getMasterElements();
@@ -78,7 +78,7 @@ export default {
       this.creating = true;
       const success = await this.createRejectionElement();
       if (success) {
-        const element = await this.getRejectionElement();
+        const element = await this.getElement('rejection');
         if (element) {
           localStorage.removeItem('rejectionStep');
           this.setOnboarded(true);

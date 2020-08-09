@@ -1,6 +1,5 @@
 <template>
   <v-dialog
-    scrollable
     persistent
     v-model="dialog"
     max-width="500px"
@@ -55,6 +54,7 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="12" sm="4">
+                  // TODO - fix validation error on reset
                   <validation-provider
                     name="rejectedQuantity"
                     :rules="`required|min_value:1|max_value:${plan.accepted}`"
@@ -62,7 +62,6 @@
                     <v-text-field
                         outlined
                         dense
-                        hide-details
                         :error-messages="errors"
                         v-model="rejectedQuantity"
                         type="number"
