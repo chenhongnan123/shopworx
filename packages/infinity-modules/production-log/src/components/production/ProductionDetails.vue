@@ -109,7 +109,7 @@
                             <v-expansion-panel-content class="panel-padding">
                               <!-- // TODO - Move below segment to separate component/s
                                (say RejectionView and RejectionEntry) -->
-                              <v-card class="mb-2">
+                              <v-card class="mb-2" v-if="plan.rejectionDetails.length">
                                 <template>
                                   <v-data-table
                                     :headers="headers"
