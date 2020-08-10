@@ -54,7 +54,8 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="12" sm="4">
-                  // TODO - fix validation error on reset
+                  <!-- // TODO - fix validation error on reset
+                   -->
                   <validation-provider
                     name="rejectedQuantity"
                     :rules="`required|min_value:1|max_value:${plan.accepted}`"

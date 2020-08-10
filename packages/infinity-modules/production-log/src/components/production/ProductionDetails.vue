@@ -24,7 +24,8 @@
               </div>
               <template>
                 <template v-for="plan in value">
-                  // TODO - Move below segment to separate component/s (say PlanProductionView)
+                  <!-- // TODO - Move below segment to separate component/s
+                  (say PlanProductionView) -->
                   <v-card
                     :key="plan.id"
                     outlined
@@ -97,7 +98,8 @@
                         </v-col>
                       </v-row>
                       <v-divider></v-divider>
-                       // TODO - Auto expand by default
+                        <!-- // TODO - Auto expand by default
+                         -->
                       <v-expansion-panels
                         flat
                         accordion
@@ -174,7 +176,8 @@
                                           </v-autocomplete>
                                         </v-col>
                                         <v-col cols="12" sm="4">
-                                           // TODO - fix validation error on reset
+                                           <!-- // TODO - fix validation error on reset
+                                            -->
                                           <validation-provider
                                           name="rejectedQuantity"
                                           :rules="`required|min_value:1|max_value:${plan.accepted}`"
@@ -276,7 +279,7 @@ export default {
       if (this.planProductionData) {
         return this.planProductionData;
       }
-      return [];
+      return false;
     },
   },
   watch: {

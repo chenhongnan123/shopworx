@@ -220,10 +220,10 @@ export default ({
       let query = `?query=date==${date}`;
       // TODO - i18n check for "All"
       if (!selectedShift.includes('All')) {
-        query = `${query}%26%26shift==${selectedShift}`;
+        query = `${query}%26%26shift=="${selectedShift}"`;
       }
       if (!selectedMachine.includes('All')) {
-        query = `${query}%26%26shift==${selectedMachine}`;
+        query = `${query}%26%26machinename=="${selectedMachine}"`;
       }
       const records = await dispatch(
         'element/getRecords',
@@ -334,6 +334,7 @@ export default ({
   getters: {
     planProductionData: ({ productionDetails, allRejections }) => {
       const data = [];
+      let res = null;
       if (productionDetails && productionDetails.length && allRejections) {
         productionDetails.forEach((plan) => {
           const rejection = allRejections.filter(
@@ -346,19 +347,18 @@ export default ({
             rejectionDetails: rejection,
           });
         });
+        res = data.reduce((acc, curr) => {
+          if (curr.firstcycle && curr.firstcycle !== '-') {
+            curr.firstcycle = new Date(curr.firstcycle).toISOString().substr(11, 5);
+          }
+          if (curr.lastcycle && curr.lastcycle !== '-') {
+            curr.lastcycle = new Date(curr.lastcycle).toISOString().substr(11, 5);
+          }
+          if (!acc[curr.machinename]) acc[curr.machinename] = [];
+          acc[curr.machinename].push(curr);
+          return acc;
+        }, {});
       }
-      const res = data.reduce((acc, curr) => {
-        if (curr.firstcycle && curr.firstcycle !== '-') {
-          curr.firstcycle = new Date(curr.firstcycle).toISOString().substr(11, 5);
-        }
-        if (curr.lastcycle && curr.lastcycle !== '-') {
-          curr.lastcycle = new Date(curr.lastcycle).toISOString().substr(11, 5);
-        }
-        if (!acc[curr.machinename]) acc[curr.machinename] = [];
-        acc[curr.machinename].push(curr);
-        return acc;
-      }, {});
-
       // console.log(res);
       return res;
     },
