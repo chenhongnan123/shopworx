@@ -24,9 +24,16 @@
     "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
     "SELECT_LINE": "Please Select Line First.",
     "SELECT_SUBLINE": "Please Select Sub-Line First.",
-    "SELECT_SUBSTATION": "Please Select SubStation First"
+    "SELECT_SUBSTATION": "Please Select SubStation First",
+    "ERROR_DELETING_NG_CODE": "Error in Deleting NG Code Record!",
+    "ERROR_CREATING_NG_CONFIG": "Error in Creating NG Code Record!",
+    "ERROR_UPDATING_NG_CONFIG": "Error in Updating NG Code Record!",
+    "NG_CODE_PRESENT": "NG Code all ready Present! use another."
   },
   "success": {
-    "RECIPE_CREATED": "Recipe created!"
+    "RECIPE_CREATED": "Recipe created!",
+    "NG_CODE_CONFIG_DELETED": "NG Code Record DELETED!",
+    "NG_CONFIGURATION_CREATED": "Ng Code Config Record Created!",
+    "NG_CONFIGURATION_UPDATED": "Ng Code Config Record Updated!"
   }
 }

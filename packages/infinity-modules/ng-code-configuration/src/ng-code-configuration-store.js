@@ -12,6 +12,7 @@ export default ({
     filter: false,
     subStationbySubline: [],
     ngCodeConfigRecord: [],
+    assets: {},
   },
   mutations: {
     setLines: set('lines'),
@@ -24,8 +25,21 @@ export default ({
     setFilter: set('filter'),
     setSubstationbySubline: set('subStationbySubline'),
     setNgCodeConfigRecord: set('ngCodeConfigRecord'),
+    setAssets: set('assets'),
   },
   actions: {
+    getAssets: async ({ commit, dispatch }) => {
+      const assets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (assets && assets.length) {
+        commit('setAssets', assets);
+        return true;
+      }
+      return false;
+    },
     getNgCodeConfig: async ({ dispatch, commit }, query) => {
       const ngcodelist = await dispatch(
         'element/getRecords',

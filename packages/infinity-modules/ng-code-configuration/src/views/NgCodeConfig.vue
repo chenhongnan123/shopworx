@@ -96,6 +96,11 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
+         <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
         <v-select
           v-model="selectedLinenew"
           :items="lines"
@@ -120,6 +125,8 @@
             prepend-icon="mdi-tray-plus"
             type="number"
             v-model="ngConfigInput.ngcode"
+            :rules="rules.ngcode"
+            :counter="6"
         ></v-text-field>
         <v-select
           v-model="ngConfigInput.subStationname"
@@ -189,12 +196,14 @@
             </v-list-item-content>
           </template>
         </v-autocomplete> -->
+         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!valid"
           @click="saveNgConfig"
         >
           {{ $t('displayTags.buttons.save') }}
@@ -221,6 +230,11 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
+        <v-form
+          ref="formUpdate"
+          v-model="valid"
+          lazy-validation
+        >
         <v-select
           v-model="newNgCode.selectedLinenew"
           :items="lines"
@@ -280,6 +294,7 @@
             prepend-icon="mdi-tray-plus"
             v-model="newNgCode.reworkDescription"
         ></v-text-field>
+        </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -416,7 +431,7 @@ export default {
         },
       ],
       selectedLinenew: null,
-      assetId: 4,
+      assetId: null,
       visible: false,
       updateDialog: false,
       dialog: false,
@@ -445,9 +460,18 @@ export default {
         processNgcode: '',
       },
       processNgcode: [true, false],
+      valid: true,
+      rules: {
+        ngcode: [
+          (v) => !!v || 'NG Code is required (digits)',
+          (v) => v >= 0 || 'NG Code is bigger than 0',
+          (v) => (v && v.length <= 6) || 'NG Code must be less than 7 Digits',
+        ],
+      },
     };
   },
   async created() {
+    this.getAssets();
     this.getLines('');
     this.getSublinebyline('');
     this.getSubstationbySubline('');
@@ -455,12 +479,12 @@ export default {
     this.getroadMapsList('');
   },
   computed: {
-    ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine', 'subStationbySubline', 'ngCodeConfigRecord']),
+    ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine', 'subStationbySubline', 'ngCodeConfigRecord', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('ngCodeConfiguration', ['setSelectedLine', 'toggleFilter']),
-    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline', 'getSubstationbySubline', 'createNgConfig', 'getNgCodeConfig', 'getroadMapsList', 'updateNgConfig']),
+    ...mapActions('ngCodeConfiguration', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps', 'getSublinebyline', 'getSubstationbySubline', 'createNgConfig', 'getNgCodeConfig', 'getroadMapsList', 'updateNgConfig', 'getAssets']),
 
     addNewNGCode() {
       this.dialog = true;
@@ -477,11 +501,20 @@ export default {
     },
     async saveNgConfig() {
       debugger;
+      const ngNumberFlag = this.ngCodeConfigRecord
+        .filter((o) => o.ngcode === parseInt(this.ngConfigInput.ngcode, 10));
       if (!this.selectedLinenew) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'SELECT_LINE',
+        });
+      } else if (ngNumberFlag.length > 0) {
+        this.ngConfigInput.ngcode = '';
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NG_CODE_PRESENT',
         });
       } else if (!this.ngConfigInput.sublinename) {
         this.setAlert({
@@ -497,6 +530,8 @@ export default {
         });
       } else {
         this.saving = true;
+        const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+        this.assetId = getAssetId;
         this.newNgConfig = {
           // ...this.ngConfigInput,
           // ...this.input,
@@ -523,9 +558,10 @@ export default {
             message: 'NG_CONFIGURATION_CREATED',
           });
           this.dialog = false;
-          this.assetId = 4;
+          this.assetId = this.getAssetId;
           this.newNgConfig = {};
-          // this.$refs.form.reset();
+          this.ngConfigInput = {};
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -546,8 +582,6 @@ export default {
       this.updateDialog = true;
       this.updateNgCodeId = item._id;
       this.newNgCode.selectedLinenew = item.linename;
-      console.log(item.lineid);
-      // await this.getfilteredSubline();
       this.newNgCode.sublinename = item.sublinename;
       this.newNgCode.subStationname = item.substationname;
       this.newNgCode.processNgcode = item.processngcode;
@@ -566,6 +600,8 @@ export default {
         });
       } else {
         this.saving = true;
+        const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+        this.assetId = getAssetId;
         this.newNgConfig = {
           // ...this.ngConfigInput,
           // ...this.input,
@@ -574,9 +610,7 @@ export default {
           linename: this.newNgCode.selectedLinenew,
           assetid: this.assetId,
           substationname: this.newNgCode.subStationname.name,
-          // substationid: this.newNgCode.subStation.id,
           sublinename: this.newNgCode.sublinename,
-          // sublineid: this.newNgCode.sublineid,
           reworkroadmap: this.newNgCode.machinename,
           ngdescription: this.newNgCode.description,
           reworkdescription: this.newNgCode.reworkDescription,
@@ -592,17 +626,17 @@ export default {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'NG_CONFIGURATION_CREATED',
+            message: 'NG_CONFIGURATION_UPDATED',
           });
           this.updateDialog = false;
-          this.assetId = 4;
+          this.assetId = this.getAssetId;
           this.newNgConfig = {};
-          // this.$refs.form.reset();
+          // this.$refs.formUpdate.reset();
         } else {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_CREATING_NG_CONFIG',
+            message: 'ERROR_UPDATING_NG_CONFIG',
           });
         }
         this.saving = false;

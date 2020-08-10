@@ -25,6 +25,7 @@
             color="primary"
             class="text-none"
             @click="btnDeleteNgCodeConfig(item)"
+            :loading="deleting"
           >
             Yes
           </v-btn>
@@ -39,11 +40,10 @@ export default {
   data() {
     return {
       ngcode: {},
-      assetId: 4,
-      // myResult: [],
-      // getLastInserTedData: [],
+      // assetId: 4,
       default: false,
       dialog: false,
+      deleting: false,
     };
   },
   props: {
@@ -65,26 +65,21 @@ export default {
     async btnDeleteNgCodeConfig(item) {
       debugger;
       this.itemForDelete = item;
-      // const deleted = false;
-      //   const ngcodeObject = {
-      //     id: this.ngcodeconfig.id,
-      //     lineid: this.selectedLinenew.lineid,
-      //   };
-      await this.deleteNgCode(this.itemForDelete._id);
-      // if (deleted) {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'success',
-      //     message: 'PROCESS_DELETED',
-      //   });
-      //   this.dialog = false;
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'ERROR_DELETING_PROCESS',
-      //   });
-      // }
+      const deleted = await this.deleteNgCode(this.itemForDelete._id);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'NG_CODE_CONFIG_DELETED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_NG_CODE',
+        });
+      }
       this.dialog = false;
     },
   },
