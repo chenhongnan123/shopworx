@@ -1,5 +1,5 @@
 {
-  "name": "@shopworx/maintenance-summary",
+  "name": "@shopworx/downtime-log",
   "version": "4.1.0-rc.1-patch.4",
   "private": true,
   "scripts": {
@@ -7,8 +7,6 @@
   },
   "dependencies": {
     "@shopworx/services": "^4.1.0-rc.1-patch.4",
-    "@shopworx/ui-components": "^4.1.0-rc.1-patch.4",
-    "vue-grid-layout": "^2.3.7",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

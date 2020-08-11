@@ -55,20 +55,16 @@ export default ({
       return false;
     },
 
-    executeReport: async ({ commit, state }) => {
+    executeReport: async ({ commit, state, rootState }) => {
       try {
         const { reportMapping, dateRange } = state;
+        const { activeSite } = rootState.user;
         const reportName = reportMapping ? reportMapping.reportName : '';
         const [start, end] = dateRange;
-        const [businessStartYear, businessStartMonth, businessStartDay] = start.split('-');
-        const [businessEndYear, businessEndMonth, businessEndDay] = end.split('-');
         const payload = {
-          businessStartYear,
-          businessEndYear,
-          businessStartMonth,
-          businessEndMonth,
-          businessStartDay,
-          businessEndDay,
+          start: parseInt(start.replace(/-/g, ''), 10),
+          end: parseInt(end.replace(/-/g, ''), 10),
+          siteid: activeSite,
         };
         const { data } = await ReportService.executeReport(reportName, payload);
         if (data && data.reportData) {

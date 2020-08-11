@@ -92,24 +92,26 @@
         </template>
       </v-list>
     </perfect-scrollbar>
-    <v-divider></v-divider>
-    <v-list
-      dense
-      shaped
-      class="py-1"
-    >
-      <v-list-item
-        :key="item.title"
-        :to="{ name: item.title }"
-        v-for="item in adminItems"
-        :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+    <template v-if="adminItems && adminItems.length">
+      <v-divider></v-divider>
+      <v-list
+        dense
+        shaped
+        class="py-1"
       >
-        <v-list-item-icon>
-          <v-icon v-text="item.icon"></v-icon>
-        </v-list-item-icon>
-        <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-      </v-list-item>
-    </v-list>
+        <v-list-item
+          :key="item.title"
+          :to="{ name: item.title }"
+          v-for="item in adminItems"
+          :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="item.icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </template>
   </v-navigation-drawer>
 </template>
 

@@ -54,7 +54,9 @@
     "PLAN_CREATED": "Plan created!",
     "PLAN_UPDATED": "Plan updated!",
     "CREATED_RECORD": "Record added successfully.",
-    "DELETE_RECORD": "Record deleted successfully."
+    "DELETE_RECORD": "Record deleted successfully.",
+    "ROLE_UPDATED": "Role updated successfully.",
+    "USER_DELETED": "User removed successfully."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -86,7 +88,14 @@
     "endTime": "End time",
     "date": "Date",
     "shift": "Shift",
-    "role": "Role"
+    "role": "Role",
+    "partname": "Part name",
+    "machinename": "Machine name",
+    "moldname": "Mold name",
+    "plannedQuantity": "Quantity",
+    "activeCavity": "Active cavity",
+    "familyActiveCavity": "Active cavity",
+    "scheduledStart": "Scheduled start"
   },
   "snackbar": {
     "close": "Close",
@@ -158,6 +167,7 @@
   },
   "modules": {
     "apps": "Apps",
+    "dashboards": "Dashboards",
     "home": "Home",
     "order": "Order",
     "configuration": "Configuration",
@@ -167,6 +177,7 @@
     "shopfloorDashboard": "Shopfloor Dashboard",
     "orderManagement": "Order",
     "productionLog": "Production Log",
+    "downtimeLog": "Downtime Log",
     "maintenanceSummary": "Maintenance Summary",
     "parameterConfiguration": "Parameter Configuration",
     "productionPlanning": "Production Planning",
@@ -183,7 +194,7 @@
     "oee": "Oee",
     "masters": "Master Data",
     "admin": "Admin Console",
-    "search": "Search reports & insights (This is dummy for 4.1.0-rc.1)",
+    "search": "Search reports & insights",
     "insights": "Insights"
   },
   "account": {
