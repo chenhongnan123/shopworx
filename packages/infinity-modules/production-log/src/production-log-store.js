@@ -58,7 +58,7 @@ export default ({
         elementName,
         { root: true },
       );
-      return !!element;
+      return element;
     },
     // TODO - below 2 functions can be merged
     getMasterData: async ({ commit, dispatch, rootGetters }) => {
@@ -126,17 +126,11 @@ export default ({
         { root: true },
       );
       if (masterElements && masterElements.length) {
-        let planningMaster = null;
-        let rejectionReasonsMaster = [];
+        const planningMaster = await dispatch('getElement', 'planning');
+        const rejectionReasonsMaster = await dispatch('getElement', 'rejectionreasons');
         let rejectionMaster = [];
         masterElements
           .forEach((elem) => {
-            if (elem.masterElement.elementName === 'planning') {
-              planningMaster = elem;
-            }
-            if (elem.masterElement.elementName === 'rejectionreasons') {
-              rejectionReasonsMaster = elem;
-            }
             if (elem.masterElement.elementName === 'rejection') {
               rejectionMaster = elem;
             }
@@ -149,14 +143,24 @@ export default ({
       }
       return false;
     },
-    createRejectionElement: async ({ dispatch, state }) => {
+    createRejectionElement: async ({ dispatch, state, rootState }) => {
       const { planningMaster, rejectionReasonsMaster, rejectionMaster } = state;
+      let { licenses } = rootState.user;
+      licenses = licenses.map((l) => l.assetId);
+      const assets = [...new Set(licenses)];
+      const assetReasonMasters = [];
+      assets.forEach((l) => {
+        rejectionReasonsMaster.tags.forEach((rm) => {
+          assetReasonMasters.push({ ...rm, assetId: l });
+        });
+        // assetReasonMasters.push(...rejectionReasonsMaster.tags);
+      });
       if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
         const element = rejectionMaster.masterElement;
         const tags = [
-          ...rejectionReasonsMaster.masterTags,
-          ...planningMaster.masterTags,
           ...rejectionMaster.masterTags,
+          ...planningMaster.tags,
+          ...assetReasonMasters,
         ];
         const payload = {
           element,

@@ -112,17 +112,14 @@ export default {
     },
     async downloadZip() {
       this.downloading = true;
-      // await this.getMasterElements();
       const success = await this.getMasterData();
       if (success) {
         this.masterList = this.masterData;
-        console.log('ML', this.masterList);
         const files = this.masterList.map((list) => ({
           data: [],
           fields: list.tags.map((t) => t.tagDescription),
           fileName: `${list.element.elementName}.csv`,
         }));
-        console.log('file', files);
         try {
           await this.addFilesToZip(files);
         } catch (e) {
