@@ -7,13 +7,13 @@
     >
       <v-col cols="5" align="center">
         <v-img
-          :src="require(`@shopworx/assets/illustrations/${reportViewerIllustration}.svg`)"
+          :src="require(`@shopworx/assets/illustrations/${notFoundIllustration}.svg`)"
           contain
         />
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No reports found
+          No downtime record for selected filters
         </span>
       </v-col>
     </v-row>
@@ -22,12 +22,12 @@
 
 <script>
 export default {
-  name: 'ReportViewsNotFound',
+  name: 'DowntimeNoRecords',
   computed: {
-    reportViewerIllustration() {
+    notFoundIllustration() {
       return this.$vuetify.theme.dark
-        ? 'report-viewer-dark'
-        : 'report-viewer-light';
+        ? 'not-found-dark'
+        : 'not-found-light';
     },
   },
 };
