@@ -13,6 +13,10 @@ export default ({
     downtimeList: [],
     loading: false,
     error: false,
+    downtimeReasons: [],
+    downtimeCount: 0,
+    pageNumber: 1,
+    pageSize: 10,
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -22,9 +26,23 @@ export default ({
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
     setSelectedDuration: set('selectedDuration'),
-    setDowntimeList: set('downtimeList'),
     setLoading: set('loading'),
     setError: set('error'),
+    setDowntimeReasons: set('downtimeReasons'),
+    setDowntimeCount: set('downtimeCount'),
+    resetPageNumber: (state) => {
+      state.pageNumber = 1;
+    },
+    incrementPageNumber: (state) => {
+      state.pageNumber += 1;
+    },
+    setDowntimeList: (state, payload) => {
+      if (payload && payload.length) {
+        state.downtimeList = [...state.downtimeList, ...payload];
+      } else {
+        state.downtimeList = [];
+      }
+    },
   },
   actions: {
     fetchMachines: async ({ commit, dispatch }) => {
@@ -58,12 +76,27 @@ export default ({
       return false;
     },
 
+    fetchDowntimeReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'downtimereasons' },
+        { root: true },
+      );
+      if (records) {
+        commit('setDowntimeReasons', records);
+        return true;
+      }
+      return false;
+    },
+
     fetchDowntimeList: async ({ commit, dispatch, state }) => {
       const {
         selectedMachine,
         selectedDate,
         selectedShift,
         selectedDuration,
+        pageNumber,
+        pageSize,
       } = state;
       const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       const duration = parseInt(selectedDuration && selectedDuration.value, 10);
@@ -77,24 +110,58 @@ export default ({
       if (duration) {
         query += `%26%26downtimeduration%3E${duration}`;
       }
-      commit('setLoading', true);
-      commit('setError', false);
-      const records = await dispatch(
-        'element/getRecords',
+      const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
+      if (pageNumber === 1) {
+        commit('setLoading', true);
+        commit('setError', false);
+      }
+      const data = await dispatch(
+        'element/getRecordsWithCount',
         {
           elementName: 'downtime',
-          query: `?query=${query}`,
+          query: `?query=${query}&${paginatedQuery}`,
         },
         { root: true },
       );
-      if (records) {
-        commit('setDowntimeList', records);
+      if (data && data.results) {
+        commit('setDowntimeList', data.results);
+        commit('setDowntimeCount', data.totalCount);
         commit('setError', false);
       } else {
         commit('setDowntimeList', []);
+        commit('setDowntimeCount', 0);
         commit('setError', true);
       }
       commit('setLoading', false);
+    },
+
+    updateReason: async ({ dispatch, commit }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'downtime',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      if (updated) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'success',
+          message: 'DOWNTIME_UPDATE_SUCCESS',
+        }, {
+          root: true,
+        });
+      } else {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'DOWNTIME_UPDATE_ERROR',
+        }, {
+          root: true,
+        });
+      }
     },
   },
   getters: {

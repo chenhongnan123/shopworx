@@ -273,6 +273,18 @@ export default ({
       }
     },
 
+    getRecordsWithCount: async (_, { elementName, query = '' }) => {
+      try {
+        const { data } = await ElementService.getRecords(elementName, query);
+        if (data && data.results) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     deleteRecordById: async (_, { elementName, id }) => {
       try {
         const { data } = await ElementService.deleteRecordById(elementName, id);
