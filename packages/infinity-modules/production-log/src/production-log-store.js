@@ -153,13 +153,12 @@ export default ({
         rejectionReasonsMaster.tags.forEach((rm) => {
           assetReasonMasters.push({ ...rm, assetId: l });
         });
-        // assetReasonMasters.push(...rejectionReasonsMaster.tags);
       });
       if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
         const element = rejectionMaster.masterElement;
         const tags = [
           ...rejectionMaster.masterTags,
-          ...planningMaster.tags,
+          ...planningMaster.tags.filter((t) => !t.hide),
           ...assetReasonMasters,
         ];
         const payload = {
