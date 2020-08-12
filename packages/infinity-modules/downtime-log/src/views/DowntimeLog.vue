@@ -54,12 +54,13 @@ export default {
       await this.getAppSchema();
       this.setExtendedHeader(true);
     }
+    await this.fetchDowntimeReasons();
     this.loading = false;
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
-    ...mapActions('downtimeLog', ['getOnboardingState']),
+    ...mapActions('downtimeLog', ['getOnboardingState', 'fetchDowntimeReasons']),
   },
   watch: {
     onboarded(val) {
