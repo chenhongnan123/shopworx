@@ -255,10 +255,10 @@ export default ({
         if (data && data.errors) {
           return false;
         }
+        return data;
       } catch (e) {
         return false;
       }
-      return true;
     },
 
     getRecords: async (_, { elementName, query = '' }) => {

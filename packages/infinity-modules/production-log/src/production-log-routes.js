@@ -9,11 +9,6 @@ const routes = [
       {
         path: '',
         name: 'productionLog',
-        component: () => import(/* webpackChunkName: "production-log" */ './views/ProductionDashboard.vue'),
-      },
-      {
-        path: ':id',
-        name: 'production-detail',
         component: () => import(/* webpackChunkName: "production-log" */ './views/ProductionMachineView.vue'),
         props: true,
       },
