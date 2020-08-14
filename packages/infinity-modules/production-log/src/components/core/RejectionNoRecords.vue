@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No rejection record for selected filters
+          No production record for selected filters
         </span>
       </v-col>
     </v-row>
