@@ -28,7 +28,7 @@
             Duration
           </div>
           <div class="text-uppercase title font-weight-regular mb-2">
-            {{ downtime.downtimeduration }} secs
+            {{ duration }}
           </div>
         </v-col>
         <v-col cols="12" sm="6">
@@ -75,6 +75,15 @@ export default {
   components: {
     DowntimeSplit,
     EditDowntimeReason,
+  },
+  computed: {
+    duration() {
+      const d = this.downtime.downtimeduration;
+      const h = Math.floor(d / 3600);
+      const m = Math.floor((d % 3600) / 60);
+      const s = Math.floor((d % 3600) % 60);
+      return `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
+    },
   },
 };
 </script>

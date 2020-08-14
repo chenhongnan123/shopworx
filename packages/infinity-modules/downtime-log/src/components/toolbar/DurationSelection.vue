@@ -52,7 +52,7 @@ export default {
         name: '> 60 mins',
         value: 3600,
       }, {
-        name: 'None',
+        name: 'All durations',
         value: 0,
       }],
     };
