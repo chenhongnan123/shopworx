@@ -10,7 +10,7 @@
       <downtime-no-records />
     </template>
     <template v-else>
-      <div v-for="downtime in downtimeList" :key="downtime._id">
+      <div v-for="(downtime, n) in downtimeList" :key="n">
         <downtime-list-item
           :downtime="downtime"
           class="mb-2 mx-4"

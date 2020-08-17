@@ -7,7 +7,10 @@
         {{ new Date(downtime.downtimeend).toLocaleTimeString('en-US') }}
       </div>
       <v-spacer></v-spacer>
-      <downtime-split />
+      <downtime-split
+        :downtime="downtime"
+        :duration="duration"
+      />
     </v-card-title>
     <v-card-text>
       <v-row no-gutters >

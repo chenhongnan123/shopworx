@@ -12,6 +12,14 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
+      <v-btn
+        icon
+        small
+        class="ml-2 mb-1"
+        @click="refreshDowntimes"
+      >
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
     </portal>
     <downtime-log-loading v-if="loading" />
     <template v-else>
@@ -59,8 +67,17 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapMutations('downtimeLog', ['resetPageNumber']),
     ...mapActions('webApp', ['getAppSchema']),
-    ...mapActions('downtimeLog', ['getOnboardingState', 'fetchDowntimeReasons']),
+    ...mapActions('downtimeLog', [
+      'getOnboardingState',
+      'fetchDowntimeReasons',
+      'fetchDowntimeList',
+    ]),
+    refreshDowntimes() {
+      this.resetPageNumber();
+      this.fetchDowntimeList();
+    },
   },
   watch: {
     onboarded(val) {

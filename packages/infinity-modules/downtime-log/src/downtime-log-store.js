@@ -112,6 +112,7 @@ export default ({
       }
       const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
       if (pageNumber === 1) {
+        commit('setDowntimeList', []);
         commit('setLoading', true);
         commit('setError', false);
       }
@@ -135,7 +136,7 @@ export default ({
       commit('setLoading', false);
     },
 
-    updateReason: async ({ dispatch, commit }, { id, payload }) => {
+    updateReason: async ({ dispatch, commit, state }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',
         {
@@ -146,6 +147,19 @@ export default ({
         { root: true },
       );
       if (updated) {
+        let { downtimeList } = state;
+        downtimeList = downtimeList.map((dt) => {
+          // eslint-disable-next-line
+          if (dt._id === id) {
+            return {
+              ...dt,
+              ...payload,
+            };
+          }
+          return dt;
+        });
+        commit('setDowntimeList', []);
+        commit('setDowntimeList', downtimeList);
         commit('helper/setAlert', {
           show: true,
           type: 'success',

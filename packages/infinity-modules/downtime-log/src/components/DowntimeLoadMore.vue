@@ -34,8 +34,6 @@ export default {
   computed: {
     ...mapState('downtimeLog', ['downtimeList', 'downtimeCount']),
     moreRecords() {
-      console.log(this.downtimeList.length);
-      console.log(this.downtimeCount);
       return this.downtimeList.length < this.downtimeCount;
     },
   },
