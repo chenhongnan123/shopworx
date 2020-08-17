@@ -273,7 +273,14 @@ export default {
   created() {
   },
   computed: {
-    ...mapState('productionLog', ['rejectionReasons', 'selectedDate', 'selectedMachine', 'selectedShift', 'allRejections']),
+    ...mapState('productionLog', [
+      'rejectionReasons',
+      'selectedDate',
+      'selectedMachine',
+      'selectedShift',
+      'allRejections',
+      'businessHours',
+    ]),
     ...mapGetters('productionLog', ['planProductionData']),
     plans() {
       if (this.planProductionData) {
@@ -303,18 +310,19 @@ export default {
     ...mapActions('productionLog', ['executeProductionReport', 'addRejection', 'updateRejection', 'getRejections']),
     async addRejectionData(plan) {
       const {
-        day, date, machinename, moldname, month, partname,
-        planid, planned, produced, shift, toolname, trial, year,
+        day, machinename, moldname, month, partname,
+        planid, planned, produced, shift, toolname, trial, year, assetid,
       } = plan;
       const {
-        assetid, category, department, reasoncode, reasonname, siteId,
+        category, department, reasoncode, reasonname, siteId,
       } = this.selectedReason;
+      const [currentShift] = this.businessHours
+        .filter((hour) => hour.shift === shift)
+        .sort((a, b) => a.sortindex - b.sortindex);
+      const [hour, mins] = currentShift.starttime.split(':');
+      const timestamp = new Date(year, (month - 1), day, hour, mins).getTime();
       const rejectionData = {
-        shift,
-        day,
-        month,
-        year,
-        date,
+        timestamp,
         planid,
         machinename,
         partname,

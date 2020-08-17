@@ -20,6 +20,7 @@ export default ({
     rejectionReasons: [],
     productionDetails: [],
     allRejections: null,
+    businessHours: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -39,6 +40,7 @@ export default ({
     setRejectionReasons: set('rejectionReasons'),
     setProductionDetails: set('productionDetails'),
     setAllRejections: set('allRejections'),
+    setBusinessHours: set('businessHours'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -182,6 +184,7 @@ export default ({
       );
       if (records) {
         if (records.length) {
+          commit('setBusinessHours', records);
           const allShifts = records.filter((rec) => rec.type === 'shift');
           commit('setShift', allShifts);
           const shiftList = [...new Set(allShifts.map((item) => item.name))];
