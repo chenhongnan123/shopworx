@@ -365,7 +365,6 @@ export default ({
           return acc;
         }, {});
       }
-      console.log(res);
       return res;
     },
     cells: ({ machines }) => {

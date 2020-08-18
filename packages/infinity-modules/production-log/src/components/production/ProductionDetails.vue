@@ -140,8 +140,8 @@
                                   </v-data-table>
                                 </template>
                               </v-card>
-                              <validation-observer ref="form" #default="{ passes, invalid }">
-                                <v-form @submit.prevent="passes(onSubmit)" >
+                              <validation-observer ref="addRejectionForm" #default="{ invalid }">
+                                <v-form>
                                   <v-card class="mt-2 pa-3" flat>
                                     <template>
                                       <v-row>
@@ -196,7 +196,7 @@
                                           <v-textarea
                                             outlined
                                             dense
-                                            label="Remarks"
+                                            label="Remarks (Optional)"
                                             v-model="remark"
                                           ></v-textarea>
                                         </v-col>
@@ -206,8 +206,8 @@
                                         <v-btn
                                           :disabled="!selectedReason || invalid"
                                           color="primary"
-                                          class="text-none"
                                           @click="addRejectionData(plan)"
+                                          class="text-none"
                                         >
                                           <v-icon left>mdi-plus</v-icon>
                                           Add new
@@ -337,6 +337,7 @@ export default {
         reasoncode,
         reasonname,
         siteId,
+        shiftName: shift,
         quantity: +this.rejectedQuantity,
         remark: this.remark,
       };
@@ -346,7 +347,7 @@ export default {
         this.remark = null;
         this.selectedReason = null;
         requestAnimationFrame(() => {
-          this.$refs.form.reset();
+          this.$refs.addRejectionForm[0].reset();
         });
       } else {
         console.error('Error while creating rejection record');
