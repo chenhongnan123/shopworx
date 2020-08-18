@@ -20,6 +20,7 @@ export default ({
     rejectionReasons: [],
     productionDetails: [],
     allRejections: null,
+    businessHours: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -39,6 +40,7 @@ export default ({
     setRejectionReasons: set('rejectionReasons'),
     setProductionDetails: set('productionDetails'),
     setAllRejections: set('allRejections'),
+    setBusinessHours: set('businessHours'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -182,6 +184,7 @@ export default ({
       );
       if (records) {
         if (records.length) {
+          commit('setBusinessHours', records);
           const allShifts = records.filter((rec) => rec.type === 'shift');
           commit('setShift', allShifts);
           const shiftList = [...new Set(allShifts.map((item) => item.name))];
@@ -343,7 +346,7 @@ export default ({
           const rejection = allRejections.filter(
             (rej) => rej.planid === plan.planid
             && rej.partname === plan.partname
-            && rej.shift === plan.shift,
+            && rej.shiftName === plan.shift,
           );
           data.push({
             ...plan,
@@ -362,7 +365,6 @@ export default ({
           return acc;
         }, {});
       }
-      // console.log(res);
       return res;
     },
     cells: ({ machines }) => {

@@ -19,7 +19,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <validation-observer ref="form" #default="{ passes, invalid }">
+        <validation-observer ref="updateRejectionForm" #default="{ passes, invalid }">
           <v-form @submit.prevent="passes(onSubmit)">
             <v-card-text>
               <v-row>

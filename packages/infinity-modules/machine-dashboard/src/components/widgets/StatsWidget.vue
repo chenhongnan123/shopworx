@@ -64,7 +64,7 @@
                   </span>
                 </div>
                 <div class="title">
-                  0
+                  {{ assetState.rqty || 0 }}
                 </div>
               </v-col>
               <v-col cols="6">
@@ -74,7 +74,9 @@
                   </span>
                 </div>
                 <div class="title">
-                  0%
+                  {{ assetState.rqty
+                    ? ((assetState.rqty / assetState.qty) * 100).toFixed(2)
+                    : 0 }} %
                 </div>
               </v-col>
             </v-row>

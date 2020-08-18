@@ -13,12 +13,12 @@
           class="pa-0"
         >
           <template v-if="plans" >
-            <v-flex v-for="(value, name) in plans" :key="value.planid">
+            <v-flex v-for="(value, name, index) in plans" :key="value.planid">
                <div
                 :key="value.planid"
                 style="border-left: 4px solid"
                 class="headline pl-2 font-weight-medium"
-                :class="n !== 0 ? 'my-4' : 'mb-4'"
+                :class="index !== 0 ? 'my-4' : 'mb-4'"
               >
                 {{ name }}
               </div>
@@ -140,8 +140,8 @@
                                   </v-data-table>
                                 </template>
                               </v-card>
-                              <validation-observer ref="form" #default="{ passes, invalid }">
-                                <v-form @submit.prevent="passes(onSubmit)" >
+                              <validation-observer ref="addRejectionForm" #default="{ invalid }">
+                                <v-form>
                                   <v-card class="mt-2 pa-3" flat>
                                     <template>
                                       <v-row>
@@ -196,7 +196,7 @@
                                           <v-textarea
                                             outlined
                                             dense
-                                            label="Remarks"
+                                            label="Remarks (Optional)"
                                             v-model="remark"
                                           ></v-textarea>
                                         </v-col>
@@ -206,8 +206,8 @@
                                         <v-btn
                                           :disabled="!selectedReason || invalid"
                                           color="primary"
-                                          class="text-none"
                                           @click="addRejectionData(plan)"
+                                          class="text-none"
                                         >
                                           <v-icon left>mdi-plus</v-icon>
                                           Add new
@@ -273,7 +273,14 @@ export default {
   created() {
   },
   computed: {
-    ...mapState('productionLog', ['rejectionReasons', 'selectedDate', 'selectedMachine', 'selectedShift', 'allRejections']),
+    ...mapState('productionLog', [
+      'rejectionReasons',
+      'selectedDate',
+      'selectedMachine',
+      'selectedShift',
+      'allRejections',
+      'businessHours',
+    ]),
     ...mapGetters('productionLog', ['planProductionData']),
     plans() {
       if (this.planProductionData) {
@@ -303,18 +310,19 @@ export default {
     ...mapActions('productionLog', ['executeProductionReport', 'addRejection', 'updateRejection', 'getRejections']),
     async addRejectionData(plan) {
       const {
-        day, date, machinename, moldname, month, partname,
-        planid, planned, produced, shift, toolname, trial, year,
+        day, machinename, moldname, month, partname,
+        planid, planned, produced, shift, toolname, trial, year, assetid,
       } = plan;
       const {
-        assetid, category, department, reasoncode, reasonname, siteId,
+        category, department, reasoncode, reasonname, siteId,
       } = this.selectedReason;
+      const [currentShift] = this.businessHours
+        .filter((hour) => hour.shift === shift)
+        .sort((a, b) => a.sortindex - b.sortindex);
+      const [hour, mins] = currentShift.starttime.split(':');
+      const timestamp = new Date(year, (month - 1), day, hour, mins).getTime();
       const rejectionData = {
-        shift,
-        day,
-        month,
-        year,
-        date,
+        timestamp,
         planid,
         machinename,
         partname,
@@ -329,6 +337,7 @@ export default {
         reasoncode,
         reasonname,
         siteId,
+        shiftName: shift,
         quantity: +this.rejectedQuantity,
         remark: this.remark,
       };
@@ -338,7 +347,7 @@ export default {
         this.remark = null;
         this.selectedReason = null;
         requestAnimationFrame(() => {
-          this.$refs.form.reset();
+          this.$refs.addRejectionForm[0].reset();
         });
       } else {
         console.error('Error while creating rejection record');

@@ -13,16 +13,30 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No reports found
+          Error while fetching downtimes
         </span>
+      </v-col>
+      <v-col cols="12" align="center">
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="fetchDowntimeList"
+        >
+          Retry
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
-  name: 'ReportViewsNotFound',
+  name: 'DowntimeError',
+  methods: {
+    ...mapActions('downtimeLog', ['fetchDowntimeList']),
+  },
   computed: {
     reportViewerIllustration() {
       return this.$vuetify.theme.dark

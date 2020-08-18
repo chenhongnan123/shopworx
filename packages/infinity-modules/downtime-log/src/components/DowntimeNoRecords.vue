@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No production record for selected filters
+          No downtime record for selected filters
         </span>
       </v-col>
     </v-row>
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'RejectionNoRecords',
+  name: 'DowntimeNoRecords',
   computed: {
     notFoundIllustration() {
       return this.$vuetify.theme.dark
