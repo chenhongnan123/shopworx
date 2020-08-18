@@ -13,12 +13,12 @@
           class="pa-0"
         >
           <template v-if="plans" >
-            <v-flex v-for="(value, name) in plans" :key="value.planid">
+            <v-flex v-for="(value, name, index) in plans" :key="value.planid">
                <div
                 :key="value.planid"
                 style="border-left: 4px solid"
                 class="headline pl-2 font-weight-medium"
-                :class="n !== 0 ? 'my-4' : 'mb-4'"
+                :class="index !== 0 ? 'my-4' : 'mb-4'"
               >
                 {{ name }}
               </div>
