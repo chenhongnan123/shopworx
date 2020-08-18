@@ -7,7 +7,7 @@ export default ({
     autorun: true,
     machines: [],
     selectedCell: null,
-    selectedTime: 0,
+    selectedTime: 1,
     customizeMode: false,
     allWidgets: [
       {
