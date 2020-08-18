@@ -22,7 +22,11 @@
       <v-card-title primary-title>
         Split downtime
         <v-spacer></v-spacer>
-        <v-btn icon @click="close">
+        <v-btn
+          icon
+          @click="close"
+          :disabled="loading"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -63,7 +67,7 @@
               :items="downtimeReasons"
               item-text="reasonname"
               item-value="reasonname"
-              v-model="dt.reasonname"
+              v-model="dt.selectedReason"
             >
               <template #selection="data">
                 {{ data.item.reasonname }}
@@ -138,6 +142,7 @@
           text
           color="primary"
           class="text-none"
+          :disabled="loading"
           @click="setDowntimes"
         >
           Reset
@@ -145,6 +150,8 @@
         <v-btn
           color="primary"
           class="text-none"
+          :loading="loading"
+          @click="splitDowntime"
           :disabled="saveDisabled"
         >
           Split
@@ -155,7 +162,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'DowntimeSplit',
@@ -171,6 +178,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       dialog: false,
       downtimes: [],
     };
@@ -189,6 +197,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions('downtimeLog', ['fetchDowntimeList']),
+    ...mapActions('element', ['postRecord', 'deleteRecordById']),
     setDowntimes() {
       const {
         downtimestart,
@@ -201,17 +211,16 @@ export default {
       this.downtimes = [{
         downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
         downtimeend: '',
-        reasonname,
-        reasoncode,
-        category,
-        department,
+        selectedReason: {
+          reasonname,
+          reasoncode,
+          category,
+          department,
+        },
       }, {
         downtimestart: '',
         downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
-        reasonname: '',
-        reasoncode: '',
-        category: '',
-        department: '',
+        selectedReason: null,
       }];
     },
     addDowntime() {
@@ -219,10 +228,7 @@ export default {
         downtimestart: '',
         downtimeend: new Date(this.downtime.downtimeend)
           .toLocaleTimeString('en-US', { hour12: false }),
-        reasonname: '',
-        reasoncode: '',
-        category: '',
-        department: '',
+        selectedReason: null,
       });
     },
     removeDowntime(index) {
@@ -239,10 +245,12 @@ export default {
         this.downtimes[index] = {
           downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
           downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
-          reasonname,
-          reasoncode,
-          category,
-          department,
+          selectedReason: {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          },
         };
       } else if (this.downtimes.length === 1 && index === 1) {
         const {
@@ -256,15 +264,53 @@ export default {
         this.downtimes[index - 1] = {
           downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
           downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
-          reasonname,
-          reasoncode,
-          category,
-          department,
+          selectedReason: {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          },
         };
       }
     },
     close() {
       this.dialog = false;
+    },
+    async splitDowntime() {
+      this.loading = true;
+      const { year, month, day } = this.downtime;
+      await Promise.all([this.downtimes.forEach((dt) => {
+        const [sHrs, sMins, sSecs] = dt.downtimestart.split(':');
+        const [eHrs, eMins, eSecs] = dt.downtimeend.split(':');
+        const start = new Date(year, (month - 1), day, sHrs, sMins, sSecs || 0).getTime();
+        const end = new Date(year, (month - 1), day, eHrs, eMins, eSecs || 0).getTime();
+        const payload = {
+          ...this.downtime,
+          _id: null,
+          ...dt.selectedReason,
+          downtimestart: start,
+          downtimeend: end,
+          downtimeinms: end - start,
+          downtimeduration: (end - start) / 1000,
+          timestamp: start,
+        };
+        this.postRecord({
+          elementName: 'downtime',
+          payload,
+        });
+      })]);
+      const deleted = await this.deleteRecordById({
+        elementName: 'downtime',
+        // eslint-disable-next-line
+        id: this.downtime._id,
+      });
+      if (deleted) {
+        await this.fetchDowntimeList();
+        this.loading = false;
+        this.close();
+      } else {
+        this.loading = false;
+      }
     },
   },
 };
