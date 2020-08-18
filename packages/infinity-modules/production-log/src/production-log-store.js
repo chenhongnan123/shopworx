@@ -346,7 +346,7 @@ export default ({
           const rejection = allRejections.filter(
             (rej) => rej.planid === plan.planid
             && rej.partname === plan.partname
-            && rej.shift === plan.shift,
+            && rej.shiftName === plan.shift,
           );
           data.push({
             ...plan,
@@ -365,7 +365,7 @@ export default ({
           return acc;
         }, {});
       }
-      // console.log(res);
+      console.log(res);
       return res;
     },
     cells: ({ machines }) => {
