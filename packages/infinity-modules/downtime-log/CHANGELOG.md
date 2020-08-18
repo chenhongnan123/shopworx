@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+* **downtime-log:** added feature to split downtimes ([3039358](https://bitbucket.org/entrib/shopworx/commits/3039358e38429a8aeb812081a4bc4804faf501a2))
+* **downtime-log:** user can update downtime reason ([eacb2f3](https://bitbucket.org/entrib/shopworx/commits/eacb2f3957d2ada460d9a6a9e0c4d444870dc1f9))
+
+
+
+
+
 # [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
 
 **Note:** Version bump only for package @shopworx/downtime-log

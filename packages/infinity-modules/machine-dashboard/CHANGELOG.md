@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed rejecion display on dashboard ([fb1b19d](https://bitbucket.org/entrib/shopworx/commits/fb1b19da39e6d52254f6e9c0ac5c0d337e036aaf))
+* **machine-dashboard:** updated rejection details ([5cbf747](https://bitbucket.org/entrib/shopworx/commits/5cbf7472160429dda29514fd445d5d64ba434566))
+
+
+
+
+
 # [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
 
 
