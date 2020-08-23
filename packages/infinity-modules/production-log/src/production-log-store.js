@@ -226,7 +226,7 @@ export default ({
       let query = `?query=date==${date}`;
       // TODO - i18n check for "All"
       if (!selectedShift.includes('All')) {
-        query = `${query}%26%26shift=="${selectedShift}"`;
+        query = `${query}%26%26shiftName=="${selectedShift}"`;
       }
       if (!selectedMachine.includes('All')) {
         query = `${query}%26%26machinename=="${selectedMachine}"`;
@@ -355,10 +355,10 @@ export default ({
         });
         res = data.reduce((acc, curr) => {
           if (curr.firstcycle && curr.firstcycle !== '-') {
-            curr.firstcycle = new Date(curr.firstcycle).toISOString().substr(11, 5);
+            curr.firstcycle = new Date(curr.firstcycle).toLocaleTimeString('en-US');
           }
           if (curr.lastcycle && curr.lastcycle !== '-') {
-            curr.lastcycle = new Date(curr.lastcycle).toISOString().substr(11, 5);
+            curr.lastcycle = new Date(curr.lastcycle).toLocaleTimeString('en-US');
           }
           if (!acc[curr.machinename]) acc[curr.machinename] = [];
           acc[curr.machinename].push(curr);
