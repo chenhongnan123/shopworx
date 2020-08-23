@@ -95,7 +95,8 @@
     "plannedQuantity": "Quantity",
     "activeCavity": "Active cavity",
     "familyActiveCavity": "Active cavity",
-    "scheduledStart": "Scheduled start"
+    "scheduledStart": "Scheduled start",
+    "rejectedQuantity": "Quantity"
   },
   "snackbar": {
     "close": "Close",

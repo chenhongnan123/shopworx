@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed rejecion display on dashboard ([fb1b19d](https://bitbucket.org/entrib/shopworx/commits/fb1b19da39e6d52254f6e9c0ac5c0d337e036aaf))
+* **machine-dashboard:** updated rejection details ([5cbf747](https://bitbucket.org/entrib/shopworx/commits/5cbf7472160429dda29514fd445d5d64ba434566))
+* **planning:** Fixed unable to add plan ([ac16381](https://bitbucket.org/entrib/shopworx/commits/ac16381d7f082de8053959c6331637c8e6ef6e29))
+* **production-log:** added loop index for production plans ([0e5b09f](https://bitbucket.org/entrib/shopworx/commits/0e5b09fa3922e7c283b17d000b30e2bce9728153))
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+* **production-log:** Removed hidden tags from rejection onboarding ([a041b32](https://bitbucket.org/entrib/shopworx/commits/a041b32a6dabf10fecb52068a498a775cca91901))
+* **production-log:** updated shift tag for rejection ([9475ea1](https://bitbucket.org/entrib/shopworx/commits/9475ea1ddb26ce70fdd2c2ee71638b1625e60c28))
+* **production-log:** Updated timestamp for rejection entry ([11d22da](https://bitbucket.org/entrib/shopworx/commits/11d22daed2696b3399e2c41337961962df00c1a3))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+* **downtime-log:** added feature to split downtimes ([3039358](https://bitbucket.org/entrib/shopworx/commits/3039358e38429a8aeb812081a4bc4804faf501a2))
+* **downtime-log:** user can update downtime reason ([eacb2f3](https://bitbucket.org/entrib/shopworx/commits/eacb2f3957d2ada460d9a6a9e0c4d444870dc1f9))
+
+
+
+
+
 # [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
 
 

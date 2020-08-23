@@ -5,7 +5,7 @@
     v-model="time"
     color="primary"
   >
-    <v-btn class="text-none">
+    <v-btn class="text-none" disabled>
       Hourly
     </v-btn>
     <v-btn class="text-none">

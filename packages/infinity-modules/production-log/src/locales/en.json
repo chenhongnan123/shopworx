@@ -1,3 +1,53 @@
 {
-  "productionLog": "Production Log"
+  "productionLog": "Production Log",
+  "rejectionReasons": {
+    "setup": {
+      "counter": "Step {current} of {total}",
+      "importMaster": {
+        "title": "Import rejection reasons",
+        "title1": "Upload rejection reasons to ShopWorx to get better",
+        "title2": "logs",
+        "title3": "of your rejections on the shopfloor.",
+        "import": "Import rejection reasons",
+        "downloading": "Generating templates...",
+        "downloadError": "Could not download the rejection reasons templates.",
+        "retryDownload": "Retry download.",
+        "download": "You can download the rejection reasons templates",
+        "downloadLink": "here.",
+        "fetchMaster": "Fetching rejection reasons from ShopWorx servers...",
+        "fetchError": "We couldn't fetch rejection reasons from ShopWorx servers.",
+        "retryFetch": "Please retry.",
+        "importFile": "Import file",
+        "recordsExist": "1 record already exist! | {count} records already exist!",
+        "starting": "Starting...",
+        "parsing": "Parsing...",
+        "mapping": "Mapping...",
+        "importing": "Importing...",
+        "recordsImported": "1 record imported! | {count} records imported!",
+        "recordsNotCreated": "Cannot reach ShopWorx servers!",
+        "missingHeaders": "Please include headers in the first row!",
+        "missingData": "Please have atleast one data row!",
+        "fileUnparsable": "Cannot parse file!",
+        "fileNotFound": "File {file} not found!",
+        "review": "Review",
+        "updateColumns": "Update columns",
+        "reimport": "Re-import",
+        "reviewTitle": "Review {title}",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "delete": "Delete selected rows",
+        "missingMapping": "Missing required mapping for one column | Missing required mappings for {count} columns",
+        "requiredData": "Missing required data for one record | Missing required data for {count} records",
+        "duplicateData": "Duplicate data for one column | Duplicate data for {count} columns",
+        "invalidDataType": "Invalid data type for one column | Invalid data type for {count} columns"
+      },
+      "complete": {
+        "title": "Complete setup",
+        "title1": "Great! you are all set. Welcome to the",
+        "title2": "rejection",
+        "title3": "app. Other settings are available in the app for you to change.",
+        "next": "Let's go"
+      }
+    }
+  }
 }

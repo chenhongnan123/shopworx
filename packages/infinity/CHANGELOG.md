@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+
+
+
+
+
 # [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
 
 

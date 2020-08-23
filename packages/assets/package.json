@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/assets",
-  "version": "4.1.0-rc.1-patch.4",
+  "version": "4.1.0-rc.2",
   "private": true,
   "devDependencies": {
     "eslint": "^7.1.0",
