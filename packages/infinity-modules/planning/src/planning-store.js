@@ -9,6 +9,8 @@ export default ({
     assets: [],
     machine: null,
     onboarded: false,
+    isFullScreen: false,
+    planView: 0,
     planningMaster: null,
     partMatrixMaster: [],
     partMatrixRecords: [],
@@ -27,6 +29,8 @@ export default ({
     setAssets: set('assets'),
     setMachine: set('machine'),
     setOnboarded: set('onboarded'),
+    setFullScreen: set('isFullScreen'),
+    setPlanView: set('planView'),
     setPlanningMaster: set('planningMaster'),
     setPartMatrixMaster: set('partMatrixMaster'),
     setPartMatrixRecords: set('partMatrixRecords'),
@@ -347,13 +351,12 @@ export default ({
       return null;
     },
 
-    getScheduledEnd: async (_, { start, end }) => {
-      let scheduledEnd = end;
-      const { data } = await HourService.getNonWorkingTime(start, end);
+    getScheduledEnd: async (_, { start, duration }) => {
+      const { data } = await HourService.getPlanEndTime(start, duration);
       if (data && data.results) {
-        scheduledEnd += data.results;
+        return data.results;
       }
-      return scheduledEnd;
+      return start + duration;
     },
 
     getStarredPlans: async ({ commit, dispatch }) => {
@@ -391,7 +394,7 @@ export default ({
     getOnTimePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        `?query=(status=="inProgress"%7C%7Cstatus=="paused")%26%26${now()}<scheduledend`,
+        `?query=(status=="inProgress"%7C%7Cstatus=="paused")%26%26scheduledend>${now()}`,
       );
       commit('setOnTimePlans', plans);
     },
@@ -399,7 +402,7 @@ export default ({
     getOverduePlans: async ({ commit, dispatch }) => {
       const plans = await dispatch(
         'getPlanningRecords',
-        `?query=status!="completed"%26%26status!="aborted"%26%26${now()}>scheduledend`,
+        `?query=(status=="inProgress"%7C%7Cstatus=="paused")%26%26scheduledend<${now()}`,
       );
       commit('setOverduePlans', plans);
     },
