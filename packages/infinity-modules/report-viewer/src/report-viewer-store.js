@@ -56,6 +56,7 @@ export default ({
     },
 
     executeReport: async ({ commit, state, rootState }) => {
+      commit('setReport', null);
       try {
         const { reportMapping, dateRange } = state;
         const { activeSite } = rootState.user;
