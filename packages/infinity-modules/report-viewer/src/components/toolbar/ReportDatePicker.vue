@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ReportDatePicker',
@@ -51,7 +51,11 @@ export default {
       menu: false,
     };
   },
+  created() {
+    this.dates = this.dateRange;
+  },
   computed: {
+    ...mapState('reports', ['dateRange']),
     dateRangeText() {
       return this.dates.join(' to ');
     },
