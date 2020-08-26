@@ -420,7 +420,7 @@ export default ({
       const machinename = machine ? machine.machinename : '';
       const plans = await dispatch(
         'getPlanningRecords',
-        `?query=status!="completed"%26%26status!="aborted"%26%26machinename=="${machinename}"`,
+        `?query=status!="complete"%26%26status!="abort"%26%26machinename=="${machinename}"`,
       );
       return plans;
     },
@@ -544,7 +544,7 @@ export default ({
         case 'inProgress': return 'success';
         case 'paused': return 'warning';
         case 'notStarted': return 'info';
-        case 'aborted': return 'error';
+        case 'abort': return 'error';
         case 'complete': return 'accent';
         default: return '';
       }
