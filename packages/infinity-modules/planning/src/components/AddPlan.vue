@@ -16,10 +16,10 @@
           Create plan
         </span>
         <span v-else-if="edit">
-          Edit plan {{ planToEdit.planid }}
+          Edit plan {{ planToEdit[0].planid }}
         </span>
         <span v-else-if="duplicate">
-          Duplicate plan {{ planToEdit.planid }}
+          Duplicate plan {{ planToEdit[0].planid }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon @click="close">
@@ -279,8 +279,8 @@ export default {
       default: false,
     },
     planToEdit: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
     },
   },
   data() {
@@ -409,6 +409,10 @@ export default {
         this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
       }
       if (this.partMatrixRecords.length === 1) {
+        const matrixKeys = Object.keys(this.partMatrix);
+        matrixKeys.forEach((key) => {
+          this.partMatrix[key] = this.partMatrixRecords[0][key];
+        });
         if (this.isInjectionMolding) {
           const uniqueMoldTagName = this.primaryMatrixTags
             .find((t) => t.element === 'mold')
@@ -417,6 +421,7 @@ export default {
             .find((t) => t.element === 'machine')
             .tag.tagName;
           this.message = 'Checking if family mold...';
+          // TODO: check why partmatrix.moldname is empty
           this.isFamily = await this.isFamilyMold(
             `?query=${uniqueMoldTagName}=="${encodeURIComponent(this.partMatrix[uniqueMoldTagName])}"`,
           );
@@ -438,10 +443,6 @@ export default {
           }
           this.plan.activecavity = this.partMatrix.cavity;
         }
-        const matrixKeys = Object.keys(this.partMatrix);
-        matrixKeys.forEach((key) => {
-          this.partMatrix[key] = this.partMatrixRecords[0][key];
-        });
         this.plan.activecavity = this.partMatrix.cavity;
         this.plan.scheduledstart = formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm');
         this.message = null;
@@ -491,7 +492,7 @@ export default {
         * (this.plan.stdcycletime * 1000);
       const scheduledEnd = await this.getScheduledEnd({
         start: this.plan.scheduledstart,
-        end: (this.plan.scheduledstart + runTime),
+        duration: runTime,
       });
       this.plan.scheduledend = scheduledEnd;
       let created = false;
@@ -536,7 +537,7 @@ export default {
       this.saving = true;
       this.plan = {
         ...this.plan,
-        planid: this.planToEdit.planid,
+        planid: this.planToEdit[0].planid,
         assetid: this.assetId,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
       };
@@ -544,7 +545,7 @@ export default {
         * (this.plan.stdcycletime * 1000);
       const scheduledEnd = await this.getScheduledEnd({
         start: this.plan.scheduledstart,
-        end: (this.plan.scheduledstart + runTime),
+        duration: runTime,
       });
       this.plan.scheduledend = scheduledEnd;
       let updated = false;
@@ -589,18 +590,43 @@ export default {
       this.dialog = false;
     },
     async setPlan() {
-      this.selectedPart = this.parts.find((part) => part.partname === this.planToEdit.partname);
+      this.selectedPart = this.parts.find((part) => part.partname === this.planToEdit[0].partname);
       await this.onPartSelection();
-      await this.updatePartMatrixRecords({ name: 'machinename', value: this.planToEdit.machinename });
+      await this.updatePartMatrixRecords({ name: 'machinename', value: this.planToEdit[0].machinename });
       if (this.isInjectionMolding) {
-        await this.updatePartMatrixRecords({ name: 'moldname', value: this.planToEdit.moldname });
+        await this.updatePartMatrixRecords({ name: 'moldname', value: this.planToEdit[0].moldname });
+        // TODO: set familyplan selected = false where plantoedit
+        // array part does not match family plan part
+        if (this.isFamily) {
+          const familyPlansToEdit = this.planToEdit.filter((plan, index) => index !== 0);
+          const familyPartsToEdit = [...new Set(familyPlansToEdit.map((plan) => plan.partname))];
+          this.familyPlan = this.familyPlan.map((fPlan) => {
+            const { cavity, partname } = fPlan;
+            let { selected, activecavity, plannedquantity } = fPlan;
+            if (familyPartsToEdit.includes(partname)) {
+              const plan = familyPlansToEdit.find((p) => p.partname === partname);
+              selected = true;
+              activecavity = plan.activecavity;
+              plannedquantity = plan.plannedquantity;
+            } else {
+              selected = false;
+            }
+            return {
+              selected,
+              cavity,
+              activecavity,
+              partname,
+              plannedquantity,
+            };
+          });
+        }
       } else if (this.isPress) {
-        await this.updatePartMatrixRecords({ name: 'toolname', value: this.planToEdit.toolname });
+        await this.updatePartMatrixRecords({ name: 'toolname', value: this.planToEdit[0].toolname });
       }
-      this.plan.plannedquantity = this.planToEdit.plannedquantity;
-      this.plan.activecavity = this.planToEdit.activecavity;
-      this.plan.status = this.planToEdit.status;
-      this.plan.scheduledstart = formatDate(this.planToEdit.scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
+      this.plan.plannedquantity = this.planToEdit[0].plannedquantity;
+      this.plan.activecavity = this.planToEdit[0].activecavity;
+      this.plan.status = this.planToEdit[0].status;
+      this.plan.scheduledstart = formatDate(this.planToEdit[0].scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
     },
   },
 };
