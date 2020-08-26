@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Bug Fixes
+
+* **planning:** display overdue plans ([8be6cb0](https://bitbucket.org/entrib/shopworx/commits/8be6cb005468ef138e8fa226ab77458ea9eca3cb))
+* **planning:** updated complete and abort status values ([0dc70a9](https://bitbucket.org/entrib/shopworx/commits/0dc70a90a4c8ae80d96c0511b2ebe7c855a745da))
+* **production-log:** fixed shift filter and shift date time ([3bacc71](https://bitbucket.org/entrib/shopworx/commits/3bacc719a6570de2c94fac94e5c68b6a71caa976))
+* **report-viewer:** added ag grid filters for number and text ([7812936](https://bitbucket.org/entrib/shopworx/commits/7812936adae06504d42cae2075019efd10332b68))
+* **report-viewer:** fixed date range display on view change ([b5b45d7](https://bitbucket.org/entrib/shopworx/commits/b5b45d78065244bcf8204d0a5829102dcc8743ff))
+* **report-viewer:** Reset report view on view change ([1cc9d12](https://bitbucket.org/entrib/shopworx/commits/1cc9d12f57a1011795897686b35bfc5a947e64c2))
+
+
+### Features
+
+* **service:** added plan end time api ([2e79ceb](https://bitbucket.org/entrib/shopworx/commits/2e79ceb770ade5d146a5bbe4dfa51858e2bb18b7))
+
+
+
+
+
 # [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
 
 
