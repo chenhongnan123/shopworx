@@ -108,7 +108,6 @@ export default {
       const success = await this.getMasterData();
       if (success) {
         this.masterList = this.masterData;
-        console.log('List', this.masterList);
       }
       this.error = !success;
       this.loading = false;

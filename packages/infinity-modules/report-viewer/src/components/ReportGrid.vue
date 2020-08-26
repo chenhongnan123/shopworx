@@ -74,9 +74,7 @@ export default {
           headerName: col.description,
           field: col.name,
           colId: col.name,
-          filter: col.type === 'long' || col.type === 'number'
-            ? 'agNumberColumnFilter'
-            : undefined,
+          filter: this.getColumnFilter(col),
         }));
       }
       if (val && val.reportData) {
@@ -86,6 +84,21 @@ export default {
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
+    getColumnFilter(col) {
+      const type = col && col.type.toLowerCase();
+      switch (type) {
+        case 'long':
+          return 'agNumberColumnFilter';
+        case 'double':
+          return 'agNumberColumnFilter';
+        case 'number':
+          return 'agNumberColumnFilter';
+        case 'integer':
+          return 'agNumberColumnFilter';
+        default:
+          return 'agTextColumnFilter';
+      }
+    },
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
