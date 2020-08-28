@@ -35,7 +35,7 @@
       <template v-else>
         <toggle-star
           :starred="starredPlans"
-          :plans="selectedPlans"
+          :plans="selectedPlans.flat()"
           @on-update="$emit('refresh-widget')"
         />
         <!-- <abort-plan
@@ -43,7 +43,7 @@
           @on-abort="$emit('refresh-widget')"
         /> -->
         <delete-plan
-          :plans="selectedPlans"
+          :plans="selectedPlans.flat()"
           @on-delete="$emit('refresh-widget')"
         />
         <add-plan

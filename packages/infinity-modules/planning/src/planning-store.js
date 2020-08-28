@@ -440,10 +440,10 @@ export default ({
 
     deletePlan: async ({ dispatch }, id) => {
       const deleted = await dispatch(
-        'element/deleteRecordByQuery',
+        'element/deleteRecordById',
         {
           elementName: 'planning',
-          queryParam: `?query=planid=="${id}"`,
+          id,
         },
         { root: true },
       );
