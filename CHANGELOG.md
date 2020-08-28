@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+
+### Bug Fixes
+
+* **planning:** fixed delete plans ([e240852](https://bitbucket.org/entrib/shopworx/commits/e2408529f660bf2d71ca9d04984542a3b24a7ee2))
+* **planning:** fixed edit plan for family molds ([a9226c5](https://bitbucket.org/entrib/shopworx/commits/a9226c59f770eb6dc4ff247e7ccb78853b0b47ce))
+
+
+
+
+
+
+
+**Note:** Version bump only for package shopworx
+
+
+
+
+
 # [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
 
 
