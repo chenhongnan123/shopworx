@@ -557,18 +557,16 @@ export default {
       } else {
         const familyPlans = this.familyPlan
           .filter((p) => p.selected)
-          .map((p) => {
-            return {
-              payload: {
-                ...this.plan,
-                cavity: p.cavity,
-                activecavity: p.activecavity,
-                plannedquantity: p.plannedquantity,
-                [this.partTag.tagName]: p[this.partTag.tagName],
-              },
-              id: p._id,
-            };
-          });
+          .map((p) => ({
+            payload: {
+              ...this.plan,
+              cavity: p.cavity,
+              activecavity: p.activecavity,
+              plannedquantity: p.plannedquantity,
+              [this.partTag.tagName]: p[this.partTag.tagName],
+            },
+            id: p._id,
+          }));
         const plans = [{
           id: this.planToEdit[0]._id,
           payload: this.plan,
