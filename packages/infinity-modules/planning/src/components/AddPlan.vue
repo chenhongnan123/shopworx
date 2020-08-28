@@ -140,6 +140,7 @@
                       <v-checkbox
                         hide-details
                         :disabled="saving"
+                        :readonly="family.disabled"
                         v-model="family.selected"
                         :label="family[partTag.tagName]"
                       ></v-checkbox>
@@ -549,9 +550,33 @@ export default {
       });
       this.plan.scheduledend = scheduledEnd;
       let updated = false;
-      const payload = this.plan;
-      /* eslint-disable no-underscore-dangle */
-      updated = await this.updatePlanById({ id: this.planToEdit._id, payload });
+      if (!this.showFamilyParts) {
+        const payload = this.plan;
+        /* eslint-disable no-underscore-dangle */
+        updated = await this.updatePlanById({ id: this.planToEdit[0]._id, payload });
+      } else {
+        const familyPlans = this.familyPlan
+          .filter((p) => p.selected)
+          .map((p) => {
+            return {
+              payload: {
+                ...this.plan,
+                cavity: p.cavity,
+                activecavity: p.activecavity,
+                plannedquantity: p.plannedquantity,
+                [this.partTag.tagName]: p[this.partTag.tagName],
+              },
+              id: p._id,
+            };
+          });
+        const plans = [{
+          id: this.planToEdit[0]._id,
+          payload: this.plan,
+        }, ...familyPlans];
+        updated = await Promise.all([plans.forEach(({ id, payload }) => {
+          this.updatePlanById({ id, payload });
+        })]);
+      }
       if (updated) {
         this.setAlert({
           show: true,
@@ -599,26 +624,12 @@ export default {
         // array part does not match family plan part
         if (this.isFamily) {
           const familyPlansToEdit = this.planToEdit.filter((plan, index) => index !== 0);
-          const familyPartsToEdit = [...new Set(familyPlansToEdit.map((plan) => plan.partname))];
-          this.familyPlan = this.familyPlan.map((fPlan) => {
-            const { cavity, partname } = fPlan;
-            let { selected, activecavity, plannedquantity } = fPlan;
-            if (familyPartsToEdit.includes(partname)) {
-              const plan = familyPlansToEdit.find((p) => p.partname === partname);
-              selected = true;
-              activecavity = plan.activecavity;
-              plannedquantity = plan.plannedquantity;
-            } else {
-              selected = false;
-            }
-            return {
-              selected,
-              cavity,
-              activecavity,
-              partname,
-              plannedquantity,
-            };
-          });
+          this.familyPlan = familyPlansToEdit
+            .map((fPlan) => ({
+              ...fPlan,
+              selected: true,
+              disabled: true,
+            }));
         }
       } else if (this.isPress) {
         await this.updatePartMatrixRecords({ name: 'toolname', value: this.planToEdit[0].toolname });
