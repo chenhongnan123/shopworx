@@ -1,0 +1,252 @@
+0 silly argv {
+0 silly argv   _: [ 'version' ],
+0 silly argv   'conventional-commits': true,
+0 silly argv   conventionalCommits: true,
+0 silly argv   lernaVersion: '3.22.0',
+0 silly argv   '$0': '..\\..\\..\\..\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
+0 silly argv   bump: '4.1.0-rc.2-patch.1'
+0 silly argv }
+1 notice cli v3.22.0
+2 verbose rootPath C:\Users\Ankit Jain\Documents\entrib\code\shopworx
+3 info current version 4.1.0-rc.2-patch.1
+4 silly isAnythingCommitted
+5 verbose isAnythingCommitted 1
+6 silly currentBranch
+7 verbose currentBranch release/4.1.0
+8 silly remoteBranchExists
+9 silly isBehindUpstream
+10 silly isBehindUpstream release/4.1.0 is behind origin/release/4.1.0 by 0 commit(s) and ahead by 0
+11 silly hasTags
+12 verbose hasTags true
+13 silly git-describe.sync "bb7b356" => {"refCount":"595","sha":"bb7b356","isDirty":false}
+14 info Assuming all packages changed
+15 verbose updated @shopworx/assets
+16 verbose updated @shopworx/infinity
+17 verbose updated @shopworx/admin
+18 verbose updated @shopworx/downtime-log
+19 verbose updated @shopworx/machine-dashboard
+20 verbose updated @shopworx/maintenance-summary
+21 verbose updated @shopworx/masters
+22 verbose updated @shopworx/material-management
+23 verbose updated @shopworx/order-management
+24 verbose updated @shopworx/parameter-configuration
+25 verbose updated @shopworx/planning
+26 verbose updated @shopworx/product-management
+27 verbose updated @shopworx/production-layout
+28 verbose updated @shopworx/production-log
+29 verbose updated @shopworx/recipe-management
+30 verbose updated @shopworx/report-viewer
+31 verbose updated @shopworx/roadmap-management
+32 verbose updated @shopworx/setup
+33 verbose updated @shopworx/user-dashboard
+34 verbose updated @shopworx/services
+35 verbose updated @shopworx/ui-components
+36 verbose git-describe undefined => "bb7b356"
+37 silly git-describe parsed => {"refCount":"595","sha":"bb7b356","isDirty":false}
+38 info execute Skipping releases
+39 silly lifecycle No script for "preversion" in "shopworx", continuing
+40 silly lifecycle No script for "preversion" in "@shopworx/assets", continuing
+41 silly lifecycle No script for "preversion" in "@shopworx/services", continuing
+42 silly lifecycle No script for "preversion" in "@shopworx/ui-components", continuing
+43 silly lifecycle No script for "version" in "@shopworx/ui-components", continuing
+44 silly fixed for @shopworx/ui-components at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\ui-components
+45 verbose getChangelogConfig using preset "conventional-changelog-angular"
+46 silly npa Result {
+46 silly npa   type: 'tag',
+46 silly npa   registry: true,
+46 silly npa   where: undefined,
+46 silly npa   raw: 'conventional-changelog-angular',
+46 silly npa   name: 'conventional-changelog-angular',
+46 silly npa   escapedName: 'conventional-changelog-angular',
+46 silly npa   scope: undefined,
+46 silly npa   rawSpec: '',
+46 silly npa   saveSpec: null,
+46 silly npa   fetchSpec: 'latest',
+46 silly npa   gitRange: undefined,
+46 silly npa   gitCommittish: undefined,
+46 silly npa   hosted: undefined
+46 silly npa }
+47 verbose getChangelogConfig Attempting to resolve preset "conventional-changelog-angular"
+48 info getChangelogConfig Successfully resolved preset "conventional-changelog-angular"
+49 silly lifecycle No script for "version" in "@shopworx/assets", continuing
+50 silly fixed for @shopworx/assets at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\assets
+51 silly lifecycle No script for "version" in "@shopworx/services", continuing
+52 silly fixed for @shopworx/services at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\services
+53 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/assets\n\n\n\n"
+54 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\assets\CHANGELOG.md
+55 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/services\n\n\n\n"
+56 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\services\CHANGELOG.md
+57 silly lifecycle No script for "preversion" in "@shopworx/admin", continuing
+58 silly lifecycle No script for "preversion" in "@shopworx/downtime-log", continuing
+59 silly lifecycle No script for "preversion" in "@shopworx/masters", continuing
+60 silly lifecycle No script for "preversion" in "@shopworx/material-management", continuing
+61 silly lifecycle No script for "preversion" in "@shopworx/order-management", continuing
+62 silly lifecycle No script for "preversion" in "@shopworx/parameter-configuration", continuing
+63 silly lifecycle No script for "preversion" in "@shopworx/planning", continuing
+64 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/ui-components\n\n\n\n"
+65 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\ui-components\CHANGELOG.md
+66 silly lifecycle No script for "preversion" in "@shopworx/product-management", continuing
+67 silly lifecycle No script for "version" in "@shopworx/admin", continuing
+68 silly fixed for @shopworx/admin at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\admin
+69 silly lifecycle No script for "version" in "@shopworx/masters", continuing
+70 silly fixed for @shopworx/masters at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\masters
+71 silly lifecycle No script for "version" in "@shopworx/material-management", continuing
+72 silly fixed for @shopworx/material-management at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\material-management
+73 silly lifecycle No script for "version" in "@shopworx/order-management", continuing
+74 silly fixed for @shopworx/order-management at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\order-management
+75 silly lifecycle No script for "version" in "@shopworx/downtime-log", continuing
+76 silly fixed for @shopworx/downtime-log at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\downtime-log
+77 silly lifecycle No script for "version" in "@shopworx/parameter-configuration", continuing
+78 silly fixed for @shopworx/parameter-configuration at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\parameter-configuration
+79 silly lifecycle No script for "version" in "@shopworx/planning", continuing
+80 silly fixed for @shopworx/planning at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\planning
+81 silly lifecycle No script for "version" in "@shopworx/product-management", continuing
+82 silly fixed for @shopworx/product-management at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\product-management
+83 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/masters\n\n\n\n"
+84 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\masters\CHANGELOG.md
+85 silly lifecycle No script for "preversion" in "@shopworx/production-layout", continuing
+86 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/material-management\n\n\n\n"
+87 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\material-management\CHANGELOG.md
+88 silly lifecycle No script for "preversion" in "@shopworx/production-log", continuing
+89 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/order-management\n\n\n\n"
+90 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\order-management\CHANGELOG.md
+91 silly lifecycle No script for "preversion" in "@shopworx/recipe-management", continuing
+92 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/admin\n\n\n\n"
+93 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\admin\CHANGELOG.md
+94 silly lifecycle No script for "preversion" in "@shopworx/report-viewer", continuing
+95 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/planning\n\n\n\n"
+96 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/downtime-log\n\n\n\n"
+97 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\planning\CHANGELOG.md
+98 silly lifecycle No script for "preversion" in "@shopworx/roadmap-management", continuing
+99 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\downtime-log\CHANGELOG.md
+100 silly lifecycle No script for "preversion" in "@shopworx/setup", continuing
+101 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/parameter-configuration\n\n\n\n"
+102 silly lifecycle No script for "version" in "@shopworx/production-layout", continuing
+103 silly fixed for @shopworx/production-layout at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\production-layout
+104 silly lifecycle No script for "version" in "@shopworx/production-log", continuing
+105 silly fixed for @shopworx/production-log at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\production-log
+106 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/product-management\n\n\n\n"
+107 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\parameter-configuration\CHANGELOG.md
+108 silly lifecycle No script for "preversion" in "@shopworx/user-dashboard", continuing
+109 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\product-management\CHANGELOG.md
+110 silly lifecycle No script for "preversion" in "@shopworx/machine-dashboard", continuing
+111 silly lifecycle No script for "version" in "@shopworx/recipe-management", continuing
+112 silly fixed for @shopworx/recipe-management at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\recipe-management
+113 silly lifecycle No script for "version" in "@shopworx/report-viewer", continuing
+114 silly fixed for @shopworx/report-viewer at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\report-viewer
+115 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/production-log\n\n\n\n"
+116 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/production-layout\n\n\n\n"
+117 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\production-log\CHANGELOG.md
+118 silly lifecycle No script for "preversion" in "@shopworx/maintenance-summary", continuing
+119 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\production-layout\CHANGELOG.md
+120 silly lifecycle No script for "version" in "@shopworx/roadmap-management", continuing
+121 silly fixed for @shopworx/roadmap-management at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\roadmap-management
+122 silly lifecycle No script for "version" in "@shopworx/setup", continuing
+123 silly fixed for @shopworx/setup at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\setup
+124 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/recipe-management\n\n\n\n"
+125 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\recipe-management\CHANGELOG.md
+126 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/report-viewer\n\n\n\n"
+127 silly lifecycle No script for "version" in "@shopworx/user-dashboard", continuing
+128 silly fixed for @shopworx/user-dashboard at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\user-dashboard
+129 silly lifecycle No script for "version" in "@shopworx/machine-dashboard", continuing
+130 silly fixed for @shopworx/machine-dashboard at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\machine-dashboard
+131 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\report-viewer\CHANGELOG.md
+132 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/roadmap-management\n\n\n\n"
+133 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\roadmap-management\CHANGELOG.md
+134 silly lifecycle No script for "version" in "@shopworx/maintenance-summary", continuing
+135 silly fixed for @shopworx/maintenance-summary at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\maintenance-summary
+136 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/setup\n\n\n\n"
+137 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\setup\CHANGELOG.md
+138 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/machine-dashboard\n\n\n\n"
+139 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/user-dashboard\n\n\n\n"
+140 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\user-dashboard\CHANGELOG.md
+141 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\machine-dashboard\CHANGELOG.md
+142 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/maintenance-summary\n\n\n\n"
+143 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity-modules\maintenance-summary\CHANGELOG.md
+144 silly lifecycle No script for "preversion" in "@shopworx/infinity", continuing
+145 silly lifecycle No script for "version" in "@shopworx/infinity", continuing
+146 silly fixed for @shopworx/infinity at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity
+147 silly fixed writing new entry: "\n\n**Note:** Version bump only for package @shopworx/infinity\n\n\n\n"
+148 verbose fixed wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\packages\infinity\CHANGELOG.md
+149 silly root for shopworx at C:\Users\Ankit Jain\Documents\entrib\code\shopworx
+150 silly root writing new entry: "\n\n**Note:** Version bump only for package shopworx\n\n\n\n"
+151 verbose root wrote C:\Users\Ankit Jain\Documents\entrib\code\shopworx\CHANGELOG.md
+152 silly lifecycle No script for "version" in "shopworx", continuing
+153 silly gitAdd [
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\ui-components\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\ui-components\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\assets\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\assets\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\services\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\services\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\assets\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\services\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\ui-components\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\admin\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\admin\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\masters\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\masters\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\material-management\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\material-management\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\order-management\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\order-management\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\downtime-log\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\downtime-log\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\parameter-configuration\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\parameter-configuration\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\planning\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\planning\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\product-management\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\product-management\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\masters\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\material-management\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\order-management\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\admin\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\planning\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\downtime-log\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-layout\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-layout\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-log\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-log\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\parameter-configuration\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\product-management\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\recipe-management\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\recipe-management\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\report-viewer\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\report-viewer\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-log\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\production-layout\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\roadmap-management\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\roadmap-management\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\setup\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\setup\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\recipe-management\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\user-dashboard\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\user-dashboard\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\machine-dashboard\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\machine-dashboard\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\report-viewer\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\roadmap-management\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\maintenance-summary\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\maintenance-summary\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\setup\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\user-dashboard\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\machine-dashboard\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity-modules\\maintenance-summary\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity\\package.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity\\package-lock.json',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\packages\\infinity\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\CHANGELOG.md',
+153 silly gitAdd   'C:\\Users\\Ankit Jain\\Documents\\entrib\\code\\shopworx\\lerna.json'
+153 silly gitAdd ]
+154 silly gitCommit v4.1.0-rc.2-patch.1
+155 verbose git [ 'commit', '-m', 'v4.1.0-rc.2-patch.1' ]
+156 silly gitTag v4.1.0-rc.2-patch.1
+157 verbose git [ 'tag', 'v4.1.0-rc.2-patch.1', '-m', 'v4.1.0-rc.2-patch.1' ]
+158 error Error: Command failed: git tag v4.1.0-rc.2-patch.1 -m v4.1.0-rc.2-patch.1
+158 error fatal: tag 'v4.1.0-rc.2-patch.1' already exists
+158 error
+158 error     at makeError (C:\Users\Ankit Jain\Documents\entrib\code\shopworx\node_modules\execa\index.js:174:9)
+158 error     at C:\Users\Ankit Jain\Documents\entrib\code\shopworx\node_modules\execa\index.js:278:16
+158 error     at runMicrotasks (<anonymous>)
+158 error     at processTicksAndRejections (internal/process/task_queues.js:97:5)
