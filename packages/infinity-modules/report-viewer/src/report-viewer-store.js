@@ -14,6 +14,7 @@ export default ({
       new Date().toISOString().substr(0, 10)],
     report: null,
     gridState: '',
+    loading: false,
   },
   mutations: {
     setReportViews: set('reportViews'),
@@ -25,6 +26,7 @@ export default ({
     setDateRange: set('dateRange'),
     setReport: set('report'),
     setGridState: set('gridState'),
+    setLoading: set('loading'),
   },
   actions: {
     getReportViews: async ({ commit }, reportCategoryId) => {
@@ -57,6 +59,7 @@ export default ({
 
     executeReport: async ({ commit, state, rootState }) => {
       commit('setReport', null);
+      commit('setLoading', true);
       try {
         const { reportMapping, dateRange } = state;
         const { activeSite } = rootState.user;
@@ -70,11 +73,14 @@ export default ({
         const { data } = await ReportService.executeReport(reportName, payload);
         if (data && data.reportData) {
           commit('setReport', JSON.parse(data.reportData));
+          commit('setLoading', false);
           return true;
         }
       } catch (e) {
+        commit('setLoading', false);
         return false;
       }
+      commit('setLoading', false);
       return false;
     },
 
