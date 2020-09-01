@@ -56,7 +56,8 @@
     "CREATED_RECORD": "Record added successfully.",
     "DELETE_RECORD": "Record deleted successfully.",
     "ROLE_UPDATED": "Role updated successfully.",
-    "USER_DELETED": "User removed successfully."
+    "USER_DELETED": "User removed successfully.",
+    "DOWNTIME_UPDATE_SUCCESS": "Downtime reason updated!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -73,7 +74,9 @@
     "MISSING_BUSINESS_HOUR": "Hours should be provisioned in sequence. Please verify your data.",
     "INVALID_HOURS_SUM": "Total sum of your provisioned hours should be 24. Please verify your data.",
     "ERROR_CREATING_PLAN": "Error while creating plan, please retry.",
-    "ERROR_UPDATING_PLAN": "Error while updating plan, please retry."
+    "ERROR_UPDATING_PLAN": "Error while updating plan, please retry.",
+    "INVALID_DOWNTIME_SPLIT": "Invalid downtime start or end time. Please verify your data.",
+    "DOWNTIME_UPDATE_ERROR": "Error while updating downtime reason. Plese retry."
   },
   "fields": {
     "email": "Email",
@@ -96,7 +99,10 @@
     "activeCavity": "Active cavity",
     "familyActiveCavity": "Active cavity",
     "scheduledStart": "Scheduled start",
-    "rejectedQuantity": "Quantity"
+    "rejectedQuantity": "Quantity",
+    "downtimeReason": "Reason",
+    "downtimeStart": "Start time",
+    "downtimeEnd": "End time"
   },
   "snackbar": {
     "close": "Close",
