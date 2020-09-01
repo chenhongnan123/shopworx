@@ -100,7 +100,7 @@ export default ({
       } = state;
       const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-      let query = `date==${date}`;
+      let query = `date==${date}%26%26status!="inProgress"`;
       if (selectedMachine && selectedMachine !== 'All Machines') {
         query += `%26%26machinename=="${selectedMachine}"`;
       }
