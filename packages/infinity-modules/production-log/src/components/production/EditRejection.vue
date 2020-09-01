@@ -20,7 +20,7 @@
           </v-btn>
         </v-card-title>
         <validation-observer ref="updateRejectionForm" #default="{ passes, invalid }">
-          <v-form @submit.prevent="passes(onSubmit)">
+          <v-form @submit.prevent="passes(saveEdit)">
             <v-card-text>
               <v-row>
                 <v-col cols="12" sm="8">
@@ -86,7 +86,7 @@
                 :disabled="invalid"
                 color="primary"
                 class="text-none"
-                @click="saveEdit()"
+                type="submit"
                 >
                 <v-icon left>mdi-update</v-icon>
                 Update
@@ -151,6 +151,7 @@ export default {
         assetid, category, department, reasoncode, reasonname,
       } = this.selectedReason;
       const data = {
+        // eslint-disable-next-line
         id: this.rejection._id,
         quantity: +this.rejectedQuantity,
         remark: this.remark,
