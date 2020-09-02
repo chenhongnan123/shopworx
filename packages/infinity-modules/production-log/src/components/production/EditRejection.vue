@@ -20,7 +20,7 @@
           </v-btn>
         </v-card-title>
         <validation-observer ref="updateRejectionForm" #default="{ passes, invalid }">
-          <v-form @submit.prevent="passes(onSubmit)">
+          <v-form @submit.prevent="passes(saveEdit)">
             <v-card-text>
               <v-row>
                 <v-col cols="12" sm="8">
@@ -86,7 +86,8 @@
                 :disabled="invalid"
                 color="primary"
                 class="text-none"
-                @click="saveEdit()"
+                type="submit"
+                :loading="saving"
                 >
                 <v-icon left>mdi-update</v-icon>
                 Update
@@ -147,10 +148,12 @@ export default {
   methods: {
     ...mapActions('productionLog', ['updateRejection']),
     async saveEdit() {
+      this.saving = true;
       const {
         assetid, category, department, reasoncode, reasonname,
       } = this.selectedReason;
       const data = {
+        // eslint-disable-next-line
         id: this.rejection._id,
         quantity: +this.rejectedQuantity,
         remark: this.remark,
@@ -161,6 +164,7 @@ export default {
         reasonname,
       };
       const updated = await this.updateRejection(data);
+      this.saving = false;
       if (updated) {
         this.dialog = false;
       }
