@@ -43,6 +43,7 @@
           @on-abort="$emit('refresh-widget')"
         /> -->
         <delete-plan
+          v-if="addPlan"
           :plans="selectedPlans.flat()"
           @on-delete="$emit('refresh-widget')"
         />

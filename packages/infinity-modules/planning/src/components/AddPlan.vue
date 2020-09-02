@@ -618,8 +618,6 @@ export default {
       await this.updatePartMatrixRecords({ name: 'machinename', value: this.planToEdit[0].machinename });
       if (this.isInjectionMolding) {
         await this.updatePartMatrixRecords({ name: 'moldname', value: this.planToEdit[0].moldname });
-        // TODO: set familyplan selected = false where plantoedit
-        // array part does not match family plan part
         if (this.isFamily) {
           const familyPlansToEdit = this.planToEdit.filter((plan, index) => index !== 0);
           this.familyPlan = familyPlansToEdit
@@ -632,9 +630,7 @@ export default {
       } else if (this.isPress) {
         await this.updatePartMatrixRecords({ name: 'toolname', value: this.planToEdit[0].toolname });
       }
-      this.plan.plannedquantity = this.planToEdit[0].plannedquantity;
-      this.plan.activecavity = this.planToEdit[0].activecavity;
-      this.plan.status = this.planToEdit[0].status;
+      this.plan = { ...this.planToEdit[0] };
       this.plan.scheduledstart = formatDate(this.planToEdit[0].scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
     },
   },
