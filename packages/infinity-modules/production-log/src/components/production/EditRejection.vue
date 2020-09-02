@@ -87,6 +87,7 @@
                 color="primary"
                 class="text-none"
                 type="submit"
+                :loading="saving"
                 >
                 <v-icon left>mdi-update</v-icon>
                 Update
@@ -147,6 +148,7 @@ export default {
   methods: {
     ...mapActions('productionLog', ['updateRejection']),
     async saveEdit() {
+      this.saving = true;
       const {
         assetid, category, department, reasoncode, reasonname,
       } = this.selectedReason;
@@ -162,6 +164,7 @@ export default {
         reasonname,
       };
       const updated = await this.updateRejection(data);
+      this.saving = false;
       if (updated) {
         this.dialog = false;
       }
