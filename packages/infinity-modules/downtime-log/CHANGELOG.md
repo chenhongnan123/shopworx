@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **downtime-log:** do not fetch in progress downtimes ([d61f054](https://bitbucket.org/entrib/shopworx/commits/d61f054675269616ee2f300caf9acd3324f2e42d))
+* **downtime-log:** fixed downtime split ([41af3fb](https://bitbucket.org/entrib/shopworx/commits/41af3fb466abf2e82ad3bb6acfcdbf50753a03fe))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
 # [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
 
 
