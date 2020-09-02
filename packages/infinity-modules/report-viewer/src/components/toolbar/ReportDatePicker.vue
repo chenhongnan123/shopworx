@@ -25,6 +25,7 @@
     </template>
     <v-date-picker
       range
+      :max="today"
       v-model="dates"
       no-title scrollable
     >
@@ -49,6 +50,7 @@ export default {
   name: 'ReportDatePicker',
   data() {
     return {
+      today: new Date().toISOString().substr(0, 10),
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
       menu: false,
     };
