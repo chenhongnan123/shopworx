@@ -32,18 +32,25 @@
     >
       <v-icon small>mdi-pencil</v-icon>
     </v-btn>
-    <!-- <v-btn
+    <v-btn
       icon
       small
       class="mb-1"
+      v-if="!edit"
+      @click="executeReport()"
     >
       <v-icon>mdi-refresh</v-icon>
-    </v-btn> -->
+    </v-btn>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import {
+  mapGetters,
+  mapState,
+  mapMutations,
+  mapActions,
+} from 'vuex';
 
 export default {
   name: 'ReportTitle',
@@ -72,7 +79,11 @@ export default {
       this.setNewReportTitle(val);
     },
   },
+  beforeDestroy() {
+    this.setNewReportTitle(null);
+  },
   methods: {
+    ...mapActions('reports', ['executeReport']),
     ...mapMutations('reports', ['setNewReportTitle']),
     onEdit() {
       this.edit = true;

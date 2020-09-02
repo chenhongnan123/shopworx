@@ -56,9 +56,13 @@ export default {
       }
     },
   },
+  beforeDestroy() {
+    this.setReportMappings([]);
+    this.setReportMapping(null);
+  },
   methods: {
     ...mapActions('reports', ['getReportMappings']),
-    ...mapMutations('reports', ['setReportMapping']),
+    ...mapMutations('reports', ['setReportMappings', 'setReportMapping']),
     async fetchReportMappings() {
       if (this.reportView) {
         this.loading = true;
