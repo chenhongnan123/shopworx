@@ -2,6 +2,7 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
+    :close-on-click="false"
     :nudge-right="40"
     transition="scale-transition"
     offset-y
@@ -32,6 +33,7 @@
         text
         color="primary"
         class="text-none"
+        :disabled="dates.length != 2"
         @click="saveDateRange"
       >
         OK
