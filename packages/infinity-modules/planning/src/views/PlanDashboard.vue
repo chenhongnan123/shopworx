@@ -48,7 +48,7 @@ import NotStartedStats from '../components/dashboard/stats/NotStartedStats.vue';
 import PausedStats from '../components/dashboard/stats/PausedStats.vue';
 
 export default {
-  name: 'PlanScheduleView',
+  name: 'PlanDashboard',
   components: {
     StarredPlans,
     OnTimePlans,

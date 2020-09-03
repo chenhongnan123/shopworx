@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     ...mapActions('setup', ['getCalendarData']),
-    ...mapActions('element', ['upsertRecord', 'upsertBulkRecords']),
+    ...mapActions('element', ['upsertRecordWithElement', 'upsertBulkRecordsWithElement']),
     async fetchCalendar() {
       this.fetching = true;
       const success = await this.getCalendarData();
@@ -96,7 +96,7 @@ export default {
     },
     async onMonthProvisioned(data) {
       this.loading = true;
-      const created = await this.upsertRecord(data);
+      const created = await this.upsertRecordWithElement(data);
       if (created) {
         this.window = 1;
       }
@@ -104,7 +104,7 @@ export default {
     },
     async onDaysProvisioned(data) {
       this.loading = true;
-      const created = await this.upsertBulkRecords(data);
+      const created = await this.upsertBulkRecordsWithElement(data);
       if (created) {
         this.window = 2;
       }
@@ -112,7 +112,7 @@ export default {
     },
     async onHoursProvisioned(data) {
       this.loading = true;
-      const created = await this.upsertBulkRecords(data);
+      const created = await this.upsertBulkRecordsWithElement(data);
       if (created) {
         this.window = 3;
       }
@@ -120,7 +120,7 @@ export default {
     },
     async onHolidaysProvisioned(data) {
       this.loading = true;
-      const created = await this.upsertBulkRecords(data);
+      const created = await this.upsertBulkRecordsWithElement(data);
       if (created) {
         this.$emit('update-step');
       }

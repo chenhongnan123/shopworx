@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Highcharts from 'highcharts';
 import HighchartsVue from 'highcharts-vue';
 import HighchartsMore from 'highcharts/highcharts-more';
+import xRange from 'highcharts/modules/xrange';
 
 Highcharts.theme = {
   chart: {
@@ -17,4 +18,5 @@ Highcharts.theme = {
 
 Highcharts.setOptions(Highcharts.theme);
 HighchartsMore(Highcharts);
+xRange(Highcharts);
 Vue.use(HighchartsVue);

@@ -3,77 +3,196 @@ import { set } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
-    isPlanningSet: false,
+    isRejectionSet: false,
     onboarded: false,
-    notStartedPlans: null,
     plansOnDate: null,
     machines: [],
+    allShifts: [],
+    shiftList: [],
+    selectedMachine: null,
     selectedCell: null,
     selectedShift: null,
     selectedDate: null,
+    planningMaster: null,
+    rejectionReasonsMaster: null,
+    rejectionMaster: null,
+    masterData: [],
+    rejectionReasons: [],
+    productionDetails: [],
+    allRejections: null,
+    businessHours: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
-    setIsPlanningSet: set('isPlanningSet'),
-    setNotStartedPlans: set('notStartedPlans'),
+    setIsRejectionSet: set('isRejectionSet'),
     setPlansOnDate: set('plansOnDate'),
     setMachines: set('machines'),
+    setShift: set('allShifts'),
+    setShiftList: set('shiftList'),
     setSelectedCell: set('selectedCell'),
+    setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
+    setPlanningMaster: set('planningMaster'),
+    setRejectionReasonsMaster: set('rejectionReasonsMaster'),
+    setRejectionMaster: set('rejectionMaster'),
+    setMasterData: set('masterData'),
+    setRejectionReasons: set('rejectionReasons'),
+    setProductionDetails: set('productionDetails'),
+    setAllRejections: set('allRejections'),
+    setBusinessHours: set('businessHours'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
-      const planning = await dispatch('getPlanningElement');
-      if (planning) {
-        commit('setIsPlanningSet', true);
-        const rejectionReason = await dispatch('getRejectionReasonElement');
-        if (rejectionReason) {
-          const downtimeReason = await dispatch('getDowntimeReasonElement');
-          if (downtimeReason) {
-            const operator = await dispatch('getOperatorElement');
-            if (operator) {
-              commit('setOnboarded', true);
-            }
-          }
+      const rejectionElement = await dispatch('getElement', 'rejection');
+      if (rejectionElement) {
+        commit('setIsRejectionSet', true);
+        const rejectionReasonElement = await dispatch('getElement', 'rejectionreasons');
+        if (rejectionReasonElement) {
+          commit('setOnboarded', true);
         }
       }
     },
 
-    getPlanningElement: async ({ dispatch }) => {
+    getElement: async ({ dispatch }, elementName) => {
       const element = await dispatch(
         'element/getElement',
-        'planning',
+        elementName,
         { root: true },
       );
-      return !!element;
+      return element;
     },
-
-    getRejectionReasonElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'rejectionreasons',
+    // TODO - below 2 functions can be merged
+    getMasterData: async ({ commit, dispatch, rootGetters }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
         { root: true },
       );
-      return !!element;
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => (
+            elem.masterElement.onboardingRequired
+          ))
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
     },
-
-    getDowntimeReasonElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'downtimereasons',
+    getMasterElements: async ({ commit, dispatch, rootState }) => {
+      const { id } = rootState.user.me.industry;
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        id,
         { root: true },
       );
-      return !!element;
+      if (masterElements && masterElements.length) {
+        const planningMaster = await dispatch('getElement', 'planning');
+        const rejectionReasonsMaster = await dispatch('getElement', 'rejectionreasons');
+        let rejectionMaster = [];
+        masterElements
+          .forEach((elem) => {
+            if (elem.masterElement.elementName === 'rejection') {
+              rejectionMaster = elem;
+            }
+            return elem;
+          });
+        commit('setPlanningMaster', planningMaster);
+        commit('setRejectionReasonsMaster', rejectionReasonsMaster);
+        commit('setRejectionMaster', rejectionMaster);
+        return true;
+      }
+      return false;
     },
-
-    getOperatorElement: async ({ dispatch }) => {
-      const element = await dispatch(
-        'element/getElement',
-        'operator',
+    createRejectionElement: async ({ dispatch, state, rootState }) => {
+      const { planningMaster, rejectionReasonsMaster, rejectionMaster } = state;
+      let { licenses } = rootState.user;
+      licenses = licenses.map((l) => l.assetId);
+      const assets = [...new Set(licenses)];
+      const assetReasonMasters = [];
+      assets.forEach((l) => {
+        rejectionReasonsMaster.tags.forEach((rm) => {
+          assetReasonMasters.push({ ...rm, assetId: l });
+        });
+      });
+      if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
+        const element = rejectionMaster.masterElement;
+        const tags = [
+          ...rejectionMaster.masterTags,
+          ...planningMaster.tags.filter((t) => !t.hide),
+          ...assetReasonMasters,
+        ];
+        const payload = {
+          element,
+          tags,
+        };
+        const success = await dispatch(
+          'element/createElementAndTags',
+          payload,
+          { root: true },
+        );
+        return success;
+      }
+      return false;
+    },
+    fetchBusinessHours: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'businesshours', query: '?sortquery=sortindex==1' },
         { root: true },
       );
-      return !!element;
+      if (records) {
+        if (records.length) {
+          commit('setBusinessHours', records);
+          const allShifts = records.filter((rec) => rec.type === 'shift');
+          commit('setShift', allShifts);
+          const shiftList = [...new Set(allShifts.map((item) => item.name))];
+          commit('setShiftList', shiftList);
+          return true;
+        }
+      }
+      return false;
     },
 
     fetchMachines: async ({ commit, dispatch }) => {
@@ -88,26 +207,166 @@ export default ({
       }
       return false;
     },
-
-    getPlansBetweenDateRange: async ({ commit, dispatch }, { min, max }) => {
-      const plans = await dispatch(
-        'planning/getPlanningRecords',
-        `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
+    fetchRejectionReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'rejectionreasons' },
         { root: true },
       );
-      commit('setPlansOnDate', plans);
+      if (records) {
+        commit('setRejectionReasons', records);
+        return true;
+      }
+      return false;
     },
 
-    getNotStartedPlans: async ({ commit, dispatch }) => {
-      const plans = await dispatch(
-        'planning/getPlanningRecords',
-        '?query=status=="notStarted"',
+    getRejections: async ({ state, commit, dispatch }) => {
+      const { selectedDate, selectedShift, selectedMachine } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      let query = `?query=date==${date}`;
+      // TODO - i18n check for "All"
+      if (!selectedShift.includes('All')) {
+        query = `${query}%26%26shiftName=="${selectedShift}"`;
+      }
+      if (!selectedMachine.includes('All')) {
+        query = `${query}%26%26machinename=="${selectedMachine}"`;
+      }
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rejection',
+          query,
+        },
         { root: true },
       );
-      commit('setNotStartedPlans', plans);
+      if (records) {
+        commit('setAllRejections', records);
+        return true;
+      }
+      return false;
+    },
+    addRejection: async ({ dispatch, commit, state }, rejectionData) => {
+      const { allRejections } = state;
+      const records = await dispatch(
+        'element/postRecord', {
+          elementName: 'rejection',
+          payload: rejectionData,
+        }, {
+          root: true,
+        },
+      );
+      if (records) {
+        //  TODO  - Success toast
+        rejectionData._id = records.id;
+        allRejections.unshift(rejectionData);
+        await dispatch('executeProductionReport');
+        commit('setAllRejections', allRejections);
+        return true;
+      }
+      return false;
+    },
+    updateRejection: async ({ dispatch }, rejectionData) => {
+      const { id } = rejectionData;
+      const records = await dispatch(
+        'element/updateRecordById', {
+          elementName: 'rejection',
+          id,
+          payload: rejectionData,
+        }, {
+          root: true,
+        },
+      );
+      if (records) {
+        //  TODO  - Success toast
+        await dispatch('executeProductionReport');
+        await dispatch('getRejections');
+        return true;
+      }
+      return false;
+    },
+    executeProductionReport: async ({
+      state,
+      commit,
+      dispatch,
+      rootGetters,
+    }) => {
+      const sites = rootGetters['user/sites'];
+      const { selectedMachine, selectedShift, selectedDate } = state;
+      let machineFilter = null;
+      let shiftFilter = null;
+      if (!selectedDate || !selectedMachine || !selectedShift) {
+        return false;
+      }
+      // TODO - use common function
+      if (selectedMachine.includes('All ')) {
+        let machineList = rootGetters['productionLog/machineList'];
+        machineList = machineList.filter((machine) => !machine.includes('All ')).join();
+        machineFilter = `{${machineList}}`;
+      } else {
+        machineFilter = `{${selectedMachine}}`;
+      }
+      if (selectedShift.includes('All ')) {
+        let shifts = rootGetters['productionLog/shifts'];
+        shifts = shifts.filter((machine) => !machine.includes('All ')).join();
+        shiftFilter = `{${shifts}}`;
+      } else {
+        shiftFilter = `{${selectedShift}}`;
+      }
+      const reportData = await dispatch(
+        'report/executeReport', {
+          reportName: 'productionlogreport',
+          payload: {
+            machineFilter,
+            shiftFilter,
+            start: parseInt(selectedDate.replace(/-/g, ''), 10),
+            end: parseInt(selectedDate.replace(/-/g, ''), 10),
+            siteid: sites[0].id,
+          },
+        },
+        { root: true },
+      );
+      if (reportData) {
+        try {
+          await commit('setProductionDetails', JSON.parse(reportData).reportData);
+          await dispatch('getRejections');
+          return true;
+        } catch (error) {
+          console.error(`Exception while parsing production report data : ${error}`);
+        }
+      }
+      return false;
     },
   },
   getters: {
+    planProductionData: ({ productionDetails, allRejections }) => {
+      const data = [];
+      let res = null;
+      if (productionDetails && productionDetails.length && allRejections) {
+        productionDetails.forEach((plan) => {
+          const rejection = allRejections.filter(
+            (rej) => rej.planid === plan.planid
+            && rej.partname === plan.partname
+            && rej.shiftName === plan.shift,
+          );
+          data.push({
+            ...plan,
+            rejectionDetails: rejection,
+          });
+        });
+        res = data.reduce((acc, curr) => {
+          if (curr.firstcycle && curr.firstcycle !== '-') {
+            curr.firstcycle = new Date(curr.firstcycle).toLocaleTimeString('en-US');
+          }
+          if (curr.lastcycle && curr.lastcycle !== '-') {
+            curr.lastcycle = new Date(curr.lastcycle).toLocaleTimeString('en-US');
+          }
+          if (!acc[curr.machinename]) acc[curr.machinename] = [];
+          acc[curr.machinename].push(curr);
+          return acc;
+        }, {});
+      }
+      return res;
+    },
     cells: ({ machines }) => {
       let cells = [];
       if (machines && machines.length) {
@@ -120,7 +379,21 @@ export default ({
       }
       return cells;
     },
-
+    machineList: ({ machines }) => {
+      let machineList = [];
+      if (machines && machines.length) {
+        machineList = machines.map((mac) => mac.machinename);
+        machineList = ['All Machines', ...machineList];
+      }
+      return machineList;
+    },
+    shifts: ({ shiftList }) => {
+      let shifts = [];
+      if (shiftList && shiftList.length) {
+        shifts = ['All Shift', ...shiftList];
+      }
+      return shifts;
+    },
     filteredMachines: ({ machines, selectedCell }) => {
       let filteredMachines = machines;
       if (selectedCell && selectedCell.value && machines && machines.length) {

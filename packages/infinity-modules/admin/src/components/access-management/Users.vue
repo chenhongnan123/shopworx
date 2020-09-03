@@ -2,19 +2,7 @@
   <div>
     <portal to="settings-header">
       <span>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'$invite'"
-          ></v-icon>
-          Invite users
-        </v-btn>
+        <invite-users @invited="onInvited" />
         <v-btn
           small
           outlined
@@ -25,7 +13,7 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           small
           outlined
           color="primary"
@@ -35,7 +23,7 @@
           <v-icon small v-text="'$download'" left></v-icon>
           Export users
           <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn>
+        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
@@ -60,17 +48,7 @@
               <div>{{ item.email || item.phone }}</div>
             </template>
             <template v-slot:item.role="{ item }">
-              <v-select
-                dense
-                flat
-                solo
-                hide-details
-                :items="roles"
-                v-model="item.role"
-                item-value="roleId"
-                :id="`user-${item.id}`"
-                item-text="roleDescription"
-              ></v-select>
+              <div>{{ roles.find((role) => role.roleId === item.role).roleDescription }}</div>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-btn
@@ -129,19 +107,20 @@
               solo
               hide-details
               :items="roles"
+              @change="updateRole(item)"
               v-model="item.role"
               item-value="roleId"
               :id="`user-${item.id}`"
               item-text="roleDescription"
             ></v-select>
           </template>
-          <template v-slot:item.status="{ item }">
+          <!-- <template v-slot:item.status="{ item }">
             <v-switch
               value
               dense
               :input-value="item.status === 'ACTIVE' || item.status === 'RESET'"
             ></v-switch>
-          </template>
+          </template> -->
           <template v-slot:item.actions="{ item }">
             <v-btn
               icon
@@ -161,9 +140,13 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
+import InviteUsers from './InviteUsers.vue';
 
 export default {
   name: 'Users',
+  components: {
+    InviteUsers,
+  },
   data() {
     return {
       search: null,
@@ -183,12 +166,12 @@ export default {
           sortable: false,
           value: 'role',
         },
-        {
+        /* {
           text: 'Active',
           align: 'start',
           sortable: false,
           value: 'status',
-        },
+        }, */
         {
           text: 'Actions',
           align: 'start',
@@ -227,6 +210,7 @@ export default {
         users = this.users
           .filter((user) => (
             user.userState !== 'REGISTERED'
+            && user.userState !== 'INACTIVE'
             && user.loginType.toUpperCase() === 'INFINITY'
           ))
           .map((user) => {
@@ -267,12 +251,20 @@ export default {
   },
   methods: {
     ...mapActions('user', ['inviteUsers', 'getUserRoles']),
-    ...mapActions('admin', ['getAllUsers', 'resendInvitation']),
+    ...mapActions('admin', [
+      'getAllUsers',
+      'resendInvitation',
+      'updateUser',
+      'updateUserRole',
+    ]),
     ...mapMutations('helper', ['setAlert']),
     async fetchUsers() {
       this.loading = true;
       await this.getAllUsers();
       this.loading = false;
+    },
+    async onInvited() {
+      await this.fetchUsers();
     },
     async resendInvite(user) {
       this.inviteLoading = true;
@@ -299,6 +291,19 @@ export default {
         }
       }
       this.inviteLoading = false;
+    },
+    updateRole(user) {
+      this.updateUserRole({
+        userId: user.id,
+        roleId: user.role,
+      });
+    },
+    deleteUser(user) {
+      const payload = {
+        userId: user.id,
+        userState: 'INACTIVE',
+      };
+      this.updateUser(payload);
     },
   },
 };

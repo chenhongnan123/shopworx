@@ -31,6 +31,7 @@ export default ({
       },
     ],
     isDark: null,
+    insightsDrawer: false,
     extendedHeader: false,
     infinityLoading: false,
   },
@@ -40,5 +41,7 @@ export default ({
     toggleIsDark: toggle('isDark'),
     setExtendedHeader: set('extendedHeader'),
     setInfinityLoading: toggle('infinityLoading'),
+    setInsightsDrawer: set('insightsDrawer'),
+    toggleInsightsDrawer: toggle('insightsDrawer'),
   },
 });

@@ -65,5 +65,87 @@ export default ({
         return false;
       }
     },
+
+    updateUser: async ({ dispatch, commit }, payload) => {
+      try {
+        const { data } = await UserService.updateUser(payload);
+        if (data && data.results) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'success',
+            message: 'USER_DELETED',
+          }, {
+            root: true,
+          });
+          await dispatch('getAllUsers');
+        } else {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+
+    updateUserRole: async ({ commit }, { userId, roleId }) => {
+      try {
+        const { data } = await UserService.updateUserRole(userId, roleId);
+        if (data && data.updated) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'success',
+            message: 'ROLE_UPDATED',
+          }, {
+            root: true,
+          });
+        } else {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+
+    updateRole: async ({ commit }, payload) => {
+      try {
+        const { data } = await UserService.updateRole(payload);
+        if (data && data.results) {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'success',
+            message: 'ROLE_UPDATED',
+          }, {
+            root: true,
+          });
+        } else {
+          commit('helper/setAlert', {
+            show: true,
+            type: 'error',
+            message: data.errors.errorCode,
+          }, {
+            root: true,
+          });
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
   },
 });
