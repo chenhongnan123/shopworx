@@ -1,3 +1,27 @@
 {
-  "productionLayout": "Production Layout"
+  "productionLayout": "产线配置",
+  "error": {  
+    "ALREADY_EXSIST": "名称已存在",
+    "ALREADY_EXSIST_NO": "编号已存在",
+    "ALREADY_EXSIST_INITIAL_SUBSTATION": "首站已分配",
+    "ALREADY_EXSIST_FINAL_SUBSTATION": "末站已分配",    
+    "Number Required": "所需数量",
+    "ERROR_CREATING_SUBLINE": "Error in Creating SUBLINE"
+  },
+  "success": {
+    "No_CHANGE_EXSIST_NO": "再次保存现有编号",
+    "INITIAL_SUBSTATION_ASSIGNED": "该子站已变更为首站",
+    "FINAL_SUBSTATION_ASSIGNED": "该子站已变更为末站",
+    "INITIAL_SUBSTATION_REMOVED": "本站不是首站",
+    "FINAL_SUBSTATION_REMOVED": "本站不是末站",
+    "STATION_CREATED": "已创建工站，接下来您可以添加子站",
+    "SUBLINE_CREATED": "SUBLINE CREATED",
+    "SUB-STATION_CREATED": "SUB-STATION CREATED",
+    "PROCESS_CREATED": "PROCESS CREATED",
+    "SUBLINE_DELETED": "SUBLINE DELETED",
+    "STATION_DELETED": "STATION DELETED",
+    "SUBSTATION_DELETED": "SUB-STATION DELETED",
+    "PROCESS_DELETED": "PROCESS DELETED",
+    "SUBSTATION_UPDATED": "Sub-Station UPDATED"
+  }
 }
