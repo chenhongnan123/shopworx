@@ -339,5 +339,16 @@ export default ({
       }
       return false;
     },
+    postSocket: async (_, { functionName, payload }) => {
+      try {
+        const { data } = await ElementService.postSocket(functionName, payload);
+        if (data && data.errors) {
+          return false;
+        }
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
   },
 });

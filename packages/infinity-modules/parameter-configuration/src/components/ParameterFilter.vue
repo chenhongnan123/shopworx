@@ -180,7 +180,8 @@
           color="primary"
           @click="btnApply"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-          :disabled="!substationValue"
+          :disabled="!stationValue"
+          :loading="saving"
         >
           Apply
         </v-btn>
@@ -205,10 +206,7 @@ export default {
   },
   data() {
     return {
-      line: null,
-      subline: null,
-      station: null,
-      substation: null,
+      saving: false,
     };
   },
   computed: {
@@ -253,60 +251,54 @@ export default {
         this.setSelectedParameterDatatype(val);
       },
     },
-  },
-  watch: {
-    line(val) {
-      this.setLineValue(val);
-      const query = `?query=lineid==${val}`;
-      this.getSublineList(query);
-      this.setSublineValue('');
-      this.setStationValue('');
-      this.setSubstationValue('');
+    line: {
+      get() {
+        return this.lineValue;
+      },
+      set(val) {
+        this.setLineValue(val);
+        const query = `?query=lineid==${val}`;
+        this.getSublineList(query);
+        this.setSublineValue('');
+        this.setStationValue('');
+        this.setSubstationValue('');
+      },
     },
-    subline(val) {
-      this.setSublineValue(val);
-      const query = `?query=sublineid=="${val}"`;
-      this.getStationList(query);
-      this.setStationValue('');
-      this.setSubstationValue('');
+    subline: {
+      get() {
+        return this.sublineValue;
+      },
+      set(val) {
+        this.setSublineValue(val);
+        const query = `?query=sublineid=="${val}"`;
+        this.getStationList(query);
+        this.setStationValue('');
+        this.setSubstationValue('');
+      },
     },
-    async station(val) {
-      this.setStationValue(val);
-      await this.getSubstationList(`?query=stationid=="${val}"`);
-      this.setSubstationValue('');
+    station: {
+      get() {
+        return this.stationValue;
+      },
+      set(val) {
+        this.setStationValue(val);
+        this.getSubstationList(`?query=stationid=="${val}"`);
+        this.setSubstationValue('');
+      },
     },
-    async substation(val) {
-      await this.setSubstationValue(val);
-    },
-    lineValue(val) {
-      if (!val) {
-        this.line = '';
-        this.subline = '';
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    sublineValue(val) {
-      if (!val) {
-        this.subline = '';
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    stationValue(val) {
-      if (!val) {
-        this.station = '';
-        this.substation = '';
-      }
-    },
-    substationValue(val) {
-      if (!val) {
-        this.substation = '';
-      }
+    substation: {
+      get() {
+        this.setApply(false);
+        return this.substationValue;
+      },
+      set(val) {
+        this.setApply(false);
+        this.setSubstationValue(val);
+      },
     },
   },
   methods: {
-    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSselectedParameterDatatype']),
+    ...mapMutations('parameterConfiguration', ['setFilter', 'toggleFilter', 'setApply', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSselectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getParameterListRecords', 'getSublineList', 'getStationList', 'getSubstationList']),
     async btnApply() {
       let query = '?query=';
@@ -322,9 +314,16 @@ export default {
       if (this.selectedParameterDatatype) {
         query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
       }
-      query += `substationid=="${this.substationValue || null}"`;
+      if (this.substationValue) {
+        query += `substationid=="${this.substationValue}"`;
+      } else {
+        query += `stationid=="${this.stationValue || null}"`;
+      }
+      this.saving = true;
       await this.getParameterListRecords(query);
+      this.saving = false;
       this.toggleFilter();
+      this.setApply(true);
     },
     btnReset() {
       this.getParameterListRecords('?query=stationid==null');

@@ -7,13 +7,17 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
           {{ $t('displayTags.updateDialog') }}
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="(dialog = false); dialogReset();">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -22,13 +26,17 @@
             :disabled="saving"
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
-            v-model="productName"
+            v-model="productNew.productname"
+            :rules="productNameRule"
+            required
+            :counter="10"
+            @keyup="validName"
         ></v-text-field>
         <v-text-field
             :disabled="saving"
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
-            v-model="productDescription"
+            v-model="productNew.description"
         ></v-text-field>
         <v-autocomplete
             clearable
@@ -37,7 +45,9 @@
             return-object
             :disabled="saving"
             item-text="name"
-            v-model="selectedProductTypeCategory"
+            v-model="productNew.producttypecategory"
+            :rules="selectProductTypeRule"
+            required
             prepend-icon="mdi-road-variant"
             >
             <template v-slot:item="{ item }">
@@ -52,13 +62,14 @@
         <v-btn
           color="primary"
           class="text-none"
-          :disabled="!selectedProductTypeCategory || !productName || !productDescription"
+          :disabled="!valid"
           @click="updateProduct"
         >
-          {{ $t('displayTags.buttons.update') }}
+          {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -73,12 +84,18 @@ export default {
   name: 'EditProduct',
   data() {
     return {
+      productNew: {},
       saving: false,
       message: null,
       loadingProducts: false,
-      selectedProductTypeCategory: null,
-      productName: null,
-      productDescription: null,
+      producttypecategory: null,
+      productname: null,
+      description: null,
+      valid: true,
+      productNameRule: [(v) => !!v || 'Product Name Required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
+      selectProductTypeRule: [(v) => !!v || 'Product Type selection Required'],
     };
   },
   props: {
@@ -91,7 +108,11 @@ export default {
     product(val) {
       this.productName = val.productname;
       this.productDescription = val.description;
+      return val;
     },
+  },
+  created() {
+    this.productNew = { ...this.product };
   },
   computed: {
     ...mapState('productManagement', ['productTypeCategory', 'editProductDialog', 'productList']),
@@ -118,53 +139,63 @@ export default {
     ...mapMutations('productManagement', ['setEditDialog']),
     ...mapActions('productManagement', ['updateProductType']),
     async updateProduct() {
-      if (!this.productName) {
+      this.$refs.form.validate();
+      if (!this.productNew.productname) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'PRODUCT_NAME_EMPTY',
         });
       } else {
-        const duplicateName = this.productList.filter(
-          (o) => o.productname === this.productName,
-        );
-        if (duplicateName.length > 0) {
-          this.productName = '';
+        const payload = {
+          productname: this.productNew.productname,
+          description: this.productNew.description,
+          editedby: this.userName,
+          producttypecategory: this.productNew.producttypecategory.name,
+          productTypecategoryid: this.productNew.producttypecategory.id,
+          productversionnumber: (this.productNew.productversionnumber + 1),
+          // TODO asset, check editedtime on value and datatype
+          assetid: 4,
+          editedtime: new Date().getTime(),
+        };
+        let update = false;
+        update = this.updateProductType({ id: this.productNew._id, payload });
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PRODUCT_UPDATED',
+          });
+          this.dialog = false;
+          this.$refs.form.reset();
+        } else {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ALREADY_EXSIST_PRODUCT',
+            message: 'ERROR_UPDATING_PRODUCT',
           });
-        } else {
-          const payload = {
-            productname: this.productName,
-            description: this.productDescription,
-            editedby: this.userName,
-            producttypecategory: this.selectedProductTypeCategory.name,
-            productTypecategoryid: this.selectedProductTypeCategory.id,
-            productversionnumber: (this.product.productversionnumber + 1),
-            // TODO asset, check editedtime on value and datatype
-            assetid: 4,
-            editedtime: new Date().getTime(),
-          };
-          let update = false;
-          update = await this.updateProductType({ id: this.product._id, payload });
-          if (update) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'PRODUCT_UPDATED',
-            });
-            this.dialog = false;
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ERROR_UPDATING_PRODUCT',
-            });
-          }
         }
       }
+    },
+    async validName() {
+      const duplicateName = this.productList.filter(
+        (o) => o.productname.toLowerCase().split(' ').join('') === this.productNew.productname.toLowerCase().split(' ').join(''),
+      );
+      if (duplicateName.length > 0) {
+        this.valid = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ALREADY_EXSIST_PRODUCT',
+        });
+      } else {
+        this.valid = true;
+        // this.saving = false;
+      }
+    },
+    async dialogReset() {
+      this.$refs.form.resetValidation();
+      this.productNew = { ...this.product };
     },
   },
 };

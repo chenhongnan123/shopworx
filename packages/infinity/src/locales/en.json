@@ -202,7 +202,9 @@
     "masters": "Master Data",
     "admin": "Admin Console",
     "search": "Search reports & insights",
-    "insights": "Insights"
+    "insights": "Insights",
+    "ngCodeConfiguration": "Ng-Code-Config",
+    "reworkOperation": "Quality Rework"    
   },
   "account": {
     "account": "Account",

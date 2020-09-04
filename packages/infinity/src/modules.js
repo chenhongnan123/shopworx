@@ -12,6 +12,8 @@ import RoadmapManagement from '@shopworx/roadmap-management';
 import ProductionLayout from '@shopworx/production-layout';
 import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
+import ReworkOperation from '@shopworx/rework-operation';
+import NgCodeConfiguration from '@shopworx/ng-code-configuration';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
 import UserDashboard from '@shopworx/user-dashboard';
@@ -105,6 +107,18 @@ Vue.use(Setup, {
   i18n,
 });
 Vue.use(UserDashboard, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(NgCodeConfiguration, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ReworkOperation, {
   router,
   store,
   i18n,
