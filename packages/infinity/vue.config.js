@@ -6,11 +6,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/server': {
-<<<<<<< HEAD
-        target: 'http://192.168.30.100/server',
-=======
         target: 'http://192.168.1.161/server',
->>>>>>> dev
         changeOrigin: true,
         pathRewrite: {
           '^/server': '',
