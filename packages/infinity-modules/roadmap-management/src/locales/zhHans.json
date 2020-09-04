@@ -1,3 +1,23 @@
 {
-  "productionLog": "Production Log"
+  "productionLog": "生产日志",
+  "error": {
+    "ROADMAP_NAME_EMPTY": "流程路径名称为空.",
+    "ALREADY_EXSIST_ROADMAP": "流程路径名称已存在.",
+    "ERROR_CREATING_ROADMAP": "创建流程路径时出错",
+    "ERROR_CREATING_ROADMAP_DETAILS": "创建流程路径详细信息时出错",
+    "SELECT_ROADMAP_FIRST": "请先选择流程路径",
+    "ROADMAP_TYPE_NOT_SELECTED": "Please Select Roadmap Type",
+    "SUBLINE_NOT_SELECTED_ROADMAPDETAILS": "Please Select Subline",
+    "STATION_NOT_SELECTED_ROADMAPDETAILS": "Please Select Station",
+    "SUBSTATION_NOT_SELECTED_ROADMAPDETAILS": "Please Select Sub-Station",
+    "PROCESS_CODE_EXISTS": "Process Code Allready Exists",
+    "PROCESS_CODE_EMPTY": "Please Enter Process Code",
+    "ERROR_DELETING_ROADMAP": "Error in Deleting Roadmap"
+  },
+  "success": {
+    "ROADMAP_CREATED": "流程路径已创建.",
+    "ROADMAP_UPDATED": "流程路径已更新.",
+    "ROADMAP_DETAILS_CREATED" : "流程路径详细信息已创建.",
+    "ROADMAP_RECORD_DELETED": "Roadmap Record Deleted"
+  }
 }
