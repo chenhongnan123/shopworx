@@ -18,8 +18,12 @@ export default ({
     updateProcessDialog: false,
     allSublines: [],
     allStations: [],
+    stationsbylines: [],
+    substationsbylines: [],
+    selectedLine: {},
   },
   mutations: {
+    setSelectedLine: set('selectedLine'),
     setLines: set('lines'),
     setSublines: set('sublines'),
     setStations: set('stations'),
@@ -35,6 +39,8 @@ export default ({
     setUpdateProcessDialog: set('updateProcessDialog'),
     setAllSublines: set('allSublines'),
     setAllStations: set('allStations'),
+    setStationsbyline: set('stationsbylines'),
+    setSubStationsbyline: set('substationsbylines'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {
@@ -83,6 +89,32 @@ export default ({
       // }
       stations.push(...localStations);
       commit('setStations', stations);
+      return true;
+    },
+    getStationbyline: async ({ dispatch, commit }, query) => {
+      // const query = `?query=lineid==${this.selectedLine.id}`;
+      const stationsbylines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationsbyline', stationsbylines);
+      return true;
+    },
+    getSubStationbyline: async ({ dispatch, commit }, query) => {
+      // const query = `?query=lineid==${this.selectedLine.id}`;
+      const substationsbylines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationsbyline', substationsbylines);
       return true;
     },
     getAllSublines: async ({ dispatch, commit }, query) => {
@@ -174,7 +206,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = `?query=lineid==${payload.lineid}`;
         const stations = await dispatch(
           'element/getRecords',
           {
@@ -203,7 +235,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = `?query=lineid==${payload.lineid}`;
         const substations = await dispatch(
           'element/getRecords',
           {
@@ -249,6 +281,32 @@ export default ({
         }
       }
       return created;
+    },
+    updateLine: async ({ dispatch, commit }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'line',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = `?query=id==${payload.id}`;
+        const lines = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'line',
+            query,
+          },
+          { root: true },
+        );
+        if (lines) {
+          commit('setLines', lines);
+          // return sublines;
+        }
+      }
     },
     updateSubline: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
@@ -394,6 +452,36 @@ export default ({
         { root: true },
       );
       if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'station',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'substation',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=sublineid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
         const query = `?query=lineid==${object.lineid}`;
         const sublines = await dispatch(
           'element/getRecords',
@@ -410,15 +498,35 @@ export default ({
       }
       return deleted;
     },
-    deleteStation: async ({ dispatch, commit }, id) => {
+    deleteStation: async ({ dispatch, commit }, object) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
           elementName: 'station',
-          queryParam: `?query=id=="${id}"`,
+          queryParam: `?query=id=="${object.id}"`,
         },
         { root: true },
       );
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'substation',
+            queryParam: `?query=stationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=substationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
       if (deleted) {
         const query = '';
         const stations = await dispatch(
@@ -436,15 +544,25 @@ export default ({
       }
       return deleted;
     },
-    deleteSubstation: async ({ dispatch, commit }, id) => {
+    deleteSubstation: async ({ dispatch, commit }, object) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
           elementName: 'substation',
-          queryParam: `?query=id=="${id}"`,
+          queryParam: `?query=id=="${object.id}"`,
         },
         { root: true },
       );
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'process',
+            queryParam: `?query=substationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
       if (deleted) {
         const query = '';
         const substations = await dispatch(

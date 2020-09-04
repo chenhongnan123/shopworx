@@ -35,7 +35,7 @@
       >
         <v-icon
           left
-          v-text="'$next'"
+          v-text="'$forward'"
         ></v-icon>
         {{ $t('planning.setup.complete.next') }}
       </v-btn>

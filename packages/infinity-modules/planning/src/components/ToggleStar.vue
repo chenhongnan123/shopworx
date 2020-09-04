@@ -38,12 +38,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions('planning', ['updatePlan', 'getStarredPlans']),
+    ...mapActions('planning', ['updatePlanById', 'getStarredPlans']),
     async updatePlans() {
       await Promise.all([
         this.plans.forEach((plan) => {
-          this.updatePlan({
-            id: plan.planid,
+          this.updatePlanById({
+            id: plan._id,
             payload: {
               starred: !this.starred,
             },

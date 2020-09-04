@@ -1,3 +1,10 @@
 {
-  "machineDashboard": "Machine Dashboard"
+  "shopfloorDashboard": {
+    "title": "Shopfloor Dashboard",
+    "up": "Up",
+    "down": "Down",
+    "customize": "Customize",
+    "done": "Done",
+    "addWidgets": "Add widgets"
+  }
 }

@@ -14,6 +14,10 @@ import {
   digits,
   email,
   max,
+  min,
+  numeric,
+  max_value,
+  min_value,
 } from 'vee-validate/dist/rules';
 import i18n from '../i18n';
 
@@ -28,6 +32,23 @@ extend('required', required);
 extend('digits', digits);
 extend('email', email);
 extend('max', max);
+extend('min', min);
+extend('numeric', numeric);
+extend('max_value', max_value);
+extend('min_value', min_value);
+
+extend('multiple_of', {
+  validate(value, { multiple }) {
+    return value % multiple === 0;
+  },
+  params: ['multiple'],
+});
+
+extend('greater_than_now', {
+  validate(value) {
+    return new Date(value).getTime() >= new Date().getTime();
+  },
+});
 
 configure({
   defaultMessage: (field, values) => {

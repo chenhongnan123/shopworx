@@ -45,6 +45,14 @@ class UserService {
     return this.request.get('/server/role');
   }
 
+  updateRole(payload) {
+    return this.request.put('/server/role', payload);
+  }
+
+  updateUserRole(userId, roleId) {
+    return this.request.put(`/server/users/${userId}/${roleId}`);
+  }
+
   getUsers() {
     return this.request.get('/server/users');
   }

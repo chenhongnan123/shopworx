@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <auth-header />
     <v-container fill-height>
       <v-row
@@ -10,6 +10,7 @@
         <v-col v-if="$vuetify.breakpoint.mdAndUp" md="6" xl="5">
           <v-img
             :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+            id="auth_illustration"
             contain
           />
         </v-col>
@@ -29,7 +30,7 @@
                     flat
                     solo
                     dense
-                    id="locale"
+                    id="locale_input"
                     :items="locales"
                     menu-props="top"
                     item-text="text"
@@ -44,7 +45,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

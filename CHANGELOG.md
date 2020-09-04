@@ -3,6 +3,234 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **downtime-log:** do not fetch in progress downtimes ([d61f054](https://bitbucket.org/entrib/shopworx/commits/d61f054675269616ee2f300caf9acd3324f2e42d))
+* **downtime-log:** fixed downtime split ([41af3fb](https://bitbucket.org/entrib/shopworx/commits/41af3fb466abf2e82ad3bb6acfcdbf50753a03fe))
+* **report-viewer:** fixed previous report preview ([2f5e994](https://bitbucket.org/entrib/shopworx/commits/2f5e994cf786cfd3347096f9f1bc0e45179e1fed))
+
+
+### Features
+
+* **report-viewer:** added refresh report data button ([f2f046c](https://bitbucket.org/entrib/shopworx/commits/f2f046c754d7ca595447759e0cd0c420561e8f47))
+* **report-viewer:** added report loading indicator ([e21b30c](https://bitbucket.org/entrib/shopworx/commits/e21b30c1eac7e4c6e2eca55e0394afec96250f12))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+
+### Bug Fixes
+
+* **planning:** fixed delete plans ([e240852](https://bitbucket.org/entrib/shopworx/commits/e2408529f660bf2d71ca9d04984542a3b24a7ee2))
+* **planning:** fixed edit plan for family molds ([a9226c5](https://bitbucket.org/entrib/shopworx/commits/a9226c59f770eb6dc4ff247e7ccb78853b0b47ce))
+
+
+
+
+
+
+
+**Note:** Version bump only for package shopworx
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Bug Fixes
+
+* **planning:** display overdue plans ([8be6cb0](https://bitbucket.org/entrib/shopworx/commits/8be6cb005468ef138e8fa226ab77458ea9eca3cb))
+* **planning:** updated complete and abort status values ([0dc70a9](https://bitbucket.org/entrib/shopworx/commits/0dc70a90a4c8ae80d96c0511b2ebe7c855a745da))
+* **production-log:** fixed shift filter and shift date time ([3bacc71](https://bitbucket.org/entrib/shopworx/commits/3bacc719a6570de2c94fac94e5c68b6a71caa976))
+* **report-viewer:** added ag grid filters for number and text ([7812936](https://bitbucket.org/entrib/shopworx/commits/7812936adae06504d42cae2075019efd10332b68))
+* **report-viewer:** fixed date range display on view change ([b5b45d7](https://bitbucket.org/entrib/shopworx/commits/b5b45d78065244bcf8204d0a5829102dcc8743ff))
+* **report-viewer:** Reset report view on view change ([1cc9d12](https://bitbucket.org/entrib/shopworx/commits/1cc9d12f57a1011795897686b35bfc5a947e64c2))
+
+
+### Features
+
+* **service:** added plan end time api ([2e79ceb](https://bitbucket.org/entrib/shopworx/commits/2e79ceb770ade5d146a5bbe4dfa51858e2bb18b7))
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed rejecion display on dashboard ([fb1b19d](https://bitbucket.org/entrib/shopworx/commits/fb1b19da39e6d52254f6e9c0ac5c0d337e036aaf))
+* **machine-dashboard:** updated rejection details ([5cbf747](https://bitbucket.org/entrib/shopworx/commits/5cbf7472160429dda29514fd445d5d64ba434566))
+* **planning:** Fixed unable to add plan ([ac16381](https://bitbucket.org/entrib/shopworx/commits/ac16381d7f082de8053959c6331637c8e6ef6e29))
+* **production-log:** added loop index for production plans ([0e5b09f](https://bitbucket.org/entrib/shopworx/commits/0e5b09fa3922e7c283b17d000b30e2bce9728153))
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+* **production-log:** Removed hidden tags from rejection onboarding ([a041b32](https://bitbucket.org/entrib/shopworx/commits/a041b32a6dabf10fecb52068a498a775cca91901))
+* **production-log:** updated shift tag for rejection ([9475ea1](https://bitbucket.org/entrib/shopworx/commits/9475ea1ddb26ce70fdd2c2ee71638b1625e60c28))
+* **production-log:** Updated timestamp for rejection entry ([11d22da](https://bitbucket.org/entrib/shopworx/commits/11d22daed2696b3399e2c41337961962df00c1a3))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+* **downtime-log:** added feature to split downtimes ([3039358](https://bitbucket.org/entrib/shopworx/commits/3039358e38429a8aeb812081a4bc4804faf501a2))
+* **downtime-log:** user can update downtime reason ([eacb2f3](https://bitbucket.org/entrib/shopworx/commits/eacb2f3957d2ada460d9a6a9e0c4d444870dc1f9))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **admin-console:** Fixed user role update ([d716807](https://bitbucket.org/entrib/shopworx/commits/d716807b1a677f18ce8d00bcf6c6efb87e86c28a))
+* **dashboard:** fixed APQ widget ([8edf28c](https://bitbucket.org/entrib/shopworx/commits/8edf28ceb6c6b0642f153880d1d271471c55b140))
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+* **planning:** fixed edit and duplicate plan ([fbab973](https://bitbucket.org/entrib/shopworx/commits/fbab973dd8519caf3d8a5935b51007cab516fdb2))
+* **report-viewer:** fixed report viewer grid display ([41e7656](https://bitbucket.org/entrib/shopworx/commits/41e765670041abd46d17e2ad43df11acf108d1c2))
+
+
+### Features
+
+* **account:** added role information for logged in user ([3a86f74](https://bitbucket.org/entrib/shopworx/commits/3a86f7415b4d4a498113d1f031c283b79fee6709))
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+
+### Bug Fixes
+
+* **master:** fixed data grid does not update ([5389bfb](https://bitbucket.org/entrib/shopworx/commits/5389bfb9bd284f989f99a303659f86077ef17977))
+* **planning:** toggle star plans ([d2e098f](https://bitbucket.org/entrib/shopworx/commits/d2e098fd6ef8b4f377a1fb4fb6d62210b1ac36bc))
+
+
+### Features
+
+* **planning:** added duplicate plan feature on dashboard ([1839075](https://bitbucket.org/entrib/shopworx/commits/183907530672958f1ffce43275e0a5ded5bc3b37))
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **core:** updated sidebar module display ([575d27a](https://bitbucket.org/entrib/shopworx/commits/575d27ac3d4f87d93a31ca782a4f14615f2bd8bf))
+* **locale:** fixed zhHans translations ([a67d008](https://bitbucket.org/entrib/shopworx/commits/a67d0083cc5aa476714baf284b85a888bb81f77a))
+* **master-data:** updated ag-grid API ([beaa216](https://bitbucket.org/entrib/shopworx/commits/beaa216d599f4f35c4254866fb4585282657cf00))
+
+
+### Features
+
+* **master data:** add button to add new entry, and save button to save the entries to database ([39f1158](https://bitbucket.org/entrib/shopworx/commits/39f1158b7f522665b32af353a238d9944039e23a))
+* **master data:** deleting of record from master data ([ac6c4dd](https://bitbucket.org/entrib/shopworx/commits/ac6c4ddda68c8bc7b6adf6de75793614c6f45fac))
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+
+### Bug Fixes
+
+* **core:** updated HTML element IDs ([3695c41](https://bitbucket.org/entrib/shopworx/commits/3695c41b88ca84794700dafc57673b705df3af6e))
+* **update-account:** fixed user already exists error ([fbf3d5a](https://bitbucket.org/entrib/shopworx/commits/fbf3d5a6fe6dca7522930cfdbbee64bc9892e3a6))
+
+
+### Features
+
+* **admin:** added calendar ([7163a81](https://bitbucket.org/entrib/shopworx/commits/7163a81ef5996edc5238e0255ee448d80d523395))
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+
+### Features
+
+* **machine-dashboard:** added machine dashboard module ([454cb70](https://bitbucket.org/entrib/shopworx/commits/454cb703433fb76a2b7766a27a719743a2b156b5))
+
+
+
+
+
+# [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
+
+
+### Bug Fixes
+
+* **(production-layout):** empty number field cant allowed ([a750e6c](https://bitbucket.org/entrib/shopworx/commits/a750e6c98847457e794cb643b59b50002c5ea3a9))
+* **(production-layout): issue ra-i97:** deletedependent elements on deletion of Subline ([8240da2](https://bitbucket.org/entrib/shopworx/commits/8240da228260e3c61499196a0041c1621b3545e6))
+* **addstation.vue:** add ipv4 validation on dialog for valid format ([9ee2a58](https://bitbucket.org/entrib/shopworx/commits/9ee2a5820e80cb307bebe01332054c2c19f2eb31))
+* **addstation.vue:** spelling mistake ([b2c0a34](https://bitbucket.org/entrib/shopworx/commits/b2c0a340c5b9b2733c46112203250b689b4a0e46))
+* **addsubstation.vue:** switch button validation while creating sub station ([be22649](https://bitbucket.org/entrib/shopworx/commits/be2264939bc70233b62d3f1d1f78f5f27c86894b))
+* **all elements:** add astrisk symbol to mandetory fields ([033bb62](https://bitbucket.org/entrib/shopworx/commits/033bb62cb0f911df03cd4e64aba610d02b9987ee))
+* **fix(production-layout):** bind the station, substation and process with selected line ([25bbbee](https://bitbucket.org/entrib/shopworx/commits/25bbbeeed12325fc42ef2a046b59f86381f52887))
+* **production-layout:** on deleting subline parameter related with that subline also deleted ([47ca452](https://bitbucket.org/entrib/shopworx/commits/47ca45236067f7d2a930b311193138cdc6d9a56d))
+* **ra-i114:** filters option should get closed after clicking on Apply button ([c5e2bac](https://bitbucket.org/entrib/shopworx/commits/c5e2bacac0085bac1b59029432a776b43b07c893))
+* **ra-i115:** need to change label of fields ([1b7890c](https://bitbucket.org/entrib/shopworx/commits/1b7890c6469955eee6169aeaccddd71b53a56673))
+* **ra-i116:** popup not get closed after adding the data ([64a4423](https://bitbucket.org/entrib/shopworx/commits/64a4423b3040950a8968a90c80c58437e622114a))
+* **ra-i117:** alignment of column name should be proper ([8659a2e](https://bitbucket.org/entrib/shopworx/commits/8659a2e3339df0597196ad4ef4da314f952d2214))
+* **ra-i117:** line MES | Parameter configuration | Alignment of column name should be proper ([1de9dcd](https://bitbucket.org/entrib/shopworx/commits/1de9dcd0afe263f190e58ea482886592eaedd8e6))
+* **ra-i118:** reset button functionality is not proper ([e33c1f7](https://bitbucket.org/entrib/shopworx/commits/e33c1f724428a9ea59ef7e063ee481bdc98ce11b))
+* **ra-i120:** line MES | Parameter configuration | UI issues ([3e203fa](https://bitbucket.org/entrib/shopworx/commits/3e203fa0a10ba958f43294125fe0a0886b27c506))
+* **ra-i122:** add Parameter popup remembered previously added details ([40762e1](https://bitbucket.org/entrib/shopworx/commits/40762e1e70d06dcc24b7f7dd7388851a4310fcf4))
+* **ra-i125:** filter option functionality is not correct ([d3e02ea](https://bitbucket.org/entrib/shopworx/commits/d3e02eabea4e29a86f9e11ff44619c6e4dc53fb7))
+* **ra-i125:** filter option functionality is not correct ([d0d0330](https://bitbucket.org/entrib/shopworx/commits/d0d033014fbaa862fbd6865a424100c0f648edc1))
+* **ra-i126:** for Import option, reference file should be present ([b46a616](https://bitbucket.org/entrib/shopworx/commits/b46a6169a1b34f9cf93d52120a0c5f3eb21966fb))
+* **ra-i127:** data types for every field in popup should be defined ([7a0bfc1](https://bitbucket.org/entrib/shopworx/commits/7a0bfc1fbd9a60c67e23f81f1308d44c95d9dfc3))
+* **ra-i128:** after importing and exporting,message should get displayed ([1d9518b](https://bitbucket.org/entrib/shopworx/commits/1d9518ba009a0bc77c5c1480d33d6a46ca21a6cd))
+* **ra-i129:** edit button/sign should be present for table values ([d784be6](https://bitbucket.org/entrib/shopworx/commits/d784be6f2b94c3d4bf28e18fe8440d2f1f1d23cf))
+* **ra-i132:** save button should not be clickable before adding the details ([8b786db](https://bitbucket.org/entrib/shopworx/commits/8b786db915fa05252be18ab2c785aaf7cc617f40))
+* **ra-i133:** line MES | Parameter configuration | UI issue ([874687b](https://bitbucket.org/entrib/shopworx/commits/874687b58d74da4a84ea03554861fcc0809ace64))
+* **RA-I139:** Remove BOM validation while adding new product. ([54468e1](https://bitbucket.org/entrib/shopworx/commits/54468e1c28fd36f0f2adcb15ee08c2f0577339ff))
+* **ra-i96 to reset the previous selected data:** reset the data which is previously seleted options ([078421b](https://bitbucket.org/entrib/shopworx/commits/078421bf1ff8e55c46130b1ac44db2cb594fed2a))
+* **subline, station, substation and process all elements:** sample entries or placeholder ([2c81a96](https://bitbucket.org/entrib/shopworx/commits/2c81a9630c67beea287cab6bf82559e33f600eed))
+* **while aading subline,station, substation and process clear only those field whos have error:** vl ([54519f4](https://bitbucket.org/entrib/shopworx/commits/54519f44847090bde45a5e12554b472188887a9b))
+* line MES | Parameter configuration | UI issues ([3a832e0](https://bitbucket.org/entrib/shopworx/commits/3a832e0f775d38e93940afd436b97844d38ba54c))
+* on closing the header tabs, table also get refreshed without clicking on refresh button ([95d7a3c](https://bitbucket.org/entrib/shopworx/commits/95d7a3c20d9435b01f0df9fd287427045ab6f48e))
+* user not able to change Direction/Category/Data type from dropdown and edit any other fields ([b7c5f00](https://bitbucket.org/entrib/shopworx/commits/b7c5f0034796deac359d971608ea4dcf49830b9f))
+
+
+### Features
+
+* **all four component subline, station, substation and process:** max limit for name and num limit ([2355554](https://bitbucket.org/entrib/shopworx/commits/235555423d510e787c4806f5c2b557a783c39691))
+* **Material Management:** Added new module Material Management ([3a1e239](https://bitbucket.org/entrib/shopworx/commits/3a1e239e89e0e6f4627f28d8e9523dcdc5b2d89f))
+* **production-layout:** edit selected line and saved ([55fdf7c](https://bitbucket.org/entrib/shopworx/commits/55fdf7ca8b8c8368f8894e4e348c666ab12f5fd6))
+* for starting parameter-configuration ([1702685](https://bitbucket.org/entrib/shopworx/commits/170268515c2c7ab57715845ab37b7c9998d84329))
+
+
+### BREAKING CHANGES
+
+* **(production-layout):** add if and else block
+
+no
+* **subline, station, substation and process all elements:** add place holderto every fields
+
+RA-I108
+
+
+
+
+
 # [4.1.0-beta.16](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.15...v4.1.0-beta.16) (2020-05-30)
 
 

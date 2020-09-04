@@ -1,4 +1,4 @@
-<template>
+  <template>
     <v-dialog
       v-model="dialog"
       max-width="290"
@@ -38,7 +38,7 @@ import { mapActions, mapMutations } from 'vuex';
 export default {
   data() {
     return {
-      plan: {},
+      // plan: {},
       default: false,
       dialog: false,
     };
@@ -46,10 +46,6 @@ export default {
   props: {
     process: {
       type: Object,
-      required: true,
-    },
-    stationid: {
-      type: [Number, String],
       required: true,
     },
   },

@@ -48,105 +48,101 @@
     }
   },
   "success": {
-    "OTP_SENT": "发送一次性密码到邮件/手机.",
-    "PASSWORD_RESET": "发送新密码到邮箱/手机.",
-    "UPDATED": "刷新!",
+    "OTP_SENT": "通过注册的电子邮件/电话发送一次密码。",
+    "PASSWORD_RESET": "通过注册电子邮件/电话发送的新密码。",
+    "UPDATED": "更新！",
     "PLAN_CREATED": "计划已创建！",
-    "PLAN_UPDATED": "计划已更新！",
-    "CREATED_RECORD": "记录添加成功.",
-    "DELETE_RECORD": "记录删除成功."
+    "PLAN_UPDATED": "计划已更新！"
   },
   "error": {
-    "ERROR_CREATING_RECORD": "记录添加失败.",
-    "ERROR_DELETE_RECORD": "记录删除失败.",
-    "NOT_VALID": "{_字段_}无效.",
-    "NO_LICENSE": "缺少有效许可证。请联系Shopworx技术支持。.",
-    "CANNOT_FETCH_LICENSE": "无法获取有效许可证。请再试一次。.",
-    "INVALID_SESSION": "Session expired: Please login again.",
-    "USER_ALREADY_EXIST": "用户已存在.",
-    "USER_NOT_FOUND": "用户不存在.",
-    "EMAIL_NOT_FOUND": "用户不存在.",
-    "INCORRECT_PASSWORD": "登录失败：密码错误.",
-    "INVALID_OTP": "登录失败：一次性密码错误.",
-    "MISSING_BUSINESS_HOUR": "应按顺序添加小时数。请检查数据。.",
-    "INVALID_HOURS_SUM": "您所提供的总小时数应为24。请检查数据。.",
-    "ERROR_CREATING_PLAN": "创建计划错误，请再试一次。.",
-    "ERROR_UPDATING_PLAN": "更新计划错误，请再试一次。."
+    "NOT_VALID": "{_field_}无效。",
+    "NO_LICENSE": "您没有有效的许可证。请联系ShopWorx支持。",
+    "CANNOT_FETCH_LICENSE": "我们无法获取您的有效许可证。请再试一遍。",
+    "INVALID_SESSION": "会话已过期：请重新登录。",
+    "USER_ALREADY_EXIST": "用户已存在。",
+    "USER_NOT_FOUND": "找不到用户帐户。",
+    "EMAIL_NOT_FOUND": "找不到用户帐户。",
+    "INCORRECT_PASSWORD": "登录失败：密码错误。",
+    "INVALID_OTP": "登录失败：OTP错误。",
+    "MISSING_BUSINESS_HOUR": "时间应按顺序设置。请验证您的数据。",
+    "INVALID_HOURS_SUM": "您提供的小时总数应为24。请验证您的数据。",
+    "ERROR_CREATING_PLAN": "创建计划时出错，请重试。",
+    "ERROR_UPDATING_PLAN": "更新计划时出错，请重试。"
   },
   "fields": {
-    "email": "邮件",
-    "phone": "手机",
+    "email": "电子邮件",
+    "phone": "电话",
     "password": "密码",
     "otp": "一次性密码",
-    "firstName":"姓氏",
-    "lastName":"名称",
-    "name": "姓名",
+    "firstName":"名字",
+    "lastName":"姓",
+    "name": "名称",
     "type": "类型",
     "startTime": "开始时间",
-    "endTime": "结束时间",
+    "endTime": "时间结束",
     "date": "日期",
-    "shift": "班次",
+    "shift": "转移",
     "role": "角色"
   },
   "snackbar": {
-    "close": "关闭",
-    "redirectToLogin": "重新校准{time}"
+    "close": "关",
+    "redirectToLogin": "重定向到{time}"
   },
   "helper": {
-    "or": "或者",
-    "help": "帮助",
+    "or": "要么",
+    "help": "救命",
     "next": "下一个",
-    "skip": "暂时跳过",
-    "loading": "登录中"
+    "skip": "现在跳过",
+    "loading": "载入中..."
   },
   "notFound": {
-    "title": "错误！",
-    "subTitle1": "访问的地址",
+    "title": "那是一个错误！",
+    "subTitle1": "要求的网址",
     "subTitle2": "{url}",
-    "subTitle3": "未能在服务器中找到.",
-    "goHome": "返回主页"
+    "subTitle3": "本服务器上没有找到。",
+    "goHome": "回去"
   },
   "forbidden": {
     "title": "禁止访问！",
-    "subTitle1": "您正访问新的页面",
+    "subTitle1": "您试图访问以前没有的页面",
     "subTitle2": "授权",
-    "subTitle3": "对于.",
-    "goHome": "返回主页"
+    "subTitle3": "对于。",
+    "goHome": "回去"
   },
   "login": {
     "title": "登录到Infinity",
-    "subTitle": "使用ShopWorx账号登录",
-    "identifier": "邮箱或手机",
+    "subTitle": "使用您的ShopWorx帐户",
+    "identifier": "邮件或者电话",
     "password": "密码",
-    "otp": "一次性密码",
-    "resendOtp": "重新发送一次性密码？",
-    "resendOtpIn": "在{时间}内重新发送一次性密码",
-    "sendOtp": "发送一次性密码",
+    "otp": "OTP",
+    "resendOtp": "重新发送otp？",
+    "resendOtpIn": "重新发送otp{time}",
+    "sendOtp": "发送OTP",
     "forgotPassword": "忘记密码？",
     "login": "安全登录",
-    "loginWithOtp": "用一次性密码登录",
+    "loginWithOtp": "用otp登录",
     "loginWithPassword": "用密码登录"
   },
   "forgotPassword": {
     "title": "重设密码？",
-    "subTitle": "输入你的邮箱或手机号",
-    "reset": "重设密码？"
+    "subTitle": "输入您的电子邮件或电话号码",
+    "reset": "重设密码"
   },
   "welcome": {
-    "title": "欢迎！我们一直期待您的到来.",
-    "subTitle1": "首先，让我们从···开始",
-    "subTitle2": "创建账号.",
-    "subTitle3": "这可能会花费一点时间.",
+    "title": "欢迎！我们一直在期待您。",
+    "subTitle1": "首先，让我们开始",
+    "subTitle2": "创建您的帐户。",
+    "subTitle3": "不到一分钟。",
     "start": "让我们开始吧"
   },
   "register": {
     "account": {
-      "title": "更新您的Shopworx账号",
-      "update": "更新账号",
-      "firstName": "姓氏",
-      "lastName": "名字",
-      "email": "邮件",
-      "phone": "手机"
+      "title": "更新您的ShopWorx帐户",
+      "update": "更新账户",
+      "firstName": "名字",
+      "lastName": "姓",
+      "email": "电子邮件（可选）",
+      "phone": "电话（可选）"
     },
     "password": {
       "title": "更新您的ShopWorx密码",
@@ -154,72 +150,68 @@
       "confirmPassword": "确认密码",
       "update": "更新密码"
     },
-    "updated": "你的ShopWorx账户已经更新完毕！"
+    "updated": "您的ShopWorx帐户已更新！"
   },
   "modules": {
-    "apps": "应用程序",
-    "home": "首页",
-    "order": "订单",
-    "configuration": "配置",
-    "dataconfiguration": "数据配置",
-    "traceability": "追溯",
-    "management": "管理",
-    "shopfloorDashboard": "车间看板",
-    "orderManagement": "订单",
+    "apps": "应用",
+    "home": "家",
+    "shopfloorDashboard": "车间仪表板",
+    "orderManagement": "订单管理",
     "productionLog": "生产日志",
-    "maintenanceSummary": "维护概要",
+    "downtimeLog": "停机日志",
+    "maintenanceSummary": "维护摘要",
     "parameterConfiguration": "参数配置",
-    "productionPlanning": "生产计划",
-    "roadmapManagement": "路径",
-    "recipeManagement": "配方",
-    "productManagement": "产品类型",
-    "productionLayout": "生产布局配置",
-    "materialManagement": "物料",
-    "reports": "报表",
+    "productionPlanning": "计划生产",
+    "roadmapManagement": "路线图管理",
+    "recipeManagement": "配方管理",
+    "productManagement": "产品类型管理",
+    "productionLayout": "生产布局",
+    "materialManagement": "物资管理",
+    "reports": "报告书",
     "production": "生产",
-    "maintenance": "维护",
+    "maintenance": "保养",
     "downtime": "停机时间",
-    "rejection": "不合格",
-    "oee": "Oee",
-    "masters": "主数据",
-    "admin": "管理员操控台",
-    "search": "搜索报表和分析（假设为4.1.0-rc.1）",
-    "insights": "分析"
+    "rejection": "拒绝",
+    "oee": "大江",
+    "masters": "主数据（仅查看）",
+    "admin": "管理控制台",
+    "search": "搜索报告和见解",
+    "insights": "见解"
   },
   "account": {
-    "account": "账户",
-    "sites": "位置",
-    "profile": "配置文件设置",
-    "logout": "退出",
-    "lightMode": "浅色模式",
-    "darkMode": "深色模式"
+    "account": "帐户",
+    "sites": "网站",
+    "profile": "个人资料",
+    "logout": "登出",
+    "lightMode": "灯光模式",
+    "darkMode": "暗模式"
   },
   "help": {
-    "help": "帮助",
-    "legal": "法律声明",
-    "version": "版本",
-    "keyboardShortcuts": "快捷键",
+    "help": "救命",
+    "legal": "法律",
+    "version": "版",
+    "keyboardShortcuts": "键盘快捷键",
     "support": "支持",
     "terms": "服务条款",
     "privacy": "隐私政策"
   },
   "user": {
-    "general": "普通",
+    "general": "一般",
     "security": "安全",
     "profile": {
-      "title": "简况",
-      "firstName": "姓氏",
-      "lastName":"名字",
-      "email": "邮件",
-      "phone": "手机",
-      "reset": "重设",
-      "update": "更新简况"
+      "title": "个人资料",
+      "firstName": "名字",
+      "lastName":"姓",
+      "email": "电子邮件",
+      "phone": "电话",
+      "reset": "重启",
+      "update": "更新个人信息"
     },
     "preferences": {
-      "title": "优先级",
+      "title": "优先",
       "display": "显示设置",
       "language": "语言",
-      "darkMode": "深色模式"
+      "darkMode": "暗模式"
     },
     "password": {
       "title": "密码",
@@ -228,7 +220,7 @@
       "update": "更新密码"
     },
     "auditLog": {
-      "title": "检查日志"
+      "title": "审核日志"
     }
   }
 }

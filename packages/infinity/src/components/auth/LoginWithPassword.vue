@@ -3,6 +3,7 @@
     <v-form @submit.prevent="passes(onLogin)">
       <v-card-text>
         <identifier-input
+          id="identifier_input"
           :loading="loading"
           v-model="identifier"
           @on-update="setIdentifier"
@@ -13,7 +14,7 @@
           #default="{ errors }"
         >
           <v-text-field
-            id="password"
+            id="password_input"
             type="password"
             v-model="password"
             :disabled="loading"
@@ -29,7 +30,7 @@
             text
             small
             color="primary"
-            id="forgotPassword"
+            id="forgot_password_btn"
             :disabled="loading"
             @click="resetPassword"
             class="text-none pa-0"
@@ -42,7 +43,7 @@
         <v-btn
           block
           rounded
-          id="login"
+          id="login_btn"
           type="submit"
           color="primary"
           class="text-none"
@@ -63,7 +64,7 @@
         <v-btn
           text
           color="primary"
-          id="loginWithOtp"
+          id="login_otp_btn"
           class="text-none"
           :disabled="loading"
           @click="$emit('login-with-otp')"
