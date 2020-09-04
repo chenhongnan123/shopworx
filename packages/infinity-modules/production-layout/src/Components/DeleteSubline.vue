@@ -61,21 +61,22 @@ export default {
         id: this.subline.id,
         lineid: this.subline.lineid,
       };
-      await this.deleteSubline(sublineObject);
-      // if (deleted) {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'success',
-      //     message: 'PROCESS_DELETED',
-      //   });
-      //   this.dialog = false;
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'ERROR_DELETING_PROCESS',
-      //   });
-      // }
+      let deleted = false;
+      deleted = this.deleteSubline(sublineObject);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'SUBLINE_DELETED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_SUBLINE',
+        });
+      }
       this.dialog = false;
     },
   },

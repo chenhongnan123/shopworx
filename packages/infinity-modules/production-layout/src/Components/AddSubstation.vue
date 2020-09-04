@@ -55,6 +55,8 @@
         label="Final Sub Station"
         :disabled="btnFindisable"
         ></v-switch>
+        <v-checkbox v-model="checked" class="mx-2"
+         label="this Substation have Parameter Configuration"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -74,7 +76,10 @@ export default {
   data() {
     return {
       newSubstation: {},
-      assetId: 4,
+      // assetId: 4,
+      assetId: null,
+      getAssetId: '',
+      checked: false,
       selectedSubstationLine: null,
       default: false,
       dialog: false,
@@ -93,14 +98,15 @@ export default {
   },
   created() {
     // this.getAllStations('');
+    this.getAssets();
     this.newSubstation = { ...this.substation };
   },
   computed: {
-    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName', 'getAssets']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -165,6 +171,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newSubstation = {
             ...this.newSubstation,
             stationid: this.selectedSubstationLine.id,
@@ -172,20 +180,53 @@ export default {
             lineid: this.selectedSubstationLine.lineid,
             // lineid: this.lineid,
             assetid: this.assetId,
+            stationcolor: 1,
           };
           let created = false;
           const payload = this.newSubstation;
-          created = this.createSubstation(payload);
+          created = await this.createSubstation(payload);
           if (created) {
             this.setAlert({
               show: true,
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            this.newSubstation = {};
-            this.dialog = false;
-            this.assetId = 4;
-            this.$refs.form.reset();
+            const checkedPlc = this.checked;
+            if (checkedPlc) {
+              this.newSubstation = {};
+              this.dialog = false;
+              this.assetId = this.getAssetId;
+              this.$refs.form.reset();
+              const substationid = this.subStations[0].id;
+              const object = {
+                customerId: 195,
+                siteId: 197,
+                categoryType: 'ASSET',
+                collectionName: 'provisioning',
+                elementName: substationid,
+                elementDescription: this.subStations[0].name,
+                dateCreated: 1590647154882,
+                dateModified: 1590647154882,
+                status: 'ACTIVE',
+                elementType: 'PROVISIONING',
+                uniqueTagName: '',
+                uniqueTagValue: 0,
+                uniqueTagStartValue: 0,
+                uniqueTagValuePrefix: '',
+                uniqueTagValueSuffix: '',
+                businessTimeTagsRequired: false,
+                optional: false,
+                assetBased: true,
+                uniqueTag: false,
+              };
+              this.createElement(object);
+            } else {
+              this.newSubstation = {};
+              this.dialog = false;
+              this.checked = false;
+              this.assetId = this.getAssetId;
+              this.$refs.form.reset();
+            }
           } else {
             this.setAlert({
               show: true,
