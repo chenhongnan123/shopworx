@@ -16,7 +16,7 @@
             @click="dialog = true,isUpdate = false;"
             >
               <v-icon small left>mdi-plus</v-icon>
-              Add Datatype
+              Add Category
             </v-btn>
             <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
@@ -27,7 +27,7 @@
         <v-data-table
         :headers="headers"
         item-key="_id"
-        :items="dataTypeList"
+        :items="categoryDataList"
         >
         <template v-slot:item.actions="{ item }">
           <v-row>
@@ -96,7 +96,7 @@
         <v-card>
           <v-card-title primary-title>
             <span>
-              Create datatype
+              Create Category
             </span>
             <v-spacer></v-spacer>
             <v-btn icon small @click="handleClose">
@@ -110,47 +110,18 @@
               lazy-validation
             >
               <v-text-field
-                  label="Datatype"
+                  label="Category"
                   prepend-icon="mdi-tray-plus"
                   v-model="parameterObj.name"
                   :rules="rules.name"
               ></v-text-field>
               <v-text-field
-                  label="Datatype number"
+                  label="Category ID"
                   prepend-icon="mdi-tray-plus"
                   v-model="parameterObj.id"
                   :rules="rules.id"
                   type="number"
               ></v-text-field>
-              <v-text-field
-                  label="Size"
-                  prepend-icon="mdi-tray-plus"
-                  v-model="parameterObj.size"
-                  :rules="rules.size"
-                  type="number"
-              ></v-text-field>
-              <v-autocomplete
-                clearable
-                label="isBigendian"
-                :items="boolList"
-                :disabled="saving"
-                item-text="name"
-                prepend-icon="$production"
-                v-model="parameterObj.isbigendian"
-                :rules="rules.isbigendian"
-              >
-              </v-autocomplete>
-              <v-autocomplete
-                clearable
-                label="isSwapped"
-                :items="boolList"
-                :disabled="saving"
-                item-text="name"
-                prepend-icon="$production"
-                v-model="parameterObj.isswapped"
-                :rules="rules.isswapped"
-              >
-              </v-autocomplete>
             </v-form>
             </v-card-text>
             <v-card-actions>
@@ -179,38 +150,24 @@ import {
 } from 'vuex';
 
 export default {
-  name: 'PlcDatatypes',
+  name: 'PlcCategory',
   data() {
     return {
       headers: [
         { text: 'PLC', value: 'plc' },
         { text: 'Protocol', value: 'protocol' },
-        { text: 'Data type', value: 'name' },
-        { text: 'Data type number', value: 'id' },
-        { text: 'Size', value: 'size' },
-        { text: 'isBigendian', value: 'isbigendian' },
-        { text: 'isSwapped', value: 'isswapped' },
+        { text: 'Category', value: 'name' },
+        { text: 'Category ID', value: 'id' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       rules: {
         name: [
-          (v) => !!v || 'Data type is required',
+          (v) => !!v || 'Category is required',
         ],
         id: [
           (v) => !!v || 'Data type number is required',
           (v) => v % 1 === 0 || 'Data type number is Integer',
           (v) => v > 0 || 'Data type number is greater than zero',
-        ],
-        size: [
-          (v) => !!v || 'Sizee is required',
-          (v) => v % 1 === 0 || 'Size is Integer',
-          (v) => v > 0 || 'Size is greater than zero',
-        ],
-        isbigendian: [
-          (v) => !!v || 'isBigendian is required',
-        ],
-        isswapped: [
-          (v) => !!v || 'isSwapped is required',
         ],
       },
       valid: true,
@@ -220,56 +177,49 @@ export default {
       parameterObj: {
         name: null,
         id: null,
-        size: null,
-        isbigendian: null,
-        isswapped: null,
       },
-      boolList: ['1', '0'],
-      datatypeObjDefault: null,
+      categoryObjDefault: null,
       isUpdate: false,
     };
   },
   async created() {
-    await this.getDataTypes();
+    await this.getCategory();
   },
   computed: {
-    ...mapState('parameterConfiguration', ['dataTypeList']),
+    ...mapState('parameterConfiguration', ['categoryDataList']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('parameterConfiguration', ['getDataTypes', 'addDataType', 'deleteDatatype', 'updateDataType']),
+    ...mapActions('parameterConfiguration', ['getCategory', 'addCategory', 'deleteCategory', 'updateCategory']),
     editItem(item) {
-      this.datatypeObjDefault = item;
+      this.categoryObjDefault = item;
       this.dialog = true;
       this.isUpdate = true;
       Object.keys(this.parameterObj).forEach((k) => {
-        this.parameterObj[k] = item[k].toString();
+        this.parameterObj[k] = item[k];
       });
     },
     deleteItem(item) {
       this.confirmDialog = true;
-      this.datatypeObjDefault = item;
+      this.categoryObjDefault = item;
     },
     handleClose() {
       this.parameterObj = {
         name: null,
         id: null,
-        size: null,
-        isbigendian: null,
-        isswapped: null,
       };
       this.dialog = false;
     },
     async handleDeleteItem() {
       this.saving = true;
-      const deleteResult = await this.deleteDatatype(this.datatypeObjDefault.id);
+      const deleteResult = await this.deleteCategory(this.categoryObjDefault.id);
       this.saving = false;
       if (deleteResult) {
-        this.getDataTypes();
+        this.getCategory();
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'delete datatype success',
+          message: 'delete category success',
         });
       } else {
         this.setAlert({
@@ -281,10 +231,10 @@ export default {
       this.confirmDialog = false;
     },
     async RefreshUI() {
-      await this.getDataTypes();
+      await this.getCategory();
     },
     async saveDataType() {
-      const { parameterObj, datatypeObjDefault } = this;
+      const { parameterObj, categoryObjDefault } = this;
       const { name, id } = parameterObj;
       if (this.$refs.form.validate()) {
         const payload = {
@@ -292,54 +242,54 @@ export default {
           assetid: 4,
         };
         if (!this.isUpdate) {
-          if (this.dataTypeList.some((datatype) => name === datatype.name)) {
+          if (this.categoryDataList.some((category) => name === category.name)) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'Datatype is present',
+              message: 'Category is present',
             });
             return;
           }
-          if (this.dataTypeList.some((datatype) => id === datatype.id.toString())) {
+          if (this.categoryDataList.some((category) => id === category.id.toString())) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'Datatype Number is present',
+              message: 'Category ID is present',
             });
             return;
           }
-          const createdResult = this.addDataType(payload);
+          const createdResult = this.addCategory(payload);
           if (createdResult) {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'CREATE_DATATYPE',
+              message: 'Create Category',
             });
           }
         } else {
           const fetchObj = {};
           Object.keys(parameterObj).forEach((k) => {
-            if (parameterObj[k] !== datatypeObjDefault[k].toString()) {
+            if (parameterObj[k] !== categoryObjDefault[k]) {
               fetchObj[k] = parameterObj[k];
             }
           });
           if (Object.keys(fetchObj).length) {
             if (fetchObj.name) {
-              if (this.dataTypeList.some((datatype) => name === datatype.name)) {
+              if (this.categoryDataList.some((category) => name === category.name)) {
                 this.setAlert({
                   show: true,
                   type: 'error',
-                  message: 'Datatype is present',
+                  message: 'Category is present',
                 });
                 return;
               }
             }
             if (fetchObj.id) {
-              if (this.dataTypeList.some((datatype) => id === datatype.id.toString())) {
+              if (this.categoryDataList.some((category) => id === category.id.toString())) {
                 this.setAlert({
                   show: true,
                   type: 'error',
-                  message: 'Datatype Number is present',
+                  message: 'Category ID is present',
                 });
                 return;
               }
@@ -349,29 +299,23 @@ export default {
             this.parameterObj = {
               name: null,
               id: null,
-              size: null,
-              isbigendian: null,
-              isswapped: null,
             };
             return;
           }
-          const query = `?query=id==${datatypeObjDefault.id}`;
-          const updateResult = await this.updateDataType({ query, payload: fetchObj });
+          const query = `?query=id==${categoryObjDefault.id}`;
+          const updateResult = await this.updateCategory({ query, payload: fetchObj });
           if (updateResult) {
             this.setAlert({
               show: true,
               type: 'success',
-              message: 'update_datatype',
+              message: 'update_category',
             });
           }
         }
-        this.getDataTypes();
+        this.getCategory();
         this.parameterObj = {
           name: null,
           id: null,
-          size: null,
-          isbigendian: null,
-          isswapped: null,
         };
         this.dialog = false;
       }
