@@ -1,3 +1,71 @@
 {
-  "planning": "Planning"
+  "error": {
+    "MATERIAL_NAME_PRESENT": "物料名称已存在",
+    "MATERIAL_NUMBER_PRESENT": "物料号已存在",
+    "ERROR_CREATING_MATERIAL": "创建物料错误",
+    "ERROR_UPDATING_MATERIAL": "更新物料错误",
+    "ERROR_UPDATING_BOM": "更新BOM错误",
+    "ERROR_DELETING_MATERIAL": "删除物料错误",
+    "ERROR_DELETING_BOM": "删除BOM错误",
+    "ERROR_CREATING_BOM": "创建BOM错误.",
+    "BOM_NAME_PRESENT": "BOM名称已存在",
+    "BOM_NUMBER_PRESENT": "BOM编号已存在"
+  },
+  "success": {
+    "CREATED_MATERIAL": "物料已创建.",
+    "CREATED_BOM": "BOM已创建.",
+    "UPDATE_MATERIAL": "物料已更新.",
+    "UPDATE_BOM": "BOM已更新.",
+    "MATERIAL_DELETED": "物料已删除.",
+    "BOM_DELETED": "BOM已删除."
+  },
+  "planning": {
+    "setup": {
+      "counter": "第{current}步骤，共{total}步",
+      "importMaster": {
+        "title": "导入零件矩阵",
+        "title1": "上传零件矩阵到ShopWorx",
+        "title2": "计划",
+        "title3": "在车间的生产.",
+        "import": "导入零件矩阵",
+        "downloading": "正在生产模板···",
+        "downloadError": "无法下载零件矩阵模板.",
+        "retryDownload": "重新下载.",
+        "download": "您可以下载零件矩阵模板",
+        "downloadLink": "这里.",
+        "fetchMaster": "正在从ShopWorx服务器获取零件矩阵…",
+        "fetchError": "无法从ShopWorx服务器获取零件矩阵.",
+        "retryFetch": "请再试一次.",
+        "importFile": "导入文件",
+        "recordsExist": "1记录已经存在|{count}记录已经存在！",
+        "starting": "启动中…",
+        "parsing": "正在分析…",
+        "mapping": "正在映射…",
+        "importing": "正在导入…",
+        "recordsImported": "1记录已被导入|{count}记录已被导入！",
+        "recordsNotCreated": "不能访问ShopWorx服务器！",
+        "missingHeaders": "请在第一行填入标题！",
+        "missingData": "至少有一个数据行！",
+        "fileUnparsable": "无法分析文件！",
+        "fileNotFound": "没有找到文件{file}！",
+        "review": "检查",
+        "updateColumns": "更新列",
+        "reimport": "重新导入",
+        "reviewTitle": "检查{title}",
+        "save": "保存更改",
+        "cancel": "取消",
+        "missingMapping": "缺少必要的映射",
+        "requiredData": "缺少必要的数据:",
+        "duplicateData": "复制数据",
+        "invalidDataType": "无效的数据类型"
+      },
+      "complete": {
+        "title": "完成设置",
+        "title1": "很好！ 一切准备就绪,欢迎来到",
+        "title2": "正在计划",
+        "title3": "应用程序。您可以在应用程序中更改其他设置。",
+        "next": "开始吧"
+      }
+    }
+  }
 }

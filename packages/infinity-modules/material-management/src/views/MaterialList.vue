@@ -8,19 +8,6 @@
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
-          <v-btn
-          small
-          color="primary"
-          class="text-none"
-          @click="setaddMaterialDialog(true)"
-          >
-            <v-icon small left>mdi-plus</v-icon>
-            Add material
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-            <v-icon small left>mdi-refresh</v-icon>
-            Refresh
-          </v-btn>
           <span v-if="lineList.length && !!lineValue" class="ml-2">
             line:
             <v-btn
@@ -46,20 +33,43 @@
             </v-btn>
           </span>
           <v-spacer></v-spacer>
+          <v-btn
+          small
+          color="primary"
+          class="text-none"
+          @click="setaddMaterialDialog(true)"
+          >
+            <v-icon small left>mdi-plus</v-icon>
+            Add material
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <v-btn small color="error"
+            outlined
+            class="text-none ml-2"
+            @click="confirmListDialog = true"
+            v-if="materialList.length && materialSelected.length">
+            <v-icon small left>mdi-delete</v-icon>
+            Delete
+          </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>
         </v-toolbar>
         <v-data-table
+        show-select
         v-model="materialSelected"
         :headers="headers"
         :items="materialList"
         item-key="id"
         >
         <template v-slot:item.category="props" v-if="categoryList.length">
-        {{categoryList.filter((category) => props.item.category === category.name)[0]
-        && categoryList.filter((category) => props.item.category === category.name)[0].name}}
+        {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
+        && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
+        [0].name}}
         </template>
         <template v-slot:top>
         <v-dialog
@@ -69,27 +79,29 @@
           max-width="500px"
           transition="dialog-transition"
         >
+        <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+        >
           <v-card>
             <v-card-title primary-title>
               <span>
-                Update Material
+                Edit Material
               </span>
               <v-spacer></v-spacer>
-              <v-btn icon small @click="editDialog = false">
+              <v-btn icon small @click="(editDialog = false);editDialogReset();">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-card-title>
               <v-card-text>
-              <v-form
-                ref="form"
-                v-model="valid"
-                lazy-validation
-              >
                 <v-text-field
                     :rules="rules.name"
-                    label="Material"
+                    label="Material Name"
                     prepend-icon="mdi-tray-plus"
                     v-model="materialObj.name"
+                    required
+                    :counter="10"
                 ></v-text-field>
                 <v-text-field
                     :rules="rules.materialnumber"
@@ -97,16 +109,18 @@
                     label="Material Number"
                     prepend-icon="mdi-tray-plus"
                     v-model="materialObj.materialnumber"
+                    required
+                    :counter="10"
                 ></v-text-field>
                 <v-autocomplete
                   clearable
                   label="Category"
                   :items="categoryList"
                   item-text="name"
-                  item-value="name"
+                  item-value="id"
                   prepend-icon="$production"
-                  v-model="materialObj.category"
-                  :rules="rules.materilcategory"
+                  v-model="materialObj.materialcategory"
+                  :rules="rules.materialcategory"
                 >
                   <template v-slot:item="{ item }">
                     <v-list-item-content>
@@ -133,7 +147,6 @@
                     prepend-icon="mdi-tray-plus"
                     v-model="materialObj.manufacturer"
                 ></v-text-field>
-              </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -142,11 +155,13 @@
                   class="text-none"
                   :loading="saving"
                   @click="handleUpdateMaterial"
+                  :disabled="!valid"
                 >
                   Save
                 </v-btn>
               </v-card-actions>
           </v-card>
+          </v-form>
         </v-dialog>
         <v-dialog
           persistent
@@ -205,11 +220,46 @@
       </v-data-table>
       </v-col>
     </v-row>
+    <v-dialog
+      persistent
+      scrollable
+      v-model="confirmListDialog"
+      max-width="500px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-title primary-title>
+          <span>
+            Please confirm
+          </span>
+          <v-spacer></v-spacer>
+          <v-btn icon small @click="confirmListDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          Are you sure to delete the items?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            @click="handleDeleteItemList"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <add-material v-if="addMaterialDialog"/>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import AddMaterial from '../components/AddMaterial.vue';
 
 export default {
   name: 'MaterialList',
@@ -220,23 +270,25 @@ export default {
         {
           text: 'Material',
           value: 'name',
+          width: 120,
         },
         {
           text: 'Material Number',
           value: 'materialnumber',
+          width: 180,
         },
-        { text: 'Category', value: 'category' },
-        { text: 'Lifetime(days)', value: 'lifetime' },
-        { text: 'Material TypeID', value: 'materialtype' },
-        { text: 'Manufacturer', value: 'manufacturer' },
-        { text: 'Last Edited By', value: 'editedby' },
-        { text: 'Last Edited On', value: 'modifiedtimestamp' },
+        { text: 'Category', value: 'category', width: 120 },
+        { text: 'Lifetime(days)', value: 'lifetime', width: 140 },
+        { text: 'Material TypeID', value: 'materialtype', width: 180 },
+        { text: 'Manufacturer', value: 'manufacturer', width: 140 },
+        { text: 'Last Edited By', value: 'editedby', width: 140 },
+        { text: 'Last Edited On', value: 'modifiedtimestamp', width: 140 },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       materialObj: {
         name: null,
-        materialnumber: null,
-        materilcategory: null,
+        materialnumber: '',
+        materialcategory: null,
         lifetime: null,
         materialtype: null,
         manufacturer: null,
@@ -244,8 +296,11 @@ export default {
       materialObjDefault: null,
       editDialog: false,
       confirmDialog: false,
+      confirmListDialog: false,
       valid: true,
       saving: false,
+      name: '',
+      materialnumber: '',
       rules: {
         line: [
           (v) => !!v || 'Line is required',
@@ -254,24 +309,27 @@ export default {
           (v) => !!v || 'Subline is required',
         ],
         name: [
-          (v) => !!v || 'Material is required',
+          (v) => !!v || 'Material Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         materialnumber: [
           (v) => !!v || 'Material Number is required',
           (v) => v >= 0 || 'Material Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Number must be less than 10 digit',
         ],
-        materilcategory: [
+        materialcategory: [
           (v) => !!v || 'Category is required',
         ],
-        lifetime: [
-          (v) => !!v || 'lifetime is required',
-        ],
-        materialtype: [
-          (v) => !!v || 'Materialtype Typeid is required',
-        ],
-        manufacturer: [
-          (v) => !!v || 'Manufacturer is required',
-        ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
@@ -280,7 +338,7 @@ export default {
     this.getDefaultList();
   },
   computed: {
-    ...mapState('materialManagement', ['materialList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+    ...mapState('materialManagement', ['materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addMaterialDialog', 'categoryList']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -288,11 +346,15 @@ export default {
       },
     },
   },
+  components: {
+    AddMaterial,
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('materialManagement', ['setaddMaterialDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getDefaultList', 'updateMaterial', 'deleteMaterial']),
     async handleUpdateMaterial() {
+      this.$refs.form.validate();
       if (this.$refs.form.validate()) {
         const { materialObj, materialObjDefault } = this;
         const { name, materialnumber } = materialObj;
@@ -340,6 +402,7 @@ export default {
             type: 'success',
             message: 'UPDATE_MATERIAL',
           });
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -356,6 +419,7 @@ export default {
       Object.keys(this.materialObj).forEach((k) => {
         this.materialObj[k] = item[k];
       });
+      this.$refs.form.resetValidation();
     },
     deleteItem(item) {
       this.confirmDialog = true;
@@ -381,6 +445,29 @@ export default {
       }
       this.confirmDialog = false;
     },
+    async handleDeleteItemList() {
+      this.saving = true;
+      const results = await Promise.all(this.materialSelected.map(
+        (material) => this.deleteMaterial(material.id),
+      ));
+      if (results.every((bool) => bool === true)) {
+        this.getMaterialListRecords('');
+        this.materialSelected = [];
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'MATERIAL_DELETED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_MATERIAL',
+        });
+      }
+      this.saving = false;
+      this.confirmListDialog = false;
+    },
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },
@@ -394,6 +481,10 @@ export default {
         type: 'success',
         message: 'DATA_SAVED',
       });
+    },
+    editDialogReset() {
+      this.$refs.form.reset();
+      this.$refs.form.resetValidation();
     },
   },
 };

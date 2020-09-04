@@ -32,8 +32,6 @@
     </portal>
     <material-filter></material-filter>
     <bom-filter></bom-filter>
-    <add-material/>
-    <add-bom/>
     <planning-loading v-if="loading" />
     <template v-else>
       <v-fade-transition mode="out-in">
@@ -48,8 +46,6 @@
 import { mapActions, mapMutations, mapState } from 'vuex';
 import MaterialList from './MaterialList.vue';
 import BomList from './BOMList.vue';
-import AddMaterial from '../components/AddMaterial.vue';
-import AddBom from '../components/AddBom.vue';
 import MaterialFilter from '../components/MaterialFilter.vue';
 import BomFilter from '../components/BomFilter.vue';
 
@@ -58,8 +54,6 @@ export default {
   components: {
     MaterialList,
     BomList,
-    AddMaterial,
-    AddBom,
     MaterialFilter,
     BomFilter,
   },

@@ -31,8 +31,9 @@
             name="name"
             label="Select Line"
             item-text="name"
-            item-value="id"
+            return-object
             clearable
+            @change="getfilteredBomNames"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -61,7 +62,7 @@
           </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
-            :items="bomList"
+            :items="bomNamebylines"
             outlined
             dense
             hide-details
@@ -77,7 +78,7 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="bomList"
             outlined
@@ -94,7 +95,7 @@
               <v-list-item-title v-text="item.bomnumber"></v-list-item-title>
             </v-list-item-content>
           </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
         </v-card-text>
       </perfect-scrollbar>
       <v-card-actions>
@@ -132,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
+    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList', 'bomNamebylines']),
     showFilter: {
       get() {
         return this.filter;
@@ -147,7 +148,6 @@ export default {
       },
       set(val) {
         this.setLineValue(val);
-        this.setLineValue('');
         // console.log(val);
         // const query = `?query=lineid==${val}`;
         // this.getSublineList(query);
@@ -156,7 +156,7 @@ export default {
   },
   methods: {
     ...mapMutations('bomManagement', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue']),
-    ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList']),
+    ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList', 'getBomNamesbyline']),
     btnApply() {
       let query = '?query=';
       if (this.bomname) {
@@ -165,9 +165,10 @@ export default {
       if (this.bomnumber) {
         query += `bomnumber=="${this.bomnumber}"&`;
       }
-      query += `lineid=="${this.lineValue || null}"`;
+      query += `lineid==${this.line.id || null}`;
       // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getBomListRecords(query);
+      this.toggleFilter();
     },
     btnReset() {
       this.getBomListRecords('');
@@ -179,6 +180,9 @@ export default {
       this.manufacturer = '';
       this.line = '';
       this.subline = '';
+    },
+    async getfilteredBomNames(item) {
+      await this.getBomNamesbyline(`?query=lineid==${item.id}`);
     },
   },
 };

@@ -15,6 +15,7 @@ export default ({
     sublineValue: '',
     bomDetails: '',
     parameterList: '',
+    bomNamebylines: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -29,9 +30,23 @@ export default ({
     setSublineValue: set('sublineValue'),
     setBomDetailsList: set('bomDetailsList'),
     setParameterList: set('parameterList'),
+    setBomNamebyline: set('bomNamebylines'),
   },
   actions: {
+    getBomNamesbyline: async ({ dispatch, commit }, query) => {
+      const bomNamebylines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'bomlist',
+          query,
+        },
+        { root: true },
+      );
+      commit('setBomNamebyline', bomNamebylines);
+      return true;
+    },
     getBomListRecords: async ({ dispatch, commit }, query) => {
+      // const { lineList } = state;
       const bomlist = await dispatch(
         'element/getRecords',
         {
@@ -40,9 +55,36 @@ export default ({
         },
         { root: true },
       );
+      // if (lineList.length > 0) {
+      //   bomlist = bomlist.map((bom) => ({
+      //     ...bom,
+      //     line: lineList.filter((line) => line.id === bom.lineid)[0]
+      //     && lineList.filter((line) => line.id === bom.lineid)[0].name,
+      //   }));
+      // }
       commit('setBomList', bomlist);
     },
     getBomDetailsListRecords: async ({ dispatch, commit }, query) => {
+      const lineList = await dispatch(
+        'element/getRecords',
+        { elementName: 'line' },
+        { root: true },
+      );
+      const subLineList = await dispatch(
+        'element/getRecords',
+        { elementName: 'subline' },
+        { root: true },
+      );
+      const stationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'station' },
+        { root: true },
+      );
+      const sunStationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'substation' },
+        { root: true },
+      );
       const bomdetails = await dispatch(
         'element/getRecords',
         {
@@ -51,6 +93,23 @@ export default ({
         },
         { root: true },
       );
+      bomdetails.forEach(async (item) => {
+        if (lineList.length) {
+          item.line = lineList.filter((line) => Number(line.id) === item.lineid)[0].name;
+        }
+        if (subLineList.length) {
+          item.subline = subLineList
+            .filter((subline) => subline.id === item.sublineid)[0].name;
+        }
+        if (stationList.length) {
+          item.station = stationList
+            .filter((station) => station.id === item.stationid)[0].name;
+        }
+        if (sunStationList.length) {
+          item.substation = sunStationList
+            .filter((substation) => substation.id === item.substationid)[0].name;
+        }
+      });
       commit('setBomDetailsList', bomdetails);
       return bomdetails;
     },
@@ -78,7 +137,7 @@ export default ({
         commit('setSublineList', sublineList);
       }
     },
-    getParameterList: async ({ dispatch, commit }, query) => {
+    getParameterList: async ({ dispatch }, query) => {
       const parameterList = await dispatch(
         'element/getRecords',
         {
@@ -87,7 +146,6 @@ export default ({
         },
         { root: true },
       );
-      commit('setParameterList', parameterList.filter((parameter) => parameter.parametercategory === '3' || parameter.parametercategory === '4'));
       return parameterList;
     },
     createBom: async ({ dispatch }, payload) => {
@@ -158,9 +216,21 @@ export default ({
       );
       return putParameter;
     },
+    updateRecordById: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'bomdetails',
+          id: payload.id,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
     deleteBomDetail: async ({ dispatch }, id) => {
       const deleteBomdetail = await dispatch(
-        'element/deleteRecord',
+        'element/deleteRecordById',
         {
           elementName: 'bomdetails',
           id,

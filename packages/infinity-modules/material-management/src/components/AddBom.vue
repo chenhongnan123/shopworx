@@ -6,31 +6,30 @@
     max-width="500px"
     transition="dialog-transition"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
           Create Bom
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="handleBomDialog()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
         <v-card-text>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
         <v-autocomplete
             clearable
             label="Line"
             :items="lineList"
             :disabled="saving"
             item-text="name"
-            item-value="id"
+            return-object
             prepend-icon="$production"
-            v-model="bomObj.lineid"
+            v-model="selectedLine"
             :rules="rules.line"
             @change="handleChangeLine"
           >
@@ -65,6 +64,8 @@
               label="Bom"
               prepend-icon="mdi-tray-plus"
               v-model="bomObj.name"
+              required
+              :counter="10"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -73,8 +74,9 @@
               label="Bom Number"
               prepend-icon="mdi-tray-plus"
               v-model="bomObj.bomnumber"
+              required
+              :counter="10"
           ></v-text-field>
-        </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -83,11 +85,13 @@
             class="text-none"
             :loading="saving"
             @click="saveBom"
+            :disabled="!valid"
           >
             Save
           </v-btn>
         </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -102,9 +106,11 @@ import {
 export default {
   data() {
     return {
+      selectedLine: null,
       saving: false,
-      bomObj: {
-      },
+      name: '',
+      bomnumber: '',
+      bomObj: {},
       valid: true,
       rules: {
         line: [
@@ -114,11 +120,14 @@ export default {
           (v) => !!v || 'Subline is required',
         ],
         name: [
-          (v) => !!v || 'Bom is required',
+          (v) => !!v || 'Bom Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         bomnumber: [
           (v) => !!v || 'Bom Number is required',
           (v) => v >= 0 || 'Bom Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Number must be less than 10 digit',
         ],
       },
     };
@@ -146,11 +155,14 @@ export default {
       this.getSublineList(query);
     },
     async saveBom() {
+      this.$refs.form.validate();
       const { bomObj } = this;
       if (this.$refs.form.validate()) {
         const { name, bomnumber } = bomObj;
         if (this.bomList.length) {
-          if (this.bomList.some((bom) => name === bom.name)) {
+          if (this.bomList.some(
+            (bom) => name.toLowerCase().split(' ').join('') === bom.name.toLowerCase().split(' ').join(''),
+          )) {
             this.setAlert({
               show: true,
               type: 'error',
@@ -169,6 +181,8 @@ export default {
         }
         const payload = {
           ...bomObj,
+          lineid: this.selectedLine.id,
+          linename: this.selectedLine.name,
           assetid: 4,
         };
         this.saving = true;
@@ -188,8 +202,15 @@ export default {
             message: 'ERROR_CREATING_BOM',
           });
         }
+        this.bomObj = {};
         this.dialog = false;
+        this.$refs.form.reset();
       }
+    },
+    handleBomDialog() {
+      this.bomObj = {};
+      this.dialog = false;
+      this.$refs.form.reset();
     },
   },
 };
