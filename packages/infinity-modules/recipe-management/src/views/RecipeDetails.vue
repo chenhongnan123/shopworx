@@ -332,8 +332,6 @@ export default {
         recipeparameter: parameterList,
       };
       this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received - upload');
-        console.log(data);
       });
       await this.uploadToPLC(object);
     },
@@ -344,16 +342,32 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.off(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
-        console.log('event closed - download');
       });
       this.socket.on(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received - download');
         if (data) {
-          this.recipeListDetails.forEach((element) => {
+          this.recipeListDetails.forEach(async (element) => {
             if (data[element.tagname]) {
               this.$set(element, 'parametervalue', data[element.tagname]);
+              const request = {
+                parametervalue: data[element.tagname],
+              };
+              const objectForUpdate = {
+                payload: request,
+                query: `?query=tagname=="${element.tagname}"%26%26recipeid=="${this.$route.params.id.recipenumber}"`,
+              };
+              await this.updateRecipeDetails(objectForUpdate);
             }
           });
+          const recipe = {
+            editedby: this.userName,
+            editedtime: new Date().getTime(),
+            versionnumber: this.$route.params.id.versionnumber + 1,
+          };
+          const object2 = {
+            payload: recipe,
+            query: `?query=recipenumber=="${this.$route.params.id.recipenumber}"`,
+          };
+          this.updateRecipe(object2);
         }
       });
       await this.downloadFromPLC(object);
@@ -379,16 +393,17 @@ export default {
       };
       await this.updateRecipeDetails(object);
       const recipe = {
-        editedby: 'this.userName',
+        editedby: this.userName,
         editedtime: new Date().getTime(),
         versionnumber: this.$route.params.id.versionnumber + 1,
       };
       const object2 = {
         payload: recipe,
-        query: `?query=recipenumber=='${this.$route.params.id.recipenumber}'`,
+        query: `?query=recipenumber=="${this.$route.params.id.recipenumber}"`,
       };
       await this.updateRecipe(object2);
       this.dialog = false;
+      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id.recipenumber}"`);
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;
@@ -401,15 +416,14 @@ export default {
     },
     async fnDeleteOnYes() {
       await this.deleteRecipeDetails(`?query=tagname=="${this.itemForDelete.tagname}"%26%26recipeid=="${this.$route.params.id.recipenumber}"`);
-
       const recipe = {
-        editedby: 'this.userName',
+        editedby: this.userName,
         editedtime: new Date().getTime(),
         versionnumber: this.$route.params.id.versionnumber + 1,
       };
       const object = {
         payload: recipe,
-        query: `?query=recipenumber=='${this.$route.params.id.recipenumber}'`,
+        query: `?query=recipenumber=="${this.$route.params.id.recipenumber}"`,
       };
       await this.updateRecipe(object);
       this.dialogConfirm = false;

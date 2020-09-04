@@ -31,6 +31,36 @@ export default ({
     setStationNamebySubline: set('stationNamebySubline'),
   },
   actions: {
+    getMonitorValues: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'parameterupload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
+    uploadToPLC: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'recipeupload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
+    downloadFromPLC: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'recipedownload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
     getStationNamesbysubline: async ({ dispatch, commit }, query) => {
       const stationNamebySubline = await dispatch(
         'element/getRecords',
