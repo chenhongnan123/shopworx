@@ -1,6 +1,6 @@
 <template>
   <plan-widget
-    :groupedPlans="plans"
+    :groupedPlans="overduePlans"
     :error="error"
     :loading="loading"
     :title="'Plans running late'"

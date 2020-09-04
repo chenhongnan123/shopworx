@@ -13,6 +13,31 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
+    postBulkRecords: async ({ dispatch }, { payload, name }) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: name,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    deleteRecord: async ({ dispatch }, { id, name }) => {
+      const deleteBomdetail = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: name,
+          id,
+        },
+        { root: true },
+      );
+      return deleteBomdetail;
+    },
     getAssets: async ({ commit, dispatch }) => {
       const assets = await dispatch(
         'industry/getAssets',
@@ -51,7 +76,7 @@ export default ({
         payload,
         { root: true },
       );
-      if (records && records.length) {
+      if (records) {
         commit('setRecords', records);
       }
     },

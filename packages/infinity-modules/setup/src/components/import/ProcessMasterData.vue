@@ -64,7 +64,7 @@
       >
         <v-icon
           left
-          v-text="'$next'"
+          v-text="'$forward'"
         ></v-icon>
         Continue to next step
       </v-btn>

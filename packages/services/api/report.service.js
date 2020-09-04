@@ -6,7 +6,7 @@ class ReportService {
   }
 
   executeReport(reportName, payload) {
-    return this.request.post(`/server/executereport/${reportName}`, payload);
+    return this.request.post(`/server/executereport/${reportName}/?all=false`, payload);
   }
 
   getReportViews(reportCategoryId) {

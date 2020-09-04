@@ -1,7 +1,7 @@
 <template>
   <ag-grid-vue
     :sideBar="true"
-    v-model="rowData"
+    :rowData="rowData"
     multiSortKey="ctrl"
     :animateRows="true"
     :enableCharts="true"
@@ -29,7 +29,7 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
-import { mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'ReportGrid',
@@ -59,28 +59,46 @@ export default {
       floatingFilter: true,
     };
   },
-  beforeMount() {
-    this.columnDefs = [
-      { headerName: 'Make', field: 'make' },
-      { headerName: 'Model', field: 'model' },
-      { headerName: 'Price', field: 'price', filter: 'agNumberColumnFilter' },
-    ];
-    this.rowData = [
-      { make: 'Toyota', model: 'Celica', price: 35000 },
-      { make: 'Ford', model: 'Mondeo', price: 32000 },
-      { make: 'Porsche', model: 'Boxter', price: 72000 },
-    ];
-  },
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    this.restoreState();
   },
   computed: {
+    ...mapState('reports', ['report']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject']),
+  },
+  watch: {
+    report(val) {
+      if (val && val.cols) {
+        this.columnDefs = val.cols.map((col) => ({
+          headerName: col.description,
+          field: col.name,
+          colId: col.name,
+          filter: this.getColumnFilter(col),
+        }));
+      }
+      if (val && val.reportData) {
+        this.rowData = val.reportData;
+      }
+    },
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
+    getColumnFilter(col) {
+      const type = col && col.type.toLowerCase();
+      switch (type) {
+        case 'long':
+          return 'agNumberColumnFilter';
+        case 'double':
+          return 'agNumberColumnFilter';
+        case 'number':
+          return 'agNumberColumnFilter';
+        case 'integer':
+          return 'agNumberColumnFilter';
+        default:
+          return 'agTextColumnFilter';
+      }
+    },
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
@@ -102,15 +120,17 @@ export default {
     },
     restoreState() {
       if (!this.isBaseReport) {
-        this.setGridState(this.gridObject);
         const state = JSON.parse(this.gridObject);
-        this.gridColumnApi.setColumnState(state.colState);
-        this.gridColumnApi.setColumnGroupState(state.groupState);
-        this.gridApi.setSortModel(state.sortState);
-        this.gridApi.setFilterModel(state.filterState);
+        this.setState(state);
       } else {
         this.resetState();
       }
+    },
+    setState(state) {
+      this.gridColumnApi.setColumnState(state.colState);
+      this.gridColumnApi.setColumnGroupState(state.groupState);
+      this.gridApi.setSortModel(state.sortState);
+      this.gridApi.setFilterModel(state.filterState);
     },
     resetState() {
       this.gridColumnApi.resetColumnState();

@@ -25,8 +25,8 @@
 <script>
 import { mapState } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import ShiftSelection from './dashboard/ShiftSelection.vue';
-import DateSelection from './dashboard/DateSelection.vue';
+import ShiftSelection from './core/ShiftSelection.vue';
+import DateSelection from './core/DateSelection.vue';
 
 export default {
   name: 'ProductionToolbar',
@@ -45,7 +45,7 @@ export default {
       'selectedDate',
     ]),
     shift() {
-      return 'Shift 1';
+      return this.selectedShift;
     },
     date() {
       return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';

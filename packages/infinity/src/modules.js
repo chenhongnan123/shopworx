@@ -6,9 +6,11 @@ import MachineDashboard from '@shopworx/machine-dashboard';
 import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
+import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import ProductionLayout from '@shopworx/production-layout';
+import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
@@ -38,6 +40,13 @@ Vue.use(RoadmapManagement, {
   store,
   i18n,
 });
+
+Vue.use(MaintenanceSummary, {
+  router,
+  store,
+  i18n,
+});
+
 Vue.use(ProductionLayout, {
   router,
   store,
@@ -78,6 +87,13 @@ Vue.use(ProductionLog, {
   store,
   i18n,
 });
+
+Vue.use(DowntimeLog, {
+  router,
+  store,
+  i18n,
+});
+
 Vue.use(ReportViewer, {
   router,
   store,

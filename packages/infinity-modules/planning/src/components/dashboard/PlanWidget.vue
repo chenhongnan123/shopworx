@@ -35,17 +35,50 @@
       <template v-else>
         <toggle-star
           :starred="starredPlans"
-          :plans="selectedPlans"
+          :plans="selectedPlans.flat()"
           @on-update="$emit('refresh-widget')"
         />
-        <abort-plan
+        <!-- <abort-plan
           :plans="selectedPlans"
           @on-abort="$emit('refresh-widget')"
-        />
+        /> -->
         <delete-plan
-          :plans="selectedPlans"
+          v-if="addPlan"
+          :plans="selectedPlans.flat()"
           @on-delete="$emit('refresh-widget')"
         />
+        <add-plan
+          #default="{ on }"
+          edit
+          :planToEdit="selectedPlans[0]"
+          v-if="selectedPlans.length === 1"
+          @on-add="$emit('refresh-widget')"
+        >
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>
+              mdi-pencil-outline
+            </v-icon>
+          </v-btn>
+        </add-plan>
+        <add-plan
+          #default="{ on }"
+          duplicate
+          :planToEdit="selectedPlans[0]"
+          v-if="selectedPlans.length === 1"
+          @on-add="$emit('refresh-widget')"
+        >
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>
+              mdi-content-copy
+            </v-icon>
+          </v-btn>
+        </add-plan>
       </template>
     </v-toolbar>
     <perfect-scrollbar style="max-height: 400px;">
@@ -74,50 +107,47 @@
             class="pa-0"
           >
             <v-list class="py-0">
-              <template v-for="(plan, i) in plans">
+              <template v-for="(plan, planId, index) in groupedPlans">
                 <v-list-item
-                  :key="i"
-                  :style="`border-left: 6px solid var(--v-${planStatusClass(plan.status)}-base)`"
+                  :key="index"
+                  :style="`border-left: 6px solid var(--v-${planStatusClass(plan[0].status)}-base)`"
                 >
-                  <v-list-item-content>
-                    <v-row>
-                      <v-col cols="12" md="5">
-                        <v-list-item-title>
-                          <span v-text="plan.planid"></span>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          <div v-text="plan.machinename"></div>
-                          <div v-text="plan.partname"></div>
-                        </v-list-item-subtitle>
-                      </v-col>
-                      <v-col cols="12" md="7" class="my-auto">
-                        <v-list-item-subtitle>
-                          {{ getScheduledStart(plan) }}
-                        </v-list-item-subtitle>
-                        <v-progress-linear
-                          :height="20"
-                          class="mt-2"
-                          color="secondary"
-                          :value="plan.actualquantity || 0"
-                        >
-                          <span class="font-weight-medium">
-                            {{plan.actualquantity || 0}}/{{plan.plannedquantity}}
-                          </span>
-                        </v-progress-linear>
-                      </v-col>
-                    </v-row>
-                  </v-list-item-content>
-                  <v-list-item-action>
+                  <v-list-item-action class="mb-auto">
                     <v-checkbox
                       hide-details
                       v-model="plan.selected"
                       @change="onSelectionChanged(plan)"
                     ></v-checkbox>
                   </v-list-item-action>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <span v-text="planId"></span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <div v-text="plan[0].machinename"></div>
+                      <div v-text="getScheduledStart(plan[0])"></div>
+                    </v-list-item-subtitle>
+                    <template v-for="(p, n) in plan">
+                      <v-progress-linear
+                        :key="n"
+                        :height="25"
+                        class="mt-1"
+                        color="secondary"
+                        :value="p.actualquantity || 0"
+                      >
+                        <span class="font-weight-medium mr-auto ml-2">
+                          {{ p.partname }}
+                        </span>
+                        <span class="font-weight-medium ml-auto mr-2">
+                          {{p.actualquantity || 0}}/{{p.plannedquantity}}
+                        </span>
+                      </v-progress-linear>
+                    </template>
+                  </v-list-item-content>
                 </v-list-item>
                 <v-divider
-                  :key="`d-${i}`"
-                  v-if="i < plans.length - 1"
+                  :key="`d-${index}`"
+                  v-if="index < plans.length - 1"
                 ></v-divider>
               </template>
             </v-list>
@@ -133,7 +163,7 @@ import { mapGetters } from 'vuex';
 import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
-import AbortPlan from '../AbortPlan.vue';
+// import AbortPlan from '../AbortPlan.vue';
 import AddPlan from '../AddPlan.vue';
 
 export default {
@@ -141,7 +171,7 @@ export default {
   components: {
     ToggleStar,
     DeletePlan,
-    AbortPlan,
+    // AbortPlan,
     AddPlan,
   },
   props: {
@@ -188,16 +218,9 @@ export default {
           .keys(this.groupedPlans)
           .map((planId) => {
             const plans = this.groupedPlans[planId];
-            let { partname } = plans[0];
-            if (plans.length > 1) {
-              partname = plans
-                .map((plan) => plan.partname)
-                .join(', ');
-            }
             return {
               ...plans[0],
               planid: planId,
-              partname,
               selected: false,
             };
           });
@@ -217,6 +240,7 @@ export default {
       if (plan.selected) {
         this.selectedPlans.push(plan);
       } else {
+        // eslint-disable-next-line
         const index = this.selectedPlans.findIndex((p) => p._id === plan._id);
         this.selectedPlans.splice(index, 1);
       }
