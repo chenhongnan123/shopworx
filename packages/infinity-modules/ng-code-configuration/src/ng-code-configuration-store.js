@@ -153,7 +153,6 @@ export default ({
       return created;
     },
     deleteNgCode: async ({ dispatch, commit }, id) => {
-      debugger;
       const deleted = await dispatch(
         'element/deleteRecordById',
         {

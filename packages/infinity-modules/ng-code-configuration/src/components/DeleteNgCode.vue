@@ -54,7 +54,6 @@ export default {
   },
   created() {
     const ngcode = { ...this.ngCodeConfigRecord };
-    console.log(ngcode.id);
   },
   computed: {
     ...mapState('ngCodeConfiguration', ['ngCodeConfigRecord']),
@@ -63,7 +62,6 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('ngCodeConfiguration', ['deleteNgCode']),
     async btnDeleteNgCodeConfig(item) {
-      debugger;
       this.itemForDelete = item;
       const deleted = await this.deleteNgCode(this.itemForDelete._id);
       if (deleted) {

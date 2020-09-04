@@ -493,14 +493,12 @@ export default {
       await this.getSublinebyline(`?query=lineid==${item.id}`);
     },
     async getfilteredSubstation(item) {
-      debugger;
       await this.getSubstationbySubline(`?query=sublineid=="${item.id}"`);
     },
     async RefreshUI() {
       this.getNgCodeConfig('');
     },
     async saveNgConfig() {
-      debugger;
       const ngNumberFlag = this.ngCodeConfigRecord
         .filter((o) => o.ngcode === parseInt(this.ngConfigInput.ngcode, 10));
       if (!this.selectedLinenew) {
@@ -573,10 +571,8 @@ export default {
       }
     },
     async fnDeleteOnYes() {
-      console.log('write code for delete the record');
     },
     async fnSaveDuplicateRecipe() {
-      console.log('write code for create Duplicate the record');
     },
     async fnUpdateNgCode(item) {
       this.updateDialog = true;
@@ -591,7 +587,6 @@ export default {
       this.newNgCode.machinename = item.reworkroadmap;
     },
     async updateSaveNgConfig() {
-      debugger;
       if (!this.newNgCode.selectedLinenew) {
         this.setAlert({
           show: true,
