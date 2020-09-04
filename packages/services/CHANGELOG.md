@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Features
+
+* **service:** added plan end time api ([2e79ceb](https://bitbucket.org/entrib/shopworx/commits/2e79ceb770ade5d146a5bbe4dfa51858e2bb18b7))
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **admin-console:** Fixed user role update ([d716807](https://bitbucket.org/entrib/shopworx/commits/d716807b1a677f18ce8d00bcf6c6efb87e86c28a))
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
 # [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
 
 **Note:** Version bump only for package @shopworx/services

@@ -6,6 +6,7 @@
           small
           color="primary"
           class="text-none"
+          @click="addNewEntry"
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
         >
           <v-icon
@@ -14,7 +15,26 @@
             v-text="'mdi-plus'"
           ></v-icon>
           Add new
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
+        </v-btn>
+        <v-btn
+          small
+          outlined
+          color="success"
+          class="text-none"
+          @click="saveNewEntry"
+          :class="'ml-2'"
+        >
+          Save
+        </v-btn>
+        <v-btn
+          small
+          outlined
+          color="error"
+          class="text-none"
+          @click="deleteEntry"
+          :class="'ml-2'"
+        >
+          Delete
         </v-btn>
         <v-btn
           small
@@ -56,18 +76,20 @@
         <base-master
           :assetId="asset.id"
           :id="id"
+          ref="base"
         />
       </v-tab-item>
     </v-tabs>
     <base-master
       v-else
       :id="id"
+      ref="base"
     />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BaseMaster from '../components/BaseMaster.vue';
 
 export default {
@@ -77,8 +99,73 @@ export default {
   },
   data() {
     return {
+      base: '',
       tab: 0,
     };
+  },
+  mounted() {
+    this.base = this.$refs.base;
+  },
+  methods: {
+    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
+    ...mapMutations('helper', ['setAlert']),
+    addNewEntry() {
+      this.base.addRow();
+    },
+    async deleteEntry() {
+      if (this.base.gridApi.getSelectedRows()) {
+        const selectedRow = this.base.gridApi.getSelectedRows();
+        const name = this.id;
+        let deleted = '';
+        await Promise.all([
+          selectedRow.forEach((row) => {
+            const id = row._id;
+            deleted = this.deleteRecord({ id, name });
+          }),
+        ]);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DELETE_RECORD',
+          });
+          this.base.deleteSelectedRows();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETE_RECORD',
+          });
+        }
+      }
+    },
+    async saveNewEntry() {
+      const name = this.id;
+      const payload = [];
+      this.base.rowData.forEach((data) => {
+        if (!data.elementName) {
+          payload.push({
+            ...data,
+            assetid: 4,
+          });
+        }
+      });
+      const postData = await this.postBulkRecords({ payload, name });
+      if (postData) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'CREATED_RECORD',
+        });
+        this.base.fetchRecords();
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_CREATING_RECORD',
+        });
+      }
+    },
   },
   computed: {
     ...mapGetters('masters', ['showTabs', 'getAssets']),

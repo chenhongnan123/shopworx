@@ -136,9 +136,10 @@ export default ({
       return false;
     },
 
-    updatePassword: async ({ commit, dispatch }, payload) => {
+    updatePassword: async ({ commit, dispatch, state }, payload) => {
       try {
         const { data } = await UserService.updatePassword(payload);
+        const { me } = state;
         if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -149,7 +150,10 @@ export default ({
           });
           return false;
         }
-        const updatedMe = await dispatch('updateUser', { userState: 'ACTIVE' });
+        const updatedMe = await dispatch('updateUser', {
+          userId: me.user.id,
+          userState: 'ACTIVE',
+        });
         if (updatedMe) {
           return true;
         }
@@ -262,6 +266,13 @@ export default ({
       return '';
     },
 
+    role: ({ me }) => {
+      if (me && me.user) {
+        return me.role.roleDescription;
+      }
+      return '';
+    },
+
     sites: ({ me }) => {
       if (me && me.site && me.site.length) {
         return me.site.map((s) => ({
@@ -289,46 +300,56 @@ export default ({
         adminItems: [],
       };
       if (mySolutions && mySolutions.length) {
-        mySolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS') {
-            module.details.forEach((detail) => {
-              modules.items.push({
-                id: detail.id,
-                icon: detail.iconURL,
-                to: detail.webAppLink,
-                title: detail.webAppName,
+        mySolutions.forEach((solution) => solution.modules
+          .sort((a, b) => a.id - b.id)
+          .map((module) => {
+            if (module.moduleName.toUpperCase().trim() === 'APPS'
+            || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+              module.details.forEach((detail) => {
+                modules.items.push({
+                  id: detail.id,
+                  icon: detail.iconURL,
+                  to: detail.webAppLink,
+                  title: detail.webAppName,
+                });
               });
-            });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
-            modules.items.push({ header: module.moduleName });
-            module.details.forEach((detail) => {
-              modules.items.push({
-                id: detail.id,
-                icon: detail.iconUrl,
-                to: module.moduleName,
-                title: detail.reportsCategoryName,
+            } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+              modules.items.push({ header: module.moduleName });
+              module.details.forEach((detail) => {
+                modules.items.push({
+                  id: detail.id,
+                  icon: detail.iconUrl,
+                  to: module.moduleName,
+                  title: detail.reportsCategoryName,
+                });
               });
-            });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
-            modules.adminItems.push({
-              id: module.id,
-              to: module.moduleLink,
-              title: module.moduleName,
-              icon: `$${module.moduleName}`,
-            });
-          }
-          if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
-            modules.adminItems.push({
-              id: module.id,
-              to: module.moduleLink,
-              title: module.moduleName,
-              icon: `$${module.moduleName}`,
-            });
-          }
-          return modules;
-        }));
+            } else if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
+              modules.adminItems.push({
+                id: module.id,
+                to: module.moduleLink,
+                title: module.moduleName,
+                icon: `$${module.moduleName}`,
+              });
+            } else if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
+              modules.adminItems.push({
+                id: module.id,
+                to: module.moduleLink,
+                title: module.moduleName,
+                icon: `$${module.moduleName}`,
+              });
+            } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+              modules.items.push({ header: module.moduleName });
+              module.details.forEach((detail) => {
+                modules.items.push({
+                  id: detail.id,
+                  icon: detail.iconURL,
+                  to: detail.webAppLink,
+                  title: detail.webAppName,
+                });
+              });
+            }
+            return modules;
+          }));
       }
       return modules;
     },

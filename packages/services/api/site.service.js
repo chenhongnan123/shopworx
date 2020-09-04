@@ -17,6 +17,10 @@ class SiteService {
     return this.request.get(`/server/webappaccess/${roleId}/${appId}`);
   }
 
+  getBusinessTime(timestamp) {
+    return this.request.get(`/server/businesstime/?timestamp=${timestamp}`);
+  }
+
   getMasterSolutions() {
     return this.request.get('/server/solution/getallforsite');
   }

@@ -85,7 +85,7 @@
         >
           <v-icon
             left
-            :v-text="success ? '$next' : '$invite'"
+            :v-text="success ? '$forward' : '$invite'"
           ></v-icon>
             {{ success
               ? $t('setup.inviteUsers.continue')

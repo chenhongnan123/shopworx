@@ -103,7 +103,7 @@ export default ({
       return recordsCreated;
     },
 
-    upsertRecord: async ({ dispatch }, {
+    upsertRecordWithElement: async ({ dispatch }, {
       element,
       tags,
       record,
@@ -144,7 +144,7 @@ export default ({
       return upsert;
     },
 
-    upsertBulkRecords: async ({ dispatch }, {
+    upsertBulkRecordsWithElement: async ({ dispatch }, {
       element,
       tags,
       records,
@@ -185,6 +185,58 @@ export default ({
       return upsert;
     },
 
+    upsertRecord: async ({ dispatch }, { elementName, record, assetId = 0 }) => {
+      let upsert = false;
+      try {
+        const payload = {
+          ...record,
+          assetid: assetId,
+        };
+        const rec = await dispatch('getRecords', { elementName });
+        if (rec && rec.length) {
+          await Promise.all([rec.forEach((r) => {
+            dispatch('deleteRecordById', {
+              elementName,
+              id: r._id,
+            });
+          })]);
+        }
+        upsert = await dispatch('postRecord', {
+          elementName,
+          payload,
+        });
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
+    upsertBulkRecords: async ({ dispatch }, { elementName, records, assetId = 0 }) => {
+      let upsert = false;
+      try {
+        const payload = records.map((record) => ({
+          ...record,
+          assetid: assetId,
+        }));
+        const rec = await dispatch('getRecords', { elementName });
+        if (rec && rec.length) {
+          await Promise.all([rec.forEach((r) => {
+            dispatch('deleteRecordById', {
+              elementName,
+              id: r._id,
+            });
+          })]);
+        }
+        upsert = await dispatch('postBulkRecords', {
+          elementName,
+          payload,
+        });
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
     postBulkRecords: async (_, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postBulkRecords(elementName, payload);
@@ -203,10 +255,10 @@ export default ({
         if (data && data.errors) {
           return false;
         }
+        return data;
       } catch (e) {
         return false;
       }
-      return true;
     },
 
     getRecords: async (_, { elementName, query = '' }) => {
@@ -214,6 +266,18 @@ export default ({
         const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
           return data.results;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    getRecordsWithCount: async (_, { elementName, query = '' }) => {
+      try {
+        const { data } = await ElementService.getRecords(elementName, query);
+        if (data && data.results) {
+          return data;
         }
         return false;
       } catch (e) {

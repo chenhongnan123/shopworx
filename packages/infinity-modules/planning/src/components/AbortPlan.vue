@@ -37,7 +37,7 @@ export default {
         await Promise.all([
           this.plans.forEach((plan) => {
             let payload = {
-              status: 'aborted',
+              status: 'abort',
               actualend: now(),
             };
             if (plan.status === 'notStarted') {

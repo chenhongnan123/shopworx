@@ -152,6 +152,7 @@ export default {
     async onUpdateProfile() {
       this.loading = true;
       const payload = {
+        userId: this.me.user.id,
         emailId: this.email,
         phoneNumber: `91${this.phone}`,
         lastname: this.lastName,

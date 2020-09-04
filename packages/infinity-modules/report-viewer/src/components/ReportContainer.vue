@@ -1,8 +1,11 @@
 <template>
   <v-container fluid class="py-0">
+    <template v-if="loading">
+      <v-progress-linear :indeterminate="true"></v-progress-linear>
+    </template>
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
-        <report-chart />
+        <!-- <report-chart /> -->
         <report-grid ref="reportGrid" />
       </v-col>
     </v-row>
@@ -11,22 +14,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import ReportChart from './ReportChart.vue';
+// import ReportChart from './ReportChart.vue';
 import ReportGrid from './ReportGrid.vue';
 
 export default {
   name: 'ReportContainer',
   components: {
-    ReportChart,
+    // ReportChart,
     ReportGrid,
   },
-  data() {
-    return {
-      loading: false,
-    };
-  },
   computed: {
-    ...mapState('reports', ['reportMapping', 'dateRange']),
+    ...mapState('reports', ['reportMapping', 'dateRange', 'loading']),
   },
   watch: {
     reportMapping(val) {
@@ -41,10 +39,8 @@ export default {
   methods: {
     ...mapActions('reports', ['executeReport']),
     async runReport() {
-      this.loading = true;
       await this.executeReport();
       this.$refs.reportGrid.restoreState();
-      this.loading = false;
     },
   },
 };

@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+**Note:** Version bump only for package @shopworx/planning
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+
+### Bug Fixes
+
+* **planning:** fixed delete plans ([e240852](https://bitbucket.org/entrib/shopworx/commits/e2408529f660bf2d71ca9d04984542a3b24a7ee2))
+* **planning:** fixed edit plan for family molds ([a9226c5](https://bitbucket.org/entrib/shopworx/commits/a9226c59f770eb6dc4ff247e7ccb78853b0b47ce))
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/planning
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Bug Fixes
+
+* **planning:** display overdue plans ([8be6cb0](https://bitbucket.org/entrib/shopworx/commits/8be6cb005468ef138e8fa226ab77458ea9eca3cb))
+* **planning:** updated complete and abort status values ([0dc70a9](https://bitbucket.org/entrib/shopworx/commits/0dc70a90a4c8ae80d96c0511b2ebe7c855a745da))
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **planning:** Fixed unable to add plan ([ac16381](https://bitbucket.org/entrib/shopworx/commits/ac16381d7f082de8053959c6331637c8e6ef6e29))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+* **planning:** fixed edit and duplicate plan ([fbab973](https://bitbucket.org/entrib/shopworx/commits/fbab973dd8519caf3d8a5935b51007cab516fdb2))
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+
+### Bug Fixes
+
+* **planning:** toggle star plans ([d2e098f](https://bitbucket.org/entrib/shopworx/commits/d2e098fd6ef8b4f377a1fb4fb6d62210b1ac36bc))
+
+
+### Features
+
+* **planning:** added duplicate plan feature on dashboard ([1839075](https://bitbucket.org/entrib/shopworx/commits/183907530672958f1ffce43275e0a5ded5bc3b37))
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+**Note:** Version bump only for package @shopworx/planning
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+**Note:** Version bump only for package @shopworx/planning
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+**Note:** Version bump only for package @shopworx/planning
+
+
+
+
+
 # [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
 
 **Note:** Version bump only for package @shopworx/planning

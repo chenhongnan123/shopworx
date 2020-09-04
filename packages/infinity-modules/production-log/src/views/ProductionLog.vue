@@ -21,8 +21,6 @@
       >
         <v-icon v-text="'$left'"></v-icon>
       </v-btn>
-      <span class="ml-2">{{ id }}</span>
-      <selected-machine-status />
     </portal>
     <production-log-loading v-if="loading" />
     <template v-else>
@@ -36,14 +34,12 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
-import SelectedMachineStatus from '../components/SelectedMachineStatus.vue';
 import ProductionLogSetup from './ProductionLogSetup.vue';
 import ProductionLogLoading from './ProductionLogLoading.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
-    SelectedMachineStatus,
     ProductionLogSetup,
     ProductionLogLoading,
   },
