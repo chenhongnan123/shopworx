@@ -19,13 +19,13 @@
     <v-card-text>
       <v-row>
       <v-col cols="12" md="12">
-        <v-text-field label="Name" v-model="newSubstation.name"
+        <v-text-field label="Name *" v-model="newSubstation.name"
          :rules ="nameRules"
          :counter="15"
           required
           hint="For example, SST_01"
          @keyup="validateName"></v-text-field>
-         <v-text-field label="Number" type="number"
+         <v-text-field label="Number *" type="number"
          v-model="newSubstation.numbers" :rules ="numberRules"
          :counter="10"
           required
@@ -37,13 +37,13 @@
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
-         @click="validateInitsst"
+         @change="validateInitsst"
          :disabled="btnInitdisable"
         ></v-switch>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
-         @click="validateFinalsst"
+         @change="validateFinalsst"
          :disabled="btnFindisable"
         ></v-switch>
       </v-col>

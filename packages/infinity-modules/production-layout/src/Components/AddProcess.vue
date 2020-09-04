@@ -67,7 +67,8 @@ export default {
   data() {
     return {
       newProcess: {},
-      assetId: 4,
+      assetId: null,
+      getAssetId: '',
       dialog: false,
       selectedSubstationLine: null,
       valid: true,
@@ -82,15 +83,15 @@ export default {
   props: {
   },
   created() {
-    // this.getSubStations('');
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['selectedLine', 'substationsbylines', 'processes', 'addProcessDialog', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'substationsbylines', 'processes', 'addProcessDialog', 'subStations', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout',
-      ['createSubline', 'getAllSublines', 'createProcess', 'getSubStationbyline']),
+      ['createSubline', 'getAllSublines', 'createProcess', 'getSubStationbyline', 'getAssets']),
     async getfilteredSubStations() {
       this.getSubStationbyline(`?query=lineid==${this.selectedLine.id}`);
     },
@@ -123,6 +124,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newProcess = {
             ...this.newProcess,
             // lineid: this.lineid,
@@ -141,7 +144,7 @@ export default {
               message: 'PROCESS_CREATED',
             });
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.newProcess = {};
             this.$refs.form.reset();
           } else {
