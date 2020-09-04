@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed downtime split ([41af3fb](https://bitbucket.org/entrib/shopworx/commits/41af3fb466abf2e82ad3bb6acfcdbf50753a03fe))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+
+
+### Features
+
+* **account:** added role information for logged in user ([3a86f74](https://bitbucket.org/entrib/shopworx/commits/3a86f7415b4d4a498113d1f031c283b79fee6709))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 **Note:** Version bump only for package @shopworx/infinity

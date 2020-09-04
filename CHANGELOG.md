@@ -3,6 +3,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **downtime-log:** do not fetch in progress downtimes ([d61f054](https://bitbucket.org/entrib/shopworx/commits/d61f054675269616ee2f300caf9acd3324f2e42d))
+* **downtime-log:** fixed downtime split ([41af3fb](https://bitbucket.org/entrib/shopworx/commits/41af3fb466abf2e82ad3bb6acfcdbf50753a03fe))
+* **report-viewer:** fixed previous report preview ([2f5e994](https://bitbucket.org/entrib/shopworx/commits/2f5e994cf786cfd3347096f9f1bc0e45179e1fed))
+
+
+### Features
+
+* **report-viewer:** added refresh report data button ([f2f046c](https://bitbucket.org/entrib/shopworx/commits/f2f046c754d7ca595447759e0cd0c420561e8f47))
+* **report-viewer:** added report loading indicator ([e21b30c](https://bitbucket.org/entrib/shopworx/commits/e21b30c1eac7e4c6e2eca55e0394afec96250f12))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+
+### Bug Fixes
+
+* **planning:** fixed delete plans ([e240852](https://bitbucket.org/entrib/shopworx/commits/e2408529f660bf2d71ca9d04984542a3b24a7ee2))
+* **planning:** fixed edit plan for family molds ([a9226c5](https://bitbucket.org/entrib/shopworx/commits/a9226c59f770eb6dc4ff247e7ccb78853b0b47ce))
+
+
+
+
+
+
+
+**Note:** Version bump only for package shopworx
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Bug Fixes
+
+* **planning:** display overdue plans ([8be6cb0](https://bitbucket.org/entrib/shopworx/commits/8be6cb005468ef138e8fa226ab77458ea9eca3cb))
+* **planning:** updated complete and abort status values ([0dc70a9](https://bitbucket.org/entrib/shopworx/commits/0dc70a90a4c8ae80d96c0511b2ebe7c855a745da))
+* **production-log:** fixed shift filter and shift date time ([3bacc71](https://bitbucket.org/entrib/shopworx/commits/3bacc719a6570de2c94fac94e5c68b6a71caa976))
+* **report-viewer:** added ag grid filters for number and text ([7812936](https://bitbucket.org/entrib/shopworx/commits/7812936adae06504d42cae2075019efd10332b68))
+* **report-viewer:** fixed date range display on view change ([b5b45d7](https://bitbucket.org/entrib/shopworx/commits/b5b45d78065244bcf8204d0a5829102dcc8743ff))
+* **report-viewer:** Reset report view on view change ([1cc9d12](https://bitbucket.org/entrib/shopworx/commits/1cc9d12f57a1011795897686b35bfc5a947e64c2))
+
+
+### Features
+
+* **service:** added plan end time api ([2e79ceb](https://bitbucket.org/entrib/shopworx/commits/2e79ceb770ade5d146a5bbe4dfa51858e2bb18b7))
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed rejecion display on dashboard ([fb1b19d](https://bitbucket.org/entrib/shopworx/commits/fb1b19da39e6d52254f6e9c0ac5c0d337e036aaf))
+* **machine-dashboard:** updated rejection details ([5cbf747](https://bitbucket.org/entrib/shopworx/commits/5cbf7472160429dda29514fd445d5d64ba434566))
+* **planning:** Fixed unable to add plan ([ac16381](https://bitbucket.org/entrib/shopworx/commits/ac16381d7f082de8053959c6331637c8e6ef6e29))
+* **production-log:** added loop index for production plans ([0e5b09f](https://bitbucket.org/entrib/shopworx/commits/0e5b09fa3922e7c283b17d000b30e2bce9728153))
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+* **production-log:** Removed hidden tags from rejection onboarding ([a041b32](https://bitbucket.org/entrib/shopworx/commits/a041b32a6dabf10fecb52068a498a775cca91901))
+* **production-log:** updated shift tag for rejection ([9475ea1](https://bitbucket.org/entrib/shopworx/commits/9475ea1ddb26ce70fdd2c2ee71638b1625e60c28))
+* **production-log:** Updated timestamp for rejection entry ([11d22da](https://bitbucket.org/entrib/shopworx/commits/11d22daed2696b3399e2c41337961962df00c1a3))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+* **downtime-log:** added feature to split downtimes ([3039358](https://bitbucket.org/entrib/shopworx/commits/3039358e38429a8aeb812081a4bc4804faf501a2))
+* **downtime-log:** user can update downtime reason ([eacb2f3](https://bitbucket.org/entrib/shopworx/commits/eacb2f3957d2ada460d9a6a9e0c4d444870dc1f9))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **admin-console:** Fixed user role update ([d716807](https://bitbucket.org/entrib/shopworx/commits/d716807b1a677f18ce8d00bcf6c6efb87e86c28a))
+* **dashboard:** fixed APQ widget ([8edf28c](https://bitbucket.org/entrib/shopworx/commits/8edf28ceb6c6b0642f153880d1d271471c55b140))
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+* **planning:** fixed edit and duplicate plan ([fbab973](https://bitbucket.org/entrib/shopworx/commits/fbab973dd8519caf3d8a5935b51007cab516fdb2))
+* **report-viewer:** fixed report viewer grid display ([41e7656](https://bitbucket.org/entrib/shopworx/commits/41e765670041abd46d17e2ad43df11acf108d1c2))
+
+
+### Features
+
+* **account:** added role information for logged in user ([3a86f74](https://bitbucket.org/entrib/shopworx/commits/3a86f7415b4d4a498113d1f031c283b79fee6709))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 

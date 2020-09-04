@@ -43,8 +43,12 @@ export default {
       this.setDefaultView();
     },
   },
+  beforeDestroy() {
+    this.setReportViews([]);
+    this.setReportView(null);
+  },
   methods: {
-    ...mapMutations('reports', ['setReportView']),
+    ...mapMutations('reports', ['setReportViews', 'setReportView']),
     setDefaultView() {
       if (this.reportViews && this.reportViews.length) {
         this.setReportView(this.reportViews[0]);

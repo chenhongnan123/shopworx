@@ -255,10 +255,10 @@ export default ({
         if (data && data.errors) {
           return false;
         }
+        return data;
       } catch (e) {
         return false;
       }
-      return true;
     },
 
     getRecords: async (_, { elementName, query = '' }) => {
@@ -266,6 +266,18 @@ export default ({
         const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
           return data.results;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    getRecordsWithCount: async (_, { elementName, query = '' }) => {
+      try {
+        const { data } = await ElementService.getRecords(elementName, query);
+        if (data && data.results) {
+          return data;
         }
         return false;
       } catch (e) {

@@ -2,6 +2,7 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
+    :close-on-click="false"
     :nudge-right="40"
     transition="scale-transition"
     offset-y
@@ -24,6 +25,7 @@
     </template>
     <v-date-picker
       range
+      :max="today"
       v-model="dates"
       no-title scrollable
     >
@@ -32,6 +34,7 @@
         text
         color="primary"
         class="text-none"
+        :disabled="dates.length != 2"
         @click="saveDateRange"
       >
         OK
@@ -41,17 +44,22 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ReportDatePicker',
   data() {
     return {
+      today: new Date().toISOString().substr(0, 10),
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
       menu: false,
     };
   },
+  created() {
+    this.dates = this.dateRange;
+  },
   computed: {
+    ...mapState('reports', ['dateRange']),
     dateRangeText() {
       return this.dates.join(' to ');
     },

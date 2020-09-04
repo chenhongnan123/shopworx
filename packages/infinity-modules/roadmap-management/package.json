@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/roadmap-management",
-  "version": "4.1.0-rc.1-patch.3",
+  "version": "4.1.0-rc.2-patch.3",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.1.0-rc.1-patch.3",
+    "@shopworx/services": "^4.1.0-rc.2-patch.3",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

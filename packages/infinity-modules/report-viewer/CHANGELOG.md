@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed previous report preview ([2f5e994](https://bitbucket.org/entrib/shopworx/commits/2f5e994cf786cfd3347096f9f1bc0e45179e1fed))
+
+
+### Features
+
+* **report-viewer:** added refresh report data button ([f2f046c](https://bitbucket.org/entrib/shopworx/commits/f2f046c754d7ca595447759e0cd0c420561e8f47))
+* **report-viewer:** added report loading indicator ([e21b30c](https://bitbucket.org/entrib/shopworx/commits/e21b30c1eac7e4c6e2eca55e0394afec96250f12))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+
+### Bug Fixes
+
+* **report-viewer:** added ag grid filters for number and text ([7812936](https://bitbucket.org/entrib/shopworx/commits/7812936adae06504d42cae2075019efd10332b68))
+* **report-viewer:** fixed date range display on view change ([b5b45d7](https://bitbucket.org/entrib/shopworx/commits/b5b45d78065244bcf8204d0a5829102dcc8743ff))
+* **report-viewer:** Reset report view on view change ([1cc9d12](https://bitbucket.org/entrib/shopworx/commits/1cc9d12f57a1011795897686b35bfc5a947e64c2))
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed report viewer grid display ([41e7656](https://bitbucket.org/entrib/shopworx/commits/41e765670041abd46d17e2ad43df11acf108d1c2))
+
+
+
+
+
 # [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
 
 **Note:** Version bump only for package @shopworx/report-viewer
