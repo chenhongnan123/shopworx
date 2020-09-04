@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-main>
     <auth-header />
     <v-container fill-height>
       <v-row
@@ -22,7 +22,7 @@
             <v-btn
               block
               rounded
-              id="start"
+              id="next-btn"
               color="primary"
               class="text-none"
               @click="createAccount"
@@ -43,7 +43,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>

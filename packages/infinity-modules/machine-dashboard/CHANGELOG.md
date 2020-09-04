@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed rejecion display on dashboard ([fb1b19d](https://bitbucket.org/entrib/shopworx/commits/fb1b19da39e6d52254f6e9c0ac5c0d337e036aaf))
+* **machine-dashboard:** updated rejection details ([5cbf747](https://bitbucket.org/entrib/shopworx/commits/5cbf7472160429dda29514fd445d5d64ba434566))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **dashboard:** fixed APQ widget ([8edf28c](https://bitbucket.org/entrib/shopworx/commits/8edf28ceb6c6b0642f153880d1d271471c55b140))
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **locale:** fixed zhHans translations ([a67d008](https://bitbucket.org/entrib/shopworx/commits/a67d0083cc5aa476714baf284b85a888bb81f77a))
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+**Note:** Version bump only for package @shopworx/machine-dashboard
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+
+### Features
+
+* **machine-dashboard:** added machine dashboard module ([454cb70](https://bitbucket.org/entrib/shopworx/commits/454cb703433fb76a2b7766a27a719743a2b156b5))
+
+
+
+
+
 # [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
 
 **Note:** Version bump only for package @shopworx/machine-dashboard

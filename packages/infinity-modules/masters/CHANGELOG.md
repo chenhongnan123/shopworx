@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+
+### Bug Fixes
+
+* **master:** fixed data grid does not update ([5389bfb](https://bitbucket.org/entrib/shopworx/commits/5389bfb9bd284f989f99a303659f86077ef17977))
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **master-data:** updated ag-grid API ([beaa216](https://bitbucket.org/entrib/shopworx/commits/beaa216d599f4f35c4254866fb4585282657cf00))
+
+
+### Features
+
+* **master data:** add button to add new entry, and save button to save the entries to database ([39f1158](https://bitbucket.org/entrib/shopworx/commits/39f1158b7f522665b32af353a238d9944039e23a))
+* **master data:** deleting of record from master data ([ac6c4dd](https://bitbucket.org/entrib/shopworx/commits/ac6c4ddda68c8bc7b6adf6de75793614c6f45fac))
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
 # [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
 
 **Note:** Version bump only for package @shopworx/masters

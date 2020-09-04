@@ -3,6 +3,123 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed downtime split ([41af3fb](https://bitbucket.org/entrib/shopworx/commits/41af3fb466abf2e82ad3bb6acfcdbf50753a03fe))
+
+
+
+
+
+# [4.1.0-rc.2-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.1...v4.1.0-rc.2-patch.2) (2020-08-28)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.1.0-rc.2-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2...v4.1.0-rc.2-patch.1) (2020-08-26)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.1.0-rc.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.4...v4.1.0-rc.2) (2020-08-18)
+
+
+### Bug Fixes
+
+* **production-log:** fixed rejection form validation reset ([a9cf94f](https://bitbucket.org/entrib/shopworx/commits/a9cf94fff567832d3fcb8ee02164ede51d271d0c))
+
+
+### Features
+
+* **donwtime-log:** added pagination ([c48a3c3](https://bitbucket.org/entrib/shopworx/commits/c48a3c3094c9bb4bce6e4b0db3d18bd5bd1083b4))
+
+
+
+
+
+# [4.1.0-rc.1-patch.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.3...v4.1.0-rc.1-patch.4) (2020-07-30)
+
+
+### Bug Fixes
+
+* **planning:** added plan validations ([0aabe3c](https://bitbucket.org/entrib/shopworx/commits/0aabe3c9cf940321b65695f73388dce2bc5e28b0))
+
+
+### Features
+
+* **account:** added role information for logged in user ([3a86f74](https://bitbucket.org/entrib/shopworx/commits/3a86f7415b4d4a498113d1f031c283b79fee6709))
+
+
+
+
+
+# [4.1.0-rc.1-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.2...v4.1.0-rc.1-patch.3) (2020-07-14)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.1.0-rc.1-patch.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1-patch.1...v4.1.0-rc.1-patch.2) (2020-07-13)
+
+
+### Bug Fixes
+
+* **core:** updated sidebar module display ([575d27a](https://bitbucket.org/entrib/shopworx/commits/575d27ac3d4f87d93a31ca782a4f14615f2bd8bf))
+* **locale:** fixed zhHans translations ([a67d008](https://bitbucket.org/entrib/shopworx/commits/a67d0083cc5aa476714baf284b85a888bb81f77a))
+
+
+### Features
+
+* **master data:** add button to add new entry, and save button to save the entries to database ([39f1158](https://bitbucket.org/entrib/shopworx/commits/39f1158b7f522665b32af353a238d9944039e23a))
+
+
+
+
+
+# [4.1.0-rc.1-patch.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.1...v4.1.0-rc.1-patch.1) (2020-07-09)
+
+
+### Bug Fixes
+
+* **core:** updated HTML element IDs ([3695c41](https://bitbucket.org/entrib/shopworx/commits/3695c41b88ca84794700dafc57673b705df3af6e))
+* **update-account:** fixed user already exists error ([fbf3d5a](https://bitbucket.org/entrib/shopworx/commits/fbf3d5a6fe6dca7522930cfdbbee64bc9892e3a6))
+
+
+### Features
+
+* **admin:** added calendar ([7163a81](https://bitbucket.org/entrib/shopworx/commits/7163a81ef5996edc5238e0255ee448d80d523395))
+
+
+
+
+
+# [4.1.0-rc.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.17...v4.1.0-rc.1) (2020-07-07)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
 # [4.1.0-beta.17](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-beta.16...v4.1.0-beta.17) (2020-06-10)
 
 

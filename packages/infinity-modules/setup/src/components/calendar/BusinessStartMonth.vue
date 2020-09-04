@@ -93,7 +93,7 @@ export default {
       });
       if (records && records.length) {
         const [tag] = this.masterDetails.tags;
-        this.monthStart = records[0][tag.tagName];
+        this.monthStart = records[0][tag.tagName] - 1;
       }
       this.fetching = false;
     },
@@ -103,7 +103,7 @@ export default {
         element: this.masterDetails.element,
         tags: this.masterDetails.tags,
         record: {
-          [tag.tagName]: this.monthStart,
+          [tag.tagName]: this.monthStart + 1,
         },
       };
       this.$emit('save', payload);

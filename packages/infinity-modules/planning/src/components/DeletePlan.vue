@@ -35,7 +35,7 @@ export default {
       )) {
         await Promise.all([
           this.plans.forEach((plan) => {
-            this.deletePlan(plan.planid);
+            this.deletePlan(plan._id);
           }),
         ]);
         this.$emit('on-delete');

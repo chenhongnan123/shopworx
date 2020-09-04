@@ -7,11 +7,12 @@
       @set-drawer="setDrawer"
     />
     <infinity-header @toggle-drawer="toggleDrawer" />
-    <v-content>
+    <infinity-insights />
+    <v-main>
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>
-    </v-content>
+    </v-main>
     <infinity-bottom v-if="$vuetify.breakpoint.smAndDown" />
   </v-app>
 </template>
@@ -26,6 +27,7 @@ import {
 import InfinityHeader from '@/components/core/InfinityHeader.vue';
 import InfinityDrawer from '@/components/core/InfinityDrawer.vue';
 import InfinityBottom from '@/components/core/InfinityBottom.vue';
+import InfinityInsights from '@/components/insights/Insights.vue';
 
 export default {
   name: 'InfinityHome',
@@ -33,6 +35,7 @@ export default {
     InfinityHeader,
     InfinityDrawer,
     InfinityBottom,
+    InfinityInsights,
   },
   async created() {
     this.setInfinityLoading(true);

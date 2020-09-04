@@ -4,11 +4,16 @@
     :color="type"
     bottom
     right
+    id="app_snackbar"
     :timeout="timeout"
   >
-    <span v-text="message"></span>
+    <span
+      id="app_msg"
+      v-text="message"
+    ></span>
     <v-btn
       text
+      id="app_msg_close"
       v-if="!reLogin"
       class="text-none"
       @click="snackbar = false"
@@ -17,6 +22,7 @@
     <v-btn
       text
       v-else
+      id="app_relogin"
       class="text-none"
       @click="logout"
       v-text="$t('snackbar.redirectToLogin', { time: logoutTimer })"
