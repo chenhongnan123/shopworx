@@ -14,6 +14,7 @@ export default ({
     filterSubLine: {},
     filterStation: {},
     filterBList: [],
+    stationNamebySubline: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -27,8 +28,51 @@ export default ({
     setFilterSubLine: set('filterSubLine'),
     setFilterStation: set('filterStation'),
     setFilterBackupList: set('filterBList'),
+    setStationNamebySubline: set('stationNamebySubline'),
   },
   actions: {
+    getMonitorValues: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'parameterupload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
+    uploadToPLC: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'recipeupload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
+    downloadFromPLC: async ({ dispatch }, payload) => {
+      const orders = await dispatch(
+        'element/postSocket', {
+          functionName: 'recipedownload',
+          payload,
+        },
+        { root: true },
+      );
+      return orders;
+    },
+    getStationNamesbysubline: async ({ dispatch, commit }, query) => {
+      const stationNamebySubline = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationNamebySubline', stationNamebySubline);
+      return true;
+    },
     getRecipeListRecords: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
