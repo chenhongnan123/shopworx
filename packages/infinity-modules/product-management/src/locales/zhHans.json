@@ -1,0 +1,26 @@
+{
+  "appTitle": "Product Type Management",
+  "displayTags": {
+    "lineName": "Line",
+    "productTypeName": "Product Type Name",
+    "productTypeNumber": "Product Type Number",
+    "customer": "Customer",
+    "roadmap": "Roadmap",
+    "bom": "BOM",
+    "version": "Version",
+    "lastEditedBy": "Last Editted By",
+    "lastEditedOn": "Last Editted On",
+    "createProductType": "Create Product Type",
+    "productTypeCategory": "Product Type Category",
+    "placeHolders": {
+      "selectLineName": "Select Line Name",
+      "selectRoadmap": "Select Roadmap"
+    },
+    "buttons": {
+      "addProductType": "Add Product Type",
+      "refresh": "Refresh",
+      "filters": "Filters",
+      "save": "Save"
+    }
+  }
+}

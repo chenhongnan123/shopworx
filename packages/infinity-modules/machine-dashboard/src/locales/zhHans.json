@@ -1,0 +1,10 @@
+{
+  "shopfloorDashboard": {
+    "title": "车间仪表板",
+    "up": "跑步",
+    "down": "停",
+    "customize": "定制",
+    "done": "完成了",
+    "addWidgets": "添加小部件"
+  }
+}

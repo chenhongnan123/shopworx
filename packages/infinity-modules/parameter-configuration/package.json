@@ -1,10 +1,14 @@
 {
 	"name": "@shopworx/parameter-configuration",
-	"version": "4.1.0-beta.16",
+	"version": "4.1.0-rc.2-patch.3",
 	"private": true,
 	"dependencies": {
+<<<<<<< HEAD
 		"@shopworx/services": "^4.1.0-beta.16",
 		"socket.io-client": "^2.3.0",
+=======
+		"@shopworx/services": "^4.1.0-rc.2-patch.3",
+>>>>>>> dev
 		"vuex": "^3.4.0"
 	},
 	"devDependencies": {
