@@ -174,8 +174,7 @@
             >
               <span>
                 {{ props.item.description.length > 10
-                  ? props.item.description.substr(0,19) + '...' :
-                  (props.item.description === 'null' ? '-' : props.item.description)}}
+                  ? props.item.description.substr(0,9) + '...' :  props.item.description}}
               </span>
               <v-icon
                 small
@@ -196,7 +195,6 @@
           </template>
           <template v-slot:item.parametercategory="props">
             <v-select
-              class="cagetory"
               :disabled="(substationValue ? false : true) || saving"
               :items="categoryList"
               v-model="props.item.parametercategory"
@@ -223,11 +221,11 @@
               depressed
             ></v-select>
           </template>
-          <template v-slot:item.booleanbit="props">
+          <template v-slot:item.bitnumber="props">
             <v-edit-dialog
-              :return-value.sync="props.item.booleanbit"
-              @save="saveTableParameter(props.item, 'booleanbit')"
-            > {{ props.item.booleanbit }}
+              :return-value.sync="props.item.bitnumber"
+              @save="saveTableParameter(props.item, 'bitnumber')"
+            > {{ props.item.bitnumber }}
               <v-icon
                 small
                 color="primary"
@@ -240,7 +238,7 @@
                 <v-text-field
                   :disabled="!substationValue
                   || props.item.datatype !== 12"
-                  v-model="props.item.booleanbit"
+                  v-model="props.item.bitnumber"
                   label="Edit"
                   single-line
                   type='number'
@@ -382,19 +380,19 @@ export default {
     return {
       parameterSelected: [],
       headers: [
-        { text: 'Number', value: 'number', width: 100 },
+        { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
         { text: 'substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
-        { text: 'Category', value: 'parametercategory', width: 300 },
+        { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
         { text: 'DB Address', value: 'dbaddress', width: 130 },
         { text: 'Start Address', value: 'startaddress', width: 140 },
-        { text: 'Boolean Bit', value: 'booleanbit', width: 120 },
+        { text: 'Boolean Bit', value: 'bitnumber', width: 120 },
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
       ],
@@ -407,16 +405,15 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getParameterListRecords(this.getQuery());
+    this.getParameterListRecords('?pagenumber=1&pagesize=10');
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
-      console.log('connected to socketwebhook');
     });
   },
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-    ]),
+      'subStationElementDeatils']),
     isAddButtonOK() {
       if (this.lineValue
         && this.sublineValue
@@ -463,7 +460,8 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
-    ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC']),
+    ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
+      'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -535,7 +533,7 @@ export default {
             .some((parameter) => parameter.datatype === 12
             && Number(item.dbaddress) === parameter.dbaddress
             && Number(item.startaddress) === parameter.startaddress
-            && item.booleanbit === parameter.booleanbit);
+            && item.bitnumber === parameter.bitnumber);
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -551,7 +549,7 @@ export default {
             .some((parameter) => parameter.datatype === 12
             && Number(item.dbaddress) === parameter.dbaddress
             && Number(item.startaddress) === parameter.startaddress
-            && item.booleanbit === parameter.booleanbit);
+            && item.bitnumber === parameter.bitnumber);
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -562,12 +560,12 @@ export default {
             return;
           }
         }
-        if (type === 'booleanbit') {
+        if (type === 'bitnumber') {
           const isRepeat = parameterListSave
             .some((parameter) => parameter.datatype === 12
             && Number(item.dbaddress) === parameter.dbaddress
             && Number(item.startaddress) === parameter.startaddress
-            && item.booleanbit === parameter.booleanbit);
+            && item.bitnumber === parameter.bitnumber);
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -581,11 +579,13 @@ export default {
       }
       let selectedDatatypeItem = {};
       const parameterItem = parameterListSave.filter((parameter) => item._id === parameter._id)[0];
-      let query = `?query=name=="${parameterItem.name}"&${type}=="${value}"`;
+      // let query = `?query=id=="${parameterItem.id}"`;
       const payload = {};
       if (type === 'datatype') {
         [selectedDatatypeItem] = this.datatypeList.filter((datatype) => value === datatype.id);
-        query = `?query=name=="${parameterItem.name}"&${type}=="${value}"&isbigendian==${selectedDatatypeItem.isbigendian === 1}&isswapped==${selectedDatatypeItem.isswapped === 1}`;
+        // query = `?query=id=="${parameterItem.id}"&isbigendian==
+        // ${selectedDatatypeItem.isbigendian === 1}
+        // &isswapped==${selectedDatatypeItem.isswapped === 1}`;
         payload.isbigendian = selectedDatatypeItem.isbigendian === 1;
         payload.isswapped = selectedDatatypeItem.isswapped === 1;
         if (selectedDatatypeItem.name !== 'Boolean' && selectedDatatypeItem.name !== 'String') {
@@ -594,7 +594,7 @@ export default {
       }
       payload[type] = value;
       this.saving = true;
-      const updateResult = await this.updateParameter({ query, payload });
+      const updateResult = await this.updateParameter({ id: parameterItem._id, payload });
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -609,6 +609,22 @@ export default {
       const results = await Promise.all(this.parameterSelected.map(
         (parameter) => this.deleteParameter(parameter.id),
       ));
+      const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
+      const deletedElement = await this.getSubStationIdElement(selectedSubStaionlist[0]);
+      const listT = this.subStationElementDeatils;
+      // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
+      const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+      let payloadData;
+      for (let i = 0; i < FilteredTags.length; i += 1) {
+        const pay = [{
+          tagId: FilteredTags[i].id,
+          elementId: FilteredTags[i].elementId,
+          status: 'INACTIVE',
+        }];
+        payloadData = pay;
+      }
+      const payload = payloadData;
+      const changeTagStatus = await this.updateTagStatus(payload);
       if (results.every((bool) => bool === true)) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
@@ -646,10 +662,9 @@ export default {
         substationid: this.substationValue,
       };
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received');
         if (data) {
           this.parameterList.forEach((element) => {
-            if (data[element.name]) {
+            if (data[element.name] || data[element.name] === 0) {
               this.$set(element, 'monitorvalue', data[element.name]);
             }
           });
@@ -695,7 +710,7 @@ export default {
         'description',
         'protocol',
         'datatype',
-        'booleanbit',
+        'bitnumber',
         'dbaddress',
         'startaddress',
         'stringsize',
@@ -744,7 +759,7 @@ export default {
         'description',
         'protocol',
         'datatype',
-        'booleanbit',
+        'bitnumber',
         'dbaddress',
         'startaddress',
         'stringsize',
@@ -801,7 +816,6 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      console.log(data, 'data');
       data.forEach((item) => {
         item.lineid = this.lineValue;
         item.sublineid = this.sublineValue;
@@ -824,6 +838,7 @@ export default {
           }
         }
         item.protocol = item.protocol.toUpperCase();
+        item.name = item.name.toLowerCase().trim();
         item.assetid = 4;
         delete item.monitorvalue;
         delete item.status;
@@ -833,14 +848,13 @@ export default {
       if (new Set(nameList).size === nameList.length) {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
-        console.log(isBooleanList, 'isBooleanItem');
         if (isBooleanList.length) {
           for (let i = 0; i < isBooleanList.length; i += 1) {
             for (let k = i + 1; k < isBooleanList.length; k += 1) {
               if (
                 Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
                 && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
-                && Number(isBooleanList[i].booleanbit) === Number(isBooleanList[k].booleanbit)
+                && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
               ) {
                 this.setAlert({
                   show: true,
@@ -874,6 +888,85 @@ export default {
         const createResult = await this.createParameterList(data);
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
+          const tagList = [];
+          await this.getSubStationIdElement(this.substationValue);
+          // add by default mainid
+          tagList.push({
+            assetId: 4,
+            tagName: 'mainid',
+            tagDescription: 'mainid',
+            emgTagType: 'String',
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          });
+          data.forEach((item) => {
+            if (Number(item.parametercategory) === 15
+            || Number(item.parametercategory) === 17
+            || Number(item.parametercategory) === 18) {
+              let dataTypeName = '';
+              if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
+                dataTypeName = 'String';
+              } else {
+                dataTypeName = 'Double';
+              }
+              const tagname = item.name;
+              tagList.push({
+                assetId: 4,
+                tagName: tagname.toLowerCase().trim(),
+                tagDescription: item.name,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: this.subStationElementDeatils.element.id,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
+              });
+            }
+          });
+          await this.createTagElement(tagList);
           this.setAlert({
             show: true,
             type: 'success',
@@ -928,8 +1021,5 @@ export default {
 }
 .planScheduleView .v-text-field.v-text-field--solo.v-input--dense > .v-input__control{
   min-height: 30px;
-}
-.cagetory .v-input__slot{
-  width: 300px;
 }
 </style>

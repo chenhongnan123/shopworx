@@ -24,6 +24,7 @@ export default ({
     selectedParameterDirection: '',
     selectedParameterCategory: '',
     selectedParameterDatatype: '',
+    subStationElementDeatils: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -48,8 +49,39 @@ export default ({
     setSelectedParameterDirection: set('selectedParameterDirection'),
     setSelectedParameterCategory: set('selectedParameterCategory'),
     setSelectedParameterDatatype: set('selectedParameterDatatype'),
+    setSubStationIdDeatils: set('subStationElementDeatils'),
   },
   actions: {
+    createTagElement: async ({ commit, dispatch }, payload) => {
+      const element = await dispatch(
+        'element/createElementTags',
+        payload,
+        { root: true },
+      );
+      if (element) {
+        commit('setSubStationIdDeatils', element);
+      }
+    },
+    getSubStationIdElement: async ({ commit, dispatch }, elementName) => {
+      const element = await dispatch(
+        'element/getElement',
+        elementName,
+        { root: true },
+      );
+      if (element) {
+        commit('setSubStationIdDeatils', element);
+      }
+    },
+    updateTagStatus: async ({ dispatch }, request) => {
+      const putTagstatus = await dispatch(
+        'element/updateTagById',
+        {
+          payload: request,
+        },
+        { root: true },
+      );
+      return putTagstatus;
+    },
     getPageDataList: async ({ commit, dispatch }) => {
       const directionList = await dispatch(
         'element/getRecords',
@@ -268,13 +300,14 @@ export default ({
       commit('setParameterList', parameterList);
       return parameterList;
     },
-    updateParameter: async ({ dispatch }, payload) => {
+    updateParameter: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
       const putParameter = await dispatch(
-        'element/updateRecordByQuery',
+        'element/updateRecordById',
         {
           elementName: 'parameters',
-          queryParam: payload.query,
-          payload: payload.payload,
+          id,
+          payload,
         },
         { root: true },
       );
