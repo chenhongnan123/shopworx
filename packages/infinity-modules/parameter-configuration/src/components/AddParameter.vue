@@ -31,19 +31,11 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              :rules="rules.id"
-              label="Parameter ID"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.id"
-          ></v-text-field>
-          <v-text-field
-              :disabled="saving"
-              :rules="rules.description"
               label="Parameter Description"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.description"
           ></v-text-field>
-           <v-autocomplete
+           <!-- <v-autocomplete
             clearable
             label="Direction"
             :items="directionList"
@@ -60,7 +52,7 @@
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
           <v-autocomplete
             clearable
             label="Category"
@@ -97,6 +89,26 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
+          <v-text-field
+              v-if="parameterObj.datatype
+              && parameterObj.datatype.name === 'Boolean'"
+              :disabled="saving"
+              label="Boolean Bit"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.booleanbit"
+              :rules="rules.booleanbit"
+              type="number"
+          ></v-text-field>
+          <v-text-field
+              v-if="parameterObj.datatype
+              && (parameterObj.datatype.name === 'Boolean'
+              || parameterObj.datatype.name === 'String')"
+              :disabled="saving"
+              label="Size"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.size"
+              :rules="rules.size"
+          ></v-text-field>
           <v-text-field
               :disabled="saving"
               label="DB Address"
@@ -149,6 +161,7 @@
             </template>
           </v-autocomplete>
           <v-text-field
+              v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.multiplicationfactor"
               label="Multiplication Factor"
@@ -156,6 +169,7 @@
               v-model="parameterObj.multiplicationfactor"
           ></v-text-field>
           <v-text-field
+              v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.divisionfactor"
               label="Division Factor"
@@ -164,17 +178,17 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              :rules="rules.currentvalue"
-              label="Parameter Current Value"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.currentvalue"
-          ></v-text-field>
-          <v-text-field
-              :disabled="saving"
               :rules="rules.parameterunit"
               label="Parameter Unit"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.parameterunit"
+          ></v-text-field>
+          <v-text-field
+              :disabled="saving"
+              :rules="rules.paid"
+              label="PAID"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.paid"
           ></v-text-field>
         </v-form>
         </v-card-text>
@@ -184,7 +198,6 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            :disabled="Object.keys(parameterObj).some((k) => !parameterObj[k]) || saving"
             @click="saveParameter"
           >
             Save
@@ -208,19 +221,21 @@ export default {
       saving: false,
       parameterObj: {
         name: null,
-        id: null,
         description: null,
-        parameterdirection: null,
+        // parameterdirection: null,
         parametercategory: null,
         datatype: null,
+        booleanbit: null,
+        size: null,
         dbaddress: null,
         startaddress: null,
         protocol: null,
         isconversion: null,
-        multiplicationfactor: null,
-        divisionfactor: null,
-        currentvalue: null,
+        // multiplicationfactor: null,
+        // divisionfactor: null,
+        // currentvalue: null,
         parameterunit: null,
+        paid: null,
       },
       valid: true,
       isSaveValid: false,
@@ -228,15 +243,12 @@ export default {
         name: [
           (v) => !!v || 'Parameter Name is required',
         ],
-        id: [
-          (v) => !!v || 'Parameter ID is required',
-        ],
-        description: [
-          (v) => !!v || 'Parameter Description is required',
-        ],
-        parameterdirection: [
-          (v) => !!v || 'Direction is required',
-        ],
+        // description: [
+        //   (v) => !!v || 'Parameter Description is required',
+        // ],
+        // parameterdirection: [
+        //   (v) => !!v || 'Direction is required',
+        // ],
         parametercategory: [
           (v) => !!v || 'Category is required',
         ],
@@ -258,6 +270,10 @@ export default {
           (v) => v % 1 === 0 || 'Size is Integer',
           (v) => v > 0 || 'Size is greater than zero',
         ],
+        booleanbit: [
+          (v) => !!v || 'Boolean Bit is required',
+          (v) => v > 0 || 'Size is greater than zero',
+        ],
         isconversion: [
           (v) => !!v || 'Is Conversion is required',
         ],
@@ -269,11 +285,14 @@ export default {
           (v) => !!v || 'Division Factor is required',
           (v) => v % 1 === 0 || 'Division Factor is Integer',
         ],
-        currentvalue: [
-          (v) => !!v || 'Parameter Current Value',
-        ],
+        // currentvalue: [
+        //   (v) => !!v || 'Parameter Current Value',
+        // ],
         parameterunit: [
-          (v) => !!v || 'Parameter Unit',
+          (v) => !!v || 'Parameter Unit is required',
+        ],
+        paid: [
+          (v) => !!v || 'PAID is required',
         ],
       },
       boolList: [
@@ -287,7 +306,7 @@ export default {
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -295,6 +314,19 @@ export default {
       set(val) {
         this.setAddParameterDialog(val);
       },
+    },
+  },
+  watch: {
+    parameterObj: {
+      handler(parameterObj) {
+        if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean' && parameterObj.datatype.name !== 'String') {
+          parameterObj.size = parameterObj.datatype.size;
+          // delete this.parameterObj.booleanbit;
+        } else if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
+          // this.parameterObj.booleanbit = null;
+        }
+      },
+      deep: true,
     },
   },
   methods: {
@@ -321,7 +353,12 @@ export default {
     async saveParameter() {
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
-        const { name, dbaddress, startaddress } = parameterObj;
+        const {
+          name,
+          dbaddress,
+          startaddress,
+          booleanbit,
+        } = parameterObj;
         if (this.parameterList.some((parameter) => name === parameter.name)) {
           this.setAlert({
             show: true,
@@ -330,28 +367,34 @@ export default {
           });
           return;
         }
-        if (this.parameterList
-          .some((parameter) => dbaddress === parameter.dbaddress
-          && startaddress === parameter.startaddress)) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter startaddress is present',
-          });
-          return;
-        }
-        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean' && parameterObj.size > 8) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'parameter size is less than 9',
-          });
-          return;
+        if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
+          if (this.parameterList
+            .some((parameter) => Number(dbaddress) === parameter.dbaddress
+            && Number(startaddress) === parameter.startaddress
+            && Number(booleanbit) === Number(parameter.booleanbit))) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'Boolean Bit is present',
+            });
+            return;
+          }
+        } else if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean') {
+          if (this.parameterList
+            .some((parameter) => Number(dbaddress) === parameter.dbaddress
+            && Number(startaddress) === parameter.startaddress)) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'parameter startaddress is present',
+            });
+            return;
+          }
         }
         const payload = {
           ...parameterObj,
           assetid: 4,
-          parameterdirection: parameterObj.parameterdirection.id,
+          // parameterdirection: parameterObj.parameterdirection.id,
           parametercategory: parameterObj.parametercategory.id,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
@@ -364,8 +407,10 @@ export default {
           sublineid: this.subline,
           stationid: this.station,
           substationid: this.substation,
+          plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcipaddress,
+          booleanbit: parameterObj.booleanbit || '',
         };
-        if (payload.datatype === 'Boolean' || payload.datatype === 'String') {
+        if (parameterObj.datatype && parameterObj.datatype.name === 'String') {
           payload.size = parameterObj.size;
         }
         this.saving = true;
