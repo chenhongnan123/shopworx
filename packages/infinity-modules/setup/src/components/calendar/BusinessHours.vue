@@ -244,13 +244,11 @@ export default {
       ));
     },
     isSumInvalid() {
-      const sum = this.hours.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      return !!sum;
-    },
-    getDuration({ endtime, starttime }) {
-      const timeStart = new Date(`01/01/2007 ${starttime}`).getHours();
-      const timeEnd = new Date(`01/01/2007 ${endtime}`).getHours();
-      return timeEnd - timeStart;
+      const sum = this.hours.reduce((acc, cur) => acc + getDurationBetweenTime(
+        cur.endtime,
+        cur.starttime,
+      ), 0);
+      return sum !== 86400000;
     },
     addHour() {
       this.hours.push({
