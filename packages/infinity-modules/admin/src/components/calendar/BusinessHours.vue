@@ -268,7 +268,7 @@ export default {
       }
       return time;
     },
-    saveHourlyAvailableTime(records) {
+    async saveHourlyAvailableTime(records) {
       let hours = [];
       for (let i = 0; i < 24; i += 1) {
         const start = i === 0
@@ -319,16 +319,19 @@ export default {
           }, 0);
         return {
           sortindex: hour.sortindex,
-          displayHour: `${startString} - ${endString}`,
+          displayhour: `${startString} - ${endString}`,
           availabletimeinms: availabletime,
           breaktimeinms: breaktime,
           totaltimeinms: 3600000,
         };
       });
-      // TODO: create element & tags, and save records.
-      console.log(hours);
+      const payload = {
+        elementName: 'hourlyavailabletime',
+        records: hours,
+      };
+      await this.upsertBulkRecords(payload);
     },
-    saveShiftWiseAvailableTime(records) {
+    async saveShiftWiseAvailableTime(records) {
       let index = 0;
       let shifts = records.reduce((a, c) => {
         const prev = a.get(c.shift);
@@ -369,8 +372,11 @@ export default {
         breaktimeinms: s.breaktime,
         totaltimeinms: s.availabletime + s.breaktime,
       }));
-      // TODO: create element & tags, and save records.
-      console.log(shifts);
+      const payload = {
+        elementName: 'shiftwiseavailabletime',
+        records: shifts,
+      };
+      await this.upsertBulkRecords(payload);
     },
     async saveAvaliableTime(records) {
       const hourRecords = this.saveHourlyAvailableTime(records);
@@ -398,11 +404,11 @@ export default {
           message: 'INVALID_HOURS_SUM',
         });
       } else {
-        /* const payload = {
+        const payload = {
           elementName: 'businesshours',
           records,
         };
-        await this.upsertBulkRecords(payload); */
+        await this.upsertBulkRecords(payload);
         await this.saveAvaliableTime(records);
       }
       this.saving = false;

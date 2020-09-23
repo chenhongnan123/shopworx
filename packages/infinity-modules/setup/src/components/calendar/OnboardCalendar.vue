@@ -110,10 +110,14 @@ export default {
       }
       this.loading = false;
     },
-    async onHoursProvisioned(data) {
+    async onHoursProvisioned({ payload, hourlyPayload, shiftPayload }) {
       this.loading = true;
-      const created = await this.upsertBulkRecordsWithElement(data);
-      if (created) {
+      const created = await this.upsertBulkRecordsWithElement(payload);
+      const createdTime = await Promise.all([
+        this.upsertBulkRecordsWithElement(hourlyPayload),
+        this.upsertBulkRecordsWithElement(shiftPayload),
+      ]);
+      if (created && createdTime) {
         this.window = 3;
       }
       this.loading = false;
