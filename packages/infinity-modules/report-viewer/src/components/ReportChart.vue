@@ -1,10 +1,12 @@
 <template>
-  <highcharts
-    v-if="chartType && chartType.value"
-    :options="options"
-    style="height: 300px;"
-    ref="chart"
-  ></highcharts>
+  <div>
+    <highcharts
+      v-if="chartType && chartType.value"
+      :options="options"
+      style="height: 300px;"
+      ref="chart"
+    ></highcharts>
+  </div>
 </template>
 
 <script>
@@ -22,7 +24,7 @@ export default {
           text: null,
         },
         xAxis: {
-          categories: ['28/01', '29/01', '30/01', '31/01', '01/02', '02/02', '03/02'],
+          categories: [],
           title: {
             text: null,
           },
@@ -32,47 +34,56 @@ export default {
             text: null,
           },
         },
-        series: [{
-          name: 'Availability',
-          data: [94, 93.4, 96, 92, 97, 88, 91],
-          color: '#354493',
-          showInLegend: false,
-        }],
+        series: [],
       },
     };
   },
   created() {
     this.updateChartType();
-    this.updateSeriesColor(this.isDark);
   },
   computed: {
-    ...mapState('helper', ['isDark']),
-    ...mapState('reports', ['chartType']),
+    ...mapState('reports', ['chartType', 'report']),
   },
   watch: {
-    isDark(val) {
-      this.updateSeriesColor(val);
-    },
     chartType(val) {
       if (val) {
         this.updateChartType();
       }
     },
+    report(val) {
+      if (val && val.cols) {
+        const col = val.cols.find((c) => c.type.toLowerCase() === 'string');
+        const seriesCols = val.cols
+          .filter((c) => c.type.toLowerCase() !== 'string' && c.type.toLowerCase() !== 'boolean')
+          .map((c) => c.name);
+        const colName = col && col.name;
+        const categories = val && val.reportData
+          ? val.reportData.map((data) => data[colName])
+          : [];
+        // eslint-disable-next-line
+        const subset = (obj, keys) => keys.reduce((a, b) => (a[b] = obj[b], a), {});
+        const series = val && val.reportData
+          ? val.reportData.map((data) => subset(data, seriesCols))
+          : [];
+        this.updateCategory(categories);
+        this.updateSeries(series, seriesCols);
+      }
+    },
   },
   methods: {
-    updateSeriesColor(val) {
-      this.options.series.forEach((s) => {
-        if (val) {
-          s.color = '#21C77C';
-        } else {
-          s.color = '#354493';
-        }
-      });
-    },
     updateChartType() {
       if (this.chartType) {
         this.options.chart.type = this.chartType.value;
       }
+    },
+    updateCategory(categories) {
+      this.options.xAxis.categories = categories;
+    },
+    updateSeries(series, seriesCols) {
+      this.options.series = seriesCols.map((col) => ({
+        name: col,
+        data: series.map((data) => data[col]),
+      }));
     },
   },
 };

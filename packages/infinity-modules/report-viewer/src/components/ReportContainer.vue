@@ -5,7 +5,7 @@
     </template>
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
-        <!-- <report-chart /> -->
+        <report-chart />
         <report-grid ref="reportGrid" />
       </v-col>
     </v-row>
@@ -14,13 +14,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-// import ReportChart from './ReportChart.vue';
+import ReportChart from './ReportChart.vue';
 import ReportGrid from './ReportGrid.vue';
 
 export default {
   name: 'ReportContainer',
   components: {
-    // ReportChart,
+    ReportChart,
     ReportGrid,
   },
   computed: {
