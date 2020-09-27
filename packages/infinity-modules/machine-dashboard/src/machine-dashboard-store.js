@@ -1,10 +1,10 @@
-import { set, toggle, reactiveSet } from '@shopworx/services/util/store.helper';
+import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
   namespaced: true,
   state: {
     page: 0,
-    autorun: true,
+    autorun: false,
     machines: [],
     selectedCell: null,
     selectedTime: 1,
@@ -214,7 +214,7 @@ export default ({
         moved: false,
       },
     ],
-    assetData: {},
+    assetData: null,
   },
   mutations: {
     setPage: set('page'),
@@ -226,7 +226,15 @@ export default ({
     toggleCustomizeMode: toggle('customizeMode'),
     setAllWidgets: set('allWidgets'),
     setWidgets: set('widgets'),
-    setAssetData: reactiveSet('assetData'),
+    setAssetData: (state, payload) => {
+      if (!state.assetData) {
+        state.assetData = {};
+        state.assetData[payload.machinename] = {};
+      } else if (!state.assetData[payload.machinename]) {
+        state.assetData[payload.machinename] = {};
+      }
+      state.assetData[payload.machinename][payload.partname] = payload;
+    },
   },
   actions: {
     getMachines: async ({ commit, dispatch }) => {
