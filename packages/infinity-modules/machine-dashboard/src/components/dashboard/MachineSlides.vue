@@ -1,7 +1,6 @@
 <template>
   <v-window
     v-model="window"
-    style="height: calc(100vh - 104px)"
     v-if="machines.length"
   >
     <template>
