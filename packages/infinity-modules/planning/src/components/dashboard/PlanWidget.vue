@@ -121,7 +121,14 @@
                   </v-list-item-action>
                   <v-list-item-content>
                     <v-list-item-title>
-                      <span v-text="planId"></span>
+                      <a
+                        @click="$router.push({
+                          name: 'plan-detail',
+                          params: { id: planId }
+                        })"
+                        v-text="planId"
+                        class="font-weight-medium"
+                      ></a>
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       <div v-text="plan[0].machinename"></div>

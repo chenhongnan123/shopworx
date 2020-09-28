@@ -23,6 +23,7 @@ export default ({
     overduePlans: null,
     inProgressPlans: null,
     pausedPlans: null,
+    planDetails: null,
   },
   mutations: {
     setParts: set('parts'),
@@ -43,6 +44,7 @@ export default ({
     setOverduePlans: set('overduePlans'),
     setInProgressPlans: set('inProgressPlans'),
     setPausedPlans: set('pausedPlans'),
+    setPlanDetails: set('planDetails'),
   },
   actions: {
     getPlanningElement: async ({ commit, dispatch }) => {
@@ -413,6 +415,14 @@ export default ({
         `?query=(actualstart<${max}%26%26actualend>${min})%7C%7C((status=="inProgress"%7C%7Cstatus=="paused")%26%26actualstart<${max})%7C%7C(status=="notStarted"%26%26scheduledstart<${max})`,
       );
       return plans;
+    },
+
+    getPlanDetails: async ({ commit, dispatch }, planid) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=planid=="${planid}"`,
+      );
+      commit('setPlanDetails', plans);
     },
 
     getMachineSchedule: async ({ state, dispatch }) => {
