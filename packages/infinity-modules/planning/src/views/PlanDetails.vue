@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%" class="px-4">
     <plan-loading v-if="loading" />
     <plan-not-found v-else-if="!loading && !planDetails" />
     <v-row v-else>
