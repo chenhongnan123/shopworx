@@ -6,7 +6,27 @@
     @click="$router.push({ name: 'machine-detail', params: { id: machine.machinename } })"
   >
     <v-window v-model="card">
-      <template v-if="assetState">
+      <template v-if="Object.keys(assetState).length === 0">
+        <v-card-title class="py-0 error" style="border-radius: 8px 8px 0px 0px">
+          {{ machine.machinename }}
+        </v-card-title>
+        <v-card-text>
+          <v-container fill-height>
+            <v-row
+              align="center"
+              justify="center"
+              :no-gutters="$vuetify.breakpoint.smAndDown"
+            >
+              <v-col cols="12" align="center">
+                <span class="headline">
+                  Waiting for {{ machine.machinename }} events...
+                </span>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </template>
+      <template v-else>
         <v-window-item
           v-for="asset in assetState"
           :key="asset.key"
@@ -92,33 +112,13 @@
           </v-card-text>
         </v-window-item>
       </template>
-      <template v-else>
-        <v-card-title class="py-0 error" style="border-radius: 8px 8px 0px 0px">
-          {{ machine.machinename }}
-        </v-card-title>
-        <v-card-text>
-          <v-container fill-height>
-            <v-row
-              align="center"
-              justify="center"
-              :no-gutters="$vuetify.breakpoint.smAndDown"
-            >
-              <v-col cols="12" align="center">
-                <span class="headline">
-                  Waiting for {{ machine.machinename }} events...
-                </span>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-      </template>
     </v-window>
   </v-card>
 </template>
 
 <script>
 import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MachineCard',
@@ -144,9 +144,9 @@ export default {
     clearInterval(this.interval);
   },
   computed: {
-    ...mapState('machineDashboard', ['assetData']),
+    ...mapGetters('machineDashboard', ['realTimeValue']),
     assetState() {
-      return this.assetData && this.assetData[this.machine.machinename];
+      return this.realTimeValue(this.machine.machinename);
     },
     len() {
       return this.assetState && Object.keys(this.assetState).length;

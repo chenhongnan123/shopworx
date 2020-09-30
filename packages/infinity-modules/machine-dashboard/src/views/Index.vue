@@ -91,7 +91,8 @@ export default {
     },
     listenStream() {
       this.evtSource.addEventListener(this.getTimeGranularity(), (evt) => {
-        const eventData = JSON.parse(JSON.parse(evt.data));
+        let eventData = JSON.parse(JSON.parse(evt.data));
+        eventData = { ...eventData, key: `${eventData.machinename}__${eventData.partname}` };
         this.setAssetData(eventData);
       });
     },

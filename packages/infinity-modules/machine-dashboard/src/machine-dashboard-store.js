@@ -1,4 +1,4 @@
-import { set, toggle } from '@shopworx/services/util/store.helper';
+import { set, toggle, reactiveSet } from '@shopworx/services/util/store.helper';
 
 export default ({
   namespaced: true,
@@ -214,7 +214,7 @@ export default ({
         moved: false,
       },
     ],
-    assetData: null,
+    assetData: {},
   },
   mutations: {
     setPage: set('page'),
@@ -226,15 +226,7 @@ export default ({
     toggleCustomizeMode: toggle('customizeMode'),
     setAllWidgets: set('allWidgets'),
     setWidgets: set('widgets'),
-    setAssetData: (state, payload) => {
-      if (!state.assetData) {
-        state.assetData = {};
-        state.assetData[payload.machinename] = {};
-      } else if (!state.assetData[payload.machinename]) {
-        state.assetData[payload.machinename] = {};
-      }
-      state.assetData[payload.machinename][payload.partname] = payload;
-    },
+    setAssetData: reactiveSet('assetData'),
   },
   actions: {
     getMachines: async ({ commit, dispatch }) => {
@@ -271,5 +263,14 @@ export default ({
       }
       return filteredMachines;
     },
+
+    realTimeValue: ({ assetData }) => (machinename) => Object.keys(assetData)
+      .filter((key) => key.includes(machinename))
+      .reduce((obj, key) => {
+        const k = key.split('__');
+        // eslint-disable-next-line
+        obj[k[1]] = assetData[key];
+        return obj;
+      }, {}),
   },
 });

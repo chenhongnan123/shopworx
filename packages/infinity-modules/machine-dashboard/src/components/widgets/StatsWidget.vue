@@ -18,7 +18,24 @@
     </span>
     <v-card>
       <v-window v-model="card">
-        <template v-if="assetState">
+        <template v-if="Object.keys(assetState).length === 0">
+          <v-card-text>
+            <v-container fill-height>
+              <v-row
+                align="center"
+                justify="center"
+                :no-gutters="$vuetify.breakpoint.smAndDown"
+              >
+                <v-col cols="12" align="center">
+                  <span class="headline">
+                    Waiting for {{ machine }} events...
+                  </span>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </template>
+        <template v-else>
           <v-window-item
             v-for="asset in assetState"
             :key="asset.key"
@@ -93,30 +110,13 @@
             </v-card-text>
           </v-window-item>
         </template>
-        <template v-else>
-          <v-card-text>
-            <v-container fill-height>
-              <v-row
-                align="center"
-                justify="center"
-                :no-gutters="$vuetify.breakpoint.smAndDown"
-              >
-                <v-col cols="12" align="center">
-                  <span class="headline">
-                    Waiting for {{ machine }} events...
-                  </span>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-        </template>
       </v-window>
     </v-card>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'StatsWidget',
@@ -146,15 +146,15 @@ export default {
     clearInterval(this.interval);
   },
   computed: {
+    ...mapGetters('machineDashboard', ['realTimeValue']),
     title() {
       return this.widget && this.widget.definition.title;
     },
     machine() {
       return this.$route.params.id;
     },
-    ...mapState('machineDashboard', ['assetData']),
     assetState() {
-      return this.assetData && this.assetData[this.machine];
+      return this.realTimeValue(this.machine);
     },
     len() {
       return this.assetState && Object.keys(this.assetState).length;
