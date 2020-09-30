@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **machine-dashboard:** fixed family mold view ([8bfffd5](https://bitbucket.org/entrib/shopworx/commits/8bfffd5943a92e1996dbe4fdae3b624ca5900173))
+* **machine-dashboard:** fixed family view for plans ([7a3fbc8](https://bitbucket.org/entrib/shopworx/commits/7a3fbc8a88f09d10d82c6928cc55ff5fee204496))
+
+
+### Features
+
+* **machine-dashboard:** added paginator ([631f50d](https://bitbucket.org/entrib/shopworx/commits/631f50d9ca2022fa33cbc663799228c1541f3fa8))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/machine-dashboard

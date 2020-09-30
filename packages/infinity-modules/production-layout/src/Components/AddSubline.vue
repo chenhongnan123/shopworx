@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       newSubLine: {},
-      assetId: 4,
+      assetId: null,
+      getAssetId: '',
       default: false,
       dialog: false,
       valid: true,
@@ -74,12 +75,15 @@ export default {
       required: true,
     },
   },
+  created() {
+    this.getAssets();
+  },
   computed: {
-    ...mapState('productionLayout', ['sublines', 'addSublineDialog']),
+    ...mapState('productionLayout', ['sublines', 'addSublineDialog', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubline', 'getSublines']),
+    ...mapActions('productionLayout', ['createSubline', 'getSublines', 'getAssets']),
     async saveSubline() {
       if (this.newSubLine.numbers === undefined) {
         this.setAlert({
@@ -109,6 +113,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newSubLine = {
             ...this.newSubLine,
             lineid: this.lineid,
@@ -124,7 +130,7 @@ export default {
               message: 'SUBLINE_CREATED',
             });
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.newSubLine = {};
             this.$refs.form.reset();
           } else {

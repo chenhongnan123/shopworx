@@ -8,19 +8,6 @@
           class="stick"
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
-          <v-btn
-          small
-          color="primary"
-          class="text-none"
-          @click="setaddBomDialog(true)"
-          >
-            <v-icon small left>mdi-plus</v-icon>
-            Add BOM
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-            <v-icon small left>mdi-refresh</v-icon>
-            Refresh
-          </v-btn>
           <span v-if="lineList.length && !!lineValue" class="ml-2">
             line:
             <v-btn
@@ -46,12 +33,34 @@
             </v-btn>
           </span>
           <v-spacer></v-spacer>
+          <v-btn
+          small
+          color="primary"
+          class="text-none"
+          @click="setaddBomDialog(true)"
+          >
+            <v-icon small left>mdi-plus</v-icon>
+            Add BOM
+          </v-btn>
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+            <v-icon small left>mdi-refresh</v-icon>
+            Refresh
+          </v-btn>
+          <v-btn small color="error"
+            outlined
+            class="text-none ml-2"
+            @click="confirmListDialog = true"
+            v-if="bomList.length && bomSelected.length">
+            <v-icon small left>mdi-delete</v-icon>
+            Delete
+          </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
             Filters
           </v-btn>
         </v-toolbar>
         <v-data-table
+        show-select
         v-model="bomSelected"
         :headers="headers"
         :items="bomList"
@@ -70,27 +79,29 @@
           max-width="500px"
           transition="dialog-transition"
         >
-          <v-card>
-            <v-card-title primary-title>
-              <span>
-                Update Bom
-              </span>
-              <v-spacer></v-spacer>
-              <v-btn icon small @click="editDialog = false">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-card-title>
-              <v-card-text>
-              <v-form
+        <v-form
                 ref="form"
                 v-model="valid"
                 lazy-validation
               >
+          <v-card>
+            <v-card-title primary-title>
+              <span>
+                Edit Bom
+              </span>
+              <v-spacer></v-spacer>
+              <v-btn icon small @click="(editDialog = false); editDialogReset();">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+              <v-card-text>
                 <v-text-field
                     :rules="rules.name"
                     label="Bom"
                     prepend-icon="mdi-tray-plus"
                     v-model="bomObj.name"
+                    required
+                    :counter="10"
                 ></v-text-field>
                 <v-text-field
                     :rules="rules.bomnumber"
@@ -98,8 +109,9 @@
                     label="Bom Number"
                     prepend-icon="mdi-tray-plus"
                     v-model="bomObj.bomnumber"
+                    required
+                    :counter="10"
                 ></v-text-field>
-              </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -108,11 +120,13 @@
                   class="text-none"
                   :loading="saving"
                   @click="handleUpdateBom"
+                  :disabled="!valid"
                 >
                   Save
                 </v-btn>
               </v-card-actions>
           </v-card>
+          </v-form>
         </v-dialog>
         <v-dialog
           persistent
@@ -171,18 +185,60 @@
       </v-data-table>
       </v-col>
     </v-row>
+    <v-dialog
+      persistent
+      scrollable
+      v-model="confirmListDialog"
+      max-width="500px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-title primary-title>
+          <span>
+            Please confirm
+          </span>
+          <v-spacer></v-spacer>
+          <v-btn icon small @click="confirmListDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          Are you sure to delete the items?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="saving"
+            @click="handleDeleteItemList"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <add-bom v-if="addBomDialog"/>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+import AddBom from '../components/AddBom.vue';
 
 export default {
   name: 'BOMList',
+  components: {
+    AddBom,
+  },
   data() {
     return {
       bomSelected: [],
       headers: [
+        {
+          text: 'Line',
+          value: 'linename',
+        },
         {
           text: 'BOM name',
           value: 'name',
@@ -198,7 +254,7 @@ export default {
       bomObj: {
         name: null,
         bomnumber: null,
-        materilcategory: null,
+        materialcategory: null,
         lifetime: null,
         bomtype: null,
         manufacturer: null,
@@ -206,25 +262,31 @@ export default {
       bomObjDefault: null,
       editDialog: false,
       confirmDialog: false,
+      confirmListDialog: false,
       valid: true,
       saving: false,
+      name: '',
+      bomnumber: '',
       rules: {
         name: [
-          (v) => !!v || 'Bom is required',
+          (v) => !!v || 'Bom Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         bomnumber: [
           (v) => !!v || 'Bom Number is required',
           (v) => v >= 0 || 'Bom Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
       },
     };
   },
   async created() {
-    await this.getBomListRecords('');
-    this.getDefaultList();
+    await this.getDefaultList();
+    this.getBomListRecords('');
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addBomDialog']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -237,6 +299,7 @@ export default {
     ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
     ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom', 'deleteAllBomDetails']),
     async handleUpdateBom() {
+      this.$refs.form.validate();
       if (this.$refs.form.validate()) {
         const { bomObj, bomObjDefault } = this;
         const { name, bomnumber } = bomObj;
@@ -284,6 +347,7 @@ export default {
             type: 'success',
             message: 'UPDATE_BOM',
           });
+          this.$refs.form.reset();
         } else {
           this.setAlert({
             show: true,
@@ -326,6 +390,29 @@ export default {
       }
       this.confirmDialog = false;
     },
+    async handleDeleteItemList() {
+      this.saving = true;
+      const results = await Promise.all(this.bomSelected.map(
+        (bom) => this.deleteBom(bom.id),
+      ));
+      if (results.every((bool) => bool === true)) {
+        this.getBomListRecords('');
+        this.bomSelected = [];
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'BOM_DELETED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_BOM',
+        });
+      }
+      this.saving = false;
+      this.confirmListDialog = false;
+    },
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },
@@ -340,6 +427,9 @@ export default {
         message: 'DATA_SAVED',
       });
     },
+  },
+  editDialogReset() {
+    this.$refs.form.reset();
   },
 };
 </script>

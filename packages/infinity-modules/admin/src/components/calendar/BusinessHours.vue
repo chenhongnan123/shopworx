@@ -238,13 +238,11 @@ export default {
       ));
     },
     isSumInvalid() {
-      const sum = this.hours.reduce((acc, cur) => acc + (this.getDuration(cur) || 0), 0);
-      return !!sum;
-    },
-    getDuration({ endtime, starttime }) {
-      const timeStart = new Date(`01/01/2007 ${starttime}`).getHours();
-      const timeEnd = new Date(`01/01/2007 ${endtime}`).getHours();
-      return timeEnd - timeStart;
+      const sum = this.hours.reduce((acc, cur) => acc + getDurationBetweenTime(
+        cur.endtime,
+        cur.starttime,
+      ), 0);
+      return sum !== 86400000;
     },
     addHour() {
       this.hours.push({
@@ -256,6 +254,134 @@ export default {
     },
     removeHour(index) {
       this.hours.splice(index, 1);
+    },
+    getDurationInAnHour(hourStart, hourEnd, shiftStart, shiftEnd) {
+      let time = 0;
+      if (hourStart >= shiftStart && hourEnd <= shiftEnd) {
+        time = hourEnd - hourStart;
+      } else if (hourStart <= shiftStart && hourEnd >= shiftEnd) {
+        time = shiftEnd - shiftStart;
+      } else if (hourStart > shiftStart && hourStart < shiftEnd) {
+        time = shiftEnd - hourStart;
+      } else if (hourEnd > shiftStart && hourEnd < shiftEnd) {
+        time = hourEnd - shiftStart;
+      }
+      return time;
+    },
+    async saveHourlyAvailableTime(records) {
+      let hours = [];
+      for (let i = 0; i < 24; i += 1) {
+        const start = i === 0
+          ? new Date(`01/01/2007 ${records[0].starttime}`).getTime()
+          : hours[i - 1].end;
+        hours.push({
+          sortindex: i,
+          start,
+          end: start + 3600000,
+        });
+      }
+      const shifts = [];
+      records.forEach((record, i) => {
+        const start = i === 0
+          ? new Date(`01/01/2007 ${record.starttime}`).getTime()
+          : shifts[i - 1].end;
+        shifts.push({
+          type: record.type,
+          duration: record.duration,
+          start,
+          end: start + record.duration,
+        });
+      });
+      hours = hours.map((hour) => {
+        const startString = `${`${new Date(hour.start).getHours()}`.padStart(2, '0')}:${`${new Date(hour.start).getMinutes()}`.padStart(2, '0')}`;
+        const endString = `${`${new Date(hour.end).getHours()}`.padStart(2, '0')}:${`${new Date(hour.end).getMinutes()}`.padStart(2, '0')}`;
+        const availabletime = shifts
+          .filter((shift) => shift.type === 'shift')
+          .reduce((a, c) => {
+            const time = this.getDurationInAnHour(
+              hour.start,
+              hour.end,
+              c.start,
+              c.end,
+            );
+            return a + time;
+          }, 0);
+        const breaktime = shifts
+          .filter((shift) => shift.type === 'break')
+          .reduce((a, c) => {
+            const time = this.getDurationInAnHour(
+              hour.start,
+              hour.end,
+              c.start,
+              c.end,
+            );
+            return a + time;
+          }, 0);
+        return {
+          sortindex: hour.sortindex,
+          displayhour: `${startString} - ${endString}`,
+          availabletimeinms: availabletime,
+          breaktimeinms: breaktime,
+          totaltimeinms: 3600000,
+        };
+      });
+      const payload = {
+        elementName: 'hourlyavailabletime',
+        records: hours,
+      };
+      await this.upsertBulkRecords(payload);
+    },
+    async saveShiftWiseAvailableTime(records) {
+      let index = 0;
+      let shifts = records.reduce((a, c) => {
+        const prev = a.get(c.shift);
+        if (prev) {
+          a.set(prev.shift, {
+            ...prev,
+            endtime: c.endtime,
+            availabletime: c.type === 'shift'
+              ? prev.availabletime + c.duration
+              : prev.availabletime,
+            breaktime: c.type === 'break'
+              ? prev.breaktime + c.duration
+              : prev.breaktime,
+          });
+        } else {
+          a.set(c.shift, {
+            index,
+            type: c.type,
+            starttime: c.starttime,
+            endtime: c.endtime,
+            duration: c.duration,
+            shift: c.shift,
+            availabletime: c.type === 'shift'
+              ? c.duration
+              : 0,
+            breaktime: c.type === 'break'
+              ? c.duration
+              : 0,
+          });
+          index += 1;
+        }
+        return a;
+      }, new Map()).values();
+      shifts = [...shifts].map((s) => ({
+        sortindex: s.index,
+        displayshift: s.shift,
+        availabletimeinms: s.availabletime,
+        breaktimeinms: s.breaktime,
+        totaltimeinms: s.availabletime + s.breaktime,
+      }));
+      const payload = {
+        elementName: 'shiftwiseavailabletime',
+        records: shifts,
+      };
+      await this.upsertBulkRecords(payload);
+    },
+    async saveAvaliableTime(records) {
+      const hourRecords = this.saveHourlyAvailableTime(records);
+      const shiftRecords = this.saveShiftWiseAvailableTime(records);
+      await Promise.all([hourRecords, shiftRecords]);
     },
     async save() {
       this.saving = true;
@@ -283,6 +409,7 @@ export default {
           records,
         };
         await this.upsertBulkRecords(payload);
+        await this.saveAvaliableTime(records);
       }
       this.saving = false;
     },

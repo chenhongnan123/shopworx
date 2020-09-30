@@ -21,13 +21,13 @@
       <!-- {{subline}} -->
       <v-row>
       <v-col cols="12" md="12">
-        <v-text-field label="Name" v-model="sublineNew.name"
+        <v-text-field label="Name *" v-model="sublineNew.name"
         :rules="nameRules"
         :counter="15"
          required
          hint="For example, Subline_01"
         @keyup="validName"></v-text-field>
-        <v-text-field label="Number"
+        <v-text-field label="Number *"
          type="number" v-model="sublineNew.numbers"
          :rules="numberRules"
          :counter="10"

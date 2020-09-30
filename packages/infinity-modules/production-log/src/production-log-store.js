@@ -20,7 +20,8 @@ export default ({
     rejectionReasons: [],
     productionDetails: [],
     allRejections: null,
-    businessHours: [],
+    shiftHours: [],
+    hours: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -40,7 +41,8 @@ export default ({
     setRejectionReasons: set('rejectionReasons'),
     setProductionDetails: set('productionDetails'),
     setAllRejections: set('allRejections'),
-    setBusinessHours: set('businessHours'),
+    setShiftHours: set('shiftHours'),
+    setHours: set('hours'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -176,6 +178,20 @@ export default ({
       }
       return false;
     },
+
+    getHours: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'hourlyavailabletime', query: '?sortquery=sortindex==1' },
+        { root: true },
+      );
+      if (records && records.length) {
+        commit('setHours', records);
+        return true;
+      }
+      return false;
+    },
+
     fetchBusinessHours: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
@@ -184,7 +200,7 @@ export default ({
       );
       if (records) {
         if (records.length) {
-          commit('setBusinessHours', records);
+          commit('setShiftHours', records);
           const allShifts = records.filter((rec) => rec.type === 'shift');
           commit('setShift', allShifts);
           const shiftList = [...new Set(allShifts.map((item) => item.name))];

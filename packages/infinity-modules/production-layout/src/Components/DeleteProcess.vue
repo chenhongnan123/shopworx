@@ -53,22 +53,22 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['deleteProcess']),
     async btnDeleteProcess() {
-      // const deleted = false;
-      await this.deleteProcess(this.process.id);
-      // if (deleted) {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'success',
-      //     message: 'PROCESS_DELETED',
-      //   });
-      //   this.dialog = false;
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'ERROR_DELETING_PROCESS',
-      //   });
-      // }
+      let deleted = false;
+      deleted = this.deleteProcess(this.process.id);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PROCESS_DELETED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_PROCESS',
+        });
+      }
       this.dialog = false;
     },
   },

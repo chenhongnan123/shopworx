@@ -85,6 +85,7 @@ export default {
         });
         this.getProductListRecords('');
         this.dialog = false;
+        this.products = {};
       } else {
         this.setAlert({
           show: true,

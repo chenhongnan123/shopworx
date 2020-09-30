@@ -183,16 +183,16 @@
                                           :rules="`required|min_value:1|max_value:${plan.accepted}`"
                                           #default="{ errors }">
                                             <v-text-field
-                                                outlined
-                                                dense
-                                                :error-messages="errors"
-                                                v-model="rejectedQuantity"
-                                                type="number"
-                                                label="Quantity"
+                                              outlined
+                                              dense
+                                              :error-messages="errors"
+                                              v-model="rejectedQuantity"
+                                              type="number"
+                                              label="Quantity"
                                             ></v-text-field>
                                           </validation-provider>
                                         </v-col>
-                                        <v-col cols="12">
+                                        <v-col cols="12" sm="8">
                                           <v-textarea
                                             outlined
                                             dense
@@ -200,11 +200,20 @@
                                             v-model="remark"
                                           ></v-textarea>
                                         </v-col>
+                                        <v-col cols="12" sm="4">
+                                          <v-select
+                                            dense
+                                            outlined
+                                            v-model="rejectionHour"
+                                            :items="getHours(plan.shift)"
+                                            label="Rejection hour"
+                                          ></v-select>
+                                        </v-col>
                                       </v-row>
                                       <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn
-                                          :disabled="!selectedReason || invalid"
+                                          :disabled="!selectedReason || invalid || !rejectionHour"
                                           color="primary"
                                           @click="addRejectionData(plan)"
                                           class="text-none"
@@ -264,13 +273,12 @@ export default {
       ],
       selectedReason: null,
       rejectedQuantity: null,
+      rejectionHour: 0,
       remark: '',
       dataToEdit: null,
       referencePlan: null,
       editRejection: false,
     };
-  },
-  created() {
   },
   computed: {
     ...mapState('productionLog', [
@@ -279,8 +287,10 @@ export default {
       'selectedMachine',
       'selectedShift',
       'allRejections',
-      'businessHours',
+      'shiftHours',
+      'hours',
     ]),
+    ...mapState('calendar', ['businessHours']),
     ...mapGetters('productionLog', ['planProductionData']),
     plans() {
       if (this.planProductionData) {
@@ -308,6 +318,19 @@ export default {
   },
   methods: {
     ...mapActions('productionLog', ['executeProductionReport', 'addRejection', 'updateRejection', 'getRejections']),
+    getHours(shift) {
+      const hourList = this.businessHours
+        .filter((hours) => hours.shiftName === shift)
+        .map((h) => h.hoursList)
+        .flat();
+      const hours = hourList.map((h) => ({
+        text: this.hours.find((hr) => hr.sortindex === h.businessHour)
+          ? this.hours.find((hr) => hr.sortindex === h.businessHour).displayhour
+          : '-',
+        value: h.businessHour,
+      }));
+      return hours;
+    },
     async addRejectionData(plan) {
       const {
         day, machinename, moldname, month, partname,
@@ -316,11 +339,11 @@ export default {
       const {
         category, department, reasoncode, reasonname, siteId,
       } = this.selectedReason;
-      const [currentShift] = this.businessHours
-        .filter((hour) => hour.shift === shift)
-        .sort((a, b) => a.sortindex - b.sortindex);
-      const [hour, mins] = currentShift.starttime.split(':');
-      const timestamp = new Date(year, (month - 1), day, hour, mins).getTime();
+      const selectedHour = this.hours.find((hr) => hr.sortindex === this.rejectionHour).displayhour;
+      const [start] = selectedHour.split('-');
+      const [hr, mins] = start.split(':');
+      const timestamp = new Date(year, (month - 1), day, parseInt(hr, 10), parseInt(mins, 10))
+        .getTime();
       const rejectionData = {
         timestamp,
         planid,
@@ -346,6 +369,7 @@ export default {
         this.rejectedQuantity = null;
         this.remark = null;
         this.selectedReason = null;
+        this.rejectionHour = 0;
         requestAnimationFrame(() => {
           this.$refs.addRejectionForm[0].reset();
         });

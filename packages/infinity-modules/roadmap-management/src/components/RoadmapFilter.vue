@@ -89,9 +89,13 @@ export default {
     ...mapMutations('roadmapManagement', ['setRoadmapList', 'setFilter', 'toggleFilter']),
     ...mapActions('roadmapManagement', ['getRecords']),
     btnApply() {
-      this.setRoadmapList(this.roadmapList.filter((r) => r.roadmaptype === this.selectedRoadType));
+      let query = '?query=';
+      query += `roadmaptype=="${this.selectedRoadType}"`;
+      this.getRecords(query);
+      this.toggleFilter();
     },
     async btnReset() {
+      this.selectedRoadType = '';
       await this.getRecords('');
       this.toggleFilter();
     },

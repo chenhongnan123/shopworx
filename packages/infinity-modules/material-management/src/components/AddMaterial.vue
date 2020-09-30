@@ -6,22 +6,22 @@
     max-width="500px"
     transition="dialog-transition"
   >
+  <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+  >
     <v-card>
       <v-card-title primary-title>
         <span>
           Create Material
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
+        <v-btn icon small @click="handleCloseDialog()">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
         <v-card-text>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
           <!-- <v-autocomplete
             clearable
             label="Line"
@@ -62,9 +62,11 @@
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
-              label="Material"
+              label="Material Name"
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.name"
+              required
+              :counter="10"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -73,6 +75,8 @@
               label="Material Number"
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.materialnumber"
+              required
+              :counter="10"
           ></v-text-field>
           <v-autocomplete
             clearable
@@ -82,8 +86,9 @@
             :disabled="saving"
             item-text="name"
             prepend-icon="$production"
-            v-model="materialObj.materilcategory"
-            :rules="rules.materilcategory"
+            v-model="materialObj.materialcategory"
+            :rules="rules.materialcategory"
+            required
           >
             <template v-slot:item="{ item }">
               <v-list-item-content>
@@ -113,7 +118,6 @@
               prepend-icon="mdi-tray-plus"
               v-model="materialObj.manufacturer"
           ></v-text-field>
-        </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -122,11 +126,13 @@
             class="text-none"
             :loading="saving"
             @click="saveMaterial"
+            :disabled="!valid"
           >
             Save
           </v-btn>
         </v-card-actions>
     </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
@@ -153,29 +159,32 @@ export default {
           (v) => !!v || 'Subline is required',
         ],
         name: [
-          (v) => !!v || 'Material is required',
+          (v) => !!v || 'Material Name is required',
+          (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed (including space)',
+          (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         ],
         materialnumber: [
           (v) => !!v || 'Material Number is required',
           (v) => v >= 0 || 'Material Number is bigger than 0',
+          (v) => (v && v.length <= 10) || 'Number must be less than 10 digit',
         ],
-        materilcategory: [
+        materialcategory: [
           (v) => !!v || 'Category is required',
         ],
-        lifetime: [
-          (v) => !!v || 'lifetime is required',
-        ],
-        materialtype: [
-          (v) => !!v || 'Materialtype Typeid is required',
-        ],
-        manufacturer: [
-          (v) => !!v || 'Manufacturer is required',
-        ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
   computed: {
-    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'categoryList', 'lineValue', 'sublineValue']),
+    ...mapState('materialManagement', ['addMaterialDialog', 'materialList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
     dialog: {
       get() {
         return this.addMaterialDialog;
@@ -201,7 +210,9 @@ export default {
       if (this.$refs.form.validate()) {
         const { name, materialnumber } = materialObj;
         if (this.materialList.length) {
-          if (this.materialList.some((material) => name === material.name)) {
+          if (this.materialList.some(
+            (material) => name.toLowerCase().split(' ').join('') === material.name.toLowerCase().split(' ').join(''),
+          )) {
             this.setAlert({
               show: true,
               type: 'error',
@@ -221,8 +232,7 @@ export default {
         const payload = {
           ...materialObj,
           assetid: 4,
-          category: materialObj.materilcategory.name,
-          categoryid: materialObj.materilcategory.id,
+          materialcategory: materialObj.materialcategory.id,
         };
         this.saving = true;
         const materialList = await this.createMaterial(payload);
@@ -241,8 +251,15 @@ export default {
             message: 'ERROR_CREATING_MATERIAL',
           });
         }
+        this.materialObj = {};
         this.dialog = false;
+        this.$refs.form.reset();
       }
+    },
+    handleCloseDialog() {
+      this.materialObj = {};
+      this.dialog = false;
+      this.$refs.form.reset();
     },
   },
 };

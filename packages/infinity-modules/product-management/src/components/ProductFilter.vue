@@ -30,6 +30,7 @@
             name="name"
             label="BOM name"
             item-text="name"
+            clearable="true"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -47,6 +48,7 @@
             name="name"
             label="Roadmap name"
             item-text="name"
+            clearable="true"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -107,16 +109,21 @@ export default {
     ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter']),
     ...mapActions('productManagement', ['getProductListRecords']),
     btnApply() {
+      let query = '?query=';
       if (this.selectedBOM) {
-        this.setProductList(this.productList.filter((r) => r.bomname === this.selectedBOM));
+        query += `bomname=="${this.selectedBOM}"&`;
       }
       if (this.selectedRoadmap) {
-        this.setProductList(this.productList.filter((r) => r.roadmapname === this.selectedRoadmap));
+        query += `roadmapname=="${this.selectedRoadmap}"`;
       }
+      this.getProductListRecords(query);
+      this.toggleFilter();
     },
     async btnReset() {
       await this.getProductListRecords('');
       this.toggleFilter();
+      this.selectedBOM = '';
+      this.selectedRoadmap = '';
     },
   },
 };

@@ -1,3 +1,36 @@
 {
-  "productionLog": "Production Log"
+  "title": "配方管理",
+  "headers": {
+    "list": "列表",
+    "changeover": "换型"
+  },
+  "displayTags": {
+      "duplicate_title": "创建重复标题",
+      "lineName": "产线",
+      "stationName": "工站",
+      "sublineName": "子线",
+    "buttons" : {
+      "addNewRecipe" : "添加配方",
+      "duplicateRecipe": "复制配方",
+      "refreshRecipe": "刷新配方",
+      "filtersRecipe": "筛选配方",
+      "save": "保存"
+    }
+  },
+  "error": {
+    "RECIPE_NAME_EMPTY": "配方名称为空.",
+    "ALREADY_EXSIST_RECIPE": "配方名称已存在",
+    "ERROR_CREATING_RECIPE": "创建配方时出错，请重试.",
+    "ERROR_UPDATING_RECIPE": "更新配方时出错，请重试.",
+    "SELECT_RECIPE_FIRST": "请先选择配方.",
+    "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record",
+    "RECIPE_SUBLINE_NAME_EMPTY": "Select Subline Name from DropDown",
+    "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown",
+    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name All ready Exist"
+  },
+  "success": {
+    "RECIPE_CREATED": "配方已创建！",
+    "RECIPE_UPDATED": "配方已更新！",
+    "RECIPE_RECORD_DELETED": "Recipe Record DELETED."
+  }
 }

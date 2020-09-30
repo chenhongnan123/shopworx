@@ -29,6 +29,14 @@
           <v-icon small left>mdi-refresh</v-icon>
           Get Data
         </v-btn>
+        <v-btn small color="error"
+          outlined
+          class="text-none ml-2"
+          @click="confirmListDialog = true"
+          v-if="bomDetailList.length && bomDetailSelected.length">
+          <v-icon small left>mdi-delete</v-icon>
+          Delete
+        </v-btn>
       </v-toolbar>
       <v-row>
         <v-col cols="2">
@@ -73,9 +81,11 @@
         </v-col>
       </v-row>
       <v-data-table
+        show-select
+        v-model="bomDetailSelected"
         :headers="headers"
         :items="bomDetailList"
-        item-key="bomnumber"
+        item-key="id"
         class="tableContainer"
         >
         <template v-slot:item.materialname="props">
@@ -91,6 +101,11 @@
             depressed
           ></v-select>
         </template>
+        <template v-slot:item.materialcategory="props" v-if="categoryList.length">
+        {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
+        && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
+        [0].name}}
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-btn
             icon
@@ -100,6 +115,8 @@
           >
             <v-icon v-text="'$delete'"></v-icon>
           </v-btn>
+        </template>
+        <template v-slot:top>
           <v-dialog
             persistent
             scrollable
@@ -135,6 +152,39 @@
           </v-dialog>
         </template>
       </v-data-table>
+      <v-dialog
+        persistent
+        scrollable
+        v-model="confirmListDialog"
+        max-width="500px"
+        transition="dialog-transition"
+      >
+        <v-card>
+          <v-card-title primary-title>
+            <span>
+              Please confirm
+            </span>
+            <v-spacer></v-spacer>
+            <v-btn icon small @click="confirmListDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text>
+            Are you sure to delete the items?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              class="text-none"
+              :loading="saving"
+              @click="handleDeleteItemList"
+            >
+              Yes
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -147,72 +197,103 @@ export default {
   data() {
     return {
       bomDetailList: [],
+      bomDetailSelected: [],
       headers: [
         {
+          text: 'Line',
+          value: 'line',
+          width: 120,
+        },
+        {
+          text: 'Subline',
+          value: 'subline',
+          width: 120,
+        },
+        {
+          text: 'Station',
+          value: 'station',
+          width: 120,
+        },
+        {
           text: 'Substation',
-          value: 'substationid',
+          value: 'substation',
+          width: 120,
         },
         {
           text: 'Parameter Name',
           value: 'parametername',
+          width: 180,
         },
-        { text: 'Material', value: 'materialname' },
-        { text: 'Material TypeID', value: 'materialtype' },
-        { text: 'Category', value: 'materialcategory' },
-        { text: 'Actions', value: 'actions' },
+        { text: 'Material', value: 'materialname', width: 120 },
+        { text: 'Material TypeID', value: 'materialtype', width: 180 },
+        { text: 'Category', value: 'materialcategory', width: 120 },
+        { text: 'Actions', value: 'actions', width: 120 },
       ],
       materialname: '',
       confirmDialog: false,
+      confirmListDialog: false,
       bomdetailObjDefault: null,
       saving: false,
     };
   },
   async created() {
+    // console.log(this.query, 'query');
     await this.getMaterialListRecords('');
     this.handleGetDetails();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail']),
+    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail', 'updateRecordById']),
     ...mapActions('materialManagement', ['getMaterialListRecords']),
     async handleGetDetails() {
-      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid=="${this.query.id}"&lineid=="${this.query.lineid || null}"`);
+      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       this.bomDetailList = bomdetailList;
     },
     async handleGetData() {
-      await this.getParameterList(`?query=lineid==${this.query.lineid || null}`);
-      // await this.getParameterList('');
+      const parameterList = (await this.getParameterList(`?query=lineid==${this.query.lineid || null}`))
+        .filter((parameter) => Number(parameter.parametercategory) === 25
+        || Number(parameter.parametercategory) === 27);
+      // console.log(parameterList, 'parameterList');
+
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
           (bomdetail) => this.deleteBomDetail(bomdetail._id),
         ));
         this.bomDetailList = [];
       }
-      this.bomDetailList = this.parameterList.map((parameter) => ({
-        substationid: parameter.substationid,
-        bomid: this.query.id,
-        name: this.query.name,
-        parametername: parameter.name,
-        materialname: '',
-        materialtype: '',
-        materialcategory: '',
-        sublineid: this.query.sublineid,
-        assetid: '4',
-      }));
-      this.createBomdetailList(this.bomDetailList);
+      if (parameterList.length > 0) {
+        const bomDetailList = parameterList.map((parameter) => ({
+          lineid: parameter.lineid,
+          sublineid: parameter.sublineid,
+          stationid: parameter.stationid,
+          substationid: parameter.substationid,
+          bomid: this.query.id,
+          name: this.query.name,
+          parametername: parameter.name,
+          materialname: '',
+          materialtype: '',
+          materialcategory: '',
+          assetid: '4',
+        }));
+        await this.createBomdetailList(bomDetailList);
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+      }
     },
     async handleChangeMaterial(item) {
       const { materialname } = item;
       const materialItem = this.materialList
         .filter((material) => materialname === material.name)[0];
-      const query = `?query=parametername=="${item.parametername}"&bomid=="${this.query.id}"`;
       const payload = {
-        materialname: item.materialname,
-        materialtype: materialItem.materialtype,
-        materialcategory: materialItem.category,
+        id: item._id,
+        payload: {
+          materialname,
+          materialtype: materialItem.materialtype,
+          materialcategory: materialItem.materialcategory,
+        },
       };
+      // console.log(payload, 'payload');
       this.saving = true;
-      const updateResult = await this.updateBomDetail({ query, payload });
+      const updateResult = await this.updateRecordById(payload);
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -227,7 +308,7 @@ export default {
           message: 'ERROR_UPDATING_MATERIAL',
         });
       }
-      this.bomDetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
+      this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
     },
     deleteItem(item) {
       this.confirmDialog = true;
@@ -238,20 +319,43 @@ export default {
       const deleteResult = await this.deleteBomDetail(this.bomdetailObjDefault._id);
       this.saving = false;
       if (deleteResult) {
-        this.bomDetailList = await this.getBomDetailsListRecords(`?query=name=="${this.query.name}"&sublineid=="${this.query.sublineid || null}"`);
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'update BOM Details success',
+          message: 'BOM_DETAIL_DELETED',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'network error',
+          message: 'ERROR_DELETING_BOM_DETAIL',
         });
       }
       this.confirmDialog = false;
+    },
+    async handleDeleteItemList() {
+      this.saving = true;
+      const results = await Promise.all(this.bomDetailSelected.map(
+        (bomDetail) => this.deleteBomDetail(bomDetail._id),
+      ));
+      if (results.every((bool) => bool === true)) {
+        this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+        this.bomDetailSelected = [];
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'BOM_DETAIL_DELETED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_DELETING_BOM_DETAIL',
+        });
+      }
+      this.saving = false;
+      this.confirmListDialog = false;
     },
   },
   computed: {

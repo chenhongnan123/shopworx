@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import PlanDashboard from './PlanDashboard.vue';
 import PlanScheduleView from './PlanScheduleView.vue';
 import PlanCalendarView from './PlanCalendarView.vue';
@@ -27,8 +27,23 @@ export default {
     PlanCalendarView,
     PlanSetup,
   },
+  created() {
+    if (this.onboarded) {
+      this.setExtendedHeader(true);
+    }
+  },
+  watch: {
+    onboarded(val) {
+      if (val) {
+        this.setExtendedHeader(true);
+      }
+    },
+  },
   computed: {
     ...mapState('planning', ['onboarded', 'isFullScreen', 'planView']),
+  },
+  methods: {
+    ...mapMutations('helper', ['setExtendedHeader']),
   },
 };
 </script>

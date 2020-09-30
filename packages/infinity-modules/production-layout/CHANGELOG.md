@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **addstation.vue/production-layout:** usage Staart Date enable after Manfucture Date ([fde281b](https://bitbucket.org/entrib/shopworx/commits/fde281b3ebcca5bab0a13c59b22b9dc2ec2b3b21))
+* **production-layout:** change the data type of fields as per schema ([6762031](https://bitbucket.org/entrib/shopworx/commits/67620312bcfe0489413328a08f138dfa54aa0a63))
+
+
+### Features
+
+* **production-layout:** add checkbox in UI while creating SubStation for PLCconfiguration value ([a033609](https://bitbucket.org/entrib/shopworx/commits/a033609261ac83b017d04704a0f63f9e0368d005))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/production-layout

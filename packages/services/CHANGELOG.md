@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **shift-hours:** fixed shift validation of 24 hours ([52b6f82](https://bitbucket.org/entrib/shopworx/commits/52b6f82bb60554386f300155c1d23cb8dc405bd5))
+
+
+### Features
+
+* **production-log:** user input: map rejection to hour ([2c61f5b](https://bitbucket.org/entrib/shopworx/commits/2c61f5ba6842d58a031c733d5117de139d1c0ef0))
+* feature for fetching monitor ([d6d79aa](https://bitbucket.org/entrib/shopworx/commits/d6d79aa03bb258893de687392e03217f9684d999))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/services

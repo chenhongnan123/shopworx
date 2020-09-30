@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* category selector width change ([c75e453](https://bitbucket.org/entrib/shopworx/commits/c75e4532f8e901ee2946137441e68a196d59371a))
+* disable multiplicationfactor and divisionfactor when isconversion == NO ([0cff8a0](https://bitbucket.org/entrib/shopworx/commits/0cff8a0e11cfdfd5b41808a61e6a640cac8af473))
+* fix bug for always false of isbigendian ([ed398d6](https://bitbucket.org/entrib/shopworx/commits/ed398d64e45bdfe1f87c9841c00c33c899158cbf))
+* **ra-i165:** line MES | Parameter configuration | Export Sample file/Import issue ([a5726e1](https://bitbucket.org/entrib/shopworx/commits/a5726e1b0c11348db23aea33f9bd848c4fdd20dd))
+* **ra-i177:** line MES | Parameter Configuration | Reduce size of parameter description field ([c993954](https://bitbucket.org/entrib/shopworx/commits/c993954d7fe764a7084c8965bd66349901887baf))
+* **ra-i196:** rename "size" column in sample CSV to "string_size" ([90ae7b9](https://bitbucket.org/entrib/shopworx/commits/90ae7b9ad8bf9c3084b7f00989e26c0d9f7b1727))
+* fix bug for parameter-configuration ([cf4a410](https://bitbucket.org/entrib/shopworx/commits/cf4a41082bdf8ef8fe7262ff78176b37921d8122))
+* fix bug for parameter-configuration ([91075e0](https://bitbucket.org/entrib/shopworx/commits/91075e022a783930058fd800716864ea12482308))
+* fix bug for parameter-configuration ([ecab01f](https://bitbucket.org/entrib/shopworx/commits/ecab01f042110340edd459edc62577b9df07c91a))
+* fix bug for plcaddress ([0ad1a5b](https://bitbucket.org/entrib/shopworx/commits/0ad1a5b9ac06cf5883fbd64b4a47cf7e7637179a))
+* fix bugs for parameter-configuration ([7a6352d](https://bitbucket.org/entrib/shopworx/commits/7a6352def5913ace2beadc869bc27c0cc616fbad))
+
+
+### Features
+
+* feature for Boolean Bit ([fbd6779](https://bitbucket.org/entrib/shopworx/commits/fbd67798ad7ad3a8265e49b918ab921c8249d9af))
+* feature for category ([e7db137](https://bitbucket.org/entrib/shopworx/commits/e7db137f095bcc8df8aee380cbad259d2900a444))
+* feature for fetching monitor ([301bd15](https://bitbucket.org/entrib/shopworx/commits/301bd156fc0603830f63ca90b9e8ec8aebfe1416))
+* feature for fetching monitor ([9c35843](https://bitbucket.org/entrib/shopworx/commits/9c358436138deaba992e8c0a1b7a782cd2a90a72))
+* feature for fetching monitor ([d6d79aa](https://bitbucket.org/entrib/shopworx/commits/d6d79aa03bb258893de687392e03217f9684d999))
+* fix bug for substation ([fe9efa7](https://bitbucket.org/entrib/shopworx/commits/fe9efa70ccb4c353844772b799f5e03cde95b815))
+* merge ([7f4e388](https://bitbucket.org/entrib/shopworx/commits/7f4e3882c77d57f72dcb1959a5e6666664df00f9))
+* **feature for datatypes:** feature for datatypes ([4816c93](https://bitbucket.org/entrib/shopworx/commits/4816c93785cd05e84f52a14b070326e7b19a7bb4))
+* **save line after linking to the other page:** save line after linking to the other page ([ae9e585](https://bitbucket.org/entrib/shopworx/commits/ae9e585c580de16b4a3317cff6e41521de5701e3))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

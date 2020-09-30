@@ -70,7 +70,7 @@
                     ></v-text-field>
                   </validation-provider>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" sm="12">
                   <v-textarea
                       outlined
                       dense
@@ -78,6 +78,15 @@
                       v-model="remark"
                   ></v-textarea>
                 </v-col>
+                <!-- <v-col cols="12" sm="4">
+                  <v-select
+                    dense
+                    outlined
+                    v-model="rejectionHour"
+                    :items="getHours(plan.shift)"
+                    label="Rejection hour"
+                  ></v-select>
+                </v-col> -->
               </v-row>
             </v-card-text>
             <v-card-actions>
@@ -124,11 +133,13 @@ export default {
       message: null,
       selectedReason: null,
       rejectedQuantity: null,
+      rejectionHour: 0,
       remark: '',
     };
   },
   computed: {
-    ...mapState('productionLog', ['rejectionReasons']),
+    ...mapState('productionLog', ['rejectionReasons', 'hours']),
+    ...mapState('calendar', ['businessHours']),
     dialog: {
       get() {
         return this.editRejection;
@@ -147,14 +158,36 @@ export default {
   },
   methods: {
     ...mapActions('productionLog', ['updateRejection']),
+    getHours(shift) {
+      const hourList = this.businessHours
+        .filter((hours) => hours.shiftName === shift)
+        .map((h) => h.hoursList)
+        .flat();
+      const hours = hourList.map((h) => ({
+        text: this.hours.find((hr) => hr.sortindex === h.businessHour)
+          ? this.hours.find((hr) => hr.sortindex === h.businessHour).displayhour
+          : '-',
+        value: h.businessHour,
+      }));
+      return hours;
+    },
     async saveEdit() {
       this.saving = true;
+      // const { day, month, year } = this.plan;
       const {
         assetid, category, department, reasoncode, reasonname,
       } = this.selectedReason;
+      /* const selectedHour = this.hours.find((hr) => hr.sortindex === this.rejectionHour)
+      .displayhour;
+      const [start] = selectedHour.split('-');
+      const [hr, mins] = start.split(':');
+      const timestamp = new Date(year, (month - 1), day, parseInt(hr, 10), parseInt(mins, 10))
+        .getTime();
+      console.log(timestamp); */
       const data = {
         // eslint-disable-next-line
         id: this.rejection._id,
+        // timestamp,
         quantity: +this.rejectedQuantity,
         remark: this.remark,
         assetid,
