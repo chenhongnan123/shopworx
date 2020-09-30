@@ -331,8 +331,7 @@ export default {
         // tagname, parametervalue
         recipeparameter: parameterList,
       };
-      this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-      });
+      this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`);
       await this.uploadToPLC(object);
     },
     async btnDownloadFromPLC() {
