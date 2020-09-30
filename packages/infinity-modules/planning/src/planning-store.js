@@ -1,5 +1,5 @@
 import HourService from '@shopworx/services/api/hour.service';
-import { set } from '@shopworx/services/util/store.helper';
+import { reactiveSet, set } from '@shopworx/services/util/store.helper';
 import { now } from '@shopworx/services/util/date.service';
 
 export default ({
@@ -24,6 +24,7 @@ export default ({
     inProgressPlans: null,
     pausedPlans: null,
     planDetails: null,
+    eventData: {},
   },
   mutations: {
     setParts: set('parts'),
@@ -45,6 +46,7 @@ export default ({
     setInProgressPlans: set('inProgressPlans'),
     setPausedPlans: set('pausedPlans'),
     setPlanDetails: set('planDetails'),
+    setEventData: reactiveSet('eventData'),
   },
   actions: {
     getPlanningElement: async ({ commit, dispatch }) => {
@@ -559,5 +561,14 @@ export default ({
         default: return '';
       }
     },
+
+    realTimeValue: ({ eventData }) => (planId) => Object.keys(eventData)
+      .filter((key) => key.includes(planId))
+      .reduce((obj, key) => {
+        const k = key.split('__');
+        // eslint-disable-next-line
+        obj[k[1]] = eventData[key];
+        return obj;
+      }, {}),
   },
 });

@@ -125,7 +125,12 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('planning', ['setOnboarded', 'setFullScreen', 'setPlanView']),
+    ...mapMutations('planning', [
+      'setOnboarded',
+      'setFullScreen',
+      'setPlanView',
+      'setEventData',
+    ]),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('planning', ['getPlanningElement']),
     startStream() {
@@ -133,9 +138,9 @@ export default {
     },
     listenStream() {
       this.evtSource.addEventListener('plan', (evt) => {
-        const eventData = JSON.parse(JSON.parse(evt.data));
-        console.log(eventData);
-        // this.setAssetData(eventData);
+        let eventData = JSON.parse(JSON.parse(evt.data));
+        eventData = { ...eventData, key: `${eventData.planid}__${eventData.partname}` };
+        this.setEventData(eventData);
       });
     },
     closeStream() {
