@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **report-viewer:** disable future dates ([bea5034](https://bitbucket.org/entrib/shopworx/commits/bea5034f34385ffa9f092ddcd2bb27fc3f340446))
+* **report-viewer:** disable ok button on single date selection ([0987068](https://bitbucket.org/entrib/shopworx/commits/09870684158850df2c4d30e84d40c7e264baf6e5))
+
+
+### Features
+
+* **report-viewer:** added charts ([46187bb](https://bitbucket.org/entrib/shopworx/commits/46187bb160d2a730a241af9755252e266941d588))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 
