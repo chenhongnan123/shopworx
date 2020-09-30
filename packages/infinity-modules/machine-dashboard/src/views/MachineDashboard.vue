@@ -17,6 +17,7 @@
         :col="currentDimension.col"
         :len="currentDimension.len"
       />
+      <machine-paginator :len="currentDimension.len"></machine-paginator>
     </template>
   </v-container>
 </template>
@@ -25,12 +26,14 @@
 import { mapMutations, mapActions, mapGetters } from 'vuex';
 import DashboardToolbarExtension from '../components/dashboard/DashboardToolbarExtension.vue';
 import MachineSlides from '../components/dashboard/MachineSlides.vue';
+import MachinePaginator from '../components/dashboard/MachinePaginator.vue';
 
 export default {
   name: 'MachineDashboard',
   components: {
     DashboardToolbarExtension,
     MachineSlides,
+    MachinePaginator,
   },
   data() {
     return {

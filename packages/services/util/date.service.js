@@ -59,7 +59,15 @@ export const isWithinRange = (date, interval) => isWithinInterval(date, interval
 export const getDurationBetweenTime = (endTime, startTime) => {
   const [endHour, endMin, endSec] = endTime.split(':');
   const [startHour, startMin, startSec] = startTime.split(':');
-  let endDate = null;
+  let endDate = new Date(
+    2020,
+    3,
+    17,
+    parseInt(endHour, 10),
+    parseInt(endMin, 10),
+    parseInt(endSec || 0, 10),
+    0,
+  );
   const startDate = new Date(
     2020,
     3,
@@ -79,11 +87,11 @@ export const getDurationBetweenTime = (endTime, startTime) => {
       parseInt(endSec || 0, 10),
       0,
     );
-  } else {
+  } else if (startHour >= endHour && startMin >= endMin) {
     endDate = new Date(
       2020,
       3,
-      17,
+      18,
       parseInt(endHour, 10),
       parseInt(endMin, 10),
       parseInt(endSec || 0, 10),

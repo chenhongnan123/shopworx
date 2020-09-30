@@ -4,7 +4,7 @@ export default ({
   namespaced: true,
   state: {
     page: 0,
-    autorun: true,
+    autorun: false,
     machines: [],
     selectedCell: null,
     selectedTime: 1,
@@ -263,5 +263,14 @@ export default ({
       }
       return filteredMachines;
     },
+
+    realTimeValue: ({ assetData }) => (machinename) => Object.keys(assetData)
+      .filter((key) => key.includes(machinename))
+      .reduce((obj, key) => {
+        const k = key.split('__');
+        // eslint-disable-next-line
+        obj[k[1]] = assetData[key];
+        return obj;
+      }, {}),
   },
 });

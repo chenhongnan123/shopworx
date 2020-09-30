@@ -21,6 +21,10 @@ class SiteService {
     return this.request.get(`/server/businesstime/?timestamp=${timestamp}`);
   }
 
+  getBusinessHours() {
+    return this.request.get('/server/elements/getbusinesshours');
+  }
+
   getMasterSolutions() {
     return this.request.get('/server/solution/getallforsite');
   }

@@ -1,5 +1,5 @@
 import HourService from '@shopworx/services/api/hour.service';
-import { set } from '@shopworx/services/util/store.helper';
+import { reactiveSet, set } from '@shopworx/services/util/store.helper';
 import { now } from '@shopworx/services/util/date.service';
 
 export default ({
@@ -23,6 +23,8 @@ export default ({
     overduePlans: null,
     inProgressPlans: null,
     pausedPlans: null,
+    planDetails: null,
+    eventData: {},
   },
   mutations: {
     setParts: set('parts'),
@@ -43,6 +45,8 @@ export default ({
     setOverduePlans: set('overduePlans'),
     setInProgressPlans: set('inProgressPlans'),
     setPausedPlans: set('pausedPlans'),
+    setPlanDetails: set('planDetails'),
+    setEventData: reactiveSet('eventData'),
   },
   actions: {
     getPlanningElement: async ({ commit, dispatch }) => {
@@ -415,6 +419,14 @@ export default ({
       return plans;
     },
 
+    getPlanDetails: async ({ commit, dispatch }, planid) => {
+      const plans = await dispatch(
+        'getPlanningRecords',
+        `?query=planid=="${planid}"`,
+      );
+      commit('setPlanDetails', plans);
+    },
+
     getMachineSchedule: async ({ state, dispatch }) => {
       const { machine } = state;
       const machinename = machine ? machine.machinename : '';
@@ -549,5 +561,14 @@ export default ({
         default: return '';
       }
     },
+
+    realTimeValue: ({ eventData }) => (planId) => Object.keys(eventData)
+      .filter((key) => key.includes(planId))
+      .reduce((obj, key) => {
+        const k = key.split('__');
+        // eslint-disable-next-line
+        obj[k[1]] = eventData[key];
+        return obj;
+      }, {}),
   },
 });

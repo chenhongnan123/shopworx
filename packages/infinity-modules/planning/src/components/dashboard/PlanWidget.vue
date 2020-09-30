@@ -108,43 +108,12 @@
           >
             <v-list class="py-0">
               <template v-for="(plan, planId, index) in groupedPlans">
-                <v-list-item
+                <plan-list-item
                   :key="index"
-                  :style="`border-left: 6px solid var(--v-${planStatusClass(plan[0].status)}-base)`"
-                >
-                  <v-list-item-action class="mb-auto">
-                    <v-checkbox
-                      hide-details
-                      v-model="plan.selected"
-                      @change="onSelectionChanged(plan)"
-                    ></v-checkbox>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      <span v-text="planId"></span>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      <div v-text="plan[0].machinename"></div>
-                      <div v-text="getScheduledStart(plan[0])"></div>
-                    </v-list-item-subtitle>
-                    <template v-for="(p, n) in plan">
-                      <v-progress-linear
-                        :key="n"
-                        :height="25"
-                        class="mt-1"
-                        color="secondary"
-                        :value="p.actualquantity || 0"
-                      >
-                        <span class="font-weight-medium mr-auto ml-2">
-                          {{ p.partname }}
-                        </span>
-                        <span class="font-weight-medium ml-auto mr-2">
-                          {{p.actualquantity || 0}}/{{p.plannedquantity}}
-                        </span>
-                      </v-progress-linear>
-                    </template>
-                  </v-list-item-content>
-                </v-list-item>
+                  :plan="plan"
+                  :planId="planId"
+                  @selection-changed="onSelectionChanged"
+                />
                 <v-divider
                   :key="`d-${index}`"
                   v-if="index < plans.length - 1"
@@ -159,12 +128,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
 // import AbortPlan from '../AbortPlan.vue';
 import AddPlan from '../AddPlan.vue';
+import PlanListItem from './PlanListItem.vue';
 
 export default {
   name: 'PlanWidget',
@@ -173,6 +141,7 @@ export default {
     DeletePlan,
     // AbortPlan,
     AddPlan,
+    PlanListItem,
   },
   props: {
     groupedPlans: {
@@ -211,7 +180,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('planning', ['planStatusClass']),
     plans() {
       if (this.groupedPlans) {
         const items = Object
@@ -230,12 +198,6 @@ export default {
     },
   },
   methods: {
-    getScheduledStart(plan) {
-      return `Scheduled start ${distanceInWordsToNow(
-        new Date(plan.scheduledstart),
-        { addSuffix: true },
-      )}`;
-    },
     onSelectionChanged(plan) {
       if (plan.selected) {
         this.selectedPlans.push(plan);

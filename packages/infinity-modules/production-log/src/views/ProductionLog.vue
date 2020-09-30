@@ -58,6 +58,8 @@ export default {
   async created() {
     this.loading = true;
     await this.getOnboardingState();
+    await this.getBusinessHours();
+    await this.getHours();
     if (this.onboarded) {
       await this.getAppSchema();
       this.setExtendedHeader(true);
@@ -67,7 +69,8 @@ export default {
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
-    ...mapActions('productionLog', ['getOnboardingState']),
+    ...mapActions('calendar', ['getBusinessHours']),
+    ...mapActions('productionLog', ['getOnboardingState', 'getHours']),
   },
   watch: {
     onboarded(val) {

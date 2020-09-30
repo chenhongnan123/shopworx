@@ -46,16 +46,21 @@
         </v-tabs>
       </portal>
     </template>
-    <portal to="app-header" v-else>
-      <v-btn
-        icon
-        v-if="!$vuetify.breakpoint.mdAndDown"
-        @click="$router.back()"
-      >
-        <v-icon v-text="'$left'"></v-icon>
-      </v-btn>
-      <span>Plan: {{ id }}</span>
-    </portal>
+    <template v-else>
+      <portal to="app-header">
+        <v-btn
+          icon
+          v-if="!$vuetify.breakpoint.mdAndDown"
+          @click="$router.back()"
+        >
+          <v-icon v-text="'$left'"></v-icon>
+        </v-btn>
+        <span>Plan {{ id }}</span>
+      </portal>
+      <!-- <portal to="app-extension" v-if="!loading">
+        <plan-details-toolbar />
+      </portal> -->
+    </template>
     <planning-loading v-if="loading" />
     <template v-else>
       <v-fade-transition mode="out-in">
@@ -68,11 +73,13 @@
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
 import PlanningLoading from './PlanningLoading.vue';
+// import PlanDetailsToolbar from '../components/details/PlanDetailsToolbar.vue';
 
 export default {
   name: 'Planning',
   components: {
     PlanningLoading,
+    // PlanDetailsToolbar,
   },
   data() {
     return {
@@ -93,6 +100,13 @@ export default {
       },
     },
   },
+  beforeMount() {
+    this.startStream();
+    this.listenStream();
+  },
+  beforeDestroy() {
+    this.closeStream();
+  },
   async created() {
     this.loading = true;
     const view = localStorage.getItem('planView');
@@ -102,25 +116,36 @@ export default {
     const element = await this.getPlanningElement();
     if (element) {
       this.setOnboarded(true);
-      this.setExtendedHeader(true);
     }
     this.loading = false;
   },
   watch: {
-    onboarded(val) {
-      if (val) {
-        this.setExtendedHeader(true);
-      }
-    },
     planView(val) {
       localStorage.setItem('planView', val);
     },
   },
   methods: {
-    ...mapMutations('planning', ['setOnboarded', 'setFullScreen', 'setPlanView']),
-    ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapMutations('planning', [
+      'setOnboarded',
+      'setFullScreen',
+      'setPlanView',
+      'setEventData',
+    ]),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('planning', ['getPlanningElement']),
+    startStream() {
+      this.evtSource = new EventSource('/sse/asm');
+    },
+    listenStream() {
+      this.evtSource.addEventListener('plan', (evt) => {
+        let eventData = JSON.parse(JSON.parse(evt.data));
+        eventData = { ...eventData, key: `${eventData.planid}__${eventData.partname}` };
+        this.setEventData(eventData);
+      });
+    },
+    closeStream() {
+      this.evtSource.close();
+    },
     enterFullscreen() {
       const elem = document.querySelector('#planning-dashboard');
       elem.onfullscreenchange = (event) => {

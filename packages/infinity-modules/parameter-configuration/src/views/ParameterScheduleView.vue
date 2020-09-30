@@ -610,7 +610,7 @@ export default {
         (parameter) => this.deleteParameter(parameter.id),
       ));
       const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
-      const deletedElement = await this.getSubStationIdElement(selectedSubStaionlist[0]);
+      await this.getSubStationIdElement(selectedSubStaionlist[0]);
       const listT = this.subStationElementDeatils;
       // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
@@ -624,7 +624,7 @@ export default {
         payloadData = pay;
       }
       const payload = payloadData;
-      const changeTagStatus = await this.updateTagStatus(payload);
+      await this.updateTagStatus(payload);
       if (results.every((bool) => bool === true)) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());

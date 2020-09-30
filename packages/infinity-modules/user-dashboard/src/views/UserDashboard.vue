@@ -49,7 +49,7 @@
         </v-col> -->
         <v-col cols="12" md="12" class="text-center mt-6">
           <span class="headline my-auto">
-            Watch out for this section in 4.1.0-rc.3
+            Watch out for the dashboard in upcoming releases
           </span>
         </v-col>
       </v-row>
@@ -59,7 +59,7 @@
 
 <script>
 /* import TabbedChartWidget from '../components/TabbedChartWidget.vue';
-import ChartWidget from '../components/ChartWidget.vue';
+// import ChartWidget from '../components/ChartWidget.vue';
 import StatsWidget from '../components/StatsWidget.vue';
 import ListWidget from '../components/ListWidget.vue'; */
 
@@ -67,7 +67,7 @@ export default {
   name: 'UserDashboard',
   /* components: {
     TabbedChartWidget,
-    ChartWidget,
+    // ChartWidget,
     StatsWidget,
     ListWidget,
   }, */
