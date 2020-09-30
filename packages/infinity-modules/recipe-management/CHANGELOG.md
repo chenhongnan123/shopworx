@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **recipe name have limit of character:** recipe name have limit of character ([df2a1f7](https://bitbucket.org/entrib/shopworx/commits/df2a1f7cb0d961dfdbe2191f793177d25ec2c4c3))
+* **recipe-management:** after selecting subline on station name related with selected subline shown ([3e5f93a](https://bitbucket.org/entrib/shopworx/commits/3e5f93a2332d7b8098a642cba379744f69ddbdfb))
+* **recipe-management:** duplicate button functionality not working correctly after delete ([f62d36b](https://bitbucket.org/entrib/shopworx/commits/f62d36bc22f78b759fd31d4298f26a764ff5b4b9))
+* **recipe-management:** duplicate button will see on first page load ([e4f786d](https://bitbucket.org/entrib/shopworx/commits/e4f786dc8b010be795ae8e3b6c226cba4c042b97))
+* **recipe-management:** refresh b utton functionality with filtered data ([89f5492](https://bitbucket.org/entrib/shopworx/commits/89f549221b309d75f9b1fca260af661bc5e6fccc))
+* **recipe-managment:** popup should not remembered the previous selection ([ca31f51](https://bitbucket.org/entrib/shopworx/commits/ca31f51f3364e37e1d803feab37c6981fe5f78ec))
+* **recipe-managment:** recipe name must be unique ([24699e5](https://bitbucket.org/entrib/shopworx/commits/24699e514451f3d907463582f9703c2314a9e718))
+* **recipe-managment:** special character not allowed in recipe name field ([2bafc3b](https://bitbucket.org/entrib/shopworx/commits/2bafc3b91769e3e1f0d37a3a34bd4554509659fd))
+* **recipe-managment:** toast message on deletion of Recipe ([97d0d2e](https://bitbucket.org/entrib/shopworx/commits/97d0d2ec8602e0e38a4d48b2178ce3d28f908ce6))
+* **recipe-managment:** user cano not add recipe with empty subline and station field ([f4dbbd6](https://bitbucket.org/entrib/shopworx/commits/f4dbbd63b508059bae89871ba8e2070d1a48d1d4))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/recipe-management

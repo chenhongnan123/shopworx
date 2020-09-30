@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **shift-hours:** fixed shift validation of 24 hours ([52b6f82](https://bitbucket.org/entrib/shopworx/commits/52b6f82bb60554386f300155c1d23cb8dc405bd5))
+
+
+### Features
+
+* **business-hours:** calculate and provision available time ([4823d46](https://bitbucket.org/entrib/shopworx/commits/4823d4666436627bb09f96d9942566461655686e))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/setup

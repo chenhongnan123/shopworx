@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **planning:** fixed edit plan ([0c4e942](https://bitbucket.org/entrib/shopworx/commits/0c4e942a156b0aa78299a5af2f4cb84ad15e82d5))
+* **planning:** user can only delete not started plans ([8c5d660](https://bitbucket.org/entrib/shopworx/commits/8c5d660ad80c2b559ea92dd5097c87ec1624fa3a))
+
+
+### Features
+
+* **planning:** added real time plan analytics ([090955a](https://bitbucket.org/entrib/shopworx/commits/090955a939339d377155b67e7d16dd8fef6b3f2a))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 **Note:** Version bump only for package @shopworx/planning

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* fix bugs for parameter-configuration ([7a6352d](https://bitbucket.org/entrib/shopworx/commits/7a6352def5913ace2beadc869bc27c0cc616fbad))
+* remove moudles ([1321ef1](https://bitbucket.org/entrib/shopworx/commits/1321ef1782dedd3d4d7c0c9064fecdf01cf3bcde))
+
+
+### Features
+
+* **ng-code-config:** seprate the ng-code-config and rework-operation from tab to new module ([913d3ec](https://bitbucket.org/entrib/shopworx/commits/913d3ecb96de35102aa6f9d23fd0ff6bb85c0400))
+* **production-log:** user input: map rejection to hour ([2c61f5b](https://bitbucket.org/entrib/shopworx/commits/2c61f5ba6842d58a031c733d5117de139d1c0ef0))
+* feature for fetching monitor ([d6d79aa](https://bitbucket.org/entrib/shopworx/commits/d6d79aa03bb258893de687392e03217f9684d999))
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 

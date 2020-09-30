@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
+
+
+### Bug Fixes
+
+* **add basic validation while creating roadmap details:** add basic validation ([89c82b5](https://bitbucket.org/entrib/shopworx/commits/89c82b554485d9aed010f36f2a7590fc09f24925))
+* **addstation.vue/production-layout:** usage Staart Date enable after Manfucture Date ([fde281b](https://bitbucket.org/entrib/shopworx/commits/fde281b3ebcca5bab0a13c59b22b9dc2ec2b3b21))
+* **machine-dashboard:** fixed family mold view ([8bfffd5](https://bitbucket.org/entrib/shopworx/commits/8bfffd5943a92e1996dbe4fdae3b624ca5900173))
+* **machine-dashboard:** fixed family view for plans ([7a3fbc8](https://bitbucket.org/entrib/shopworx/commits/7a3fbc8a88f09d10d82c6928cc55ff5fee204496))
+* **material-management:** character length for name and number validation ([87cd55f](https://bitbucket.org/entrib/shopworx/commits/87cd55f0c7cb5f5a171ca77b5cd6eb92fa2f1d9b))
+* **material-management:** do not accept special character in Material Name field and basic validati ([8d51d38](https://bitbucket.org/entrib/shopworx/commits/8d51d389bff789dc230350a0b1f2c1e6b512c573))
+* **material-management:** filter get closedon apply button clicked ([09e3c12](https://bitbucket.org/entrib/shopworx/commits/09e3c12a2cd66c89fb73885aceb533cd0f9c254b))
+* **material-management:** remove the number filed from filter window ([7a7a5a8](https://bitbucket.org/entrib/shopworx/commits/7a7a5a8dc6fb345122b3861a20c3a5728ed91ffe))
+* **material-management:** syntax correction in condition statement ([9726d81](https://bitbucket.org/entrib/shopworx/commits/9726d8182d51e04adbca215e50cf403b03b30dff))
+* **material-management:** toggle filter on click on apply button ([cd5669d](https://bitbucket.org/entrib/shopworx/commits/cd5669d9bb897330d2b03f31427c2d2bc627bfe6))
+* **matrial-management:** popup value should get cleared after close the popup ([83d5969](https://bitbucket.org/entrib/shopworx/commits/83d5969abe9e53e1322725a71c78c9f033c6dca1))
+* **planning:** fixed edit plan ([0c4e942](https://bitbucket.org/entrib/shopworx/commits/0c4e942a156b0aa78299a5af2f4cb84ad15e82d5))
+* **planning:** user can only delete not started plans ([8c5d660](https://bitbucket.org/entrib/shopworx/commits/8c5d660ad80c2b559ea92dd5097c87ec1624fa3a))
+* **product-management:** after deleting product duplicate button can not allowed to make duplicate ([e253498](https://bitbucket.org/entrib/shopworx/commits/e253498cf695d77118a8531779161ec7ee1e2f06))
+* **product-management:** change text on button to SAVE instead of UPDATE ([f279610](https://bitbucket.org/entrib/shopworx/commits/f279610726aacd2d27f29b553f77d09e7ec9d945))
+* **product-management:** data not visible in edit popup ([4b127f3](https://bitbucket.org/entrib/shopworx/commits/4b127f32ddfd929be9fd3ff3ca591f3a9f7c878e))
+* **product-management:** edit the coloumn name label ([a18c384](https://bitbucket.org/entrib/shopworx/commits/a18c384adddf0808f6ec3268be819791dbfd0d8b))
+* **product-management:** filtering of value multiple time without using Reset or close button ([276b971](https://bitbucket.org/entrib/shopworx/commits/276b97181069d285eb6c1c6635627178abc2f15b))
+* **product-management:** resolved issue gor filtered value get cleared after reset ([dce1c51](https://bitbucket.org/entrib/shopworx/commits/dce1c51673d2ed3e2c3fe7552e2dd76ad962f16e))
+* **product-management:** single filed can also updated ([f92d5a0](https://bitbucket.org/entrib/shopworx/commits/f92d5a0943a948ab5048efe12474c1b622a2855f))
+* **product-management:** unique product name while creating, updating and while creating duplicate ([012c2eb](https://bitbucket.org/entrib/shopworx/commits/012c2ebe2684daf7d588e6b42a199c37506b3d43))
+* **product-management:** validation for Product Name fiels ([6fb5517](https://bitbucket.org/entrib/shopworx/commits/6fb5517bffa3cf6dc423ed1c7dd11df76509e295))
+* **production-layout:** change the data type of fields as per schema ([6762031](https://bitbucket.org/entrib/shopworx/commits/67620312bcfe0489413328a08f138dfa54aa0a63))
+* **production-log:** added loading on rejection update ([3371a6d](https://bitbucket.org/entrib/shopworx/commits/3371a6de1213720d65266f5525868b043dad8655))
+* **production-log:** fixed form validation on edit rejection ([6a40557](https://bitbucket.org/entrib/shopworx/commits/6a40557f7e8df807959519c10ccd24895bb05a1b))
+* **ra-i165:** line MES | Parameter configuration | Export Sample file/Import issue ([a5726e1](https://bitbucket.org/entrib/shopworx/commits/a5726e1b0c11348db23aea33f9bd848c4fdd20dd))
+* **ra-i177:** line MES | Parameter Configuration | Reduce size of parameter description field ([c993954](https://bitbucket.org/entrib/shopworx/commits/c993954d7fe764a7084c8965bd66349901887baf))
+* **ra-i196:** rename "size" column in sample CSV to "string_size" ([90ae7b9](https://bitbucket.org/entrib/shopworx/commits/90ae7b9ad8bf9c3084b7f00989e26c0d9f7b1727))
+* **ra-i202:** line MES | Material Management | UI issue ([a785845](https://bitbucket.org/entrib/shopworx/commits/a7858454804fdb603207c5b625fb439f9f505fab))
+* **recipe name have limit of character:** recipe name have limit of character ([df2a1f7](https://bitbucket.org/entrib/shopworx/commits/df2a1f7cb0d961dfdbe2191f793177d25ec2c4c3))
+* **recipe-management:** after selecting subline on station name related with selected subline shown ([3e5f93a](https://bitbucket.org/entrib/shopworx/commits/3e5f93a2332d7b8098a642cba379744f69ddbdfb))
+* **recipe-management:** duplicate button functionality not working correctly after delete ([f62d36b](https://bitbucket.org/entrib/shopworx/commits/f62d36bc22f78b759fd31d4298f26a764ff5b4b9))
+* **recipe-management:** duplicate button will see on first page load ([e4f786d](https://bitbucket.org/entrib/shopworx/commits/e4f786dc8b010be795ae8e3b6c226cba4c042b97))
+* **recipe-management:** refresh b utton functionality with filtered data ([89f5492](https://bitbucket.org/entrib/shopworx/commits/89f549221b309d75f9b1fca260af661bc5e6fccc))
+* **recipe-managment:** popup should not remembered the previous selection ([ca31f51](https://bitbucket.org/entrib/shopworx/commits/ca31f51f3364e37e1d803feab37c6981fe5f78ec))
+* **recipe-managment:** recipe name must be unique ([24699e5](https://bitbucket.org/entrib/shopworx/commits/24699e514451f3d907463582f9703c2314a9e718))
+* **recipe-managment:** special character not allowed in recipe name field ([2bafc3b](https://bitbucket.org/entrib/shopworx/commits/2bafc3b91769e3e1f0d37a3a34bd4554509659fd))
+* **recipe-managment:** toast message on deletion of Recipe ([97d0d2e](https://bitbucket.org/entrib/shopworx/commits/97d0d2ec8602e0e38a4d48b2178ce3d28f908ce6))
+* **recipe-managment:** user cano not add recipe with empty subline and station field ([f4dbbd6](https://bitbucket.org/entrib/shopworx/commits/f4dbbd63b508059bae89871ba8e2070d1a48d1d4))
+* **report-viewer:** disable future dates ([bea5034](https://bitbucket.org/entrib/shopworx/commits/bea5034f34385ffa9f092ddcd2bb27fc3f340446))
+* **report-viewer:** disable ok button on single date selection ([0987068](https://bitbucket.org/entrib/shopworx/commits/09870684158850df2c4d30e84d40c7e264baf6e5))
+* **roadmap-management:** add toast message on deletion of roadmap record ([9a8c570](https://bitbucket.org/entrib/shopworx/commits/9a8c570f479bbbe0637dc974be38f37cb80779a1))
+* **roadmap-management:** add validation for roadmap name limit, special characters not allowedd ([36fa469](https://bitbucket.org/entrib/shopworx/commits/36fa4697e59ad4ecca17fed02efadfff984aa126))
+* **roadmap-management:** basic validation ([5e644dd](https://bitbucket.org/entrib/shopworx/commits/5e644ddcb31ca0e843f09dcd4eb6a49fd3157c04))
+* **roadmap-management:** change the date format ([6197acb](https://bitbucket.org/entrib/shopworx/commits/6197acbff8d60351d1068bb610df05a6874e8b00))
+* **roadmap-management:** cleare the selected roadmap type field on pressing RESET button ([a84ac63](https://bitbucket.org/entrib/shopworx/commits/a84ac634720e3fb85842c57892ed2c9e69653b02))
+* **roadmap-management:** in dropdown value popued up depending on their parent dropdown ([45084a6](https://bitbucket.org/entrib/shopworx/commits/45084a6290ef6f8272f1a08aa1965836cb58c111))
+* **roadmap-management:** onpage refresh data get populated in RoadmapDetails.vue ([3e51d93](https://bitbucket.org/entrib/shopworx/commits/3e51d936509cebad33a100f567a73f7225cf78c7))
+* **roadmap-management:** previoussubline field on Add Entry popup ([07c6d2f](https://bitbucket.org/entrib/shopworx/commits/07c6d2fb541833bad093b708233f875b6eddee52))
+* **shift-hours:** fixed shift validation of 24 hours ([52b6f82](https://bitbucket.org/entrib/shopworx/commits/52b6f82bb60554386f300155c1d23cb8dc405bd5))
+* category selector width change ([c75e453](https://bitbucket.org/entrib/shopworx/commits/c75e4532f8e901ee2946137441e68a196d59371a))
+* disable multiplicationfactor and divisionfactor when isconversion == NO ([0cff8a0](https://bitbucket.org/entrib/shopworx/commits/0cff8a0e11cfdfd5b41808a61e6a640cac8af473))
+* **roadmap-management:** roadmap record updated with only change with roadmapType in autoselect ([86ee0ad](https://bitbucket.org/entrib/shopworx/commits/86ee0ad941b992404768163a59684c2545ef9ab7))
+* fix bug for parameter-configuration ([91075e0](https://bitbucket.org/entrib/shopworx/commits/91075e022a783930058fd800716864ea12482308))
+* fix bug for parameter-configuration ([ecab01f](https://bitbucket.org/entrib/shopworx/commits/ecab01f042110340edd459edc62577b9df07c91a))
+* fix bugs for parameter-configuration ([7a6352d](https://bitbucket.org/entrib/shopworx/commits/7a6352def5913ace2beadc869bc27c0cc616fbad))
+* fix bugs material-management ([fa07803](https://bitbucket.org/entrib/shopworx/commits/fa07803a9ae996438c898480cde0e84497decd50))
+* remove moudles ([1321ef1](https://bitbucket.org/entrib/shopworx/commits/1321ef1782dedd3d4d7c0c9064fecdf01cf3bcde))
+* **roadmap-management:** popup remembered previous selection and text ([2764ec1](https://bitbucket.org/entrib/shopworx/commits/2764ec1a8f974dc3a32b7a6654069b716f1db15c))
+* **roadmap-management:** roadmap name should be unique ([3e4b2d3](https://bitbucket.org/entrib/shopworx/commits/3e4b2d3c905276ad2b0b6f4e9c8d43dfafa0d8b0))
+* fix bug for always false of isbigendian ([ed398d6](https://bitbucket.org/entrib/shopworx/commits/ed398d64e45bdfe1f87c9841c00c33c899158cbf))
+* fix bug for parameter-configuration ([cf4a410](https://bitbucket.org/entrib/shopworx/commits/cf4a41082bdf8ef8fe7262ff78176b37921d8122))
+* fix bug for plcaddress ([0ad1a5b](https://bitbucket.org/entrib/shopworx/commits/0ad1a5b9ac06cf5883fbd64b4a47cf7e7637179a))
+
+
+### Features
+
+* **business-hours:** calculate and provision available time ([4823d46](https://bitbucket.org/entrib/shopworx/commits/4823d4666436627bb09f96d9942566461655686e))
+* **feature for datatypes:** feature for datatypes ([4816c93](https://bitbucket.org/entrib/shopworx/commits/4816c93785cd05e84f52a14b070326e7b19a7bb4))
+* **fix bugs material-management:** fix bugs material-management ([a193245](https://bitbucket.org/entrib/shopworx/commits/a19324567c7c617889ae8f8ac1b50bda27ef2475))
+* **machine-dashboard:** added paginator ([631f50d](https://bitbucket.org/entrib/shopworx/commits/631f50d9ca2022fa33cbc663799228c1541f3fa8))
+* **ng-code-config:** seprate the ng-code-config and rework-operation from tab to new module ([913d3ec](https://bitbucket.org/entrib/shopworx/commits/913d3ecb96de35102aa6f9d23fd0ff6bb85c0400))
+* **ng-code-configuration:** add NG-CODE-CONFIGURATION through POST http method and GET http method ([3ceac5e](https://bitbucket.org/entrib/shopworx/commits/3ceac5e9aabf68d7c0e1a800abd6d3e16091dae5))
+* **planning:** added real time plan analytics ([090955a](https://bitbucket.org/entrib/shopworx/commits/090955a939339d377155b67e7d16dd8fef6b3f2a))
+* **production-layout:** add checkbox in UI while creating SubStation for PLCconfiguration value ([a033609](https://bitbucket.org/entrib/shopworx/commits/a033609261ac83b017d04704a0f63f9e0368d005))
+* **production-log:** user input: map rejection to hour ([2c61f5b](https://bitbucket.org/entrib/shopworx/commits/2c61f5ba6842d58a031c733d5117de139d1c0ef0))
+* **report-viewer:** added charts ([46187bb](https://bitbucket.org/entrib/shopworx/commits/46187bb160d2a730a241af9755252e266941d588))
+* feature for Boolean Bit ([fbd6779](https://bitbucket.org/entrib/shopworx/commits/fbd67798ad7ad3a8265e49b918ab921c8249d9af))
+* feature for category ([e7db137](https://bitbucket.org/entrib/shopworx/commits/e7db137f095bcc8df8aee380cbad259d2900a444))
+* feature for fetching monitor ([301bd15](https://bitbucket.org/entrib/shopworx/commits/301bd156fc0603830f63ca90b9e8ec8aebfe1416))
+* feature for fetching monitor ([9c35843](https://bitbucket.org/entrib/shopworx/commits/9c358436138deaba992e8c0a1b7a782cd2a90a72))
+* feature for fetching monitor ([d6d79aa](https://bitbucket.org/entrib/shopworx/commits/d6d79aa03bb258893de687392e03217f9684d999))
+* fix bug for substation ([fe9efa7](https://bitbucket.org/entrib/shopworx/commits/fe9efa70ccb4c353844772b799f5e03cde95b815))
+* **save line after linking to the other page:** save line after linking to the other page ([ae9e585](https://bitbucket.org/entrib/shopworx/commits/ae9e585c580de16b4a3317cff6e41521de5701e3))
+
+
+### BREAKING CHANGES
+
+* **roadmap-management:** ex value.id.id is now value.id
+
+RA-I184, RA-I176
+
+
+
+
+
 # [4.1.0-rc.2-patch.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.2...v4.1.0-rc.2-patch.3) (2020-09-01)
 
 
