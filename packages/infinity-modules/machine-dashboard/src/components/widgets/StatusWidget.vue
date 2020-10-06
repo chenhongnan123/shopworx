@@ -37,7 +37,7 @@
 
 <script>
 import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'StatusWidget',
@@ -73,12 +73,17 @@ export default {
     machine() {
       return this.$route.params.id;
     },
-    ...mapState('machineDashboard', ['assetData']),
+    ...mapGetters('machineDashboard', ['realTimeValue']),
     assetState() {
-      return this.assetData && this.assetData[this.machine];
+      const val = this.realTimeValue(this.machine);
+      if (Object.keys(val).length > 0) {
+        const key = Object.keys(val)[0];
+        return val[key];
+      }
+      return null;
     },
     running() {
-      return this.assetState && !this.assetState.isdown;
+      return this.assetState && this.assetState.status !== 'inProgress';
     },
   },
   methods: {
