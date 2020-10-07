@@ -413,7 +413,7 @@ export default {
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-      'subStationElementDeatils']),
+      'subStationElementDeatils', 'createElementResponse']),
     isAddButtonOK() {
       if (this.lineValue
         && this.sublineValue
@@ -614,17 +614,15 @@ export default {
       const listT = this.subStationElementDeatils;
       // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
-      let payloadData;
-      for (let i = 0; i < FilteredTags.length; i += 1) {
-        const pay = [{
-          tagId: FilteredTags[i].id,
-          elementId: FilteredTags[i].elementId,
+      const payloadData = [];
+      FilteredTags.forEach(async (tag) => {
+        payloadData.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
           status: 'INACTIVE',
-        }];
-        payloadData = pay;
-      }
-      const payload = payloadData;
-      await this.updateTagStatus(payload);
+        });
+      });
+      await this.updateTagStatus(payloadData);
       if (results.every((bool) => bool === true)) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
@@ -713,11 +711,11 @@ export default {
         'bitnumber',
         'dbaddress',
         'startaddress',
-        'stringsize',
-        'isconversion',
+        'size',
+        // 'isconversion',
         'multiplicationfactor',
-        'divisionfactor',
-        'currentvalue',
+        // 'divisionfactor',
+        // 'currentvalue',
         'parameterunit',
         'parametercategory',
         'plcaddress',
@@ -726,7 +724,7 @@ export default {
       parameterSelected.forEach((parameter) => {
         const arr = [];
         column.forEach((key) => {
-          if (key === 'stringsize') {
+          if (key === 'size') {
             arr.push(parameter.size);
           } else {
             arr.push(parameter[key]);
@@ -762,11 +760,11 @@ export default {
         'bitnumber',
         'dbaddress',
         'startaddress',
-        'stringsize',
-        'isconversion',
+        'size',
+        // 'isconversion',
         'multiplicationfactor',
-        'divisionfactor',
-        'currentvalue',
+        // 'divisionfactor',
+        // 'currentvalue',
         'parameterunit',
         'parametercategory',
         'plcaddress',
@@ -834,7 +832,7 @@ export default {
             .isswapped === 1;
           if (Number(item.datatypeList) === 11) {
             item.size = this.datatypeList
-              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].stringsize;
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
           }
         }
         item.protocol = item.protocol.toUpperCase();
@@ -967,6 +965,19 @@ export default {
             }
           });
           await this.createTagElement(tagList);
+          const payloadData = [];
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              console.log(tag[0].tagId);
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
           this.setAlert({
             show: true,
             type: 'success',
