@@ -73,6 +73,7 @@
           <tr>
             <td>{{ item.sublinename }}</td>
             <td>{{ item.stationname }}</td>
+            <td>{{ item.substationname }}</td>
             <td>
               <v-select
                 dense
@@ -119,6 +120,10 @@ export default {
           value: 'stationname',
         },
         {
+          text: this.$i18n.t('displayTags.substationName'),
+          value: 'substationname',
+        },
+        {
           text: this.$i18n.t('displayTags.recipeName'),
           value: 'recipeDetails',
         },
@@ -143,27 +148,91 @@ export default {
         const { roadmapid } = info;
         await this.processForNewEntry(roadmapid);
         await this.saveProductDetails();
-      } else {
+        await this.getProductDetails(productNumber);
         this.stationRecipeList = [];
         this.productDetails.forEach((detail) => {
-          let recipeList = this.recipeList.filter(
-            (recipe) => recipe.machinename === detail.stationname,
-          );
+          let recipeList = [{
+            recipename: '-',
+          }];
+          recipeList.push(...this.recipeList.filter(
+            (recipe) => recipe.substationid === detail.substationid,
+          ));
           if (recipeList.length === 0) {
-            recipeList = [];
+            recipeList = [{
+              recipename: '-',
+            }];
           }
           const selectedRecipe = recipeList.filter(
             (recipe) => recipe.recipename === detail.recipename,
           );
-          this.stationRecipeList.push({
-            id: detail._id,
-            sublinename: detail.sublinename,
-            sublineid: detail.sublineid,
-            stationname: detail.stationname,
-            stationid: detail.stationid,
-            recipeDetails: recipeList,
-            selectedRecipe: selectedRecipe[0],
-          });
+          if (selectedRecipe.length === 0) {
+            this.stationRecipeList.push({
+              id: detail._id,
+              sublinename: detail.sublinename,
+              sublineid: detail.sublineid,
+              stationname: detail.stationname,
+              stationid: detail.stationid,
+              substationname: detail.substationname,
+              substationid: detail.substationid,
+              recipeDetails: recipeList,
+              selectedRecipe: recipeList[0],
+            });
+          } else {
+            this.stationRecipeList.push({
+              id: detail._id,
+              sublinename: detail.sublinename,
+              sublineid: detail.sublineid,
+              stationname: detail.stationname,
+              stationid: detail.stationid,
+              substationname: detail.substationname,
+              substationid: detail.substationid,
+              recipeDetails: recipeList,
+              selectedRecipe: selectedRecipe[0],
+            });
+          }
+        });
+      } else {
+        this.stationRecipeList = [];
+        this.productDetails.forEach((detail) => {
+          let recipeList = [{
+            recipename: '-',
+          }];
+          recipeList.push(...this.recipeList.filter(
+            (recipe) => recipe.substationid === detail.substationid,
+          ));
+          if (recipeList.length === 0) {
+            recipeList = [{
+              recipename: '-',
+            }];
+          }
+          const selectedRecipe = recipeList.filter(
+            (recipe) => recipe.recipename === detail.recipename,
+          );
+          if (selectedRecipe.length === 0) {
+            this.stationRecipeList.push({
+              id: detail._id,
+              sublinename: detail.sublinename,
+              sublineid: detail.sublineid,
+              stationname: detail.stationname,
+              stationid: detail.stationid,
+              substationname: detail.substationname,
+              substationid: detail.substationid,
+              recipeDetails: recipeList,
+              selectedRecipe: recipeList[0],
+            });
+          } else {
+            this.stationRecipeList.push({
+              id: detail._id,
+              sublinename: detail.sublinename,
+              sublineid: detail.sublineid,
+              stationname: detail.stationname,
+              stationid: detail.stationid,
+              substationname: detail.substationname,
+              substationid: detail.substationid,
+              recipeDetails: recipeList,
+              selectedRecipe: selectedRecipe[0],
+            });
+          }
         });
       }
     },
@@ -200,13 +269,15 @@ export default {
         this.roadmapForProduct.forEach((station) => {
           // TODO change tags in stationname (instaed of machinename)
           const recipeList = this.recipeList.filter(
-            (recipe) => recipe.machinename === station.machinename,
+            (recipe) => recipe.substationid === station.substationid,
           );
           this.stationRecipeList.push({
             sublinename: station.sublinename,
             sublineid: station.sublineid,
             stationname: station.machinename,
             stationid: station.stationid,
+            substationname: station.substationname,
+            substationid: station.substationid,
             recipeDetails: recipeList,
             selectedRecipe: recipeList[0],
           });
@@ -215,13 +286,24 @@ export default {
       }
     },
     async onRecipeChange(item) {
-      const productDetails = {
-        recipename: item.selectedRecipe.recipename,
-        recipenumber: item.selectedRecipe.recipenumber,
-        recipeversion: item.selectedRecipe.versionnumber,
-        editedby: this.userName,
-        editedtime: new Date().getTime(),
-      };
+      let productDetails = {};
+      if (item.selectedRecipe.recipename !== '-') {
+        productDetails = {
+          recipename: item.selectedRecipe.recipename,
+          recipenumber: item.selectedRecipe.recipenumber,
+          recipeversion: item.selectedRecipe.versionnumber,
+          editedby: this.userName,
+          editedtime: new Date().getTime(),
+        };
+      } else {
+        productDetails = {
+          recipename: '',
+          recipenumber: '',
+          recipeversion: 0,
+          editedby: this.userName,
+          editedtime: new Date().getTime(),
+        };
+      }
       if (item.id) {
         const updated = await this.updateProductDetails({
           id: item.id,
@@ -248,17 +330,30 @@ export default {
       this.saving = true;
       const payload = [];
       this.stationRecipeList.forEach((element) => {
+        const recipeList = this.recipeList.filter(
+          (recipe) => recipe.substationid === element.substationid,
+        );
+        let recipenum = '';
+        let recipenam = '';
+        let recipever = 0;
+        if (recipeList.length !== 0) {
+          recipenum = recipeList[0].recipenumber;
+          recipenam = recipeList[0].recipename;
+          recipever = recipeList[0].versionnumber;
+        }
         payload.push({
           machinename: element.stationname,
-          recipenumber: element.selectedRecipe.recipenumber,
-          recipename: element.selectedRecipe.recipename,
-          recipeversion: element.selectedRecipe.versionnumber,
+          recipenumber: recipenum,
+          recipename: recipenam,
+          recipeversion: recipever,
           productname: this.productInfo.productname,
           productnumber: this.productInfo.productnumber,
           sublinename: element.sublinename,
           sublineid: element.sublineid,
           stationname: element.stationname,
           stationid: element.stationid,
+          substationname: element.substationname,
+          substationid: element.substationid,
           linename: this.productInfo.linename,
           lineid: this.productInfo.lineid,
           roadmapname: this.productInfo.roadmapname,
@@ -269,20 +364,6 @@ export default {
         });
       });
       await this.createProductDetails(payload);
-      // if (created) {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'success',
-      //     message: 'PRODUCT_DETAILS_CREATED',
-      //   });
-      //   this.disableSave = true;
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'ERROR_CREATING_PRODUCT_DETAILS',
-      //   });
-      // }
       this.saving = false;
     },
   },
