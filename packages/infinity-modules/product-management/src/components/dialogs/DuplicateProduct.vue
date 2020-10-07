@@ -37,32 +37,13 @@
             prepend-icon="mdi-tray-plus"
             v-model="duplicateProductDescription"
         ></v-text-field>
-        <v-autocomplete
-            clearable
-            :label="$t('displayTags.placeHolders.selectProductTypeCategory')"
-            :items="productTypeCategory"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            v-model="selectedProductTypeCategory"
-            :rules="selectProductTypeRule"
-            required
-            prepend-icon="mdi-road-variant"
-            >
-            <template v-slot:item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
           color="primary"
           class="text-none"
-          :disabled="!selectedProductTypeCategory ||
-          !duplicateProductName ||
+          :disabled="!duplicateProductName ||
           !valid"
           @click="saveDuplicate"
         >
@@ -167,8 +148,6 @@ export default {
             editedby: this.userName,
             bomname: this.products[0].bomname,
             bomid: this.products[0].bomid,
-            producttypecategory: this.selectedProductTypeCategory.name,
-            productTypecategoryid: this.selectedProductTypeCategory.id,
             // TODO asset, check editedtime on value and datatype
             assetid: 4,
             editedtime: new Date().getTime(),

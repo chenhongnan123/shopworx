@@ -14,6 +14,8 @@ export default ({
     productList: [],
     stationNamebySubline: [],
     subStationNamebyStation: [],
+    preSubStationList: [],
+    lineList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -28,8 +30,34 @@ export default ({
     setProductList: set('productList'),
     setStationNamebySubline: set('stationNamebySubline'),
     setSubStationNamebyStation: set('subStationNamebyStation'),
+    setPreSubStationList: set('preSubStationList'),
+    setLineList: set('lineList'),
   },
   actions: {
+    getLineList: async ({ dispatch, commit }, query) => {
+      const line = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'line',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLineList', line);
+      return line;
+    },
+    getPreSubStationList: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setPreSubStationList', list);
+      return list;
+    },
     getStationNamesbysubline: async ({ dispatch, commit }, query) => {
       const stationNamebySubline = await dispatch(
         'element/getRecords',

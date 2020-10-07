@@ -10,11 +10,14 @@ export default ({
     lineList: [],
     subLineList: [],
     stationList: [],
+    subStationList: [],
     filterLine: {},
     filterSubLine: {},
     filterStation: {},
     filterBList: [],
     stationNamebySubline: [],
+    datatypeList: [],
+    parametersList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -24,11 +27,14 @@ export default ({
     setLineList: set('lineList'),
     setSubLineList: set('subLineList'),
     setStationList: set('stationList'),
+    setSubStationList: set('subStationList'),
     setFilterLine: set('filterLine'),
     setFilterSubLine: set('filterSubLine'),
     setFilterStation: set('filterStation'),
     setFilterBackupList: set('filterBList'),
     setStationNamebySubline: set('stationNamebySubline'),
+    setDataTypeList: set('datatypeList'),
+    setParamtersList: set('parametersList'),
   },
   actions: {
     getMonitorValues: async ({ dispatch }, payload) => {
@@ -95,6 +101,18 @@ export default ({
       commit('setFilterBackupList', recipe);
       return recipe;
     },
+    getDataTypes: async ({ dispatch, commit }, query) => {
+      const datatype = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'datatypes',
+          query,
+        },
+        { root: true },
+      );
+      commit('setDataTypeList', datatype);
+      return datatype;
+    },
     getOrderRecords: async ({ dispatch }, query) => {
       const orders = await dispatch(
         'element/getRecords',
@@ -105,6 +123,33 @@ export default ({
         { root: true },
       );
       return orders;
+    },
+    getParametersRecords: async ({ dispatch, commit }, query) => {
+      let parameters = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '33');
+      commit('setParamtersList', parameters);
+      return parameters;
+    },
+    createRecipeDetails: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'recipedetails',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
     },
     deleteRecipeByRecipeNumber: async ({ dispatch }, id) => {
       const deleted = await dispatch(
@@ -182,6 +227,18 @@ export default ({
         { root: true },
       );
       commit('setStationList', station);
+      return station;
+    },
+    getSubStations: async ({ dispatch, commit }, query) => {
+      const station = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationList', station);
       return station;
     },
     getRecipeDetailListRecords: async ({ dispatch, commit }, query) => {

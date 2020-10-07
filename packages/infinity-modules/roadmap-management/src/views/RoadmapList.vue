@@ -35,6 +35,18 @@
         item-key="id"
         show-select
         >
+        <template v-slot:item.reworkdescription="{ item }">
+          <v-tooltip top>
+             <template v-slot:activator="{ on, attrs }">
+               <v-btn
+               text small
+               v-bind="attrs"
+                v-on="on"
+              >{{ item.reworkdescription.substring(0,10)+"..." }}</v-btn>
+             </template>
+            <span>{{ item.reworkdescription }}</span>
+            </v-tooltip>
+        </template>
         <template v-slot:item.name="{ item }">
           <span @click="handleClick(item)"><a>{{ item.name }}</a></span>
         </template>
@@ -264,6 +276,10 @@ export default {
           value: 'roadmaptype',
         },
         {
+          text: 'Rework description',
+          value: 'reworkdescription',
+        },
+        {
           text: 'Version',
           value: 'versionnumber',
         },
@@ -377,6 +393,7 @@ export default {
       this.roadmap.name = item.name;
       this.editedVersionNumber = item.versionnumber;
       this.roadmap.roadmaptype = item.roadmaptype;
+      this.roadmap.reworkdescription = item.reworkdescription;
     },
     // addNewRoadmap() {
     //   this.dialog = true;
@@ -386,17 +403,7 @@ export default {
       await this.getRecords('');
     },
     handleClick(value) {
-      this.$router.push(
-        {
-          name: 'roadmap-details',
-          params: {
-            id: value.id,
-            roadmaptype: value.roadmaptype,
-            name: value.name,
-            line: value.line,
-          },
-        },
-      );
+      this.$router.push({ name: 'roadmap-details', params: { id: value } });
     },
     fnLineModel() {
       this.showLineFilter = false;
@@ -423,6 +430,7 @@ export default {
           this.roadmap = {
             name: this.dupRoadmapName,
             roadmaptype: this.roadmaps[0].roadmaptype,
+            reworkdescription: this.roadmaps[0].reworkdescription,
             versionnumber: 1,
             assetid: 4,
             createdby: this.userName,
@@ -445,12 +453,17 @@ export default {
             roadmapDetailsList.forEach((roadmapDetail) => {
               payloadDetails.push({
                 sublinename: roadmapDetail.sublinename,
+                sublineid: roadmapDetail.sublineid,
                 machinename: roadmapDetail.machinename,
+                stationid: roadmapDetail.stationid,
                 substationname: roadmapDetail.substationname,
+                substationid: roadmapDetail.substationid,
                 process: roadmapDetail.process,
                 amtpresubstation: roadmapDetail.amtpresubstation,
                 prestationname: roadmapDetail.prestationname,
+                prestationid: roadmapDetail.prestationid,
                 presubstationname: roadmapDetail.presubstationname,
+                presubstationid: roadmapDetail.presubstationid,
                 assetid: 4,
                 roadmapid: this.roadmapList[0].id,
                 familyName: roadmapDetail.machinename,

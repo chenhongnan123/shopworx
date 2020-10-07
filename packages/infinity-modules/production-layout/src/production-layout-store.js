@@ -21,7 +21,11 @@ export default ({
     stationsbylines: [],
     substationsbylines: [],
     selectedLine: {},
-    assets: {},
+    subStationName: {},
+    runningOrderList: [],
+    roadMapDetailsRecord: [],
+    parametersList: [],
+    subStationsForIP: [],
   },
   mutations: {
     setSelectedLine: set('selectedLine'),
@@ -42,28 +46,80 @@ export default ({
     setAllStations: set('allStations'),
     setStationsbyline: set('stationsbylines'),
     setSubStationsbyline: set('substationsbylines'),
-    setAssets: set('assets'),
+    setSubStationName: set('subStationName'),
+    setrunningOrderList: set('runningOrderList'),
+    setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
+    setParametersList: set('parametersList'),
   },
   actions: {
-    createElement: async ({ dispatch }, payload) => {
-      const created = await dispatch(
-        'element/createElement',
-        payload,
+    getSubStationIdElement: async ({ dispatch }, elementName) => {
+      const results = await dispatch(
+        'element/getElement',
+        elementName,
         { root: true },
       );
-      return created;
-    },
-    getAssets: async ({ commit, dispatch }) => {
-      const assets = await dispatch(
-        'industry/getAssets',
-        null,
-        { root: true },
-      );
-      if (assets && assets.length) {
-        commit('setAssets', assets);
-        return true;
+      if (results) {
+        return results.element;
       }
       return false;
+    },
+    inactiveElement: async ({ dispatch }, object) => {
+      const results = await dispatch(
+        'element/changeElementStatusById',
+        {
+          payload: object,
+          elementId: object.elementId,
+        },
+        { root: true },
+      );
+      if (results) {
+        return results;
+      }
+      return false;
+    },
+    getParameterList: async ({ dispatch, commit }) => {
+      const parameterRecords = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+        },
+        { root: true },
+      );
+      commit('setParametersList', parameterRecords);
+    },
+    downloadToPLC: async ({ dispatch }, payload) => {
+      const substations = await dispatch(
+        'element/postSocket',
+        {
+          functionName: 'parameterupload',
+          payload,
+        },
+        { root: true },
+      );
+      return substations;
+    },
+    getRunningOrder: async ({ dispatch, commit }, query) => {
+      query = '?query=orderstatus=="Running"';
+      const runningOrderList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'order',
+          query,
+        },
+        { root: true },
+      );
+      commit('setrunningOrderList', runningOrderList);
+      return true;
+    },
+    getRoadMapDetailsRecord: async ({ dispatch, commit }) => {
+      const roadMapDetailsRecord = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'roadmapdetails',
+        },
+        { root: true },
+      );
+      commit('setRoadMapDetailsRecord', roadMapDetailsRecord);
     },
     getLines: async ({ dispatch, commit }, query) => {
       const lineList = await dispatch(
@@ -183,6 +239,18 @@ export default ({
       commit('setSubStations', subStations);
       return true;
     },
+    getSubStationName: async ({ dispatch, commit }, query) => {
+      const subStations = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationName', subStations);
+      return true;
+    },
     getProcesses: async ({ dispatch, commit, state }, query) => {
       const { processes } = state;
       const localProcesses = await dispatch(
@@ -195,6 +263,14 @@ export default ({
       );
       commit('setProcesses', localProcesses);
       return processes;
+    },
+    createElement: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/createElement',
+        payload,
+        { root: true },
+      );
+      return created;
     },
     createSubline: async ({ dispatch, commit }, payload) => {
       let list = [];
@@ -265,7 +341,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = `?query=lineid==${payload.lineid}`;
+        const query = `?query=lineid==${payload.lineid}&sortquery=createdTimestamp==-1`;
         const substations = await dispatch(
           'element/getRecords',
           {
@@ -276,7 +352,7 @@ export default ({
         );
         if (substations) {
           list = substations;
-          list = list.sort((a, b) => a.indexno - b.indexno);
+          // list = list.sort((a, b) => a.indexno - b.indexno);
           commit('setSubStations', list);
           return substations;
         }
@@ -365,6 +441,18 @@ export default ({
       }
       // return created;
     },
+    updateMainLineFlagToSubStations: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'substation',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
     updateProcess: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
@@ -446,6 +534,18 @@ export default ({
       }
       return created;
     },
+    updateIpAddressForParameters: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'parameters',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
     deleteProcess: async ({ dispatch, commit }, id) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
@@ -512,6 +612,36 @@ export default ({
         );
       }
       if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'roadmaplist',
+            queryParam: `?query=id=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'roadmapdetails',
+            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'order',
+            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
         const query = `?query=lineid==${object.lineid}`;
         const sublines = await dispatch(
           'element/getRecords',
@@ -558,6 +688,41 @@ export default ({
         );
       }
       if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'roadmaplist',
+            queryParam: `?query=id=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'roadmapdetails',
+            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'order',
+            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+          },
+          { root: true },
+        );
+      }
+      // commit('helper/setAlert', {
+      //   show: true,
+      //   type: 'success',
+      //   message: 'STATION_DEPENDANT_DELETED',
+      // });
+      if (deleted) {
         const query = '';
         const stations = await dispatch(
           'element/getRecords',
@@ -588,6 +753,26 @@ export default ({
           'element/deleteRecordByQuery',
           {
             elementName: 'process',
+            queryParam: `?query=substationid=="${object.id}"`,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/changeElementStatusById',
+          {
+            payload: object,
+            elementId: object.elementId,
+          },
+          { root: true },
+        );
+      }
+      if (deleted) {
+        await dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: 'parameters',
             queryParam: `?query=substationid=="${object.id}"`,
           },
           { root: true },

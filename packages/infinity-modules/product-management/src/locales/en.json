@@ -21,6 +21,7 @@
     "lineName" : "Line",
     "sublineName": "Subline Name",
     "stationName": "Station Name",
+    "substationName": "Sub-Station Name",
     "sublineId": "Subline ID",
     "recipeName": "Recipe Name",
     "recipeId": "Recipe ID",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <span v-text="$t('appTitle')"></span>
+      <span>Product Type</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -115,8 +115,8 @@ export default {
         { text: this.$i18n.t('displayTags.roadmap'), value: 'roadmapname' },
         { text: this.$i18n.t('displayTags.bom'), value: 'bomname' },
         { text: this.$i18n.t('displayTags.version'), value: 'productversionnumber' },
-        { text: this.$i18n.t('displayTags.createdAt'), value: 'editedtime' },
-        { text: this.$i18n.t('displayTags.createdBy'), value: 'editedby' },
+        { text: this.$i18n.t('displayTags.lastEditedOn'), value: 'editedtime' },
+        { text: this.$i18n.t('displayTags.lastEditedBy'), value: 'editedby' },
         { text: this.$i18n.t('displayTags.actions'), sortable: false, value: 'actions' },
       ],
       loadingLine: false,

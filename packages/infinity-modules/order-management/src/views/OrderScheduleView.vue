@@ -62,7 +62,7 @@
                @change="check($event)"
                ></v-checkbox>
             </td>
-            <td>Line1</td>
+            <td>{{ item.linename }}</td>
             <td @click="handleClick(item)">{{ item.ordername }}</td>
             <td>{{ item.ordernumber }}</td>
             <td>{{ item.ordertype }}</td>
@@ -162,9 +162,9 @@ export default {
         },
       ],
       orderStatusToChangeFromNew: ['New', 'Released', 'Interrupted'],
-      orderStatusToChangeFromReleased: ['Released', 'Running', 'Interrupted'],
+      orderStatusToChangeFromReleased: ['Released', 'Running', 'Interrupted', 'Completed'],
       orderStatusToChangeFromInterrupted: ['Interrupted', 'Running'],
-      orderStatusToChangeFromRunning: ['Running', 'Interrupted'],
+      orderStatusToChangeFromRunning: ['Running', 'Interrupted', 'Completed'],
       headers: [
         {
           text: 'Line',
@@ -407,33 +407,55 @@ export default {
     },
     async onChangeStatus(item) {
       let object;
+      let statusFlag = 0;
+      const test = this.orderList.filter((o) => o.orderstatus === 'Running');
+      if (test.length > 1) {
+        statusFlag = 1;
+        await this.RefreshUI();
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ALLREADY_ONE_RUNNING_STATUS',
+        });
+      } else
       if (item.orderstatus === 'Running') {
+        statusFlag = 2;
         object = {
           orderstatus: item.orderstatus,
           orderruntime: new Date().getTime(),
         };
       } else if (item.orderstatus === 'Released') {
+        statusFlag = 2;
         object = {
           orderstatus: item.orderstatus,
           orderreltime: new Date().getTime(),
         };
       } else if (item.orderstatus === 'Interrupted') {
+        statusFlag = 2;
         object = {
           orderstatus: item.orderstatus,
           orderinttime: new Date().getTime(),
+        };
+      } else if (item.orderstatus === 'Completed') {
+        statusFlag = 2;
+        object = {
+          orderstatus: item.orderstatus,
+          ordercompletetime: new Date().getTime(),
         };
       } else {
         object = {
           orderstatus: item.orderstatus,
         };
       }
-      const updated = await this.updateOrder({ query: `?query=ordernumber=="${item.ordernumber}"`, payload: object });
-      if (updated) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'DATA_SAVED',
-        });
+      if (statusFlag === 2) {
+        const updated = await this.updateOrder({ query: `?query=ordernumber=="${item.ordernumber}"`, payload: object });
+        if (updated) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DATA_SAVED',
+          });
+        }
       }
     },
   },

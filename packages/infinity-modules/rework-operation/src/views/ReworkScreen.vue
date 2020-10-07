@@ -1,253 +1,64 @@
 <template>
   <v-container fluid class="py-0">
     <v-row justify="center">
-      <v-col cols="12" xl="10" class="py-0">
-        <v-toolbar
-          flat
-          dense
-          class="stick"
-          :color="$vuetify.theme.dark ? '#121212': ''"
-        >
-        <v-row justify="left"
-        class="mt-10">
-            <v-col cols="12" md="2" class="py-2">
-              <v-text-field
-            label="Enter Query ID"
-            v-model="line"
-        ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="2" class="py-2">
-              <v-text-field
-            label="Subline"
-            v-model="subline"
-        ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="2" class="py-2">
-              <v-text-field
-            label="Station name"
-            v-model="machinename"
-        ></v-text-field>
-            </v-col>
-            </v-row>
-        <v-spacer></v-spacer>
-        </v-toolbar>
+        <v-col cols="12" xl="10" class="py-0">
+             <v-toolbar
+              flat
+              dense
+              lass="stick"
+              :color="$vuetify.theme.dark ? '#121212': ''"
+              >
+            <v-spacer></v-spacer>
+            <v-text-field
+            class="mt-10 mr-2"
+            type="datetime-local"
+            v-model="fromdate"
+            label="From date"
+            dense
+            ></v-text-field>
+            <v-text-field
+            class="mt-10 mr-2"
+            type="datetime-local"
+            v-model="todate"
+            label="To date"
+            dense
+            ></v-text-field>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="btnSearch">
+            Search
+          </v-btn>
+              <v-btn small color="primary" outlined class="text-none ml-2" @click="refreshUi">
+            Refresh
+            </v-btn>
+            </v-toolbar>
+        </v-col>
+      </v-row>
         <v-data-table
         class="mt-2"
-        v-model="recipes"
+        v-model="reworkTable"
         :headers="headers"
-        :items="recipeList"
-        item-key="recipenumber"
-        show-select
+        :items="reworkList"
+        item-key="_id"
         >
         <template v-slot:item="{ item, index }">
           <tr>
-          <td>
-            <v-checkbox
-            v-model="recipes"
-            :value ="item"
-            primary
-            hide-details
-            @change="check($event)"
-            ></v-checkbox>
-          </td>
           <td>{{ index+1 }}</td>
-          <td>{{ item.line }}</td>
-          <td>{{ item.subline }}</td>
-          <td>{{ item.machinename }}</td>
-          <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td>
-          <td>{{ item.recipenumber}}</td>
-          <td>{{ item.versionnumber }}</td>
           <td>{{ item.createdTimestamp }}</td>
-          <td>{{ item.createdby }}</td>
-          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
+          <td>{{ item.mainid }}</td>
+          <td>{{ item.checkoutngcode }}</td>
+          <td v-if="ngCodeDetails.filter((f) =>
+            f.ngcode === item.checkoutngcode).length > 0">{{ ngCodeDetails.filter((f) =>
+            f.ngcode === item.checkoutngcode)[0].ngdescription }}</td>
           <td v-else></td>
-          <td>{{ item.editedby }}</td>
-          <td><v-row><v-btn
-              icon
-              small
-              color="primary"
-              @click="fnUpdateRecipe(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$edit'"></v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              small
-              color="error"
-              @click="deleteRecipe(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn></v-row></td>
+          <td>{{ item.ordername }}</td>
+          <td>{{ item.substationmatch }}</td>
           </tr>
         </template>
       </v-data-table>
-      </v-col>
-    </v-row>
-    <v-dialog
-    scrollable
-    persistent
-    v-model="dialog"
-    max-width="500px"
-    transition="dialog-transition"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
-  >
-    <v-card>
-      <v-card-title primary-title>
-        <span>
-          Recipe
-        </span>
-        <v-spacer></v-spacer>
-        <v-btn icon small @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <v-select
-          v-model="input.sublinename"
-          :items="subLineList"
-          :disabled="saving"
-          item-value="name"
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Sub-Line name"/>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Sub-Line name"
-          :items="subLineList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="subLineSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-        <v-select
-          v-model="input.machinename"
-          :items="stationList"
-          :disabled="saving"
-          item-value="name"
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Station name"/>
-        <v-text-field
-            label="Recipe Name"
-            prepend-icon="mdi-tray-plus"
-            v-model="recipe.recipename"
-        ></v-text-field>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Station name"
-          :items="stationList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="stationSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          @click="saveRecipe"
-        >
-          {{ $t('displayTags.buttons.save') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog
-    scrollable
-    persistent
-    v-model="dialogDup"
-    max-width="500px"
-    transition="dialog-transition"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
-  >
-    <v-card>
-      <v-card-title primary-title>
-        <span>
-          {{ $t('displayTags.duplicate_title') }}
-        </span>
-        <v-spacer></v-spacer>
-        <v-btn icon small @click="dialogDup = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <v-text-field
-            :disabled="saving"
-            label="Recipe Name"
-            prepend-icon="mdi-tray-plus"
-            v-model="dupRecipeName"
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          @click="fnSaveDuplicateRecipe"
-        >
-          {{ $t('displayTags.buttons.save') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-dialog
-    scrollable
-    persistent
-    v-model="dialogConfirm"
-    max-width="500px"
-    transition="dialog-transition"
-    :fullscreen="$vuetify.breakpoint.smAndDown"
-  >
-    <v-card>
-      <v-card-title primary-title>
-        <span>
-          Alert
-        </span>
-        <v-spacer></v-spacer>
-        <v-btn icon small @click="dialogConfirm = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <span>Are you sure you want to delete?</span>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          @click="fnDeleteOnYes"
-        >
-          Yes
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
   </v-container>
 </template>
 
 <script>
-// import { mapActions, mapState, mapMutations } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'NgCodeConfig',
@@ -260,24 +71,21 @@ export default {
         },
         {
           text: 'Date',
-          value: 'reworkdate',
+          value: 'createdTimestamp',
         },
         {
-          text: 'Query ID',
-          value: 'queryid',
+          text: 'Main ID',
+          value: 'mainid',
         },
-        { text: 'NG Code', value: 'ngcode' },
+        { text: 'NG Code', value: 'checkoutngcode' },
+        { text: 'NG Description', value: 'ngcodematch' },
         {
-          text: 'Reworkable',
-          value: 'reworkable',
-        },
-        {
-          text: 'NG Description',
-          value: 'ngdescription',
+          text: 'Order name',
+          value: 'ordername',
         },
         {
-          text: 'Status',
-          value: 'status',
+          text: 'Sub-Station',
+          value: 'substationmatch',
         },
       ],
       visible: false,
@@ -303,11 +111,47 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
+    await this.getReworkList('?query=overallresult!="1"');
+    await this.getNgCodeRecords('');
   },
   computed: {
+    ...mapState('reworkOperation', ['reworkList', 'ngCodeDetails']),
   },
   methods: {
+    ...mapActions('reworkOperation', ['getReworkList', 'getNgCodeRecords']),
+    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('reworkOperation', ['toggleFilter']),
+    handleClick(value) {
+      this.$router.push({ name: 'reworkDetails', params: { id: value } });
+    },
+    async refreshUi() {
+      this.getReworkList('?query=overallresult!="1"');
+    },
+    async btnSearch() {
+      const fromDate = new Date(this.fromdate).getTime();
+      const toDate = new Date(this.todate).getTime();
+      if (!fromDate && !toDate) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_DATE',
+        });
+      } else if (!fromDate || !toDate) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'EITHER_DATE_EMPTY',
+        });
+      } else {
+        this.getReworkList(`?datefrom=${fromDate}&dateto=${toDate}&pagenumber=1&pagesize=20`);
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS_DATE_RANGE',
+        });
+      }
+    },
   },
 };
 </script>

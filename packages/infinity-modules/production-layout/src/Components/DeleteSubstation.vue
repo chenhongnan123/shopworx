@@ -16,7 +16,15 @@
         </v-card-title>
 
         <v-card-text>
-        Do you really want to Delete this Substation?
+        <span class="red--text"
+        >
+          <div v-if="this.parameter.length > 0">
+            This Substation have Parameters and those are also deleted !
+          </div>
+          <div v-else>
+            This Substation Don't Have any Parameter!
+          </div>
+        </span>
         </v-card-text>
 
         <v-card-actions>
@@ -25,6 +33,7 @@
             color="primary"
             class="text-none"
             @click="btnDeleteSubstation"
+            :loading="deleting"
           >
             Yes
           </v-btn>
@@ -33,7 +42,7 @@
     </v-dialog>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   data() {
@@ -42,6 +51,8 @@ export default {
       assetId: 4,
       default: false,
       dialog: false,
+      deleting: false,
+      parameter: [],
     };
   },
   props: {
@@ -50,33 +61,83 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState('productionLayout', [
+      'parametersList',
+    ]),
+  },
+  async created() {
+    await this.getParameterList('');
+    this.invoke();
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['deleteSubstation']),
+    ...mapActions('productionLayout', ['deleteSubstation', 'getParameterList', 'getSubStationIdElement']),
+    async invoke() {
+      const parameterInfo = this.parametersList
+        .filter((p) => p.substationid === this.substation.id);
+      this.parameter = parameterInfo;
+    },
     async btnDeleteSubstation() {
+      const deletedElement = await this.getSubStationIdElement(this.substation.id);
       // const deleted = false;
-      const subStationObject = {
-        id: this.substation.id,
-        sublineid: this.substation.sublineid,
-        lineid: this.substation.lineid,
-      };
-      let deleted = false;
-      deleted = this.deleteSubstation(subStationObject);
-      if (deleted) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'SUBSTATION_DELETED',
-        });
+      console.log(deletedElement);
+      if (!deletedElement) {
+        const defaultElementId = 0;
+        const subStationObject2 = {
+          id: this.substation.id,
+          sublineid: this.substation.sublineid,
+          lineid: this.substation.lineid,
+          elementId: defaultElementId,
+          status: 'INACTIVE',
+        };
+        let deleted = false;
+        this.deleting = true;
+        deleted = await this.deleteSubstation(subStationObject2);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'SUBSTATION__DELETED',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETING_SUBSTATION',
+          });
+        }
         this.dialog = false;
       } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ERROR_DELETING_SUBSTATION',
-        });
+        const subStationObject = {
+          id: this.substation.id,
+          sublineid: this.substation.sublineid,
+          lineid: this.substation.lineid,
+          elementId: deletedElement.id,
+          status: 'INACTIVE',
+        };
+        let deleted = false;
+        this.deleting = true;
+        deleted = await this.deleteSubstation(subStationObject);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'SUBSTATION_DEPENDANT_DELETED',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETING_SUBSTATION',
+          });
+        }
+        this.dialog = false;
       }
-      this.dialog = false;
     },
   },
 };

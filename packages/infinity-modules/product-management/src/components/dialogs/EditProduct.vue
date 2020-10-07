@@ -26,7 +26,7 @@
             :disabled="saving"
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
-            v-model="productNew.productname"
+            v-model="productName"
             :rules="productNameRule"
             required
             :counter="10"
@@ -36,24 +36,48 @@
             :disabled="saving"
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
-            v-model="productNew.description"
+            v-model="productDescription"
+        ></v-text-field>
+        <v-text-field
+            :disabled="saving"
+            :label="$t('displayTags.customer')"
+            prepend-icon="mdi-account"
+            v-model="customername"
+            :counter="15"
         ></v-text-field>
         <v-autocomplete
             clearable
-            :label="$t('displayTags.placeHolders.selectProductTypeCategory')"
-            :items="productTypeCategory"
+            :label="$t('displayTags.placeHolders.selectRoadmap')"
+            :items="roadmapsDetails"
             return-object
             :disabled="saving"
             item-text="name"
-            v-model="productNew.producttypecategory"
-            :rules="selectProductTypeRule"
-            required
+            v-model="selectedRoadmap"
+            :loading="loadingProducts"
             prepend-icon="mdi-road-variant"
             >
             <template v-slot:item="{ item }">
-              <v-list-item-content>
+                <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
-              </v-list-item-content>
+                </v-list-item-content>
+            </template>
+          </v-autocomplete>
+          <v-autocomplete
+            clearable
+            :label="$t('displayTags.placeHolders.selectBom')"
+            :items="bom"
+            return-object
+            :disabled="saving"
+            item-text="name"
+            v-model="selectedBom"
+            :loading="loadingProducts"
+            prepend-icon="mdi-road-variant"
+            required
+            >
+            <template v-slot:item="{ item }">
+                <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
             </template>
           </v-autocomplete>
       </v-card-text>
@@ -62,7 +86,7 @@
         <v-btn
           color="primary"
           class="text-none"
-          :disabled="!valid"
+          :disabled="!productName || !productDescription"
           @click="updateProduct"
         >
           {{ $t('displayTags.buttons.save') }}
@@ -108,14 +132,20 @@ export default {
     product(val) {
       this.productName = val.productname;
       this.productDescription = val.description;
-      return val;
+      this.customername = val.customername;
+      this.selectedRoadmap = val.roadmapname;
+      this.selectedBom = val.bomname;
     },
   },
   created() {
-    this.productNew = { ...this.product };
+    this.productName = this.product.productname;
+    this.productDescription = this.product.description;
+    this.customername = this.product.customername;
+    this.selectedRoadmap = this.product.roadmapname;
+    this.selectedBom = this.product.bomname;
   },
   computed: {
-    ...mapState('productManagement', ['productTypeCategory', 'editProductDialog', 'productList']),
+    ...mapState('productManagement', ['bom', 'roadmapsDetails', 'productTypeCategory', 'editProductDialog', 'productList']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -147,33 +177,52 @@ export default {
           message: 'PRODUCT_NAME_EMPTY',
         });
       } else {
-        const payload = {
-          productname: this.productNew.productname,
-          description: this.productNew.description,
-          editedby: this.userName,
-          producttypecategory: this.productNew.producttypecategory.name,
-          productTypecategoryid: this.productNew.producttypecategory.id,
-          productversionnumber: (this.productNew.productversionnumber + 1),
-          // TODO asset, check editedtime on value and datatype
-          assetid: 4,
-          editedtime: new Date().getTime(),
-        };
-        let update = false;
-        update = this.updateProductType({ id: this.productNew._id, payload });
-        if (update) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'PRODUCT_UPDATED',
-          });
-          this.dialog = false;
-          this.$refs.form.reset();
-        } else {
+        const duplicateName = this.productList.filter(
+          (o) => o.productname === this.productName,
+        );
+        if (duplicateName.length > 0 && this.valid) {
+          this.productName = '';
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'ERROR_UPDATING_PRODUCT',
+            message: 'ALREADY_EXSIST_PRODUCT',
           });
+        } else {
+          const object = {};
+          if (this.selectedBom) {
+            object.bomname = this.selectedBom.name;
+            object.bomid = this.selectedBom.id;
+          }
+          const payload = {
+            ...object,
+            productname: this.productName,
+            description: this.productDescription,
+            editedby: this.userName,
+            roadmapname: this.selectedRoadmap.name,
+            roadmapid: this.selectedRoadmap.id,
+            roadmaptype: this.selectedRoadmap.roadmaptype,
+            customername: this.customername,
+            productversionnumber: (this.product.productversionnumber + 1),
+            // TODO asset, check editedtime on value and datatype
+            editedtime: new Date().getTime(),
+          };
+          let update = false;
+          update = this.updateProductType({ id: this.product._id, payload });
+          if (update) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'PRODUCT_UPDATED',
+            });
+            this.dialog = false;
+            this.$refs.form.reset();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_UPDATING_PRODUCT',
+            });
+          }
         }
       }
     },

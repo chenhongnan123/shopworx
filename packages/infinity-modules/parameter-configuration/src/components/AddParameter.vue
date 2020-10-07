@@ -142,7 +142,7 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             clearable
             label="Is Conversion"
             :items="boolList"
@@ -159,7 +159,7 @@
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
           <v-text-field
               v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
@@ -168,14 +168,14 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.multiplicationfactor"
           ></v-text-field>
-          <v-text-field
+          <!-- <v-text-field
               v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.divisionfactor"
               label="Division Factor"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.divisionfactor"
-          ></v-text-field>
+          ></v-text-field> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.parameterunit"
@@ -332,7 +332,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog']),
-    ...mapActions('parameterConfiguration', ['getPageDataList', 'createParameter', 'getParameterListRecords']),
+    ...mapActions('parameterConfiguration', ['getPageDataList', 'createParameter', 'getParameterListRecords', 'getSubStationIdElement', 'createTagElement']),
     getQuery() {
       let query = '?query=';
       if (this.selectedParameterName) {
@@ -401,6 +401,7 @@ export default {
           isswapped: parameterObj.datatype.isswapped,
           isconversion: parameterObj.isconversion.id,
           protocol: parameterObj.protocol.id,
+          maxdecimal: 3,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),
           lineid: this.line,
@@ -410,12 +411,55 @@ export default {
           plcaddress: this.stationList.filter((item) => item.id === this.station)[0].plcipaddress,
           booleanbit: parameterObj.booleanbit || '',
         };
-        if (parameterObj.datatype && parameterObj.datatype.name === 'String') {
+        if (parameterObj.datatype && (parameterObj.datatype.name === 'Boolean' || parameterObj.datatype.name === 'String')) {
           payload.size = parameterObj.size;
         }
         this.saving = true;
         const parameterList = await this.createParameter(payload);
         this.saving = false;
+        if (Number(parameterObj.parametercategory.id) === 15
+        || Number(parameterObj.parametercategory.id) === 17
+        || Number(parameterObj.parametercategory.id) === 18) {
+          await this.getSubStationIdElement(this.substationValue);
+          let dataTypeName = '';
+          if (parameterObj.datatype.name === 'String') {
+            dataTypeName = 'String';
+          } else {
+            dataTypeName = 'Double';
+          }
+          const object = [{
+            assetId: 4,
+            tagName: parameterObj.name,
+            tagDescription: parameterObj.name,
+            emgTagType: dataTypeName,
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          }];
+          await this.createTagElement(object);
+        }
         if (parameterList) {
           this.getParameterListRecords(this.getQuery());
           Object.keys(this.parameterObj).forEach((k) => {

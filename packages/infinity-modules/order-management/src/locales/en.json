@@ -1,4 +1,5 @@
 {
+  "orderManagement": "Order",
   "planning": {
     "setup": {
       "counter": "Step {current} of {total}",
@@ -45,8 +46,21 @@
         "title2": "planning",
         "title3": "app. Other settings are available in the app for you to change.",
         "next": "Let's go"
+      },
+      "error": {
+        "ROADMAPTYPE_NOT_EXISTS": "RoadMap Type Not Exists"
       }
     },
     "orderstatus": "Order Status"
+  },
+  "error": {
+    "PRODUCT_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product!",
+    "ROADMAP_DETAILS_NOT_AVAILABLE": "RoadMap Details Not Exists for this Product!",
+    "PRODUCT_ROADMAP_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product",
+    "ORDER_NOT_INTERRUPTED": "Not Allowed! This is Not INTERRUPTED Order !"
+  },
+  "success": {
+    "ORDER_HIDE": "Selected Order is Hide by you.",
+    "ORDER_UNHIDE": "Selected Order is Unhide by you."
   }
 }

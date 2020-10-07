@@ -13,6 +13,7 @@ import ProductionLayout from '@shopworx/production-layout';
 import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
+import TraceabilityApp from '@shopworx/traceability-app';
 import NgCodeConfiguration from '@shopworx/ng-code-configuration';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
@@ -33,6 +34,11 @@ Vue.use(MaterialManagement, {
   i18n,
 });
 Vue.use(Admin, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(TraceabilityApp, {
   router,
   store,
   i18n,

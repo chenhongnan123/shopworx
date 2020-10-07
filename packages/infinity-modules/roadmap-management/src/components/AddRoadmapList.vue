@@ -47,7 +47,15 @@
           item-text="name"
           prepend-icon="$production"
           :rules="roadmapTyperule"
-          v-model="roadmap.roadmaptype"/>
+          v-model="roadmap.roadmaptype"
+          @change="onChangeRoadmapType()"/>
+        <v-textarea
+          rows="2"
+          v-show="selectReworkFlag"
+          label="Rework description"
+          prepend-icon="mdi-tray-plus"
+          v-model="roadmap.reworkdescription"
+        ></v-textarea>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -94,6 +102,7 @@ export default {
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
       roadmapTyperule: [(v) => !!v || 'Selection Required'],
+      selectReworkFlag: false,
     };
   },
   computed: {
@@ -138,6 +147,7 @@ export default {
         this.saving = true;
         this.roadmap = {
           ...this.roadmap,
+          reworkdescription: this.roadmap.reworkdescription,
           versionnumber: 1,
           assetid: 4,
           createdby: this.userName,
@@ -162,6 +172,13 @@ export default {
           });
         }
         this.saving = false;
+      }
+    },
+    onChangeRoadmapType() {
+      if (this.roadmap.roadmaptype === 'Rework') {
+        this.selectReworkFlag = true;
+      } else {
+        this.selectReworkFlag = false;
       }
     },
     async dialogReset() {

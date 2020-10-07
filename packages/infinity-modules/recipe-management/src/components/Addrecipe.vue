@@ -9,8 +9,7 @@
   >
   <template v-slot:activator="{ on }">
     <v-btn v-on="on" small color="primary" class="text-none ml-2">
-    <v-icon  v-text="'$plus'"
-    class="float-right"></v-icon>
+    <v-icon small left>mdi-plus</v-icon>
     {{ $t('displayTags.buttons.addNewRecipe') }}
     </v-btn>
     </template>
@@ -29,6 +28,24 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
+        <v-autocomplete
+          clearable
+          label="Select Line name"
+          :items="lineList"
+          return-object
+          :disabled="saving"
+          item-text="name"
+          v-model="input.linename"
+          :loading="loadingParts"
+          prepend-icon="$production"
+          @change="handleLineClick"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
         <v-select
           v-model="input.sublinename"
           :items="subLineList"
@@ -39,7 +56,7 @@
           required
           prepend-icon="$production"
           label="Select Sub-Line name"
-          @change="getfilteredStationNames"/>
+          @change="handleSubLineClick"/>
         <!-- <v-autocomplete
           clearable
           label="Select Sub-Line name"
@@ -58,15 +75,24 @@
           </template>
         </v-autocomplete> -->
         <v-select
-          v-model="input.machinename"
-          :items="stationNamebySubline"
+          v-model="input.stationname"
+          :items="stationList"
           :disabled="saving"
-          item-value="name"
+          return-object
           item-text="name"
           :rules="stationSelect"
           required
           prepend-icon="$production"
-          label="Select Station name"/>
+          label="Select Station name"
+          @change="handleStationClick"/>
+        <v-select
+          v-model="input.substationname"
+          :items="subStationList"
+          :disabled="saving"
+          return-object
+          item-text="name"
+          prepend-icon="$production"
+          label="Select Sub-Station name"/>
         <v-text-field
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
@@ -140,17 +166,48 @@ export default {
       sublineSelect: [(v) => !!v || 'required'],
       stationSelect: [(v) => !!v || 'required'],
       input: {
+        linename: '',
         sublinename: '',
-        machinename: '',
+        stationname: '',
+        substationname: '',
       },
     };
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'stationList', 'lineList', 'subLineList', 'filterLine', 'filterSubLine', 'filterStation', 'stationNamebySubline']),
+    ...mapState('recipeManagement', ['recipeList', 'stationList',
+      'lineList',
+      'stationList',
+      'subStationList',
+      'subLineList',
+      'filterLine',
+      'filterSubLine',
+      'filterStation',
+      'stationNamebySubline']),
+    ...mapState('user', ['me']),
+    userName: {
+      get() {
+        return this.me.user.firstname;
+      },
+    },
   },
   methods: {
-    ...mapActions('recipeManagement', ['createRecipe', 'updateRecipe', 'getStationNamesbysubline']),
+    ...mapActions('recipeManagement', ['createRecipe', 'updateRecipe', 'getStationNamesbysubline',
+      'getSubLines',
+      'getStations',
+      'getSubStations']),
     ...mapMutations('helper', ['setAlert']),
+    async handleLineClick(item) {
+      const query = `?query=lineid==${item.id}`;
+      await this.getSubLines(query);
+    },
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getStations(query);
+    },
+    async handleStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getSubStations(query);
+    },
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
       this.$refs.form.validate();
@@ -175,7 +232,7 @@ export default {
           type: 'error',
           message: 'RECIPE_SUBLINE_NAME_EMPTY',
         });
-      } else if (!this.input.machinename) {
+      } else if (!this.input.stationname) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -183,7 +240,7 @@ export default {
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-        && o.machinename === this.input.machinename);
+        && o.stationname === this.input.stationname);
         //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';
@@ -199,8 +256,8 @@ export default {
             ...this.recipe,
             line: 'Line1',
             subline: this.input.sublinename,
-            machinename: this.input.machinename,
-            editedby: 'admin',
+            stationname: this.input.stationname,
+            editedby: this.userName,
             editedtime: new Date().getTime(),
             versionnumber: this.editedVersionNumber + 1,
           };
@@ -232,12 +289,17 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            line: 'Line1',
-            subline: this.input.sublinename,
+            linename: this.input.linename.name,
+            lineid: this.input.linename.id,
+            sublinename: this.input.sublinename.name,
+            sublineid: this.input.sublinename.id,
+            stationid: this.input.stationname.id,
+            stationname: this.input.stationname.name,
+            substationid: this.input.substationname.id,
+            substationname: this.input.substationname.name,
             versionnumber: 1,
             assetid: 4,
-            machinename: this.input.machinename,
-            createdby: 'admin',
+            createdby: this.userName,
           };
           let created = false;
           const payload = this.recipe;
