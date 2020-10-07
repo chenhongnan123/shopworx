@@ -34,12 +34,12 @@
           <v-card-title
             class="py-0"
             style="border-radius: 8px 8px 0px 0px"
-            :class="assetState && !assetState.isdown ? 'success' : 'error'"
+            :class="asset && asset.status === 'inProgress' ? 'error' : 'success'"
           >
             {{ machine.machinename }}
             <v-spacer></v-spacer>
-            <span v-if="assetState && assetState.isdown">
-              {{ getDowntimeSince(assetState.actualdowntimestart) }}
+            <span v-if="asset && asset.status === 'inProgress'">
+              {{ getDowntimeSince(asset.actualdowntimestart) }}
             </span>
           </v-card-title>
           <v-card-text
@@ -65,7 +65,7 @@
                       </span>
                     </div>
                     <div class="headline">
-                      {{ asset.qty }}
+                      {{ asset.qty || 0 }}
                     </div>
                   </v-col>
                 </v-row>

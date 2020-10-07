@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
+
+
+### Bug Fixes
+
+* **shopfloor-dashboard:** fixed asm integration for realtime values ([3504713](https://bitbucket.org/entrib/shopworx/commits/35047136b4fc3cb3f7b51335e7a37b246a66e9b5))
+
+
+
+
+
 # [4.1.0-rc.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.2-patch.3...v4.1.0-rc.3) (2020-09-30)
 
 
