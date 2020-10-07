@@ -9,8 +9,7 @@
   >
   <template v-slot:activator="{ on }">
     <v-btn v-on="on" small color="primary" class="text-none ml-2">
-    <v-icon  v-text="'$plus'"
-    class="float-right"></v-icon>
+    <v-icon small left>mdi-plus</v-icon>
     {{ $t('displayTags.buttons.addNewRecipe') }}
     </v-btn>
     </template>
