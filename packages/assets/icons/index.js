@@ -10,6 +10,7 @@ export default {
     home: 'mdi-home-outline',
     productionPlanning: 'mdi-calendar-text-outline',
     productionLayout: 'mdi-file-tree-outline',
+    traceabilityApp: 'mdi-graph-outline',
     materialManagement: 'mdi-cart-minus',
     parameterManagement: 'mdi-tune',
     productManagement: 'mdi-ballot-outline',
