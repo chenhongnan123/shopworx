@@ -77,7 +77,7 @@
                     <v-row justify="left">
                       <v-col cols="12" md="4" xl="2">
                         <v-list-item-title>
-                          <span>Line1</span>
+                          <div v-text="plan.linename"></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           <div v-text="plan.productname"></div>
