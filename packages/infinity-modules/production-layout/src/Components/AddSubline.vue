@@ -35,8 +35,16 @@
           :counter="10"
           required></v-text-field>
         <v-text-field label="Description"
-         hint="For example, added by Manager"
          type="text" v-model="newSubLine.description"></v-text-field>
+         <v-text-field label="Expected OEE"
+         type="number" v-model="newSubLine.expectedoee"></v-text-field>
+        <v-text-field label="Expected Cycletime"
+         type="number" v-model="newSubLine.expectedcycletime"></v-text-field>
+         <div>
+         <v-checkbox v-model="checked" class="mx-2"
+         label="Make this subline as MainLine"
+         @change="checkMainline"></v-checkbox>
+         </div>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -75,15 +83,26 @@ export default {
       required: true,
     },
   },
-  created() {
-    this.getAssets();
-  },
   computed: {
     ...mapState('productionLayout', ['sublines', 'addSublineDialog', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubline', 'getSublines', 'getAssets']),
+    ...mapActions('productionLayout', ['createSubline', 'getSublines']),
+    async checkMainline() {
+      const mainline = this.sublines
+        .filter((m) => m.lineid === parseInt(this.lineid, 10)
+         && m.ismainline === true
+         && m.ismainline === this.checked);
+      if (mainline.length > 0) {
+        this.checked = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MAINLINE_EXISTIS',
+        });
+      }
+    },
     async saveSubline() {
       if (this.newSubLine.numbers === undefined) {
         this.setAlert({
@@ -113,12 +132,11 @@ export default {
           });
         } else {
           this.saving = true;
-          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
-          this.assetId = getAssetId;
           this.newSubLine = {
             ...this.newSubLine,
             lineid: this.lineid,
-            assetid: this.assetId,
+            assetid: 4,
+            ismainline: this.checked,
           };
           let created = false;
           const payload = this.newSubLine;
@@ -130,7 +148,7 @@ export default {
               message: 'SUBLINE_CREATED',
             });
             this.dialog = false;
-            this.assetId = this.getAssetId;
+            this.assetId = 4;
             this.newSubLine = {};
             this.$refs.form.reset();
           } else {

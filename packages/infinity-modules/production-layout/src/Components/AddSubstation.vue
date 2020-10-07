@@ -76,9 +76,7 @@ export default {
   data() {
     return {
       newSubstation: {},
-      // assetId: 4,
-      assetId: null,
-      getAssetId: '',
+      assetId: 4,
       checked: false,
       selectedSubstationLine: null,
       default: false,
@@ -95,18 +93,21 @@ export default {
     };
   },
   props: {
+    lineid: {
+      type: [Number, String],
+      required: true,
+    },
   },
   created() {
     // this.getAllStations('');
-    this.getAssets();
     this.newSubstation = { ...this.substation };
   },
   computed: {
-    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations', 'assets']),
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName', 'getAssets']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -171,16 +172,17 @@ export default {
           });
         } else {
           this.saving = true;
-          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
-          this.assetId = getAssetId;
           this.newSubstation = {
             ...this.newSubstation,
             stationid: this.selectedSubstationLine.id,
             sublineid: this.selectedSubstationLine.sublineid,
+            ismainline: this.sublines.filter(
+              (f) => f.id === this.selectedSubstationLine.sublineid,
+            )[0].ismainline,
             lineid: this.selectedSubstationLine.lineid,
+            paramconfigured: this.checked,
             // lineid: this.lineid,
             assetid: this.assetId,
-            stationcolor: 1,
           };
           let created = false;
           const payload = this.newSubstation;
@@ -191,12 +193,13 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
+            this.dialog = false;
             const checkedPlc = this.checked;
             if (checkedPlc) {
               this.newSubstation = {};
               this.dialog = false;
-              this.assetId = this.getAssetId;
-              this.$refs.form.reset();
+              this.assetId = 4;
+              // this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
@@ -205,8 +208,8 @@ export default {
                 collectionName: 'provisioning',
                 elementName: substationid,
                 elementDescription: this.subStations[0].name,
-                dateCreated: 1590647154882,
-                dateModified: 1590647154882,
+                // dateCreated: 1590647154882,
+                // dateModified: 1590647154882,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',
@@ -219,12 +222,16 @@ export default {
                 assetBased: true,
                 uniqueTag: false,
               };
-              this.createElement(object);
-            } else {
-              this.newSubstation = {};
+              let createdElement = false;
+              createdElement = await this.createElement(object);
+              if (createdElement) {
+                this.setAlert({
+                  show: true,
+                  type: 'success',
+                  message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
+                });
+              }
               this.dialog = false;
-              this.checked = false;
-              this.assetId = this.getAssetId;
               this.$refs.form.reset();
             }
           } else {

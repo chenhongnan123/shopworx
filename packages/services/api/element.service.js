@@ -49,6 +49,14 @@ class ElementService {
     return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
   }
 
+  updateTagById(payload) {
+    return this.request.put(`/server/tag/updatemultiple`, payload);
+  }
+
+  changeElementStatusById(payload, elementId) {
+    return this.request.put(`/server/elements/schema/${elementId}`, payload);
+  }
+
   postSocket(functionName, payload) {
     return this.request.post(`/socket.io/linemes/${functionName}`, payload);
   }
