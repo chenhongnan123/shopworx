@@ -258,7 +258,7 @@ export default {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
         cFlag = 4;
       }
-      console.log(this.selectedSubLine);
+      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -272,13 +272,11 @@ export default {
       // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
       this.componentList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptions.api.refreshCells();
         }
       });
-      console.log(this.componentList);
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -315,7 +313,6 @@ export default {
     },
     async nextSearch() {
       const pagenumber = this.pageNumber;
-      console.log(pagenumber);
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       let param = '';
@@ -347,15 +344,12 @@ export default {
       param += '&sortquery=modifiedtimestamp==-1';
       await this.getPartStatus(param);
       this.componentList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptions.api.refreshCells();
         }
       });
-      console.log(this.componentList);
       this.partStatusList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptionsPart.api.refreshCells();
@@ -373,7 +367,6 @@ export default {
     },
     async prevSearch() {
       const pagenumber = this.pageNumber;
-      console.log(pagenumber);
       if (pagenumber <= 1) {
         this.prevDisabled = true;
         const fromDate = new Date(this.trecibilityState.fromdate).getTime();
@@ -392,7 +385,6 @@ export default {
           param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
           param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
         }
-        console.log(this.selectedSubLine);
         if (this.trecibilityState.selectedSubLine) {
           param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         }
@@ -407,15 +399,12 @@ export default {
         param += '&sortquery=modifiedtimestamp==-1';
         await this.getPartStatus(param);
         this.componentList.forEach((e) => {
-          console.log(e.substationid);
           if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
             e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
             this.gridOptions.api.refreshCells();
           }
         });
-        console.log(this.componentList);
         this.partStatusList.forEach((e) => {
-          console.log(e.substationid);
           if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
             e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
             this.gridOptionsPart.api.refreshCells();
@@ -439,7 +428,6 @@ export default {
           fromdate: this.fromdate,
           todate: this.todate,
         };
-        console.log(data, 'data');
         this.setRecipeViewState(0);
         this.setSubStationInfo(data);
       }

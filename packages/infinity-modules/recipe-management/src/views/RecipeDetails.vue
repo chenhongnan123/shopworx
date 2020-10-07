@@ -249,7 +249,7 @@ export default {
     }
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
-      console.log('connected to socketwebhook');
+      // console.log('connected to socketwebhook');
     });
   },
   beforeDestroy() {
@@ -290,7 +290,7 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received');
+        // console.log('event received');
         if (data) {
           this.recipeListDetails.forEach((element) => {
             if (data[element.tagname]) {
@@ -330,8 +330,8 @@ export default {
         recipeparameter: parameterList,
       };
       this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received - upload');
-        console.log(data);
+          // console.log('event received - upload');
+        // console.log(data);
       });
       await this.uploadToPLC(object);
     },
@@ -342,10 +342,10 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.off(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
-        console.log('event closed - download');
+        // console.log('event closed - download');
       });
       this.socket.on(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received - download');
+        // console.log('event received - download');
         if (data) {
           this.recipeListDetails.forEach(async (element) => {
             if (data[element.tagname]) {

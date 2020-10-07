@@ -392,7 +392,7 @@ export default {
         await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"`);
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
-        console.log(singlengcodeconfig);
+        // console.log(singlengcodeconfig);
         if (singlengcodeconfig.length === 0) {
           this.setAlert({
             show: true,

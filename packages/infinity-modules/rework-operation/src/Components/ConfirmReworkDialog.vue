@@ -121,7 +121,7 @@ export default {
             overallresult: 1,
           },
         };
-        console.log(payload);
+        // console.log(payload);
         await this.updateOverAllResult(payload);
         this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
           let reworkS = 2;

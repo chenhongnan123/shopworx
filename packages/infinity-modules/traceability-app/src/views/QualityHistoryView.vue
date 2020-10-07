@@ -113,7 +113,6 @@ export default {
       'trecibilityState']),
   },
   async created() {
-    console.log(this.trecibility);
     await this.getSubStations();
     const {
       substationid,
@@ -378,7 +377,6 @@ export default {
         param += `dateto=${toDate}&`;
       }
       param += `pagenumber=${pagenumber}&pagesize=20`;
-      console.log(param);
       if (this.trecibilityState.selectedSubStation) {
         const elDetails = await this.getProcessElement(this.trecibilityState.selectedSubStation.id);
         if (elDetails) {

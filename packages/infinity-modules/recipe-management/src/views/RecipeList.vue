@@ -271,7 +271,7 @@ export default {
     await this.getRecipeListRecords('');
   },
   async beforeDestroy() {
-    console.log('beforeDestroy');
+    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
   },

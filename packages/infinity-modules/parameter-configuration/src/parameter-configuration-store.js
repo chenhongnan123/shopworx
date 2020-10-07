@@ -265,7 +265,7 @@ export default ({
         { elementName: 'substation' },
         { root: true },
       );
-      console.log(lineList, 'lineList');
+      // console.log(lineList, 'lineList');
       const parameterList = await dispatch(
         'element/getRecords',
         {

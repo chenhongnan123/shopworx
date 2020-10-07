@@ -159,8 +159,6 @@ export default {
     await this.getSubStations();
     // await this.fetchRecords();
     await this.showInput();
-    const self = this;
-    console.log(self.$refs.partstatus);
   },
   data() {
     return {

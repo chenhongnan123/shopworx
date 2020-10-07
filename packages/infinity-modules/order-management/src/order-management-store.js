@@ -100,7 +100,7 @@ export default ({
           if (checkOut.length) {
             const matchOrder = checkOut
               .filter((o) => o.ordernumber === item.ordernumber);
-            console.log(matchOrder);
+            // console.log(matchOrder);
             const substationInfo = substations
               .filter((st) => st.id === matchOrder[0].substationid);
             // item.actualcount = actualUpdatecount[0].ordercount;

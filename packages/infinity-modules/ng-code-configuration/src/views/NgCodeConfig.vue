@@ -615,7 +615,7 @@ export default {
       this.newNgCode.description = item.ngdescription;
       // this.newNgCode.reworkDescription = item.reworkdescription;
       // this.newNgCode.roadmap = item.reworkroadmap;
-      console.log(this.newNgCode.reWorkable);
+      // console.log(this.newNgCode.reWorkable);
     },
     async updateSaveNgConfig() {
       if (!this.newNgCode.selectedLinenew) {

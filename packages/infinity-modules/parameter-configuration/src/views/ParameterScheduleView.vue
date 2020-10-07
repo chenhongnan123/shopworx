@@ -969,7 +969,7 @@ export default {
           tagList.forEach((l) => {
             const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
-              console.log(tag[0].tagId);
+              // console.log(tag[0].tagId);
               payloadData.push({
                 elementId: l.elementId,
                 tagId: tag[0].tagId,

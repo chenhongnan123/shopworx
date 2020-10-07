@@ -142,7 +142,6 @@ export default {
   },
   async created() {
     await this.fetchRecords();
-    console.log(this.trecibility);
   },
   beforeMount() {
     this.componentList = null;
@@ -251,7 +250,6 @@ export default {
       let cFlag = 0;
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
-      console.log(this.trecibilityState.fromdate);
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
          && (fromDate || toDate)) {
@@ -271,7 +269,6 @@ export default {
       //   param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
       //   cFlag = 4;
       // }
-      console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -286,7 +283,6 @@ export default {
       param += 'sortquery=modifiedtimestamp==-1';
       await this.getPartStatus(param);
       this.partStatusList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptionsPart.api.refreshCells();
@@ -328,7 +324,6 @@ export default {
     },
     async nextSearch() {
       const pagenumber = this.pageNumber;
-      console.log(pagenumber);
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       let param = '';
@@ -344,7 +339,6 @@ export default {
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
       }
-      // console.log(this.trecibilityState.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
       }
@@ -359,15 +353,12 @@ export default {
       param += '&sortquery=modifiedtimestamp==-1';
       await this.getPartStatus(param);
       this.componentList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptions.api.refreshCells();
         }
       });
-      console.log(this.componentList);
       this.partStatusList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptionsPart.api.refreshCells();
@@ -385,7 +376,6 @@ export default {
     },
     async prevSearch() {
       const pagenumber = this.pageNumber;
-      console.log(pagenumber);
       // if (pagenumber <= 1) {
       this.prevDisabled = true;
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
@@ -404,7 +394,6 @@ export default {
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
       }
-      console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
       }
@@ -419,15 +408,12 @@ export default {
       param += '&sortquery=modifiedtimestamp==-1';
       await this.getPartStatus(param);
       this.componentList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptions.api.refreshCells();
         }
       });
-      console.log(this.componentList);
       this.partStatusList.forEach((e) => {
-        console.log(e.substationid);
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
           e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
           this.gridOptionsPart.api.refreshCells();
@@ -446,7 +432,6 @@ export default {
     },
     onCellClicked(node) {
       if (node.colDef.field === 'mainid') {
-        console.log(node.data);
         this.trecibilityState.searchMainID = node.data.mainid;
         this.setTrecibilityState(this.trecibilityState);
         this.setRecipeViewState(0);
