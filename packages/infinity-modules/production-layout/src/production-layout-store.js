@@ -26,6 +26,7 @@ export default ({
     roadMapDetailsRecord: [],
     parametersList: [],
     subStationsForIP: [],
+    assets: {},
   },
   mutations: {
     setSelectedLine: set('selectedLine'),
@@ -50,8 +51,21 @@ export default ({
     setrunningOrderList: set('runningOrderList'),
     setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
     setParametersList: set('parametersList'),
+    setAssets: set('assets'),
   },
   actions: {
+    getAssets: async ({ commit, dispatch }) => {
+      const assets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (assets && assets.length) {
+        commit('setAssets', assets);
+        return true;
+      }
+      return false;
+    },
     getSubStationIdElement: async ({ dispatch }, elementName) => {
       const results = await dispatch(
         'element/getElement',

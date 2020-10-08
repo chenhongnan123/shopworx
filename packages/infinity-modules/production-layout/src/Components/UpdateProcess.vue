@@ -64,6 +64,7 @@ export default {
       dialog: false,
       processNew: {},
       btnDisable: false,
+      assetId: null,
       valid: true,
       name: '',
       numbers: '',
@@ -77,13 +78,14 @@ export default {
   },
   created() {
     this.processNew = { ...this.process };
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['processes']),
+    ...mapState('productionLayout', ['processes', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['updateProcess']),
+    ...mapActions('productionLayout', ['updateProcess', 'getAssets']),
     async nameValid() {
       if (this.processNew.name === '' || this.processNew.name.length > 15) {
         this.btnDisable = true;
@@ -122,10 +124,13 @@ export default {
     },
     async saveProcess() {
       this.saving = true;
+      const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+      this.assetId = getAssetId;
       this.newProcess = {
         name: this.processNew.name,
         numbers: this.processNew.numbers,
         description: this.processNew.description,
+        assetid: this.assetId,
       };
       let created = false;
       const payload = {
@@ -141,7 +146,7 @@ export default {
           message: 'PROCESS_UPDATED',
         });
         this.dialog = false;
-        this.assetId = 4;
+        this.assetId = this.getAssetId;
       } else {
         this.setAlert({
           show: true,

@@ -77,6 +77,7 @@ export default {
       dialog: false,
       sublineNew: {},
       btnDisable: false,
+      assetId: null,
       valid: true,
       name: '',
       numbers: '',
@@ -90,15 +91,15 @@ export default {
   },
   created() {
     this.sublineNew = { ...this.subline };
-    console.log(this.lineid);
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['sublines', 'selectedLine']),
+    ...mapState('productionLayout', ['sublines', 'selectedLine', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     // ...mapMutations('productionLayout', ['setAddSublineDialog']),
-    ...mapActions('productionLayout', ['updateSubline', 'getSublines', 'updateMainLineFlagToSubStations']),
+    ...mapActions('productionLayout', ['updateSubline', 'getSublines', 'updateMainLineFlagToSubStations', 'getAssets']),
     // close() {
     //   this.$emit('update:dialog', false);
     // },
@@ -140,6 +141,8 @@ export default {
     },
     async saveSubline() {
       this.saving = true;
+      const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+      this.assetId = getAssetId;
       this.newSubLine = {
         name: this.sublineNew.name,
         numbers: this.sublineNew.numbers,
@@ -147,6 +150,7 @@ export default {
         expectedoee: this.sublineNew.expectedoee,
         expectedcycletime: this.sublineNew.expectedcycletime,
         ismainline: this.sublineNew.ismainline,
+        assetid: this.assetId,
       };
       let created = false;
       const payload = {
@@ -162,7 +166,7 @@ export default {
           message: 'SUBLINE_UPDATED',
         });
         this.dialog = false;
-        this.assetId = 4;
+        this.assetId = this.getAssetId;
         const object = {
           query: `?query=sublineid=="${this.subline.id}"`,
           payload: {

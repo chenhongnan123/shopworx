@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       newSubstation: {},
-      assetId: 4,
+      assetId: null,
       checked: false,
       selectedSubstationLine: null,
       default: false,
@@ -101,13 +101,14 @@ export default {
   created() {
     // this.getAllStations('');
     this.newSubstation = { ...this.substation };
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations']),
+    ...mapState('productionLayout', ['selectedLine', 'stationsbylines', 'sublines', 'allStations', 'stations', 'subStations', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName']),
+    ...mapActions('productionLayout', ['createSubstation', 'getStationbyline', 'createElement', 'getSubStationName', 'getAssets']),
     compareValues(val) {
       if (val.initialsubstation === true) {
         this.btnFindisable = true;
@@ -172,6 +173,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newSubstation = {
             ...this.newSubstation,
             stationid: this.selectedSubstationLine.id,
@@ -198,7 +201,7 @@ export default {
             if (checkedPlc) {
               this.newSubstation = {};
               this.dialog = false;
-              this.assetId = 4;
+              this.assetId = this.getAssetId;
               // this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
