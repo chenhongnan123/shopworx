@@ -204,6 +204,7 @@
     "masters": "Master Data",
     "admin": "Admin Console",
     "search": "Search reports & insights",
+    "searchMobile": "Search",
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework"    

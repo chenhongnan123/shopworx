@@ -12,7 +12,6 @@
     }
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "bootstrap:origin": "lerna bootstrap --scope @shopworx/origin --include-dependencies",
     "bootstrap:infinity": "lerna bootstrap --scope @shopworx/infinity --include-dependencies",
     "serve:origin": "lerna exec --scope @shopworx/origin -- npm run serve",
@@ -20,7 +19,8 @@
     "build:origin": "lerna exec --scope @shopworx/origin -- npm run build",
     "build:infinity": "lerna exec --scope @shopworx/infinity -- npm run build",
     "release": "lerna version --conventional-commits",
-    "release:pre": "lerna version --conventional-prerelease"
+    "release:pre": "lerna version --conventional-prerelease",
+    "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
     "commitizen": "^4.2.1",
