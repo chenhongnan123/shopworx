@@ -10,10 +10,10 @@
       <v-icon v-text="'$home'"></v-icon>
     </v-btn>
     <v-btn disabled :to="{ name: 'search'}">
-      <span v-text="$t('modules.search')"></span>
+      <span v-text="$t('modules.searchMobile')"></span>
       <v-icon v-text="'$search'"></v-icon>
     </v-btn>
-    <v-btn disabled :to="{ name: 'insights'}">
+    <v-btn @click="toggleInsightsDrawer">
       <span v-text="$t('modules.insights')"></span>
       <v-icon v-text="'$insights'"></v-icon>
     </v-btn>
@@ -25,12 +25,17 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'InfinityBottom',
   data() {
     return {
       bottomNav: false,
     };
+  },
+  methods: {
+    ...mapMutations('helper', ['toggleInsightsDrawer']),
   },
 };
 </script>

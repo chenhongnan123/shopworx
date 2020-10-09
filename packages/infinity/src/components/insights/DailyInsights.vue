@@ -5,7 +5,7 @@
         <v-col>
           <div class="title font-weight-regular">
             No new insights right now.
-            Watch out for insights in 4.1.0-rc.3
+            Watch out for in upcoming releases
           </div>
           <div class="subheading">
             Check back soon!
