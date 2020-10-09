@@ -63,6 +63,7 @@ export default ({
       //   }));
       // }
       commit('setBomList', bomlist);
+      return true;
     },
     getBomDetailsListRecords: async ({ dispatch, commit }, query) => {
       const lineList = await dispatch(

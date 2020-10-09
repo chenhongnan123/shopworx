@@ -28,7 +28,7 @@
             dense
             hide-details
             v-model="line"
-            name="name"
+            item-value="name"
             label="Select Line"
             item-text="name"
             return-object
@@ -158,6 +158,7 @@ export default {
     ...mapMutations('bomManagement', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue']),
     ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList', 'getBomNamesbyline']),
     btnApply() {
+      debugger;
       let query = '?query=';
       if (this.bomname) {
         query += `name=="${this.bomname}"&`;
@@ -182,7 +183,7 @@ export default {
       this.subline = '';
     },
     async getfilteredBomNames(item) {
-      await this.getBomNamesbyline(`?query=lineid==${item.id}`);
+      await this.getBomNamesbyline(`?query=lineid=="${item.id}"`);
     },
   },
 };
