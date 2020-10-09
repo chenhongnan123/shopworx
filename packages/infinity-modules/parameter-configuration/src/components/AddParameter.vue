@@ -25,7 +25,7 @@
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
-              label="Parameter Name"
+              label="Parameter Name*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.name"
           ></v-text-field>
@@ -55,7 +55,7 @@
           </v-autocomplete> -->
           <v-autocomplete
             clearable
-            label="Category"
+            label="Category*"
             :items="categoryList"
             return-object
             :disabled="saving"
@@ -73,7 +73,7 @@
           </v-autocomplete>
           <v-autocomplete
             clearable
-            label="Date type"
+            label="Date type*"
             :items="datatypeList"
             return-object
             :disabled="saving"
@@ -93,7 +93,7 @@
               v-if="parameterObj.datatype
               && parameterObj.datatype.name === 'Boolean'"
               :disabled="saving"
-              label="Boolean Bit"
+              label="Boolean Bit*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.booleanbit"
               :rules="rules.booleanbit"
@@ -104,21 +104,21 @@
               && (parameterObj.datatype.name === 'Boolean'
               || parameterObj.datatype.name === 'String')"
               :disabled="saving"
-              label="Size"
+              label="Size*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.size"
               :rules="rules.size"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              label="DB Address"
+              label="DB Address*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.dbaddress"
               :rules="rules.dbaddress"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              label="Start address"
+              label="Start address*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.startaddress"
               :rules="rules.startaddress"
@@ -126,7 +126,7 @@
           ></v-text-field>
           <v-autocomplete
             clearable
-            label="Protocol"
+            label="Protocol*"
             :items="protocolList"
             return-object
             :disabled="saving"
@@ -164,7 +164,7 @@
               v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
               :rules="rules.multiplicationfactor"
-              label="Multiplication Factor"
+              label="Multiplication Factor*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.multiplicationfactor"
           ></v-text-field>
@@ -179,14 +179,14 @@
           <v-text-field
               :disabled="saving"
               :rules="rules.parameterunit"
-              label="Parameter Unit"
+              label="Parameter Unit*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.parameterunit"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
               :rules="rules.paid"
-              label="PAID"
+              label="PAID*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.paid"
           ></v-text-field>
