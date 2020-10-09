@@ -13,6 +13,10 @@ export default ({
     filter: false,
     lineValue: '',
     sublineValue: '',
+    materialNum: [],
+    materialType: [],
+    manuFacturer: [],
+    categoryByMaterial: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -25,8 +29,36 @@ export default ({
     setFilter: set('filter'),
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
+    setMaterialNumber: set('materialNum'),
+    setMaterialType: set('materialType'),
+    setMaterialManufacturer: set('manuFacturer'),
+    setCategoryByMaterial: set('categoryByMaterial'),
   },
   actions: {
+    getCategoryByMaterial: async ({ dispatch, commit }, query) => {
+      const category = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'category',
+          query,
+        },
+        { root: true },
+      );
+      commit('setCategoryByMaterial', category);
+    },
+    getMaterialNumById: async ({ dispatch, commit }, query) => {
+      const materialNum = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'materiallist',
+          query,
+        },
+        { root: true },
+      );
+      commit('setMaterialNumber', materialNum);
+      commit('setMaterialType', materialNum);
+      commit('setMaterialManufacturer', materialNum);
+    },
     getMaterialListRecords: async ({ dispatch, commit }, query) => {
       const materiallist = await dispatch(
         'element/getRecords',
