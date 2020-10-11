@@ -19,25 +19,25 @@
       </v-btn>
       <span>BOM Name: {{query.name}}</span>
       <span></span>
-      <v-toolbar
+      <!-- <v-toolbar
         flat
         dense
         class="stick"
         :color="$vuetify.theme.dark ? '#121212': ''"
-      >
-        <v-btn small color="primary" outlined class="text-none ml-2" @click="handleGetData">
+      > -->
+        <!-- <v-btn small color="primary" outlined class="text-none ml-2" @click="handleGetData">
           <v-icon small left>mdi-refresh</v-icon>
           Get Data
-        </v-btn>
-        <v-btn small color="error"
+        </v-btn> -->
+        <!-- <v-btn small color="error"
           outlined
           class="text-none ml-2"
           @click="confirmListDialog = true"
           v-if="bomDetailList.length && bomDetailSelected.length">
           <v-icon small left>mdi-delete</v-icon>
           Delete
-        </v-btn>
-      </v-toolbar>
+        </v-btn> -->
+      <!-- </v-toolbar> -->
       <v-row>
         <v-col cols="2">
           <v-text-field
@@ -81,17 +81,67 @@
         </v-col>
       </v-row>
       <v-data-table
-        show-select
         v-model="bomDetailSelected"
         :headers="headers"
         :items="bomDetailList"
         item-key="id"
         class="tableContainer"
         >
+        <template v-slot:item.savedata="{ item }">
+         <v-checkbox
+               primary
+               hide-details
+               :value = item.savedata
+               v-model="item.savedata"
+               @change="checkSaveData($event, item)"
+               ></v-checkbox>
+        </template>
+        <template v-slot:item.boundsubstationname="{ item }">
+         <v-select
+          v-if="item.parametercategory === '24'"
+          label="-"
+          :items="substationList"
+          :disabled="saving"
+          return-object
+          solo
+          dense
+          depressed
+          item-text="name"
+          v-model="item.stationSelected"
+          @change="chanageStation(item)"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+         </v-select>
+         </template>
+         <template v-slot:item.componentstatus="{ item }">
+         <v-select
+          label="-"
+          :items="item.componentStatusList"
+          :disabled="saving"
+          return-object
+          solo
+          dense
+          depressed
+          item-text="name"
+          item-value="name"
+          v-model="item.componentStatusSelected"
+          @change="chanageComponentStatus(item)"
+        >
+        <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+         </v-select>
+         </template>
         <template v-slot:item.materialname="props">
           <v-select
             :disabled="saving"
-            :items="materialList"
+            :items="materialListChoice"
             v-model="props.item.materialname"
             @change="handleChangeMaterial(props.item)"
             label="-"
@@ -198,62 +248,113 @@ export default {
     return {
       bomDetailList: [],
       bomDetailSelected: [],
+      parameterListForComponentStatus: [],
       headers: [
         {
           text: 'Line',
           value: 'line',
-          width: 120,
         },
         {
           text: 'Subline',
           value: 'subline',
-          width: 120,
-        },
-        {
-          text: 'Station',
-          value: 'station',
-          width: 120,
         },
         {
           text: 'Substation',
           value: 'substation',
-          width: 120,
         },
         {
           text: 'Parameter Name',
           value: 'parametername',
-          width: 180,
         },
         { text: 'Material', value: 'materialname', width: 120 },
-        { text: 'Material TypeID', value: 'materialtype', width: 180 },
-        { text: 'Category', value: 'materialcategory', width: 120 },
+        { text: 'Bound Substation', value: 'boundsubstationname', width: 180 },
+        { text: 'Component Status', value: 'componentstatus', width: 180 },
+        { text: 'Save Date?', value: 'savedata', width: 180 },
+        // { text: 'Material TypeID', value: 'materialtype', width: 180 },
+        // { text: 'Category', value: 'materialcategory', width: 120 },
         { text: 'Actions', value: 'actions', width: 120 },
       ],
       materialname: '',
+      substationname: '',
       confirmDialog: false,
       confirmListDialog: false,
       bomdetailObjDefault: null,
       saving: false,
+      stationSelected: '',
+      componentStatusSelected: '',
     };
   },
   async created() {
-    // console.log(this.query, 'query');
+    console.log(this.query, 'query');
     await this.getMaterialListRecords('');
-    this.handleGetDetails();
+    await this.getMaterialListChoice('');
+    await this.handleGetDetails();
+    await this.getSubStationList('');
+    // this.getFilteredSubstation();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail', 'updateRecordById']),
-    ...mapActions('materialManagement', ['getMaterialListRecords']),
+    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail', 'updateRecordById', 'getSublineList', 'getSubStationList']),
+    ...mapActions('materialManagement', ['getMaterialListRecords', 'getMaterialListChoice']),
+    async getFilteredsubstation() {
+      await this.getSubStationList('');
+    },
+    // async getFilteredSubstation() {
+    //   const sub = await this.getBomDetailsListRecords();
+    //   await this.getSubStationList(`?query=sublineid=="${sub[0].sublineid}"`);
+    // },
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       this.bomDetailList = bomdetailList;
+      // const parametersList =
+      this.bomDetailList.forEach(async (bom) => {
+        // set component status list to everystation
+        // bom.componentStatusList = await this.getParameterList
+        // (`?query=substationid=="${bom.substationid}"%26%26parametercategory=="32"`);
+        const list = [{
+          name: '-',
+        }];
+        list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
+        bom.componentStatusList = list;
+      });
+      console.log(this.bomDetailList);
+      if (this.bomDetailList.length === 0) {
+        this.handleGetData();
+      }
+    },
+    async checkSaveData(event, item) {
+      const payload = {
+        id: item._id,
+        payload: {
+          savedata: event,
+        },
+      };
+      this.saving = true;
+      const updateResult = await this.updateRecordById(payload);
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'UPDATE_SUBSTATION',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_UPDATING_SUBSTATION',
+        });
+      }
+    },
+    async getComponentStatusList(item) {
+      console.log(item);
+      item.componentStatusList = await this.getParameterList(`?query=substationid=="${item.substationid}"%26%26parametercategory=="46"`);
     },
     async handleGetData() {
       const parameterList = (await this.getParameterList(`?query=lineid==${this.query.lineid || null}`))
-        .filter((parameter) => Number(parameter.parametercategory) === 25
-        || Number(parameter.parametercategory) === 27);
-      // console.log(parameterList, 'parameterList');
+        .filter((parameter) => Number(parameter.parametercategory) === 24
+        || Number(parameter.parametercategory) === 26);
+      console.log(parameterList, 'parameterList');
 
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
@@ -270,28 +371,118 @@ export default {
           bomid: this.query.id,
           name: this.query.name,
           parametername: parameter.name,
+          parametercategory: parameter.parametercategory,
           materialname: '',
           materialtype: '',
           materialcategory: '',
-          assetid: '4',
+          assetid: 4,
         }));
         await this.createBomdetailList(bomDetailList);
         this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       }
     },
-    async handleChangeMaterial(item) {
-      const { materialname } = item;
-      const materialItem = this.materialList
-        .filter((material) => materialname === material.name)[0];
+    async chanageStation(item) {
+      const { stationSelected } = item;
+      // const substationItem = this.substationList
+      //   .filter((substation) => stationSelected === substation.name)[0];
+      let payload;
+      if (stationSelected.name !== '-') {
+        payload = {
+          id: item._id,
+          payload: {
+            stationSelected,
+            boundsubstationname: stationSelected.name,
+            boundsubstationid: stationSelected.id,
+          },
+        };
+      } else {
+        // stationSelected = '';
+        payload = {
+          id: item._id,
+          payload: {
+            stationSelected,
+            boundsubstationname: '',
+            boundsubstationid: '',
+          },
+        };
+      }
+      console.log(payload, 'payload');
+      this.saving = true;
+      const updateResult = await this.updateRecordById(payload);
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'UPDATE_SUBSTATION',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_UPDATING_SUBSTATION',
+        });
+      }
+      // this.bomDetailList = await this.getBomDetailsListRecords
+      // (`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+    },
+    async chanageComponentStatus(item) {
+      const { componentStatusSelected } = item;
+      // const substationItem = this.substationList
+      console.log(this.componentStatusSelected);
       const payload = {
         id: item._id,
         payload: {
-          materialname,
-          materialtype: materialItem.materialtype,
-          materialcategory: materialItem.materialcategory,
+          componentStatusSelected,
+          componentstatus: componentStatusSelected.name,
         },
       };
-      // console.log(payload, 'payload');
+      console.log(payload, 'payload');
+      this.saving = true;
+      const updateResult = await this.updateRecordById(payload);
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'UPDATE_COMPONENTSTATUS',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_UPDATING_COMPONENTSTATUS',
+        });
+      }
+      // this.bomDetailList = await this.getBomDetailsListRecords
+      // (`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+    },
+    async handleChangeMaterial(item) {
+      let { materialname } = item;
+      const materialItem = this.materialList
+        .filter((material) => materialname === material.name)[0];
+      let payload = {};
+      if (materialname !== '-') {
+        payload = {
+          id: item._id,
+          payload: {
+            materialname,
+            materialtype: materialItem.materialtype,
+            materialcategory: materialItem.materialcategory,
+          },
+        };
+      } else {
+        materialname = '';
+        payload = {
+          id: item._id,
+          payload: {
+            materialname,
+            materialtype: '',
+            materialcategory: '',
+          },
+        };
+      }
+      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateRecordById(payload);
       this.saving = false;
@@ -308,7 +499,9 @@ export default {
           message: 'ERROR_UPDATING_MATERIAL',
         });
       }
-      this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+      // this.bomDetailList =
+      // await this.getBomDetailsListRecords
+      // (`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
     },
     deleteItem(item) {
       this.confirmDialog = true;
@@ -359,8 +552,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList']),
-    ...mapState('materialManagement', ['materialList']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList', 'substationList']),
+    ...mapState('materialManagement', ['materialList', 'materialListChoice']),
   },
   props: ['query'],
 };

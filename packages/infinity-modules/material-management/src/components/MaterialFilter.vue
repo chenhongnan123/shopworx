@@ -66,12 +66,10 @@
             dense
             hide-details
             v-model="materialname"
-            item-value="name"
+            name="name"
             label="Material Name"
             item-text="name"
             clearable
-            return-object
-            @change="setMaterialNum"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -81,7 +79,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialNum"
+            :items="materialList"
             outlined
             dense
             hide-details
@@ -99,7 +97,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="categoryByMaterial"
+            :items="categoryList"
             outlined
             dense
             hide-details
@@ -119,7 +117,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialType"
+            :items="materialList"
             outlined
             dense
             hide-details
@@ -137,7 +135,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="manuFacturer"
+            :items="materialList"
             outlined
             dense
             hide-details
@@ -193,7 +191,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList', 'materialNum', 'materialType', 'manuFacturer', 'categoryByMaterial']),
+    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList']),
     showFilter: {
       get() {
         return this.filter;
@@ -205,11 +203,11 @@ export default {
   },
   methods: {
     ...mapMutations('materialManagement', ['setFilter', 'toggleFilter']),
-    ...mapActions('materialManagement', ['getMaterialListRecords', 'getSublineList', 'getMaterialNumById', 'getCategoryByMaterial']),
+    ...mapActions('materialManagement', ['getMaterialListRecords', 'getSublineList']),
     btnApply() {
       let query = '?query=';
       if (this.materialname) {
-        query += `name=="${this.materialname.name}"||`;
+        query += `name=="${this.materialname}"&`;
       }
       if (this.materialnumber) {
         query += `materialnumber==${this.materialnumber}&`;
@@ -224,7 +222,6 @@ export default {
         query += `manufacturer=="${this.manufacturer}"&`;
       }
       this.getMaterialListRecords(query);
-      this.toggleFilter();
     },
     btnReset() {
       this.getMaterialListRecords('');
@@ -236,14 +233,6 @@ export default {
       this.manufacturer = '';
       this.line = '';
       this.subline = '';
-      this.materialNum = [];
-      this.materialType = [];
-      this.manuFacturer = [];
-      this.categoryByMaterial = [];
-    },
-    async setMaterialNum(item) {
-      await this.getMaterialNumById(`?query=id==${item.id}`);
-      this.getCategoryByMaterial(`?query=id==${item.materialcategory}`);
     },
   },
 };

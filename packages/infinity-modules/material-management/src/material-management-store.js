@@ -13,10 +13,7 @@ export default ({
     filter: false,
     lineValue: '',
     sublineValue: '',
-    materialNum: [],
-    materialType: [],
-    manuFacturer: [],
-    categoryByMaterial: [],
+    materialListChoice: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -29,25 +26,16 @@ export default ({
     setFilter: set('filter'),
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
-    setMaterialNumber: set('materialNum'),
-    setMaterialType: set('materialType'),
-    setMaterialManufacturer: set('manuFacturer'),
-    setCategoryByMaterial: set('categoryByMaterial'),
+    setMaterialListChoice: set('materialListChoice'),
   },
   actions: {
-    getCategoryByMaterial: async ({ dispatch, commit }, query) => {
-      const category = await dispatch(
-        'element/getRecords',
-        {
-          elementName: 'category',
-          query,
-        },
-        { root: true },
-      );
-      commit('setCategoryByMaterial', category);
-    },
-    getMaterialNumById: async ({ dispatch, commit }, query) => {
-      const materialNum = await dispatch(
+    getMaterialListChoice: async ({ dispatch, commit }, query) => {
+      const list = [];
+      const obj = {
+        name: '-',
+      };
+      list.push(obj);
+      const materialListChoice = await dispatch(
         'element/getRecords',
         {
           elementName: 'materiallist',
@@ -55,9 +43,10 @@ export default ({
         },
         { root: true },
       );
-      commit('setMaterialNumber', materialNum);
-      commit('setMaterialType', materialNum);
-      commit('setMaterialManufacturer', materialNum);
+      materialListChoice.forEach((f) => {
+        list.push(f);
+      });
+      commit('setMaterialListChoice', list);
     },
     getMaterialListRecords: async ({ dispatch, commit }, query) => {
       const materiallist = await dispatch(

@@ -9,13 +9,13 @@ export default ({
     addBomDialog: false,
     lineList: [],
     sublineList: [],
+    substationList: [],
     categoryList: [],
     filter: false,
     lineValue: '',
     sublineValue: '',
     bomDetails: '',
     parameterList: '',
-    bomNamebylines: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -30,11 +30,12 @@ export default ({
     setSublineValue: set('sublineValue'),
     setBomDetailsList: set('bomDetailsList'),
     setParameterList: set('parameterList'),
-    setBomNamebyline: set('bomNamebylines'),
+    setSubstationList: set('substationList'),
   },
   actions: {
-    getBomNamesbyline: async ({ dispatch, commit }, query) => {
-      const bomNamebylines = await dispatch(
+    getBomListRecords: async ({ dispatch, commit, state }, query) => {
+      const { lineList } = state;
+      let bomlist = await dispatch(
         'element/getRecords',
         {
           elementName: 'bomlist',
@@ -42,28 +43,14 @@ export default ({
         },
         { root: true },
       );
-      commit('setBomNamebyline', bomNamebylines);
-      return true;
-    },
-    getBomListRecords: async ({ dispatch, commit }, query) => {
-      // const { lineList } = state;
-      const bomlist = await dispatch(
-        'element/getRecords',
-        {
-          elementName: 'bomlist',
-          query,
-        },
-        { root: true },
-      );
-      // if (lineList.length > 0) {
-      //   bomlist = bomlist.map((bom) => ({
-      //     ...bom,
-      //     line: lineList.filter((line) => line.id === bom.lineid)[0]
-      //     && lineList.filter((line) => line.id === bom.lineid)[0].name,
-      //   }));
-      // }
+      if (lineList.length > 0) {
+        bomlist = bomlist.map((bom) => ({
+          ...bom,
+          line: lineList.filter((line) => line.id === bom.lineid)[0]
+          && lineList.filter((line) => line.id === bom.lineid)[0].name,
+        }));
+      }
       commit('setBomList', bomlist);
-      return true;
     },
     getBomDetailsListRecords: async ({ dispatch, commit }, query) => {
       const lineList = await dispatch(
@@ -111,7 +98,14 @@ export default ({
             .filter((substation) => substation.id === item.substationid)[0].name;
         }
       });
-      commit('setBomDetailsList', bomdetails);
+      let bomDetailsList = [];
+      if (bomdetails && bomdetails.length) {
+        bomDetailsList = bomdetails.map((l) => ({
+          ...l,
+          componentStatusList: [],
+        }));
+      }
+      commit('setBomDetailsList', bomDetailsList);
       return bomdetails;
     },
     getDefaultList: async ({ dispatch, commit }) => {
@@ -137,6 +131,23 @@ export default ({
       if (sublineList) {
         commit('setSublineList', sublineList);
       }
+    },
+    getSubStationList: async ({ commit, dispatch }, query) => {
+      const list = [];
+      const obj = {
+        name: '-',
+        stationid: '-',
+      };
+      list.push(obj);
+      const substationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'substation', query },
+        { root: true },
+      );
+      substationList.forEach((f) => {
+        list.push(f);
+      });
+      commit('setSubstationList', list);
     },
     getParameterList: async ({ dispatch }, query) => {
       const parameterList = await dispatch(
