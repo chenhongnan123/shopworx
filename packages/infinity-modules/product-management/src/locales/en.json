@@ -15,7 +15,8 @@
     "PRODUCT_CREATED": "Product created.",
     "PRODUCT_UPDATED": "Product updated.",
     "ROADMAP_DETAILS_CREATED" : "Roadmap details created.",
-    "PRODUCT_DETAILS_UPDATED": "Product details updated."
+    "PRODUCT_DETAILS_UPDATED": "Product details updated.",
+    "PRODUCT_DELETED": "Product type deleted."
   },
   "displayTags": {
     "lineName" : "Line",

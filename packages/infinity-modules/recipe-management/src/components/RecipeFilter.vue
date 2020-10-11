@@ -98,15 +98,16 @@ export default {
     btnApply() {
       if (this.sublines != null) {
         this.setFilterSubLine(this.sublines);
-        const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
+        const newarray = this.filterBList.filter((o) => o.sublineid === this.sublines.id);
         this.setRecipeList(newarray);
         if (this.stations != null) {
           this.setFilterStation(this.stations);
-          this.setRecipeList(this.newarray.filter((o) => o.machinename === this.stations.name));
+          this.setRecipeList(this.newarray.filter((o) => o.stationid === this.stations.id));
         }
       } else if (this.stations != null) {
+        debugger;
         this.setFilterStation(this.stations);
-        this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
+        this.setRecipeList(this.filterBList.filter((o) => o.stationid === this.stations.id));
       }
       this.toggleFilter();
     },

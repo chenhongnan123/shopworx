@@ -110,6 +110,8 @@ export default {
       }
     },
     btnReset() {
+      this.orderStatusSelected = null;
+      this.selectedOrderName = null;
       this.getOrderListRecords('');
       this.toggleFilter();
     },

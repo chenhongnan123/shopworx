@@ -19,8 +19,11 @@
     lazy-validation>
     <v-card>
       <v-card-title primary-title>
-        <span>
-          Recipe
+        <span v-if="!saving">
+          Add Recipe
+        </span>
+        <span v-else>
+          Edit Recipe
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="(dialog = false); dialogReset();">
@@ -325,6 +328,7 @@ export default {
       }
     },
     async dialogReset() {
+      this.saving = false;
       this.$refs.form.reset();
     },
     async getfilteredStationNames(item) {

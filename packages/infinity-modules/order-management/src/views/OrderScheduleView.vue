@@ -51,38 +51,64 @@
         item-key="ordernumber"
         show-select
         >
-        <template v-slot:item="{ item }">
-          <tr :class="orderC(item.orderstatus)">
-            <td>
-               <v-checkbox
-               v-model="orders"
-               :value ="item"
-               primary
-               hide-details
-               @change="check($event)"
-               ></v-checkbox>
-            </td>
-            <td>{{ item.linename }}</td>
-            <td @click="handleClick(item)">{{ item.ordername }}</td>
-            <td>{{ item.ordernumber }}</td>
-            <td>{{ item.ordertype }}</td>
-            <td>{{ item.productname }}</td>
-            <td>{{ item.customername }}</td>
-            <td v-if='item.orderstatus == "New"'>
+        <template v-slot:item.linename="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.linename }}</span>
+        </template>
+        <template v-slot:item.ordernumber="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.ordernumber }}</span>
+        </template>
+        <template v-slot:item.ordertype="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.ordertype }}</span>
+        </template>
+        <template v-slot:item.productname="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.productname }}</span>
+        </template>
+        <template v-slot:item.ordername="{ item }">
+          <span @click="handleClick(item)"><a>{{ item.ordername }}</a></span>
+        </template>
+        <template v-slot:item.ordercreatedtime="{ item }">
+          <span :class="orderC(item.orderstatus)">
+            {{new Date(item.ordercreatedtime).toLocaleString()}}</span>
+        </template>
+        <template v-slot:item.scheduledstart="{ item }">
+          <span :class="orderC(item.orderstatus)">
+            {{new Date(item.scheduledstart).toLocaleString()}}</span>
+        </template>
+        <template v-slot:item.orderexpendtime="{ item }">
+          <span :class="orderC(item.orderstatus)">
+            {{new Date(item.orderexpendtime).toLocaleString()}}</span>
+        </template>
+        <template v-slot:item.targetcount="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.targetcount }}</span>
+        </template>
+        <template v-slot:item.actualcount="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.actualcount }}</span>
+        </template>
+        <template v-slot:item.okcount="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.okcount }}</span>
+        </template>
+        <template v-slot:item.ngcount="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.ngcount }}</span>
+        </template>
+        <template v-slot:item.customername="{ item }">
+          <span :class="orderC(item.orderstatus)">{{ item.customername }}</span>
+        </template>
+        <template v-slot:item.orderstatus="{ item }">
+          <v-select
+            v-if='item.orderstatus == "New"'
+            dense
+            flat
+            solo
+            hide-details
+            :items="orderStatusToChangeFromNew"
+            v-model="item.orderstatus"
+            @change="onChangeStatus(item)"
+          >
+          <template v-slot:selection="{ item }">
+            <span :class="orderC(item)">{{ item }}</span>
+              </template></v-select>
               <v-select
-                dense
-                flat
-                solo
-                hide-details
-                :items="orderStatusToChangeFromNew"
-                v-model="item.orderstatus"
-                @change="onChangeStatus(item)"
-              >
-              <template v-slot:selection="{ item }">
-                <span :class="orderC(item)">{{ item }}</span>
-              </template></v-select></td>
-            <td v-if='item.orderstatus == "Released"'>
-              <v-select
+                v-if='item.orderstatus == "Released"'
                 dense
                 flat
                 solo
@@ -92,8 +118,9 @@
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
-              </template></v-select></td>
-            <td v-if='item.orderstatus == "Running"'><v-select
+              </template></v-select>
+            <v-select
+                v-if='item.orderstatus == "Running"'
                 dense
                 flat
                 solo
@@ -103,8 +130,9 @@
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
-              </template></v-select></td>
-            <td v-if='item.orderstatus == "Interrupted"'><v-select
+              </template></v-select>
+            <v-select
+                v-if='item.orderstatus == "Interrupted"'
                 dense
                 flat
                 solo
@@ -114,18 +142,10 @@
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
-              </template></v-select></td>
-            <td v-if='item.orderstatus == "Completed"'>
+              </template></v-select>
+            <span v-if='item.orderstatus == "Completed"'>
               {{ item.orderstatus }}
-            </td>
-            <td><span>{{new Date(item.ordercreatedtime).toLocaleString()}}</span></td>
-            <td><span>{{new Date(item.scheduledstart).toLocaleString()}}</span></td>
-            <td><span>{{new Date(item.orderexpendtime).toLocaleString()}}</span></td>
-            <td>{{ item.targetcount }}</td>
-            <td>{{ item.actualcount }}</td>
-            <td>{{ item.okcount }}</td>
-            <td>{{ item.ngcount }}</td>
-          </tr>
+            </span>
         </template>
       </v-data-table>
       </v-col>
@@ -168,7 +188,7 @@ export default {
       headers: [
         {
           text: 'Line',
-          value: 'line',
+          value: 'linename',
         },
         {
           text: 'Order Name',

@@ -402,7 +402,7 @@ export default ({
       }
       return created;
     },
-    updateLine: async ({ dispatch, commit }, payload) => {
+    updateLine: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
         {
@@ -412,21 +412,7 @@ export default ({
         },
         { root: true },
       );
-      if (created) {
-        const query = `?query=id==${payload.id}`;
-        const lines = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'line',
-            query,
-          },
-          { root: true },
-        );
-        if (lines) {
-          commit('setLines', lines);
-          // return sublines;
-        }
-      }
+      return created;
     },
     updateSubline: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(

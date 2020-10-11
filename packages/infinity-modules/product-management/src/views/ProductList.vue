@@ -162,7 +162,10 @@ export default {
       this.showLineFilter = false;
     },
     addDuplicateProduct() {
-      if (this.products.length && this.products.length === 1) {
+      debugger;
+      if (this.products.length && this.products.length === 1
+        && this.productList.filter((f) => f.productnumber
+        === this.products[0].productnumber).length === 1) {
         this.setDuplicateDialog(true);
       } else {
         this.setAlert({

@@ -9,7 +9,6 @@
   >
   <v-form
     ref="form"
-    v-model="valid"
     lazy-validation>
     <v-card>
       <v-card-title primary-title>
@@ -89,7 +88,7 @@
           :disabled="!productName || !productDescription"
           @click="updateProduct"
         >
-          {{ $t('displayTags.buttons.save') }}
+          {{ $t('displayTags.buttons.update') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -108,14 +107,13 @@ export default {
   name: 'EditProduct',
   data() {
     return {
-      productNew: {},
       saving: false,
       message: null,
       loadingProducts: false,
       producttypecategory: null,
-      productname: null,
+      productName: null,
       description: null,
-      valid: true,
+      valid: false,
       productNameRule: [(v) => !!v || 'Product Name Required',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
@@ -169,8 +167,7 @@ export default {
     ...mapMutations('productManagement', ['setEditDialog']),
     ...mapActions('productManagement', ['updateProductType']),
     async updateProduct() {
-      this.$refs.form.validate();
-      if (!this.productNew.productname) {
+      if (!this.productName) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -227,24 +224,20 @@ export default {
       }
     },
     async validName() {
-      const duplicateName = this.productList.filter(
-        (o) => o.productname.toLowerCase().split(' ').join('') === this.productNew.productname.toLowerCase().split(' ').join(''),
-      );
-      if (duplicateName.length > 0) {
+      const roadmapFlag = this.productList
+        .filter((o) => o.productname.toLowerCase().split(' ').join('') === this.productName.toLowerCase().split(' ').join(''));
+      if (roadmapFlag.length > 0) {
         this.valid = false;
+        this.validupdate = false;
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ALREADY_EXSIST_PRODUCT',
+          message: 'ALREADY_EXSIST',
         });
       } else {
         this.valid = true;
-        // this.saving = false;
+        this.validupdate = true;
       }
-    },
-    async dialogReset() {
-      this.$refs.form.resetValidation();
-      this.productNew = { ...this.product };
     },
   },
 };

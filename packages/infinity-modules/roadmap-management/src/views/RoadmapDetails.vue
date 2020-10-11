@@ -77,9 +77,9 @@
           <td>{{ item.substationname }}</td>
           <td>{{ item.process }}</td>
           <td>{{ item.amtpresubstation }}</td>
+          <td>{{ item.presublinename }}</td>
           <td>{{ item.prestationname }}</td>
           <td>{{ item.presubstationname }}</td>
-          <td>{{ item.presublinename }}</td>
           <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("en-gb") }}</td>
           <td v-else></td>
           <td><v-row justify="center"><v-btn
@@ -193,7 +193,7 @@
             prepend-icon="mdi-tray-plus"
             v-model="roadmapDetail.presubstationname"
         ></v-text-field> -->
-        <!-- <v-select
+        <v-select
           class="mt-2"
           hide-details
           label="Select Pre-Subline name"
@@ -201,12 +201,13 @@
           item-text="name"
           return-object
           prepend-icon="$production"
-          v-model="roadmapDetail.presubline"/> -->
+          v-model="roadmapDetail.presubline"
+          @change="handlePreSubLineClick"/>
           <v-select
           class="mt-2"
           hide-details
           label="Select Pre-Station name"
-          :items="stationList"
+          :items="preStationList"
           item-text="name"
           return-object
           prepend-icon="$production"
@@ -309,9 +310,9 @@ export default {
           value: 'process',
         },
         { text: 'Pre-Subtations before', value: 'amtpresubstation' },
+        { text: 'Previous subline', value: 'presublinename' },
         { text: 'Previous station', value: 'prestationname' },
         { text: 'Pre-Substation name', value: 'presubstationname' },
-        { text: 'Previous subline', value: 'presubline' },
         { text: 'Edited time', value: 'editedtime' },
         {
           text: 'Actions',
@@ -366,6 +367,7 @@ export default {
       'subLineList',
       'productList',
       'preSubStationList',
+      'preStationList',
       'lineList',
       'stationNamebySubline',
       'subStationNamebyStation']),
@@ -390,7 +392,8 @@ export default {
       'createProductDetails',
       'getProductListFromRoadmapName',
       'getStationNamesbysubline',
-      'getSubStationNamesbyStation']),
+      'getSubStationNamesbyStation',
+      'getPreStationList']),
     ...mapMutations('helper', ['setAlert', 'setCurrentPath']),
     async checkProcessCode() {
       const preSubstBefor = this.roadmapDetail.amtpresubstation;
@@ -411,6 +414,10 @@ export default {
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLineList(query);
+    },
+    async handlePreSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getPreStationList(query);
     },
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
@@ -497,6 +504,8 @@ export default {
               stationid: this.roadmapDetail.machinename.id,
               substationname: this.roadmapDetail.substationname.name,
               substationid: this.roadmapDetail.substationname.id,
+              presublineid: this.roadmapDetail.presubline.id,
+              presublinename: this.roadmapDetail.presubline.name,
               prestationname: this.roadmapDetail.prestationname.name,
               prestationid: this.roadmapDetail.prestationname.id,
               presubstationname: this.roadmapDetail.presubstationname.name,
@@ -515,6 +524,8 @@ export default {
               stationid: this.roadmapDetail.machinename.id,
               substationname: this.roadmapDetail.substationname.name,
               substationid: this.roadmapDetail.substationname.id,
+              presublineid: '',
+              presublinename: '',
               prestationname: '',
               prestationid: '',
               presubstationname: '',
@@ -545,11 +556,12 @@ export default {
                   sublineid: this.roadmapDetail.sublineid,
                   machinename: this.roadmapDetail.machinename,
                   stationid: this.roadmapDetail.stationid,
-                  presubline: this.roadmapDetail.presubline,
+                  presublineid: this.roadmapDetail.presubline.id,
+                  presublinename: this.roadmapDetail.presubline.name,
                   substationname: this.roadmapDetail.substationname,
                   substationid: this.roadmapDetail.substationid,
-                  roadmapname: this.$route.params.name,
-                  roadmapid: this.$route.params.id,
+                  roadmapname: this.$route.params.id.name,
+                  roadmapid: this.$route.params.id.id,
                   assetid: 4,
                 };
                 await this.createProductDetails(object);
