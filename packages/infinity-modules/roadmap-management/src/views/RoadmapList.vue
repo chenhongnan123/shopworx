@@ -453,6 +453,8 @@ export default {
             const payloadDetails = [];
             roadmapDetailsList.forEach((roadmapDetail) => {
               payloadDetails.push({
+                lineid: roadmapDetail.lineid,
+                linename: roadmapDetail.linename,
                 sublinename: roadmapDetail.sublinename,
                 sublineid: roadmapDetail.sublineid,
                 machinename: roadmapDetail.machinename,
@@ -461,6 +463,8 @@ export default {
                 substationid: roadmapDetail.substationid,
                 process: roadmapDetail.process,
                 amtpresubstation: roadmapDetail.amtpresubstation,
+                presublineid: roadmapDetail.presublineid,
+                presublinename: roadmapDetail.presublinename,
                 prestationname: roadmapDetail.prestationname,
                 prestationid: roadmapDetail.prestationid,
                 presubstationname: roadmapDetail.presubstationname,

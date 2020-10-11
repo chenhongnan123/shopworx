@@ -188,10 +188,11 @@ export default {
       this.sublineNew = { ...this.subline };
     },
     async changeInMainline() {
+      debugger;
       if (this.sublineNew.ismainline === true) {
-        const isMainlineFlag = this.sublines
-          .filter((item) => item.lineid === parseInt(this.lineid, 10)
-          && item.ismainline === true);
+        console.log(this.lineid);
+        const isMainlineFlag = this.sublines.filter((o) => o.lineid === parseInt(this.lineid, 10)
+          && o.ismainline === true);
         const changeMainline = this.sublines
           .filter((o) => o.ismainline
            === this.sublineNew.ismainline === true);

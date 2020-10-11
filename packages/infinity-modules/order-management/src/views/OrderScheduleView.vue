@@ -64,7 +64,8 @@
           <span :class="orderC(item.orderstatus)">{{ item.productname }}</span>
         </template>
         <template v-slot:item.ordername="{ item }">
-          <span @click="handleClick(item)"><a>{{ item.ordername }}</a></span>
+          <span :class="orderC(item.orderstatus)"
+            @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
         <template v-slot:item.ordercreatedtime="{ item }">
           <span :class="orderC(item.orderstatus)">
