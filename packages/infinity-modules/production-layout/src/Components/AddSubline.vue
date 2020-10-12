@@ -43,7 +43,7 @@
          <div>
          <v-checkbox v-model="checked" class="mx-2"
          label="Make this subline as MainLine"
-         @change="checkMainline"></v-checkbox>
+         ></v-checkbox>
          </div>
     </v-card-text>
     <v-card-actions>
@@ -65,7 +65,6 @@ export default {
     return {
       newSubLine: {},
       assetId: null,
-      getAssetId: '',
       default: false,
       dialog: false,
       valid: true,
@@ -83,32 +82,32 @@ export default {
       required: true,
     },
   },
+  created() {
+    this.getAssets();
+  },
   computed: {
     ...mapState('productionLayout', ['sublines', 'addSublineDialog', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubline', 'getSublines']),
-    async checkMainline() {
+    ...mapActions('productionLayout', ['createSubline', 'getSublines', 'getAssets']),
+    async saveSubline() {
       const mainline = this.sublines
         .filter((m) => m.lineid === parseInt(this.lineid, 10)
          && m.ismainline === true
          && m.ismainline === this.checked);
-      if (mainline.length > 0) {
-        this.checked = false;
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'MAINLINE_EXISTIS',
-        });
-      }
-    },
-    async saveSubline() {
       if (this.newSubLine.numbers === undefined) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'Number Required',
+        });
+      } else if (mainline.length > 0) {
+        this.checked = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MAINLINE_EXISTIS',
         });
       } else {
         this.$refs.form.validate();
@@ -132,10 +131,12 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newSubLine = {
             ...this.newSubLine,
             lineid: this.lineid,
-            assetid: 4,
+            assetid: this.assetId,
             ismainline: this.checked,
           };
           let created = false;
@@ -148,7 +149,7 @@ export default {
               message: 'SUBLINE_CREATED',
             });
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.newSubLine = {};
             this.$refs.form.reset();
           } else {

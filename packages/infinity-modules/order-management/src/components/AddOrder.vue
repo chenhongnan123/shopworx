@@ -59,6 +59,8 @@
             :disabled="saving"
             label="Order Name"
             prepend-icon="mdi-tray-plus"
+            :counter="10"
+            :rules="nameRules"
             v-model="plan.ordername"
         ></v-text-field>
         <v-autocomplete
@@ -164,6 +166,9 @@ export default {
       dateValue: '',
       selectedLine: null,
       btnDisable: false,
+      nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
+        (v) => !!v || 'Name required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
     };
   },
   computed: {

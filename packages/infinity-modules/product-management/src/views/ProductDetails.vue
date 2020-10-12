@@ -163,7 +163,7 @@ export default {
             }];
           }
           const selectedRecipe = recipeList.filter(
-            (recipe) => recipe.recipename === detail.recipename,
+            (recipe) => recipe.recipenumber === detail.recipenumber,
           );
           if (selectedRecipe.length === 0) {
             this.stationRecipeList.push({
@@ -206,7 +206,7 @@ export default {
             }];
           }
           const selectedRecipe = recipeList.filter(
-            (recipe) => recipe.recipename === detail.recipename,
+            (recipe) => recipe.recipenumber === detail.recipenumber,
           );
           if (selectedRecipe.length === 0) {
             this.stationRecipeList.push({

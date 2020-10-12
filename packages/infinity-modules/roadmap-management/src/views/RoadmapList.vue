@@ -14,7 +14,8 @@
             Add roadmap
           </v-btn> -->
           <AddRoadmapList />
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
+          <v-btn v-if="roadmaps.length > 0"
+            small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             Duplicate
           </v-btn>
@@ -452,6 +453,8 @@ export default {
             const payloadDetails = [];
             roadmapDetailsList.forEach((roadmapDetail) => {
               payloadDetails.push({
+                lineid: roadmapDetail.lineid,
+                linename: roadmapDetail.linename,
                 sublinename: roadmapDetail.sublinename,
                 sublineid: roadmapDetail.sublineid,
                 machinename: roadmapDetail.machinename,
@@ -460,6 +463,8 @@ export default {
                 substationid: roadmapDetail.substationid,
                 process: roadmapDetail.process,
                 amtpresubstation: roadmapDetail.amtpresubstation,
+                presublineid: roadmapDetail.presublineid,
+                presublinename: roadmapDetail.presublinename,
                 prestationname: roadmapDetail.prestationname,
                 prestationid: roadmapDetail.prestationid,
                 presubstationname: roadmapDetail.presubstationname,

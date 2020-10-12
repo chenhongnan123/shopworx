@@ -61,6 +61,7 @@
   },
   "success": {
     "ORDER_HIDE": "Selected Order is Hide by you.",
-    "ORDER_UNHIDE": "Selected Order is Unhide by you."
+    "ORDER_UNHIDE": "Selected Order is Unhide by you.",
+    "DATA_SAVED": "Date saved"
   }
 }

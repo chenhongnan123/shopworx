@@ -60,7 +60,7 @@
                         <AddRecipe ref="addUpdateRecipe"/>
             <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
           <!-- </v-btn> -->
-          <v-btn
+          <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}

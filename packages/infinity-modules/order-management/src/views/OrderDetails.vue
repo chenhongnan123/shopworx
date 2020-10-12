@@ -48,11 +48,18 @@
               <div class="title">
                 {{ id.orderstatus }}
               </div>
-              <div>
+              <!-- <div>
                 Target Count
-              </div>
+              </div> -->
               <div class="title">
-                {{ id.targetcount }}
+                <v-text-field
+                 label="Target Count"
+                 append-icon="mdi-pencil"
+                 v-model="id.targetcount"
+                 v-on:keyup.enter="updateTargetCount(id)"
+                 hint="Hit Enter to Save"
+                 type="number"
+                ></v-text-field>
               </div>
             </v-col>
             </v-row>
@@ -107,7 +114,7 @@
                 <v-data-table
                 v-model="roadmaps"
                 :headers="headersRunning"
-                :items="runningOrders"
+                :items="runningOrderList"
                 :footer-props="{
                 'items-per-page-options': [3, 10, 30, 40, 50]}"
                 :items-per-page="3"
@@ -150,7 +157,7 @@
             </v-row>
           </v-col>
           <v-divider></v-divider>
-          <v-row no-gutters>
+          <!-- <v-row no-gutters>
             <span class="headline font-weight-regular info--text mt-2">Recipe Summary</span>
             <v-col cols="12" class="py-2">
               <div>
@@ -167,7 +174,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-divider></v-divider>
+          <v-divider></v-divider> -->
           <v-row no-gutters>
             <v-col cols="12" class="py-2">
               <div class="title">
@@ -213,7 +220,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'OrderDetails',
@@ -226,10 +233,14 @@ export default {
           value: 'machinename',
         },
         {
+          text: 'Sub-Station Name',
+          value: 'substationname',
+        },
+        {
           text: 'Recipe Name',
           value: 'recipename',
         },
-        { text: 'Recipe Number', value: 'recipenumber' },
+        { text: 'Recipe Version', value: 'recipeversion' },
       ],
       headersRunning: [
         {
@@ -242,7 +253,6 @@ export default {
         },
         { text: 'OK Count', value: 'okcount' },
         { text: 'NG Count', value: 'ngcount' },
-        { text: 'Rework', value: 'rework' },
       ],
       runningOrders: [
         {
@@ -279,12 +289,35 @@ export default {
   async created() {
     await this.getRoadMap(`?query=name=="${this.id.roadmapname}"`);
     await this.getProductDetails(`?query=productname=="${this.id.productname}"`);
+    await this.getRunningOrder('');
   },
   computed: {
-    ...mapState('orderManagement', ['roadmapList', 'roadmapDetails', 'productDetails']),
+    ...mapState('orderManagement', ['roadmapList', 'roadmapDetails', 'productDetails', 'runningOrderList']),
   },
   methods: {
-    ...mapActions('orderManagement', ['getRoadMap', 'getProductDetails']),
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('orderManagement', ['getRoadMap', 'getProductDetails', 'updateOrder', 'getRunningOrder']),
+    async updateTargetCount(id) {
+      if (id.orderstatus === 'Interrupted') {
+        const object = {
+          targetcount: id.targetcount,
+        };
+        const updated = await this.updateOrder({ query: `?query=ordernumber=="${id.ordernumber}"`, payload: object });
+        if (updated) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DATA_SAVED',
+          });
+        }
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ORDER_NOT_INTERRUPTED',
+        });
+      }
+    },
   },
   props: {
     id: {

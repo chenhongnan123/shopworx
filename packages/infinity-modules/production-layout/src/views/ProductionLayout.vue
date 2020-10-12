@@ -69,7 +69,7 @@
                   tile
                   outlined>
                   <span class="ml-0">SubStation</span>
-                  <AddSubstation/>
+                  <AddSubstation :lineid="selectedLine.id"/>
                   </v-card>
                 </v-col>
                 <v-col>
@@ -126,7 +126,7 @@
   <v-col cols="3" md="3" lg="3" class="py-0">
     <div>{{ subline.name }}
       <DeleteSubline :subline="subline" />
-      <UpdateSubline :subline="subline" />
+      <UpdateSubline :subline="subline" :lineid="selectedLine.id"/>
     </div>
   </v-col>
   <v-col cols="9" md="9" lg="9" class="py-0">
@@ -147,7 +147,7 @@
                  substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
                 {{ substation.name }}
                 <DeleteSubstation :substation="substation" />
-                <UpdateSubstation :substation="substation" />
+                <UpdateSubstation :substation="substation" :lineid="selectedLine.id"/>
               </div>
             </v-col>
             <v-col cols="6" md="6" lg="6" class="py-0">

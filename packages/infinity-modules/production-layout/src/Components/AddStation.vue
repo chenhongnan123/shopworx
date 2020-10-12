@@ -107,7 +107,7 @@ export default {
   data() {
     return {
       newStation: {},
-      assetId: 4,
+      assetId: null,
       selectedSubLine: null,
       default: false,
       dialog: false,
@@ -130,13 +130,14 @@ export default {
   },
   created() {
     // this.getAllSublines('');
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['stations', 'sublines', 'allSublines']),
+    ...mapState('productionLayout', ['stations', 'sublines', 'allSublines', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation']),
+    ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
     async saveStation() {
       if (this.newStation.numbers === undefined) {
         this.setAlert({
@@ -166,6 +167,8 @@ export default {
           });
         } else {
           this.saving = true;
+          const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+          this.assetId = getAssetId;
           this.newStation = {
             ...this.newStation,
             lineid: this.lineid,
@@ -182,7 +185,7 @@ export default {
               message: 'STATION_CREATED, Now Next you can Add SUBSTATION',
             });
             this.dialog = false;
-            this.assetId = 4;
+            this.assetId = this.getAssetId;
             this.newStation = {};
             this.$refs.form.reset();
           } else {

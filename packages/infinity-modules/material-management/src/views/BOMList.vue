@@ -97,7 +97,7 @@
               <v-card-text>
                 <v-text-field
                     :rules="rules.name"
-                    label="Bom"
+                    label="Bom Name"
                     prepend-icon="mdi-tray-plus"
                     v-model="bomObj.name"
                     required

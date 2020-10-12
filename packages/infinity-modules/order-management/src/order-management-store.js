@@ -301,7 +301,7 @@ export default ({
         'element/getRecords',
         {
           elementName: 'ordercount',
-          query,
+          query: '',
         },
         { root: true },
       );

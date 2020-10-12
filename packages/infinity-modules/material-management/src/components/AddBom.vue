@@ -61,7 +61,7 @@
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
-              label="Bom"
+              label="Bom Name"
               prepend-icon="mdi-tray-plus"
               v-model="bomObj.name"
               required
