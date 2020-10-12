@@ -162,7 +162,6 @@ export default {
       this.showLineFilter = false;
     },
     addDuplicateProduct() {
-      debugger;
       if (this.products.length && this.products.length === 1
         && this.productList.filter((f) => f.productnumber
         === this.products[0].productnumber).length === 1) {

@@ -14,7 +14,7 @@
             Add roadmap
           </v-btn> -->
           <AddRoadmapList />
-          <v-btn v-if="this.roadmaps.length > 0"
+          <v-btn v-if="roadmaps.length > 0"
             small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             Duplicate
