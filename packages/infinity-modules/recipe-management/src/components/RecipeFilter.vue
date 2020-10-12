@@ -105,7 +105,6 @@ export default {
           this.setRecipeList(this.newarray.filter((o) => o.stationid === this.stations.id));
         }
       } else if (this.stations != null) {
-        debugger;
         this.setFilterStation(this.stations);
         this.setRecipeList(this.filterBList.filter((o) => o.stationid === this.stations.id));
       }
