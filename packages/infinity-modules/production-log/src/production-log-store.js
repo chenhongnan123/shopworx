@@ -22,6 +22,7 @@ export default ({
     allRejections: null,
     shiftHours: [],
     hours: [],
+    loading: false,
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -43,6 +44,7 @@ export default ({
     setAllRejections: set('allRejections'),
     setShiftHours: set('shiftHours'),
     setHours: set('hours'),
+    setLoading: set('loading'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -313,6 +315,7 @@ export default ({
       if (!selectedDate || !selectedMachine || !selectedShift) {
         return false;
       }
+      commit('setLoading', true);
       // TODO - use common function
       if (selectedMachine.includes('All ')) {
         let machineList = rootGetters['productionLog/machineList'];
@@ -345,6 +348,7 @@ export default ({
         try {
           await commit('setProductionDetails', JSON.parse(reportData).reportData);
           await dispatch('getRejections');
+          commit('setLoading', false);
           return true;
         } catch (error) {
           console.error(`Exception while parsing production report data : ${error}`);
