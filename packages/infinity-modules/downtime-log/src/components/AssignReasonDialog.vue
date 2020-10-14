@@ -23,7 +23,6 @@
     </v-card-title>
     <v-card-text>
      <v-data-table
-       v-model="maultipleDowntime"
       :headers="headers"
       :items="this.selectedItems"
       item-key="_id"
@@ -101,7 +100,6 @@ export default {
     return {
       dialog: false,
       saving: false,
-      maultipleDowntime: true,
       selectedReason: null,
       headers: [
         {
@@ -157,6 +155,7 @@ export default {
       this.selectedItems.forEach(async (item) => {
         await this.updateReason(
           {
+            // eslint-disable-next-line
             id: item._id,
             payload,
           },
