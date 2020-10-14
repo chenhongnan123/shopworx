@@ -25,12 +25,9 @@
     <production-log-loading v-if="loading" />
     <template v-else>
       <production-log-setup v-if="!onboarded" />
-      <template v-else>
-        <production-list/>
-        <v-fade-transition mode="out-in">
+        <v-fade-transition mode="out-in" v-else>
           <router-view />
         </v-fade-transition>
-      </template>
     </template>
   </div>
 </template>
@@ -39,14 +36,12 @@
 import { mapMutations, mapActions, mapState } from 'vuex';
 import ProductionLogSetup from './ProductionLogSetup.vue';
 import ProductionLogLoading from './ProductionLogLoading.vue';
-import ProductionList from '../components/ProductionList.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
     ProductionLogSetup,
     ProductionLogLoading,
-    ProductionList,
   },
   data() {
     return {
