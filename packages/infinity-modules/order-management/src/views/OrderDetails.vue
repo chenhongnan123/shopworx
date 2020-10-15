@@ -114,7 +114,7 @@
                 <v-data-table
                 v-model="roadmaps"
                 :headers="headersRunning"
-                :items="runningOrderList"
+                :items="subStationWiseOrderCount"
                 :footer-props="{
                 'items-per-page-options': [3, 10, 30, 40, 50]}"
                 :items-per-page="3"
@@ -245,11 +245,7 @@ export default {
       headersRunning: [
         {
           text: 'Station Name',
-          value: 'stationname',
-        },
-        {
-          text: 'Actual Count',
-          value: 'actualcount',
+          value: 'substationname',
         },
         { text: 'OK Count', value: 'okcount' },
         { text: 'NG Count', value: 'ngcount' },
@@ -289,26 +285,48 @@ export default {
   async created() {
     await this.getRoadMap(`?query=name=="${this.id.roadmapname}"`);
     await this.getProductDetails(`?query=productname=="${this.id.productname}"`);
-    await this.getRunningOrder('');
+    // await this.getRunningOrder('');
+    if (this.id.orderstatus === 'Running') {
+      await this.getSubStationWiseOrderCounts({
+        substationlist: this.productDetails,
+        ordernumber: this.id.ordernumber,
+      });
+    }
   },
   computed: {
-    ...mapState('orderManagement', ['roadmapList', 'roadmapDetails', 'productDetails', 'runningOrderList']),
+    ...mapState('orderManagement', ['roadmapList',
+      'roadmapDetails',
+      'productDetails',
+      'runningOrderList',
+      'subStationWiseOrderCount']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('orderManagement', ['getRoadMap', 'getProductDetails', 'updateOrder', 'getRunningOrder']),
+    ...mapActions('orderManagement', ['getRoadMap',
+      'getProductDetails',
+      'updateOrder',
+      'getRunningOrder',
+      'getSubStationWiseOrderCounts']),
     async updateTargetCount(id) {
       if (id.orderstatus === 'Interrupted') {
-        const object = {
-          targetcount: id.targetcount,
-        };
-        const updated = await this.updateOrder({ query: `?query=ordernumber=="${id.ordernumber}"`, payload: object });
-        if (updated) {
+        if (id.targetcount <= id.actualcount) {
           this.setAlert({
             show: true,
-            type: 'success',
-            message: 'DATA_SAVED',
+            type: 'error',
+            message: 'TARGET_ACTUAL',
           });
+        } else {
+          const object = {
+            targetcount: id.targetcount,
+          };
+          const updated = await this.updateOrder({ query: `?query=ordernumber=="${id.ordernumber}"`, payload: object });
+          if (updated) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'DATA_SAVED',
+            });
+          }
         }
       } else {
         this.setAlert({

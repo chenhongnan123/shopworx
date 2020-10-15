@@ -105,6 +105,9 @@
         <v-tab class="text-none">
           Order
         </v-tab>
+        <v-tab class="text-none">
+          Archive
+        </v-tab>
       </v-tabs>
     </portal>
     <order-filter></order-filter>
@@ -115,6 +118,7 @@
         <order-dashboard v-if="planView === 0" />
         <order-calendar-view v-else-if="planView === 1" />
         <order-schedule-view v-else-if="planView === 2" />
+        <hidden-orders v-else-if="planView === 3" />
       </v-fade-transition>
     </template>
   </div>
@@ -125,6 +129,7 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import OrderLoading from './OrderLoading.vue';
 import OrderDashboard from './OrderDashboard.vue';
 import OrderScheduleView from './OrderScheduleView.vue';
+import HiddenOrders from './HiddenOrders.vue';
 import OrderCalendarView from './OrderCalendarView.vue';
 import AddOrder from '../components/AddOrder.vue';
 import OrderFilter from '../components/OrderFilter.vue';
@@ -138,6 +143,7 @@ export default {
     OrderCalendarView,
     AddOrder,
     OrderFilter,
+    HiddenOrders,
   },
   data() {
     return {

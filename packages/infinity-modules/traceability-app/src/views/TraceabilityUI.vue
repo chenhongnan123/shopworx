@@ -212,7 +212,7 @@ export default {
     },
     async showInput() {
       const subline = this.subLineList;
-      const firstSubline = subline[0].name;
+      const firstSubline = subline[0];
       this.newTrecibility.selectedSubLine = firstSubline;
       // this.newTrecibility.fromdate = '2020-09-21T13:59';
       // const tDate = (new Date()).toISOString().slice(0, 16).replace(/-/g, '-');

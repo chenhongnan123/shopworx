@@ -108,6 +108,7 @@ export default {
           ordername: this.rework.reworkinfo[0].ordername,
           ordernumber: this.rework.reworkinfo[0].ordernumber,
           ordertype: this.rework.reworkinfo[0].ordertype,
+          customername: this.rework.reworkinfo[0].customername,
           producttypename: this.rework.reworkinfo[0].productname,
           productid: this.rework.reworkinfo[0].productid,
           overallresult: 1,

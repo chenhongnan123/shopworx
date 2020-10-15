@@ -17,7 +17,7 @@
     "GET_RECORDS_BY_SUBLINEID": "Fetched the records by selected Subline",
     "GET_RECORDS_BY_MAINID": "Fetched the records by provided MainID",
     "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
-    "GET_RECORDS": "Fetched thr records!",
+    "GET_RECORDS": "Fetched the records!",
     "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
   }
 }

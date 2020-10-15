@@ -9,10 +9,10 @@
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
           <v-spacer></v-spacer>
-          <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
+          <!-- <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
             <v-icon small left>mdi-plus</v-icon>
             Add order
-          </v-btn>
+          </v-btn> -->
           <v-btn
           small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
@@ -20,8 +20,8 @@
           </v-btn>
           <v-btn
           v-if="orders.length > 0"
-          small color="primary" outlined class="text-none ml-2" @click="archiveRecord">
-            Archive
+          small color="primary" outlined class="text-none ml-2" @click="unArchiveRecord">
+            Unarchive
           </v-btn>
           <v-btn
           v-if="visible"
@@ -69,8 +69,7 @@
           <span :class="orderC(item.orderstatus)">{{ item.productname }}</span>
         </template>
         <template v-slot:item.ordername="{ item }">
-          <span @mouseover="hover = true"
-            @mouseleave="hover = false" :class="orderC(item.orderstatus)"
+          <span :class="orderC(item.orderstatus)"
             @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
         <template v-slot:item.ordercreatedtime="{ item }">
@@ -152,7 +151,6 @@
               </template></v-select>
             <span :class="orderC(item.orderstatus)"
               v-if='item.orderstatus == "Completed"'>
-              <span style='color:red;margin-right:1.00em; display:inline-block;'></span>
               {{ item.orderstatus }}
             </span>
         </template>
@@ -170,7 +168,6 @@ export default {
   data() {
     return {
       drawer: true,
-      hover: true,
       orders: [],
       max25chars: 25,
       visible: false,
@@ -223,7 +220,7 @@ export default {
     };
   },
   async created() {
-    await this.getOrderListRecords('');
+    await this.getHiddenOrderListRecords('');
     this.orders = [];
   },
   computed: {
@@ -249,37 +246,30 @@ export default {
       }
       return '';
     },
-    ...mapActions('orderManagement', ['getOrderListRecords', 'updateOrder']),
+    ...mapActions('orderManagement', ['getOrderListRecords', 'updateOrder', 'getHiddenOrderListRecords']),
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },
     async RefreshUI() {
-      await this.getOrderListRecords('');
+      await this.getHiddenOrderListRecords('');
       this.orders = [];
     },
-    async archiveRecord() {
-      if (this.orders[0].orderstatus === 'Interrupted') {
-        this.orders.visible = false;
-        const object = {
-          visible: this.orders.visible,
-        };
-        const updated = await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
-        if (updated) {
-          await this.getOrderListRecords('');
-          this.orders = [];
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'ORDER_HIDE',
-          });
-        }
-      } else {
+    async unArchiveRecord() {
+      this.orders.visible = true;
+      const object = {
+        visible: this.orders.visible,
+      };
+      const updated = await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
+      if (updated) {
+        await this.getHiddenOrderListRecords('');
+        this.orders = [];
         this.setAlert({
           show: true,
-          type: 'error',
-          message: 'ORDER_NOT_INTERRUPTED',
+          type: 'success',
+          message: 'ORDER_UNHIDE',
         });
       }
+      this.active = true;
     },
     check(event) {
       if (event.length > 0) {
@@ -522,15 +512,6 @@ export default {
   position: sticky;
   top: 104px;
   z-index: 1;
-}
-.example {
-  height: 200px;
-  border: solid #CCCCCC 2px;
-  padding: 0 10px;
-  white-space: normal;
-  word-break: break-word;
-  display: flex;
-  align-items: center;
 }
 .card-border {
   border-left: 4px solid green;

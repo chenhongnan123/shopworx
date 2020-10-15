@@ -207,6 +207,7 @@ export default {
   },
   data() {
     return {
+      interval: null,
       dialog: false,
       isActive: 2,
       hasError: 4,
@@ -242,9 +243,12 @@ export default {
       [this.selectedLine] = this.lines;
       await this.onLineChange();
     }
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.downloadFromToPLC();
     }, 10000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
   methods: {
     ...mapActions('productionLayout', ['getLines',
@@ -265,7 +269,7 @@ export default {
       this.socket.on('connect', () => {
       });
       let ObJ;
-      this.subStations.forEach((item) => {
+      this.subStations.forEach(async (item) => {
         ObJ = {
           lineid: item.lineid,
           sublineid: item.sublineid,
@@ -273,14 +277,15 @@ export default {
         };
         this.socket.on(`update_parameter_${ObJ.lineid}_${ObJ.sublineid}_${ObJ.substationid}`,
           (data) => {
-            if (data) {
-              this.substation.stationcolor = 1;
+            console.log(data);
+            if (data.communicationerror) {
+              item.stationcolor = 0;
             } else {
-              this.substation.stationcolor = 0;
+              item.stationcolor = 1;
             }
           });
+        await this.downloadToPLC(ObJ);
       });
-      await this.downloadToPLC(ObJ);
     },
     setStation(station) {
       this.selectedStation = station;
