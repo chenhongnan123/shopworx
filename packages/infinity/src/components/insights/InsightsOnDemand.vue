@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'InsightsOnDemand',
@@ -82,11 +82,18 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('insight', ['setWindow', 'setQuery']),
+    ...mapMutations('insight', ['setWindow', 'setQuery', 'setInsightsOnDemand']),
+    ...mapActions('insight', ['createInsightsOnDemand']),
     navigateToDetails(query) {
       this.setQuery(query);
       this.setWindow(1);
     },
+  },
+  computed: {
+    ...mapState('insight', ['insightCategories']),
+  },
+  created() {
+    this.createInsightsOnDemand();
   },
 };
 </script>
