@@ -13,7 +13,7 @@ export default ({
     setWindow: set('window'),
   },
   actions: {
-    createInsightsOnDemand: async ({ dispatch }) => {
+    createInsightsOnDemand: async ({ commit, dispatch }) => {
       const categories = await dispatch('getInsightCategories');
       const categoryQueries = categories.map(async (category) => dispatch('getInsightViews', {
         categoryId: category.id,
@@ -22,16 +22,27 @@ export default ({
       const queries = await Promise.all(categoryQueries);
       const queryItems = queries.flat();
       const groupByQueries = queryItems.reduce((insightArr, query) => {
-        insightArr[query.categoryId]
-          ? insightArr[query.categoryId].push({ name: query.name, reportName: query.reportName })
-          : insightArr[query.categoryId] = [{ name: query.name, reportName: query.reportName }];
+        if (insightArr[query.categoryId]) {
+          insightArr[query.categoryId].push({
+            id: query.id,
+            name: query.name,
+            reportName: query.reportName,
+          });
+        } else {
+          insightArr[query.categoryId] = [{
+            id: query.id,
+            name: query.name,
+            reportName: query.reportName,
+          }];
+        }
         return insightArr;
       }, {});
-      const insightOnDemand = categories.map(({ description, id }) => ({
+      const insightOnDemand = categories.map(({ name, description, id }) => ({
+        icon: name,
         category: description,
-        query: groupByQueries[id],
+        queries: groupByQueries[id],
       }));
-      console.log(insightOnDemand);
+      commit('setInsightsOnDemand', insightOnDemand);
     },
     getInsightCategories: async () => {
       try {

@@ -6,12 +6,12 @@
         <v-expansion-panel
           :key="index"
           class="my-1 transparent"
-          v-for="(insight, index) in insights"
+          v-for="(insight, index) in insightsOnDemand"
         >
           <v-expansion-panel-header class="body-2 px-0">
             <v-row no-gutters>
               <v-col cols="2" class="px-1">
-                <v-icon v-text="insight.icon"></v-icon>
+                <v-icon v-text="`$${insight.icon}`"></v-icon>
               </v-col>
               <v-col cols="9">
                 <span v-text="insight.category"></span>
@@ -82,7 +82,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('insight', ['setWindow', 'setQuery', 'setInsightsOnDemand']),
+    ...mapMutations('insight', ['setWindow', 'setQuery']),
     ...mapActions('insight', ['createInsightsOnDemand']),
     navigateToDetails(query) {
       this.setQuery(query);
@@ -90,7 +90,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('insight', ['insightCategories']),
+    ...mapState('insight', ['insightsOnDemand']),
   },
   created() {
     this.createInsightsOnDemand();
