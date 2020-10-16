@@ -1,7 +1,6 @@
 <template>
    <v-switch
         v-model="multipleSelection"
-        @change="onValuechange"
         :label="this.multipleSelection ?
          'Disable Multiple Assignment' : 'Enable Multiple Assignment'"
     ></v-switch>
@@ -15,21 +14,21 @@ import {
 
 export default {
   name: 'ToggleSelection',
-  data() {
-    return {
-      multipleSelection: false,
-    };
-  },
   computed: {
     ...mapState('downtimeLog', ['toggleSelection']),
+    multipleSelection: {
+      get() {
+        return this.toggleSelection;
+      },
+      set(val) {
+        this.setToggleSelection(val);
+      },
+    },
   },
   methods: {
     ...mapMutations('downtimeLog', [
       'setToggleSelection',
     ]),
-    async onValuechange() {
-      this.setToggleSelection(this.multipleSelection);
-    },
   },
 };
 </script>

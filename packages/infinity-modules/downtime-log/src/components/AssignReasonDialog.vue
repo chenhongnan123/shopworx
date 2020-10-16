@@ -92,7 +92,7 @@
 </v-dialog>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'AssignReason',
@@ -101,6 +101,7 @@ export default {
       dialog: false,
       saving: false,
       selectedReason: null,
+      toggleHide: false,
       headers: [
         {
           text: 'Select',
@@ -130,9 +131,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['downtimeReasons', 'selectedItems']),
+    ...mapState('downtimeLog', ['downtimeReasons', 'selectedItems', 'downtimeList']),
   },
   methods: {
+    ...mapMutations('downtimeLog', [
+      'setCheckedItems',
+      'setToggleSelection',
+    ]),
     ...mapActions('downtimeLog', ['updateReason']),
     durationTime(value) {
       let Time = 0;
@@ -161,6 +166,12 @@ export default {
           },
         );
       });
+      const unchecked = this.downtimeList.map((dt) => ({
+        ...dt,
+        selected: false,
+      }));
+      this.setCheckedItems(unchecked);
+      this.setToggleSelection(this.toggleHide);
       this.saving = false;
       this.dialog = false;
     },
