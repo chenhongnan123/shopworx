@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     ...mapMutations('insight', ['setWindow', 'setQuery']),
-    ...mapActions('insight', ['createInsightsOnDemand']),
+    ...mapActions('insight', ['getInsightsOnDemand']),
     navigateToDetails(query) {
       this.setQuery(query);
       this.setWindow(1);
@@ -93,7 +93,7 @@ export default {
     ...mapState('insight', ['insightsOnDemand']),
   },
   created() {
-    this.createInsightsOnDemand();
+    this.getInsightsOnDemand();
   },
 };
 </script>

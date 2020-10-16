@@ -26,7 +26,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'InsightDetails',
   computed: {
-    ...mapState('insight', ['query']),
+    ...mapState('insight', ['query', 'window']),
   },
 };
 </script>

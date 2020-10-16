@@ -13,7 +13,7 @@ export default ({
     setWindow: set('window'),
   },
   actions: {
-    createInsightsOnDemand: async ({ commit, dispatch }) => {
+    getInsightsOnDemand: async ({ commit, dispatch }) => {
       const categories = await dispatch('getInsightCategories');
       const categoryQueries = categories.map(async (category) => dispatch('getInsightViews', {
         categoryId: category.id,
@@ -26,12 +26,14 @@ export default ({
           insightArr[query.categoryId].push({
             id: query.id,
             name: query.name,
+            categoryId: query.categoryId,
             reportName: query.reportName,
           });
         } else {
           insightArr[query.categoryId] = [{
             id: query.id,
             name: query.name,
+            categoryId: query.categoryId,
             reportName: query.reportName,
           }];
         }
@@ -44,6 +46,7 @@ export default ({
       }));
       commit('setInsightsOnDemand', insightOnDemand);
     },
+
     getInsightCategories: async () => {
       try {
         const { data } = await ReportService.getInsightCategories();
@@ -55,6 +58,7 @@ export default ({
       }
       return false;
     },
+
     getInsightViews: async (_, { categoryId, parentId }) => {
       try {
         const { data } = await ReportService.getInsightViews(categoryId, parentId);
