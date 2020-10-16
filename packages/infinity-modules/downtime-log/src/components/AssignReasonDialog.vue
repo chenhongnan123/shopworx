@@ -58,6 +58,7 @@
         item-text="reasonname"
         item-value="reasonname"
         v-model="selectedReason"
+        @change="checkSelection"
       >
         <template #selection="data">
           {{ data.item.reasonname }}
@@ -83,6 +84,7 @@
           color="primary"
           class="text-none"
           @click="saveReasons"
+          :disabled="btnDisable"
           :loading="saving"
           > Save
         </v-btn>
@@ -101,6 +103,7 @@ export default {
       dialog: false,
       saving: false,
       selectedReason: null,
+      btnDisable: false,
       toggleHide: false,
       headers: [
         {
@@ -133,6 +136,9 @@ export default {
   computed: {
     ...mapState('downtimeLog', ['downtimeReasons', 'selectedItems', 'downtimeList']),
   },
+  async created() {
+    await this.checkSelection();
+  },
   methods: {
     ...mapMutations('downtimeLog', [
       'setCheckedItems',
@@ -148,6 +154,13 @@ export default {
       const viewTime = `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
       Time = viewTime;
       return Time;
+    },
+    checkSelection() {
+      if (!this.selectedReason) {
+        this.btnDisable = true;
+      } else {
+        this.btnDisable = false;
+      }
     },
     async saveReasons() {
       this.saving = true;
