@@ -5,15 +5,12 @@
       <span v-text="query.name"></span>
     </v-card-text>
     <v-progress-linear :indeterminate="true"></v-progress-linear>
-    <v-card-text class="text-center">
+    <v-card-text class="text-center" v-if="Object.keys(report).length">
       <v-row align="center" no-gutters style="height: 100%">
         <v-col cols="12">
-          <div class="title font-weight-regular">
-            Insight detail here.
-          </div>
-          <div class="subheading">
-            Check back soon!
-          </div>
+          <highcharts
+            :options="report.options"
+          ></highcharts>
         </v-col>
       </v-row>
     </v-card-text>
@@ -21,12 +18,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'InsightDetails',
   computed: {
     ...mapState('insight', ['query', 'window']),
+    ...mapState('report', ['report']),
+  },
+  methods: {
+    ...mapActions('report', ['executeReport']),
   },
 };
 </script>
