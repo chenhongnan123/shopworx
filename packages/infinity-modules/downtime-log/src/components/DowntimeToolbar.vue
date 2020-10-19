@@ -9,7 +9,7 @@
         <toggle-selection />
       </div>
       <div v-if="this.selectedItems.length > 0">
-         <assign-reason />
+         <assign-reason-dialog />
       </div>
       <v-spacer></v-spacer>
       <div class="mt-1" v-show="!edit">
@@ -45,7 +45,7 @@ import MachineSelection from './toolbar/MachineSelection.vue';
 import ShiftSelection from './toolbar/ShiftSelection.vue';
 import DateSelection from './toolbar/DateSelection.vue';
 import ToggleSelection from './toolbar/ToggleSelection.vue';
-import AssignReason from './AssignReasonDialog.vue';
+import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
@@ -55,7 +55,7 @@ export default {
     ShiftSelection,
     DateSelection,
     ToggleSelection,
-    AssignReason,
+    AssignReasonDialog,
   },
   data() {
     return {

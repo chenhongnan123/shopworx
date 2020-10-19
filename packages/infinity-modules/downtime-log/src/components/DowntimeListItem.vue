@@ -2,12 +2,13 @@
   <v-card outlined>
     <v-card-title>
       <div>
-         <v-checkbox
-          v-show="this.toggleSelection"
-          v-model="downtime.selected"
-          class="mx-2"
-          @change="setCheckedItems(downtime)"
-         ></v-checkbox>
+        <v-checkbox
+        class="ma-0 mb-2"
+        hide-details
+        v-show="this.toggleSelection"
+        v-model="downtime.selected"
+        @change="setCheckedItems(downtime)"
+        ></v-checkbox>
       </div>
       <div>
         {{ new Date(downtime.downtimestart).toLocaleTimeString('en-US') }}

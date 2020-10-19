@@ -2,7 +2,7 @@
    <v-switch
         v-model="multipleSelection"
         :label="this.multipleSelection ?
-         'Disable Multiple Assignment' : 'Enable Multiple Assignment'"
+         'Disable multiple assignment' : 'Enable multiple assignment'"
     ></v-switch>
 </template>
 

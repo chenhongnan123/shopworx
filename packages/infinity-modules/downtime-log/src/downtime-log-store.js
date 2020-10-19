@@ -30,6 +30,9 @@ export default ({
         state.selectedItems.splice(index, 1);
       }
     },
+    clearCheckedItems: (state) => {
+      state.selectedItems = [];
+    },
     setToggleSelection: set('toggleSelection'),
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),

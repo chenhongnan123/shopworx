@@ -1,103 +1,90 @@
  <template>
-<v-dialog v-model="dialog" max-width="700px">
+  <v-dialog v-model="dialog" max-width="700px" persistent>
     <template v-slot:activator="{ on }">
-     <v-btn
-        small
-        outlined
-        class="text-none"
-        v-on="on"
-     >
-        Assign Reason
-     </v-btn>
+      <v-btn small v-on="on" class="text-none" color="primary"> Assign Reason </v-btn>
     </template>
-    <v-form
-    ref="form"
-    lazy-validation>
-    <v-card>
-    <v-card-title>
-        <span class="headline">Assign</span>
-         <v-spacer></v-spacer>
+    <v-form ref="form" lazy-validation>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Assign downtime reason</span>
+          <v-spacer></v-spacer>
           <v-btn icon small @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-    </v-card-title>
-    <v-card-text>
-     <v-data-table
-      :headers="headers"
-      :items="this.selectedItems"
-      item-key="_id"
-      hide-default-footer
-      >
-      <template v-slot:item="{ item }">
-          <tr>
-            <td>
-                <v-checkbox
-                v-model="item.selected"
-                class="mx-2"
-                @change="setCheckedItems(downtime)"
-                ></v-checkbox>
-            </td>
-            <td>{{ item.machinename }}</td>
-            <td>{{ item.shiftName }}</td>
-            <td>
-              {{new Date(item.downtimestart).toLocaleTimeString()}}
-            </td>
-            <td>
-              {{new Date(item.downtimeend).toLocaleTimeString()}}
-            </td>
-            <td>{{ durationTime(item.downtimeduration) }}</td>
-          </tr>
-      </template>
-     </v-data-table>
-     <v-autocomplete
-        dense
-        outlined
-        hide-details
-        return-object
-        :items="downtimeReasons"
-        item-text="reasonname"
-        item-value="reasonname"
-        v-model="selectedReason"
-        @change="checkSelection"
-      >
-        <template #selection="data">
-          {{ data.item.reasonname }}
-        </template>
-        <template #item="data">
-          <v-list-item-content>
-            <v-list-item-title>
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-data-table
+            :headers="headers"
+            :items="selectedItems"
+            item-key="_id"
+            hide-default-footer
+          >
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{ item.machinename }}</td>
+                <td>{{ item.shiftName }}</td>
+                <td>
+                  {{ new Date(item.downtimestart).toLocaleTimeString() }}
+                </td>
+                <td>
+                  {{ new Date(item.downtimeend).toLocaleTimeString() }}
+                </td>
+                <td>{{ durationTime(item.downtimeduration) }}</td>
+              </tr>
+            </template>
+          </v-data-table>
+          <v-autocomplete
+            dense
+            outlined
+            hide-details
+            return-object
+            label="Reason"
+            class="mt-4"
+            :items="downtimeReasons"
+            item-text="reasonname"
+            item-value="reasonname"
+            v-model="selectedReason"
+            @change="checkSelection"
+          >
+            <template #selection="data">
               {{ data.item.reasonname }}
-            </v-list-item-title>
-            <v-list-item-subtitle
-              v-text="data.item.category"
-            ></v-list-item-subtitle>
-            <v-list-item-subtitle
-              v-text="data.item.department"
-            ></v-list-item-subtitle>
-          </v-list-item-content>
-        </template>
-      </v-autocomplete>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          class="text-none"
-          @click="saveReasons"
-          :disabled="btnDisable"
-          :loading="saving"
-          > Save
-        </v-btn>
-    </v-card-actions>
-    </v-card>
+            </template>
+            <template #item="data">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ data.item.reasonname }}
+                </v-list-item-title>
+                <v-list-item-subtitle
+                  v-text="data.item.category"
+                ></v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-text="data.item.department"
+                ></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="text-none"
+            @click="saveReasons"
+            :disabled="btnDisable"
+            :loading="saving"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-form>
-</v-dialog>
+  </v-dialog>
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
-  name: 'AssignReason',
+  name: 'AssignReasonDialog',
   data() {
     return {
       dialog: false,
@@ -105,11 +92,8 @@ export default {
       selectedReason: null,
       btnDisable: false,
       toggleHide: false,
+      downtimes: [],
       headers: [
-        {
-          text: 'Select',
-          value: '',
-        },
         {
           text: 'Machine',
           value: 'machinename',
@@ -119,11 +103,11 @@ export default {
           value: 'shiftName',
         },
         {
-          text: 'StartTime',
+          text: 'From',
           value: 'downtimestart',
         },
         {
-          text: 'EndTime',
+          text: 'To',
           value: 'downtimeend',
         },
         {
@@ -134,16 +118,17 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['downtimeReasons', 'selectedItems', 'downtimeList']),
+    ...mapState('downtimeLog', [
+      'downtimeReasons',
+      'selectedItems',
+      'downtimeList',
+    ]),
   },
-  async created() {
-    await this.checkSelection();
+  created() {
+    this.checkSelection();
   },
   methods: {
-    ...mapMutations('downtimeLog', [
-      'setCheckedItems',
-      'setToggleSelection',
-    ]),
+    ...mapMutations('downtimeLog', ['clearCheckedItems', 'setToggleSelection', 'setDowntimeList']),
     ...mapActions('downtimeLog', ['updateReason']),
     durationTime(value) {
       let Time = 0;
@@ -151,7 +136,9 @@ export default {
       const h = Math.floor(d / 3600);
       const m = Math.floor((d % 3600) / 60);
       const s = Math.floor((d % 3600) % 60);
-      const viewTime = `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
+      const viewTime = `${h.toString().padStart(2, 0)}:${m
+        .toString()
+        .padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
       Time = viewTime;
       return Time;
     },
@@ -171,19 +158,19 @@ export default {
         department: this.selectedReason.department,
       };
       this.selectedItems.forEach(async (item) => {
-        await this.updateReason(
-          {
-            // eslint-disable-next-line
-            id: item._id,
-            payload,
-          },
-        );
+        await this.updateReason({
+          // eslint-disable-next-line
+          id: item._id,
+          payload,
+        });
       });
       const unchecked = this.downtimeList.map((dt) => ({
         ...dt,
         selected: false,
       }));
-      this.setCheckedItems(unchecked);
+      this.clearCheckedItems();
+      this.setDowntimeList([]);
+      this.setDowntimeList(unchecked);
       this.setToggleSelection(this.toggleHide);
       this.saving = false;
       this.dialog = false;
