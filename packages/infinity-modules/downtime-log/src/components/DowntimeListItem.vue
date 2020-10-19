@@ -2,6 +2,15 @@
   <v-card outlined>
     <v-card-title>
       <div>
+        <v-checkbox
+        class="ma-0 mb-2"
+        hide-details
+        v-show="this.toggleSelection"
+        v-model="downtime.selected"
+        @change="setCheckedItems(downtime)"
+        ></v-checkbox>
+      </div>
+      <div>
         {{ new Date(downtime.downtimestart).toLocaleTimeString('en-US') }}
         to
         {{ new Date(downtime.downtimeend).toLocaleTimeString('en-US') }}
@@ -64,6 +73,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import DowntimeSplit from './DowntimeSplit.vue';
 import EditDowntimeReason from './EditDowntimeReason.vue';
 
@@ -80,6 +90,7 @@ export default {
     EditDowntimeReason,
   },
   computed: {
+    ...mapState('downtimeLog', ['toggleSelection', 'selectedItems']),
     duration() {
       const d = this.downtime.downtimeduration;
       const h = Math.floor(d / 3600);
@@ -87,6 +98,11 @@ export default {
       const s = Math.floor((d % 3600) % 60);
       return `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
     },
+  },
+  methods: {
+    ...mapMutations('downtimeLog', [
+      'setCheckedItems',
+    ]),
   },
 };
 </script>

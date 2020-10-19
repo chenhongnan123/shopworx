@@ -5,6 +5,12 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
+      <div class="mt-5 mr-4">
+        <toggle-selection />
+      </div>
+      <div v-if="this.selectedItems.length > 0">
+         <assign-reason-dialog />
+      </div>
       <v-spacer></v-spacer>
       <div class="mt-1" v-show="!edit">
         <span class="title">
@@ -38,6 +44,8 @@ import DurationSelection from './toolbar/DurationSelection.vue';
 import MachineSelection from './toolbar/MachineSelection.vue';
 import ShiftSelection from './toolbar/ShiftSelection.vue';
 import DateSelection from './toolbar/DateSelection.vue';
+import ToggleSelection from './toolbar/ToggleSelection.vue';
+import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
@@ -46,6 +54,8 @@ export default {
     MachineSelection,
     ShiftSelection,
     DateSelection,
+    ToggleSelection,
+    AssignReasonDialog,
   },
   data() {
     return {
@@ -58,6 +68,7 @@ export default {
       'selectedMachine',
       'selectedShift',
       'selectedDate',
+      'selectedItems',
     ]),
     duration() {
       return this.selectedDuration ? this.selectedDuration.name : '';
