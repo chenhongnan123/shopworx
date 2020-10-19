@@ -17,8 +17,23 @@ export default ({
     downtimeCount: 0,
     pageNumber: 1,
     pageSize: 10,
+    toggleSelection: false,
+    selectedItems: [],
   },
   mutations: {
+    setCheckedItems: (state, payload) => {
+      if (payload.selected) {
+        state.selectedItems.push(payload);
+      } else {
+        // eslint-disable-next-line
+        const index = state.selectedItems.findIndex((item) => item._id === payload.id);
+        state.selectedItems.splice(index, 1);
+      }
+    },
+    clearCheckedItems: (state) => {
+      state.selectedItems = [];
+    },
+    setToggleSelection: set('toggleSelection'),
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
@@ -125,7 +140,11 @@ export default ({
         { root: true },
       );
       if (data && data.results) {
-        commit('setDowntimeList', data.results);
+        const downtimes = data.results.map((dt) => ({
+          ...dt,
+          selected: false,
+        }));
+        commit('setDowntimeList', downtimes);
         commit('setDowntimeCount', data.totalCount);
         commit('setError', false);
       } else {
