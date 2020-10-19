@@ -4,13 +4,19 @@ import ReportService from '@shopworx/services/api/report.service';
 export default ({
   state: {
     insightsOnDemand: [],
+    followUpInsights: [],
     query: null,
     window: 0,
+    loading: false,
+    insightDetails: null,
   },
   mutations: {
     setInsightsOnDemand: set('insightsOnDemand'),
+    setFollowUpInsights: set('followUpInsights'),
     setQuery: set('query'),
     setWindow: set('window'),
+    setLoading: set('loading'),
+    setInsightDetails: set('insightDetails'),
   },
   actions: {
     getInsightsOnDemand: async ({ commit, dispatch }) => {
@@ -71,6 +77,52 @@ export default ({
         return false;
       }
       return false;
+    },
+
+    getFollowUpInsightViews: async ({ commit }, { categoryId, parentId }) => {
+      try {
+        const { data } = await ReportService.getInsightViews(categoryId, parentId);
+        if (data && data.results) {
+          commit('setFollowUpInsights', data.results);
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    fetchInsightDetails: async ({
+      dispatch,
+      state,
+      rootState,
+      commit,
+    }) => {
+      const { query } = state;
+      const { activeSite } = rootState.user;
+      await dispatch('calendar/getBusinessTime', null, { root: true });
+      const { businessTime } = rootState.calendar;
+      const inputMap = JSON.parse(query.inputMap);
+      const time = inputMap
+        ? inputMap.time
+        : {};
+      const payload = {};
+      Object.keys(time).forEach((key) => {
+        payload[`${key}Val`] = businessTime[key] + time[key];
+      });
+      if (inputMap && inputMap.siteId) {
+        payload.siteid = activeSite;
+      }
+      const insightDetails = await dispatch(
+        'report/executeReport',
+        { reportName: query.reportName, payload },
+        { root: true },
+      );
+      commit('setInsightDetails', insightDetails);
+      await dispatch('getFollowUpInsightViews', {
+        categoryId: query.categoryId,
+        parentId: query.id,
+      });
     },
   },
 });

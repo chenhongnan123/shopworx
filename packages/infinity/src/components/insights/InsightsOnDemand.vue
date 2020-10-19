@@ -47,47 +47,15 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'InsightsOnDemand',
-  data() {
-    return {
-      insights: [
-        {
-          category: 'Basic performance',
-          icon: 'mdi-speedometer',
-          queries: [
-            {
-              name: 'What were the top reasons for downtime in the last week?',
-              reportName: 1,
-            },
-            {
-              name: 'What were the total parts produced last week, machine wise?',
-              reportName: 2,
-            },
-            {
-              name: 'What is the summary of yesterdays production?',
-              reportName: 3,
-            },
-          ],
-        },
-        {
-          category: 'Understanding trends',
-          icon: 'mdi-trending-up',
-          queries: [
-            {
-              name: 'What is the trend of OEE over last 7 days?',
-              reportName: 4,
-            },
-          ],
-        },
-      ],
-    };
-  },
   methods: {
-    ...mapMutations('insight', ['setWindow', 'setQuery']),
-    ...mapActions('insight', ['getInsightsOnDemand']),
-    ...mapActions('report', ['executeReport']),
-    navigateToDetails(query) {
+    ...mapMutations('insight', ['setWindow', 'setQuery', 'setLoading']),
+    ...mapActions('insight', ['getInsightsOnDemand', 'fetchInsightDetails']),
+    async navigateToDetails(query) {
       this.setQuery(query);
       this.setWindow(1);
+      this.setLoading(true);
+      await this.fetchInsightDetails();
+      this.setLoading(false);
     },
   },
   computed: {
