@@ -28,6 +28,7 @@ export default ({
             name: query.name,
             categoryId: query.categoryId,
             reportName: query.reportName,
+            inputMap: query.inputMap,
           });
         } else {
           insightArr[query.categoryId] = [{
@@ -35,6 +36,7 @@ export default ({
             name: query.name,
             categoryId: query.categoryId,
             reportName: query.reportName,
+            inputMap: query.inputMap,
           }];
         }
         return insightArr;

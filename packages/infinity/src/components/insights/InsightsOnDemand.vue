@@ -88,15 +88,6 @@ export default {
     navigateToDetails(query) {
       this.setQuery(query);
       this.setWindow(1);
-      const payload = {
-        start: 20201015,
-        end: 20201015,
-        siteid: 198,
-      };
-      this.executeReport({
-        reportName: query.reportName,
-        payload,
-      });
     },
   },
   computed: {
