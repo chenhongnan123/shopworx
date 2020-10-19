@@ -1,6 +1,7 @@
 import ReportService from '@shopworx/services/api/report.service';
 
 export default ({
+  namespaced: true,
   actions: {
     executeReport: async (_, { reportName, payload }) => {
       try {

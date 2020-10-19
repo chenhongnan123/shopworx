@@ -82,5 +82,7 @@ export default {
     locale: 'mdi-translate',
     delete: 'mdi-delete-circle-outline',
     save: 'mdi-content-save',
+    basicperformance: 'mdi-speedometer',
+    understandingtrends: 'mdi-trending-up'
   },
 };

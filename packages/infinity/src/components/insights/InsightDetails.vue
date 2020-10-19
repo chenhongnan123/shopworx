@@ -4,16 +4,10 @@
       <span>You asked:&nbsp;</span>
       <span v-text="query.name"></span>
     </v-card-text>
-    <v-progress-linear :indeterminate="true"></v-progress-linear>
+    <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
     <v-card-text class="text-center">
       <v-row align="center" no-gutters style="height: 100%">
         <v-col cols="12">
-          <div class="title font-weight-regular">
-            Insight detail here.
-          </div>
-          <div class="subheading">
-            Check back soon!
-          </div>
         </v-col>
       </v-row>
     </v-card-text>
@@ -26,7 +20,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'InsightDetails',
   computed: {
-    ...mapState('insight', ['query']),
+    ...mapState('insight', ['query', 'window', 'loading']),
   },
 };
 </script>
