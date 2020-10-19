@@ -8,7 +8,7 @@
       <div class="mt-5 mr-4">
         <toggle-selection />
       </div>
-      <div v-if="this.selectedItems.length > 0">
+      <div v-if="this.selectedItems.length > 0 && toggleSelection">
          <assign-reason-dialog />
       </div>
       <v-spacer></v-spacer>
@@ -69,6 +69,7 @@ export default {
       'selectedShift',
       'selectedDate',
       'selectedItems',
+      'toggleSelection',
     ]),
     duration() {
       return this.selectedDuration ? this.selectedDuration.name : '';
