@@ -118,7 +118,7 @@ export default ({
         { reportName: query.reportName, payload },
         { root: true },
       );
-      commit('setInsightDetails', insightDetails);
+      commit('setInsightDetails', insightDetails && JSON.parse(insightDetails));
       await dispatch('getFollowUpInsightViews', {
         categoryId: query.categoryId,
         parentId: query.id,
