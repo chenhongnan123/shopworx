@@ -57,10 +57,10 @@
         </div>
         <v-spacer></v-spacer>
         <!-- <v-btn small color="primary" class="text-none ml-2"> -->
-                        <AddRecipe />
+                        <AddRecipe ref="addUpdateRecipe"/>
             <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
           <!-- </v-btn> -->
-          <v-btn
+          <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}
@@ -271,7 +271,7 @@ export default {
     await this.getRecipeListRecords('');
   },
   async beforeDestroy() {
-    console.log('beforeDestroy');
+    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
   },
@@ -351,12 +351,17 @@ export default {
         } else {
           this.recipe = {
             recipename: this.dupRecipeName,
-            line: this.recipes[0].line,
-            subline: this.recipes[0].subline,
+            linename: this.recipes[0].linename,
+            lineid: this.recipes[0].lineid,
+            sublinename: this.recipes[0].sublinename,
+            sublineid: this.recipes[0].sublineid,
+            stationid: this.recipes[0].stationid,
+            stationname: this.recipes[0].stationname,
+            substationid: this.recipes[0].substationid,
+            substationname: this.recipes[0].substationname,
             versionnumber: 1,
             assetid: 4,
-            stationname: this.recipes[0].stationname,
-            createdby: 'admin',
+            createdby: this.userName,
           };
           let created = false;
           const payload = this.recipe;
@@ -368,6 +373,7 @@ export default {
               message: 'RECIPE_CREATED',
             });
             this.dialogDup = false;
+            this.dupRecipeName = null;
             this.recipe = {};
           } else {
             this.setAlert({
@@ -382,6 +388,7 @@ export default {
     fnCreateDupRecipe() {
       if (this.recipes.length > 0) {
         this.dialogDup = true;
+        this.saving = false;
       } else {
         this.setAlert({
           show: true,
@@ -391,18 +398,17 @@ export default {
       }
     },
     fnUpdateRecipe(item) {
-      this.dialog = true;
-      this.saving = true;
-      this.flagNewUpdate = true;
-      this.input.sublinename = item.subline;
-      this.input.linename = item.linename;
-      this.input.sublinename = item.sublinename;
-      this.updateRecipeNumber = item.recipenumber;
-      this.lineSelected = this.lineList;
-      this.editedVersionNumber = item.versionnumber;
-      this.recipe.recipename = item.recipename;
-      this.input.stationname = item.stationname;
-      this.input.substationname = item.substationname;
+      this.$refs.addUpdateRecipe.dialog = true;
+      this.$refs.addUpdateRecipe.saving = true;
+      this.$refs.addUpdateRecipe.flagNewUpdate = true;
+      this.$refs.addUpdateRecipe.input.linename = item.linename;
+      this.$refs.addUpdateRecipe.input.sublinename = item.sublinename;
+      this.$refs.addUpdateRecipe.updateRecipeNumber = item.recipenumber;
+      this.$refs.addUpdateRecipe.lineSelected = this.lineList;
+      this.$refs.addUpdateRecipe.editedVersionNumber = item.versionnumber;
+      this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
+      this.$refs.addUpdateRecipe.input.stationname = item.stationname;
+      this.$refs.addUpdateRecipe.input.substationname = item.substationname;
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;

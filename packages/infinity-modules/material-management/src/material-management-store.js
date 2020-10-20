@@ -13,6 +13,7 @@ export default ({
     filter: false,
     lineValue: '',
     sublineValue: '',
+    materialListChoice: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -25,8 +26,28 @@ export default ({
     setFilter: set('filter'),
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
+    setMaterialListChoice: set('materialListChoice'),
   },
   actions: {
+    getMaterialListChoice: async ({ dispatch, commit }, query) => {
+      const list = [];
+      const obj = {
+        name: '-',
+      };
+      list.push(obj);
+      const materialListChoice = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'materiallist',
+          query,
+        },
+        { root: true },
+      );
+      materialListChoice.forEach((f) => {
+        list.push(f);
+      });
+      commit('setMaterialListChoice', list);
+    },
     getMaterialListRecords: async ({ dispatch, commit }, query) => {
       const materiallist = await dispatch(
         'element/getRecords',

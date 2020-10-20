@@ -41,17 +41,29 @@
           </td> -->
           <td>{{ index+1 }}</td>
           <td>{{ item.ngcode }}</td>
-          <td>{{ item.substationname }}</td>
           <td>{{ item.processngcode }}</td>
-          <!-- <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td> -->
-          <td>{{ item.roadmap}}</td>
-          <td>{{ item.reworkroadmap }}</td>
+          <td>{{ item.reworkable}}</td>
           <td>{{ item.ngdescription }}</td>
-          <td>{{ item.reworkdescription }}</td>
+          <!-- <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td> -->
+          <!-- <td>{{ item.roadmap}}</td> -->
+          <!-- <td>{{ item.reworkroadmap }}</td> -->
+          <!-- <td>
+             <v-tooltip top>
+             <template v-slot:activator="{ on, attrs }">
+               <v-btn
+               text small
+               v-bind="attrs"
+                v-on="on"
+              >{{ item.reworkdescription.substring(0,8)+"..." }}</v-btn>
+             </template>
+            <span>{{ item.reworkdescription }}</span>
+            </v-tooltip>
+          </td> -->
           <td>{{ item.createdby }}</td>
-          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</td>
-          <td v-else></td>
+          <td>{{ item.createdTimestamp }}</td>
           <td>{{ item.editedby }}</td>
+          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("EN-US") }}</td>
+          <td v-else></td>
           <td><v-row><v-btn
               icon
               small
@@ -128,14 +140,14 @@
             :rules="rules.ngcode"
             :counter="6"
         ></v-text-field>
-        <v-select
+        <!-- <v-select
           v-model="ngConfigInput.subStationname"
           :items="subStationbySubline"
           :disabled="saving"
           return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Sub-Station"/>
+          label="Select Sub-Station"/> -->
         <v-select
           v-model="ngConfigInput.processNgcode"
           :items="processNgcode"
@@ -144,6 +156,15 @@
           item-text="name"
           prepend-icon="$production"
           label="Process NG Code"/>
+           <v-select
+          v-model="ngConfigInput.reWorkable"
+          :items="reWorkable"
+          :disabled="saving"
+          return-object
+          item-value="name"
+          item-text="name"
+          prepend-icon="$production"
+          label="Reworkable"/>
         <!-- <v-autocomplete
           clearable
           label="Select Sub-Line name"
@@ -161,24 +182,26 @@
             </v-list-item-content>
           </template>
         </v-autocomplete> -->
-        <v-select
-          v-model="ngConfigInput.machinename"
+        <!-- <v-select
+          v-model="ngConfigInput.roadmap"
           :items="roadMaps"
           :disabled="saving"
-          item-value="name"
+          return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Rework roadmap"/>
+          label="Select Rework roadmap"/> -->
         <v-text-field
             label="NG Description"
             prepend-icon="mdi-tray-plus"
             v-model="ngConfigInput.description"
         ></v-text-field>
-        <v-text-field
+        <!-- <v-textarea
+            rows="2"
+            clearable
             label="Rework Description"
             prepend-icon="mdi-tray-plus"
             v-model="ngConfigInput.reworkDescription"
-        ></v-text-field>
+        ></v-textarea> -->
         <!-- <v-autocomplete
           clearable
           label="Select Station name"
@@ -260,40 +283,45 @@
             type="number"
             v-model="newNgCode.ngcode"
         ></v-text-field>
-        <v-select
+        <!-- <v-select
           v-model="newNgCode.subStationname"
           :items="subStationbySubline"
           :disabled="saving"
           return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Sub-Station"/>
+          label="Select Sub-Station"/> -->
         <v-select
           v-model="newNgCode.processNgcode"
           :items="processNgcode"
           :disabled="saving"
-          item-value="name"
-          item-text="name"
           prepend-icon="$production"
           label="Process NG Code"/>
-        <v-select
-          v-model="newNgCode.machinename"
+          <v-select
+          v-model="newNgCode.reWorkable"
+          :items="reWorkable"
+          return-object
+          :disabled="saving"
+          prepend-icon="$production"
+          label="Reworkable"/>
+        <!-- <v-select
+          v-model="newNgCode.roadmap"
           :items="roadMaps"
           :disabled="saving"
-          item-value="name"
+          return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Rework roadmap"/>
+          label="Select Rework roadmap"/> -->
         <v-text-field
             label="NG Description"
             prepend-icon="mdi-tray-plus"
             v-model="newNgCode.description"
         ></v-text-field>
-        <v-text-field
+        <!-- <v-text-field
             label="Rework Description"
             prepend-icon="mdi-tray-plus"
             v-model="newNgCode.reworkDescription"
-        ></v-text-field>
+        ></v-text-field> -->
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -402,27 +430,19 @@ export default {
           text: 'NG Code',
           value: 'ngcode',
         },
-        {
-          text: 'Sub-Station',
-          value: 'substation',
-        },
         { text: 'Process NG code', value: 'processngcode' },
         {
           text: 'Reworkable',
           value: 'reworkable',
         },
         {
-          text: 'Rework roadmap',
-          value: 'reworkroadmap',
-        },
-        {
           text: 'NG description',
           value: 'ngdescription',
         },
-        { text: 'Rework description', value: 'reworkdescription' },
         { text: 'Created By', value: 'createdby' },
-        { text: 'Edited time', value: 'editedtime' },
+        { text: 'Created time', value: 'createdTimestamp' },
         { text: 'Edited By', value: 'editedby' },
+        { text: 'Edited time', value: 'editedtime' },
         {
           text: 'Actions',
           align: 'start',
@@ -455,11 +475,13 @@ export default {
       // ngConfigInput: {},
       ngConfigInput: {
         sublinename: '',
-        machinename: '',
+        roadmap: '',
         subStationname: '',
         processNgcode: '',
+        reWorkable: '',
       },
-      processNgcode: [true, false],
+      processNgcode: ['true', 'false'],
+      reWorkable: [true, false],
       valid: true,
       rules: {
         ngcode: [
@@ -480,6 +502,12 @@ export default {
   },
   computed: {
     ...mapState('ngCodeConfiguration', ['lines', 'sublines', 'subStations', 'roadMaps', 'sublinesbylines', 'selectedLine', 'subStationbySubline', 'ngCodeConfigRecord', 'assets']),
+    ...mapState('user', ['me']),
+    userName: {
+      get() {
+        return this.me.user.firstname;
+      },
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -499,8 +527,11 @@ export default {
       this.getNgCodeConfig('');
     },
     async saveNgConfig() {
-      const ngNumberFlag = this.ngCodeConfigRecord
-        .filter((o) => o.ngcode === parseInt(this.ngConfigInput.ngcode, 10));
+      let ngNumberFlag = [];
+      if (this.ngCodeConfigRecord.lenght > 0) {
+        ngNumberFlag = this.ngCodeConfigRecord
+          .filter((o) => o.ngcode === parseInt(this.ngConfigInput.ngcode, 10));
+      }
       if (!this.selectedLinenew) {
         this.setAlert({
           show: true,
@@ -520,31 +551,28 @@ export default {
           type: 'error',
           message: 'SELECT_SUBLINE',
         });
-      } else if (!this.ngConfigInput.subStationname) {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'SELECT_SUBSTATION',
-        });
       } else {
         this.saving = true;
         const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
         this.assetId = getAssetId;
+        // console.log(this.createdby);
         this.newNgConfig = {
           // ...this.ngConfigInput,
           // ...this.input,
           ngcode: this.ngConfigInput.ngcode,
           processngcode: this.ngConfigInput.processNgcode,
+          reworkable: this.ngConfigInput.reWorkable,
           lineid: this.selectedLinenew.id,
           linename: this.selectedLinenew.name,
           assetid: this.assetId,
-          substationname: this.ngConfigInput.subStationname.name,
-          substationid: this.ngConfigInput.subStationname.id,
+          // substationid: this.ngConfigInput.subStationname.id,
           sublinename: this.ngConfigInput.sublinename.name,
           sublineid: this.ngConfigInput.sublinename.id,
-          reworkroadmap: this.ngConfigInput.machinename,
+          // reworkroadmap: this.ngConfigInput.roadmap.name,
+          // reworkroadmapid: this.ngConfigInput.roadmap.id,
           ngdescription: this.ngConfigInput.description,
-          reworkdescription: this.ngConfigInput.reworkDescription,
+          // reworkdescription: this.ngConfigInput.reworkDescription,
+          createdby: this.userName,
         };
         let created = false;
         const payload = this.newNgConfig;
@@ -570,21 +598,24 @@ export default {
         this.saving = false;
       }
     },
-    /* async fnDeleteOnYes() {
+    async fnDeleteOnYes() {
+      // console.log('write code for delete the record');
     },
     async fnSaveDuplicateRecipe() {
-    }, */
+      // console.log('write code for create Duplicate the record');
+    },
     async fnUpdateNgCode(item) {
       this.updateDialog = true;
       this.updateNgCodeId = item._id;
       this.newNgCode.selectedLinenew = item.linename;
       this.newNgCode.sublinename = item.sublinename;
-      this.newNgCode.subStationname = item.substationname;
       this.newNgCode.processNgcode = item.processngcode;
+      this.newNgCode.reWorkable = item.reworkable;
       this.newNgCode.ngcode = item.ngcode;
       this.newNgCode.description = item.ngdescription;
-      this.newNgCode.reworkDescription = item.reworkdescription;
-      this.newNgCode.machinename = item.reworkroadmap;
+      // this.newNgCode.reworkDescription = item.reworkdescription;
+      // this.newNgCode.roadmap = item.reworkroadmap;
+      // console.log(this.newNgCode.reWorkable);
     },
     async updateSaveNgConfig() {
       if (!this.newNgCode.selectedLinenew) {
@@ -602,13 +633,16 @@ export default {
           // ...this.input,
           ngcode: this.newNgCode.ngcode,
           processngcode: this.newNgCode.processNgcode,
+          reworkable: this.newNgCode.reWorkable,
           linename: this.newNgCode.selectedLinenew,
           assetid: this.assetId,
-          substationname: this.newNgCode.subStationname.name,
           sublinename: this.newNgCode.sublinename,
-          reworkroadmap: this.newNgCode.machinename,
+          // reworkroadmap: this.newNgCode.roadmap.name,
+          // reworkroadmapid: this.newNgCode.roadmap.id,
           ngdescription: this.newNgCode.description,
-          reworkdescription: this.newNgCode.reworkDescription,
+          // reworkdescription: this.newNgCode.reworkDescription,
+          editedby: this.userName,
+          editedtime: new Date().getTime(),
         };
         let created = false;
         const request = this.newNgConfig;

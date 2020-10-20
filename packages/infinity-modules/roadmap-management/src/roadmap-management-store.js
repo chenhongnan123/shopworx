@@ -14,6 +14,9 @@ export default ({
     productList: [],
     stationNamebySubline: [],
     subStationNamebyStation: [],
+    preSubStationList: [],
+    lineList: [],
+    preStationList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -23,13 +26,40 @@ export default ({
     setRoadmapTypeList: set('roadmapTypeList'),
     setSubStationList: set('subStationList'),
     setStationList: set('stationList'),
+    setPreStationList: set('preStationList'),
     setSubLineList: set('subLineList'),
     setCreatedRoadmap: set('createdRoadmap'),
     setProductList: set('productList'),
     setStationNamebySubline: set('stationNamebySubline'),
     setSubStationNamebyStation: set('subStationNamebyStation'),
+    setPreSubStationList: set('preSubStationList'),
+    setLineList: set('lineList'),
   },
   actions: {
+    getLineList: async ({ dispatch, commit }, query) => {
+      const line = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'line',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLineList', line);
+      return line;
+    },
+    getPreSubStationList: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setPreSubStationList', list);
+      return list;
+    },
     getStationNamesbysubline: async ({ dispatch, commit }, query) => {
       const stationNamebySubline = await dispatch(
         'element/getRecords',
@@ -135,6 +165,18 @@ export default ({
         { root: true },
       );
       commit('setStationList', roadmap);
+      return roadmap;
+    },
+    getPreStationList: async ({ dispatch, commit }, query) => {
+      const roadmap = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setPreStationList', roadmap);
       return roadmap;
     },
     getSubLineList: async ({ dispatch, commit }, query) => {

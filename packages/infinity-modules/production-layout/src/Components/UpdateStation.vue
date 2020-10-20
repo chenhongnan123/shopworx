@@ -49,13 +49,13 @@
          v-model="newStation.weight"  dense></v-text-field>
         <v-text-field label="Size"
         v-model="newStation.size"   dense></v-text-field>
-        <v-text-field label="Voltage" type="text"
+        <v-text-field label="Voltage" type="number"
         v-model="newStation.voltage"   dense></v-text-field>
-        <v-text-field label="Power" type="number"
+        <v-text-field label="Power" type="Description"
         v-model="newStation.power"   dense></v-text-field>
         <v-text-field label="Supplier" type="Description"
         v-model="newStation.supplier"   dense></v-text-field>
-        <v-text-field label="Life time" type="number"
+        <v-text-field label="Life time" type="text"
         v-model="newStation.lifetime"   dense></v-text-field>
         <!-- <v-text-field label="Process" type="text"
         v-model="newStation.process"  dense></v-text-field> -->
@@ -112,11 +112,11 @@ export default {
     this.newStation = { ...this.station };
   },
   computed: {
-    ...mapState('productionLayout', ['stations']),
+    ...mapState('productionLayout', ['stations', 'subStationsForIP']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['updateStation']),
+    ...mapActions('productionLayout', ['updateStation', 'updateIpAddressForParameters']),
     async nameValid() {
       if (this.newStation.name === '' || this.newStation.name.length > 15) {
         this.btnDisable = true;
@@ -169,7 +169,7 @@ export default {
         supplier: this.newStation.supplier,
         usagestartdate: this.newStation.usagestartdate,
         lifetime: this.newStation.lifetime,
-        // process: this.newStation.process,
+        process: this.newStation.process,
         plcipaddress: this.newStation.plcipaddress,
       };
       let created = false;
@@ -186,6 +186,14 @@ export default {
           message: 'SUBSTATION_UPDATED',
         });
         this.dialog = false;
+        const ipaddress = this.newStation.plcipaddress;
+        const object = {
+          query: `?query=stationid=="${this.station.id}"`,
+          payload: {
+            plcaddress: ipaddress,
+          },
+        };
+        await this.updateIpAddressForParameters(object);
       } else {
         this.setAlert({
           show: true,

@@ -157,7 +157,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
-// import socketioclient from 'socket.io-client';
+import socketioclient from 'socket.io-client';
 
 export default {
   name: 'RecipeDetails',
@@ -200,7 +200,6 @@ export default {
     };
   },
   async created() {
-    await this.getRecipeDetailListRecords('');
     await this.getRecipeDetailListRecords(
       `?query=recipeid=='${this.$route.params.id.recipenumber}'`,
     );
@@ -248,9 +247,9 @@ export default {
         `?query=recipeid=='${this.$route.params.id.recipenumber}'`,
       );
     }
-    // this.socket = socketioclient.connect('http://:10190');
+    this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
-      console.log('connected to socketwebhook');
+      // console.log('connected to socketwebhook');
     });
   },
   beforeDestroy() {
@@ -285,14 +284,13 @@ export default {
       this.dialog = true;
     },
     async RefreshUI() {
-      // await this.getRecipeDetailListRecords('');
       const object = {
         lineid: Number(this.$route.params.id.lineid),
         sublineid: this.$route.params.id.sublineid,
         substationid: this.$route.params.id.substationid,
       };
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        console.log('event received');
+        // console.log('event received');
         if (data) {
           this.recipeListDetails.forEach((element) => {
             if (data[element.tagname]) {
@@ -331,7 +329,8 @@ export default {
         // tagname, parametervalue
         recipeparameter: parameterList,
       };
-      this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`);
+      this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
+      });
       await this.uploadToPLC(object);
     },
     async btnDownloadFromPLC() {
@@ -341,8 +340,10 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.off(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
+        // console.log('event closed - download');
       });
       this.socket.on(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
+        // console.log('event received - download');
         if (data) {
           this.recipeListDetails.forEach(async (element) => {
             if (data[element.tagname]) {

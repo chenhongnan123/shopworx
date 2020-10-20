@@ -73,6 +73,10 @@ export default {
       type: Object,
       required: true,
     },
+    lineid: {
+      type: [Number, String],
+      required: true,
+    },
   },
   data() {
     return {

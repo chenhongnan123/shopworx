@@ -30,14 +30,14 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <v-col cols="2" md="2" lg="2">
+            <!-- <v-col cols="2" md="2" lg="2">
               <v-text-field label="Expected OEE"
                 v-model="selectedLine.expectedoee"></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">
               <v-text-field label="Expected CT"
                 v-model="selectedLine.expectedcycletime"></v-text-field>
-            </v-col>
+            </v-col> -->
             <v-col cols="1" md="1" lg="1">
               <SelectedLineUpdate />
             </v-col>
@@ -69,7 +69,7 @@
                   tile
                   outlined>
                   <span class="ml-0">SubStation</span>
-                  <AddSubstation/>
+                  <AddSubstation :lineid="selectedLine.id"/>
                   </v-card>
                 </v-col>
                 <v-col>
@@ -126,7 +126,7 @@
   <v-col cols="3" md="3" lg="3" class="py-0">
     <div>{{ subline.name }}
       <DeleteSubline :subline="subline" />
-      <UpdateSubline :subline="subline" />
+      <UpdateSubline :subline="subline" :lineid="selectedLine.id"/>
     </div>
   </v-col>
   <v-col cols="9" md="9" lg="9" class="py-0">
@@ -147,7 +147,7 @@
                  substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
                 {{ substation.name }}
                 <DeleteSubstation :substation="substation" />
-                <UpdateSubstation :substation="substation" />
+                <UpdateSubstation :substation="substation" :lineid="selectedLine.id"/>
               </div>
             </v-col>
             <v-col cols="6" md="6" lg="6" class="py-0">
@@ -173,6 +173,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
+import socketioclient from 'socket.io-client';
 import AddSubline from '../Components/AddSubline.vue';
 import AddStation from '../Components/AddStation.vue';
 import AddSubstation from '../Components/AddSubstation.vue';
@@ -241,9 +242,17 @@ export default {
       [this.selectedLine] = this.lines;
       await this.onLineChange();
     }
+    setInterval(() => {
+      this.downloadFromToPLC();
+    }, 10000);
   },
   methods: {
-    ...mapActions('productionLayout', ['getLines', 'getSubStations', 'getStations', 'getSublines', 'getProcesses']),
+    ...mapActions('productionLayout', ['getLines',
+      'getSubStations',
+      'getStations',
+      'getSublines',
+      'getProcesses',
+      'downloadToPLC']),
     ...mapMutations('productionLayout', [
       'setSublines',
       'setStations',
@@ -251,6 +260,28 @@ export default {
       'setProcesses',
       'setSelectedLine',
     ]),
+    async downloadFromToPLC() {
+      this.socket = socketioclient.connect('http://:10190');
+      this.socket.on('connect', () => {
+      });
+      let ObJ;
+      this.subStations.forEach((item) => {
+        ObJ = {
+          lineid: item.lineid,
+          sublineid: item.sublineid,
+          substationid: item.id,
+        };
+        this.socket.on(`update_parameter_${ObJ.lineid}_${ObJ.sublineid}_${ObJ.substationid}`,
+          (data) => {
+            if (data) {
+              this.substation.stationcolor = 1;
+            } else {
+              this.substation.stationcolor = 0;
+            }
+          });
+      });
+      await this.downloadToPLC(ObJ);
+    },
     setStation(station) {
       this.selectedStation = station;
     },

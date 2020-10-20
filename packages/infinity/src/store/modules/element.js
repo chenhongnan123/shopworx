@@ -350,5 +350,27 @@ export default ({
       }
       return true;
     },
+    updateTagById: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.updateTagById(payload);
+        if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+    changeElementStatusById: async (_, { payload, elementId }) => {
+      try {
+        const { data } = await ElementService.changeElementStatusById(payload, elementId);
+        if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
   },
 });

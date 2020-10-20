@@ -71,14 +71,15 @@
         <template v-slot:item="{ item, index }">
           <tr>
           <td>{{ index+1 }}</td>
+          <td>{{ item.linename }}</td>
           <td>{{ item.sublinename }}</td>
           <td>{{ item.machinename }}</td>
           <td>{{ item.substationname }}</td>
           <td>{{ item.process }}</td>
           <td>{{ item.amtpresubstation }}</td>
+          <td>{{ item.presublinename }}</td>
           <td>{{ item.prestationname }}</td>
           <td>{{ item.presubstationname }}</td>
-          <td>{{ item.presublinename }}</td>
           <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("en-gb") }}</td>
           <td v-else></td>
           <td><v-row justify="center"><v-btn
@@ -119,7 +120,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Edit details
+          Add details
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="(dialog = false); dialogReset();">
@@ -127,12 +128,15 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <!-- <v-text-field
-            :disabled="saving"
-            label="Sub-Station name"
-            prepend-icon="mdi-tray-plus"
-            v-model="roadmapDetail.substationname"
-        ></v-text-field> -->
+        <v-select
+          hide-details
+          label="Select Line name"
+          :items="lineList"
+          item-text="name"
+          return-object
+          prepend-icon="$production"
+          v-model="roadmapDetail.linename"
+          @change="handleLineClick"/>
         <v-select
           hide-details
           label="Select Subline name"
@@ -143,24 +147,24 @@
           :rules="rmdetailName"
           required
           v-model="roadmapDetail.sublinename"
-          @change="getfilteredStationNames"/>
+          @change="handleSubLineClick"/>
         <v-select
           class="mt-2"
           hide-details
           label="Select Station name"
-          :items="stationNamebySubline"
+          :items="stationList"
           item-text="name"
           return-object
           prepend-icon="$production"
           :rules="rmdetailStName"
           required
           v-model="roadmapDetail.machinename"
-          @change="getfilteredSubStationNames"/>
+          @change="handleStationClick"/>
         <v-select
           class="mt-2"
           hide-details
           label="Select Sub-Station name"
-          :items="subStationNamebyStation"
+          :items="subStationList"
           item-text="name"
           return-object
           prepend-icon="$production"
@@ -197,20 +201,24 @@
           item-text="name"
           return-object
           prepend-icon="$production"
-          v-model="roadmapDetail.presubline"/>
+          v-model="roadmapDetail.presubline"
+          @change="handlePreSubLineClick"/>
           <v-select
           class="mt-2"
           hide-details
           label="Select Pre-Station name"
-          :items="stationList"
+          :items="preStationList"
           item-text="name"
+          return-object
           prepend-icon="$production"
-          v-model="roadmapDetail.prestationname"/>
+          v-model="roadmapDetail.prestationname"
+          @change="handlePreStationClick"/>
         <v-select
           hide-details
           label="Select Pre-Substation name"
-          :items="subStationList"
+          :items="preSubStationList"
           item-text="name"
+          return-object
           prepend-icon="$production"
           :disabled="fieldDisabled"
           v-model="roadmapDetail.presubstationname"/>
@@ -290,6 +298,7 @@ export default {
           text: 'No.',
           value: 'number',
         },
+        { text: 'Line', value: 'linename' },
         { text: 'Subline', value: 'sublinename' },
         { text: 'Station', value: 'machinename' },
         {
@@ -301,9 +310,9 @@ export default {
           value: 'process',
         },
         { text: 'Pre-Subtations before', value: 'amtpresubstation' },
+        { text: 'Previous subline', value: 'presublinename' },
         { text: 'Previous station', value: 'prestationname' },
         { text: 'Pre-Substation name', value: 'presubstationname' },
-        { text: 'Previous subline', value: 'presubline' },
         { text: 'Edited time', value: 'editedtime' },
         {
           text: 'Actions',
@@ -340,15 +349,16 @@ export default {
     };
   },
   async created() {
-    await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
-    this.roadmaptype = this.$route.params.roadmaptype;
-    this.roadmapname = this.$route.params.name;
-    this.line = this.$route.params.line;
-    this.roadmapnumber = this.$route.params.id;
+    await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
+    this.roadmaptype = this.$route.params.id.roadmaptype;
+    this.roadmapname = this.$route.params.id.name;
+    this.line = this.$route.params.id.line;
+    this.roadmapnumber = this.$route.params.id.id;
     this.toggleDisable = false;
-    await this.getSubStationList('');
-    await this.getStationList('');
-    await this.getSubLineList('');
+    await this.getLineList('');
+    // await this.getSubStationList('');
+    // await this.getStationList('');
+    // await this.getSubLineList('');
   },
   computed: {
     ...mapState('roadmapManagement', ['roadmapDetails',
@@ -356,6 +366,9 @@ export default {
       'stationList',
       'subLineList',
       'productList',
+      'preSubStationList',
+      'preStationList',
+      'lineList',
       'stationNamebySubline',
       'subStationNamebyStation']),
     ...mapState('user', ['me']),
@@ -371,13 +384,16 @@ export default {
       'getSubStationList',
       'getStationList',
       'getSubLineList',
+      'getLineList',
+      'getPreSubStationList',
       'updateRoadmap',
       'deleteRoadmapDetails',
       'updateRoadmapDetails',
       'createProductDetails',
       'getProductListFromRoadmapName',
       'getStationNamesbysubline',
-      'getSubStationNamesbyStation']),
+      'getSubStationNamesbyStation',
+      'getPreStationList']),
     ...mapMutations('helper', ['setAlert', 'setCurrentPath']),
     async checkProcessCode() {
       const preSubstBefor = this.roadmapDetail.amtpresubstation;
@@ -394,6 +410,26 @@ export default {
     },
     async RefreshUI() {
       await this.getRecipeDetailListRecords('');
+    },
+    async handleLineClick(item) {
+      const query = `?query=lineid==${item.id}`;
+      await this.getSubLineList(query);
+    },
+    async handlePreSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getPreStationList(query);
+    },
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getStationList(query);
+    },
+    async handleStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getSubStationList(query);
+    },
+    async handlePreStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getPreSubStationList(query);
     },
     async fnAddRoadmapDetails() {
       this.$refs.form.validate();
@@ -424,14 +460,27 @@ export default {
       } else if (this.flagEdit) {
         this.roadmapDetail = {
           ...this.roadmapDetail,
+          lineid: Number(this.roadmapDetail.linename.id),
+          linename: this.roadmapDetail.linename.name,
+          sublinename: this.roadmapDetail.sublinename.name,
+          sublineid: this.roadmapDetail.sublinename.id,
+          machinename: this.roadmapDetail.machinename.name,
+          stationid: this.roadmapDetail.machinename.id,
+          substationname: this.roadmapDetail.substationname.name,
+          substationid: this.roadmapDetail.substationname.id,
+          prestationname: this.roadmapDetail.prestationname.name,
+          prestationid: this.roadmapDetail.prestationname.id,
+          presubstationname: this.roadmapDetail.presubstationname.name,
+          presubstationid: this.roadmapDetail.presubstationname.id,
           editedtime: new Date().getTime(),
         };
         await this.updateRoadmapDetails({
           payload: this.roadmapDetail,
           query: `?query=id==${this.itemToUpdate.id}`,
         });
-        await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
+        await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
         this.dialog = false;
+        this.roadmapDetail = {};
       } else {
         const processcodeFlag = this.roadmapDetails
           .filter((o) => o.process.toLowerCase().split(' ').join('')
@@ -444,24 +493,51 @@ export default {
             message: 'PROCESS_CODE_EXISTS',
           });
         } else {
-        // this.roadmapDetail = {};
-          this.roadmapDetail = {
-            ...this.roadmapDetail,
-            sublinename: this.roadmapDetail.sublinename.name,
-            sublineid: this.roadmapDetail.sublinename.id,
-            presublineid: this.roadmapDetail.presubline.id,
-            presublinename: this.roadmapDetail.presubline.name,
-            machinename: this.roadmapDetail.machinename.name,
-            stationid: this.roadmapDetail.machinename.id,
-            substationname: this.roadmapDetail.substationname.name,
-            substationid: this.roadmapDetail.substationname.id,
-            assetid: 4,
-            roadmapid: this.$route.params.id,
-          };
+          if (this.roadmapDetail.prestationname && this.roadmapDetail.presubstationname) {
+            this.roadmapDetail = {
+              ...this.roadmapDetail,
+              lineid: Number(this.roadmapDetail.linename.id),
+              linename: this.roadmapDetail.linename.name,
+              sublinename: this.roadmapDetail.sublinename.name,
+              sublineid: this.roadmapDetail.sublinename.id,
+              machinename: this.roadmapDetail.machinename.name,
+              stationid: this.roadmapDetail.machinename.id,
+              substationname: this.roadmapDetail.substationname.name,
+              substationid: this.roadmapDetail.substationname.id,
+              presublineid: this.roadmapDetail.presubline.id,
+              presublinename: this.roadmapDetail.presubline.name,
+              prestationname: this.roadmapDetail.prestationname.name,
+              prestationid: this.roadmapDetail.prestationname.id,
+              presubstationname: this.roadmapDetail.presubstationname.name,
+              presubstationid: this.roadmapDetail.presubstationname.id,
+              assetid: 4,
+              roadmapid: this.$route.params.id.id,
+            };
+          } else {
+            this.roadmapDetail = {
+              ...this.roadmapDetail,
+              lineid: Number(this.roadmapDetail.linename.id),
+              linename: this.roadmapDetail.linename.name,
+              sublinename: this.roadmapDetail.sublinename.name,
+              sublineid: this.roadmapDetail.sublinename.id,
+              machinename: this.roadmapDetail.machinename.name,
+              stationid: this.roadmapDetail.machinename.id,
+              substationname: this.roadmapDetail.substationname.name,
+              substationid: this.roadmapDetail.substationname.id,
+              presublineid: '',
+              presublinename: '',
+              prestationname: '',
+              prestationid: '',
+              presubstationname: '',
+              presubstationid: '',
+              assetid: 4,
+              roadmapid: this.$route.params.id.id,
+            };
+          }
           let created = false;
           const payload = this.roadmapDetail;
           created = await this.createRoadmapDetails(payload);
-          await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
+          await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
           if (created) {
             this.setAlert({
               show: true,
@@ -470,7 +546,7 @@ export default {
             });
             this.dialog = false;
             // this.roadmapDetail = {};
-            await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.name}"`);
+            await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
             if (this.productList.length) {
               this.productList.forEach(async (products) => {
                 const object = {
@@ -479,12 +555,13 @@ export default {
                   sublinename: this.roadmapDetail.sublinename,
                   sublineid: this.roadmapDetail.sublineid,
                   machinename: this.roadmapDetail.machinename,
-                  presubline: this.roadmapDetail.presubline,
                   stationid: this.roadmapDetail.stationid,
+                  presublineid: this.roadmapDetail.presubline.id,
+                  presublinename: this.roadmapDetail.presubline.name,
                   substationname: this.roadmapDetail.substationname,
                   substationid: this.roadmapDetail.substationid,
-                  roadmapname: this.$route.params.name,
-                  roadmapid: this.$route.params.id,
+                  roadmapname: this.$route.params.id.name,
+                  roadmapid: this.$route.params.id.id,
                   assetid: 4,
                 };
                 await this.createProductDetails(object);
@@ -507,7 +584,7 @@ export default {
       };
       const object = {
         payload: roadmap,
-        query: `?query=id=="${this.$route.params.id}"`,
+        query: `?query=id=="${this.$route.params.id.id}"`,
       };
       await this.updateRoadmap(object);
     },
@@ -515,12 +592,12 @@ export default {
       this.flagEdit = true;
       this.dialog = true;
       this.itemToUpdate = item;
+      this.roadmapDetail.linename = item.linename;
       this.roadmapDetail.sublinename = item.sublinename;
       this.roadmapDetail.machinename = item.machinename;
       this.roadmapDetail.substationname = item.substationname;
       this.roadmapDetail.process = item.process;
       this.roadmapDetail.amtpresubstation = item.amtpresubstation;
-      this.roadmapDetail.presubline = item.presubline;
       this.roadmapDetail.prestationname = item.prestationname;
       this.roadmapDetail.presubstationname = item.presubstationname;
       this.recipeValue = item.parametervalue;
@@ -532,7 +609,7 @@ export default {
     async fnDeleteOnYes() {
       await this.deleteRoadmapDetails({
         id: this.itemForDelete.id,
-        roadmapid: this.$route.params.id,
+        roadmapid: this.$route.params.id.id,
       });
       const roadmap = {
         editedby: this.userName,
@@ -541,7 +618,7 @@ export default {
       };
       const object = {
         payload: roadmap,
-        query: `?query=id=="${this.$route.params.id}"`,
+        query: `?query=id=="${this.$route.params.id.id}"`,
       };
       await this.updateRoadmap(object);
       this.dialogConfirm = false;

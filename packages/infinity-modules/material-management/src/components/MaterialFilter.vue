@@ -222,7 +222,6 @@ export default {
         query += `manufacturer=="${this.manufacturer}"&`;
       }
       this.getMaterialListRecords(query);
-      this.toggleFilter();
     },
     btnReset() {
       this.getMaterialListRecords('');

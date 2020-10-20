@@ -26,6 +26,12 @@ export default ({
     roadmapDetails: [],
     productList: [],
     productDetails: [],
+    productDetailsList: [],
+    roadmapDetailsList: [],
+    lineList: [],
+    productDetailsRecord: [],
+    roadMapDetailsRecord: [],
+    runningOrderList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -51,8 +57,123 @@ export default ({
     setRoadmapDetails: set('roadmapDetails'),
     setProductList: set('productList'),
     setProductDetails: set('productDetails'),
+    setProductDetailList: set('productDetailsList'),
+    setRoadmapDetailList: set('roadmapDetailsList'),
+    setLineList: set('lineList'),
+    setProductDetailsRecord: set('productDetailsRecord'),
+    setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
+    setrunningOrderList: set('runningOrderList'),
   },
   actions: {
+    getRunningOrder: async ({ dispatch, commit }, query) => {
+      query = '?query=orderstatus=="Running"';
+      const runningOrderList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'order',
+          query,
+        },
+        { root: true },
+      );
+      const checkOut = await dispatch(
+        'element/getRecords',
+        { elementName: 'checkout' },
+        { root: true },
+      );
+      const partStatus = await dispatch(
+        'element/getRecords',
+        { elementName: 'partstatus' },
+        { root: true },
+      );
+      const stations = await dispatch(
+        'element/getRecords',
+        { elementName: 'station' },
+        { root: true },
+      );
+      const substations = await dispatch(
+        'element/getRecords',
+        { elementName: 'substation' },
+        { root: true },
+      );
+      runningOrderList.forEach(async (item) => {
+        if (runningOrderList.length) {
+          if (checkOut.length) {
+            const matchOrder = checkOut
+              .filter((o) => o.ordernumber === item.ordernumber);
+            // console.log(matchOrder);
+            const substationInfo = substations
+              .filter((st) => st.id === matchOrder[0].substationid);
+            // item.actualcount = actualUpdatecount[0].ordercount;
+            // console.log(substationInfo);
+            const stresult = substationInfo
+              .filter((sr) => sr.substationresult === 7 || sr.substationresult === 1);
+            const stationInfo = stations
+              .filter((s) => s.id === substationInfo[0].stationid);
+            // console.log(stationInfo);
+            // console.log(stresult);
+            // const modesOk = stresult
+            //   .filter((ms) => ms.modestatus === 0);
+            // console.log(modesOk);
+            item.okcount = stresult.length;
+            const stationname = stations
+              .filter((o) => o.id === stationInfo[0].id);
+            item.stationname = stationname[0].name;
+          }
+          if (partStatus.length) {
+            const matchOrder = partStatus
+              .filter((o) => o.ordernumber === item.ordernumber);
+            const substationInfo = substations
+              .filter((st) => st.id === matchOrder[0].substationid);
+            // item.actualcount = actualUpdatecount[0].ordercount;
+            const stresultPart = substationInfo
+              .filter((sr) => sr.substationresult !== 1);
+            const modesNg = stresultPart
+              .filter((ms) => ms.modestatus === 0);
+            item.ngcount = modesNg.length;
+          }
+        }
+      });
+      let orderUpdate = [];
+      if (runningOrderList && runningOrderList.length) {
+        orderUpdate = runningOrderList.map((l) => ({
+          ...l,
+        }));
+      }
+      commit('setrunningOrderList', orderUpdate);
+      return true;
+    },
+    getProductDetailsRecord: async ({ dispatch, commit }) => {
+      const productDetailsRecord = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'productdetails',
+        },
+        { root: true },
+      );
+      commit('setProductDetailsRecord', productDetailsRecord);
+    },
+    getRoadMapDetailsRecord: async ({ dispatch, commit }) => {
+      const roadMapDetailsRecord = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'roadmapdetails',
+        },
+        { root: true },
+      );
+      commit('setRoadMapDetailsRecord', roadMapDetailsRecord);
+    },
+    getLines: async ({ dispatch, commit }, query) => {
+      const line = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'line',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLineList', line);
+      return line;
+    },
     getAssets: async ({ commit, dispatch }) => {
       const assets = await dispatch(
         'industry/getAssets',
@@ -176,7 +297,28 @@ export default ({
         },
         { root: true },
       );
-      return orders;
+      const orderCount = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'ordercount',
+          query: '',
+        },
+        { root: true },
+      );
+      orders.forEach(async (item) => {
+        if (orderCount.length) {
+          const actualUpdatecount = orderCount
+            .filter((oc) => oc.ordernumber === item.ordernumber);
+          item.actualcount = actualUpdatecount[0].ordercount;
+        }
+      });
+      let orderUpdate = [];
+      if (orders && orders.length) {
+        orderUpdate = orders.map((l) => ({
+          ...l,
+        }));
+      }
+      return orderUpdate;
     },
 
     getRoadMap: async ({ dispatch, commit }, query) => {
@@ -206,6 +348,60 @@ export default ({
           }
         }
       }
+    },
+
+    getProductDetailsList: async ({ dispatch, commit }, query) => {
+      const details = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'productdetails',
+          query,
+        },
+        { root: true },
+      );
+      if (details) {
+        commit('setProductDetailList', details);
+      }
+      return details;
+    },
+
+    getRoadmapDetailsList: async ({ dispatch, commit }, query) => {
+      const details = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'roadmapdetails',
+          query,
+        },
+        { root: true },
+      );
+      if (details) {
+        commit('setRoadmapDetailList', details);
+      }
+      return details;
+    },
+
+    createBulkOrderProduct: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'orderproduct',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    createBulkOrderRoadmap: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'orderroadmap',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
     },
 
     getProductDetails: async ({ dispatch, commit }, query) => {
@@ -238,19 +434,53 @@ export default ({
     },
 
     getOrderListRecords: async ({ dispatch, commit }, query) => {
-      let list = [];
       const orders = await dispatch(
         'element/getRecords',
+        { elementName: 'order' },
+        { root: true },
+      );
+      const partStatus = await dispatch(
+        'element/getRecords',
+        { elementName: 'partstatus' },
+        { root: true },
+      );
+      const orderCount = await dispatch(
+        'element/getRecords',
         {
-          elementName: 'order',
+          elementName: 'ordercount',
           query,
         },
         { root: true },
       );
-      list = orders;
-      list = list.sort((a, b) => b.indexno - a.indexno);
-      commit('setOrderList', list);
-      return orders;
+      orders.forEach(async (item) => {
+        if (orderCount.length) {
+          const actualUpdatecount = orderCount
+            .filter((oc) => oc.ordernumber === item.ordernumber);
+          item.actualcount = actualUpdatecount[0].ordercount;
+        }
+        if (partStatus.length) {
+          const okUpdatecount = partStatus
+            .filter((mc) => mc.ordernumber === item.ordernumber);
+          const over = okUpdatecount
+            .filter((ov) => ov.overallresult === 1 || ov.overallresult === 7);
+          const modes = over
+            .filter((ms) => ms.modestatus === 0);
+          const ngOverall = okUpdatecount
+            .filter((ms) => ms.overallresult !== 1);
+          const modesNg = ngOverall
+            .filter((ms) => ms.modestatus === 0);
+          item.okcount = modes.length;
+          item.ngcount = modesNg.length;
+        }
+      });
+      let orderUpdate = [];
+      if (orders && orders.length) {
+        orderUpdate = orders.map((l) => ({
+          ...l,
+        }));
+      }
+      commit('setOrderList', orderUpdate);
+      return true;
     },
   },
   getters: {

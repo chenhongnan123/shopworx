@@ -53,7 +53,6 @@ export default {
     },
   },
   created() {
-    // const ngcode = { ...this.ngCodeConfigRecord };
   },
   computed: {
     ...mapState('ngCodeConfiguration', ['ngCodeConfigRecord']),

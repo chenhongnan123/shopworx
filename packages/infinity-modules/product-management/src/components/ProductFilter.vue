@@ -121,9 +121,9 @@ export default {
     },
     async btnReset() {
       await this.getProductListRecords('');
-      this.toggleFilter();
       this.selectedBOM = '';
       this.selectedRoadmap = '';
+      this.toggleFilter();
     },
   },
 };

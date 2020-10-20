@@ -89,27 +89,7 @@
             v-model="selectedBom"
             :loading="loadingProducts"
             prepend-icon="mdi-road-variant"
-            :rules="selectBomRule"
             required
-            >
-            <template v-slot:item="{ item }">
-                <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item-content>
-            </template>
-          </v-autocomplete>
-           <v-autocomplete
-            clearable
-            :label="$t('displayTags.placeHolders.selectProductTypeCategory')"
-            :items="productTypeCategory"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            v-model="selectedProductTypeCategory"
-            :loading="loadingProducts"
-            :rules="selectProductTypeRule"
-            required
-            prepend-icon="mdi-road-variant"
             >
             <template v-slot:item="{ item }">
                 <v-list-item-content>
@@ -125,7 +105,6 @@
             class="text-none"
             :disabled="!lineSelected ||
             !selectedRoadmap ||
-            !selectedProductTypeCategory ||
             !product ||
             !valid"
             @click="saveProduct"
@@ -228,12 +207,7 @@ export default {
             roadmapid: this.selectedRoadmap.id,
             productversionnumber: 1,
             createdby: this.userName,
-            editedby: this.userName,
-            producttypecategory: this.selectedProductTypeCategory.name,
-            productTypecategoryid: this.selectedProductTypeCategory.id,
-            // TODO asset, check editedtime on value and datatype
             assetid: 4,
-            editedtime: new Date().getTime(),
           };
           const payload = this.product;
           const created = await this.createProduct(payload);

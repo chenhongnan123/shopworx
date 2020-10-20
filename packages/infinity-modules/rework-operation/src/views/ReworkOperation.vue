@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Rework Operation</span>
+      <span>Rework</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -16,23 +16,23 @@
     <portal
       to="app-extension"
     >
-      <!-- <v-tabs
+      <v-tabs
         dense
         center-active
         v-model="reworkView"
       >
         <v-tab class="text-none">
-          NG Code Config
+          Rework List
         </v-tab>
         <v-tab class="text-none">
-          Rework
+          Rework Details
         </v-tab>
-      </v-tabs> -->
+      </v-tabs>
     </portal>
     <template>
       <v-fade-transition mode="out-in">
-        <!-- <ng-code-config v-if="reworkView === 0" /> -->
-        <rework-screen />
+        <rework-screen v-if="reworkView === 0" />
+        <rework-details v-else-if="reworkView === 1" />
       </v-fade-transition>
     </template>
   </div>
@@ -40,14 +40,14 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
-// import NgCodeConfig from './NgCodeConfig.vue';
 import ReworkScreen from './ReworkScreen.vue';
+import ReworkDetails from './ReworkDetails.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
-    // NgCodeConfig,
     ReworkScreen,
+    ReworkDetails,
   },
   data() {
     return {

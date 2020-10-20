@@ -35,8 +35,16 @@
           :counter="10"
           required></v-text-field>
         <v-text-field label="Description"
-         hint="For example, added by Manager"
          type="text" v-model="newSubLine.description"></v-text-field>
+         <v-text-field label="Expected OEE"
+         type="number" v-model="newSubLine.expectedoee"></v-text-field>
+        <v-text-field label="Expected Cycletime"
+         type="number" v-model="newSubLine.expectedcycletime"></v-text-field>
+         <div>
+         <v-checkbox v-model="checked" class="mx-2"
+         label="Make this subline as MainLine"
+         ></v-checkbox>
+         </div>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -57,7 +65,6 @@ export default {
     return {
       newSubLine: {},
       assetId: null,
-      getAssetId: '',
       default: false,
       dialog: false,
       valid: true,
@@ -85,11 +92,22 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getSublines', 'getAssets']),
     async saveSubline() {
+      const mainline = this.sublines
+        .filter((m) => m.lineid === parseInt(this.lineid, 10)
+         && m.ismainline === true
+         && m.ismainline === this.checked);
       if (this.newSubLine.numbers === undefined) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'Number Required',
+        });
+      } else if (mainline.length > 0) {
+        this.checked = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MAINLINE_EXISTIS',
         });
       } else {
         this.$refs.form.validate();
@@ -119,6 +137,7 @@ export default {
             ...this.newSubLine,
             lineid: this.lineid,
             assetid: this.assetId,
+            ismainline: this.checked,
           };
           let created = false;
           const payload = this.newSubLine;

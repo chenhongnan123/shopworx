@@ -35,8 +35,14 @@
           required
          @keyup="validNumber"></v-text-field>
         <v-text-field label="Description" type="Description"
-        hint="For example, Updated by Manager"
          v-model="sublineNew.description"></v-text-field>
+        <v-text-field label="Expected OEE"
+         type="number" v-model="sublineNew.expectedoee"></v-text-field>
+        <v-text-field label="Expected Cycletime"
+         type="number" v-model="sublineNew.expectedcycletime"></v-text-field>
+        <v-checkbox v-model="sublineNew.ismainline" class="mx-2"
+        v-bind:label="this.sublineNew.ismainline ? 'This is MainSubline' : 'Not  MainSubline'"
+         @change="changeInMainline"></v-checkbox>
       </v-col>
       </v-row>
     </v-card-text>
@@ -61,12 +67,17 @@ export default {
       type: Object,
       required: true,
     },
+    lineid: {
+      type: [Number, String],
+      required: true,
+    },
   },
   data() {
     return {
       dialog: false,
       sublineNew: {},
       btnDisable: false,
+      assetId: null,
       valid: true,
       name: '',
       numbers: '',
@@ -80,14 +91,15 @@ export default {
   },
   created() {
     this.sublineNew = { ...this.subline };
+    this.getAssets();
   },
   computed: {
-    ...mapState('productionLayout', ['sublines']),
+    ...mapState('productionLayout', ['sublines', 'selectedLine', 'assets']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     // ...mapMutations('productionLayout', ['setAddSublineDialog']),
-    ...mapActions('productionLayout', ['updateSubline', 'getSublines']),
+    ...mapActions('productionLayout', ['updateSubline', 'getSublines', 'updateMainLineFlagToSubStations', 'getAssets']),
     // close() {
     //   this.$emit('update:dialog', false);
     // },
@@ -129,10 +141,16 @@ export default {
     },
     async saveSubline() {
       this.saving = true;
+      const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
+      this.assetId = getAssetId;
       this.newSubLine = {
         name: this.sublineNew.name,
         numbers: this.sublineNew.numbers,
         description: this.sublineNew.description,
+        expectedoee: this.sublineNew.expectedoee,
+        expectedcycletime: this.sublineNew.expectedcycletime,
+        ismainline: this.sublineNew.ismainline,
+        assetid: this.assetId,
       };
       let created = false;
       const payload = {
@@ -148,7 +166,14 @@ export default {
           message: 'SUBLINE_UPDATED',
         });
         this.dialog = false;
-        this.assetId = 4;
+        this.assetId = this.getAssetId;
+        const object = {
+          query: `?query=sublineid=="${this.subline.id}"`,
+          payload: {
+            ismainline: this.sublineNew.ismainline,
+          },
+        };
+        await this.updateMainLineFlagToSubStations(object);
       } else {
         this.setAlert({
           show: true,
@@ -161,6 +186,44 @@ export default {
     async resetDialog() {
       this.$refs.form.resetValidation();
       this.sublineNew = { ...this.subline };
+    },
+    async changeInMainline() {
+      if (this.sublineNew.ismainline === true) {
+        const isMainlineFlag = this.sublines.filter((o) => o.lineid === parseInt(this.lineid, 10)
+          && o.ismainline === true);
+        const changeMainline = this.sublines
+          .filter((o) => o.ismainline
+           === this.sublineNew.ismainline === true);
+        if (isMainlineFlag.length > 0) {
+          this.sublineNew.ismainline = '';
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'MAINLINE_EXISTIS',
+          });
+        } else if (changeMainline.length > 0) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'MAINLINE_ASSIGNED',
+          });
+        } else {
+          this.btnDisable = false;
+          this.saving = true;
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'MAINLINE_ASSIGNED',
+          });
+        }
+      } else {
+        this.sublineNew.ismainline = false;
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'MAINLINE_REMOVED',
+        });
+      }
     },
   },
 };

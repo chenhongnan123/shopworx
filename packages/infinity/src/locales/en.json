@@ -174,11 +174,13 @@
   },
   "modules": {
     "apps": "Apps",
+    "operation": "Operation",
     "dashboards": "Dashboards",
     "home": "Home",
     "order": "Order",
     "configuration": "Configuration",
     "dataconfiguration": "Data Configuration",
+    "traceabilityApp": "Traceability",
     "traceability": "Traceability",
     "management": "Management",
     "shopfloorDashboard": "Shopfloor Dashboard",
@@ -202,9 +204,10 @@
     "masters": "Master Data",
     "admin": "Admin Console",
     "search": "Search reports & insights",
+    "searchMobile": "Search",
     "insights": "Insights",
-    "ngCodeConfiguration": "Ng-Code-Config",
-    "reworkOperation": "Quality Rework"    
+    "ngCodeConfiguration": "NG-Codes",
+    "reworkOperation": "Rework"    
   },
   "account": {
     "account": "Account",

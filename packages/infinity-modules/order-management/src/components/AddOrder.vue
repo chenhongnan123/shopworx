@@ -20,6 +20,24 @@
       <v-card-text>
         <v-autocomplete
           clearable
+          label="Select Line"
+          :items="lineList"
+          return-object
+          :disabled="saving"
+          item-text="name"
+          v-model="selectedLine"
+          :loading="loadingParts"
+          prepend-icon="$production"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+              <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
+        <v-autocomplete
+          clearable
           label="Select Product Name"
           :items="parts"
           return-object
@@ -41,6 +59,8 @@
             :disabled="saving"
             label="Order Name"
             prepend-icon="mdi-tray-plus"
+            :counter="10"
+            :rules="nameRules"
             v-model="plan.ordername"
         ></v-text-field>
         <v-autocomplete
@@ -144,15 +164,29 @@ export default {
       getLastInserTedData: [],
       myResult: [],
       dateValue: '',
+      selectedLine: null,
+      btnDisable: false,
+      nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
+        (v) => !!v || 'Name required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
     };
   },
   computed: {
-    ...mapState('orderManagement', ['parts', 'orderTypeList', 'addPlanDialog', 'primaryMatrixTags', 'orderList']),
+    ...mapState('orderManagement', ['parts',
+      'orderTypeList',
+      'addPlanDialog',
+      'primaryMatrixTags',
+      'orderList',
+      'productDetailsList',
+      'productDetails',
+      'roadmapDetailsList',
+      'lineList']),
+    ...mapState('orderManagement', [
+      'productDetailsRecord',
+      'roadMapDetailsRecord',
+    ]),
     ...mapGetters('orderManagement', [
-      'planningTags',
-      'partMatrixTags',
       'filteredPartMatrixRecords',
-      'partMatrixComposition',
     ]),
     dialog: {
       get() {
@@ -167,7 +201,9 @@ export default {
     this.loadingParts = true;
     await this.getPorducts();
     await this.getOrderTypeList();
+    await this.getLines();
     this.loadingParts = false;
+    this.getProductDetailsRecord('');
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -183,7 +219,32 @@ export default {
       'getPorductRecords',
       'getPrimaryMatrixTags',
       'getScheduledEnd',
+      'getProductDetailsList',
+      'createBulkOrderProduct',
+      'getRoadmapDetailsList',
+      'createBulkOrderRoadmap',
+      'getLines',
     ]),
+    ...mapActions('orderManagement', [
+      'getProductDetailsRecord',
+      'getRoadMapDetailsRecord',
+      'getProductDetails',
+    ]),
+    async checkProductAndRoadmapDetails(selectedPart) {
+      const productObj = JSON.parse(JSON.stringify(selectedPart));
+      const ProductDetailsExists = this.productDetailsRecord
+        .filter((pr) => pr.productnumber === productObj.productnumber);
+      if (ProductDetailsExists.length > 0) {
+        this.btnDisable = false;
+      } else {
+        this.btnDisable = true;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PRODUCT_ROADMAP_DETAILS_NOT_AVAILABLE',
+        });
+      }
+    },
     async onPartSelection() {
       this.plan = {};
       this.plan.starred = false;
@@ -204,8 +265,15 @@ export default {
         this.plan.productname = productname;
         this.plan.productid = productnumber;
         this.plan.roadmapname = this.partMatrixRecords[0].roadmapname;
+        this.plan.roadmapid = this.partMatrixRecords[0].roadmapid;
+        this.plan.roadmaptype = this.partMatrixRecords[0].roadmaptype;
         this.plan.customername = this.partMatrixRecords[0].customername;
-        this.plan.producttype = this.partMatrixRecords[0].producttype;
+        // this.plan.producttype = this.partMatrixRecords[0].producttype;
+        if (this.partMatrixRecords[0].bomid) {
+          this.plan.bomid = this.partMatrixRecords[0].bomid;
+        } else {
+          this.plan.bomid = 0;
+        }
         this.displayPlanningFields = true;
       }
     },
@@ -224,6 +292,12 @@ export default {
           show: true,
           type: 'error',
           message: 'ORDER_PAST_DATE',
+        });
+      } else if (!this.plan.roadmaptype) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ROADMAPTYPE_NOT_EXISTS',
         });
       } else {
         const orderNameFlag = this.orderList.filter((o) => o.ordername === this.plan.ordername);
@@ -255,6 +329,8 @@ export default {
           }
           this.plan = {
             ...this.plan,
+            lineid: this.selectedLine.id,
+            linename: this.selectedLine.name,
             orderstatus: 'New',
             assetid: this.assetId,
             scheduledstart: new Date(this.plan.scheduledstart).getTime(),
@@ -277,6 +353,53 @@ export default {
             this.showFamilyParts = false;
             this.displayPlanningFields = false;
             this.familyPlan = [];
+            // order details in new table
+            await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
+            const payloadDetails = [];
+            this.productDetailsList.forEach((product) => {
+              payloadDetails.push({
+                orderid: this.orderList[0].ordernumber,
+                ordername: this.orderList[0].ordername,
+                productid: this.orderList[0].productid,
+                recipenumber: product.recipenumber,
+                recipename: product.recipename,
+                recipeversion: product.recipeversion,
+                substationid: product.substationid,
+                lineid: this.orderList[0].lineid,
+                sublineid: product.sublineid,
+                assetid: 4,
+              });
+            });
+            await this.createBulkOrderProduct(payloadDetails);
+            // orderroadmap - calling roadmapdetails
+            await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
+            const payloadRoadDetails = [];
+            this.roadmapDetailsList.forEach((roadmap) => {
+              let processCode = 0;
+              if (roadmap.process === '') {
+                processCode = 0;
+              } else {
+                processCode = roadmap.process;
+              }
+              payloadRoadDetails.push({
+                orderid: this.orderList[0].ordernumber,
+                roadmapid: this.orderList[0].roadmapid,
+                sublineid: roadmap.sublineid,
+                sublinename: roadmap.sublinename,
+                substationid: roadmap.substationid,
+                substationname: roadmap.substationname,
+                presublineid: roadmap.presublineid,
+                amtpresubstation: roadmap.amtpresubstation,
+                processcode: processCode,
+                prestationname: roadmap.prestationname,
+                prestationid: roadmap.prestationid,
+                presubstationname: roadmap.presubstationname,
+                presubstationid: roadmap.presubstationid,
+                lineid: this.orderList[0].lineid,
+                assetid: 4,
+              });
+            });
+            await this.createBulkOrderRoadmap(payloadRoadDetails);
           } else {
             this.setAlert({
               show: true,
