@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed multiple downtime edit ([93b05ba](https://bitbucket.org/entrib/shopworx/commits/93b05ba37b4ed1cb7ecfea19e1559b9405deda25))
+* **downtime-log:** remove assign button on toggle false ([24cb9f3](https://bitbucket.org/entrib/shopworx/commits/24cb9f332064f11daa761343e814a74660381891))
+* **insight:** display chart on insight click ([3e0581e](https://bitbucket.org/entrib/shopworx/commits/3e0581edaa9095f9a9261c650d8e60eeffe1788a))
+* **insights:** fixed API integration for insights on demand ([5a14cc3](https://bitbucket.org/entrib/shopworx/commits/5a14cc37cfd6565cc86097e5baf2cebb05ac80c0))
+* api integration for Insight on demand ([2ac8b8c](https://bitbucket.org/entrib/shopworx/commits/2ac8b8c57107ca04239ba0f5868316be03e301f3))
+* loading changes in production log app ([0a98cb5](https://bitbucket.org/entrib/shopworx/commits/0a98cb5ffbd7c22e21ee49c1b3253c42ca120f62))
+* loading functionality added ([25366ec](https://bitbucket.org/entrib/shopworx/commits/25366ec6c4c7c4ac7ae5dd4559af0241a4ea9edd))
+* **material-management:** rA-I258 ([ee56c10](https://bitbucket.org/entrib/shopworx/commits/ee56c1030c1c1d7a9e964c1255fa1e0e3220375d))
+* **material-management(bom):** rA-I263 ([355263e](https://bitbucket.org/entrib/shopworx/commits/355263eeaa002aa5cc21e4cc0441e4db16a718cc))
+* **parameter-configuration:** mandetory field icon ([c97ef51](https://bitbucket.org/entrib/shopworx/commits/c97ef514477d81300469e26e513cc3183e149d5e))
+* **production-layout:** mandetory field icon-astrisck ([ad8ea48](https://bitbucket.org/entrib/shopworx/commits/ad8ea489784fdeeb38a724c048191e382c7389e9))
+* **recipe-management:** duplicate button shows only when record get selected ([3676129](https://bitbucket.org/entrib/shopworx/commits/36761296e733fbf3f39ca3e4f0be9ab1667a895c))
+* **roadmap-management:** duplicate button shows only when record get selected ([cf46b40](https://bitbucket.org/entrib/shopworx/commits/cf46b407b819d51d8f0ba22b4a7ee4863426e983))
+
+
+### Features
+
+* **charts:** added pareto to highcharts ([7537ef5](https://bitbucket.org/entrib/shopworx/commits/7537ef59ce104fdf6da228ceaedae75399c06beb))
+* insight report view ([8491066](https://bitbucket.org/entrib/shopworx/commits/8491066b1bed093d9a5d4986b70f8ec98f7c2788))
+* report added for follow up query-downtime reasons ([e5d397a](https://bitbucket.org/entrib/shopworx/commits/e5d397a68498f468e5290e121fe89ca97914e7f4))
+* **downtime-log:** assign reason to multiple downtimes at Time ([0634634](https://bitbucket.org/entrib/shopworx/commits/0634634e76816c5509f13fc8ea4e65b4d78877c4))
+* **icons:** added icons for insight categories ([33d93ae](https://bitbucket.org/entrib/shopworx/commits/33d93ae48ecd4223013315b8ae20c4c4fe8a2e74))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 

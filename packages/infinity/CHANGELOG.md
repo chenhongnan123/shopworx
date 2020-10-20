@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **insight:** display chart on insight click ([3e0581e](https://bitbucket.org/entrib/shopworx/commits/3e0581edaa9095f9a9261c650d8e60eeffe1788a))
+* **insights:** fixed API integration for insights on demand ([5a14cc3](https://bitbucket.org/entrib/shopworx/commits/5a14cc37cfd6565cc86097e5baf2cebb05ac80c0))
+* api integration for Insight on demand ([2ac8b8c](https://bitbucket.org/entrib/shopworx/commits/2ac8b8c57107ca04239ba0f5868316be03e301f3))
+
+
+### Features
+
+* **charts:** added pareto to highcharts ([7537ef5](https://bitbucket.org/entrib/shopworx/commits/7537ef59ce104fdf6da228ceaedae75399c06beb))
+* insight report view ([8491066](https://bitbucket.org/entrib/shopworx/commits/8491066b1bed093d9a5d4986b70f8ec98f7c2788))
+* report added for follow up query-downtime reasons ([e5d397a](https://bitbucket.org/entrib/shopworx/commits/e5d397a68498f468e5290e121fe89ca97914e7f4))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/infinity

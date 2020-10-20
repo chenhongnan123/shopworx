@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** mandetory field icon ([c97ef51](https://bitbucket.org/entrib/shopworx/commits/c97ef514477d81300469e26e513cc3183e149d5e))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

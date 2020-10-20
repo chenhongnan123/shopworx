@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed multiple downtime edit ([93b05ba](https://bitbucket.org/entrib/shopworx/commits/93b05ba37b4ed1cb7ecfea19e1559b9405deda25))
+* **downtime-log:** remove assign button on toggle false ([24cb9f3](https://bitbucket.org/entrib/shopworx/commits/24cb9f332064f11daa761343e814a74660381891))
+
+
+### Features
+
+* **downtime-log:** assign reason to multiple downtimes at Time ([0634634](https://bitbucket.org/entrib/shopworx/commits/0634634e76816c5509f13fc8ea4e65b4d78877c4))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/downtime-log
