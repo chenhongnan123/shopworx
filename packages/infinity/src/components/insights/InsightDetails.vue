@@ -8,6 +8,12 @@
     <v-card-text class="text-center">
       <v-row align="center" no-gutters style="height: 100%">
         <v-col cols="12">
+          <highcharts
+            v-if="insightDetails
+              && insightDetails.type
+              && insightDetails.type.toUpperCase().includes('CHART')"
+            :options="insightDetails.chartOptions"
+          ></highcharts>
         </v-col>
       </v-row>
     </v-card-text>
@@ -20,7 +26,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'InsightDetails',
   computed: {
-    ...mapState('insight', ['query', 'window', 'loading']),
+    ...mapState('insight', ['query', 'window', 'loading', 'insightDetails']),
   },
 };
 </script>
