@@ -6,12 +6,12 @@
         <v-expansion-panel
           :key="index"
           class="my-1 transparent"
-          v-for="(insight, index) in insights"
+          v-for="(insight, index) in insightsOnDemand"
         >
           <v-expansion-panel-header class="body-2 px-0">
             <v-row no-gutters>
               <v-col cols="2" class="px-1">
-                <v-icon v-text="insight.icon"></v-icon>
+                <v-icon v-text="`$${insight.icon}`"></v-icon>
               </v-col>
               <v-col cols="9">
                 <span v-text="insight.category"></span>
@@ -43,50 +43,26 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'InsightsOnDemand',
-  data() {
-    return {
-      insights: [
-        {
-          category: 'Basic performance',
-          icon: 'mdi-speedometer',
-          queries: [
-            {
-              name: 'What were the top reasons for downtime in the last week?',
-              reportName: 1,
-            },
-            {
-              name: 'What were the total parts produced last week, machine wise?',
-              reportName: 2,
-            },
-            {
-              name: 'What is the summary of yesterdays production?',
-              reportName: 3,
-            },
-          ],
-        },
-        {
-          category: 'Understanding trends',
-          icon: 'mdi-trending-up',
-          queries: [
-            {
-              name: 'What is the trend of OEE over last 7 days?',
-              reportName: 4,
-            },
-          ],
-        },
-      ],
-    };
-  },
   methods: {
-    ...mapMutations('insight', ['setWindow', 'setQuery']),
-    navigateToDetails(query) {
+    ...mapMutations('insight', ['setWindow', 'setQuery', 'setLoading']),
+    ...mapActions('insight', ['getInsightsOnDemand', 'fetchInsightDetails']),
+    async navigateToDetails(query) {
       this.setQuery(query);
       this.setWindow(1);
+      this.setLoading(true);
+      await this.fetchInsightDetails();
+      this.setLoading(false);
     },
+  },
+  computed: {
+    ...mapState('insight', ['insightsOnDemand']),
+  },
+  created() {
+    this.getInsightsOnDemand();
   },
 };
 </script>

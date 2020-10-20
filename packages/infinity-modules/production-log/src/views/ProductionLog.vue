@@ -25,9 +25,9 @@
     <production-log-loading v-if="loading" />
     <template v-else>
       <production-log-setup v-if="!onboarded" />
-      <v-fade-transition mode="out-in" v-else>
-        <router-view />
-      </v-fade-transition>
+        <v-fade-transition mode="out-in" v-else>
+          <router-view />
+        </v-fade-transition>
     </template>
   </div>
 </template>

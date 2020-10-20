@@ -24,6 +24,14 @@ class ReportService {
   getReportMappings(reportViewId) {
     return this.request.get(`/server/reportviewmapping/reportview/${reportViewId}`);
   }
+
+  getInsightCategories() {
+    return this.request.get(`/server/insightcategory`);
+  }
+  
+  getInsightViews(insightCategoryId, parentId) {
+    return this.request.get(`/server/insightview/${insightCategoryId}/${parentId}`);
+  }
 }
 
 export default new ReportService();
