@@ -10,7 +10,7 @@
       </v-toolbar-title>
     </template>
     <template v-else>
-      <v-btn icon @click="setWindow(0)">
+      <v-btn icon @click="onBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -34,7 +34,12 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['toggleInsightsDrawer']),
-    ...mapMutations('insight', ['setWindow']),
+    ...mapMutations('insight', ['setWindow', 'setInsightDetails', 'setFollowUpInsights']),
+    onBack() {
+      this.setWindow(0);
+      this.setInsightDetails(null);
+      this.setFollowUpInsights([]);
+    },
   },
 };
 </script>

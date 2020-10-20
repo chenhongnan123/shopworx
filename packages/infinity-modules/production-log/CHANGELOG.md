@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* loading changes in production log app ([0a98cb5](https://bitbucket.org/entrib/shopworx/commits/0a98cb5ffbd7c22e21ee49c1b3253c42ca120f62))
+* loading functionality added ([25366ec](https://bitbucket.org/entrib/shopworx/commits/25366ec6c4c7c4ac7ae5dd4559af0241a4ea9edd))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/production-log

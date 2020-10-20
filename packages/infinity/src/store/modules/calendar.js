@@ -12,7 +12,7 @@ export default ({
   },
   actions: {
     getBusinessTime: async ({ commit }, timestamp) => {
-      const { data } = await SiteService.getBusinessTime(timestamp);
+      const { data } = await SiteService.getBusinessTime(timestamp || Date.now());
       if (data) {
         commit('setBusinessTime', data);
         return true;
