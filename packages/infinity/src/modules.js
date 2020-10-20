@@ -15,6 +15,7 @@ import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
 import TraceabilityApp from '@shopworx/traceability-app';
 import NgCodeConfiguration from '@shopworx/ng-code-configuration';
+import ProductionImage from '@shopworx/production-image';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
 import UserDashboard from '@shopworx/user-dashboard';
@@ -125,6 +126,12 @@ Vue.use(NgCodeConfiguration, {
 });
 
 Vue.use(ReworkOperation, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ProductionImage, {
   router,
   store,
   i18n,
