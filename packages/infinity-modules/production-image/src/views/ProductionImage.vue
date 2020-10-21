@@ -402,7 +402,7 @@ export default {
         query += `timestamp>=${new Date(that.fromdate).getTime()}%26%26`;
       }
       if (that.todate) {
-        query += `timestamp<"${new Date(that.todate).getTime()}%26%26`;
+        query += `timestamp<=${new Date(that.todate).getTime()}%26%26`;
       }
       const response = await that.getReference(query);
       that.loading = false;
