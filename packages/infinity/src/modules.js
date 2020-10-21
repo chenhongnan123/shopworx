@@ -18,6 +18,7 @@ import NgCodeConfiguration from '@shopworx/ng-code-configuration';
 import ProductionImage from '@shopworx/production-image';
 import ReportViewer from '@shopworx/report-viewer';
 import Setup from '@shopworx/setup';
+import Spc from '@shopworx/spc';
 import UserDashboard from '@shopworx/user-dashboard';
 import OrderManagement from '@shopworx/order-management';
 import store from './store';
@@ -109,6 +110,11 @@ Vue.use(ReportViewer, {
   i18n,
 });
 Vue.use(Setup, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(Spc, {
   router,
   store,
   i18n,

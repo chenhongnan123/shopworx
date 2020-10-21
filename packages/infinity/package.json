@@ -31,6 +31,7 @@
     "@shopworx/roadmap-management": "^4.1.0-rc.4",
     "@shopworx/services": "^4.1.0-rc.4",
     "@shopworx/setup": "^4.1.0-rc.4",
+    "@shopworx/spc": "^4.1.0-rc.4",
     "@shopworx/user-dashboard": "^4.1.0-rc.4",
     "ag-grid-community": "^23.1.1",
     "ag-grid-enterprise": "^23.1.1",
