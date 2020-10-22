@@ -78,6 +78,9 @@
         <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
             Search
           </v-btn>
+        <v-btn small color="primary" class="text-none ml-2" @click="btnExport">
+            Export
+          </v-btn>
         </v-toolbar>
     </portal>
     <!-- <v-toolbar
@@ -135,6 +138,8 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import CSVParser from '@shopworx/services/util/csv.service';
+import ZipService from '@shopworx/services/util/zip.service';
 import OverallList from './OverallList.vue';
 import ProcessParameters from './ProcessParameters.vue';
 import PartStatusView from './PartStatusView.vue';
@@ -152,11 +157,12 @@ export default {
     this.backAndfourth();
   },
   async created() {
+    this.zipService = ZipService;
     const view = localStorage.getItem('planView');
     this.recipeView = view ? JSON.parse(view) : 0;
     this.setExtendedHeader(true);
     await this.getSubLines('');
-    await this.getSubStations();
+    // await this.getSubStations();
     // await this.fetchRecords();
     await this.showInput();
   },
@@ -219,11 +225,45 @@ export default {
       // const cDate = new Date(tDate).getTime();
       // alert(tDate);
       // this.newTrecibility.todate = tDate;
+      // this.setAlert({
+      //   show: true,
+      //   type: 'success',
+      //   message: 'FETCH_RECORD',
+      // });
+    },
+    async btnExport() {
+      // const nameEement = this.id;
+      const fileName = 'traceability_data';
+      const parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
+      const column = parameterSelected[0].questions;
+      const csvContent = [];
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(parameter[key]);
+        });
+        csvContent.push(arr);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
       this.setAlert({
         show: true,
         type: 'success',
-        message: 'FETCH_RECORD',
+        message: 'DOWNLOADED',
       });
+      return content;
+    },
+    addToZip(file) {
+      this.zipService.addFile(file);
     },
     async btnSearch() {
       if (this.newTrecibility.fromdate && this.newTrecibility.todate

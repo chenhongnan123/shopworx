@@ -88,7 +88,7 @@ export default ({
             'element/getRecords',
             {
               elementName: 'checkout',
-              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26(substationresult==1%7C%7Csubstationresult==7)`,
+              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26modestatus==0%26%26(substationresult==1%7C%7Csubstationresult==7)`,
             },
             { root: true },
           );
@@ -97,8 +97,8 @@ export default ({
           const partstatus = await dispatch(
             'element/getRecords',
             {
-              elementName: 'partstatus',
-              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26(substationresult!=1%7C%7Csubstationresult!=7)`,
+              elementName: 'checkout',
+              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26modestatus==0%26%26(substationresult!=1%26%26substationresult!=7)`,
             },
             { root: true },
           );

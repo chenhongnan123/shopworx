@@ -258,7 +258,8 @@ export default {
       this.orders = [];
     },
     async archiveRecord() {
-      if (this.orders[0].orderstatus === 'Interrupted') {
+      if (this.orders[0].orderstatus === 'Interrupted'
+        || this.orders[0].orderstatus === 'Completed') {
         this.orders.visible = false;
         const object = {
           visible: this.orders.visible,
