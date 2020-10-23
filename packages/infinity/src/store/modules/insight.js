@@ -108,7 +108,7 @@ export default ({
         : {};
       const payload = {};
       Object.keys(time).forEach((key) => {
-        payload[`${key}Val`] = businessTime[key] + time[key];
+        payload[`${key}Val`] = parseInt(businessTime[key], 10) + time[key];
       });
       if (inputMap && inputMap.siteId) {
         payload.siteid = activeSite;
