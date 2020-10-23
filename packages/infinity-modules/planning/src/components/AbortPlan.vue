@@ -28,7 +28,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('planning', ['updatePlan']),
+    ...mapActions('planning', ['updatePlanById']),
     async updatePlans() {
       if (await this.$root.$confirm.open(
         'Abort plans',
@@ -43,8 +43,9 @@ export default {
             if (plan.status === 'notStarted') {
               payload = { ...payload, actualstart: now() };
             }
-            this.updatePlan({
-              id: plan.planid,
+            this.updatePlanById({
+              // eslint-disable-next-line
+              id: plan._id,
               payload,
             });
           }),

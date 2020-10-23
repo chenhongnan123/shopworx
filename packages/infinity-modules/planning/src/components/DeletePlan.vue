@@ -35,6 +35,7 @@ export default {
       )) {
         await Promise.all([
           this.plans.forEach((plan) => {
+            // eslint-disable-next-line
             this.deletePlan(plan._id);
           }),
         ]);
