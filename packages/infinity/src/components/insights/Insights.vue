@@ -8,9 +8,7 @@
     :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
   >
     <insights-toolbar></insights-toolbar>
-    <perfect-scrollbar :style="$vuetify.breakpoint.mdAndUp
-      ? 'height: calc(100vh - 104px)'
-      : 'height: calc(100vh - 48px)'">
+    <perfect-scrollbar style="height: calc(100% - 48px)">
       <v-window v-model="currentWindow">
         <v-window-item :value="0">
           <daily-insights></daily-insights>
