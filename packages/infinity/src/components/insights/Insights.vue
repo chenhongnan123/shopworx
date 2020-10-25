@@ -5,7 +5,6 @@
     clipped
     width="290"
     v-model="drawerInput"
-    :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
   >
     <insights-toolbar></insights-toolbar>
     <perfect-scrollbar style="height: calc(100% - 48px)">
