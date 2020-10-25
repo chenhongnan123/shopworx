@@ -8,3 +8,8 @@ export const sortAlphaNum = (a, b) => {
   }
   return aA > bA ? 1 : -1;
 }
+
+export const sortArray = (sourceArray, key) => {
+  const sortByKey = (a, b) => a[key].localeCompare(b[key], 'en', { numeric: true });
+  return sourceArray.sort(sortByKey);
+};
