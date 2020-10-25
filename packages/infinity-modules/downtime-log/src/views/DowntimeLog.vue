@@ -26,6 +26,7 @@
       <downtime-log-setup v-if="!onboarded" />
       <template v-else>
         <downtime-toolbar />
+        <downtime-drawer />
         <downtime-list />
       </template>
     </template>
@@ -37,6 +38,7 @@ import { mapMutations, mapActions, mapState } from 'vuex';
 import DowntimeLogSetup from './DowntimeLogSetup.vue';
 import DowntimeLogLoading from './DowntimeLogLoading.vue';
 import DowntimeToolbar from '../components/DowntimeToolbar.vue';
+import DowntimeDrawer from '../components/DowntimeDrawer.vue';
 import DowntimeList from '../components/DowntimeList.vue';
 
 export default {
@@ -45,6 +47,7 @@ export default {
     DowntimeLogSetup,
     DowntimeLogLoading,
     DowntimeToolbar,
+    DowntimeDrawer,
     DowntimeList,
   },
   data() {

@@ -8,29 +8,26 @@
       <div class="mt-5 mr-4">
         <toggle-selection />
       </div>
-      <div v-if="this.selectedItems.length > 0 && toggleSelection">
+      <div v-if="this.selectedDowntimes.length > 0 && toggleSelection">
          <assign-reason-dialog />
       </div>
       <v-spacer></v-spacer>
-      <div class="mt-1" v-show="!edit">
+      <div class="mt-1">
         <span class="title">
+          <span v-if="downtimeList.length">
+            Showing {{ downtimeList.length }} of {{ downtimeCount }} |
+          </span>
           {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
         </span>
-      </div>
-      <div v-show="edit">
-        <duration-selection />
-        <machine-selection />
-        <shift-selection />
-        <date-selection />
       </div>
       <v-btn
         icon
         small
         outlined
         class="ml-2"
-        @click="edit = !edit"
+        @click="toggleDrawer(true)"
       >
-        <v-icon small v-if="!edit">mdi-pencil</v-icon>
+        <v-icon small v-if="!drawer">mdi-pencil</v-icon>
         <v-icon small v-else>mdi-check</v-icon>
       </v-btn>
     </v-toolbar>
@@ -38,22 +35,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import DurationSelection from './toolbar/DurationSelection.vue';
-import MachineSelection from './toolbar/MachineSelection.vue';
-import ShiftSelection from './toolbar/ShiftSelection.vue';
-import DateSelection from './toolbar/DateSelection.vue';
 import ToggleSelection from './toolbar/ToggleSelection.vue';
 import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
   components: {
-    DurationSelection,
-    MachineSelection,
-    ShiftSelection,
-    DateSelection,
     ToggleSelection,
     AssignReasonDialog,
   },
@@ -64,11 +53,14 @@ export default {
   },
   computed: {
     ...mapState('downtimeLog', [
+      'drawer',
+      'downtimeList',
+      'downtimeCount',
       'selectedDuration',
       'selectedMachine',
       'selectedShift',
       'selectedDate',
-      'selectedItems',
+      'selectedDowntimes',
       'toggleSelection',
     ]),
     duration() {
@@ -83,6 +75,9 @@ export default {
     date() {
       return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
     },
+  },
+  methods: {
+    ...mapMutations('downtimeLog', ['toggleDrawer']),
   },
 };
 </script>

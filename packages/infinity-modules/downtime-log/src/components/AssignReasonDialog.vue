@@ -15,7 +15,7 @@
         <v-card-text>
           <v-data-table
             :headers="headers"
-            :items="selectedItems"
+            :items="selectedDowntimes"
             item-key="_id"
             hide-default-footer
           >
@@ -120,7 +120,7 @@ export default {
   computed: {
     ...mapState('downtimeLog', [
       'downtimeReasons',
-      'selectedItems',
+      'selectedDowntimes',
       'downtimeList',
     ]),
   },
@@ -157,7 +157,7 @@ export default {
         category: this.selectedReason.category,
         department: this.selectedReason.department,
       };
-      this.selectedItems.forEach(async (item) => {
+      this.selectedDowntimes.forEach(async (item) => {
         await this.updateReason({
           // eslint-disable-next-line
           id: item._id,
