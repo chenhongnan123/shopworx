@@ -7,7 +7,7 @@
     v-model="sort"
     :items="sortList"
     label="Order by"
-    prepend-inner-icon="$downtimeLog"
+    prepend-inner-icon="mdi-sort-variant"
   ></v-combobox>
 </template>
 
@@ -31,7 +31,7 @@ export default {
         name: 'Longest first',
         value: 'downtimeduration==-1',
       }, {
-        name: 'Smallest first',
+        name: 'Shortest first',
         value: 'downtimeduration==1',
       }],
     };

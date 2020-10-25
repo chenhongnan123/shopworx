@@ -7,7 +7,7 @@
     return-object
     item-text="name"
     :items="downtimeTypeList"
-    prepend-inner-icon="$downtimeLog"
+    prepend-inner-icon="mdi-text-box-multiple-outline"
   ></v-combobox>
 </template>
 
@@ -40,7 +40,6 @@ export default {
         return this.selectedType;
       },
       set(val) {
-        console.log(val);
         this.setSelectedType(val);
       },
     },
