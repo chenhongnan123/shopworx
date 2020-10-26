@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **insights:** fixed vertical scroll on overflow ([1336df7](https://bitbucket.org/entrib/shopworx/commits/1336df73ecc66d69dd05e1d84e74ab30a8da3d8f))
+
+
+### Features
+
+* **insight:** added html based insight support ([0dc676d](https://bitbucket.org/entrib/shopworx/commits/0dc676daf37d67b956ac2d0c61d15d9c25b2a888))
+* **search:** added search for insights ([63553e0](https://bitbucket.org/entrib/shopworx/commits/63553e07ee142abd60c15eecd596b4531cd7e81c))
+
+
+
+
+
 ## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
 
 

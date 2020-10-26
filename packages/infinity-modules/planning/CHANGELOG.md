@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **planning:** machine list is sorted now sorted ([01e7696](https://bitbucket.org/entrib/shopworx/commits/01e76967d69ae598863431531227d35e1334cdf7))
+
+
+### Features
+
+* **planning:** added abort plan for running plans ([ee0a339](https://bitbucket.org/entrib/shopworx/commits/ee0a339f636801f7c9bca6e4513c8162336c087f))
+
+
+
+
+
 ## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
 
 **Note:** Version bump only for package @shopworx/planning
