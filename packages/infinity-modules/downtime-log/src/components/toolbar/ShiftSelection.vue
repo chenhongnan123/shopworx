@@ -1,31 +1,12 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
-    <template #activator="{ on }">
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'$shiftHours'"></v-icon>
-        {{ selectedShift ? selectedShift : '' }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item
-        :key="n"
-        v-for="(shift, n) in shiftList"
-        @click="setSelectedShift(shift)"
-      >
-        <v-list-item-title>{{ shift }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <v-combobox
+    dense
+    outlined
+    label="Shift"
+    v-model="shift"
+    :items="shiftList"
+    prepend-inner-icon="$shiftHours"
+  ></v-combobox>
 </template>
 
 <script>
@@ -41,6 +22,14 @@ export default {
   computed: {
     ...mapGetters('downtimeLog', ['shiftList']),
     ...mapState('downtimeLog', ['selectedShift']),
+    shift: {
+      get() {
+        return this.selectedShift;
+      },
+      set(val) {
+        this.setSelectedShift(val);
+      },
+    },
   },
   methods: {
     ...mapMutations('downtimeLog', ['setSelectedShift']),

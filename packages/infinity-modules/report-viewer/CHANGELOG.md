@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed chart category text for reports ([2655b2d](https://bitbucket.org/entrib/shopworx/commits/2655b2ddb9df749d4dbe5aa477ed371e4abd0b60))
+
+
+### Features
+
+* **report-viewer:** added area spline chart ([a858982](https://bitbucket.org/entrib/shopworx/commits/a858982174d69d733cfb48f50f25f43bbf23b492))
+* **report-viewer:** enabled export grid as csv and excel ([451dd82](https://bitbucket.org/entrib/shopworx/commits/451dd826e9ce3f7f89fe880aae9ae791ea910385))
+
+
+
+
+
 ## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
 
 **Note:** Version bump only for package @shopworx/report-viewer

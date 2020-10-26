@@ -2,7 +2,6 @@
   <v-toolbar
     flat
     dense
-    :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
   >
     <template v-if="!window">
       <v-toolbar-title>

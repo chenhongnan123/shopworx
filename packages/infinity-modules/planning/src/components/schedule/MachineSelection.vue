@@ -31,6 +31,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default {
   name: 'MachineSelection',
@@ -42,9 +43,10 @@ export default {
   },
   async created() {
     this.loading = true;
-    this.machines = await this.getRecords({
+    const machines = await this.getRecords({
       elementName: 'machine',
     });
+    this.machines = sortArray(machines, 'machinename');
     this.onSetMachine(this.machines[0]);
     this.loading = false;
   },

@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **insights:** fixed vertical scroll on overflow ([1336df7](https://bitbucket.org/entrib/shopworx/commits/1336df73ecc66d69dd05e1d84e74ab30a8da3d8f))
+* **planning:** machine list is sorted now sorted ([01e7696](https://bitbucket.org/entrib/shopworx/commits/01e76967d69ae598863431531227d35e1334cdf7))
+* **production-log:** machine list is now sorted ([2418609](https://bitbucket.org/entrib/shopworx/commits/24186095a8316685f9e0fe12226a79c3e67d44aa))
+* **report-viewer:** fixed chart category text for reports ([2655b2d](https://bitbucket.org/entrib/shopworx/commits/2655b2ddb9df749d4dbe5aa477ed371e4abd0b60))
+
+
+### Features
+
+* **downtime-log:** added downtime filters and sorting options ([c4a8f42](https://bitbucket.org/entrib/shopworx/commits/c4a8f42f9a2e603976993e5f352641a625540859))
+* **insight:** added html based insight support ([0dc676d](https://bitbucket.org/entrib/shopworx/commits/0dc676daf37d67b956ac2d0c61d15d9c25b2a888))
+* **planning:** added abort plan for running plans ([ee0a339](https://bitbucket.org/entrib/shopworx/commits/ee0a339f636801f7c9bca6e4513c8162336c087f))
+* **report-viewer:** added area spline chart ([a858982](https://bitbucket.org/entrib/shopworx/commits/a858982174d69d733cfb48f50f25f43bbf23b492))
+* **report-viewer:** enabled export grid as csv and excel ([451dd82](https://bitbucket.org/entrib/shopworx/commits/451dd826e9ce3f7f89fe880aae9ae791ea910385))
+* **search:** added search for insights ([63553e0](https://bitbucket.org/entrib/shopworx/commits/63553e07ee142abd60c15eecd596b4531cd7e81c))
+* **sort:** added alpha numeric sorting helper ([c1867cb](https://bitbucket.org/entrib/shopworx/commits/c1867cb78029793385c715ebeaa4e2b1308e1f80))
+
+
+
+
+
 ## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
 
 

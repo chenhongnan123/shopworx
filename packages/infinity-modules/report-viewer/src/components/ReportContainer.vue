@@ -19,6 +19,11 @@ import ReportGrid from './ReportGrid.vue';
 
 export default {
   name: 'ReportContainer',
+  props: {
+    exportType: {
+      type: String,
+    },
+  },
   components: {
     ReportChart,
     ReportGrid,
@@ -35,12 +40,22 @@ export default {
     dateRange() {
       this.runReport();
     },
+    exportType(val) {
+      this.exportReport(val);
+    },
   },
   methods: {
     ...mapActions('reports', ['executeReport']),
     async runReport() {
       await this.executeReport();
       this.$refs.reportGrid.restoreState();
+    },
+    exportReport(type) {
+      if (type === 'gridCSV') {
+        this.$refs.reportGrid.exportGridCSV();
+      } else if (type === 'gridExcel') {
+        this.$refs.reportGrid.exportGridExcel();
+      }
     },
   },
 };

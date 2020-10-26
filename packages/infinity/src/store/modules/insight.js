@@ -3,6 +3,7 @@ import ReportService from '@shopworx/services/api/report.service';
 
 export default ({
   state: {
+    insights: [],
     insightsOnDemand: [],
     followUpInsights: [],
     query: null,
@@ -11,6 +12,7 @@ export default ({
     insightDetails: null,
   },
   mutations: {
+    setInsights: set('insights'),
     setInsightsOnDemand: set('insightsOnDemand'),
     setFollowUpInsights: set('followUpInsights'),
     setQuery: set('query'),
@@ -27,6 +29,7 @@ export default ({
       }));
       const queries = await Promise.all(categoryQueries);
       const queryItems = queries.flat();
+      commit('setInsights', queryItems);
       const groupByQueries = queryItems.reduce((insightArr, query) => {
         if (insightArr[query.categoryId]) {
           insightArr[query.categoryId].push({
@@ -108,7 +111,7 @@ export default ({
         : {};
       const payload = {};
       Object.keys(time).forEach((key) => {
-        payload[`${key}Val`] = businessTime[key] + time[key];
+        payload[`${key}Val`] = parseInt(businessTime[key], 10) + time[key];
       });
       if (inputMap && inputMap.siteId) {
         payload.siteid = activeSite;
