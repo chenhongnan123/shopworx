@@ -171,6 +171,8 @@ export default {
       // recipeView: 0,
       pageNumber: 1,
       prevDisabled: false,
+      processParametersheader: [],
+      processParametersList: [],
     };
   },
   computed: {
@@ -179,6 +181,7 @@ export default {
       'subLineList',
       'subStationList',
       'trecibilityState',
+      'partStatusList',
       'componentList',
       'sortedSubStation',
     ]),
@@ -203,7 +206,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('helper', ['setExtendedHeader', 'setTrecibilityState']),
     ...mapMutations('traceabilityApp', ['setRecipeViewState']),
-    ...mapActions('traceabilityApp', ['getSubStations', 'getComponentList', 'getSortedSubStations', 'getSubLines']),
+    ...mapActions('traceabilityApp', ['getSubStations', 'getComponentList', 'getSortedSubStations', 'getSubLines', 'getProcessElement', 'getProcessParameters']),
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
@@ -233,10 +236,11 @@ export default {
     },
     async btnExport() {
       // const nameEement = this.id;
-      const fileName = 'traceability_data';
-      const parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
-      const column = parameterSelected[0].questions;
-      const csvContent = [];
+      // partstatus table
+      let fileName = 'partstatus_data';
+      let parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
+      let column = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
+      let csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
         column.forEach((key) => {
@@ -244,8 +248,54 @@ export default {
         });
         csvContent.push(arr);
       });
-      const csvParser = new CSVParser();
-      const content = csvParser.unparse({
+      let csvParser = new CSVParser();
+      let content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      // component table
+      await this.btnComponentLogic();
+      fileName = 'component_data';
+      parameterSelected = this.componentList.map((item) => ({ ...item }));
+      column = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
+      csvContent = [];
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(parameter[key]);
+        });
+        csvContent.push(arr);
+      });
+      csvParser = new CSVParser();
+      content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      // process table
+      await this.btnProcessParametersLogic();
+      fileName = 'process_parameter_data';
+      console.log(this.processParametersList);
+      console.log(this.processParametersheader);
+      parameterSelected = this.processParametersList.map((item) => ({ ...item }));
+      column = this.processParametersheader;
+      csvContent = [];
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(parameter[key]);
+        });
+        csvContent.push(arr);
+      });
+      csvParser = new CSVParser();
+      content = csvParser.unparse({
         fields: column,
         data: csvContent,
       });
@@ -254,13 +304,110 @@ export default {
         fileContent: content,
       });
       const zip = await this.zipService.generateZip();
-      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.zipService.downloadFile(zip, 'traceability.zip');
       this.setAlert({
         show: true,
         type: 'success',
         message: 'DOWNLOADED',
       });
       return content;
+    },
+    async btnComponentLogic() {
+      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
+      const toDate = new Date(this.trecibilityState.todate).getTime();
+      let param = '';
+      if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
+         && (fromDate || toDate)) {
+        param = '?';
+      } else {
+        param = '?query=';
+      }
+      if (this.trecibilityState.searchMainID) {
+        param += `mainid=="${this.trecibilityState.searchMainID}"||`;
+        param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
+        param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
+      }
+      if (this.trecibilityState.selectedSubStation) {
+        param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
+      }
+      // console.log(this.selectedSubLine);
+      if (this.trecibilityState.selectedSubLine) {
+        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
+      }
+      if (fromDate) {
+        param += `datefrom=${fromDate}&`;
+      }
+      if (toDate) {
+        param += `dateto=${toDate}`;
+      }
+      // param += 'pagenumber=1&pagesize=20';
+      await this.getComponentList(param);
+    },
+    async btnProcessParametersLogic() {
+      this.processParametersList = [];
+      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
+      const toDate = new Date(this.trecibilityState.todate).getTime();
+      this.processParametersheader = [];
+      this.processParametersheader.push('createdTimestamp', 'mainid', 'substationname');
+      // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
+      let param = '';
+      if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
+         && (fromDate || toDate)) {
+        param = '?';
+      } else {
+        param = '?query=';
+      }
+      if (this.trecibilityState.searchMainID) {
+        param += `mainid=="${this.trecibilityState.searchMainID}"||`;
+        param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
+        param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
+      }
+      if (this.trecibilityState.selectedSubStation) {
+        param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
+      }
+      if (fromDate) {
+        param += `datefrom=${fromDate}&`;
+      }
+      if (toDate) {
+        param += `dateto=${toDate}`;
+      }
+      // param += 'pagenumber=1&pagesize=20';
+      // await this.getPartStatus(param);
+      await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all([this.subStationList.forEach(async (s) => {
+        const elementDetails = await this.getProcessElement(s.id);
+        if (elementDetails) {
+          elementDetails.tags.forEach((element) => {
+            if (element.tagName !== 'mainid') {
+              const data = this.processParametersheader
+                .filter((p) => p === element.tagName);
+              if (data.length === 0) {
+                console.log(element.tagName);
+                this.processParametersheader.push(element.tagName);
+              }
+            }
+          });
+          const processData = await this.getProcessParameters({
+            elementname: s.id,
+            payload: param,
+          });
+          if (processData) {
+            const finalData = processData.map((l) => ({
+              ...l,
+              substationname: s.name,
+            }));
+            if (this.processParametersList.length === 0) {
+              this.processParametersList = finalData;
+            } else {
+              finalData.forEach((f) => {
+                this.processParametersList.push(f);
+              });
+            }
+          }
+        }
+      })]);
     },
     addToZip(file) {
       this.zipService.addFile(file);

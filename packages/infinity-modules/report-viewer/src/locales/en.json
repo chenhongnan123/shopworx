@@ -5,7 +5,8 @@
       "maintenance": "Maintenance reports",
       "downtime": "Downtime reports",
       "rejection": "Rejection reports",
-      "oee": "OEE reports"
+      "oee": "OEE reports",
+      "rawdata": "Raw Data"
     }
   }
 }

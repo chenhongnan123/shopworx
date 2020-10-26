@@ -77,6 +77,11 @@ export default {
           resizable: true,
         },
         {
+          headerName: 'Completed Product ID',
+          field: 'completedproductid',
+          resizable: true,
+        },
+        {
           headerName: 'Overall result',
           field: 'overallresult',
           resizable: true,
@@ -109,11 +114,6 @@ export default {
         {
           headerName: 'Product Name',
           field: 'producttypename',
-          resizable: true,
-        },
-        {
-          headerName: 'Completed Product ID',
-          field: 'completedproductid',
           resizable: true,
         },
       ],

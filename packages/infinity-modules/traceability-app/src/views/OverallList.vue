@@ -79,6 +79,11 @@ export default {
           resizable: true,
         },
         {
+          headerName: 'Completed Product ID',
+          field: 'completedproductid',
+          resizable: true,
+        },
+        {
           headerName: 'Component name',
           field: 'componentname',
           resizable: true,

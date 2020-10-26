@@ -179,6 +179,7 @@
     "home": "Home",
     "order": "Order",
     "spc": "SPC",
+    "rawdata": "Raw Data",
     "configuration": "Configuration",
     "dataconfiguration": "Data Configuration",
     "traceabilityApp": "Traceability",

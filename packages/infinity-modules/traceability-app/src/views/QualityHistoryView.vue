@@ -74,6 +74,11 @@ export default {
           resizable: true,
         },
         {
+          headerName: 'Completed Product ID',
+          field: 'completedproductid',
+          resizable: true,
+        },
+        {
           headerName: 'Recipe name',
           field: 'recipename',
           resizable: true,
