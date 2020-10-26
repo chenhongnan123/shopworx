@@ -45,9 +45,9 @@ export default {
           icon: 'mdi-chart-bar',
         },
         {
-          name: 'Line',
-          value: 'line',
-          icon: 'mdi-chart-line',
+          name: 'Area spline',
+          value: 'areaspline',
+          icon: 'mdi-chart-areaspline',
         },
         {
           name: 'None',

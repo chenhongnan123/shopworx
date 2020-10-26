@@ -64,8 +64,8 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
   },
   computed: {
-    ...mapState('reports', ['report']),
-    ...mapGetters('reports', ['isBaseReport', 'gridObject']),
+    ...mapState('reports', ['report', 'reportMapping']),
+    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
   watch: {
     report(val) {
@@ -137,6 +137,18 @@ export default {
       this.gridColumnApi.resetColumnGroupState();
       this.gridApi.setSortModel(null);
       this.gridApi.setFilterModel(null);
+    },
+    exportGridCSV() {
+      const params = {
+        fileName: this.exportFileName,
+      };
+      this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const params = {
+        fileName: this.exportFileName,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

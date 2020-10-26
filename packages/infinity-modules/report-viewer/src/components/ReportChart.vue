@@ -52,21 +52,31 @@ export default {
     },
     report(val) {
       if (val && val.cols) {
-        const col = val.cols.find((c) => c.type.toLowerCase() === 'string');
-        const seriesCols = val.cols
+        const categoryColumns = val.cols.filter((c) => c.type.toLowerCase() === 'string');
+        const seriesName = val.cols
           .filter((c) => c.type.toLowerCase() !== 'string' && c.type.toLowerCase() !== 'boolean')
           .map((c) => c.name);
-        const colName = col && col.name;
+        const seriesDescription = seriesName.map((key) => {
+          const column = val.cols.find((c) => c.name === key);
+          return {
+            name: column.name,
+            description: column.description,
+          };
+        });
         const categories = val && val.reportData
-          ? val.reportData.map((data) => data[colName])
+          ? val.reportData.map((data) => categoryColumns.reduce((a, b) => {
+            // eslint-disable-next-line
+            a =`${a} ${data[b.name]}`;
+            return a;
+          }, ''))
           : [];
         // eslint-disable-next-line
         const subset = (obj, keys) => keys.reduce((a, b) => (a[b] = obj[b], a), {});
         const series = val && val.reportData
-          ? val.reportData.map((data) => subset(data, seriesCols))
+          ? val.reportData.map((data) => subset(data, seriesName))
           : [];
         this.updateCategory(categories);
-        this.updateSeries(series, seriesCols);
+        this.updateSeries(series, seriesName, seriesDescription);
       }
     },
   },
@@ -79,11 +89,14 @@ export default {
     updateCategory(categories) {
       this.options.xAxis.categories = categories;
     },
-    updateSeries(series, seriesCols) {
-      this.options.series = seriesCols.map((col) => ({
-        name: col,
-        data: series.map((data) => data[col]),
-      }));
+    updateSeries(series, seriesCols, seriesDescription) {
+      this.options.series = seriesCols.map((col) => {
+        const { description } = seriesDescription.find((s) => s.name === col);
+        return {
+          name: description,
+          data: series.map((data) => data[col]),
+        };
+      });
     },
   },
 };

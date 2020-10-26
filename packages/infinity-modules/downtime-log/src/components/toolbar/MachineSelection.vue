@@ -1,31 +1,12 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
-    <template #activator="{ on }">
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'mdi-crosshairs'"></v-icon>
-        {{ selectedMachine ? selectedMachine : '' }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item
-        :key="n"
-        v-for="(machine, n) in machineList"
-        @click="setSelectedMachine(machine)"
-      >
-        <v-list-item-title>{{ machine }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <v-combobox
+    dense
+    outlined
+    label="Machine"
+    v-model="machine"
+    :items="machineList"
+    prepend-inner-icon="mdi-crosshairs"
+  ></v-combobox>
 </template>
 
 <script>
@@ -41,6 +22,14 @@ export default {
   computed: {
     ...mapGetters('downtimeLog', ['machineList']),
     ...mapState('downtimeLog', ['selectedMachine']),
+    machine: {
+      get() {
+        return this.selectedMachine;
+      },
+      set(val) {
+        this.setSelectedMachine(val);
+      },
+    },
   },
   methods: {
     ...mapMutations('downtimeLog', ['setSelectedMachine']),

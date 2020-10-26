@@ -38,10 +38,11 @@
           :plans="selectedPlans.flat()"
           @on-update="$emit('refresh-widget')"
         />
-        <!-- <abort-plan
-          :plans="selectedPlans"
+        <abort-plan
+          v-if="!addPlan"
+          :plans="selectedPlans.flat()"
           @on-abort="$emit('refresh-widget')"
-        /> -->
+        />
         <delete-plan
           v-if="addPlan"
           :plans="selectedPlans.flat()"
@@ -130,7 +131,7 @@
 <script>
 import ToggleStar from '../ToggleStar.vue';
 import DeletePlan from '../DeletePlan.vue';
-// import AbortPlan from '../AbortPlan.vue';
+import AbortPlan from '../AbortPlan.vue';
 import AddPlan from '../AddPlan.vue';
 import PlanListItem from './PlanListItem.vue';
 
@@ -139,7 +140,7 @@ export default {
   components: {
     ToggleStar,
     DeletePlan,
-    // AbortPlan,
+    AbortPlan,
     AddPlan,
     PlanListItem,
   },

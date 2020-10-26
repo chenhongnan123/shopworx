@@ -6,18 +6,17 @@
     min-width="290px"
     :close-on-content-click="false"
   >
-    <template v-slot:activator="{ on }">
-      <v-btn
-        small
+    <template v-slot:activator="{ on, attrs }">
+      <v-text-field
+        v-model="date"
+        prepend-inner-icon="$workingDays"
+        readonly
         outlined
+        dense
+        label="Date"
+        v-bind="attrs"
         v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'$workingDays'"></v-icon>
-          {{ date }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
+      ></v-text-field>
     </template>
     <v-date-picker
       no-title

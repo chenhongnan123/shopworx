@@ -7,7 +7,7 @@
         hide-details
         v-show="this.toggleSelection"
         v-model="downtime.selected"
-        @change="setCheckedItems(downtime)"
+        @change="setSelectedDowntimes(downtime)"
         ></v-checkbox>
       </div>
       <div>
@@ -90,7 +90,7 @@ export default {
     EditDowntimeReason,
   },
   computed: {
-    ...mapState('downtimeLog', ['toggleSelection', 'selectedItems']),
+    ...mapState('downtimeLog', ['toggleSelection', 'selectedDowntimes']),
     duration() {
       const d = this.downtime.downtimeduration;
       const h = Math.floor(d / 3600);
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     ...mapMutations('downtimeLog', [
-      'setCheckedItems',
+      'setSelectedDowntimes',
     ]),
   },
 };

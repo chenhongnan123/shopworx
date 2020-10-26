@@ -47,6 +47,8 @@ export default {
       'selectedShift',
       'selectedDate',
       'selectedDuration',
+      'selectedType',
+      'selectedSort',
     ]),
   },
   methods: {
@@ -76,6 +78,20 @@ export default {
       }
     },
     selectedDuration(val) {
+      if (val) {
+        this.resetPageNumber();
+        this.setDowntimeList([]);
+        this.fetchDowntimeList();
+      }
+    },
+    selectedType(val) {
+      if (val) {
+        this.resetPageNumber();
+        this.setDowntimeList([]);
+        this.fetchDowntimeList();
+      }
+    },
+    selectedSort(val) {
       if (val) {
         this.resetPageNumber();
         this.setDowntimeList([]);

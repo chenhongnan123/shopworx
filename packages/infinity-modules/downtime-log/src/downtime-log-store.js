@@ -1,15 +1,21 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, toggle } from '@shopworx/services/util/store.helper';
+import { sortAlphaNum } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
   state: {
+    drawer: false,
     onboarded: true,
     machines: [],
     shifts: [],
+    filters: {},
+    sort: {},
     selectedMachine: null,
     selectedShift: null,
     selectedDate: null,
     selectedDuration: null,
+    selectedType: null,
+    selectedSort: null,
     downtimeList: [],
     loading: false,
     error: false,
@@ -18,22 +24,24 @@ export default ({
     pageNumber: 1,
     pageSize: 10,
     toggleSelection: false,
-    selectedItems: [],
+    selectedDowntimes: [],
   },
   mutations: {
-    setCheckedItems: (state, payload) => {
+    setSelectedDowntimes: (state, payload) => {
       if (payload.selected) {
-        state.selectedItems.push(payload);
+        state.selectedDowntimes.push(payload);
       } else {
         // eslint-disable-next-line
-        const index = state.selectedItems.findIndex((item) => item._id === payload.id);
-        state.selectedItems.splice(index, 1);
+        const index = state.selectedDowntimes.findIndex((item) => item._id === payload.id);
+        state.selectedDowntimes.splice(index, 1);
       }
     },
     clearCheckedItems: (state) => {
-      state.selectedItems = [];
+      state.selectedDowntimes = [];
     },
     setToggleSelection: set('toggleSelection'),
+    setDrawer: set('drawer'),
+    toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
@@ -41,10 +49,14 @@ export default ({
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
     setSelectedDuration: set('selectedDuration'),
+    setSelectedType: set('selectedType'),
+    setSelectedSort: set('selectedSort'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
+    setFilters: set('filters'),
+    setSort: set('sort'),
     resetPageNumber: (state) => {
       state.pageNumber = 1;
     },
@@ -63,7 +75,9 @@ export default ({
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        { elementName: 'machine' },
+        {
+          elementName: 'machine',
+        },
         { root: true },
       );
       if (records && records.length) {
@@ -110,49 +124,61 @@ export default ({
         selectedDate,
         selectedShift,
         selectedDuration,
+        selectedType,
+        selectedSort,
         pageNumber,
         pageSize,
       } = state;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-      const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-      let query = `date==${date}%26%26status!="inProgress"`;
-      if (selectedMachine && selectedMachine !== 'All Machines') {
-        query += `%26%26machinename=="${selectedMachine}"`;
+      if (selectedSort) {
+        const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+        const duration = parseInt(selectedDuration && selectedDuration.value, 10);
+        let query = `date==${date}%26%26status!="inProgress"`;
+        if (selectedMachine && selectedMachine !== 'All Machines') {
+          query += `%26%26machinename=="${selectedMachine}"`;
+        }
+        if (selectedShift && selectedShift !== 'All Shifts') {
+          query += `%26%26shiftName=="${selectedShift}"`;
+        }
+        if (duration) {
+          query += `%26%26downtimeduration%3E${duration}`;
+        }
+        if (selectedType && selectedType.value) {
+          if (selectedType.value === 'reason') {
+            query += '%26%26exists%20reasonname';
+          } else {
+            query += '%26%26notexists%20reasonname';
+          }
+        }
+        const sortQuery = selectedSort.value;
+        const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
+        if (pageNumber === 1) {
+          commit('setDowntimeList', []);
+          commit('setLoading', true);
+          commit('setError', false);
+        }
+        const data = await dispatch(
+          'element/getRecordsWithCount',
+          {
+            elementName: 'downtime',
+            query: `?query=${query}&sortquery=${sortQuery}&${paginatedQuery}`,
+          },
+          { root: true },
+        );
+        if (data && data.results) {
+          const downtimes = data.results.map((dt) => ({
+            ...dt,
+            selected: false,
+          }));
+          commit('setDowntimeList', downtimes);
+          commit('setDowntimeCount', data.totalCount);
+          commit('setError', false);
+        } else {
+          commit('setDowntimeList', []);
+          commit('setDowntimeCount', 0);
+          commit('setError', true);
+        }
+        commit('setLoading', false);
       }
-      if (selectedShift && selectedShift !== 'All Shifts') {
-        query += `%26%26shiftName=="${selectedShift}"`;
-      }
-      if (duration) {
-        query += `%26%26downtimeduration%3E${duration}`;
-      }
-      const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
-      if (pageNumber === 1) {
-        commit('setDowntimeList', []);
-        commit('setLoading', true);
-        commit('setError', false);
-      }
-      const data = await dispatch(
-        'element/getRecordsWithCount',
-        {
-          elementName: 'downtime',
-          query: `?query=${query}&${paginatedQuery}`,
-        },
-        { root: true },
-      );
-      if (data && data.results) {
-        const downtimes = data.results.map((dt) => ({
-          ...dt,
-          selected: false,
-        }));
-        commit('setDowntimeList', downtimes);
-        commit('setDowntimeCount', data.totalCount);
-        commit('setError', false);
-      } else {
-        commit('setDowntimeList', []);
-        commit('setDowntimeCount', 0);
-        commit('setError', true);
-      }
-      commit('setLoading', false);
     },
 
     updateReason: async ({ dispatch, commit, state }, { id, payload }) => {
@@ -201,7 +227,9 @@ export default ({
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
-        machineList = machines.map((mac) => mac.machinename);
+        machineList = machines
+          .map((mac) => mac.machinename)
+          .sort(sortAlphaNum);
         machineList = ['All Machines', ...machineList];
       }
       return machineList;
