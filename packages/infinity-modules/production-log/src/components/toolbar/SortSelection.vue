@@ -23,16 +23,10 @@ export default {
     return {
       sortList: [{
         name: 'Newest first',
-        value: 'productionstart==-1',
+        value: 'new',
       }, {
         name: 'Oldest first',
-        value: 'productionstart==1',
-      }, {
-        name: 'Longest first',
-        value: 'productionduration==-1',
-      }, {
-        name: 'Shortest first',
-        value: 'productionduration==1',
+        value: 'old',
       }],
     };
   },

@@ -202,20 +202,44 @@ export default ({
       return shiftList;
     },
 
-    production: ({ productionList }) => {
+    production: ({
+      productionList,
+      selectedShift,
+      selectedMachine,
+      selectedSort,
+    }) => {
       let production = null;
       if (productionList && productionList.length) {
-        production = productionList.reduce((acc, cur) => {
-          const { shift, machinename } = cur;
-          if (!acc[shift]) {
-            acc[shift] = {};
-            acc[shift][machinename] = [];
-          } else if (acc[shift] && !acc[machinename]) {
-            acc[shift][machinename] = [];
-          }
-          acc[shift][machinename].push(cur);
-          return acc;
-        }, {});
+        production = productionList
+          .filter((prod) => {
+            if (selectedShift !== 'All Shifts' && selectedMachine !== 'All Machines') {
+              return (prod.shift === selectedShift && prod.machinename === selectedMachine);
+            }
+            if (selectedShift !== 'All Shifts' && selectedMachine === 'All Machines') {
+              return prod.shift === selectedShift;
+            }
+            if (selectedShift === 'All Shifts' && selectedMachine !== 'All Machines') {
+              return prod.machinename === selectedMachine;
+            }
+            return prod;
+          })
+          .sort((a, b) => {
+            if (selectedSort.value === 'new') {
+              return b.firstcycle - a.firstcycle;
+            }
+            return a.firstcycle - b.firstcycle;
+          })
+          .reduce((acc, cur) => {
+            const { shift, machinename } = cur;
+            if (!acc[shift]) {
+              acc[shift] = {};
+              acc[shift][machinename] = [];
+            } else if (acc[shift] && !acc[machinename]) {
+              acc[shift][machinename] = [];
+            }
+            acc[shift][machinename].push(cur);
+            return acc;
+          }, {});
       }
       return production;
     },
