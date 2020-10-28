@@ -5,14 +5,13 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <assign-operator-dialog />
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
           <span v-if="productionList.length">
-            {{ productionCount }} records
+            {{ productionCount }} records |
           </span>
-          | {{ machine }} | {{ shift }} - {{ date }}
+          {{ machine }} | {{ shift }} - {{ date }}
         </span>
       </div>
       <v-btn
@@ -32,13 +31,9 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import AssignOperatorDialog from './AssignOperatorDialog.vue';
 
 export default {
   name: 'ProductionToolbar',
-  components: {
-    AssignOperatorDialog,
-  },
   data() {
     return {
       edit: false,

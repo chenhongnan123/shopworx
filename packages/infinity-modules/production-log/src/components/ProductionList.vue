@@ -23,7 +23,12 @@
           v-for="(machineData, machineKey, j) in shiftData"
         >
           <span class="primary--text">
-            {{ machineKey }} | Operator
+            {{ machineKey }} |
+            <v-btn small outlined color="primary" class="text-none">
+              <v-icon small left>mdi-account-hard-hat</v-icon>
+              Suresh
+              <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
+            </v-btn>
           </span>
           <div
             :key="k"
