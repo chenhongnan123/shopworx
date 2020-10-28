@@ -57,11 +57,11 @@
         </div>
       </v-window-item>
       <v-window-item :value="1">
-        <process-reasons
+        <!-- <process-reasons
           @back="window = 0"
           @success="$emit('update-step')"
           :files="files"
-        />
+        /> -->
       </v-window-item>
     </v-window>
   </v-card>
@@ -71,13 +71,13 @@
 import { mapState, mapActions } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
-import ProcessReasons from './import/ProcessReasons.vue';
+// import ProcessReasons from './import/ProcessReasons.vue';
 
 export default {
   name: 'ImportReasons',
-  components: {
-    ProcessReasons,
-  },
+  // components: {
+  //   ProcessReasons,
+  // },
   data() {
     return {
       files: [],
@@ -112,6 +112,7 @@ export default {
     },
     async downloadZip() {
       this.downloading = true;
+      // await this.getMasterElements();
       const success = await this.getMasterData();
       if (success) {
         this.masterList = this.masterData;
@@ -139,7 +140,7 @@ export default {
         });
       })]);
       const zip = await this.zipService.generateZip();
-      this.zipService.downloadFile(zip, 'rejection-reasons-templates.zip');
+      this.zipService.downloadFile(zip, 'production-reasons-template.zip');
     },
     generateCSV({ fields, data = [] }) {
       const csvParser = new CSVParser();
