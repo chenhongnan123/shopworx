@@ -62,12 +62,6 @@
           <div class="text-uppercase title font-weight-regular mb-2 warning--text">
             {{ production.accepted }}
           </div>
-          <div class="body-2">
-            Waste (in Kgs)
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-            {{ production.accepted }}
-          </div>
         </v-col>
       </v-row>
     </v-card-text>
@@ -94,15 +88,6 @@
       >
         <v-icon left>mdi-plus</v-icon>
         Scrap
-      </v-btn>
-      <v-btn
-        small
-        outlined
-        color="primary"
-        class="text-none"
-      >
-        <v-icon left>mdi-plus</v-icon>
-        Waste
       </v-btn>
     </v-card-actions>
   </v-card>
