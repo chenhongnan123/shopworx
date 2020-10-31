@@ -335,6 +335,7 @@ export default {
             assetid: this.assetId,
             scheduledstart: new Date(this.plan.scheduledstart).getTime(),
             ordercreatedtime: new Date().getTime(),
+            visible: true,
           };
           let created = false;
           const payload = this.plan;

@@ -225,8 +225,21 @@
                             @change="checkBoxQuality($event, item)"
                             ></v-checkbox>
                       </template>
+                      <template v-slot:item.qualitystatus="{ item }">
+                        <v-select
+                          hide-details
+                          :items="setQualityStatusList"
+                          item-value="value"
+                          item-text="name"
+                          v-model="item.qualitystatus"/>
+                      </template>
                       <template v-slot:item.bound>
                         <span>1</span>
+                      </template>
+                      <template v-slot:item.checkquality="{ item }">
+                        <span v-if="item.checkquality">{{ qualityStatusList
+                          .find((f) => f.value === item.checkquality).name }}</span>
+                        <span v-else> Default </span>
                       </template>
                     </v-data-table>
                 </v-card-text>
@@ -254,6 +267,38 @@ export default {
   },
   data() {
     return {
+      qualityStatusList: [
+        {
+          name: 'Default',
+          value: 0,
+        },
+        {
+          name: 'OK',
+          value: 1,
+        },
+        {
+          name: 'NG',
+          value: 2,
+        },
+        {
+          name: 'Scraped',
+          value: 3,
+        },
+        {
+          name: 'Reworked',
+          value: 4,
+        },
+      ],
+      setQualityStatusList: [
+        {
+          name: 'Scraped',
+          value: 3,
+        },
+        {
+          name: 'Reworked',
+          value: 4,
+        },
+      ],
       headers: [
         {
           text: 'Component',
@@ -267,9 +312,11 @@ export default {
           text: 'Sub-Station name',
           value: 'substationname',
         },
-        { text: 'Bound?', value: 'boundstatus' },
-        { text: 'Keep?', value: 'rework' },
-        { text: 'Good?', value: 'quality' },
+        { text: 'Current Quality', value: 'checkquality' },
+        { text: 'Set Quality', value: 'qualitystatus' },
+        // { text: 'Bound?', value: 'boundstatus' },
+        // { text: 'Keep?', value: 'rework' },
+        // { text: 'Good?', value: 'quality' },
       ],
       reworkItem: null,
       stationRecipeList: [],
@@ -327,6 +374,7 @@ export default {
       'getNormalRoadMapDetails',
       'getReworkRoadmapDetails',
       'getPartStatusLastEntry',
+      'updateRecordById',
       'getRoadmapList']),
     async onReworkRoadmapSelected() {
       await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
@@ -343,6 +391,31 @@ export default {
       //   this.rework.substationid = this.normalRoadMapDetails[indexItem].substationid;
       //   this.rework.substationname = this.normalRoadMapDetails[indexItem].substationname;
       // }
+    },
+    async updateQualityStatus(item) {
+      console.log(item);
+      const payload = {
+        id: item._id,
+        payload: {
+          qualitystatus: item.qualitystatus.value,
+        },
+      };
+      this.saving = true;
+      const updateResult = await this.updateRecordById(payload);
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'VALUES_UPDATE',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'VALUES_UPDATE_ERROR',
+        });
+      }
     },
     checkBoxQuality(event, item) {
       if (item.boundstatus === 1) {

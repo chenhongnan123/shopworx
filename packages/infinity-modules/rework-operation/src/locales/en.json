@@ -33,9 +33,11 @@
     "NO_SUMMARY": "No Summary Data Found!",
     "NO_PRODUCT_TYPE": "Product Type is not same for Running order",
     "ALREADY_REWORK": "Already rework selected.",
-    "BOUND_STATUS_NOT_PRESENT": "Not Bound station"
+    "BOUND_STATUS_NOT_PRESENT": "Not Bound station",
+    "VALUES_UPDATE_ERROR": "Error in updating Values"
   },
   "success": {
-    "RECIPE_CREATED": "Recipe created!"
+    "RECIPE_CREATED": "Recipe created!",
+    "VALUES_UPDATE": "Values updated"
   }
 }

@@ -124,38 +124,47 @@ export default {
         };
         // console.log(payload);
         await this.updateOverAllResult(payload);
-        this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
-          let reworkS = 2;
-          let qualityS = 2;
-          if (element.reworkstatus === true) {
-            reworkS = 1;
-          }
-          if (element.qualitystatus === true) {
-            qualityS = 1;
-          }
-          if (element.reworkstatus === 1) {
-            reworkS = 1;
-          }
-          if (element.qualitystatus === 1) {
-            qualityS = 1;
-          }
-          let payloadComponent = {};
-          if (element.quality === false) {
-            payloadComponent = {
-              query: element._id,
-              payload: {
-                reworkstatus: reworkS,
-              },
-            };
-          } else {
-            payloadComponent = {
-              query: element._id,
-              payload: {
-                reworkstatus: reworkS,
-                qualitystatus: qualityS,
-              },
-            };
-          }
+        // this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
+        //   let reworkS = 2;
+        //   let qualityS = 2;
+        //   if (element.reworkstatus === true) {
+        //     reworkS = 1;
+        //   }
+        //   if (element.qualitystatus === true) {
+        //     qualityS = 1;
+        //   }
+        //   if (element.reworkstatus === 1) {
+        //     reworkS = 1;
+        //   }
+        //   if (element.qualitystatus === 1) {
+        //     qualityS = 1;
+        //   }
+        //   let payloadComponent = {};
+        //   if (element.quality === false) {
+        //     payloadComponent = {
+        //       query: element._id,
+        //       payload: {
+        //         reworkstatus: reworkS,
+        //       },
+        //     };
+        //   } else {
+        //     payloadComponent = {
+        //       query: element._id,
+        //       payload: {
+        //         reworkstatus: reworkS,
+        //         qualitystatus: qualityS,
+        //       },
+        //     };
+        //   }
+        //   await this.updateComponentById(payloadComponent);
+        // });
+        this.componantList.forEach(async (element) => {
+          const payloadComponent = {
+            query: element._id,
+            payload: {
+              qualitystatus: element.qualitystatus,
+            },
+          };
           await this.updateComponentById(payloadComponent);
         });
         await this.getReworkList('?query=overallresult!="1"');

@@ -78,7 +78,7 @@
         <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
             Search
           </v-btn>
-        <v-btn small color="primary" class="text-none ml-2" @click="btnExport">
+        <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
             Export
           </v-btn>
         </v-toolbar>
@@ -173,6 +173,7 @@ export default {
       prevDisabled: false,
       processParametersheader: [],
       processParametersList: [],
+      saving: false,
     };
   },
   computed: {
@@ -237,6 +238,7 @@ export default {
     async btnExport() {
       // const nameEement = this.id;
       // partstatus table
+      this.saving = true;
       let fileName = 'partstatus_data';
       let parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
       let column = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
@@ -305,6 +307,7 @@ export default {
       });
       const zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, 'traceability.zip');
+      this.saving = false;
       this.setAlert({
         show: true,
         type: 'success',
@@ -376,7 +379,7 @@ export default {
       // param += 'pagenumber=1&pagesize=20';
       // await this.getPartStatus(param);
       await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
-      await Promise.all([this.subStationList.forEach(async (s) => {
+      await Promise.all(this.subStationList.map(async (s) => {
         const elementDetails = await this.getProcessElement(s.id);
         if (elementDetails) {
           elementDetails.tags.forEach((element) => {
@@ -407,7 +410,7 @@ export default {
             }
           }
         }
-      })]);
+      }));
     },
     addToZip(file) {
       this.zipService.addFile(file);

@@ -312,7 +312,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = '?query=visible==true';
         const orders = await dispatch(
           'element/getRecords',
           {

@@ -11,11 +11,13 @@ export default ({
     sublineList: [],
     substationList: [],
     categoryList: [],
+    recipeViewState: 0,
     filter: false,
     lineValue: '',
     sublineValue: '',
     bomDetails: '',
     parameterList: '',
+    subStationListForConfig: [],
   },
   mutations: {
     setOnboarded: set('onboarded'),
@@ -26,11 +28,13 @@ export default ({
     setCategoryList: set('categoryList'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
+    setRecipeViewState: set('recipeViewState'),
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
     setBomDetailsList: set('bomDetailsList'),
     setParameterList: set('parameterList'),
     setSubstationList: set('substationList'),
+    setSubStationListForConfig: set('subStationListForConfig'),
   },
   actions: {
     getBomListRecords: async ({ dispatch, commit, state }, query) => {
@@ -103,10 +107,18 @@ export default ({
         bomDetailsList = bomdetails.map((l) => ({
           ...l,
           componentStatusList: [],
+          configstatus: [
+            {
+              configtstaus: 'Quality',
+            },
+            {
+              configtstaus: 'Saving',
+            },
+          ],
         }));
       }
       commit('setBomDetailsList', bomDetailsList);
-      return bomdetails;
+      return bomDetailsList;
     },
     getDefaultList: async ({ dispatch, commit }) => {
       const lineList = await dispatch(
@@ -131,6 +143,40 @@ export default ({
       if (sublineList) {
         commit('setSublineList', sublineList);
       }
+    },
+    getSubStationListForConfigScreen: async ({ commit, dispatch }, query) => {
+      const list = [];
+      const substationList = await dispatch(
+        'element/getRecords',
+        { elementName: 'substation', query },
+        { root: true },
+      );
+      substationList.forEach(async (f) => {
+        const parameterList = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'parameters', // 21, 24, 26
+            query: `?query=substationid=="${f.id}"%26%26(parametercategory=="21"%7C%7Cparametercategory=="24"%7C%7Cparametercategory=="26")`,
+          },
+          { root: true },
+        );
+        if (parameterList) {
+          parameterList.forEach((p) => {
+            const object = {
+              lineid: f.lineid,
+              sublineid: f.sublineid,
+              stationid: f.stationid,
+              id: f.id,
+              name: f.name,
+              parametername: p.name,
+            };
+            list.push(object);
+          });
+        } else {
+          list.push(f);
+        }
+      });
+      commit('setSubStationListForConfig', list);
     },
     getSubStationList: async ({ commit, dispatch }, query) => {
       const list = [];
