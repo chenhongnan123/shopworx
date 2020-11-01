@@ -109,6 +109,7 @@ export default {
       'checkOutList',
       'partStatusList',
       'subStationInfo',
+      'parametersList',
       'trecibilityState']),
   },
   async created() {
@@ -160,6 +161,7 @@ export default {
         'getCheckOutLists',
         'getProcessElement',
         'getProcessParameters',
+        'getParametersList',
         'getPartStatus']),
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
@@ -250,11 +252,6 @@ export default {
           rowGroup: true,
           resizable: true,
         },
-        {
-          headerName: 'SubStation ID',
-          field: 'substationname',
-          resizable: true,
-        },
       );
       // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let cFlag = 0;
@@ -331,7 +328,8 @@ export default {
         this.gridApi = this.gridOptions.api;
         this.gridApi.expandAll();
       } else {
-        this.subStationList.forEach(async (s) => {
+        await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+        await Promise.all(this.subStationList.map(async (s) => {
           const elementDetails = await this.getProcessElement(s.id);
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {
@@ -341,46 +339,81 @@ export default {
                 if (data.length === 0) {
                   this.processParametersheader.push(
                     {
-                      headerName: element.tagDescription,
-                      field: element.tagName,
+                      headerName: `${s.name}_${element.tagDescription}`,
+                      field: `${s.name}_${element.tagName}`,
                       resizable: true,
                     },
                   );
                 }
               }
             });
-            const processData = await this.getProcessParameters({
-              elementname: s.id,
-              payload: param,
-            });
-            if (processData) {
-              const finalData = processData.map((l) => ({
-                ...l,
-                substationname: s.name,
-              }));
-              if (this.processParametersList.length === 0) {
-                const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
-                if (check.length !== 0) {
-                  this.processParametersList = finalData;
-                }
-              } else {
-                finalData.forEach((f) => {
-                  const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
-                  if (checkData.length !== 0) {
-                    this.processParametersList.push(f);
+            await this.getParametersList(`?query=substationid=="${s.id}"%26%26(parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
+            this.partStatusList.forEach(async (f) => {
+              const processData = await this.getProcessParameters({
+                elementname: s.id,
+                payload: `?query=mainid=="${f.mainid}"`,
+              });
+              if (this.processParametersList.find((pro) => pro.mainid === f.mainid)) {
+                const object = this.processParametersList.find((pp) => pp.mainid === f.mainid);
+                this.processParametersList.splice(this.processParametersList.indexOf(object), 1);
+                const processDataObject = processData[0];
+                this.parametersList.forEach((para) => {
+                  if (processDataObject && object) {
+                    if (processDataObject[para.name]) {
+                      object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                    } else {
+                      object[`${s.name}_${para.name}`] = 0;
+                    }
                   }
                 });
+                this.processParametersList.push(object);
+              } else {
+                const processDataObject = processData[0];
+                if (processDataObject) {
+                  const object = {
+                    mainid: f.mainid,
+                    createdTimestamp: f.createdTimestamp,
+                  };
+                  this.parametersList.forEach((para) => {
+                    if (processDataObject[para.name]) {
+                      object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                    } else {
+                      object[`${s.name}_${para.name}`] = 0;
+                    }
+                  });
+                  this.processParametersList.push(object);
+                }
               }
-              // if (this.processParametersList.length === 0) {
-              //   this.processParametersList = finalData;
-              // } else {
-              //   finalData.forEach((f) => {
-              //     this.processParametersList.push(f);
-              //   });
-              // }
-            }
+            });
+            // if (processData) {
+            // const finalData = processData.map((l) => ({
+            //   ...l,
+            //   substationname: s.name,
+            // }));
+            // if (this.processParametersList.length === 0) {
+            //   const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
+            //   if (check.length !== 0) {
+            //     this.processParametersList = finalData;
+            //   }
+            // } else {
+            //   finalData.forEach((f) => {
+            //     const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
+            //     if (checkData.length !== 0) {
+            //       this.processParametersList.push(f);
+            //     }
+            //   });
+            // }
+            // if (this.processParametersList.length === 0) {
+            //   this.processParametersList = finalData;
+            // } else {
+            //   finalData.forEach((f) => {
+            //     this.processParametersList.push(f);
+            //   });
+            // }
+          // }
           }
-        });
+        }));
+        console.log(this.processParametersList);
         this.gridApi = this.gridOptions.api;
         this.gridApi.expandAll();
         if (cFlag === 1) {

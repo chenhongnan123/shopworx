@@ -248,7 +248,7 @@ export default {
           text: 'Component Name',
           value: 'parametername',
         },
-        { text: 'Check Result', value: 'componentstatus', width: 180 },
+        // { text: 'Check Result', value: 'componentstatus', width: 180 },
         { text: 'Material', value: 'materialname', width: 120 },
         { text: 'Bound Sub-Line', value: 'boundsublinename', width: 180 },
         // { text: 'Bound Substation', value: 'boundsubstationname', width: 180 },

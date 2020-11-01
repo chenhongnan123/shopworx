@@ -56,7 +56,7 @@
         :disabled="btnFindisable"
         ></v-switch>
         <v-checkbox v-model="checked" class="mx-2"
-         label="this Substation have Parameter Configuration"></v-checkbox>
+         label="Record process parameters"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>

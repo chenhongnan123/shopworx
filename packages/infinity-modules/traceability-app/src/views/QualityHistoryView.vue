@@ -236,8 +236,9 @@ export default {
       await this.getStations(query);
     },
     async handleStationClick(item) {
-      const query = `?query=stationid=="${item.id}"`;
-      await this.getSubStations(query);
+      console.log(item);
+      // const query = `?query=stationid=="${item.id}"`;
+      // await this.getSubStations(query);
     },
     async btnSearchProcessParameters() {
       this.processParametersList = [];

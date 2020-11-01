@@ -4,6 +4,9 @@ import { set, toggle } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
+    sublines: [],
+    stations: [],
+    subStations: [],
     materialList: [],
     onboarded: false,
     addMaterialDialog: false,
@@ -16,6 +19,9 @@ export default ({
     materialListChoice: [],
   },
   mutations: {
+    setSublines: set('sublines'),
+    setStations: set('stations'),
+    setSubStations: set('subStations'),
     setOnboarded: set('onboarded'),
     setMaterialList: set('materialList'),
     setaddMaterialDialog: set('addMaterialDialog'),
@@ -29,6 +35,43 @@ export default ({
     setMaterialListChoice: set('materialListChoice'),
   },
   actions: {
+    getSublines: async ({ dispatch, commit }, query) => {
+      const sublines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'subline',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSublines', sublines);
+    },
+    getStations: async ({ dispatch, commit, state }, query) => {
+      const { stations } = state;
+      const localStations = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      stations.push(...localStations);
+      commit('setStations', stations);
+      return true;
+    },
+    getSubStations: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStations', list);
+      return true;
+    },
     getMaterialListChoice: async ({ dispatch, commit }, query) => {
       const list = [];
       const obj = {

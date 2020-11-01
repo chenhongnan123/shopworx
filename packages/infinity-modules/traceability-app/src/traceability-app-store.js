@@ -16,6 +16,7 @@ export default ({
     componentList: [],
     trecibilityState: {},
     sortedSubStation: [],
+    parametersList: [],
   },
   mutations: {
     setLineList: set('lineList'),
@@ -31,6 +32,7 @@ export default ({
     setComponentList: set('componentList'),
     setTrecibilityState: set('trecibilityState'),
     setSortedSubStation: set('sortedSubStation'),
+    setParametersList: set('parametersList'),
   },
   actions: {
     getPartStatus: async ({ dispatch, commit }, query) => {
@@ -43,6 +45,18 @@ export default ({
         { root: true },
       );
       commit('setPartStatusList', part);
+      return part;
+    },
+    getParametersList: async ({ dispatch, commit }, query) => {
+      const part = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      commit('setParametersList', part);
       return part;
     },
     getProcessParameters: async ({ dispatch, commit }, { elementname, payload }) => {

@@ -2,41 +2,70 @@
   <div style="height:100%">
     <v-container fluid class="py-0">
       <v-row>
-        <v-select
-            hide-details
-            label="Select Line name"
-            :items="lineList"
-            item-text="name"
-            return-object
-            @change="handleLineClick"/>
-            <v-select
-            class="ml-2"
-            hide-details
-            label="Select Subline name"
-            :items="sublineList"
-            item-text="name"
-            return-object
-            required
-            @change="handleSubLineClick"/>
-            <v-select
-            class="ml-2"
-            hide-details
-            label="Select Station name"
-            :items="sublineList"
-            item-text="name"
-            return-object
-            required
-            @change="handleSubLineClick"/>
-            <v-select
-            class="ml-2"
-            hide-details
-            label="Select Sub-Station name"
-            :items="sublineList"
-            item-text="name"
-            return-object
-            required
-            @change="handleSubLineClick"/>
-            <v-btn small color="primary" class="text-none ml-2 mt-2">
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Select Line name"
+              :items="lineList"
+              return-object
+              item-text="name"
+              v-model="selectedLine"
+              @change="handleLineClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Select Subline name"
+              :items="sublineList"
+              return-object
+              item-text="name"
+              v-model="selectedSubLine"
+              @change="handleSubLineClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Select Station name"
+              :items="stationList"
+              return-object
+              item-text="name"
+              v-model="selectedStation"
+              @change="handleStationClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Select Sub-Station name"
+              :items="subStations"
+              return-object
+              item-text="name"
+              v-model="selectedSubStation"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-btn small color="primary" class="text-none ml-2 mt-2" @click="searchData">
             Search
           </v-btn>
       </v-row>
@@ -52,8 +81,8 @@
         <template v-slot:item.sublineid="{ item }">
             {{ sublineList.find((f) => f.id === item.sublineid).name }}
         </template>
-        <template v-slot:item.stationid="{ item }">
-            {{ item.stationid }}
+        <template v-slot:item.station="{ item }">
+            {{ item.station }}
         </template>
         <template v-slot:item.substation="{ item }">
             {{ item.substation }}
@@ -94,18 +123,44 @@
                @change="checkSaveData($event, item)"
                ></v-checkbox>
         </template>
+        <template v-slot:item.componentstatus="{ item }">
+         <v-select
+          label="-"
+          :items="item.componentStatusList"
+          :disabled="saving"
+          return-object
+          solo
+          dense
+          depressed
+          item-text="name"
+          item-value="name"
+          v-model="item.componentStatusSelected"
+          @change="chanageComponentStatus(item)"
+        >
+        <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+         </v-select>
+         </template>
       </v-data-table>
     </v-container>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'BomDetails',
   data() {
     return {
+      selectedLine: null,
+      selectedSubline: null,
+      selectedStation: null,
+      selectedSubStation: null,
+      saving: false,
       bomDetailList: [],
       headers: [
         {
@@ -118,7 +173,7 @@ export default {
         },
         {
           text: 'Station',
-          value: 'stationid',
+          value: 'station',
         },
         {
           text: 'Substation',
@@ -133,12 +188,16 @@ export default {
           value: 'parametername',
         },
         {
-          text: 'Quality',
+          text: 'Update Quality',
           value: 'qualitystatus',
         },
         {
-          text: 'Saving',
+          text: 'Save ID',
           value: 'savedata',
+        },
+        {
+          text: 'Component Status',
+          value: 'componentstatus',
         },
       ],
       headerNext: [
@@ -149,41 +208,103 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState('bomManagement', [
+      'lineList',
+      'sublineList',
+      'stationList',
+      'subStations',
+      'subStationListForConfig',
+    ]),
+  },
+  props: ['query'],
   async created() {
     await this.handleGetDetails();
     // await this.getSubStationListForConfigScreen('');
     // console.log(this.substationList);
   },
   methods: {
-    ...mapActions('bomManagement', ['getSubStationListForConfigScreen', 'getBomDetailsListRecords', 'getParameterList', 'updateRecordById']),
-    handleLineClick() {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('bomManagement', [
+      'getSubStationListForConfigScreen',
+      'getBomDetailsListRecords',
+      'getParameterList',
+      'updateRecordById',
+      'getSubLines',
+      'getStations',
+      'getSubStations',
+    ]),
+    async handleLineClick(item) {
+      const query = `?query=lineid==${item.id}`;
+      await this.getSubLines(query);
     },
-    handleSubLineClick() {
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getStations(query);
+    },
+    async handleStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getSubStations(query);
     },
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
-      console.log(bomdetailList);
-      bomdetailList.forEach((element) => {
-        element.configstatus.forEach((f) => {
-          f[element.parametername] = false;
-        });
-        if (this.headerNext.filter((f) => f.value === element.parametername).length === 0) {
-          this.headerNext.push(
-            {
-              text: element.parametername,
-              value: element.parametername,
-            },
-          );
-          // this.headers.push(
-          //   {
-          //     text: element.parametername,
-          //     value: element.parametername,
-          //   },
-          // );
-        }
+      this.bomDetailList = bomdetailList;
+      // const parametersList =
+      this.bomDetailList.forEach(async (bom) => {
+        // set component status list to everystation
+        // bom.componentStatusList = await this.getParameterList
+        // (`?query=substationid=="${bom.substationid}"%26%26parametercategory=="32"`);
+        const list = [{
+          name: '-',
+        }];
+        list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
+        bom.componentStatusList = list;
       });
+      // bomdetailList.forEach((element) => {
+      //   element.configstatus.forEach((f) => {
+      //     f[element.parametername] = false;
+      //   });
+      //   if (this.headerNext.filter((f) => f.value === element.parametername).length === 0) {
+      //     this.headerNext.push(
+      //       {
+      //         text: element.parametername,
+      //         value: element.parametername,
+      //       },
+      //     );
+      //     // this.headers.push(
+      //     //   {
+      //     //     text: element.parametername,
+      //     //     value: element.parametername,
+      //     //   },
+      //     // );
+      //   }
+      // });
       console.log(bomdetailList);
       this.bomDetailList = bomdetailList;
+    },
+    async searchData() {
+      let param = `?query=bomid==${this.query.id}`;
+      if (this.selectedLine) {
+        param += `%26%26lineid==${this.selectedLine.id}`;
+      }
+      if (this.selectedSubline) {
+        param += `%26%26sublineid=="${this.selectedSubline.id}"`;
+      }
+      if (this.selectedStation) {
+        param += `%26%26stationid=="${this.selectedStation.id}"`;
+      }
+      if (this.selectedSubStation) {
+        param += `%26%26substationid=="${this.selectedSubStation.id}"`;
+      }
+      const bomdetailList = await this.getBomDetailsListRecords(param);
+      this.bomDetailList = bomdetailList;
+      this.bomDetailList.forEach(async (bom) => {
+        const list = [{
+          name: '-',
+        }];
+        list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
+        bom.componentStatusList = list;
+      });
     },
     async checkSaveData(event, item) {
       const payload = {
@@ -208,6 +329,37 @@ export default {
           message: 'ERROR_UPDATING_SUBSTATION',
         });
       }
+    },
+    async chanageComponentStatus(item) {
+      const { componentStatusSelected } = item;
+      // const substationItem = this.substationList
+      console.log(this.componentStatusSelected);
+      const payload = {
+        id: item._id,
+        payload: {
+          componentStatusSelected,
+          componentstatus: componentStatusSelected.name,
+        },
+      };
+      console.log(payload, 'payload');
+      this.saving = true;
+      const updateResult = await this.updateRecordById(payload);
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'UPDATE_COMPONENTSTATUS',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_UPDATING_COMPONENTSTATUS',
+        });
+      }
+      // this.bomDetailList = await this.getBomDetailsListRecords
+      // (`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
     },
     async checkQualityStatus(event, item) {
       const payload = {
@@ -234,14 +386,6 @@ export default {
       }
     },
   },
-  computed: {
-    ...mapState('bomManagement', [
-      'lineList',
-      'sublineList',
-      'subStationListForConfig',
-    ]),
-  },
-  props: ['query'],
 };
 </script>
 <style>

@@ -41,6 +41,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
@@ -50,10 +51,22 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
           Export
           <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
+        </v-btn>
+        <v-btn
+          v-if="base.showUpdateBtn"
+          small
+          outlined
+          color="success"
+          class="text-none"
+          @click="updateValue"
+          :class="'ml-2'"
+        >
+          Update
         </v-btn>
       </span>
     </portal>
@@ -89,7 +102,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import {
+  mapGetters,
+  mapActions,
+  mapMutations,
+  mapState,
+} from 'vuex';
 import BaseMaster from '../components/BaseMaster.vue';
 
 export default {
@@ -107,10 +125,13 @@ export default {
     this.base = this.$refs.base;
   },
   methods: {
-    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
+    ...mapActions('masters', ['postBulkRecords', 'deleteRecord', 'getRecords', 'updateRecord']),
     ...mapMutations('helper', ['setAlert']),
     addNewEntry() {
       this.base.addRow();
+    },
+    updateValue() {
+      this.$refs.base.updateValue();
     },
     async deleteEntry() {
       if (this.base.gridApi.getSelectedRows()) {
@@ -139,7 +160,8 @@ export default {
         }
       }
     },
-    async saveNewEntry() {
+    async saveNewEntry(event) {
+      this.rowsSelected = event.api.getSelectedRows().length > 0;
       const name = this.id;
       const payload = [];
       this.base.rowData.forEach((data) => {
@@ -166,8 +188,15 @@ export default {
         });
       }
     },
+    onBtnExport() {
+      this.base.exportData();
+    },
+    refreshUi() {
+      this.base.fetchRecords();
+    },
   },
   computed: {
+    ...mapState('masters', ['records']),
     ...mapGetters('masters', ['showTabs', 'getAssets']),
     id() {
       return this.$route.params.id;

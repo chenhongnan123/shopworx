@@ -115,7 +115,7 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="directionList"
             outlined
@@ -133,7 +133,7 @@
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete>
+        </v-autocomplete> -->
         <v-autocomplete
             class="mt-5"
             :items="categoryList"

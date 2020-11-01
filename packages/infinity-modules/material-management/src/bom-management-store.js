@@ -4,11 +4,13 @@ import { set, toggle } from '@shopworx/services/util/store.helper';
 export default ({
   namespaced: true,
   state: {
+    subStations: [],
     bomList: [],
     onboarded: false,
     addBomDialog: false,
     lineList: [],
     sublineList: [],
+    stationList: [],
     substationList: [],
     categoryList: [],
     recipeViewState: 0,
@@ -20,11 +22,13 @@ export default ({
     subStationListForConfig: [],
   },
   mutations: {
+    setSubStations: set('subStations'),
     setOnboarded: set('onboarded'),
     setBomList: set('bomList'),
     setaddBomDialog: set('addBomDialog'),
     setLineList: set('lineList'),
     setSublineList: set('sublineList'),
+    setStationList: set('stationList'),
     setCategoryList: set('categoryList'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
@@ -37,6 +41,54 @@ export default ({
     setSubStationListForConfig: set('subStationListForConfig'),
   },
   actions: {
+    getLines: async ({ dispatch, commit }, query) => {
+      const line = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'line',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLineList', line);
+      return line;
+    },
+    getSubLines: async ({ dispatch, commit }, query) => {
+      const subline = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'subline',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubLineList', subline);
+      return subline;
+    },
+    getStations: async ({ dispatch, commit }, query) => {
+      const station = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationList', station);
+      return station;
+    },
+    getSubStations: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStations', list);
+      return true;
+    },
     getBomListRecords: async ({ dispatch, commit, state }, query) => {
       const { lineList } = state;
       let bomlist = await dispatch(

@@ -13,6 +13,32 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
+    updateRecord: async ({ dispatch, commit }, payloadData) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: payloadData.name,
+          id: payloadData.query,
+          payload: payloadData.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = '';
+        const record = await dispatch(
+          'element/getRecords',
+          {
+            elementName: payloadData.name,
+            query,
+          },
+          { root: true },
+        );
+        if (record) {
+          commit('setRecords', record);
+          // return record;
+        }
+      }
+    },
     postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
         'element/postBulkRecords',
@@ -61,7 +87,14 @@ export default ({
       }
     },
 
-    getRecords: async ({ commit, dispatch }, { elementName, assetId }) => {
+    getRecords: async ({ commit, dispatch }, {
+      elementName,
+      assetId,
+      // fromDate,
+      // toDate,
+      // pageSize,
+      // pageNumber,
+    }) => {
       let payload = {
         elementName,
         query: `?query=assetid==${assetId}`,
@@ -69,6 +102,9 @@ export default ({
       if (!assetId) {
         payload = {
           elementName,
+          // fromDate,
+          // toDate,
+          // query: `?query=pagenumber==${pageNumber}&pagesize=${pageSize}`,
         };
       }
       const records = await dispatch(

@@ -576,7 +576,7 @@ export default ({
           const modes = over
             .filter((ms) => ms.modestatus === 0);
           const ngOverall = okUpdatecount
-            .filter((ms) => ms.overallresult !== 1);
+            .filter((ms) => ms.overallresult !== 1 && ms.overallresult !== 7);
           const modesNg = ngOverall
             .filter((ms) => ms.modestatus === 0);
           item.okcount = modes.length;

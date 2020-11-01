@@ -24,7 +24,7 @@
             Archive
           </v-btn>
           <v-btn
-          v-if="visible"
+          v-if="orders.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="MoveUp">
             Move Up
           </v-btn>
@@ -301,7 +301,7 @@ export default {
     },
     async MoveUp() {
       if (this.orders.length > 0) {
-        if (this.orders[0].orderstatus === 'Released') {
+        if (this.orders[0].orderstatus === 'Running') {
           let resultObject = null;
           for (let i = 0; i < this.orderList.length; i += 1) {
             if (this.orders[0].ordername === this.orderList[i].ordername) {
@@ -309,30 +309,21 @@ export default {
               resultObject = this.orderList[j];
             }
           }
-          if (resultObject.orderstatus === 'Released') {
-            const object = {
-              indexno: resultObject.indexno,
-            };
-            await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
-            const object2 = {
-              indexno: this.orders[0].indexno,
-            };
-            await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
-
-            await this.getOrderListRecords('');
-            this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'DATA_SAVED',
-            });
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'NO_OTHER_RELEASED',
-            });
-          }
+          const object = {
+            indexno: resultObject.indexno,
+          };
+          await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
+          const object2 = {
+            indexno: this.orders[0].indexno,
+          };
+          await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
+          await this.getOrderListRecords('');
+          this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DATA_SAVED',
+          });
         } else {
           this.setAlert({
             show: true,

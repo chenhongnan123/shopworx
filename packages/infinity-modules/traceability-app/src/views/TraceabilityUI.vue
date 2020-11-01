@@ -55,7 +55,6 @@
           return-object
           item-text="name"
           v-model="newTrecibility.selectedSubStation"
-          @change="handleStationClick"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -184,6 +183,7 @@ export default {
       'trecibilityState',
       'partStatusList',
       'componentList',
+      'parametersList',
       'sortedSubStation',
     ]),
     recipeView: {
@@ -207,11 +207,12 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('helper', ['setExtendedHeader', 'setTrecibilityState']),
     ...mapMutations('traceabilityApp', ['setRecipeViewState']),
-    ...mapActions('traceabilityApp', ['getSubStations', 'getComponentList', 'getSortedSubStations', 'getSubLines', 'getProcessElement', 'getProcessParameters']),
+    ...mapActions('traceabilityApp', ['getSubStations', 'getComponentList', 'getSortedSubStations', 'getSubLines', 'getProcessElement', 'getProcessParameters', 'getParametersList']),
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
-      const query = `?query=sublineid=="${item.id}"`;
-      await this.getSortedSubStations(query);
+      console.log(item);
+      // const query = `?query=sublineid=="${item.id}"`;
+      // await this.getSortedSubStations(query);
     },
     async backAndfourth() {
       if (this.pageNumber === 1) {
@@ -262,6 +263,7 @@ export default {
       // component table
       await this.btnComponentLogic();
       fileName = 'component_data';
+      console.log(this.componentList);
       parameterSelected = this.componentList.map((item) => ({ ...item }));
       column = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
       csvContent = [];
@@ -286,6 +288,7 @@ export default {
       fileName = 'process_parameter_data';
       console.log(this.processParametersList);
       console.log(this.processParametersheader);
+      console.log(Array.from(this.processParametersList));
       parameterSelected = this.processParametersList.map((item) => ({ ...item }));
       column = this.processParametersheader;
       csvContent = [];
@@ -296,6 +299,7 @@ export default {
         });
         csvContent.push(arr);
       });
+      console.log(csvContent);
       csvParser = new CSVParser();
       content = csvParser.unparse({
         fields: column,
@@ -342,8 +346,9 @@ export default {
         param += `datefrom=${fromDate}&`;
       }
       if (toDate) {
-        param += `dateto=${toDate}`;
+        param += `dateto=${toDate}&`;
       }
+      param += 'sortquery=modifiedtimestamp==-1';
       // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
     },
@@ -352,7 +357,7 @@ export default {
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.processParametersheader = [];
-      this.processParametersheader.push('createdTimestamp', 'mainid', 'substationname');
+      this.processParametersheader.push('createdTimestamp', 'mainid');
       // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
@@ -374,8 +379,10 @@ export default {
         param += `datefrom=${fromDate}&`;
       }
       if (toDate) {
-        param += `dateto=${toDate}`;
+        param += `dateto=${toDate}&`;
       }
+      param += 'sortquery=modifiedtimestamp==-1';
+      console.log(param);
       // param += 'pagenumber=1&pagesize=20';
       // await this.getPartStatus(param);
       await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
@@ -387,30 +394,82 @@ export default {
               const data = this.processParametersheader
                 .filter((p) => p === element.tagName);
               if (data.length === 0) {
-                console.log(element.tagName);
-                this.processParametersheader.push(element.tagName);
+                this.processParametersheader.push(`${s.name}_${element.tagName}`);
               }
             }
           });
-          const processData = await this.getProcessParameters({
-            elementname: s.id,
-            payload: param,
-          });
-          if (processData) {
-            const finalData = processData.map((l) => ({
-              ...l,
-              substationname: s.name,
-            }));
-            if (this.processParametersList.length === 0) {
-              this.processParametersList = finalData;
-            } else {
-              finalData.forEach((f) => {
-                this.processParametersList.push(f);
+          await this.getParametersList(`?query=substationid=="${s.id}"%26%26(parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
+          this.$refs.partstatus.partStatusList.forEach(async (f) => {
+            const processData = await this.getProcessParameters({
+              elementname: s.id,
+              payload: `?query=mainid=="${f.mainid}"`,
+            });
+            if (this.processParametersList.find((pro) => pro.mainid === f.mainid)) {
+              const object = this.processParametersList.find((pp) => pp.mainid === f.mainid);
+              this.processParametersList.splice(this.processParametersList.indexOf(object), 1);
+              const processDataObject = processData[0];
+              this.parametersList.forEach((para) => {
+                if (processDataObject && object) {
+                  if (processDataObject[para.name]) {
+                    object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                  } else {
+                    object[`${s.name}_${para.name}`] = 0;
+                  }
+                }
               });
+              this.processParametersList.push(object);
+            } else {
+              const processDataObject = processData[0];
+              if (processDataObject) {
+                const object = {
+                  mainid: f.mainid,
+                  createdTimestamp: f.createdTimestamp,
+                };
+                this.parametersList.forEach((para) => {
+                  if (processDataObject[para.name]) {
+                    object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                  } else {
+                    object[`${s.name}_${para.name}`] = 0;
+                  }
+                });
+                this.processParametersList.push(object);
+              }
             }
-          }
+          });
         }
       }));
+      // await Promise.all(this.subStationList.map(async (s) => {
+      //   const elementDetails = await this.getProcessElement(s.id);
+      //   if (elementDetails) {
+      //     elementDetails.tags.forEach((element) => {
+      //       if (element.tagName !== 'mainid') {
+      //         const data = this.processParametersheader
+      //           .filter((p) => p === element.tagName);
+      //         if (data.length === 0) {
+      //           console.log(element.tagName);
+      //           this.processParametersheader.push(element.tagName);
+      //         }
+      //       }
+      //     });
+      //     const processData = await this.getProcessParameters({
+      //       elementname: s.id,
+      //       payload: param,
+      //     });
+      //     if (processData) {
+      //       const finalData = processData.map((l) => ({
+      //         ...l,
+      //         substationname: s.name,
+      //       }));
+      //       if (this.processParametersList.length === 0) {
+      //         this.processParametersList = finalData;
+      //       } else {
+      //         finalData.forEach((f) => {
+      //           this.processParametersList.push(f);
+      //         });
+      //       }
+      //     }
+      //   }
+      // }));
     },
     addToZip(file) {
       this.zipService.addFile(file);
@@ -447,7 +506,7 @@ export default {
         }
         if (this.recipeView === 1) {
           this.$refs.process.btnSearchProcessParameters();
-          this.$refs.process.handleStationClick();
+          // this.$refs.process.handleStationClick();
           // this.$refs.partstatus.btnSearchCheckOut();
         }
         if (this.recipeView === 2) {
