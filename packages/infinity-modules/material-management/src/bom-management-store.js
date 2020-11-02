@@ -158,15 +158,16 @@ export default ({
       if (bomdetails && bomdetails.length) {
         bomDetailsList = bomdetails.map((l) => ({
           ...l,
-          componentStatusList: [],
-          configstatus: [
-            {
-              configtstaus: 'Quality',
-            },
-            {
-              configtstaus: 'Saving',
-            },
-          ],
+          configstatus: [{
+            text: 'Update quality',
+            name: 'qualitystatus',
+          }, {
+            text: 'Save ID',
+            name: 'savedata',
+          }, {
+            text: 'Component Status',
+            name: 'componentstatus',
+          }],
         }));
       }
       commit('setBomDetailsList', bomDetailsList);

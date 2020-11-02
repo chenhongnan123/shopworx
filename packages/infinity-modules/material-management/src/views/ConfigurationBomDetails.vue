@@ -75,75 +75,36 @@
         item-key="id"
         class="tableContainer mt-2"
         >
-        <template v-slot:item.lineid="{ item }">
-            {{ lineList.find((f) => Number(f.id) === item.lineid).name }}
+        <template #item="{ item, headers }">
+          <tr>
+            <td>
+              {{ lineList.find((f) => Number(f.id) === item.lineid).name }}
+            </td>
+            <td>
+              {{ sublineList.find((f) => f.id === item.sublineid).name }}
+            </td>
+            <td>
+              {{ item.station }}
+            </td>
+            <td>
+              {{ item.substation }}
+            </td>
+            <td>
+              <div v-for="(status, i) in item.configstatus" :key="i">
+                {{ status.text }}
+              </div>
+            </td>
+            <td v-for="(componentValues, i) in getComponents(item, headers)" :key="i">
+              <div v-for="(value, key) in componentValues" :key="key">
+                <v-checkbox
+                  v-if="typeof value === 'boolean'"
+                  hide-details
+                ></v-checkbox>
+                <v-text-field v-else :value="value" dense hide-details></v-text-field>
+              </div>
+            </td>
+          </tr>
         </template>
-        <template v-slot:item.sublineid="{ item }">
-            {{ sublineList.find((f) => f.id === item.sublineid).name }}
-        </template>
-        <template v-slot:item.station="{ item }">
-            {{ item.station }}
-        </template>
-        <template v-slot:item.substation="{ item }">
-            {{ item.substation }}
-        </template>
-        <template v-slot:item.configstatus="{ item }">
-          <v-data-table
-          :items="item.configstatus"
-          :headers="headerNext"
-          hide-default-footer
-          >
-          <template v-slot:i="{ i }">
-            <span v-if="i.configstatus">{{ i.configstatus }}</span>
-            <span v-else>
-              <v-checkbox
-               primary
-               hide-details
-               @change="checkQualityStatus($event, i)"
-               ></v-checkbox>
-            </span>
-        </template>
-          </v-data-table>
-        </template>
-        <template v-slot:item.qualitystatus="{ item }">
-         <v-checkbox
-               primary
-               hide-details
-               :value = item.qualitystatus
-               v-model="item.qualitystatus"
-               @change="checkQualityStatus($event, item)"
-               ></v-checkbox>
-        </template>
-        <template v-slot:item.savedata="{ item }">
-         <v-checkbox
-               primary
-               hide-details
-               :value = item.savedata
-               v-model="item.savedata"
-               @change="checkSaveData($event, item)"
-               ></v-checkbox>
-        </template>
-        <template v-slot:item.componentstatus="{ item }">
-         <v-select
-          label="-"
-          :items="item.componentStatusList"
-          :disabled="saving"
-          return-object
-          solo
-          dense
-          depressed
-          item-text="name"
-          item-value="name"
-          v-model="item.componentStatusSelected"
-          @change="chanageComponentStatus(item)"
-        >
-        <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-         </v-select>
-         </template>
       </v-data-table>
     </v-container>
   </div>
@@ -179,31 +140,9 @@ export default {
           text: 'Substation',
           value: 'substation',
         },
-        // {
-        //   text: 'Config Data',
-        //   value: 'configstatus',
-        // },
         {
-          text: 'Parameter Name',
-          value: 'parametername',
-        },
-        {
-          text: 'Update Quality',
-          value: 'qualitystatus',
-        },
-        {
-          text: 'Save ID',
-          value: 'savedata',
-        },
-        {
-          text: 'Component Status',
-          value: 'componentstatus',
-        },
-      ],
-      headerNext: [
-        {
-          text: 'Config-Status',
-          value: 'configtstaus',
+          text: 'Config Status',
+          value: 'configstatus',
         },
       ],
     };
@@ -234,6 +173,18 @@ export default {
       'getStations',
       'getSubStations',
     ]),
+    getComponents(item, headers) {
+      const componentList = headers.filter((header) => header.value.includes('component_'));
+      return componentList.map((component) => {
+        const values = Object.keys(item)
+          .filter((i) => i.includes(component.value))
+          .reduce((acc, cur) => {
+            acc[cur] = item[cur];
+            return acc;
+          }, {});
+        return values;
+      });
+    },
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);
@@ -248,6 +199,7 @@ export default {
     },
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+      console.log(bomdetailList);
       this.bomDetailList = bomdetailList;
       // const parametersList =
       this.bomDetailList.forEach(async (bom) => {
@@ -260,27 +212,36 @@ export default {
         list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
         bom.componentStatusList = list;
       });
-      // bomdetailList.forEach((element) => {
-      //   element.configstatus.forEach((f) => {
-      //     f[element.parametername] = false;
-      //   });
-      //   if (this.headerNext.filter((f) => f.value === element.parametername).length === 0) {
-      //     this.headerNext.push(
-      //       {
-      //         text: element.parametername,
-      //         value: element.parametername,
-      //       },
-      //     );
-      //     // this.headers.push(
-      //     //   {
-      //     //     text: element.parametername,
-      //     //     value: element.parametername,
-      //     //   },
-      //     // );
-      //   }
-      // });
-      console.log(bomdetailList);
-      this.bomDetailList = bomdetailList;
+      bomdetailList.forEach((element) => {
+        if (!this.headers.find((f) => f.text === element.parametername)) {
+          this.headers.push(
+            {
+              text: element.parametername,
+              value: `component_${element.parametername}`,
+            },
+          );
+        }
+      });
+      const detail = {};
+      bomdetailList.forEach((element) => {
+        element.configstatus.forEach((status) => {
+          if (status.name === 'componentstatus') {
+            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
+          } else {
+            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || false;
+          }
+          console.log({
+            config: status.name,
+            component: element.parametername,
+            value: element[status.name],
+          });
+        });
+      });
+      const newList = [];
+      bomdetailList.forEach((element) => {
+        newList.push({ ...element, ...detail });
+      });
+      this.bomDetailList = newList;
     },
     async searchData() {
       let param = `?query=bomid==${this.query.id}`;
