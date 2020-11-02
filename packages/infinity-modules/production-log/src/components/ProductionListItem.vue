@@ -67,10 +67,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <production-split
-        :production="production"
-        :duration="duration"
-      />
+      <production-rejections :production="production"/>
       <v-btn
         small
         outlined
@@ -95,7 +92,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import ProductionSplit from './ProductionSplit.vue';
+import ProductionRejections from './ProductionRejections.vue';
 
 export default {
   name: 'ProductionListItem',
@@ -106,7 +103,7 @@ export default {
     },
   },
   components: {
-    ProductionSplit,
+    ProductionRejections,
   },
   computed: {
     ...mapState('productionLog', ['toggleSelection', 'selectedProductions']),
