@@ -241,6 +241,9 @@ export default ({
             return acc;
           }, {});
       }
+      if (Object.keys(production).length === 0) {
+        production = null;
+      }
       return production;
     },
   },
