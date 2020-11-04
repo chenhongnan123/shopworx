@@ -9,7 +9,7 @@
       <template v-else>
         <report-toolbar-extension @on-export="onExport" />
         <report-toolbar />
-        <report-container :exportType="exportType" />
+        <report-container ref="reportContainer" />
       </template>
     </template>
   </div>
@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       loading: false,
-      exportType: null,
     };
   },
   created() {
@@ -81,7 +80,7 @@ export default {
       }
     },
     onExport(e) {
-      this.exportType = e;
+      this.$refs.reportContainer.exportReport(e);
     },
   },
 };

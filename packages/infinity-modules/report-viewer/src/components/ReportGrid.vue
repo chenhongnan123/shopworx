@@ -140,13 +140,13 @@ export default {
     },
     exportGridCSV() {
       const params = {
-        fileName: this.exportFileName,
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsCsv(params);
     },
     exportGridExcel() {
       const params = {
-        fileName: this.exportFileName,
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsExcel(params);
     },
