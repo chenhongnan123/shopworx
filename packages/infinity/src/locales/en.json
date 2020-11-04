@@ -194,6 +194,7 @@
     "recipeManagement": "Recipe",
     "productManagement": "Product Type",
     "productionLayout": "Production Layout",
+    "modelManagement": "ML Model",
     "materialManagement": "Material",
     "reports": "Reports",
     "production": "Production",

@@ -83,6 +83,7 @@ export default {
     delete: 'mdi-delete-circle-outline',
     save: 'mdi-content-save',
     basicperformance: 'mdi-speedometer',
-    understandingtrends: 'mdi-trending-up'
+    understandingtrends: 'mdi-trending-up',
+    modelManagement: 'mdi-memory'
   },
 };
