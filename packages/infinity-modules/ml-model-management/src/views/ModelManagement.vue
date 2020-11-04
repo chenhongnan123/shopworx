@@ -90,11 +90,13 @@
             item-text="name"
             return-object
             v-model="selectedInput[index]"
+            style="width: 80%; padding-top: 10px;"
           >
           </v-select>
           <v-btn v-if="selectedInput" @click="onAddbtnClick()">+</v-btn>
         </v-card>
-        <v-card v-else class="pa-2" tile outlined>Data Not available</v-card>
+        <v-card v-else class="pa-2" tile outlined style="text-align: center;">
+          Data Not available</v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -116,21 +118,15 @@ export default {
       this.selectedProcess = null;
     },
     onAddbtnClick() {
-      const test = this.selectedInput.filter(this.onlyUnique);
-      this.count += 1;
-      // for (let i = 0; i < this.inputProcessParameters.length; i += 1) {
-      //   if (this.inputProcessParameters[i] === this.selectedInput) {
-      //     this.inputProcessParameters.splice(i, 1);
-      //     i -= 1;
-      //   }
-      // }
-      test.forEach((element) => {
-        this.inputArr.push({ name: element });
-      });
-      console.log(this.inputArr);
-    },
-    onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
+      this.inputArr = [{ name: '' }];
+      for (let index = 0; index < this.selectedInput.length; index += 1) {
+        this.inputArr.push({ name: this.selectedInput[index] });
+      }
+      for (let index = 0; index < this.inputProcessParameters.length; index += 1) {
+        if (this.inputProcessParameters[index] === this.inputArr[1]) {
+          this.inputProcessParameters.splice(index, 1);
+        }
+      }
     },
     onProcessClick(process) {
       const paramterSelected = [];
@@ -159,7 +155,6 @@ export default {
       inputProcessParameters: [],
       selectedProcess: null,
       selectedInput: [],
-      count: 0,
       inputArr: [{
         name: '',
       }],
