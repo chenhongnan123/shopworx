@@ -43,42 +43,38 @@
             </v-card>
           </v-col>
         </v-row>
-        <!-- <v-row class="pa-1 mx-1 grid_row"> -->
-          <v-row class="pa-1 mx-1 grid_row" :key="subline._id" v-for="subline in sublines">
-          <!-- <v-col v-if="selectedLine" cols="3" md="3" lg="3"> -->
-          <div class="pl-2">{{ selectedLine.name }}</div>
-          <!-- </v-col> -->
-            <v-spacer></v-spacer>
-            <v-col cols="9" md="9" lg="9" class="py-0">
-              <v-row :key="station._id" v-for="station in stations
-              .filter((s) => subline.id === s.sublineid)">
-                <v-col cols="4" md="4" lg="4" class="py-0">
-                  <div class="pl-2">{{ station.name }}</div>
-                </v-col>
-                <v-col cols="8" md="8" lg="8" class="py-0">
-                  <v-row :key="substation._id" v-for="substation in subStations
-                  .filter((ss) => station.id === ss.stationid)">
-                  <v-col cols="6" md="6" lg="6" class="py-0">
-                    <v-row :key="process._id" v-for="process in processes
-                    .filter((p) => substation.id === p.substationid)">
-                      <v-col cols="12" md="12" lg="12" class="py-0">
-                      <div @click="onProcessClick(process.name)" >
-                        {{ process.name }}
-                      </div>
-                      </v-col>
-                    </v-row>
-                  </v-col>
+        <v-row class="pa-1 mx-1 grid_row" :key="subline._id" v-for="subline in sublines">
+        <div class="pl-2">{{ selectedLine.name }}</div>
+          <v-spacer></v-spacer>
+          <v-col cols="9" md="9" lg="9" class="py-0">
+            <v-row :key="station._id" v-for="station in stations
+            .filter((s) => subline.id === s.sublineid)">
+              <v-col cols="4" md="4" lg="4" class="py-0">
+                <div class="pl-2">{{ station.name }}</div>
+              </v-col>
+              <v-col cols="8" md="8" lg="8" class="py-0">
+                <v-row :key="substation._id" v-for="substation in subStations
+                .filter((ss) => station.id === ss.stationid)">
+                <v-col cols="6" md="6" lg="6" class="py-0">
+                  <v-row :key="process._id" v-for="process in processes
+                  .filter((p) => substation.id === p.substationid)">
+                    <v-col cols="12" md="12" lg="12" class="py-0">
+                    <div @click="onProcessClick(process.name)" >
+                      {{ process.name }}
+                    </div>
+                    </v-col>
                   </v-row>
                 </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        <!-- </v-row> -->
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <v-row class="mb-6" v-if="selectedProcess" no-gutters>
-      <v-col cols="3" md="3" lg="3">
-        <v-card v-if="inputProcessParameters.length" class="pa-2" tile outlined>
+      <v-col cols="4" md="4" lg="4">
+        <v-card v-if="inputProcessParameters.length" class="pa-2" tile outlined style="width: 98%">
           {{selectedProcess}} : Input
           <v-select
             v-for="(input, index) in inputArr"
@@ -90,13 +86,19 @@
             item-text="name"
             return-object
             v-model="selectedInput[index]"
-            style="width: 80%; padding-top: 10px;"
+            style="width: 90%; padding-top: 10px;"
           >
           </v-select>
           <v-btn v-if="selectedInput" @click="onAddbtnClick()">+</v-btn>
         </v-card>
         <v-card v-else class="pa-2" tile outlined style="text-align: center;">
           Data Not available</v-card>
+      </v-col>
+      <v-col cols="4" md="4" lg="4">
+        <v-card class="pa-2" tile outlined style="width: 98%">Card 2</v-card>
+      </v-col>
+      <v-col cols="4" md="4" lg="4">
+        <v-card class="pa-2" tile outlined style="width: 98%">Card 3</v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -121,11 +123,8 @@ export default {
       this.inputArr = [{ name: '' }];
       for (let index = 0; index < this.selectedInput.length; index += 1) {
         this.inputArr.push({ name: this.selectedInput[index] });
-      }
-      for (let index = 0; index < this.inputProcessParameters.length; index += 1) {
-        if (this.inputProcessParameters[index] === this.inputArr[1]) {
-          this.inputProcessParameters.splice(index, 1);
-        }
+        // this.inputProcessParameters.splice(indexOf() + 1, 1);
+        // console.log(this.selectedInput.indexOf(this.selectedInput[index]));
       }
     },
     onProcessClick(process) {
