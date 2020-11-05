@@ -190,6 +190,8 @@ export default {
       'componentList',
       'parametersList',
       'sortedSubStation',
+      'runningOrder',
+      'bomDetailsList',
     ]),
     recipeView: {
       get() {
@@ -212,7 +214,17 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('helper', ['setExtendedHeader', 'setTrecibilityState']),
     ...mapMutations('traceabilityApp', ['setRecipeViewState']),
-    ...mapActions('traceabilityApp', ['getSubStations', 'getComponentList', 'getSortedSubStations', 'getSubLines', 'getProcessElement', 'getProcessParameters', 'getParametersList']),
+    ...mapActions('traceabilityApp', [
+      'getSubStations',
+      'getComponentList',
+      'getSortedSubStations',
+      'getSubLines',
+      'getProcessElement',
+      'getProcessParameters',
+      'getParametersList',
+      'getRunningOrder',
+      'getBOMDetails',
+    ]),
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
       console.log(item);
@@ -326,6 +338,13 @@ export default {
     },
     async btnExportDemo() {
       this.saving = true;
+      // 1. Running order
+      // 2. Get BOM ID
+      // 3. Get assemblyid related Bom Details
+      await this.getRunningOrder('?query=orderstatus=="Running"');
+      console.log(this.runningOrder);
+      await this.getBOMDetails(`?query=bomid==${this.runningOrder[0].bomid}`);
+      console.log(this.bomDetailsList);
       console.log(this.$refs.process.processParametersList);
       console.log(this.$refs.process.headerForCSV);
       this.$refs.process.headerForCSV.push('subassemblyid');
@@ -344,10 +363,12 @@ export default {
         this.$refs.process.processParametersList.forEach((process) => {
           if (process.mainid === component.mainid) {
             process[component.componentname] = component.componentvalue;
+            component[component.componentname] = component.componentvalue;
             processSendDataArray.push(component);
           }
         });
       });
+      console.log(processSendDataArray);
       await this.getK2RouterData(processSendDataArray);
       const parameterSelected = this.$refs.process
         .processParametersList.map((item) => ({ ...item }));
@@ -381,17 +402,17 @@ export default {
     },
     async getK2RouterData(mainidList) {
       await Promise.all(mainidList.map(async (request) => {
-        // const processParametersheader = [];
-        // const processParametersListFirst = [];
-        // processParametersheader.push('createdTimestamp', 'mainid');
-        await this.getSubStations(`?query=sublineid=="${request.sublineid}"`);
+        const bomData = this.bomDetailsList.filter((bom) => bom.sublineid === request.sublineid
+          && bom.parametername === 'subassemblyid' && bom.substationid === request.substationid);
+        console.log(bomData);
+        await this.getSubStations(`?query=sublineid=="${bomData[0].boundsublineid}"`);
         await Promise.all(this.subStationList.map(async (s) => {
           const elementDetails = await this.getProcessElement(s.id);
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {
               if (element.tagName !== 'mainid') {
                 const data = this.$refs.process.headerForCSV
-                  .filter((p) => p.field === element.tagName);
+                  .filter((p) => p.field === `${s.name}_${element.tagName}`);
                 if (data.length === 0) {
                   this.$refs.process.headerForCSV.push(`${s.name}_${element.tagName}`);
                 }
@@ -402,7 +423,7 @@ export default {
             C%7Cparametercategory=="18")`);
             const processData = await this.getProcessParameters({
               elementname: s.id,
-              payload: `?query=mainid=="${request.mainid}"`,
+              payload: `?query=mainid=="${request.subassemblyid}"`,
             });
             if (this.$refs.process.processParametersList.find((pro) => pro
               .mainid === request.mainid)) {

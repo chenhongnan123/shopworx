@@ -17,6 +17,8 @@ export default ({
     trecibilityState: {},
     sortedSubStation: [],
     parametersList: [],
+    runningOrder: [],
+    bomDetailsList: [],
   },
   mutations: {
     setLineList: set('lineList'),
@@ -33,8 +35,34 @@ export default ({
     setTrecibilityState: set('trecibilityState'),
     setSortedSubStation: set('sortedSubStation'),
     setParametersList: set('parametersList'),
+    setRunningOrderList: set('runningOrder'),
+    setBOMDetailsList: set('bomDetailsList'),
   },
   actions: {
+    getRunningOrder: async ({ dispatch, commit }, query) => {
+      const runningOrderList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'order',
+          query,
+        },
+        { root: true },
+      );
+      commit('setRunningOrderList', runningOrderList);
+      return true;
+    },
+    getBOMDetails: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'bomdetails',
+          query,
+        },
+        { root: true },
+      );
+      commit('setBOMDetailsList', list);
+      return true;
+    },
     getPartStatus: async ({ dispatch, commit }, query) => {
       const part = await dispatch(
         'element/getRecords',
