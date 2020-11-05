@@ -10,7 +10,8 @@
     "ERROR_CREATING_BOM": "Error in creating BOM.",
     "BOM_NAME_PRESENT": "BOM name already present",
     "BOM_NUMBER_PRESENT": "BOM number already present",
-    "ERROR_UPDATING_COMPONENTSTATUS": "Error in updating Component Status"
+    "ERROR_UPDATING_COMPONENTSTATUS": "Error in updating Component Status.",
+    "ERROR_DATA_UPDATE": "Error in updating Data."
   },
   "success": {
     "CREATED_MATERIAL": "Material created.",
@@ -19,7 +20,8 @@
     "UPDATE_BOM": "BOM updated.",
     "MATERIAL_DELETED": "Material deleted.",
     "BOM_DELETED": "BOM deleted.",
-    "UPDATE_COMPONENTSTATUS": "Component Status updated."
+    "UPDATE_COMPONENTSTATUS": "Component Status updated.",
+    "DATA_UPDATED": "Data updated."
   },
   "planning": {
     "setup": {

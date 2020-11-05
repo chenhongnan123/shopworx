@@ -160,6 +160,7 @@ export default ({
       return station;
     },
     getSubStations: async ({ dispatch, commit }, query) => {
+      let list = [];
       const station = await dispatch(
         'element/getRecords',
         {
@@ -168,7 +169,12 @@ export default ({
         },
         { root: true },
       );
-      commit('setSubStationList', station);
+      if (station) {
+        list = station;
+        list = list.sort((a, b) => a.name - b.name);
+        console.log(list);
+      }
+      commit('setSubStationList', list);
       return station;
     },
     getSortedSubStations: async ({ dispatch, commit }, query) => {

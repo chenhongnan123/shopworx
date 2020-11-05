@@ -80,6 +80,11 @@
         <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
             Export
           </v-btn>
+          <v-btn small
+            :loading="saving"
+            color="primary" class="text-none ml-2" @click="btnExportDemo">
+            Export Demo
+          </v-btn>
         </v-toolbar>
     </portal>
     <!-- <v-toolbar
@@ -318,6 +323,145 @@ export default {
         message: 'DOWNLOADED',
       });
       return content;
+    },
+    async btnExportDemo() {
+      this.saving = true;
+      console.log(this.$refs.process.processParametersList);
+      console.log(this.$refs.process.headerForCSV);
+      this.$refs.process.headerForCSV.push('subassemblyid');
+      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
+      const toDate = new Date(this.trecibilityState.todate).getTime();
+      let param = '?query=componentname=="subassemblyid"&';
+      if (fromDate) {
+        param += `datefrom=${fromDate}&`;
+      }
+      if (toDate) {
+        param += `dateto=${toDate}&`;
+      }
+      const componenetData = await this.getComponentList(param);
+      const processSendDataArray = [];
+      componenetData.forEach((component) => {
+        this.$refs.process.processParametersList.forEach((process) => {
+          if (process.mainid === component.mainid) {
+            process[component.componentname] = component.componentvalue;
+            processSendDataArray.push(component);
+          }
+        });
+      });
+      await this.getK2RouterData(processSendDataArray);
+      const parameterSelected = this.$refs.process
+        .processParametersList.map((item) => ({ ...item }));
+      const column = this.$refs.process.headerForCSV;
+      const csvContent = [];
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(parameter[key]);
+        });
+        csvContent.push(arr);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: 'process_parameters.csv',
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, 'traceability.zip');
+      this.saving = false;
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'DOWNLOADED',
+      });
+      return content;
+    },
+    async getK2RouterData(mainidList) {
+      await Promise.all(mainidList.map(async (request) => {
+        // const processParametersheader = [];
+        // const processParametersListFirst = [];
+        // processParametersheader.push('createdTimestamp', 'mainid');
+        await this.getSubStations(`?query=sublineid=="${request.sublineid}"`);
+        await Promise.all(this.subStationList.map(async (s) => {
+          const elementDetails = await this.getProcessElement(s.id);
+          if (elementDetails) {
+            elementDetails.tags.forEach(async (element) => {
+              if (element.tagName !== 'mainid') {
+                const data = this.$refs.process.headerForCSV
+                  .filter((p) => p.field === element.tagName);
+                if (data.length === 0) {
+                  this.$refs.process.headerForCSV.push(`${s.name}_${element.tagName}`);
+                }
+              }
+            });
+            await this.getParametersList(`?query=substationid=="${s.id}"%26%26
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
+            C%7Cparametercategory=="18")`);
+            const processData = await this.getProcessParameters({
+              elementname: s.id,
+              payload: `?query=mainid=="${request.mainid}"`,
+            });
+            if (this.$refs.process.processParametersList.find((pro) => pro
+              .mainid === request.mainid)) {
+              const object = this.$refs.process.processParametersList.find((pp) => pp
+                .mainid === request.mainid);
+              this.$refs.process.processParametersList.splice(this.$refs
+                .process.processParametersList
+                .indexOf(object), 1);
+              const processDataObject = processData[0];
+              this.parametersList.forEach((para) => {
+                if (processDataObject && object) {
+                  if (processDataObject[para.name]) {
+                    object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                  } else {
+                    object[`${s.name}_${para.name}`] = 0;
+                  }
+                }
+              });
+              this.$refs.process.processParametersList.push(object);
+            } else {
+              const processDataObject = processData[0];
+              if (processDataObject) {
+                const object = {
+                  mainid: request.mainid,
+                  createdTimestamp: request.createdTimestamp,
+                };
+                this.parametersList.forEach((para) => {
+                  if (processDataObject[para.name]) {
+                    object[`${s.name}_${para.name}`] = processDataObject[para.name];
+                  } else {
+                    object[`${s.name}_${para.name}`] = 0;
+                  }
+                });
+                this.$refs.process.processParametersList.push(object);
+              }
+            }
+          }
+        }));
+        // const parameterSelected = this.$refs.process.processParametersList.map
+        // ((item) => ({ ...item }));
+        // const column = processParametersheader;
+        // const csvContent = [];
+        // parameterSelected.forEach((parameter) => {
+        //   const arr = [];
+        //   column.forEach((key) => {
+        //     arr.push(parameter[key]);
+        //   });
+        //   csvContent.push(arr);
+        // });
+        // const csvParser = new CSVParser();
+        // const content = csvParser.unparse({
+        //   fields: column,
+        //   data: csvContent,
+        // });
+        // this.addToZip({
+        //   fileName: `${request.sublineid}.csv`,
+        //   fileContent: content,
+        // });
+      }));
     },
     async btnComponentLogic() {
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();

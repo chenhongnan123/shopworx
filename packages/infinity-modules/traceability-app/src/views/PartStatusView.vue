@@ -93,7 +93,7 @@ export default {
         },
         {
           headerName: 'Sub station',
-          field: 'substationname',
+          field: 'substationid',
           resizable: true,
         },
         {
@@ -263,7 +263,7 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
-        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
+        param += `completedproductid=="${this.trecibilityState.searchMainID}"%26%26`;
         cFlag = 1;
       }
       // if (this.trecibilityState.selectedSubStation) {
@@ -271,14 +271,14 @@ export default {
       //   cFlag = 4;
       // }
       if (this.trecibilityState.selectedSubLine) {
-        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
+        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"%26%26`;
         cFlag = 2;
       }
       if (fromDate) {
-        param += `datefrom=${fromDate}&`;
+        param += `(modifiedtimestamp>=timestamp('${fromDate}')%26%26`;
       }
       if (toDate) {
-        param += `dateto=${toDate}&`;
+        param += `modifiedtimestamp<=timestamp('${toDate}')))&`;
       }
       // param += 'pagenumber=1&pagesize=20';
       param += 'sortquery=modifiedtimestamp==-1';

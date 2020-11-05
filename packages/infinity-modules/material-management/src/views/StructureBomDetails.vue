@@ -273,12 +273,24 @@ export default {
     await this.getMaterialListChoice('');
     await this.handleGetDetails();
     await this.getSublineList('');
+    // await this.configurationLogic();
     // await this.getSubStationList('');
     // this.getFilteredSubstation();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('bomManagement', ['getBomDetailsListRecords', 'getParameterList', 'createBomdetailList', 'deleteBomDetail', 'updateBomDetail', 'updateRecordById', 'getSublineList', 'getSubStationList']),
+    ...mapActions('bomManagement', [
+      'getBomDetailsListRecords',
+      'getParameterList',
+      'createBomdetailList',
+      'createBomDetailConfigList',
+      'deleteBomDetail',
+      'updateBomDetail',
+      'updateRecordById',
+      'getSublineList',
+      'getSubStationList',
+      'getSubStationListForConfigScreen',
+    ]),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getMaterialListChoice']),
     async getFilteredsubstation() {
       await this.getSubStationList('');
@@ -303,7 +315,25 @@ export default {
       });
       console.log(this.bomDetailList);
       if (this.bomDetailList.length === 0) {
-        this.handleGetData();
+        await this.handleGetData();
+        await this.getSubStationListForConfigScreen('');
+        this.subStationListForConfig.forEach(async (element) => {
+          const clist = [{
+            name: '-',
+          }];
+          clist.push(...await this.getParameterList(`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
+          element.componentStatusList = clist;
+          element.bomid = this.query.id;
+        });
+        console.log(this.subStationListForConfig);
+        let finalList = [];
+        if (this.subStationListForConfig && this.subStationListForConfig.length) {
+          finalList = this.subStationListForConfig.map((l) => ({
+            ...l,
+          }));
+        }
+        console.log(finalList);
+        // await this.createBomDetailConfigList(finalList);
       }
     },
     async checkSaveData(event, item) {
@@ -366,6 +396,8 @@ export default {
         this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       }
     },
+    // configurationLogic() {
+    // },
     async chanageStation(item) {
       const { stationSelected } = item;
       // const substationItem = this.substationList
@@ -537,7 +569,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList', 'substationList']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList', 'substationList', 'subStationListForConfig']),
     ...mapState('materialManagement', ['materialList', 'materialListChoice']),
   },
   props: ['query'],

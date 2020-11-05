@@ -56,6 +56,7 @@ export default {
       loading: false,
       isFullScreen: false,
       processParametersheader: [],
+      headerForCSV: [],
       headers: [
         {
           headerName: 'Created Date',
@@ -157,6 +158,7 @@ export default {
       ['getLines',
         'getSubLines',
         'getStations',
+        'getComponentList',
         'getSubStations',
         'getCheckOutLists',
         'getProcessElement',
@@ -237,8 +239,11 @@ export default {
     },
     async btnSearchProcessParameters() {
       this.processParametersList = [];
+      this.processParametersListFirst = [];
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
+      this.headerForCSV = [];
+      this.headerForCSV.push('createdTimestamp', 'mainid');
       this.processParametersheader = [];
       this.processParametersheader.push(
         {
@@ -337,6 +342,7 @@ export default {
                 const data = this.processParametersheader
                   .filter((p) => p.field === element.tagName);
                 if (data.length === 0) {
+                  this.headerForCSV.push(`${s.name}_${element.tagName}`);
                   this.processParametersheader.push(
                     {
                       headerName: `${s.name}_${element.tagDescription}`,
@@ -347,15 +353,21 @@ export default {
                 }
               }
             });
-            await this.getParametersList(`?query=substationid=="${s.id}"%26%26(parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
-            this.partStatusList.forEach(async (f) => {
+            await this.getParametersList(`?query=substationid=="${s.id}"%26%26
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
+            C%7Cparametercategory=="18")`);
+            await Promise.all(this.partStatusList.map(async (f) => {
+              // const componenetData = await this.getComponentList(`?query=mainid=="${f.mainid}"`);
+              // const subAssemblyIdData = componenetData.filter(
+              //  (id) => id.componentname === 'subassemblyid');
               const processData = await this.getProcessParameters({
                 elementname: s.id,
                 payload: `?query=mainid=="${f.mainid}"`,
               });
-              if (this.processParametersList.find((pro) => pro.mainid === f.mainid)) {
-                const object = this.processParametersList.find((pp) => pp.mainid === f.mainid);
-                this.processParametersList.splice(this.processParametersList.indexOf(object), 1);
+              if (this.processParametersListFirst.find((pro) => pro.mainid === f.mainid)) {
+                const object = this.processParametersListFirst.find((pp) => pp.mainid === f.mainid);
+                this.processParametersListFirst.splice(this.processParametersListFirst
+                  .indexOf(object), 1);
                 const processDataObject = processData[0];
                 this.parametersList.forEach((para) => {
                   if (processDataObject && object) {
@@ -366,14 +378,25 @@ export default {
                     }
                   }
                 });
-                this.processParametersList.push(object);
+                this.processParametersListFirst.push(object);
               } else {
                 const processDataObject = processData[0];
                 if (processDataObject) {
                   const object = {
                     mainid: f.mainid,
                     createdTimestamp: f.createdTimestamp,
+                    subassemblyid1: '',
+                    subassemblyid2: '',
                   };
+                  // if (subAssemblyIdData.lenght > 0) {
+                  //   this.headerForCSV.push('subassemblyid1', 'subassemblyid2');
+                  //   if (subAssemblyIdData.lenght === 1) {
+                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
+                  //   } else {
+                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
+                  //     object.subassemblyid2 = subAssemblyIdData[1].componentvalue;
+                  //   }
+                  // }
                   this.parametersList.forEach((para) => {
                     if (processDataObject[para.name]) {
                       object[`${s.name}_${para.name}`] = processDataObject[para.name];
@@ -381,38 +404,39 @@ export default {
                       object[`${s.name}_${para.name}`] = 0;
                     }
                   });
-                  this.processParametersList.push(object);
+                  this.processParametersListFirst.push(object);
                 }
               }
-            });
-            // if (processData) {
-            // const finalData = processData.map((l) => ({
-            //   ...l,
-            //   substationname: s.name,
-            // }));
-            // if (this.processParametersList.length === 0) {
-            //   const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
-            //   if (check.length !== 0) {
-            //     this.processParametersList = finalData;
-            //   }
-            // } else {
-            //   finalData.forEach((f) => {
-            //     const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
-            //     if (checkData.length !== 0) {
-            //       this.processParametersList.push(f);
-            //     }
-            //   });
-            // }
-            // if (this.processParametersList.length === 0) {
-            //   this.processParametersList = finalData;
-            // } else {
-            //   finalData.forEach((f) => {
-            //     this.processParametersList.push(f);
-            //   });
-            // }
+            }));
+          //   if (processData) {
+          //   const finalData = processData.map((l) => ({
+          //     ...l,
+          //     substationname: s.name,
+          //   }));
+          //   if (this.processParametersList.length === 0) {
+          //     const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
+          //     if (check.length !== 0) {
+          //       this.processParametersList = finalData;
+          //     }
+          //   } else {
+          //     finalData.forEach((f) => {
+          //       const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
+          //       if (checkData.length !== 0) {
+          //         this.processParametersList.push(f);
+          //       }
+          //     });
+          //   }
+          //   if (this.processParametersList.length === 0) {
+          //     this.processParametersList = finalData;
+          //   } else {
+          //     finalData.forEach((f) => {
+          //       this.processParametersList.push(f);
+          //     });
+          //   }
           // }
           }
         }));
+        this.processParametersList = this.processParametersListFirst;
         console.log(this.processParametersList);
         this.gridApi = this.gridOptions.api;
         this.gridApi.expandAll();

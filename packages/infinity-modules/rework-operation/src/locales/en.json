@@ -30,7 +30,7 @@
     "MAINID_NOT_PRESENT": "MainId doesn't Exists.",
     "EITHER_DATE_EMPTY": "Either one of {from Date} OR {to Date} is empty!",
     "SELECT_DATE": "Please Select Date.",
-    "NO_SUMMARY": "No Summary Data Found!",
+    "NO_SUMMARY": "No NG-Code found for this Mainid!",
     "NO_PRODUCT_TYPE": "Product Type is not same for Running order",
     "ALREADY_REWORK": "Already rework selected.",
     "BOUND_STATUS_NOT_PRESENT": "Not Bound station",

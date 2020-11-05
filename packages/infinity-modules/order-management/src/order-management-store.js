@@ -545,7 +545,7 @@ export default ({
         'element/getRecords',
         {
           elementName: 'order',
-          query: '?query=visible==true',
+          query,
         },
         { root: true },
       );
@@ -558,7 +558,7 @@ export default ({
         'element/getRecords',
         {
           elementName: 'ordercount',
-          query,
+          query: '',
         },
         { root: true },
       );
@@ -583,6 +583,10 @@ export default ({
           item.ngcount = modesNg.length;
         }
       });
+
+      const object = orders.find((f) => f.orderstatus === 'Running');
+      orders.splice(orders.indexOf(object), 1);
+      orders.splice(0, 0, object);
       let orderUpdate = [];
       if (orders && orders.length) {
         orderUpdate = orders.map((l) => ({

@@ -28,6 +28,7 @@
             hide-details
             v-model="selectedOrderName"
             name="ordername"
+            return-object
             label="Order Name"
             item-text="ordername"
             @change="onOrderNameSelection()"
@@ -104,15 +105,16 @@ export default {
     ...mapActions('orderManagement', ['getOrderListRecords']),
     btnApply() {
       if (this.flag) {
-        this.getOrderListRecords(`?query=ordername=="${this.selectedOrderName}"`);
+        this.getOrderListRecords(`?query=ordernumber=="${this.selectedOrderName.ordernumber}"`);
       } else {
         this.getOrderListRecords(`?query=orderstatus=="${this.orderStatusText(this.orderStatusSelected)}"`);
       }
+      this.toggleFilter();
     },
     btnReset() {
       this.orderStatusSelected = null;
       this.selectedOrderName = null;
-      this.getOrderListRecords('');
+      this.getOrderListRecords('?query=visible==true');
       this.toggleFilter();
     },
     orderStatusText(orderstatusnumber) {

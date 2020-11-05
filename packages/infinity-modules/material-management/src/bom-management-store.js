@@ -158,6 +158,7 @@ export default ({
       if (bomdetails && bomdetails.length) {
         bomDetailsList = bomdetails.map((l) => ({
           ...l,
+          componentStatusList: [],
           configstatus: [{
             text: 'Update quality',
             name: 'qualitystatus',
@@ -198,13 +199,31 @@ export default ({
       }
     },
     getSubStationListForConfigScreen: async ({ commit, dispatch }, query) => {
-      const list = [];
+      let list = [];
       const substationList = await dispatch(
         'element/getRecords',
         { elementName: 'substation', query },
         { root: true },
       );
-      substationList.forEach(async (f) => {
+      if (substationList && substationList.length) {
+        list = substationList.map((l) => ({
+          ...l,
+          componentStatusList: [],
+          bomid: 0,
+          configstatus: [{
+            text: 'Update quality',
+            name: 'qualitystatus',
+          }, {
+            text: 'Save ID',
+            name: 'savedata',
+          }, {
+            text: 'Component Status',
+            name: 'componentstatus',
+          }],
+        }));
+      }
+      console.log(list);
+      list.forEach(async (f) => {
         const parameterList = await dispatch(
           'element/getRecords',
           {
@@ -213,22 +232,17 @@ export default ({
           },
           { root: true },
         );
-        if (parameterList) {
-          parameterList.forEach((p) => {
-            const object = {
-              lineid: f.lineid,
-              sublineid: f.sublineid,
-              stationid: f.stationid,
-              id: f.id,
-              name: f.name,
-              parametername: p.name,
-            };
-            list.push(object);
+        parameterList.forEach((element) => {
+          f.configstatus.forEach((status) => {
+            if (status.name === 'componentstatus') {
+              f[`${status.name}_component_${element.name}`] = '';
+            } else {
+              f[`${status.name}_component_${element.name}`] = false;
+            }
           });
-        } else {
-          list.push(f);
-        }
+        });
       });
+      console.log(list);
       commit('setSubStationListForConfig', list);
     },
     getSubStationList: async ({ commit, dispatch }, query) => {
@@ -309,6 +323,17 @@ export default ({
         'element/postBulkRecords',
         {
           elementName: 'bomdetails',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+    createBomDetailConfigList: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'bomdetailsconfig',
           payload,
         },
         { root: true },

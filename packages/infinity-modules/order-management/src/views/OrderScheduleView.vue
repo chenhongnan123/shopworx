@@ -223,7 +223,7 @@ export default {
     };
   },
   async created() {
-    await this.getOrderListRecords('');
+    await this.getOrderListRecords('?query=visible==true');
     this.orders = [];
   },
   computed: {
@@ -254,7 +254,7 @@ export default {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },
     async RefreshUI() {
-      await this.getOrderListRecords('');
+      await this.getOrderListRecords('?query=visible==true');
       this.orders = [];
     },
     async archiveRecord() {
@@ -266,7 +266,7 @@ export default {
         };
         const updated = await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
         if (updated) {
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orders = [];
           this.setAlert({
             show: true,
@@ -317,7 +317,7 @@ export default {
             indexno: this.orders[0].indexno,
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -358,7 +358,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -394,7 +394,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -429,7 +429,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,

@@ -75,7 +75,7 @@ export default {
         },
         {
           headerName: 'Sub station',
-          field: 'substationname',
+          field: 'substationid',
           resizable: true,
         },
         {

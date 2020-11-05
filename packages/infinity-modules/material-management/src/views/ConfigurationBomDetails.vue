@@ -71,7 +71,7 @@
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="bomDetailList"
+        :items="subStationListForConfig"
         item-key="id"
         class="tableContainer mt-2"
         >
@@ -87,7 +87,7 @@
               {{ item.station }}
             </td>
             <td>
-              {{ item.substation }}
+              {{ item.name }}
             </td>
             <td>
               <div v-for="(status, i) in item.configstatus" :key="i">
@@ -98,9 +98,30 @@
               <div v-for="(value, key) in componentValues" :key="key">
                 <v-checkbox
                   v-if="typeof value === 'boolean'"
+                  :input-value="value"
                   hide-details
+                  @change="checkSaveDataQualityStatus($event, item, key)"
                 ></v-checkbox>
-                <v-text-field v-else :value="value" dense hide-details></v-text-field>
+                <v-select
+                  v-else
+                  label="-"
+                  :items="item.componentStatusList"
+                  return-object
+                  solo
+                  dense
+                  depressed
+                  item-text="name"
+                  item-value="name"
+                  :value="value"
+                  @change="chanageComponentStatus(item)"
+                >
+                <template v-slot:item="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.name"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-select>
+                <!-- <v-text-field v-else :value="value" dense hide-details></v-text-field> -->
               </div>
             </td>
           </tr>
@@ -138,7 +159,7 @@ export default {
         },
         {
           text: 'Substation',
-          value: 'substation',
+          value: 'name',
         },
         {
           text: 'Config Status',
@@ -159,6 +180,15 @@ export default {
   props: ['query'],
   async created() {
     await this.handleGetDetails();
+    await this.getSubStationListForConfigScreen('');
+    this.subStationListForConfig.forEach(async (element) => {
+      const clist = [{
+        name: '-',
+      }];
+      clist.push(...await this.getParameterList(`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
+      element.componentStatusList = clist;
+    });
+    console.log(this.subStationListForConfig);
     // await this.getSubStationListForConfigScreen('');
     // console.log(this.substationList);
   },
@@ -199,19 +229,19 @@ export default {
     },
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
-      console.log(bomdetailList);
       this.bomDetailList = bomdetailList;
       // const parametersList =
-      this.bomDetailList.forEach(async (bom) => {
-        // set component status list to everystation
-        // bom.componentStatusList = await this.getParameterList
-        // (`?query=substationid=="${bom.substationid}"%26%26parametercategory=="32"`);
-        const list = [{
-          name: '-',
-        }];
-        list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
-        bom.componentStatusList = list;
-      });
+      // this.bomDetailList.forEach(async (bom) => {
+      //   // set component status list to everystation
+      //   // bom.componentStatusList = await this.getParameterList
+      //   // (`?query=substationid=="${bom.substationid}"%26%26parametercategory=="32"`);
+      //   const list = [{
+      //     name: '-',
+      //   }];
+      //   list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}
+      // "%26%26parametercategory=="46"`));
+      //   bom.componentStatusList = list;
+      // });
       bomdetailList.forEach((element) => {
         if (!this.headers.find((f) => f.text === element.parametername)) {
           this.headers.push(
@@ -225,23 +255,36 @@ export default {
       const detail = {};
       bomdetailList.forEach((element) => {
         element.configstatus.forEach((status) => {
+          console.log(status.name);
+          console.log(element[status.name]);
           if (status.name === 'componentstatus') {
             detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
           } else {
-            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || false;
+            if (element[status.name]) {
+              detail[`${status.name}_component_${element.parametername}`] = element[status.name];
+            } else {
+              detail[`${status.name}_component_${element.parametername}`] = false;
+            }
+            console.log('');
           }
-          console.log({
-            config: status.name,
-            component: element.parametername,
-            value: element[status.name],
-          });
+          // console.log({
+          //   config: status.name,
+          //   component: element.parametername,
+          //   value: element[status.name],
+          // });
         });
       });
       const newList = [];
-      bomdetailList.forEach((element) => {
+      bomdetailList.forEach(async (element) => {
+        const list = [{
+          name: '-',
+        }];
+        list.push(...await this.getParameterList(`?query=substationid=="${element.substationid}"%26%26parametercategory=="46"`));
+        element.componentStatusList = list;
         newList.push({ ...element, ...detail });
       });
       this.bomDetailList = newList;
+      console.log(newList);
     },
     async searchData() {
       let param = `?query=bomid==${this.query.id}`;
@@ -266,12 +309,39 @@ export default {
         list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
         bom.componentStatusList = list;
       });
+      bomdetailList.forEach((element) => {
+        if (!this.headers.find((f) => f.text === element.parametername)) {
+          this.headers.push(
+            {
+              text: element.parametername,
+              value: `component_${element.parametername}`,
+            },
+          );
+        }
+      });
+      const detail = {};
+      bomdetailList.forEach((element) => {
+        element.configstatus.forEach((status) => {
+          if (status.name === 'componentstatus') {
+            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
+          } else {
+            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || false;
+          }
+        });
+      });
+      const newList = [];
+      bomdetailList.forEach((element) => {
+        newList.push({ ...element, ...detail });
+      });
+      this.bomDetailList = newList;
     },
-    async checkSaveData(event, item) {
+    async checkSaveDataQualityStatus(event, item, key) {
+      // key = "qualitystatus_component_pcbaid"
+      // const data = key.split('_component_');
       const payload = {
         id: item._id,
         payload: {
-          savedata: event,
+          [key]: event,
         },
       };
       this.saving = true;
@@ -281,13 +351,13 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'UPDATE_SUBSTATION',
+          message: 'DATA_UPDATED',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_UPDATING_SUBSTATION',
+          message: 'ERROR_DATA_UPDATE',
         });
       }
     },
