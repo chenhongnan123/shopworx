@@ -2,7 +2,7 @@
   <v-container fluid class="py-0">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
-        <portal to="app-header">Model Management</portal>
+        <portal to="app-header">ML Model</portal>
         <v-row>
           <v-col cols="2" md="2" lg="2">
             <v-combobox
@@ -76,6 +76,8 @@
       <v-col cols="4" md="4" lg="4">
         <v-card v-if="inputProcessParameters.length" class="pa-2" tile outlined style="width: 98%">
           {{selectedProcess}} : Input
+          <v-btn style="float: right; width: 15%; margin-bottom: 10px;"
+            v-if="selectedInput" @click="onAddbtnClick()">+</v-btn>
           <v-select
             v-for="(input, index) in inputArr"
             :key="input._id"
@@ -86,16 +88,28 @@
             item-text="name"
             return-object
             v-model="selectedInput[index]"
-            style="width: 90%; padding-top: 10px;"
+            style="width: 100%;"
           >
           </v-select>
-          <v-btn v-if="selectedInput" @click="onAddbtnClick()">+</v-btn>
         </v-card>
-        <v-card v-else class="pa-2" tile outlined style="text-align: center;">
+        <v-card v-else class="pa-2" tile outlined style="text-align: center; width: 98%">
           Data Not available</v-card>
       </v-col>
       <v-col cols="4" md="4" lg="4">
-        <v-card class="pa-2" tile outlined style="width: 98%">Card 2</v-card>
+        <v-card class="pa-2" tile outlined style="width: 98%"> Machine Learning Model
+          <v-textarea outlined style="margin-top: 10px;margin-left: 10px;margin-right: 10px;"
+            v-model="description">
+            <template v-slot:label>
+              <div>Description</div>
+            </template>
+          </v-textarea>
+          <v-text-field
+            outlined
+            style="margin-top: -16px;margin-left: 10px;margin-right: 10px;"
+            v-model="path"
+            label="Path"
+            ></v-text-field>
+        </v-card>
       </v-col>
       <v-col cols="4" md="4" lg="4">
         <v-card class="pa-2" tile outlined style="width: 98%">Card 3</v-card>
@@ -122,10 +136,14 @@ export default {
     onAddbtnClick() {
       this.inputArr = [{ name: '' }];
       for (let index = 0; index < this.selectedInput.length; index += 1) {
-        this.inputArr.push({ name: this.selectedInput[index] });
-        // this.inputProcessParameters.splice(indexOf() + 1, 1);
-        // console.log(this.selectedInput.indexOf(this.selectedInput[index]));
+        this.inputArr.push({ name: this.selectedInput[0] });
       }
+      // console.log(this.selectedInput);
+      // for (let index = 0; index < this.inputProcessParameters.length; index += 1) {
+      // this.filteredInput = this.inputProcessParameters
+      //   .splice(this.inputProcessParameters.indexOf(this.selectedInput[0]), 1);
+      // }
+      // console.log(this.filteredInput);
     },
     onProcessClick(process) {
       const paramterSelected = [];
@@ -138,6 +156,7 @@ export default {
       paramterSelected.forEach((parameter) => {
         if (parameter.line === this.selectedLine.name) {
           this.inputProcessParameters.push(parameter.description);
+          // this.filteredInput = this.inputProcessParameters;
         } else {
           this.inputProcessParameters = [];
         }
@@ -157,6 +176,9 @@ export default {
       inputArr: [{
         name: '',
       }],
+      filteredInput: null,
+      description: null,
+      path: null,
     };
   },
   async created() {
@@ -173,11 +195,6 @@ export default {
         this.onLineChange();
       },
     },
-    // selectedProcess: {
-    //   handler() {
-    //     this.onProcessClick(this.selectedProcess);
-    //   },
-    // },
   },
 };
 </script>
