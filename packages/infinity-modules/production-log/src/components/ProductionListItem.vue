@@ -2,18 +2,20 @@
   <v-card outlined>
     <v-card-title>
       <div>
-        {{ production.planid }}
-      </div>
-      <v-spacer></v-spacer>
-      <div>
         {{ new Date(production.firstcycle).toLocaleTimeString('en-US') }}
         to
         {{ new Date(production.lastcycle).toLocaleTimeString('en-US') }}
       </div>
     </v-card-title>
     <v-card-text>
-      <v-row no-gutters >
+      <v-row no-gutters>
         <v-col cols="12" sm="6">
+          <div class="body-2">
+            Plan
+          </div>
+          <div class="text-uppercase title font-weight-regular mb-2">
+            {{ production.planid }}
+          </div>
           <div class="body-2">
             Shift
           </div>
@@ -27,73 +29,85 @@
             {{ production.partname }}
           </div>
         </v-col>
-        <v-col cols="12" sm="2">
-          <div class="body-2">
-            Produced
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 info--text">
-            {{ production.produced }}
-          </div>
-          <div class="body-2">
-            Accepted
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 success--text">
-            {{ production.accepted }}
-          </div>
-        </v-col>
-        <v-col cols="12" sm="2">
-          <div class="body-2">
-            Rejected
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 error--text">
-            {{ production.rejected }}
-          </div>
-          <div class="body-2">
-            Rework
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 error--text">
-            {{ production.rejected }}
-          </div>
-        </v-col>
-        <v-col cols="12" sm="2">
-          <div class="body-2">
-            Scrap (in Kgs)
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-            {{ production.accepted }}
-          </div>
+        <v-col cols="12" sm="6">
+          <v-row no-gutters>
+            <v-col cols="12" sm="4">
+              <div class="body-2">
+                Produced
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 info--text">
+                {{ production.produced }}
+              </div>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <div class="body-2">
+                Accepted
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 success--text">
+                {{ production.accepted }}
+              </div>
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="12" sm="4">
+              <div class="body-2">
+                Rejected
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 error--text">
+                {{ production.rejected }}
+                <v-btn
+                  small
+                  outlined
+                  color="primary"
+                  class="text-none float-right mr-4"
+                >
+                  <v-icon left>mdi-update</v-icon>
+                  Update
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <div class="body-2">
+                Rework
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 error--text">
+                {{ production.rejected }}
+                <v-btn
+                  small
+                  outlined
+                  color="primary"
+                  class="text-none float-right mr-4"
+                >
+                  <v-icon left>mdi-update</v-icon>
+                  Update
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <div class="body-2">
+                Scrap (in Kgs)
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 warning--text">
+                {{ production.accepted }}
+                <v-btn
+                  small
+                  outlined
+                  color="primary"
+                  class="text-none float-right mr-4"
+                >
+                  <v-icon left>mdi-update</v-icon>
+                  Update
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <production-rejections :production="production"/>
-      <v-btn
-        small
-        outlined
-        color="primary"
-        class="text-none"
-      >
-        <v-icon left>mdi-plus</v-icon>
-        Re-works
-      </v-btn>
-      <v-btn
-        small
-        outlined
-        color="primary"
-        class="text-none"
-      >
-        <v-icon left>mdi-plus</v-icon>
-        Scrap
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import ProductionRejections from './ProductionRejections.vue';
-
 export default {
   name: 'ProductionListItem',
   props: {
@@ -102,11 +116,7 @@ export default {
       required: true,
     },
   },
-  components: {
-    ProductionRejections,
-  },
   computed: {
-    ...mapState('productionLog', ['toggleSelection', 'selectedProductions']),
     duration() {
       const d = this.production.productionduration;
       const h = Math.floor(d / 3600);
@@ -114,11 +124,6 @@ export default {
       const s = Math.floor((d % 3600) % 60);
       return `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
     },
-  },
-  methods: {
-    ...mapMutations('productionLog', [
-      'setSelectedProductions',
-    ]),
   },
 };
 </script>

@@ -16,23 +16,26 @@
         class="headline ml-4 font-weight-medium"
         v-for="(shiftData, shiftKey, i) in production"
       >
-        {{ shiftKey }}
+        <span class="primary--text">
+          {{ shiftKey }}
+        </span>
         <div
           :key="j"
-          class="title mt-2 font-weight-medium"
+          class="mt-2"
           v-for="(machineData, machineKey, j) in shiftData"
         >
-          <span class="primary--text">
-            {{ machineKey }} |
-            <v-btn small outlined color="primary" class="text-none">
-              <v-icon small left>mdi-account-hard-hat</v-icon>
-              Suresh
-              <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-            </v-btn>
+          <span class="title">
+            {{ machineKey }}
+          </span>
+          <span class="title float-right mr-4">
+            <edit-shift-operator
+              :shift="shiftKey"
+              :machine="machineKey"
+            />
           </span>
           <div
             :key="k"
-            class="mb-4"
+            class="mb-4 mt-2"
             v-for="(productionList, k) in machineData"
           >
             <production-list-item
@@ -52,6 +55,7 @@ import ProductionLoading from './ProductionLoading.vue';
 import ProductionError from './ProductionError.vue';
 import ProductionNoRecords from './ProductionNoRecords.vue';
 import ProductionListItem from './ProductionListItem.vue';
+import EditShiftOperator from './EditShiftOperator.vue';
 
 export default {
   name: 'ProductionList',
@@ -60,12 +64,14 @@ export default {
     ProductionError,
     ProductionNoRecords,
     ProductionListItem,
+    EditShiftOperator,
   },
   computed: {
     ...mapState('productionLog', [
       'loading',
       'error',
       'selectedDate',
+      'operators',
     ]),
     ...mapGetters('productionLog', ['production']),
   },

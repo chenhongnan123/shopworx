@@ -65,7 +65,7 @@ export default {
       await this.getAppSchema();
       this.setExtendedHeader(true);
     }
-    await this.fetchProductionReasons();
+    await this.fetchOperators();
     this.loading = false;
   },
   methods: {
@@ -73,7 +73,7 @@ export default {
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('productionLog', [
       'getOnboardingState',
-      'fetchProductionReasons',
+      'fetchOperators',
       'fetchProductionList',
     ]),
     refreshProductions() {

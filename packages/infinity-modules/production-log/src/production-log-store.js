@@ -1,5 +1,5 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
-import { sortAlphaNum } from '@shopworx/services/util/sort.service';
+import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
@@ -13,31 +13,14 @@ export default ({
     selectedMachine: null,
     selectedShift: null,
     selectedDate: null,
-    selectedDuration: null,
-    selectedType: null,
     selectedSort: null,
     productionList: [],
     loading: false,
     error: false,
-    productionReasons: [],
     productionCount: 0,
-    toggleSelection: false,
-    selectedProductions: [],
+    operators: [],
   },
   mutations: {
-    setSelectedProductions: (state, payload) => {
-      if (payload.selected) {
-        state.selectedProductions.push(payload);
-      } else {
-        // eslint-disable-next-line
-        const index = state.selectedProductions.findIndex((item) => item._id === payload.id);
-        state.selectedProductions.splice(index, 1);
-      }
-    },
-    clearCheckedItems: (state) => {
-      state.selectedProductions = [];
-    },
-    setToggleSelection: set('toggleSelection'),
     setDrawer: set('drawer'),
     toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
@@ -46,16 +29,14 @@ export default ({
     setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
-    setSelectedDuration: set('selectedDuration'),
-    setSelectedType: set('selectedType'),
     setSelectedSort: set('selectedSort'),
     setLoading: set('loading'),
     setError: set('error'),
-    setProductionReasons: set('productionReasons'),
     setProductionCount: set('productionCount'),
     setFilters: set('filters'),
     setSort: set('sort'),
     setProductionList: set('productionList'),
+    setOperators: set('operators'),
   },
   actions: {
     fetchMachines: async ({ commit, dispatch }) => {
@@ -91,14 +72,15 @@ export default ({
       return false;
     },
 
-    fetchProductionReasons: async ({ commit, dispatch }) => {
+    fetchOperators: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        { elementName: 'productionreasons' },
+        { elementName: 'operator' },
         { root: true },
       );
       if (records) {
-        commit('setProductionReasons', records);
+        const operators = sortArray(records, 'operatorcode');
+        commit('setOperators', operators);
         return true;
       }
       return false;
@@ -138,6 +120,35 @@ export default ({
         commit('setError', true);
       }
       commit('setLoading', false);
+    },
+
+    fetchHourlyProduction: async ({ dispatch, state, rootState }, {
+      machine,
+      part,
+      shift,
+    }) => {
+      const { selectedDate } = state;
+      const { activeSite } = rootState.user;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'hourlyproductionlog',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftFilter: `{${shift}}`,
+            machineFilter: `{${machine}}`,
+            partFilter: `{${part}}`,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { production } = JSON.parse(data);
+        return production;
+      }
+      return false;
     },
 
     updateReason: async ({ dispatch, commit, state }, { id, payload }) => {

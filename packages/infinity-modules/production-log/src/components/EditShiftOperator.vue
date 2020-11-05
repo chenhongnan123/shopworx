@@ -1,48 +1,49 @@
 <template>
-  <v-autocomplete
+  <v-combobox
     dense
     outlined
+    label="Operator"
     hide-details
     return-object
-    class="primary--text"
-    :items="downtimeReasons"
-    item-text="reasonname"
-    item-value="reasonname"
-    v-model="selectedReason"
+    :items="operators"
+    item-text="operatorname"
+    item-value="operatorcode"
+    prepend-inner-icon="mdi-account-hard-hat"
   >
     <template #selection="data">
-      {{ data.item.reasonname }}
+      {{ data.item.operatorcode }} | {{ data.item.operatorname }}
     </template>
     <template #item="data">
       <v-list-item-content>
         <v-list-item-title>
-          {{ data.item.reasonname }}
+          {{ data.item.operatorname }}
         </v-list-item-title>
-        <v-list-item-subtitle
-          v-text="data.item.category"
-        ></v-list-item-subtitle>
-        <v-list-item-subtitle
-          v-text="data.item.department"
-        ></v-list-item-subtitle>
+        <v-list-item-subtitle>
+          {{ data.item.operatorcode }}
+        </v-list-item-subtitle>
       </v-list-item-content>
     </template>
-  </v-autocomplete>
+  </v-combobox>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'EditDowntimeReason',
+  name: 'EditShiftOperator',
   props: {
-    downtime: {
-      type: Object,
+    shift: {
+      type: String,
+      required: true,
+    },
+    machine: {
+      type: String,
       required: true,
     },
   },
   computed: {
-    ...mapState('downtimeLog', ['downtimeReasons']),
-    selectedReason: {
+    ...mapState('productionLog', ['operators']),
+    /* selectedOperator: {
       get() {
         return this.downtime.reasonname;
       },
@@ -58,16 +59,16 @@ export default {
           category,
           department,
         };
-        this.updateReason({
+        this.updateOperator({
         // eslint-disable-next-line
           id: this.downtime._id,
           payload,
         });
       },
-    },
+    }, */
   },
   methods: {
-    ...mapActions('downtimeLog', ['updateReason']),
+    ...mapActions('productionLog', ['updateOperator']),
   },
 };
 </script>
