@@ -1,3 +1,9 @@
 {
-  "modelManagement": "Home"
+  "modelManagement": "Home",
+  "success": {
+    "MODEL_DEPLOYED": "Model deployed succussfuly."
+  },
+  "error": {
+    "ERROR_DEPLOYMODEL": "Error in deplying model."
+  }
 }

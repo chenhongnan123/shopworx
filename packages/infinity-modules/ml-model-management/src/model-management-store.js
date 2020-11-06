@@ -8,6 +8,10 @@ export default ({
     processes: [],
     sublines: [],
     subStations: [],
+    mlTransformationOutputList: [],
+    processOutputList: [],
+    processIntputList: [],
+    processModelList: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -15,8 +19,144 @@ export default ({
     setProcesses: set('processes'),
     setSublines: set('sublines'),
     setSubStations: set('subStations'),
+    setMlTransformationOutputList: set('mlTransformationOutputList'),
+    setProcessOutputList: set('processOutputList'),
+    setProcessInputList: set('processIntputList'),
+    setProcessModelList: set('processModelList'),
   },
   actions: {
+    addOutputRecordss: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'processoutputs',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    addDeployModel: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'modeldeploymentorder',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    addInputRecords: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'processinputs',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    addProcessModel: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'processmodels',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    getModelRecords: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'processmodels',
+          query,
+        },
+        { root: true },
+      );
+      if (list) {
+        commit('setProcessModelList', list);
+      }
+      return list;
+    },
+    getOutputRecords: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'processoutputs',
+          query,
+        },
+        { root: true },
+      );
+      if (list) {
+        commit('setProcessOutputList', list);
+      }
+      return list;
+    },
+    getInputRecords: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'processinputs',
+          query,
+        },
+        { root: true },
+      );
+      if (list) {
+        commit('setProcessInputList', list);
+      }
+      return list;
+    },
+    deleteOutputRecords: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'processoutputs',
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
+    },
+    deleteModel: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'processmodels',
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
+    },
+    getMlTransformationOutputList: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'mltransformationoutput',
+          query,
+        },
+        { root: true },
+      );
+      commit('setMlTransformationOutputList', list);
+      return true;
+    },
     getLines: async ({ dispatch, commit }, query) => {
       const lineList = await dispatch(
         'element/getRecords',
@@ -75,12 +215,21 @@ export default ({
       if (list && list.length) {
         subStations = list.map((l) => ({
           ...l,
-          stationcolor: 0,
-          // numberIndex: index + 1,
         }));
       }
       commit('setSubStations', subStations);
       return true;
+    },
+    deleteInput: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'processinputs',
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
     },
   },
 });
