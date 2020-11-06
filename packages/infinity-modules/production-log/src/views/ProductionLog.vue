@@ -98,6 +98,10 @@ export default {
   watch: {
     async elementOnboarded(val) {
       if (val) {
+        await Promise.all([
+          this.getAppSchema(),
+          this.fetchOperators(),
+        ]);
         this.setExtendedHeader(true);
       }
     },
