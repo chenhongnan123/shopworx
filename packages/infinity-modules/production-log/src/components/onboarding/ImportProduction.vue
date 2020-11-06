@@ -101,7 +101,6 @@ export default {
     },
     onFilesChanged(e) {
       this.files = e && e !== undefined ? e.target.files : null;
-      // e.target.value = '';
       if (this.files && this.files.length) {
         this.window = 1;
         this.filesImported = true;
@@ -112,7 +111,6 @@ export default {
     },
     async downloadZip() {
       this.downloading = true;
-      // await this.getMasterElements();
       const success = await this.getMasterData();
       if (success) {
         this.masterList = this.masterData;

@@ -159,7 +159,6 @@ export default {
     },
     onFileChanged(e) {
       const file = e && e !== undefined ? e.target.files[0] : null;
-      // e.target.value = '';
       if (file) {
         this.$emit('file-imported', file);
         this.dialog = false;

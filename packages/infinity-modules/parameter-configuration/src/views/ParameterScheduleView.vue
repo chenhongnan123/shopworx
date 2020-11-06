@@ -579,13 +579,9 @@ export default {
       }
       let selectedDatatypeItem = {};
       const parameterItem = parameterListSave.filter((parameter) => item._id === parameter._id)[0];
-      // let query = `?query=id=="${parameterItem.id}"`;
       const payload = {};
       if (type === 'datatype') {
         [selectedDatatypeItem] = this.datatypeList.filter((datatype) => value === datatype.id);
-        // query = `?query=id=="${parameterItem.id}"&isbigendian==
-        // ${selectedDatatypeItem.isbigendian === 1}
-        // &isswapped==${selectedDatatypeItem.isswapped === 1}`;
         payload.isbigendian = selectedDatatypeItem.isbigendian === 1;
         payload.isswapped = selectedDatatypeItem.isswapped === 1;
         if (selectedDatatypeItem.name !== 'Boolean' && selectedDatatypeItem.name !== 'String') {
@@ -612,7 +608,6 @@ export default {
       const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
       await this.getSubStationIdElement(selectedSubStaionlist[0]);
       const listT = this.subStationElementDeatils;
-      // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
       const payloadData = [];
       FilteredTags.forEach(async (tag) => {
@@ -650,7 +645,6 @@ export default {
       }
     },
     RefreshUI() {
-      // await this.getParameterListRecords(this.getQuery());
       this.downloadFromPLC();
     },
     async downloadFromPLC() {
@@ -712,10 +706,7 @@ export default {
         'dbaddress',
         'startaddress',
         'size',
-        // 'isconversion',
         'multiplicationfactor',
-        // 'divisionfactor',
-        // 'currentvalue',
         'parameterunit',
         'parametercategory',
         'plcaddress',
@@ -761,10 +752,7 @@ export default {
         'dbaddress',
         'startaddress',
         'size',
-        // 'isconversion',
         'multiplicationfactor',
-        // 'divisionfactor',
-        // 'currentvalue',
         'parameterunit',
         'parametercategory',
         'plcaddress',
@@ -888,7 +876,6 @@ export default {
           await this.getParameterListRecords(this.getQuery());
           const tagList = [];
           await this.getSubStationIdElement(this.substationValue);
-          // add by default mainid
           tagList.push({
             assetId: 4,
             tagName: 'mainid',
@@ -969,7 +956,6 @@ export default {
           tagList.forEach((l) => {
             const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
-              // console.log(tag[0].tagId);
               payloadData.push({
                 elementId: l.elementId,
                 tagId: tag[0].tagId,
@@ -1007,9 +993,6 @@ export default {
 
 <style>
 .planScheduleView .stick {
-  /* position: sticky;
-  position: -webkit-sticky;
-  top: 60px; */
   width: 100%;
   padding: 20px 0;
   overflow: hidden;

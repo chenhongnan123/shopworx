@@ -418,7 +418,6 @@ export default {
     },
     async RefreshUI() {
       await this.getBomListRecords('');
-      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     btnSaveData() {
       this.setAlert({

@@ -112,7 +112,6 @@ export default {
     },
     async btnReset() {
       await this.getRecipeListRecords('');
-      // this.setRecipeList(this.filterBList);
       this.sublines = [];
       this.stations = [];
       this.setFilterSubLine(this.sublines);

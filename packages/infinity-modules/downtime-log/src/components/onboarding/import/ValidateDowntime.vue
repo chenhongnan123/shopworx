@@ -128,7 +128,6 @@ export default {
     },
     async onFileChanged(e) {
       this.file = e && e !== undefined ? e.target.files[0] : null;
-      // e.target.value = '';
       if (this.file) {
         await this.processFileUpload();
       }

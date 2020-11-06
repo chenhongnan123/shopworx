@@ -17,12 +17,6 @@ export default {
       btndisable: false,
     };
   },
-  props: {
-    // selectedLine: {
-    //   type: Object,
-    //   required: true,
-    // },
-  },
   created() {
     this.selectedLineNew = { ...this.selectedLine };
   },
@@ -36,7 +30,6 @@ export default {
       this.saving = true;
       this.selectedLineNew = { ...this.selectedLine };
       this.newSaveLine = {
-        // name: this.selectedLine.name,
         description: this.selectedLine.description,
         expectedoee: this.selectedLine.expectedoee,
         expectedcycletime: this.selectedLine.expectedcycletime,
@@ -71,7 +64,6 @@ export default {
     compareValues(val) {
       if (val.description === this.selectedLineNew.description) {
         this.btndisable = true;
-        // alert('sdsd');
       } else {
         this.btndisable = false;
       }

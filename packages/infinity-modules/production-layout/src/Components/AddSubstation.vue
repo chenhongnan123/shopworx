@@ -99,7 +99,6 @@ export default {
     },
   },
   created() {
-    // this.getAllStations('');
     this.newSubstation = { ...this.substation };
     this.getAssets();
   },
@@ -184,7 +183,6 @@ export default {
             )[0].ismainline,
             lineid: this.selectedSubstationLine.lineid,
             paramconfigured: this.checked,
-            // lineid: this.lineid,
             assetid: this.assetId,
           };
           let created = false;
@@ -202,7 +200,6 @@ export default {
               this.newSubstation = {};
               this.dialog = false;
               this.assetId = this.getAssetId;
-              // this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
@@ -211,8 +208,6 @@ export default {
                 collectionName: 'provisioning',
                 elementName: substationid,
                 elementDescription: this.subStations[0].name,
-                // dateCreated: 1590647154882,
-                // dateModified: 1590647154882,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',

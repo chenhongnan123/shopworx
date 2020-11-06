@@ -129,7 +129,6 @@ export default {
       this.btnSearchProcessParameters();
     } else {
       await this.btnSearchProcessParameters();
-      // await this.fetchRecords();
     }
   },
   beforeMount() {
@@ -148,7 +147,6 @@ export default {
     this.restoreState();
     this.gridApi = this.gridOptionsCheckOut.api;
     this.gridColumnApi = this.gridOptionsCheckOut.columnApi;
-    // this.btnSearchProcessParameters();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -175,22 +173,17 @@ export default {
         this.gridColumnApi.setColumnGroupState(state.groupState);
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
-      } else {
-        // this.resetState();
       }
     },
     async fetchRecords() {
       const records = await this.getRecords({
         elementName: 'businesshours',
       });
-      // console.log(records);
       const time = records[0].starttime;
       const splitTime = time.slice(0, 2);
       const day = new Date();
       const now = day.setHours(splitTime);
       const toDate = new Date().getTime();
-      // console.log(now);
-      // console.log(toDate);
       this.fromdate = now;
       this.todate = toDate;
       this.btnSearchProcessParameters();
@@ -200,12 +193,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -223,7 +210,6 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
-        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
@@ -258,7 +244,6 @@ export default {
           resizable: true,
         },
       );
-      // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let cFlag = 0;
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
@@ -285,7 +270,6 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
-      // param += 'pagenumber=1&pagesize=20';
       await this.getCheckOutLists(param);
       this.checkOutList.forEach((e) => {
         const checkData = this.partStatusList.filter((part) => part.mainid === e.mainid);
@@ -297,7 +281,6 @@ export default {
           }
         }
       });
-      // console.log(param);
       this.gridApi = this.gridOptionsCheckOut.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -334,9 +317,6 @@ export default {
     },
     handleSubStationClick(item) {
       this.trecibilityState.selectedSubStation = item;
-      // const query = `?query=substationid=="${item.id}"`;
-      // await this.getCheckOutList(query);
-      // await this.getPartStatus(`?query=substationid=="${item.id}"`);
     },
     async nextSearch() {
       const pagenumber = this.pageNumber;
@@ -460,11 +440,6 @@ export default {
     async prevSearch() {
       const pagenumber = this.pageNumber;
       this.processParametersList = [];
-      // this.setAlert({
-      //   show: true,
-      //   type: 'success',
-      //   message: 'SELECT_BY_ATLEAST_ONE_INPUT',
-      // });
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.processParametersheader = [];

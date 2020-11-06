@@ -137,7 +137,7 @@ export default {
     this.products = [];
   },
   computed: {
-    ...mapState('productManagement', ['productList', 'lineList'/** ,  'filterLine', 'filterSubLine', 'filterStation' */]),
+    ...mapState('productManagement', ['productList', 'lineList']),
   },
   methods: {
     ...mapActions('productManagement', ['getProductListRecords', 'createProduct']),

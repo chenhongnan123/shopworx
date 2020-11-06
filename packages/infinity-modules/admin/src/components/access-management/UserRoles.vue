@@ -26,16 +26,6 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-        >
-          <v-icon small v-text="'$download'" left></v-icon>
-          Export roles
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
