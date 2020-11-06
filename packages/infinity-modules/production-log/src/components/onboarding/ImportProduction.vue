@@ -3,11 +3,11 @@
     <v-window v-model="window">
       <v-window-item :value="0">
         <div class="headline mb-4">
-          {{ $t('rejectionReasons.setup.importMaster.title1') }}
+          {{ $t('production.setup.importMaster.title1') }}
           <span class="primary--text font-weight-medium">
-            {{ $t('rejectionReasons.setup.importMaster.title2') }}
+            {{ $t('production.setup.importMaster.title2') }}
           </span>
-          {{ $t('rejectionReasons.setup.importMaster.title3') }}
+          {{ $t('production.setup.importMaster.title3') }}
         </div>
         <v-btn
           block
@@ -21,7 +21,7 @@
             left
             v-text="'$upload'"
           ></v-icon>
-          {{ $t('rejectionReasons.setup.importMaster.import') }}
+          {{ $t('production.setup.importMaster.import') }}
         </v-btn>
         <input
           multiple
@@ -34,34 +34,34 @@
         >
         <div class="subheading my-2" v-if="downloading">
           <v-progress-circular indeterminate></v-progress-circular>
-          {{ $t('rejectionReasons.setup.importMaster.downloading') }}
+          {{ $t('production.setup.importMaster.downloading') }}
         </div>
         <div class="subheading my-2" v-else-if="error">
-          {{ $t('rejectionReasons.setup.importMaster.downloadError') }}
+          {{ $t('production.setup.importMaster.downloadError') }}
           <a
             @click="downloadZip"
             id="downloadTemplates"
             class="primary--text font-weight-medium"
           >
-            {{ $t('rejectionReasons.setup.importMaster.retryDownload') }}
+            {{ $t('production.setup.importMaster.retryDownload') }}
           </a>
         </div>
         <div class="subheading my-2" v-else>
-          {{ $t('rejectionReasons.setup.importMaster.download') }}
+          {{ $t('production.setup.importMaster.download') }}
           <a
             @click="downloadZip"
             class="primary--text font-weight-medium"
           >
-            {{ $t('rejectionReasons.setup.importMaster.downloadLink') }}
+            {{ $t('production.setup.importMaster.downloadLink') }}
           </a>
         </div>
       </v-window-item>
       <v-window-item :value="1">
-        <!-- <process-reasons
+        <process-production
           @back="window = 0"
           @success="$emit('update-step')"
           :files="files"
-        /> -->
+        />
       </v-window-item>
     </v-window>
   </v-card>
@@ -71,13 +71,13 @@
 import { mapState, mapActions } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
-// import ProcessReasons from './import/ProcessReasons.vue';
+import ProcessProduction from './import/ProcessProduction.vue';
 
 export default {
   name: 'ImportReasons',
-  // components: {
-  //   ProcessReasons,
-  // },
+  components: {
+    ProcessProduction,
+  },
   data() {
     return {
       files: [],
@@ -140,7 +140,7 @@ export default {
         });
       })]);
       const zip = await this.zipService.generateZip();
-      this.zipService.downloadFile(zip, 'production-reasons-template.zip');
+      this.zipService.downloadFile(zip, 'production-log-template.zip');
     },
     generateCSV({ fields, data = [] }) {
       const csvParser = new CSVParser();

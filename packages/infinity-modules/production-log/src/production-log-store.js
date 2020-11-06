@@ -4,8 +4,13 @@ import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 export default ({
   namespaced: true,
   state: {
+    masterData: [],
+    masterElements: [],
     drawer: false,
-    onboarded: true,
+    unavailableDataElements: [],
+    unavailableElements: [],
+    dataOnboarded: false,
+    elementOnboarded: false,
     machines: [],
     shifts: [],
     filters: {},
@@ -21,9 +26,12 @@ export default ({
     operators: [],
   },
   mutations: {
+    setMasterData: set('masterData'),
+    setMasterElements: set('masterElements'),
     setDrawer: set('drawer'),
     toggleDrawer: toggle('drawer'),
-    setOnboarded: set('onboarded'),
+    setDataOnboarded: set('dataOnboarded'),
+    setElementOnboarded: set('elementOnboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
     setSelectedMachine: set('selectedMachine'),
@@ -37,8 +45,244 @@ export default ({
     setSort: set('sort'),
     setProductionList: set('productionList'),
     setOperators: set('operators'),
+    setUnavailableDataElements: set('unavailableDataElements'),
+    setUnavailableElements: set('unavailableElements'),
   },
   actions: {
+    getDataOnboardingState: async ({ commit, dispatch }) => {
+      commit('setUnavailableDataElements', []);
+      const isRejectionAvailable = await dispatch('getRejectionReasonsElement');
+      const isScrapAvailable = await dispatch('getScrapReasonsElement');
+      const isReworkAvailable = await dispatch('getReworkReasonsElement');
+      const isOperatorAvailable = await dispatch('getOperatorElement');
+      const unavailableElements = [];
+      if (!isRejectionAvailable) {
+        unavailableElements.push('rejectionreasons');
+      }
+      if (!isScrapAvailable) {
+        unavailableElements.push('scrapreasons');
+      }
+      if (!isReworkAvailable) {
+        unavailableElements.push('reworkreasons');
+      }
+      if (!isOperatorAvailable) {
+        unavailableElements.push('operator');
+      }
+      commit('setUnavailableDataElements', unavailableElements);
+      if (unavailableElements.length) {
+        commit('setDataOnboarded', false);
+      } else {
+        commit('setDataOnboarded', true);
+      }
+    },
+
+    getElementOnboardingState: async ({ commit, dispatch }) => {
+      commit('setUnavailableElements', []);
+      const isRejectionAvailable = await dispatch('getRejectionElement');
+      const isScrapAvailable = await dispatch('getScrapElement');
+      const isReworkAvailable = await dispatch('getReworkElement');
+      const isOperatorLogAvailable = await dispatch('getOperatorLogElement');
+      const unavailableElements = [];
+      if (!isRejectionAvailable) {
+        unavailableElements.push('rejection');
+      }
+      if (!isScrapAvailable) {
+        unavailableElements.push('scrap');
+      }
+      if (!isReworkAvailable) {
+        unavailableElements.push('rework');
+      }
+      if (!isOperatorLogAvailable) {
+        unavailableElements.push('operatorlog');
+      }
+      commit('setUnavailableElements', unavailableElements);
+      if (unavailableElements.length) {
+        commit('setElementOnboarded', false);
+      } else {
+        commit('setElementOnboarded', true);
+      }
+    },
+
+    getMasterData: async ({
+      commit,
+      dispatch,
+      state,
+      rootGetters,
+    }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      const { unavailableDataElements } = state;
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => unavailableDataElements.includes(elem.masterElement.elementName))
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
+    },
+
+    getMasterElements: async ({ commit, dispatch, state }) => {
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const { unavailableElements } = state;
+        const elements = masterElements
+          .filter((elem) => unavailableElements.includes(elem.masterElement.elementName));
+        commit('setMasterElements', elements);
+        return true;
+      }
+      return false;
+    },
+
+    createElements: async ({ state, dispatch }) => {
+      const planningElem = await dispatch(
+        'element/getElement',
+        'planning',
+        { root: true },
+      );
+      if (planningElem) {
+        const { masterElements, unavailableElements } = state;
+        const createElements = unavailableElements.map(async (elem) => {
+          const masterElem = masterElements.find((e) => e.masterElement.elementName === elem);
+          const tags = [
+            ...planningElem.tags.filter((tag) => !tag.hide),
+            ...masterElem.masterTags,
+          ];
+          const payload = {
+            element: masterElem.masterElement,
+            tags,
+          };
+          await dispatch(
+            'element/createElementAndTags',
+            payload,
+            { root: true },
+          );
+        });
+        await Promise.all(createElements);
+        return true;
+      }
+      return false;
+    },
+
+    getRejectionReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rejectionreasons',
+        { root: true },
+      );
+      return element;
+    },
+
+    getScrapReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'scrapreasons',
+        { root: true },
+      );
+      return element;
+    },
+
+    getReworkReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'reworkreasons',
+        { root: true },
+      );
+      return element;
+    },
+
+    getOperatorElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'operator',
+        { root: true },
+      );
+      return element;
+    },
+
+    getRejectionElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rejection',
+        { root: true },
+      );
+      return element;
+    },
+
+    getScrapElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'scrap',
+        { root: true },
+      );
+      return element;
+    },
+
+    getReworkElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rework',
+        { root: true },
+      );
+      return element;
+    },
+
+    getOperatorLogElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'operatorlog',
+        { root: true },
+      );
+      return element;
+    },
+
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',

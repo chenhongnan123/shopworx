@@ -23,7 +23,7 @@
     </portal>
     <production-log-loading v-if="loading" />
     <template v-else>
-      <production-log-setup v-if="!onboarded" />
+      <production-log-setup v-if="!dataOnboarded || !elementOnboarded" />
       <template v-else>
         <production-toolbar />
         <production-drawer />
@@ -56,32 +56,47 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionLog', ['onboarded']),
+    ...mapState('productionLog', ['dataOnboarded', 'elementOnboarded']),
   },
   async created() {
     this.loading = true;
-    await this.getOnboardingState();
-    if (this.onboarded) {
-      await this.getAppSchema();
-      this.setExtendedHeader(true);
+    await this.getDataOnboardingState();
+    if (this.dataOnboarded) {
+      await this.getElementOnboardingState();
+      if (this.elementOnboarded) {
+        await Promise.all([
+          this.getAppSchema(),
+          this.fetchOperators(),
+        ]);
+        this.setExtendedHeader(true);
+      } else {
+        await this.getMasterElements();
+        const success = await this.createElements();
+        if (success) {
+          this.setElementOnboarded(true);
+        }
+      }
     }
-    await this.fetchOperators();
     this.loading = false;
   },
   methods: {
+    ...mapMutations('productionLog', ['setElementOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('productionLog', [
-      'getOnboardingState',
+      'getDataOnboardingState',
+      'getElementOnboardingState',
       'fetchOperators',
       'fetchProductionList',
+      'createElements',
+      'getMasterElements',
     ]),
     refreshProductions() {
       this.fetchProductionList();
     },
   },
   watch: {
-    onboarded(val) {
+    async elementOnboarded(val) {
       if (val) {
         this.setExtendedHeader(true);
       }
