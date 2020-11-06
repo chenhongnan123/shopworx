@@ -62,10 +62,12 @@ export default {
     this.loading = true;
     await this.getOnboardingState();
     if (this.onboarded) {
-      await this.getAppSchema();
+      await Promise.all([
+        this.getAppSchema(),
+        this.fetchDowntimeReasons(),
+      ]);
       this.setExtendedHeader(true);
     }
-    await this.fetchDowntimeReasons();
     this.loading = false;
   },
   methods: {
@@ -83,8 +85,12 @@ export default {
     },
   },
   watch: {
-    onboarded(val) {
+    async onboarded(val) {
       if (val) {
+        await Promise.all([
+          this.getAppSchema(),
+          this.fetchDowntimeReasons(),
+        ]);
         this.setExtendedHeader(true);
       }
     },

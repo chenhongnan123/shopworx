@@ -4,6 +4,7 @@ import { sortAlphaNum } from '@shopworx/services/util/sort.service';
 export default ({
   namespaced: true,
   state: {
+    masterData: [],
     drawer: false,
     onboarded: true,
     machines: [],
@@ -27,6 +28,7 @@ export default ({
     selectedDowntimes: [],
   },
   mutations: {
+    setMasterData: set('masterData'),
     setSelectedDowntimes: (state, payload) => {
       if (payload.selected) {
         state.selectedDowntimes.push(payload);
@@ -72,6 +74,84 @@ export default ({
     },
   },
   actions: {
+    getOnboardingState: async ({ commit, dispatch }) => {
+      const isDowntimeReasonElementAvailable = await dispatch('getDowntimeReasonsElement');
+      if (isDowntimeReasonElementAvailable) {
+        commit('setOnboarded', true);
+      } else {
+        commit('setOnboarded', false);
+      }
+    },
+
+    getMasterData: async ({
+      commit,
+      dispatch,
+      rootGetters,
+    }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => elem.masterElement.elementName === 'downtimereasons')
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
+    },
+
+    getDowntimeReasonsElement: async ({ dispatch }) => {
+      const downtimeReasonsElement = await dispatch(
+        'element/getElement',
+        'downtimereasons',
+        { root: true },
+      );
+      return downtimeReasonsElement;
+    },
+
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
