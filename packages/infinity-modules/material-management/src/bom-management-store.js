@@ -241,6 +241,19 @@ export default ({
             }
           });
         });
+        const componentStatusList = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'parameters', // 21, 24, 26
+            query: `?query=substationid=="${f.id}"%26%26parametercategory=="46"`,
+          },
+          { root: true },
+        );
+        const clist = [{
+          name: '-',
+        }];
+        clist.push(...componentStatusList);
+        f.componentStatusList = clist;
       });
       console.log(list);
       commit('setSubStationListForConfig', list);

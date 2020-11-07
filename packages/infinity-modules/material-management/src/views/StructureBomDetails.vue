@@ -317,23 +317,8 @@ export default {
       if (this.bomDetailList.length === 0) {
         await this.handleGetData();
         await this.getSubStationListForConfigScreen('');
-        this.subStationListForConfig.forEach(async (element) => {
-          const clist = [{
-            name: '-',
-          }];
-          clist.push(...await this.getParameterList(`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
-          element.componentStatusList = clist;
-          element.bomid = this.query.id;
-        });
         console.log(this.subStationListForConfig);
-        let finalList = [];
-        if (this.subStationListForConfig && this.subStationListForConfig.length) {
-          finalList = this.subStationListForConfig.map((l) => ({
-            ...l,
-          }));
-        }
-        console.log(finalList);
-        // await this.createBomDetailConfigList(finalList);
+        await this.createBomDetailConfigList(this.subStationListForConfig);
       }
     },
     async checkSaveData(event, item) {

@@ -347,7 +347,6 @@ export default {
       console.log(this.bomDetailsList);
       console.log(this.$refs.process.processParametersList);
       console.log(this.$refs.process.headerForCSV);
-      this.$refs.process.headerForCSV.push('subassemblyid');
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       let param = '?query=componentname=="subassemblyid"&';
@@ -357,13 +356,19 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}&`;
       }
+      console.log(this.subStationList);
       const componenetData = await this.getComponentList(param);
       const processSendDataArray = [];
       componenetData.forEach((component) => {
         this.$refs.process.processParametersList.forEach((process) => {
           if (process.mainid === component.mainid) {
-            process[component.componentname] = component.componentvalue;
-            component[component.componentname] = component.componentvalue;
+            const subStationName = this.subStationList.find((u) => u.id === component.substationid);
+            if (!this.$refs.process.headerForCSV.includes(`${subStationName.name}_${component.componentname}`)) {
+              this.$refs.process.headerForCSV.push(`${subStationName.name}_${component.componentname}`);
+            }
+            process[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
+            component[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
+            component.substationname = subStationName.name;
             processSendDataArray.push(component);
           }
         });
@@ -411,9 +416,8 @@ export default {
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {
               if (element.tagName !== 'mainid') {
-                const data = this.$refs.process.headerForCSV
-                  .filter((p) => p.field === `${s.name}_${element.tagName}`);
-                if (data.length === 0) {
+                const data = this.$refs.process.headerForCSV.includes(`${s.name}_${element.tagName}`);
+                if (!data) {
                   this.$refs.process.headerForCSV.push(`${s.name}_${element.tagName}`);
                 }
               }
@@ -421,9 +425,12 @@ export default {
             await this.getParametersList(`?query=substationid=="${s.id}"%26%26
             (parametercategory=="15"%7C%7Cparametercategory=="17"%7
             C%7Cparametercategory=="18")`);
+            const subAssemblyIdFieldName = `${request.substationname}_subassemblyid`;
+            console.log(subAssemblyIdFieldName);
+            console.log(request[subAssemblyIdFieldName]);
             const processData = await this.getProcessParameters({
               elementname: s.id,
-              payload: `?query=mainid=="${request.subassemblyid}"`,
+              payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
             });
             if (this.$refs.process.processParametersList.find((pro) => pro
               .mainid === request.mainid)) {

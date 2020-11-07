@@ -243,7 +243,7 @@ export default {
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.headerForCSV = [];
-      this.headerForCSV.push('createdTimestamp', 'mainid');
+      this.headerForCSV.push('createdTimestamp', 'mainid', 'completedproductid');
       this.processParametersheader = [];
       this.processParametersheader.push(
         {
@@ -255,6 +255,11 @@ export default {
           headerName: 'Main ID',
           field: 'mainid',
           rowGroup: true,
+          resizable: true,
+        },
+        {
+          headerName: 'Completed Product ID',
+          field: 'completedproductid',
           resizable: true,
         },
       );
@@ -368,6 +373,7 @@ export default {
                 const object = this.processParametersListFirst.find((pp) => pp.mainid === f.mainid);
                 this.processParametersListFirst.splice(this.processParametersListFirst
                   .indexOf(object), 1);
+                object.completedproductid = f.completedproductid;
                 const processDataObject = processData[0];
                 this.parametersList.forEach((para) => {
                   if (processDataObject && object) {
