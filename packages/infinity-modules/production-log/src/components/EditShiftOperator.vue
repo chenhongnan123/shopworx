@@ -6,6 +6,7 @@
     hide-details
     return-object
     :items="operators"
+    v-model="selectedOperator"
     item-text="operatorname"
     item-value="operatorcode"
     prepend-inner-icon="mdi-account-hard-hat"
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'EditShiftOperator',
@@ -40,32 +41,34 @@ export default {
       type: String,
       required: true,
     },
+    operator: {
+      type: Object,
+    },
   },
   computed: {
     ...mapState('productionLog', ['operators']),
-    /* selectedOperator: {
+    ...mapGetters('productionLog', ['getTimestamp']),
+    selectedOperator: {
       get() {
-        return this.downtime.reasonname;
+        return this.operator;
       },
       set({
-        reasonname,
-        reasoncode,
-        category,
-        department,
+        operatorname,
+        operatorcode,
       }) {
         const payload = {
-          reasonname,
-          reasoncode,
-          category,
-          department,
+          operatorname,
+          operatorcode,
+          machinename: this.machine,
+          timestamp: this.getTimestamp(this.shift),
         };
         this.updateOperator({
-        // eslint-disable-next-line
-          id: this.downtime._id,
           payload,
+          shift: this.shift,
+          machine: this.machine,
         });
       },
-    }, */
+    },
   },
   methods: {
     ...mapActions('productionLog', ['updateOperator']),

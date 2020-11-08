@@ -308,9 +308,7 @@ export default ({
         { root: true },
       );
       if (records && records.length) {
-        const allShifts = records.filter((rec) => rec.type === 'shift');
-        const shiftList = [...new Set(allShifts.map((item) => item.name))];
-        commit('setShifts', shiftList);
+        commit('setShifts', records);
         return true;
       }
       return false;
@@ -395,34 +393,35 @@ export default ({
       return false;
     },
 
-    updateReason: async ({ dispatch, commit, state }, { id, payload }) => {
+    updateOperator: async ({ dispatch, commit, state }, { payload, shift, machine }) => {
+      const { selectedDate } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       const updated = await dispatch(
-        'element/updateRecordById',
+        'element/upsertRecordByQuery',
         {
-          elementName: 'production',
-          id,
-          payload,
+          elementName: 'operatorlog',
+          record: payload,
+          query: `?query=date==${date}%26%26shiftName=="${shift}"%26%26machinename=="${machine}"`,
         },
         { root: true },
       );
       if (updated) {
         let { productionList } = state;
-        productionList = productionList.map((dt) => {
-          // eslint-disable-next-line
-          if (dt._id === id) {
+        productionList = productionList.map((prod) => {
+          if (prod.shift === shift && prod.machinename === machine) {
             return {
-              ...dt,
-              ...payload,
+              ...prod,
+              operatorcode: payload.operatorcode,
+              operatorname: payload.operatorname,
             };
           }
-          return dt;
+          return prod;
         });
-        commit('setProductionList', []);
         commit('setProductionList', productionList);
         commit('helper/setAlert', {
           show: true,
           type: 'success',
-          message: 'DOWNTIME_UPDATE_SUCCESS',
+          message: 'OPERATOR_UPDATE_SUCCESS',
         }, {
           root: true,
         });
@@ -430,7 +429,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: 'DOWNTIME_UPDATE_ERROR',
+          message: 'OPERATOR_UPDATE_ERROR',
         }, {
           root: true,
         });
@@ -452,9 +451,20 @@ export default ({
     shiftList: ({ shifts }) => {
       let shiftList = [];
       if (shifts && shifts.length) {
-        shiftList = ['All Shifts', ...shifts];
+        const allShifts = shifts.filter((rec) => rec.type === 'shift');
+        shiftList = [...new Set(allShifts.map((item) => item.name))];
+        shiftList = ['All Shifts', ...shiftList];
       }
       return shiftList;
+    },
+
+    getTimestamp: ({ shifts, selectedDate }) => (shiftName) => {
+      const currentShift = shifts
+        .sort((a, b) => a.sortindex - b.sortindex)
+        .find((s) => s.shift === shiftName);
+      const [hr, min] = currentShift.starttime.split(':');
+      const [year, month, day] = selectedDate.split('-');
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },
 
     production: ({
@@ -485,14 +495,23 @@ export default ({
             return a.firstcycle - b.firstcycle;
           })
           .reduce((acc, cur) => {
-            const { shift, machinename } = cur;
+            const {
+              shift,
+              machinename,
+              operatorname,
+              operatorcode,
+            } = cur;
             if (!acc[shift]) {
               acc[shift] = {};
-              acc[shift][machinename] = [];
+              acc[shift][machinename] = {};
+              acc[shift][machinename].production = [];
             } else if (acc[shift] && !acc[machinename]) {
-              acc[shift][machinename] = [];
+              acc[shift][machinename] = {};
+              acc[shift][machinename].production = [];
             }
-            acc[shift][machinename].push(cur);
+            acc[shift][machinename].operatorcode = operatorcode === '-' ? null : operatorcode;
+            acc[shift][machinename].operatorname = operatorname === '-' ? null : operatorname;
+            acc[shift][machinename].production.push(cur);
             return acc;
           }, {});
       }

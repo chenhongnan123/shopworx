@@ -31,12 +31,16 @@
             <edit-shift-operator
               :shift="shiftKey"
               :machine="machineKey"
+              :operator="{
+                operatorcode: machineData.operatorcode,
+                operatorname: machineData.operatorname,
+              }"
             />
           </span>
           <div
             :key="k"
             class="mb-4 mt-2"
-            v-for="(productionList, k) in machineData"
+            v-for="(productionList, k) in machineData.production"
           >
             <production-list-item
               :production="productionList"
