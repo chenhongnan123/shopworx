@@ -31,7 +31,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'EditShiftOperator',
+  name: 'AssignOperator',
   props: {
     shift: {
       type: String,

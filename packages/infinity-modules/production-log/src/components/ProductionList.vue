@@ -28,7 +28,7 @@
             {{ machineKey }}
           </span>
           <span class="title float-right mr-4">
-            <edit-shift-operator
+            <assign-operator
               :shift="shiftKey"
               :machine="machineKey"
               :operator="{
@@ -59,7 +59,7 @@ import ProductionLoading from './ProductionLoading.vue';
 import ProductionError from './ProductionError.vue';
 import ProductionNoRecords from './ProductionNoRecords.vue';
 import ProductionListItem from './ProductionListItem.vue';
-import EditShiftOperator from './EditShiftOperator.vue';
+import AssignOperator from './AssignOperator.vue';
 
 export default {
   name: 'ProductionList',
@@ -68,7 +68,7 @@ export default {
     ProductionError,
     ProductionNoRecords,
     ProductionListItem,
-    EditShiftOperator,
+    AssignOperator,
   },
   computed: {
     ...mapState('productionLog', [
