@@ -1,11 +1,11 @@
 <template>
   <v-card outlined>
     <v-card-title>
-      <div>
-        {{ new Date(production.firstcycle).toLocaleTimeString('en-US') }}
-        to
-        {{ new Date(production.lastcycle).toLocaleTimeString('en-US') }}
-      </div>
+      {{ production.partname }}
+      <v-spacer></v-spacer>
+      {{ new Date(production.firstcycle).toLocaleTimeString('en-US') }}
+      to
+      {{ new Date(production.lastcycle).toLocaleTimeString('en-US') }}
     </v-card-title>
     <v-card-text>
       <v-row no-gutters>
@@ -21,12 +21,6 @@
           </div>
           <div class="text-uppercase title font-weight-regular mb-2">
             {{ production.shift }}
-          </div>
-          <div class="body-2">
-            Part
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2">
-            {{ production.partname }}
           </div>
         </v-col>
         <v-col cols="12" sm="6">
@@ -55,15 +49,7 @@
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 error--text">
                 {{ production.rejected }}
-                <v-btn
-                  small
-                  outlined
-                  color="primary"
-                  class="text-none float-right mr-4"
-                >
-                  <v-icon left>mdi-update</v-icon>
-                  Update
-                </v-btn>
+                <assign-rejections :production="production" />
               </div>
             </v-col>
             <v-col cols="12" sm="4">
@@ -71,16 +57,8 @@
                 Rework
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                {{ production.rejected }}
-                <v-btn
-                  small
-                  outlined
-                  color="primary"
-                  class="text-none float-right mr-4"
-                >
-                  <v-icon left>mdi-update</v-icon>
-                  Update
-                </v-btn>
+                {{ production.rework }}
+                <assign-rework :production="production" />
               </div>
             </v-col>
             <v-col cols="12" sm="4">
@@ -88,16 +66,8 @@
                 Scrap (in Kgs)
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-                {{ production.accepted }}
-                <v-btn
-                  small
-                  outlined
-                  color="primary"
-                  class="text-none float-right mr-4"
-                >
-                  <v-icon left>mdi-update</v-icon>
-                  Update
-                </v-btn>
+                {{ production.scrap }}
+                <assign-scrap :production="production" />
               </div>
             </v-col>
           </v-row>
@@ -108,8 +78,17 @@
 </template>
 
 <script>
+import AssignRejections from './AssignRejections.vue';
+import AssignRework from './AssignRework.vue';
+import AssignScrap from './AssignScrap.vue';
+
 export default {
   name: 'ProductionListItem',
+  components: {
+    AssignRejections,
+    AssignRework,
+    AssignScrap,
+  },
   props: {
     production: {
       type: Object,

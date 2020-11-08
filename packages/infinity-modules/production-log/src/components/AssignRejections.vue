@@ -8,19 +8,19 @@
   >
     <template #activator="{ on }">
       <v-btn
+        icon
         small
         v-on="on"
-        outlined
         color="primary"
-        class="text-none"
+        class="text-none ml-4 mb-1"
       >
-        <v-icon left small v-text="'$productionLog'"></v-icon>
-        Rejections
+        <v-icon>mdi-update</v-icon>
       </v-btn>
     </template>
     <v-card>
       <v-card-title primary-title>
-        Add new rejection
+        Rejections - {{ production.shift }} | {{ production.machinename }} |
+        {{ production.partname }}
         <v-spacer></v-spacer>
         <v-btn
           icon
@@ -47,7 +47,15 @@
                 Produced
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 info--text">
-                {{ production.produced }}
+                {{ data.produced }}
+              </div>
+            </v-col>
+            <v-col cols="4">
+              <div class="body-2">
+                Accepted
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2 success--text">
+                {{ data.accepted }}
               </div>
             </v-col>
             <v-col cols="4">
@@ -55,15 +63,7 @@
                 Rejected
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                {{ production.rejected }}
-              </div>
-            </v-col>
-            <v-col cols="4">
-              <div class="body-2">
-                Accepted
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-                {{ production.accepted }}
+                {{ data.rejected }}
               </div>
             </v-col>
           </v-row>
@@ -104,7 +104,7 @@
 import { mapActions } from 'vuex';
 
 export default {
-  name: 'ProductionSplit',
+  name: 'AssignRejections',
   props: {
     production: {
       type: Object,
