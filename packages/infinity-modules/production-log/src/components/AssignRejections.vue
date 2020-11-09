@@ -38,7 +38,7 @@
         </template>
         <v-expansion-panels accordion v-else>
           <v-expansion-panel
-            v-for="(data,index) in hourlyData"
+            v-for="(data, index) in hourlyData"
             :key="index"
           >
             <v-expansion-panel-header class="primary--text">
@@ -159,7 +159,7 @@
                 ref="form"
                 #default="{ handleSubmit }"
               >
-                <v-form @submit.prevent="handleSubmit(addNewRejection(data))">
+                <v-form @submit.prevent="handleSubmit(() => addNewRejection(data))">
                   <v-row>
                     <v-col cols="4">
                       <validation-provider
