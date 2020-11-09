@@ -64,12 +64,7 @@ export default {
     if (this.dataOnboarded) {
       await this.getElementOnboardingState();
       if (this.elementOnboarded) {
-        await Promise.all([
-          this.getAppSchema(),
-          this.fetchOperators(),
-          this.fetchRejectionReasons(),
-        ]);
-        this.setExtendedHeader(true);
+        await this.initApp();
       } else {
         await this.getMasterElements();
         const success = await this.createElements();
@@ -89,6 +84,8 @@ export default {
       'getElementOnboardingState',
       'fetchOperators',
       'fetchRejectionReasons',
+      'fetchReworkReasons',
+      'fetchScrapReasons',
       'fetchProductionList',
       'createElements',
       'getMasterElements',
@@ -96,16 +93,21 @@ export default {
     refreshProductions() {
       this.fetchProductionList();
     },
+    async initApp() {
+      await Promise.all([
+        this.getAppSchema(),
+        this.fetchOperators(),
+        this.fetchRejectionReasons(),
+        this.fetchReworkReasons(),
+        this.fetchScrapReasons(),
+      ]);
+      this.setExtendedHeader(true);
+    },
   },
   watch: {
     async elementOnboarded(val) {
       if (val) {
-        await Promise.all([
-          this.getAppSchema(),
-          this.fetchOperators(),
-          this.fetchRejectionReasons(),
-        ]);
-        this.setExtendedHeader(true);
+        await this.initApp();
       }
     },
   },

@@ -31,7 +31,11 @@
         </v-btn>
       </v-card-title>
       <v-card-text class="ma-0 pa-0">
-        <template v-if="loading">Loading...</template>
+        <template v-if="loading">
+          <div class="text-center my-4">
+            Loading...
+          </div>
+        </template>
         <v-expansion-panels accordion v-else>
           <v-expansion-panel
             v-for="(data,index) in hourlyData"
@@ -44,120 +48,123 @@
               </span>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
+              <v-row no-gutters class="text-center">
+                <v-col cols="4">
+                  <div class="body-2">
+                    Produced
+                  </div>
+                  <div class="text-uppercase title font-weight-regular mb-2 info--text">
+                    {{ data.produced }}
+                  </div>
+                </v-col>
+                <v-col cols="4">
+                  <div class="body-2">
+                    Accepted
+                  </div>
+                  <div class="text-uppercase title font-weight-regular mb-2 success--text">
+                    {{ data.accepted }}
+                  </div>
+                </v-col>
+                <v-col cols="4">
+                  <div class="body-2">
+                    Rejected
+                  </div>
+                  <div class="text-uppercase title font-weight-regular mb-2 error--text">
+                    {{ data.rejected }}
+                  </div>
+                </v-col>
+              </v-row>
+              <v-data-table
+                dense
+                :headers="headers"
+                hide-default-footer
+                :items="data.rejections"
+                v-if="data.rejections.length"
+              >
+                <template v-slot:item.quantity="{ item }">
+                  <v-edit-dialog
+                    large
+                    persistent
+                    @save="updateRejection({
+                      id: item._id,
+                      hour: data.hour,
+                      payload: { quantity: parseInt(item.quantity, 10) },
+                    })"
+                    :return-value.sync="item.quantity"
+                  >
+                    {{ item.quantity }}
+                    <template v-slot:input>
+                      <v-text-field
+                        v-model="item.quantity"
+                        type="number"
+                        label="Qty"
+                        :rules="[(v) => (
+                          Number.isInteger(Number(v)) > 0
+                          && v <= parseInt(data.accepted, 10)
+                        )
+                          || 'Should be less than accepted qty']"
+                        single-line
+                      ></v-text-field>
+                    </template>
+                  </v-edit-dialog>
+                </template>
+                <template v-slot:item.reasonname="{ item }">
+                  <v-edit-dialog
+                    large
+                    persistent
+                    @save="updateRejection({
+                      id: item._id,
+                      hour: data.hour,
+                      payload: { reasonname: item.reasonname },
+                    })"
+                    :return-value.sync="item.reasonname"
+                  >
+                    {{ item.reasonname }}
+                    <template v-slot:input>
+                      <v-autocomplete
+                        single-line
+                        label="Reason"
+                        item-text="reasonname"
+                        item-value="reasonname"
+                        :items="rejectionReasons"
+                        v-model="item.reasonname"
+                      ></v-autocomplete>
+                    </template>
+                  </v-edit-dialog>
+                </template>
+                <template v-slot:item.remark="{ item }">
+                  <v-edit-dialog
+                    large
+                    persistent
+                    @save="updateRejection({
+                      id: item._id,
+                      hour: data.hour,
+                      payload: { remark: item.remark },
+                    })"
+                    :return-value.sync="item.remark"
+                  >
+                    {{ item.remark }}
+                    <template v-slot:input>
+                      <v-textarea
+                        v-model="item.remark"
+                        label="Remark"
+                        rows="2"
+                        single-line
+                      ></v-textarea>
+                    </template>
+                  </v-edit-dialog>
+                </template>
+              </v-data-table>
               <validation-observer
                 ref="form"
                 #default="{ handleSubmit }"
               >
                 <v-form @submit.prevent="handleSubmit(addNewRejection(data))">
-                  <v-row no-gutters class="text-center">
-                    <v-col cols="4">
-                      <div class="body-2">
-                        Produced
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2 info--text">
-                        {{ data.produced }}
-                      </div>
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="body-2">
-                        Accepted
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2 success--text">
-                        {{ data.accepted }}
-                      </div>
-                    </v-col>
-                    <v-col cols="4">
-                      <div class="body-2">
-                        Rejected
-                      </div>
-                      <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                        {{ data.rejected }}
-                      </div>
-                    </v-col>
-                  </v-row>
-                  <v-data-table
-                    dense
-                    :headers="headers"
-                    hide-default-footer
-                    :items="data.rejections"
-                    v-if="data.rejections.length"
-                  >
-                    <template v-slot:item.quantity="{ item }">
-                      <v-edit-dialog
-                        large
-                        persistent
-                        @save="updateRejection({
-                          id: item._id,
-                          hour: data.hour,
-                          payload: { quantity: item.quantity },
-                        })"
-                        :return-value.sync="item.quantity"
-                      >
-                        {{ item.quantity }}
-                        <template v-slot:input>
-                          <v-text-field
-                            v-model="item.quantity"
-                            type="number"
-                            label="Qty"
-                            :rules="[(v) => v <= parseInt(data.accepted, 10)
-                              || 'Should be less than accepted qty']"
-                            single-line
-                          ></v-text-field>
-                        </template>
-                      </v-edit-dialog>
-                    </template>
-                    <template v-slot:item.reasonname="{ item }">
-                      <v-edit-dialog
-                        large
-                        persistent
-                        @save="updateRejection({
-                          id: item._id,
-                          hour: data.hour,
-                          payload: { reasonname: item.reasonname },
-                        })"
-                        :return-value.sync="item.reasonname"
-                      >
-                        {{ item.reasonname }}
-                        <template v-slot:input>
-                          <v-autocomplete
-                            single-line
-                            label="Reason"
-                            item-text="reasonname"
-                            item-value="reasonname"
-                            :items="rejectionReasons"
-                            v-model="item.reasonname"
-                          ></v-autocomplete>
-                        </template>
-                      </v-edit-dialog>
-                    </template>
-                    <template v-slot:item.remark="{ item }">
-                      <v-edit-dialog
-                        large
-                        persistent
-                        @save="updateRejection({
-                          id: item._id,
-                          hour: data.hour,
-                          payload: { remark: item.remark },
-                        })"
-                        :return-value.sync="item.remark"
-                      >
-                        {{ item.remark }}
-                        <template v-slot:input>
-                          <v-textarea
-                            v-model="item.remark"
-                            label="Remark"
-                            rows="2"
-                            single-line
-                          ></v-textarea>
-                        </template>
-                      </v-edit-dialog>
-                    </template>
-                  </v-data-table>
                   <v-row>
                     <v-col cols="4">
                       <validation-provider
                         name="rejectedQuantity"
-                        :rules="`required|min_value:1|max_value:${data.accepted}`"
+                        :rules="`required|numeric|min_value:1|max_value:${data.accepted}`"
                         #default="{ errors }"
                       >
                         <v-text-field
@@ -366,8 +373,10 @@ export default {
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
       ));
-      const rejected = this.productionList[index].rejected + rejectedQty;
-      const accepted = this.productionList[index].produced - rejected;
+      const rejected = parseInt(this.productionList[index].rejected, 10)
+        + parseInt(rejectedQty, 10);
+      const accepted = parseInt(this.productionList[index].produced, 10)
+        - parseInt(rejected, 10);
       shiftProduction.splice(index, 1, {
         ...this.productionList[index],
         rejected,

@@ -25,6 +25,8 @@ export default ({
     productionCount: 0,
     operators: [],
     rejectionReasons: [],
+    reworkReasons: [],
+    scrapReasons: [],
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -47,6 +49,8 @@ export default ({
     setProductionList: set('productionList'),
     setOperators: set('operators'),
     setRejectionReasons: set('rejectionReasons'),
+    setReworkReasons: set('reworkReasons'),
+    setScrapReasons: set('scrapReasons'),
     setUnavailableDataElements: set('unavailableDataElements'),
     setUnavailableElements: set('unavailableElements'),
   },
@@ -355,6 +359,48 @@ export default ({
       return false;
     },
 
+    fetchReworkReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'reworkreasons' },
+        { root: true },
+      );
+      if (records) {
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          reasoncode,
+          reasonname,
+        }) => ({
+          reasoncode,
+          reasonname,
+        }));
+        commit('setReworkReasons', reasons);
+        return true;
+      }
+      return false;
+    },
+
+    fetchScrapReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'scrapreasons' },
+        { root: true },
+      );
+      if (records) {
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          reasoncode,
+          reasonname,
+        }) => ({
+          reasoncode,
+          reasonname,
+        }));
+        commit('setScrapReasons', reasons);
+        return true;
+      }
+      return false;
+    },
+
     fetchProductionList: async ({
       commit,
       dispatch,
@@ -483,11 +529,61 @@ export default ({
       return records;
     },
 
+    fetchRework: async ({ dispatch }, { planId, shift }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rework',
+          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
+    fetchScrap: async ({ dispatch }, { planId, shift }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'scrap',
+          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
     addRejection: async ({ dispatch }, payload) => {
       const record = await dispatch(
         'element/postRecord',
         {
           elementName: 'rejection',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
+    },
+
+    addRework: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rework',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
+    },
+
+    addScrap: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'scrap',
           payload,
         },
         { root: true },

@@ -86,7 +86,10 @@
     "ROLE_UPDATED": "Role updated successfully.",
     "USER_DELETED": "User removed successfully.",
     "DOWNTIME_UPDATE_SUCCESS": "Downtime reason updated!",
-    "OPERATOR_UPDATE_SUCCESS": "Operator updated!"
+    "OPERATOR_UPDATE_SUCCESS": "Operator updated!",
+    "REJECTION_UPDATE_SUCCESS": "Rejection updated!",
+    "REWORK_UPDATE_SUCCESS": "Rework updated!",
+    "SCRAP_UPDATE_SUCCESS": "Scrap updated!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -106,7 +109,10 @@
     "ERROR_UPDATING_PLAN": "Error while updating plan, please retry.",
     "INVALID_DOWNTIME_SPLIT": "Invalid downtime start or end time. Please verify your data.",
     "DOWNTIME_UPDATE_ERROR": "Error while updating downtime reason. Plese retry.",
-    "OPERATOR_UPDATE_ERROR": "Error while updating operator. Plese retry."
+    "OPERATOR_UPDATE_ERROR": "Error while updating operator. Plese retry.",
+    "REJECTION_UPDATE_ERROR": "Error while updating rejection. Plese retry.",
+    "REWORK_UPDATE_ERROR": "Error while updating rework. Plese retry.",
+    "SCRAP_UPDATE_ERROR": "Error while updating scrap. Plese retry."
   },
   "fields": {
     "email": "Email",
@@ -131,6 +137,10 @@
     "scheduledStart": "Scheduled start",
     "rejectedQuantity": "Quantity",
     "rejectionReason": "Reason",
+    "reworkQuantity": "Quantity",
+    "reworkReason": "Reason",
+    "scrapWeight": "Weight",
+    "scrapReason": "Reason",
     "downtimeReason": "Reason",
     "downtimeStart": "Start time",
     "downtimeEnd": "End time"
