@@ -71,8 +71,8 @@
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="subStationListForConfig"
-        item-key="id"
+        :items="bomDetailsConfigList"
+        item-key="_id"
         class="tableContainer mt-2"
         >
         <template #item="{ item, headers }">
@@ -84,7 +84,7 @@
               {{ sublineList.find((f) => f.id === item.sublineid).name }}
             </td>
             <td>
-              {{ item.station }}
+              {{ stationList.find((f) => f.id === item.stationid).name }}
             </td>
             <td>
               {{ item.name }}
@@ -111,9 +111,8 @@
                   dense
                   depressed
                   item-text="name"
-                  item-value="name"
                   :value="value"
-                  @change="chanageComponentStatus(item)"
+                  @input="parameter => chanageComponentStatus(item, parameter, key)"
                 >
                 <template v-slot:item="{ item }">
                     <v-list-item-content>
@@ -138,6 +137,7 @@ export default {
   name: 'BomDetails',
   data() {
     return {
+      componentSelectedItem: null,
       selectedLine: null,
       selectedSubline: null,
       selectedStation: null,
@@ -155,7 +155,7 @@ export default {
         },
         {
           text: 'Station',
-          value: 'station',
+          value: 'stationid',
         },
         {
           text: 'Substation',
@@ -175,20 +175,45 @@ export default {
       'stationList',
       'subStations',
       'subStationListForConfig',
+      'bomDetailsConfigList',
     ]),
   },
   props: ['query'],
   async created() {
-    await this.handleGetDetails();
-    await this.getSubStationListForConfigScreen('');
-    this.subStationListForConfig.forEach(async (element) => {
-      const clist = [{
-        name: '-',
-      }];
-      clist.push(...await this.getParameterList(`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
-      element.componentStatusList = clist;
+    await this.getStations('');
+    await this.getBomDetailsConfigList(`?query=bomid==${this.query.id}`);
+    if (this.bomDetailsConfigList.length === 0) {
+      const list = await this.getSubStationListForConfigScreen(
+        {
+          bomid: this.query.id,
+          lineid: this.query.lineid,
+        },
+      );
+      await this.createBomDetailConfigList(list);
+      await this.getBomDetailsConfigList(`?query=bomid==${this.query.id}`);
+    }
+    const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+    bomdetailList.forEach((element) => {
+      if (!this.headers.find((f) => f.text === element.parametername)) {
+        this.headers.push(
+          {
+            text: element.parametername,
+            value: `component_${element.parametername}`,
+          },
+        );
+      }
     });
-    console.log(this.subStationListForConfig);
+    // await this.handleGetDetails();
+    // await this.getSubStationListForConfigScreen('');
+    // this.subStationListForConfig.forEach(async (element) => {
+    //   const clist = [{
+    //     name: '-',
+    //   }];
+    //   clist.push(...await this.getParameterList
+    // (`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
+    //   element.componentStatusList = clist;
+    // });
+    // console.log(this.subStationListForConfig);
     // await this.getSubStationListForConfigScreen('');
     // console.log(this.substationList);
   },
@@ -202,6 +227,8 @@ export default {
       'getSubLines',
       'getStations',
       'getSubStations',
+      'getBomDetailsConfigList',
+      'createBomDetailConfigList',
     ]),
     getComponents(item, headers) {
       const componentList = headers.filter((header) => header.value.includes('component_'));
@@ -300,15 +327,7 @@ export default {
       if (this.selectedSubStation) {
         param += `%26%26substationid=="${this.selectedSubStation.id}"`;
       }
-      const bomdetailList = await this.getBomDetailsListRecords(param);
-      this.bomDetailList = bomdetailList;
-      this.bomDetailList.forEach(async (bom) => {
-        const list = [{
-          name: '-',
-        }];
-        list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
-        bom.componentStatusList = list;
-      });
+      const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       bomdetailList.forEach((element) => {
         if (!this.headers.find((f) => f.text === element.parametername)) {
           this.headers.push(
@@ -319,21 +338,7 @@ export default {
           );
         }
       });
-      const detail = {};
-      bomdetailList.forEach((element) => {
-        element.configstatus.forEach((status) => {
-          if (status.name === 'componentstatus') {
-            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
-          } else {
-            detail[`${status.name}_component_${element.parametername}`] = element[status.name] || false;
-          }
-        });
-      });
-      const newList = [];
-      bomdetailList.forEach((element) => {
-        newList.push({ ...element, ...detail });
-      });
-      this.bomDetailList = newList;
+      await this.getBomDetailsConfigList(param);
     },
     async checkSaveDataQualityStatus(event, item, key) {
       // key = "qualitystatus_component_pcbaid"
@@ -361,15 +366,14 @@ export default {
         });
       }
     },
-    async chanageComponentStatus(item) {
-      const { componentStatusSelected } = item;
-      // const substationItem = this.substationList
-      console.log(this.componentStatusSelected);
+    async chanageComponentStatus(item, parameter, key) {
+      console.log(item);
+      console.log(parameter);
+      console.log(key);
       const payload = {
         id: item._id,
         payload: {
-          componentStatusSelected,
-          componentstatus: componentStatusSelected.name,
+          [key]: parameter.name,
         },
       };
       console.log(payload, 'payload');

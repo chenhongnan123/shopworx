@@ -273,6 +273,7 @@ export default {
     await this.getMaterialListChoice('');
     await this.handleGetDetails();
     await this.getSublineList('');
+    // code
     // await this.configurationLogic();
     // await this.getSubStationList('');
     // this.getFilteredSubstation();
@@ -316,9 +317,6 @@ export default {
       console.log(this.bomDetailList);
       if (this.bomDetailList.length === 0) {
         await this.handleGetData();
-        await this.getSubStationListForConfigScreen('');
-        console.log(this.subStationListForConfig);
-        await this.createBomDetailConfigList(this.subStationListForConfig);
       }
     },
     async checkSaveData(event, item) {

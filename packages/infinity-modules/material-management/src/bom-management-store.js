@@ -20,6 +20,7 @@ export default ({
     bomDetails: '',
     parameterList: '',
     subStationListForConfig: [],
+    bomDetailsConfigList: [],
   },
   mutations: {
     setSubStations: set('subStations'),
@@ -39,6 +40,7 @@ export default ({
     setParameterList: set('parameterList'),
     setSubstationList: set('substationList'),
     setSubStationListForConfig: set('subStationListForConfig'),
+    setBomDetailsConfigList: set('bomDetailsConfigList'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {
@@ -198,18 +200,19 @@ export default ({
         commit('setSublineList', sublineList);
       }
     },
-    getSubStationListForConfigScreen: async ({ commit, dispatch }, query) => {
+    getSubStationListForConfigScreen: async ({ commit, dispatch }, request) => {
       let list = [];
+      // const query = '';
       const substationList = await dispatch(
         'element/getRecords',
-        { elementName: 'substation', query },
+        { elementName: 'substation', query: `?query=lineid==${request.lineid}` },
         { root: true },
       );
       if (substationList && substationList.length) {
         list = substationList.map((l) => ({
           ...l,
           componentStatusList: [],
-          bomid: 0,
+          bomid: request.bomid,
           configstatus: [{
             text: 'Update quality',
             name: 'qualitystatus',
@@ -223,7 +226,8 @@ export default ({
         }));
       }
       console.log(list);
-      list.forEach(async (f) => {
+      await Promise.all(list.map(async (f) => {
+        delete f._id;
         const parameterList = await dispatch(
           'element/getRecords',
           {
@@ -254,9 +258,11 @@ export default ({
         }];
         clist.push(...componentStatusList);
         f.componentStatusList = clist;
-      });
+        console.log('store');
+      }));
       console.log(list);
       commit('setSubStationListForConfig', list);
+      return list;
     },
     getSubStationList: async ({ commit, dispatch }, query) => {
       const list = [];
@@ -342,7 +348,19 @@ export default ({
       );
       return created;
     },
+    getBomDetailsConfigList: async ({ commit, dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'bomdetailsconfig', query },
+        { root: true },
+      );
+      if (list) {
+        commit('setBomDetailsConfigList', list);
+      }
+    },
     createBomDetailConfigList: async ({ dispatch }, payload) => {
+      console.log('creating-bom');
+      console.log(payload);
       const created = await dispatch(
         'element/postBulkRecords',
         {
@@ -351,6 +369,7 @@ export default ({
         },
         { root: true },
       );
+      console.log('created-bom');
       return created;
     },
     updateBomDetail: async ({ dispatch }, payload) => {
@@ -369,7 +388,7 @@ export default ({
       const putParameter = await dispatch(
         'element/updateRecordById',
         {
-          elementName: 'bomdetails',
+          elementName: 'bomdetailsconfig',
           id: payload.id,
           payload: payload.payload,
         },
