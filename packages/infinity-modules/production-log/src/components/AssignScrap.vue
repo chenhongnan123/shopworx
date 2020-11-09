@@ -19,7 +19,7 @@
     </template>
     <v-card>
       <v-card-title primary-title>
-        Scrap - {{ production.shift }} | {{ production.machinename }} |
+        Scrap (in Kg) - {{ production.shift }} | {{ production.machinename }} |
         {{ production.partname }}
         <v-spacer></v-spacer>
         <v-btn

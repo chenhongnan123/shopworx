@@ -63,7 +63,7 @@
             </v-col>
             <v-col cols="12" sm="4">
               <div class="body-2">
-                Scrap (in Kgs)
+                Scrap (in Kg)
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 warning--text">
                 {{ production.scrap }}
