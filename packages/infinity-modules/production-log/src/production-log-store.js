@@ -24,6 +24,7 @@ export default ({
     error: false,
     productionCount: 0,
     operators: [],
+    rejectionReasons: [],
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -45,6 +46,7 @@ export default ({
     setSort: set('sort'),
     setProductionList: set('productionList'),
     setOperators: set('operators'),
+    setRejectionReasons: set('rejectionReasons'),
     setUnavailableDataElements: set('unavailableDataElements'),
     setUnavailableElements: set('unavailableElements'),
   },
@@ -328,6 +330,31 @@ export default ({
       return false;
     },
 
+    fetchRejectionReasons: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'rejectionreasons' },
+        { root: true },
+      );
+      if (records) {
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          category,
+          department,
+          reasoncode,
+          reasonname,
+        }) => ({
+          category,
+          department,
+          reasoncode,
+          reasonname,
+        }));
+        commit('setRejectionReasons', reasons);
+        return true;
+      }
+      return false;
+    },
+
     fetchProductionList: async ({
       commit,
       dispatch,
@@ -364,10 +391,39 @@ export default ({
       commit('setLoading', false);
     },
 
+    reFetchProductionList: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { selectedDate } = state;
+      const { activeSite } = rootState.user;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftwiseproductionlog',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { production, records } = JSON.parse(data);
+        commit('setProductionList', production);
+        commit('setProductionCount', records);
+        commit('setError', false);
+      }
+    },
+
     fetchHourlyProduction: async ({ dispatch, state, rootState }, {
       machine,
       part,
       shift,
+      planId,
     }) => {
       const { selectedDate } = state;
       const { activeSite } = rootState.user;
@@ -388,9 +444,56 @@ export default ({
       );
       if (data) {
         const { production } = JSON.parse(data);
-        return production;
+        const computedProduction = await Promise.all(production.map(async (prod) => {
+          let rejections = await dispatch('fetchRejections', {
+            planId,
+            hour: prod.hour,
+          });
+          rejections = rejections.map((rej) => ({
+            ...rej,
+            edit: false,
+          }));
+          const rejected = rejections.reduce((a, b) => a + (b.quantity || 0), 0);
+          return {
+            ...prod,
+            rejected,
+            accepted: parseInt(prod.produced, 10) - rejected,
+            rejections,
+            newRejection: {
+              qty: '',
+              reason: '',
+              remark: '',
+            },
+          };
+        }));
+        return computedProduction;
       }
       return false;
+    },
+
+    fetchRejections: async ({ dispatch }, { planId, hour }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rejection',
+          query: `?query=planid=="${planId}"%26%26hour==${hour}`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
+    addRejection: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rejection',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
     },
 
     updateOperator: async ({ dispatch, commit, state }, { payload, shift, machine }) => {
@@ -458,11 +561,18 @@ export default ({
       return shiftList;
     },
 
-    getTimestamp: ({ shifts, selectedDate }) => (shiftName) => {
+    getShiftStart: ({ shifts, selectedDate }) => (shiftName) => {
       const currentShift = shifts
         .sort((a, b) => a.sortindex - b.sortindex)
         .find((s) => s.shift === shiftName);
       const [hr, min] = currentShift.starttime.split(':');
+      const [year, month, day] = selectedDate.split('-');
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
+    },
+
+    getHourStart: ({ selectedDate }) => (displayHour) => {
+      const [start] = displayHour.split('-');
+      const [hr, min] = start.split(':');
       const [year, month, day] = selectedDate.split('-');
       return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },

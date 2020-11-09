@@ -67,6 +67,7 @@ export default {
         await Promise.all([
           this.getAppSchema(),
           this.fetchOperators(),
+          this.fetchRejectionReasons(),
         ]);
         this.setExtendedHeader(true);
       } else {
@@ -87,6 +88,7 @@ export default {
       'getDataOnboardingState',
       'getElementOnboardingState',
       'fetchOperators',
+      'fetchRejectionReasons',
       'fetchProductionList',
       'createElements',
       'getMasterElements',
@@ -101,6 +103,7 @@ export default {
         await Promise.all([
           this.getAppSchema(),
           this.fetchOperators(),
+          this.fetchRejectionReasons(),
         ]);
         this.setExtendedHeader(true);
       }
