@@ -2,13 +2,15 @@
   <v-combobox
     dense
     outlined
-    label="Operator"
     hide-details
     return-object
+    label="Operator"
+    :loading="loading"
+    :disabled="loading"
     :items="operators"
-    v-model="selectedOperator"
     item-text="operatorname"
     item-value="operatorcode"
+    v-model="selectedOperator"
     prepend-inner-icon="mdi-account-hard-hat"
   >
     <template #selection="data">
@@ -45,6 +47,11 @@ export default {
       type: Object,
     },
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
   computed: {
     ...mapState('productionLog', ['operators']),
     ...mapGetters('productionLog', ['getTimestamp']),
@@ -52,21 +59,23 @@ export default {
       get() {
         return this.operator;
       },
-      set({
+      async set({
         operatorname,
         operatorcode,
       }) {
+        this.loading = true;
         const payload = {
           operatorname,
           operatorcode,
           machinename: this.machine,
           timestamp: this.getTimestamp(this.shift),
         };
-        this.updateOperator({
+        await this.updateOperator({
           payload,
           shift: this.shift,
           machine: this.machine,
         });
+        this.loading = false;
       },
     },
   },
