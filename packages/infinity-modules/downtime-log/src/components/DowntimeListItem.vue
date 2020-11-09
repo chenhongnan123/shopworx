@@ -64,7 +64,7 @@
             Reason
           </div>
           <div class="text-uppercase title font-weight-regular mb-2">
-            <edit-downtime-reason :downtime="downtime" />
+            <assign-downtime :downtime="downtime" />
           </div>
         </v-col>
       </v-row>
@@ -75,7 +75,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import DowntimeSplit from './DowntimeSplit.vue';
-import EditDowntimeReason from './EditDowntimeReason.vue';
+import AssignDowntime from './AssignDowntime.vue';
 
 export default {
   name: 'DowntimeListItem',
@@ -87,7 +87,7 @@ export default {
   },
   components: {
     DowntimeSplit,
-    EditDowntimeReason,
+    AssignDowntime,
   },
   computed: {
     ...mapState('downtimeLog', ['toggleSelection', 'selectedDowntimes']),

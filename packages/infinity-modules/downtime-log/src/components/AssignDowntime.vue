@@ -4,6 +4,8 @@
     outlined
     hide-details
     return-object
+    :loading="loading"
+    :disabled="loading"
     class="primary--text"
     :items="downtimeReasons"
     item-text="reasonname"
@@ -33,12 +35,17 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'EditDowntimeReason',
+  name: 'AssignDowntime',
   props: {
     downtime: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      loading: false,
+    };
   },
   computed: {
     ...mapState('downtimeLog', ['downtimeReasons']),
@@ -46,23 +53,25 @@ export default {
       get() {
         return this.downtime.reasonname;
       },
-      set({
+      async set({
         reasonname,
         reasoncode,
         category,
         department,
       }) {
+        this.loading = true;
         const payload = {
           reasonname,
           reasoncode,
           category,
           department,
         };
-        this.updateReason({
-        // eslint-disable-next-line
+        await this.updateReason({
+          // eslint-disable-next-line
           id: this.downtime._id,
           payload,
         });
+        this.loading = false;
       },
     },
   },
