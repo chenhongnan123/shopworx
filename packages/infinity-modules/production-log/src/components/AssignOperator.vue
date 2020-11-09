@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     ...mapState('productionLog', ['operators']),
-    ...mapGetters('productionLog', ['getTimestamp']),
+    ...mapGetters('productionLog', ['getShiftStart']),
     selectedOperator: {
       get() {
         return this.operator;
@@ -68,7 +68,7 @@ export default {
           operatorname,
           operatorcode,
           machinename: this.machine,
-          timestamp: this.getTimestamp(this.shift),
+          timestamp: this.getShiftStart(this.shift),
         };
         await this.updateOperator({
           payload,
