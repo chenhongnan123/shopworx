@@ -29,8 +29,8 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <validation-observer ref="form" #default="{ passes, invalid }">
-        <v-form @submit.prevent="passes(splitDowntime)">
+      <validation-observer ref="form" #default="{ handleSubmit, invalid }">
+        <v-form @submit.prevent="handleSubmit(splitDowntime)">
           <v-card-text>
             <v-row>
               <v-col cols="4">

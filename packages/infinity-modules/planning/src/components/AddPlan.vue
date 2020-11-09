@@ -26,8 +26,8 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-    <validation-observer ref="form" #default="{ passes, invalid }">
-      <v-form @submit.prevent="passes(onSubmit)">
+    <validation-observer ref="form" #default="{ handleSubmit, invalid }">
+      <v-form @submit.prevent="handleSubmit(onSubmit)">
         <v-card-text>
           <validation-provider
             name="partname"
