@@ -9,7 +9,7 @@
               style="float: left; width: 30%;"
               dense
               outlined
-              label="Line/Host"
+              label="Line"
               :items="lines"
               item-text="name"
               return-object
@@ -18,89 +18,99 @@
             </v-combobox>
           </v-col>
           <v-col cols="6" md="6" lg="6">
-          <v-btn style="float: right;" small color="primary" class="text-none mt-2 mr-2"
-            @click="btnDeployModel">
+          <v-btn style="float: right;" :disabled="!selectedProcess"
+            small color="primary" class="text-none mt-2 mr-2"
+            @click="dialogDeploy = true">
             Deploy Model
           </v-btn>
           </v-col>
         </v-row>
-        <v-row class="mb-6" v-if="selectedLine" no-gutters>
-          <v-col cols="4" md="4" lg="4">
-            <v-card
-            class="pa-2"
-            tile
-            outlined>
-            Line/Host
-            </v-card>
-          </v-col>
-          <v-col cols="4" md="4" lg="4">
-            <v-card
-            class="pa-2"
-            tile
-            outlined>
-            Station
-            </v-card>
-          </v-col>
-          <v-col cols="4" md="4" lg="4">
-            <v-card
-            class="pa-2"
-            tile
-            outlined>
-            Sub Process
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row class="pa-1 mx-1 grid_row"
-          :key="subline._id" v-for="subline in sublines">
-        <div class="pl-2">{{ selectedLine.name }}</div>
-          <v-spacer></v-spacer>
-          <v-col cols="9" md="9" lg="9" class="py-0">
-            <v-row :key="station._id" v-for="station in stations
-            .filter((s) => subline.id === s.sublineid)">
-              <v-col cols="4" md="4" lg="4" class="py-0">
-                <div class="pl-2">{{ station.name }}</div>
-              </v-col>
-              <v-col cols="8" md="8" lg="8" class="py-0">
-                <v-row :key="substation._id" v-for="substation in subStations
-                .filter((ss) => station.id === ss.stationid)">
-                <v-col cols="6" md="6" lg="6" class="py-0">
-                  <v-row :key="process._id" v-for="process in processes
-                  .filter((p) => substation.id === p.substationid)">
-                    <v-col cols="12" md="12" lg="12" class="py-0">
-                    <div @click="onProcessClick(process)" >
-                      {{ process.name }}
-                    </div>
-                    </v-col>
-                  </v-row>
+        <v-row class="mb-6" v-if="selectedLine"
+           no-gutters>
+                <v-col>
+                  <v-card
+                  class="pa-2"
+                  tile
+                  outlined>
+                  Subline
+                  <AddSubline :lineid="selectedLine.id"/>
+                  </v-card>
                 </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+                <v-col>
+                  <v-card
+                  class="pa-2"
+                  tile
+                  outlined>
+                  Station
+                  <AddStation :lineid="selectedLine.id"/>
+                  </v-card>
+                </v-col>
+                <v-col>
+                  <v-card
+                  class="pa-2"
+                  tile
+                  outlined>
+                  <span class="ml-0">SubStation</span>
+                  <AddSubstation :lineid="selectedLine.id"/>
+                  </v-card>
+                </v-col>
+                <v-col>
+                  <v-card
+                  class="pa-2"
+                  tile
+                  outlined>
+                  <span class="ml-0">Process</span>
+                  <AddProcess />
+                  </v-card>
+                </v-col>
+           </v-row>
+        <v-row class="pa-1 mx-1 grid_row" :key="subline._id" v-for="subline in sublines">
+  <v-col cols="3" md="3" lg="3" class="py-0">
+    <div>{{ subline.name }}
+    </div>
+  </v-col>
+  <v-col cols="9" md="9" lg="9" class="py-0">
+      <v-row :key="station._id" v-for="station in stations
+      .filter((s) => subline.id === s.sublineid)">
+        <v-col cols="4" md="4" lg="4" class="py-0">
+          <div>{{ station.name }}
+          </div>
+        </v-col>
+        <v-col cols="8" md="8" lg="8" class="py-0">
+          <v-row :key="substation._id" v-for="substation in subStations
+          .filter((ss) => station.id === ss.stationid)">
+            <v-col cols="6" md="6" lg="6" class="py-0">
+              <!-- <div :class="{ 'my-text-style': substation.lineid===1}"> -->
+                <div>
+                {{ substation.name }}
+              </div>
+            </v-col>
+            <v-col cols="6" md="6" lg="6" class="py-0">
+              <v-row :key="process._id" v-for="process in processes
+              .filter((p) => substation.id === p.substationid)">
+                <v-col cols="12" md="12" lg="12" class="py-0">
+                <div @click="onProcessClick(process)"><a>{{ process.name }}</a>
+                </div>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+  </v-col>
+</v-row>
       </v-col>
     </v-row>
-    <v-row class="mb-6" v-if="selectedProcess" no-gutters>
+    <v-row class="mb-6 mt-5" v-if="selectedProcess" no-gutters>
       <v-col cols="4" md="4" lg="4">
-        <v-card v-if="paramterSelected.length" class="pa-2" tile outlined style="width: 98%">
-          {{selectedProcess}} : Input
-          <v-icon style="float: right; width: 15%; margin-bottom: 10px;"
-            v-if="paramterSelected.length" @click="onAddbtnClick()" v-text="'$plus'"></v-icon>
-          <!-- <v-select
-            dense
-            outlined
-            label="Input"
-            :items="paramterSelected"
-            item-text="description"
-            return-object
-            v-model="selectedInput"
-            style="width: 80%; margin-top: 15px;"
-          >
-          </v-select> -->
+        <v-card v-if="selectedProcess" class="pa-2" tile outlined style="width: 98%">
+          <a>{{selectedProcess}}</a> : Input
+          <v-icon style="float: right; margin-bottom: 23px;"
+            v-if="selectedProcess" @click="onAddbtnClick()" v-text="'$plus'"></v-icon>
           <v-autocomplete
             clearable
             label="Input"
-            :items="paramterSelected"
+            :items="selectedParameterList"
             item-text="description"
             return-object
             prepend-icon="$production"
@@ -163,6 +173,23 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialogDeploy" max-width="500">
+    <v-card>
+      <v-card-title class="headline"
+        >Deploy models with Process - {{ selectedProcess }}?
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialogDeploy = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" class="text-none" @click="btnDeployModel">
+          Yes
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   </v-container>
 </template>
 
@@ -182,6 +209,7 @@ export default {
   payloadData: {},
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('modelManagement', ['setSelectedParameterList']),
     ...mapActions('modelManagement', [
       'getLines',
       'getStations',
@@ -218,6 +246,7 @@ export default {
           type: 'success',
           message: 'MODEL_DEPLOYED',
         });
+        this.dialogDeploy = false;
       } else {
         this.setAlert({
           show: true,
@@ -235,16 +264,43 @@ export default {
           mltransformationoutputid: item._id,
           assetid: 4,
         };
-        this.addOutputRecordss(payload);
+        const created = await this.addOutputRecordss(payload);
+        if (created) {
+          await this.getOutputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
+            %26%26processid=="${this.payloadData.processid}"`);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'OUTPUT_PROCESS',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_OUTPUT_PROCESS',
+          });
+        }
       } else {
         const idToDelete = this.processOutputList.find((f) => f
           .mltransformationoutputid === item._id);
         console.log(idToDelete);
-        this.deleteOutputRecords(idToDelete._id);
+        const deleted = this.deleteOutputRecords(idToDelete._id);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DELETE_OUTPUT_PROCESS',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETE_OUTPUT',
+          });
+        }
       }
     },
     async onLineChange() {
-      await this.getMlTransformationOutputList('');
       await this.getStations('');
       await this.getProcesses('');
       await this.getSublines(`?query=lineid==${this.selectedLine.id}`);
@@ -262,12 +318,26 @@ export default {
       };
       const response = await this.addInputRecords(payload);
       if (response) {
-        this.paramterSelected.splice(this.paramterSelected.indexOf(this.selectedInput), 1);
+        this.selectedParameterList.splice(this.selectedParameterList
+          .indexOf(this.selectedInput), 1);
+        this.setSelectedParameterList(this.selectedParameterList);
         await this.getInputRecords(`?query=lineid==${this.selectedInput.lineid}%26%26stationid=="${this.selectedInput.stationid}"
           %26%26processid=="${payload.processid}"`);
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'INPUT_PROCESS_ADDED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_ADDING_INPUT',
+        });
       }
     },
     async onProcessClick(process) {
+      this.setSelectedParameterList([]);
       this.payloadData = {
         lineid: 0,
         processid: '',
@@ -278,14 +348,15 @@ export default {
       this.payloadData.processid = process.id;
       this.payloadData.stationid = this.subStations.find((f) => f.id === process.substationid)
         .stationid;
-      this.paramterSelected = [];
+      this.selectedParameterList = [];
       this.selectedProcess = process.name;
       this.parameterList.forEach((parameter) => {
         if (parameter.parametercategory === 51) {
-          this.paramterSelected.push(parameter);
+          this.selectedParameterList.push(parameter);
         }
       });
-      this.paramterSelected = this.paramterSelected.sort((a, b) => b.description - a.description);
+      this.selectedParameterList = this.selectedParameterList
+        .sort((a, b) => b.description - a.description);
       // paramterSelected.forEach((parameter) => {
       //   if (parameter.line === this.selectedLine.name) {
       //     this.inputProcessParameters.push(parameter.description);
@@ -295,14 +366,16 @@ export default {
       //   }
       // });
       // get all records
+      await this.getMlTransformationOutputList('');
       await this.getOutputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
         %26%26processid=="${this.payloadData.processid}"`);
       await this.getInputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
         %26%26processid=="${this.payloadData.processid}"`);
       this.processIntputList.forEach((f) => {
-        const usedObject = this.paramterSelected.find((p) => p.id === f.parameterid);
-        this.paramterSelected.splice(this.paramterSelected.indexOf(usedObject), 1);
+        const usedObject = this.selectedParameterList.find((p) => p.id === f.parameterid);
+        this.selectedParameterList.splice(this.selectedParameterList.indexOf(usedObject), 1);
       });
+      this.setSelectedParameterList(this.selectedParameterList);
       await this.getModelRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
         %26%26processid=="${this.payloadData.processid}"`);
     },
@@ -318,12 +391,14 @@ export default {
       'processOutputList',
       'processIntputList',
       'processModelList',
+      'selectedParameterList',
     ]),
     ...mapState('parameterConfiguration', ['parameterList', 'categoryList']),
   },
   data() {
     return {
-      paramterSelected: [],
+      isClicked: false,
+      dialogDeploy: false,
       selectedLine: null,
       inputProcessParameters: [],
       selectedProcess: null,
@@ -354,3 +429,29 @@ export default {
   },
 };
 </script>
+<style scoped>
+div .pa-1:nth-of-type(odd) {
+    background-color:  rgba(255,255,255,.05);
+    border-color: #454d55;
+    border-bottom: 1px solid rgba(243, 243, 247, 0.25);
+  }
+div .pa-1:nth-of-type(even) {
+    border-color: #454d55;
+    border-bottom: 1px solid rgba(243, 243, 247, 0.25);
+  }
+.row .pa-1:nth-of-type(odd) {
+    border-bottom: 1px solid rgba(198, 198, 212, 0.35);
+  }
+.row .pa-1:nth-of-type(even) {
+    border-bottom: 1px solid rgba(198, 198, 212, 0.35);
+  }
+.theme--light.v-application .row .pa-1:nth-of-type(odd) {
+    background-color: #F5F5F5;
+  }
+.my-text-style{
+  color: red;
+}
+.green--text{
+  color: green;
+}
+</style>

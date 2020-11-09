@@ -27,12 +27,13 @@
   </v-dialog>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   data() {
     return {
       dialog: false,
+      paramterSelected: [],
     };
   },
   props: {
@@ -40,27 +41,55 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState('modelManagement', [
+      'processIntputList',
+      'processModelList',
+      'selectedParameterList',
+    ]),
+    ...mapState('parameterConfiguration', ['parameterList', 'categoryList']),
+  },
   methods: {
     ...mapActions('modelManagement', ['deleteInput', 'getInputRecords']),
+    ...mapActions('parameterConfiguration', [
+      'getPageDataList',
+      'getParameterListRecords',
+    ]),
     ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('modelManagement', ['setSelectedParameterList']),
     async onBtnClick() {
       let deleted = false;
       console.log(this.payload);
-      deleted = this.deleteInput(this.payload._id);
+      deleted = await this.deleteInput(this.payload._id);
       if (deleted) {
+        await this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        this.parameterList.forEach((parameter) => {
+          if (parameter.parametercategory === 51) {
+            this.paramterSelected.push(parameter);
+          }
+        });
+        this.paramterSelected = this.paramterSelected.sort((a, b) => b.description - a.description);
+        console.log(this.paramterSelected);
+        // this.setParameterList(this.parameterList);
         await this.getInputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
           %26%26processid=="${this.payload.processid}"`);
+        this.processIntputList.forEach((f) => {
+          const usedObject = this.paramterSelected.find((p) => p.id === f.parameterid);
+          this.paramterSelected.splice(this.paramterSelected.indexOf(usedObject), 1);
+        });
+        console.log(this.paramterSelected);
+        this.setSelectedParameterList(this.paramterSelected);
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'PROCESS_DELETED',
+          message: 'INPUT_PROCESS_DELETED',
         });
         this.dialog = false;
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_DELETING_PROCESS',
+          message: 'ERROR_INPUT_PROCESS',
         });
       }
       this.dialog = false;

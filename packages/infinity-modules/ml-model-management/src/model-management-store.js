@@ -12,6 +12,7 @@ export default ({
     processOutputList: [],
     processIntputList: [],
     processModelList: [],
+    selectedParameterList: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -23,6 +24,7 @@ export default ({
     setProcessOutputList: set('processOutputList'),
     setProcessInputList: set('processIntputList'),
     setProcessModelList: set('processModelList'),
+    setSelectedParameterList: set('selectedParameterList'),
   },
   actions: {
     addOutputRecordss: async ({ dispatch }, payload) => {

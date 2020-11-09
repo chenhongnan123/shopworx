@@ -11,7 +11,7 @@
     </template>
     <v-card>
       <v-card-title class="headline"
-        >Delete this Model?
+        >Delete Model?
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
@@ -46,21 +46,21 @@ export default {
     async onBtnClick() {
       let deleted = false;
       console.log(this.payload);
-      deleted = this.deleteModel(this.payload._id);
+      deleted = await this.deleteModel(this.payload._id);
       if (deleted) {
         await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
           %26%26processid=="${this.payload.processid}"`);
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'PROCESS_DELETED',
+          message: 'MODEL_DELETE',
         });
         this.dialog = false;
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_DELETING_PROCESS',
+          message: 'ERROR_DELETE_MODEL',
         });
       }
       this.dialog = false;

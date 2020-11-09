@@ -97,8 +97,22 @@ export default {
       const response = await this.addProcessModel(object);
       if (response) {
         this.dialog = false;
+        this.name = '';
+        this.description = '';
         await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
         %26%26processid=="${this.payload.processid}"`);
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'MODEL_ADDED',
+        });
+        this.dialog = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_ADDED',
+        });
       }
     },
     async dialogReset() {
