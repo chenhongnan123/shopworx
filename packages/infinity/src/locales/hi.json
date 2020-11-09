@@ -2,20 +2,27 @@
   "$vuetify": {
     "badge": "बिल्ला",
     "close": "बंद करे",
-    "dataIterator": {
+    "dataIterator": 
+    {
       "noResultsText": "कोई मिलान रिकॉर्ड पाया",
-      "loadingText": "आइटम लोड हो रहे हैं ..."
+      "loadingText": "आइटम लोड हो रहे हैं..."
     },
-    "dataTable": {
+    "dataTable": 
+    {
       "itemsPerPageText": "प्रति पृष्ठ पंक्तियाँ:",
-      "ariaLabel": {
-        "sortDescending": ": क्रमबद्ध अवरोही। छँटाई को हटाने के लिए सक्रिय करें।",
-        "sortAscending": ": आरोही क्रमबद्ध। अवरोही क्रमबद्ध करने के लिए सक्रिय करें।",
-        "sortNone": ": सॉर्ट नहीं किया गया। आरोही को सॉर्ट करने के लिए सक्रिय करें।"
+      "ariaLabel": 
+      {
+        "sortDescending": "अवरोही क्रमबद्ध।",
+        "sortAscending": "आरोही क्रमबद्ध।",
+        "sortNone": "छांटे नहीं गए।",
+        "activateNone": "छँटाई को हटाने के लिए सक्रिय करें।",
+        "activateDescending": "अवरोही क्रमबद्ध करने के लिए सक्रिय करें।",
+        "activateAscending": "आरोही को सॉर्ट करने के लिए सक्रिय करें।"
       },
       "sortBy": "इसके अनुसार क्रमबद्ध करें"
     },
-    "dataFooter": {
+    "dataFooter": 
+    {
       "itemsPerPageText": "आइटम प्रति पेज:",
       "itemsPerPageAll": "सब",
       "nextPage": "अगला पृष्ठ",
@@ -24,27 +31,48 @@
       "lastPage": "अंतिम पृष्ठ",
       "pageText": "{0} - {1} का {2}"
     },
-    "datePicker": {
-      "itemsSelected": "{0} चयनित"
+    "datePicker": 
+    {
+      "itemsSelected": "{0} चुन लिया",
+      "nextMonthAriaLabel": "अगले महीने",
+      "nextYearAriaLabel": "अगले वर्ष",
+      "prevMonthAriaLabel": "पिछ्ला महिना",
+      "prevYearAriaLabel": "पिछला साल"
     },
     "noDataText": "कोई डेटा उपलब्ध नहीं है",
-    "carousel": {
+    "carousel": 
+    {
       "prev": "पिछला दृश्य",
       "next": "अगला दृश्य",
-      "ariaLabel": {
+      "ariaLabel": 
+      {
         "delimiter": "हिंडोला स्लाइड {0} का {1}"
       }
     },
-    "calendar": {
+    "calendar": 
+    {
       "moreEvents": "{0} अधिक"
     },
-    "fileInput": {
+    "fileInput": 
+    {
       "counter": "{0} फ़ाइलें",
-      "counterSize": "{0} फ़ाइलें ({1} कुल मिलाकर)"
+      "counterSize": "{0} फाइलें ({1} कुल मिलाकर)"
     },
-    "timePicker": {
+    "timePicker": 
+    {
       "am": "AM",
       "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "पेजिनेशन नेविगेशन",
+        "next": "अगला पृष्ठ",
+        "previous": "पिछला पृष्ठ",
+        "page": "गोटो पेज {0}",
+        "currentPage": "वर्तमान पृष्ठ, पृष्ठ {0}"
+      }
     }
   },
   "success": {
