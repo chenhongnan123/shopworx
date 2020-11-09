@@ -85,6 +85,7 @@
                     <template v-slot:item.quantity="{ item }">
                       <v-edit-dialog
                         large
+                        persistent
                         @save="updateRejection({
                           id: item._id,
                           hour: data.hour,
@@ -108,6 +109,7 @@
                     <template v-slot:item.reasonname="{ item }">
                       <v-edit-dialog
                         large
+                        persistent
                         @save="updateRejection({
                           id: item._id,
                           hour: data.hour,
@@ -131,6 +133,7 @@
                     <template v-slot:item.remark="{ item }">
                       <v-edit-dialog
                         large
+                        persistent
                         @save="updateRejection({
                           id: item._id,
                           hour: data.hour,
