@@ -56,6 +56,22 @@ class UserService {
   getUsers() {
     return this.request.get('/server/users');
   }
+
+  deleteModuleAccess(roleId) {
+    return this.request.delete(`/server/moduleaccess/${roleId}`);
+  }
+
+  deleteWebAppAccess(roleId) {
+    return this.request.delete(`/server/webappaccess/${roleId}`);
+  }
+
+  deleteReportsCategoryAccess(roleId) {
+    return this.request.delete(`/server/reportscategoryaccess/${roleId}`);
+  }
+
+  createAccess(payload) {
+    return this.request.post('server/moduleaccess', payload);
+  }
 }
 
 export default new UserService();
