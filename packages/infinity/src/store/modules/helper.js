@@ -8,6 +8,9 @@ export default ({
       type: null,
       message: null,
     },
+    isSessionValid: true,
+    isServerError: false,
+    serverError: null,
     locales: [
       {
         text: 'English',
@@ -37,6 +40,9 @@ export default ({
   },
   mutations: {
     setAlert: set('alert'),
+    setIsSessionValid: set('isSessionValid'),
+    setIsServerError: set('isServerError'),
+    setServerError: set('serverError'),
     setIsDark: set('isDark'),
     toggleIsDark: toggle('isDark'),
     setExtendedHeader: set('extendedHeader'),
