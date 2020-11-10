@@ -66,7 +66,7 @@
                 Scrap (in Kg)
               </div>
               <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-                {{ production.scrap.toFixed(2) }}
+                {{ parseFloat(production.scrap).toFixed(2) }}
                 <assign-scrap :production="production" />
               </div>
             </v-col>
