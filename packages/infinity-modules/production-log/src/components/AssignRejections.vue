@@ -70,7 +70,7 @@
                     Rejected
                   </div>
                   <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                    {{ data.rejected }}
+                    {{ parseInt(data.rejected, 10) }}
                   </div>
                 </v-col>
               </v-row>
