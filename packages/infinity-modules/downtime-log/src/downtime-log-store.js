@@ -212,7 +212,7 @@ export default ({
       if (selectedSort) {
         const date = parseInt(selectedDate.replace(/-/g, ''), 10);
         const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-        let query = `date==${date}%26%26status!="inProgress"`;
+        let query = `date==${date}"`;
         if (selectedMachine && selectedMachine !== 'All Machines') {
           query += `%26%26machinename=="${selectedMachine}"`;
         }
