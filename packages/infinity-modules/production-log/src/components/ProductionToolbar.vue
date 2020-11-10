@@ -8,7 +8,7 @@
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
-          <span v-if="productionList.length">
+          <span v-if="productionCount">
             {{ productionCount }} records |
           </span>
           {{ machine }} | {{ shift }} - {{ date }}
@@ -43,7 +43,6 @@ export default {
     ...mapState('productionLog', [
       'drawer',
       'productionList',
-      'productionCount',
       'selectedDuration',
       'selectedMachine',
       'selectedShift',
@@ -59,6 +58,21 @@ export default {
     },
     date() {
       return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
+    },
+    productionCount() {
+      const production = this.productionList.filter((prod) => {
+        if (this.selectedShift !== 'All Shifts' && this.selectedMachine !== 'All Machines') {
+          return (prod.shift === this.selectedShift && prod.machinename === this.selectedMachine);
+        }
+        if (this.selectedShift !== 'All Shifts' && this.selectedMachine === 'All Machines') {
+          return prod.shift === this.selectedShift;
+        }
+        if (this.selectedShift === 'All Shifts' && this.selectedMachine !== 'All Machines') {
+          return prod.machinename === this.selectedMachine;
+        }
+        return prod;
+      });
+      return production.length;
     },
   },
   methods: {
