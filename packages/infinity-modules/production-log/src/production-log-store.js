@@ -721,7 +721,7 @@ export default ({
             return acc;
           }, {});
       }
-      if (Object.keys(production).length === 0) {
+      if (!production || Object.keys(production).length === 0) {
         production = null;
       }
       return production;
