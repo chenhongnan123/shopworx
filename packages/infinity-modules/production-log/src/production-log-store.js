@@ -44,8 +44,6 @@ export default ({
     setLoading: set('loading'),
     setError: set('error'),
     setProductionCount: set('productionCount'),
-    setFilters: set('filters'),
-    setSort: set('sort'),
     setProductionList: set('productionList'),
     setOperators: set('operators'),
     setRejectionReasons: set('rejectionReasons'),
