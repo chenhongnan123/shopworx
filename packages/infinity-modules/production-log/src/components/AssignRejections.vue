@@ -401,7 +401,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'REJECTION_UPDATE_SUCCESS',
+          message: 'REJECTION_UPDATE',
         });
         if (hasQtyProperty) {
           const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
@@ -419,7 +419,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REJECTION_UPDATE_ERROR',
+          message: 'REJECTION_UPDATE',
         });
       }
     },

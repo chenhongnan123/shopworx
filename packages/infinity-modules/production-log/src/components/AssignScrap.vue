@@ -332,7 +332,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'SCRAP_UPDATE_SUCCESS',
+          message: 'SCRAP_UPDATE',
         });
         if (hasWeightProperty) {
           await this.reFetchProductionList();
@@ -341,7 +341,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'SCRAP_UPDATE_ERROR',
+          message: 'SCRAP_UPDATE',
         });
       }
     },

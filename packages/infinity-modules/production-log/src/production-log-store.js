@@ -620,7 +620,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'success',
-          message: 'OPERATOR_UPDATE_SUCCESS',
+          message: 'OPERATOR_UPDATE',
         }, {
           root: true,
         });
@@ -628,7 +628,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: 'OPERATOR_UPDATE_ERROR',
+          message: 'OPERATOR_UPDATE',
         }, {
           root: true,
         });

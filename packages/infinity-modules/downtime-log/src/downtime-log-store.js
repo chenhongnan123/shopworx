@@ -288,7 +288,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'success',
-          message: 'DOWNTIME_UPDATE_SUCCESS',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });
@@ -296,7 +296,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: 'DOWNTIME_UPDATE_ERROR',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });

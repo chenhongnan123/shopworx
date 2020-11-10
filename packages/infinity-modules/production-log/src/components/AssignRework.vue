@@ -337,7 +337,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'REWORK_UPDATE_SUCCESS',
+          message: 'REWORK_UPDATE',
         });
         if (hasQtyProperty) {
           await this.reFetchProductionList();
@@ -346,7 +346,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REWORK_UPDATE_ERROR',
+          message: 'REWORK_UPDATE',
         });
       }
     },

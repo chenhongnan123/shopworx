@@ -85,11 +85,12 @@
     "DELETE_RECORD": "Record deleted successfully.",
     "ROLE_UPDATED": "Role updated successfully.",
     "USER_DELETED": "User removed successfully.",
-    "DOWNTIME_UPDATE_SUCCESS": "Downtime reason updated!",
-    "OPERATOR_UPDATE_SUCCESS": "Operator updated!",
-    "REJECTION_UPDATE_SUCCESS": "Rejection updated!",
-    "REWORK_UPDATE_SUCCESS": "Rework updated!",
-    "SCRAP_UPDATE_SUCCESS": "Scrap updated!"
+    "DOWNTIME_UPDATE": "Downtime reason updated!",
+    "OPERATOR_UPDATE": "Operator updated!",
+    "REJECTION_UPDATE": "Rejection updated!",
+    "REWORK_UPDATE": "Rework updated!",
+    "SCRAP_UPDATE": "Scrap updated!",
+    "PERMISSION_UPDATE": "Role permission updated!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -108,11 +109,12 @@
     "ERROR_CREATING_PLAN": "Error while creating plan, please retry.",
     "ERROR_UPDATING_PLAN": "Error while updating plan, please retry.",
     "INVALID_DOWNTIME_SPLIT": "Invalid downtime start or end time. Please verify your data.",
-    "DOWNTIME_UPDATE_ERROR": "Error while updating downtime reason. Plese retry.",
-    "OPERATOR_UPDATE_ERROR": "Error while updating operator. Plese retry.",
-    "REJECTION_UPDATE_ERROR": "Error while updating rejection. Plese retry.",
-    "REWORK_UPDATE_ERROR": "Error while updating rework. Plese retry.",
-    "SCRAP_UPDATE_ERROR": "Error while updating scrap. Plese retry."
+    "DOWNTIME_UPDATE": "Error while updating downtime reason. Plese retry.",
+    "OPERATOR_UPDATE": "Error while updating operator. Plese retry.",
+    "REJECTION_UPDATE": "Error while updating rejection. Plese retry.",
+    "REWORK_UPDATE": "Error while updating rework. Plese retry.",
+    "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
+    "PERMISSION_UPDATE": "Error while updating role permission. Plese retry."
   },
   "fields": {
     "email": "Email",
