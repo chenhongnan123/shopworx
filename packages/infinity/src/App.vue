@@ -42,9 +42,8 @@ export default {
         this.setIsSessionValid(false);
       }
       return res;
-    }, (err) => {
-      this.setIsServerError(true);
-      this.setServerError(err);
+    }, () => {
+      this.$router.push({ name: '500' });
     });
   },
   watch: {
@@ -58,8 +57,6 @@ export default {
     ...mapMutations('helper', [
       'setIsDark',
       'setIsSessionValid',
-      'setIsServerError',
-      'setServerError',
     ]),
   },
 };

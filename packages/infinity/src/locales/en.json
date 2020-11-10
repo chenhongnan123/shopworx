@@ -163,6 +163,13 @@
     "subTitle3": "was not found on this server.",
     "goHome": "Go back home"
   },
+  "serverError": {
+    "title": "Shoot!",
+    "subTitle1": "Well, this is unexpected...",
+    "subTitle2": "Error code 500.",
+    "subTitle3": "An error has occured and we're working to fix the problem! We'll be up and running shortly.",
+    "goHome": "Go back home"
+  },
   "forbidden": {
     "title": "Access forbidden!",
     "subTitle1": "You tried to access a page you did not have prior",
