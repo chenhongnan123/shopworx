@@ -58,7 +58,7 @@
             v-else
             class="text-uppercase title font-weight-regular mb-2"
           >
-            In Progress
+            Ongoing
           </div>
         </v-col>
         <v-col cols="12" sm="6">

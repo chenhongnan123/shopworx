@@ -17,6 +17,7 @@ export default ({
     selectedDuration: null,
     selectedType: null,
     selectedSort: null,
+    selectedStatus: null,
     downtimeList: [],
     loading: false,
     error: false,
@@ -53,12 +54,11 @@ export default ({
     setSelectedDuration: set('selectedDuration'),
     setSelectedType: set('selectedType'),
     setSelectedSort: set('selectedSort'),
+    setSelectedStatus: set('selectedStatus'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
-    setFilters: set('filters'),
-    setSort: set('sort'),
     resetPageNumber: (state) => {
       state.pageNumber = 1;
     },
@@ -206,13 +206,17 @@ export default ({
         selectedDuration,
         selectedType,
         selectedSort,
+        selectedStatus,
         pageNumber,
         pageSize,
       } = state;
       if (selectedSort) {
         const date = parseInt(selectedDate.replace(/-/g, ''), 10);
         const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-        let query = `date==${date}"`;
+        let query = `date==${date}`;
+        if (selectedStatus.value) {
+          query += `%26%26${selectedStatus.value}`;
+        }
         if (selectedMachine && selectedMachine !== 'All Machines') {
           query += `%26%26machinename=="${selectedMachine}"`;
         }
