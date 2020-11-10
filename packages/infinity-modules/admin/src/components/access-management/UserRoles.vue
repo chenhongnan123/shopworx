@@ -20,7 +20,7 @@
           small
           outlined
           color="primary"
-          @click="fetchRoles"
+          @click="refresh"
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
@@ -253,6 +253,11 @@ export default {
       'deleteReportsCategoryAccess',
       'createAccess',
     ]),
+    async refresh() {
+      this.loading = true;
+      await this.fetchRoles();
+      this.loading = false;
+    },
     async fetchRoles() {
       await this.getMasterSolutions();
       await this.getUserRoles();
@@ -389,20 +394,20 @@ export default {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'PERMISSION_UPDATE_SUCCESS',
+            message: 'PERMISSION_UPDATE',
           });
         } else {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'PERMISSION_UPDATE_ERROR',
+            message: 'PERMISSION_UPDATE',
           });
         }
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'PERMISSION_UPDATE_ERROR',
+          message: 'PERMISSION_UPDATE',
         });
       }
       this.saving = false;

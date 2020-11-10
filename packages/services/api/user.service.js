@@ -58,15 +58,15 @@ class UserService {
   }
 
   deleteModuleAccess(roleId) {
-    return this.request.delete(`/server/moduleaccess/${roleId}`);
+    return this.request.delete(`/server/moduleaccess?roleId=${roleId}`);
   }
 
   deleteWebAppAccess(roleId) {
-    return this.request.delete(`/server/webappaccess/${roleId}`);
+    return this.request.delete(`/server/webappaccess?roleId=${roleId}`);
   }
 
   deleteReportsCategoryAccess(roleId) {
-    return this.request.delete(`/server/reportscategoryaccess/${roleId}`);
+    return this.request.delete(`/server/reportscategoryaccess?roleId=${roleId}`);
   }
 
   createAccess(payload) {
