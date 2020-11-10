@@ -700,28 +700,36 @@ export default ({
             }
             return a.firstcycle - b.firstcycle;
           })
-          .reduce((acc, cur) => {
+          .reduce((result, currentValue) => {
             const {
               shift,
               machinename,
               operatorname,
               operatorcode,
-            } = cur;
-            if (!acc[shift]) {
-              acc[shift] = {};
-              acc[shift][machinename] = {};
-              acc[shift][machinename].production = [];
-            } else if (acc[shift] && !acc[machinename]) {
-              acc[shift][machinename] = {};
-              acc[shift][machinename].production = [];
+            } = currentValue;
+            if (!result[shift]) {
+              result[shift] = {};
+              result[shift][machinename] = {
+                operatorcode: operatorcode === '-' ? null : operatorcode,
+                operatorname: operatorname === '-' ? null : operatorname,
+                production: [],
+              };
             }
-            acc[shift][machinename].operatorcode = operatorcode === '-' ? null : operatorcode;
-            acc[shift][machinename].operatorname = operatorname === '-' ? null : operatorname;
-            acc[shift][machinename].production.push(cur);
-            return acc;
+            if (!result[shift][machinename]) {
+              result[shift][machinename] = {
+                operatorcode: operatorcode === '-' ? null : operatorcode,
+                operatorname: operatorname === '-' ? null : operatorname,
+                production: [],
+              };
+            }
+            result[shift][machinename].production = [
+              ...result[shift][machinename].production,
+              currentValue,
+            ];
+            return result;
           }, {});
       }
-      if (!production || Object.keys(production).length === 0) {
+      if (!production || !Object.keys(production).length) {
         production = null;
       }
       return production;
