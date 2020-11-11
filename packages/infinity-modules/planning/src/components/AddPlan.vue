@@ -410,6 +410,7 @@ export default {
         this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
       }
       if (this.partMatrixRecords.length === 1) {
+        this.familyPlan = [];
         const matrixKeys = Object.keys(this.partMatrix);
         matrixKeys.forEach((key) => {
           this.partMatrix[key] = this.partMatrixRecords[0][key];
