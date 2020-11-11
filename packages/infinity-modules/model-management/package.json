@@ -1,5 +1,5 @@
 {
-  "name": "@shopworx/model-management-old",
+  "name": "@shopworx/model-management",
   "version": "4.1.2",
   "private": true,
   "scripts": {
