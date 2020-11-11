@@ -14,6 +14,7 @@ export default ({
     processModelList: [],
     selectedParameterList: [],
     modelFilesList: [],
+    modelDeploymentOrderList: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -27,6 +28,7 @@ export default ({
     setProcessModelList: set('processModelList'),
     setSelectedParameterList: set('selectedParameterList'),
     setModelFilesList: set('modelFilesList'),
+    setModelDeploymentOrderList: set('modelDeploymentOrderList'),
   },
   actions: {
     uploadFile: async ({ dispatch }, payload) => {
@@ -113,6 +115,38 @@ export default ({
       }
       return false;
     },
+    getModelDeploymentOrder: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'modeldeploymentorder',
+          query,
+        },
+        { root: true },
+      );
+      if (list) {
+        let modelList = [];
+        if (list) {
+          modelList = list.map((l) => ({
+            ...l,
+            logslist: [],
+          }));
+          modelList.forEach(async (element) => {
+            const logs = await dispatch(
+              'element/getRecords',
+              {
+                elementName: 'modeldeploymentorderslogs',
+                query: `?query=modeldeploymentorderid=="${element._id}"`,
+              },
+              { root: true },
+            );
+            element.logslist = logs;
+          });
+          commit('setModelDeploymentOrderList', modelList);
+        }
+      }
+      return list;
+    },
     getModelFiles: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
@@ -143,6 +177,7 @@ export default ({
           inputlist: [],
           filelist: [],
           outputlist: [],
+          parameterlist: [],
         }));
         commit('setProcessModelList', modelList);
       }

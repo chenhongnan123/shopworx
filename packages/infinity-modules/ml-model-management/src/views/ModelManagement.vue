@@ -17,13 +17,6 @@
             >
             </v-combobox>
           </v-col>
-          <v-col cols="6" md="6" lg="6">
-          <v-btn style="float: right;" :disabled="!selectedProcess"
-            small color="primary" class="text-none mt-2 mr-2"
-            @click="dialogDeploy = true">
-            Deploy Model
-          </v-btn>
-          </v-col>
         </v-row>
         <v-row class="mb-6" v-if="selectedLine"
            no-gutters>
@@ -124,7 +117,7 @@
                     <v-autocomplete
                       clearable
                       label="Input"
-                      :items="selectedParameterList"
+                      :items="data.parameterlist"
                       item-text="description"
                       return-object
                       prepend-icon="$production"
@@ -187,13 +180,20 @@
                   </v-card>
                 </v-col>
               </v-row>
+              <v-col>
+                <v-btn style="float: right;" :disabled="!selectedProcess"
+                  small color="primary" class="text-none"
+                  @click="btnDeployModel(data)">
+                  Deploy Model
+                </v-btn>
+              </v-col>
             </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     <v-dialog v-model="dialogDeploy" max-width="500">
     <v-card>
-      <v-card-title class="headline"
-        >Deploy models with Process - {{ selectedProcess }}?
+      <v-card-title>
+        Deploy model: {{ selectedDataForDeploy.modelname }} with Process: {{ selectedProcess }}?
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialogDeploy = false">
           <v-icon>mdi-close</v-icon>
@@ -201,7 +201,7 @@
       </v-card-title>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" class="text-none" @click="btnDeployModel">
+        <v-btn color="primary" class="text-none" @click="btnConfirmDeployModel">
           Yes
         </v-btn>
       </v-card-actions>
@@ -267,18 +267,23 @@ export default {
       'getPageDataList',
       'getParameterListRecords',
     ]),
-    async btnDeployModel() {
+    btnDeployModel(data) {
+      this.selectedDataForDeploy = data;
+      this.dialogDeploy = true;
+    },
+    async btnConfirmDeployModel() {
       const object = {
         lineid: this.payloadData.lineid,
         stationid: this.payloadData.stationid,
-        processid: this.payloadData.processid,
+        subprocessid: this.payloadData.processid,
+        substationid: this.payloadData.substationid,
+        modelid: this.selectedDataForDeploy._id,
         status: 'Pending',
         operationname: 'Deploy Model',
         assetid: 4,
       };
       const response = await this.addDeployModel(object);
       if (response) {
-        this.selectedProcess = null;
         this.setAlert({
           show: true,
           type: 'success',
@@ -438,10 +443,12 @@ export default {
         lineid: 0,
         processid: '',
         stationid: '',
+        substationid: '',
       };
       this.processId = process.id;
       this.payloadData.lineid = process.lineid;
       this.payloadData.processid = process.id;
+      this.payloadData.substationid = process.substationid;
       this.payloadData.stationid = this.subStations.find((f) => f.id === process.substationid)
         .stationid;
       this.selectedParameterList = [];
@@ -451,17 +458,39 @@ export default {
           this.selectedParameterList.push(parameter);
         }
       });
+      this.selectedParameterList = this.selectedParameterList.sort(this.compare);
       await this.getMlTransformationOutputList('');
       await this.getModelRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"%26%26subprocessid=="${this.payloadData.processid}"`);
       // add new logic
-      this.processModelList.forEach(async (model) => {
-        model.inputlist = await this.getInputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
-        %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
-        model.outputlist = await this.getOutputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
-        %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
-        model.filelist = await this.getModelFiles(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
-        %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
-      });
+      if (this.processModelList.length === 0) {
+        debugger;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NO_MODELS',
+        });
+      } else {
+        this.processModelList.forEach(async (model) => {
+          model.inputlist = await this.getInputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
+          %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
+          model.outputlist = await this.getOutputRecords(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
+          %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
+          model.filelist = await this.getModelFiles(`?query=lineid==${this.payloadData.lineid}%26%26stationid=="${this.payloadData.stationid}"
+          %26%26subprocessid=="${this.payloadData.processid}"%26%26modelid=="${model._id}"`);
+          let parameterListForModel = [];
+          console.log(this.selectedParameterList);
+          console.log(this.processIntputList);
+          this.selectedParameterList.forEach((f) => {
+            const usedObject = this.processIntputList.find((p) => p.id === f.parameterid);
+            debugger;
+            if (!usedObject) {
+              parameterListForModel.push(f);
+            }
+          });
+          parameterListForModel = parameterListForModel.sort(this.compare);
+          model.parameterlist = parameterListForModel;
+        });
+      }
       // await this.getMlTransformationOutputList('');
       // await this.getOutputRecords(`?query=lineid==${this.payloadData.
       // lineid}%26%26stationid=="${this.payloadData.stationid}"
@@ -494,6 +523,7 @@ export default {
   },
   data() {
     return {
+      selectedDataForDeploy: '',
       selectedDataForDelete: null,
       dialogModel: false,
       isClicked: false,

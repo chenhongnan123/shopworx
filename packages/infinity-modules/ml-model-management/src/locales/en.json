@@ -16,6 +16,7 @@
     "ERROR_DELETE_MODEL": "Error in deleting model",
     "ERROR_ADD_MODEL": "Error in adding model",
     "ERROR_INPUT_PROCESS": "Error in deleting input process.",
-    "ERROR_ADDING_INPUT": "Error in adding input process"
+    "ERROR_ADDING_INPUT": "Error in adding input process",
+    "NO_MODELS": "No Model provisioned."
   }
 }

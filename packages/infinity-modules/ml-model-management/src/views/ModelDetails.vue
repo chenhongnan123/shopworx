@@ -24,11 +24,15 @@
         <v-tab class="text-none">
           Add Model
         </v-tab>
+         <v-tab class="text-none">
+          Model Orders Logs
+        </v-tab>
       </v-tabs>
     </portal>
     <template>
       <v-fade-transition mode="out-in">
-        <model-management v-if="recipeView === 0" />
+        <ModelManagement v-if="recipeView === 0" />
+        <ModelOrderLogs v-else />
       </v-fade-transition>
     </template>
   </div>
@@ -37,11 +41,13 @@
 <script>
 import { mapMutations } from 'vuex';
 import ModelManagement from './ModelManagement.vue';
+import ModelOrderLogs from './ModelOrderLogs.vue';
 
 export default {
-  name: 'ModelManagement',
+  name: 'ModelDetailst',
   components: {
     ModelManagement,
+    ModelOrderLogs,
   },
   async created() {
     // const view = localStorage.getItem('planView');
