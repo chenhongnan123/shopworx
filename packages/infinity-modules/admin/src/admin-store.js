@@ -147,5 +147,53 @@ export default ({
       }
       return true;
     },
+
+    deleteModuleAccess: async (_, roleId) => {
+      try {
+        const { data } = await UserService.deleteModuleAccess(roleId);
+        if (data && data.deleted) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    deleteWebAppAccess: async (_, roleId) => {
+      try {
+        const { data } = await UserService.deleteWebAppAccess(roleId);
+        if (data && data.deleted) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    deleteReportsCategoryAccess: async (_, roleId) => {
+      try {
+        const { data } = await UserService.deleteReportsCategoryAccess(roleId);
+        if (data && data.deleted) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    createAccess: async (_, payload) => {
+      try {
+        const { data } = await UserService.createAccess(payload);
+        if (data && data.created) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
   },
 });

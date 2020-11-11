@@ -211,7 +211,6 @@ export default {
     this.toggleDisable = false;
     if (this.recipeListDetails.length === 0) {
       const payload = [];
-      // %26%26%28parametercategory=="36"%7C%7Cparametercategory=="7"%29
       await this.getParametersRecords(
         `?query=substationid=="${this.$route.params.id.substationid}"`,
       );
@@ -248,9 +247,6 @@ export default {
       );
     }
     this.socket = socketioclient.connect('http://:10190');
-    this.socket.on('connect', () => {
-      // console.log('connected to socketwebhook');
-    });
   },
   beforeDestroy() {
     this.socket.close();
@@ -290,7 +286,6 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        // console.log('event received');
         if (data) {
           this.recipeListDetails.forEach((element) => {
             if (data[element.tagname]) {
@@ -326,7 +321,6 @@ export default {
         sublineid: this.$route.params.id.sublineid,
         substationid: this.$route.params.id.substationid,
         recipenumber: this.$route.params.id.recipenumber,
-        // tagname, parametervalue
         recipeparameter: parameterList,
       };
       this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
@@ -340,10 +334,8 @@ export default {
         substationid: this.$route.params.id.substationid,
       };
       this.socket.off(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
-        // console.log('event closed - download');
       });
       this.socket.on(`update_download_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        // console.log('event received - download');
         if (data) {
           this.recipeListDetails.forEach(async (element) => {
             if (data[element.tagname]) {

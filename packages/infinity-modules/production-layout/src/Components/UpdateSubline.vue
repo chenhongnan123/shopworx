@@ -1,7 +1,6 @@
  <template>
 <v-dialog v-model="dialog"  max-width="700px">
     <template v-slot:activator="{ on }">
-    <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>
@@ -18,7 +17,6 @@
         </v-btn>
     </v-card-title>
     <v-card-text>
-      <!-- {{subline}} -->
       <v-row>
       <v-col cols="12" md="12">
         <v-text-field label="Name *" v-model="sublineNew.name"
@@ -48,7 +46,6 @@
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
-        <!-- <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn> -->
         <v-btn color="primary"
         class="text-none"
         :disabled="btnDisable"
@@ -98,11 +95,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    // ...mapMutations('productionLayout', ['setAddSublineDialog']),
     ...mapActions('productionLayout', ['updateSubline', 'getSublines', 'updateMainLineFlagToSubStations', 'getAssets']),
-    // close() {
-    //   this.$emit('update:dialog', false);
-    // },
     async validName() {
       if (this.sublineNew.name === '' || this.sublineNew.name.length > 15) {
         this.btnDisable = true;

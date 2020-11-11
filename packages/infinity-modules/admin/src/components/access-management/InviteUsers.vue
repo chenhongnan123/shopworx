@@ -33,8 +33,8 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <validation-observer ref="form" #default="{ passes }">
-        <v-form @submit.prevent="passes(onSubmit)">
+      <validation-observer ref="form" #default="{ handleSubmit }">
+        <v-form @submit.prevent="handleSubmit(onSubmit)">
           <v-card-text>
             <v-row v-if="invitedUsers && invitedUsers.length">
               <template v-for="(user, index) in invitedUsers">

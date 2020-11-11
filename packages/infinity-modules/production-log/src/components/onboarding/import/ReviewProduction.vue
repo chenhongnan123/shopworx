@@ -14,12 +14,12 @@
         color="primary"
         class="text-none pa-0"
       >
-        {{ $t('rejectionReasons.setup.importMaster.review') }}
+        {{ $t('production.setup.importMaster.review') }}
       </v-btn>
     </template>
     <v-card>
       <v-card-title primary-title>
-        {{ $t('rejectionReasons.setup.importMaster.reviewTitle', { title }) }}
+        {{ $t('production.setup.importMaster.reviewTitle', { title }) }}
         <v-spacer></v-spacer>
         <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
@@ -61,7 +61,7 @@
           @click="showColumnMappings = true"
           v-if="reviewType === 'data' && !showColumnMappings"
         >
-          {{ $t('rejectionReasons.setup.importMaster.updateColumns') }}
+          {{ $t('production.setup.importMaster.updateColumns') }}
         </v-btn>
         <v-btn
           text
@@ -69,7 +69,7 @@
           class="text-none"
           @click="uploadFile"
         >
-          {{ $t('rejectionReasons.setup.importMaster.reimport') }}
+          {{ $t('production.setup.importMaster.reimport') }}
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
@@ -79,7 +79,7 @@
           @click="onDelete"
           v-if="rowsSelected && reviewType === 'data' && !showColumnMappings"
         >
-          {{ $t('rejectionReasons.setup.importMaster.delete') }}
+          {{ $t('production.setup.importMaster.delete') }}
         </v-btn>
         <v-btn
           @click="onSave"
@@ -87,7 +87,7 @@
           class="text-none"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
         >
-          {{ $t('rejectionReasons.setup.importMaster.save') }}
+          {{ $t('production.setup.importMaster.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -99,7 +99,7 @@ import ReviewColumn from './ReviewColumn.vue';
 import ReviewData from './ReviewData.vue';
 
 export default {
-  name: 'ReviewReasons',
+  name: 'ReviewProduction',
   props: {
     title: {
       type: String,
@@ -159,7 +159,6 @@ export default {
     },
     onFileChanged(e) {
       const file = e && e !== undefined ? e.target.files[0] : null;
-      // e.target.value = '';
       if (file) {
         this.$emit('file-imported', file);
         this.dialog = false;

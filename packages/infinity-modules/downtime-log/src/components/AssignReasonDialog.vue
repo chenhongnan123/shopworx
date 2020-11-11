@@ -26,10 +26,18 @@
                 <td>
                   {{ new Date(item.downtimestart).toLocaleTimeString() }}
                 </td>
-                <td>
+                <td v-if="item.status !== 'inProgress'">
                   {{ new Date(item.downtimeend).toLocaleTimeString() }}
                 </td>
-                <td>{{ durationTime(item.downtimeduration) }}</td>
+                <td v-else>
+                  N.A
+                </td>
+                <td v-if="item.status !== 'inProgress'">
+                  {{ duration(item.downtimeduration) }}
+                </td>
+                <td v-else>
+                  Ongoing
+                </td>
               </tr>
             </template>
           </v-data-table>
@@ -130,17 +138,14 @@ export default {
   methods: {
     ...mapMutations('downtimeLog', ['clearCheckedItems', 'setToggleSelection', 'setDowntimeList']),
     ...mapActions('downtimeLog', ['updateReason']),
-    durationTime(value) {
-      let Time = 0;
+    duration(value) {
       const d = value;
       const h = Math.floor(d / 3600);
       const m = Math.floor((d % 3600) / 60);
       const s = Math.floor((d % 3600) % 60);
-      const viewTime = `${h.toString().padStart(2, 0)}:${m
+      return `${h.toString().padStart(2, 0)}:${m
         .toString()
         .padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
-      Time = viewTime;
-      return Time;
     },
     checkSelection() {
       if (!this.selectedReason) {

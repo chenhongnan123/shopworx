@@ -18,17 +18,17 @@
     </span>
     <v-card :class="title === null ? 'mt-8' : ''" :color="running ? 'success' : 'error'">
       <v-card-text class="text-center my-auto">
-        <div class="display-2 white--text">{{ running
-          ? $t('shopfloorDashboard.up') : $t('shopfloorDashboard.down') }}
+        <div class="display-2 white--text">
+          {{ assetState.shift }} |
+          {{ running
+            ? $t('shopfloorDashboard.up')
+            : $t('shopfloorDashboard.down') }}
         </div>
-        <div class="headline" v-if="running">
-          {{ time }}
-        </div>
-        <div class="headline" v-else-if="assetState && assetState.actualdowntimestart && !running">
+        <div class="headline" v-if="assetState && assetState.actualdowntimestart && !running">
           {{ getDowntimeSince(assetState.actualdowntimestart) }}
         </div>
-        <div class="headline">
-          Shift 1
+        <div class="title mt-2">
+          Last updated at: {{ new Date(assetState.updatedAt).toLocaleString('en-GB') }}
         </div>
       </v-card-text>
     </v-card>
@@ -50,21 +50,6 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  data() {
-    return {
-      interval: null,
-      time: null,
-    };
-  },
-  mounted() {
-    this.interval = setInterval(() => {
-      this.updateTime();
-    }, 1000);
-    this.updateTime();
-  },
-  destroyed() {
-    clearInterval(this.interval);
   },
   computed: {
     title() {
@@ -91,9 +76,6 @@ export default {
       return `since ${distanceInWordsToNow(
         new Date(datetime),
       )}`;
-    },
-    updateTime() {
-      this.time = new Date().toLocaleString();
     },
   },
 };

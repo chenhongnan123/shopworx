@@ -80,7 +80,6 @@ export default {
   name: 'AddRoadmapList',
   data() {
     return {
-      // deleting: false,
       dialog: false,
       dialogConfirm: false,
       roadmap: {},

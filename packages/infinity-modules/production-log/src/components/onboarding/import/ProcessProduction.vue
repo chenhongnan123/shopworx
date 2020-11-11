@@ -3,16 +3,16 @@
     <template v-if="loading">
       <v-progress-circular indeterminate></v-progress-circular>
       <span>
-        {{ $t('rejectionReasons.setup.importMaster.fetchMaster') }}
+        {{ $t('production.setup.importMaster.fetchMaster') }}
       </span>
     </template>
     <template v-else-if="error">
-      {{ $t('rejectionReasons.setup.importMaster.fetchError') }}
+      {{ $t('production.setup.importMaster.fetchError') }}
       <a
         @click="fetchMaster"
         class="primary--text font-weight-medium"
       >
-      {{ $t('rejectionReasons.setup.importMaster.retryFetch') }}
+      {{ $t('production.setup.importMaster.retryFetch') }}
       </a>
     </template>
     <template v-else>
@@ -44,7 +44,7 @@
             <v-list-item-title class="font-weight-medium">
               {{ list.title }}
             </v-list-item-title>
-            <validate-reasons
+            <validate-production
               :data="list"
               :files="files"
               @on-loading="onLoading($event, index)"
@@ -74,10 +74,10 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import ValidateReasons from './ValidateReasons.vue';
+import ValidateProduction from './ValidateProduction.vue';
 
 export default {
-  name: 'ProcessReasons',
+  name: 'ProcessProduction',
   props: {
     files: {
       type: FileList,
@@ -85,7 +85,7 @@ export default {
     },
   },
   components: {
-    ValidateReasons,
+    ValidateProduction,
   },
   data() {
     return {

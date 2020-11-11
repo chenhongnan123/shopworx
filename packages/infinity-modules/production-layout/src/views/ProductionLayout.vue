@@ -4,7 +4,6 @@
       <v-col cols="12" xl="10" class="py-0">
         <portal to="app-header">Production Layout</portal>
         <v-row>
-          <!-- {{lines}} -->
           <v-col cols="2" md="2" lg="2">
             <v-select
               label="Line"
@@ -30,14 +29,6 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <!-- <v-col cols="2" md="2" lg="2">
-              <v-text-field label="Expected OEE"
-                v-model="selectedLine.expectedoee"></v-text-field>
-            </v-col>
-            <v-col cols="2" md="2" lg="2">
-              <v-text-field label="Expected CT"
-                v-model="selectedLine.expectedcycletime"></v-text-field>
-            </v-col> -->
             <v-col cols="1" md="1" lg="1">
               <SelectedLineUpdate />
             </v-col>
@@ -82,46 +73,6 @@
                   </v-card>
                 </v-col>
            </v-row>
-           <!-- <v-row
-      v-if="selectedLine"
-      class="mb-6"
-      no-gutters>
-      <v-col>
-        <v-card
-          class="pa-2"
-          tile
-          outlined
-          v-text="$t('headers.subline')">
-          <AddSubline :lineid="selectedLine.id"/>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card
-          class="pa-2"
-          tile
-          outlined
-          v-text="$t('headers.station')">
-          <AddStation :lineid="selectedLine.id"/>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card
-          class="pa-2"
-          tile
-          outlined
-          v-text="$t('headers.substation')">
-          <AddSubstation/>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card
-          class="pa-2"
-          tile
-          outlined
-          v-text="$t('headers.process')">
-        </v-card>
-      </v-col>
-    </v-row> -->
 <v-row class="pa-1 mx-1 grid_row" :key="subline._id" v-for="subline in sublines">
   <v-col cols="3" md="3" lg="3" class="py-0">
     <div>{{ subline.name }}
@@ -142,7 +93,6 @@
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
-              <!-- <div :class="{ 'my-text-style': substation.lineid===1}"> -->
                 <div v-bind:style="
                  substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
                 {{ substation.name }}

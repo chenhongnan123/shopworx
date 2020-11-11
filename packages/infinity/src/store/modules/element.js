@@ -211,6 +211,35 @@ export default ({
       return upsert;
     },
 
+    upsertRecordByQuery: async ({ dispatch }, {
+      elementName,
+      record,
+      query,
+      assetId = 0,
+    }) => {
+      let upsert = false;
+      try {
+        const payload = {
+          ...record,
+          assetid: assetId,
+        };
+        const rec = await dispatch('getRecords', { elementName, query });
+        if (rec && rec.length) {
+          await dispatch('deleteRecordByQuery', {
+            elementName,
+            queryParam: query,
+          });
+        }
+        upsert = await dispatch('postRecord', {
+          elementName,
+          payload,
+        });
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
     upsertBulkRecords: async ({ dispatch }, { elementName, records, assetId = 0 }) => {
       let upsert = false;
       try {

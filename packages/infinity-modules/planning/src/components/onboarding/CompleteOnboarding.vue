@@ -3,7 +3,7 @@
     <template v-if="loading">
       <v-progress-circular indeterminate></v-progress-circular>
       <span>
-        Fetching plan settings from ShopWorx servers
+        Fetching planning app settings from ShopWorx servers
       </span>
     </template>
     <template v-else-if="error">

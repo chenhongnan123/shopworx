@@ -17,7 +17,10 @@
         :col="currentDimension.col"
         :len="currentDimension.len"
       />
-      <machine-paginator :len="currentDimension.len"></machine-paginator>
+      <machine-paginator
+        v-if="currentDimension.len > 1"
+        :len="currentDimension.len"
+      ></machine-paginator>
     </template>
   </v-container>
 </template>

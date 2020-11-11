@@ -101,7 +101,6 @@ export default {
     },
     onFilesChanged(e) {
       this.files = e && e !== undefined ? e.target.files : null;
-      // e.target.value = '';
       if (this.files && this.files.length) {
         this.window = 1;
         this.filesImported = true;

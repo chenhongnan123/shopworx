@@ -1,8 +1,8 @@
 <template>
   <v-card class="transparent" flat>
     <user-avatar />
-    <validation-observer #default="{ passes }">
-      <v-form @submit.prevent="passes(onUpdateProfile)">
+    <validation-observer #default="{ handleSubmit }">
+      <v-form @submit.prevent="handleSubmit(onUpdateProfile)">
         <v-card-text class="py-0 pt-2">
           <v-row>
             <v-col cols="12" sm="6" class="py-0">

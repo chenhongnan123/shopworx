@@ -3,8 +3,8 @@
     <div class="display-1 mb-4 font-weight-medium text-center primary--text">
       {{ $t('register.account.title') }}
     </div>
-    <validation-observer #default="{ passes }">
-      <v-form @submit.prevent="passes(onUpdateAccount)">
+    <validation-observer #default="{ handleSubmit }">
+      <v-form @submit.prevent="handleSubmit(onUpdateAccount)">
         <v-card-text>
           <validation-provider
             rules="required"

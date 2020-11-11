@@ -16,23 +16,10 @@
     <portal
       to="app-extension"
     >
-      <!-- <v-tabs
-        dense
-        center-active
-        v-model="reworkView"
-      >
-        <v-tab class="text-none">
-          NG Code Config
-        </v-tab>
-        <v-tab class="text-none">
-          Rework
-        </v-tab>
-      </v-tabs> -->
     </portal>
     <template>
       <v-fade-transition mode="out-in">
         <ng-code-config/>
-        <!-- <rework-screen v-else-if="reworkView === 1" /> -->
       </v-fade-transition>
     </template>
   </div>
@@ -41,13 +28,11 @@
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
 import NgCodeConfig from './NgCodeConfig.vue';
-// import ReworkScreen from './ReworkScreen.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
     NgCodeConfig,
-    // ReworkScreen,
   },
   data() {
     return {
@@ -66,7 +51,6 @@ export default {
     const success = await this.getLines();
     if (success) {
       [this.selectedLine] = this.lines;
-      // await this.onLineChange();
     }
     this.setSublines([]);
     await this.getSublines(`?query=lineid==${this.selectedLine.id}`);

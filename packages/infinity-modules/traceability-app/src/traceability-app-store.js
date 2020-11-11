@@ -74,14 +74,6 @@ export default ({
         },
         { root: true },
       );
-      // let checkout = [];
-      // if (list && list.length) {
-      //   checkout = list.map((l) => ({
-      //     ...l,
-      //     componentname: '',
-      //     componentvalue: '',
-      //   }));
-      // }
       commit('setComponentList', list);
       return list;
     },

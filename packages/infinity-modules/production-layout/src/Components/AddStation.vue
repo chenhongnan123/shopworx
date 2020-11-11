@@ -75,9 +75,6 @@
               v-model="newStation.lifetime"
               hint="For example, 4"   dense></v-text-field>
               <v-spacer></v-spacer>
-              <!-- <v-text-field label="Process" type="text"
-              v-model="newStation.process"
-              hint="For example, Night Shift"  dense></v-text-field> -->
               <v-text-field label="PLC Ip Address"
               :rules ="plcRules" required class="mb-3"
               hint="Hint: 127.168.1.1"
@@ -90,7 +87,6 @@
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
-        <!-- <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn> -->
         <v-btn color="primary"
         class="text-none"
         :disabled="!valid"
@@ -129,7 +125,6 @@ export default {
     },
   },
   created() {
-    // this.getAllSublines('');
     this.getAssets();
   },
   computed: {

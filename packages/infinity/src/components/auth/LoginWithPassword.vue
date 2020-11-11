@@ -1,6 +1,6 @@
 <template>
-  <validation-observer #default="{ passes }">
-    <v-form @submit.prevent="passes(onLogin)">
+  <validation-observer #default="{ handleSubmit }">
+    <v-form @submit.prevent="handleSubmit(onLogin)">
       <v-card-text>
         <identifier-input
           id="identifier_input"

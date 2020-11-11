@@ -28,8 +28,8 @@
       indeterminate
       v-if="loading"
     ></v-progress-circular>
-    <validation-observer #default="{ passes }" v-else>
-      <v-form @submit.prevent="passes(save)">
+    <validation-observer #default="{ handleSubmit }" v-else>
+      <v-form @submit.prevent="handleSubmit(save)">
         <v-card
           flat
           :key="index"

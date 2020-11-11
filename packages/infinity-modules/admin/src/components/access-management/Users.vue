@@ -13,17 +13,6 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-          @click="fetchUsers"
-        >
-          <v-icon small v-text="'$download'" left></v-icon>
-          Export users
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
@@ -114,13 +103,6 @@
               item-text="roleDescription"
             ></v-select>
           </template>
-          <!-- <template v-slot:item.status="{ item }">
-            <v-switch
-              value
-              dense
-              :input-value="item.status === 'ACTIVE' || item.status === 'RESET'"
-            ></v-switch>
-          </template> -->
           <template v-slot:item.actions="{ item }">
             <v-btn
               icon
@@ -166,12 +148,6 @@ export default {
           sortable: false,
           value: 'role',
         },
-        /* {
-          text: 'Active',
-          align: 'start',
-          sortable: false,
-          value: 'status',
-        }, */
         {
           text: 'Actions',
           align: 'start',

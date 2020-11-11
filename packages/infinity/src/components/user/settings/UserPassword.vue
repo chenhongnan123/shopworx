@@ -1,8 +1,8 @@
 <template>
   <v-card class="transparent" flat>
     <user-avatar />
-    <validation-observer ref="form" #default="{ passes }">
-      <v-form @submit.prevent="passes(onUpdatePassword)">
+    <validation-observer ref="form" #default="{ handleSubmit }">
+      <v-form @submit.prevent="handleSubmit(onUpdatePassword)">
         <v-card-text class="py-0 pt-2">
           <validation-provider
             vid="updatePassword"

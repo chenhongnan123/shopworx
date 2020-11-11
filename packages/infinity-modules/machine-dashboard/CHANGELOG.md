@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **machine-dashboard:** machines are sorted alpha numerically ([1f56c1e](https://bitbucket.org/entrib/shopworx/commits/1f56c1ea6ac35a63e9ea8cc3ad9225d1620d29c5))
+* **shopfloor-dashboard:** display real time shift and date ([b8f123f](https://bitbucket.org/entrib/shopworx/commits/b8f123f2529a9b716f93f9adcdcb4bc197f29a2f))
+* **shopfloor-dashboard:** hide paginator if only one page ([2a8e033](https://bitbucket.org/entrib/shopworx/commits/2a8e0336ab01222a97c85f85df3bc4b0e8d7748a))
+
+
+### Features
+
+* **shopfloor-dashboard:** added last updated time ([c4139b1](https://bitbucket.org/entrib/shopworx/commits/c4139b1f514a4a22c4f0a06bd0c0511c04eafda8))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 **Note:** Version bump only for package @shopworx/machine-dashboard

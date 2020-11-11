@@ -1,74 +1,118 @@
-import { set } from '@shopworx/services/util/store.helper';
-import { sortAlphaNum } from '@shopworx/services/util/sort.service';
+import { set, toggle } from '@shopworx/services/util/store.helper';
+import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
   state: {
-    isRejectionSet: false,
-    onboarded: false,
-    plansOnDate: null,
+    masterData: [],
+    masterElements: [],
+    drawer: false,
+    unavailableDataElements: [],
+    unavailableElements: [],
+    dataOnboarded: false,
+    elementOnboarded: false,
     machines: [],
-    allShifts: [],
-    shiftList: [],
+    shifts: [],
+    filters: {},
+    sort: {},
     selectedMachine: null,
-    selectedCell: null,
     selectedShift: null,
     selectedDate: null,
-    planningMaster: null,
-    rejectionReasonsMaster: null,
-    rejectionMaster: null,
-    masterData: [],
-    rejectionReasons: [],
-    productionDetails: [],
-    allRejections: null,
-    shiftHours: [],
-    hours: [],
+    selectedSort: null,
+    productionList: [],
     loading: false,
+    error: false,
+    productionCount: 0,
+    operators: [],
+    rejectionReasons: [],
+    reworkReasons: [],
+    scrapReasons: [],
   },
   mutations: {
-    setOnboarded: set('onboarded'),
-    setIsRejectionSet: set('isRejectionSet'),
-    setPlansOnDate: set('plansOnDate'),
+    setMasterData: set('masterData'),
+    setMasterElements: set('masterElements'),
+    setDrawer: set('drawer'),
+    toggleDrawer: toggle('drawer'),
+    setDataOnboarded: set('dataOnboarded'),
+    setElementOnboarded: set('elementOnboarded'),
     setMachines: set('machines'),
-    setShift: set('allShifts'),
-    setShiftList: set('shiftList'),
-    setSelectedCell: set('selectedCell'),
+    setShifts: set('shifts'),
     setSelectedMachine: set('selectedMachine'),
     setSelectedShift: set('selectedShift'),
     setSelectedDate: set('selectedDate'),
-    setPlanningMaster: set('planningMaster'),
-    setRejectionReasonsMaster: set('rejectionReasonsMaster'),
-    setRejectionMaster: set('rejectionMaster'),
-    setMasterData: set('masterData'),
-    setRejectionReasons: set('rejectionReasons'),
-    setProductionDetails: set('productionDetails'),
-    setAllRejections: set('allRejections'),
-    setShiftHours: set('shiftHours'),
-    setHours: set('hours'),
+    setSelectedSort: set('selectedSort'),
     setLoading: set('loading'),
+    setError: set('error'),
+    setProductionCount: set('productionCount'),
+    setProductionList: set('productionList'),
+    setOperators: set('operators'),
+    setRejectionReasons: set('rejectionReasons'),
+    setReworkReasons: set('reworkReasons'),
+    setScrapReasons: set('scrapReasons'),
+    setUnavailableDataElements: set('unavailableDataElements'),
+    setUnavailableElements: set('unavailableElements'),
   },
   actions: {
-    getOnboardingState: async ({ commit, dispatch }) => {
-      const rejectionElement = await dispatch('getElement', 'rejection');
-      if (rejectionElement) {
-        commit('setIsRejectionSet', true);
-        const rejectionReasonElement = await dispatch('getElement', 'rejectionreasons');
-        if (rejectionReasonElement) {
-          commit('setOnboarded', true);
-        }
+    getDataOnboardingState: async ({ commit, dispatch }) => {
+      commit('setUnavailableDataElements', []);
+      const isRejectionAvailable = await dispatch('getRejectionReasonsElement');
+      const isScrapAvailable = await dispatch('getScrapReasonsElement');
+      const isReworkAvailable = await dispatch('getReworkReasonsElement');
+      const isOperatorAvailable = await dispatch('getOperatorElement');
+      const unavailableElements = [];
+      if (!isRejectionAvailable) {
+        unavailableElements.push('rejectionreasons');
+      }
+      if (!isScrapAvailable) {
+        unavailableElements.push('scrapreasons');
+      }
+      if (!isReworkAvailable) {
+        unavailableElements.push('reworkreasons');
+      }
+      if (!isOperatorAvailable) {
+        unavailableElements.push('operator');
+      }
+      commit('setUnavailableDataElements', unavailableElements);
+      if (unavailableElements.length) {
+        commit('setDataOnboarded', false);
+      } else {
+        commit('setDataOnboarded', true);
       }
     },
 
-    getElement: async ({ dispatch }, elementName) => {
-      const element = await dispatch(
-        'element/getElement',
-        elementName,
-        { root: true },
-      );
-      return element;
+    getElementOnboardingState: async ({ commit, dispatch }) => {
+      commit('setUnavailableElements', []);
+      const isRejectionAvailable = await dispatch('getRejectionElement');
+      const isScrapAvailable = await dispatch('getScrapElement');
+      const isReworkAvailable = await dispatch('getReworkElement');
+      const isOperatorLogAvailable = await dispatch('getOperatorLogElement');
+      const unavailableElements = [];
+      if (!isRejectionAvailable) {
+        unavailableElements.push('rejection');
+      }
+      if (!isScrapAvailable) {
+        unavailableElements.push('scrap');
+      }
+      if (!isReworkAvailable) {
+        unavailableElements.push('rework');
+      }
+      if (!isOperatorLogAvailable) {
+        unavailableElements.push('operatorlog');
+      }
+      commit('setUnavailableElements', unavailableElements);
+      if (unavailableElements.length) {
+        commit('setElementOnboarded', false);
+      } else {
+        commit('setElementOnboarded', true);
+      }
     },
-    // TODO - below 2 functions can be merged
-    getMasterData: async ({ commit, dispatch, rootGetters }) => {
+
+    getMasterData: async ({
+      commit,
+      dispatch,
+      state,
+      rootGetters,
+    }) => {
       const licensedAssets = rootGetters['user/licensedAssets'];
       const masterElements = await dispatch(
         'industry/getMasterElements',
@@ -80,11 +124,10 @@ export default ({
         null,
         { root: true },
       );
+      const { unavailableDataElements } = state;
       if (masterElements && masterElements.length) {
         const filteredMasterElements = masterElements
-          .filter((elem) => (
-            elem.masterElement.onboardingRequired
-          ))
+          .filter((elem) => unavailableDataElements.includes(elem.masterElement.elementName))
           .map((elem) => {
             if (elem.masterElement.assetBased) {
               if (masterAssets && masterAssets.length) {
@@ -125,107 +168,170 @@ export default ({
       }
       return false;
     },
-    getMasterElements: async ({ commit, dispatch, rootState }) => {
-      const { id } = rootState.user.me.industry;
+
+    getMasterElements: async ({ commit, dispatch, state }) => {
       const masterElements = await dispatch(
         'industry/getMasterElements',
-        id,
+        null,
         { root: true },
       );
       if (masterElements && masterElements.length) {
-        const planningMaster = await dispatch('getElement', 'planning');
-        const rejectionReasonsMaster = await dispatch('getElement', 'rejectionreasons');
-        let rejectionMaster = [];
-        masterElements
-          .forEach((elem) => {
-            if (elem.masterElement.elementName === 'rejection') {
-              rejectionMaster = elem;
-            }
-            return elem;
-          });
-        commit('setPlanningMaster', planningMaster);
-        commit('setRejectionReasonsMaster', rejectionReasonsMaster);
-        commit('setRejectionMaster', rejectionMaster);
+        const { unavailableElements } = state;
+        const elements = masterElements
+          .filter((elem) => unavailableElements.includes(elem.masterElement.elementName));
+        commit('setMasterElements', elements);
         return true;
       }
       return false;
     },
-    createRejectionElement: async ({ dispatch, state, rootState }) => {
-      const { planningMaster, rejectionReasonsMaster, rejectionMaster } = state;
-      let { licenses } = rootState.user;
-      licenses = licenses.map((l) => l.assetId);
-      const assets = [...new Set(licenses)];
-      const assetReasonMasters = [];
-      assets.forEach((l) => {
-        rejectionReasonsMaster.tags.forEach((rm) => {
-          assetReasonMasters.push({ ...rm, assetId: l });
+
+    createElements: async ({ state, dispatch }) => {
+      const planningElem = await dispatch(
+        'element/getElement',
+        'planning',
+        { root: true },
+      );
+      if (planningElem) {
+        const { masterElements, unavailableElements } = state;
+        const createElements = unavailableElements.map(async (elem) => {
+          const masterElem = masterElements.find((e) => e.masterElement.elementName === elem);
+          const tags = [
+            ...planningElem.tags.filter((tag) => !tag.hide),
+            ...masterElem.masterTags,
+          ];
+          const payload = {
+            element: masterElem.masterElement,
+            tags,
+          };
+          await dispatch(
+            'element/createElementAndTags',
+            payload,
+            { root: true },
+          );
         });
-      });
-      if (planningMaster != null && rejectionReasonsMaster != null && rejectionMaster != null) {
-        const element = rejectionMaster.masterElement;
-        const tags = [
-          ...rejectionMaster.masterTags,
-          ...planningMaster.tags.filter((t) => !t.hide),
-          ...assetReasonMasters,
-        ];
-        const payload = {
-          element,
-          tags,
-        };
-        const success = await dispatch(
-          'element/createElementAndTags',
-          payload,
-          { root: true },
-        );
-        return success;
-      }
-      return false;
-    },
-
-    getHours: async ({ commit, dispatch }) => {
-      const records = await dispatch(
-        'element/getRecords',
-        { elementName: 'hourlyavailabletime', query: '?sortquery=sortindex==1' },
-        { root: true },
-      );
-      if (records && records.length) {
-        commit('setHours', records);
+        await Promise.all(createElements);
         return true;
       }
       return false;
     },
 
-    fetchBusinessHours: async ({ commit, dispatch }) => {
-      const records = await dispatch(
-        'element/getRecords',
-        { elementName: 'businesshours', query: '?sortquery=sortindex==1' },
+    getRejectionReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rejectionreasons',
         { root: true },
       );
-      if (records) {
-        if (records.length) {
-          commit('setShiftHours', records);
-          const allShifts = records.filter((rec) => rec.type === 'shift');
-          commit('setShift', allShifts);
-          const shiftList = [...new Set(allShifts.map((item) => item.name))];
-          commit('setShiftList', shiftList);
-          return true;
-        }
-      }
-      return false;
+      return element;
+    },
+
+    getScrapReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'scrapreasons',
+        { root: true },
+      );
+      return element;
+    },
+
+    getReworkReasonsElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'reworkreasons',
+        { root: true },
+      );
+      return element;
+    },
+
+    getOperatorElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'operator',
+        { root: true },
+      );
+      return element;
+    },
+
+    getRejectionElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rejection',
+        { root: true },
+      );
+      return element;
+    },
+
+    getScrapElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'scrap',
+        { root: true },
+      );
+      return element;
+    },
+
+    getReworkElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'rework',
+        { root: true },
+      );
+      return element;
+    },
+
+    getOperatorLogElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'operatorlog',
+        { root: true },
+      );
+      return element;
     },
 
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        { elementName: 'machine' },
+        {
+          elementName: 'machine',
+        },
         { root: true },
       );
-      if (records) {
+      if (records && records.length) {
         commit('setMachines', records);
         return true;
       }
       return false;
     },
+
+    fetchShifts: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'businesshours',
+          query: '?sortquery=sortindex==1',
+        },
+        { root: true },
+      );
+      if (records && records.length) {
+        commit('setShifts', records);
+        return true;
+      }
+      return false;
+    },
+
+    fetchOperators: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'operator' },
+        { root: true },
+      );
+      if (records) {
+        const operators = sortArray(records, 'operatorcode');
+        commit('setOperators', operators);
+        return true;
+      }
+      return false;
+    },
+
     fetchRejectionReasons: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
@@ -233,173 +339,301 @@ export default ({
         { root: true },
       );
       if (records) {
-        commit('setRejectionReasons', records);
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          category,
+          department,
+          reasoncode,
+          reasonname,
+        }) => ({
+          category,
+          department,
+          reasoncode,
+          reasonname,
+        }));
+        commit('setRejectionReasons', reasons);
         return true;
       }
       return false;
     },
 
-    getRejections: async ({ state, commit, dispatch }) => {
-      const { selectedDate, selectedShift, selectedMachine } = state;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-      let query = `?query=date==${date}`;
-      // TODO - i18n check for "All"
-      if (!selectedShift.includes('All')) {
-        query = `${query}%26%26shiftName=="${selectedShift}"`;
-      }
-      if (!selectedMachine.includes('All')) {
-        query = `${query}%26%26machinename=="${selectedMachine}"`;
-      }
+    fetchReworkReasons: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        {
-          elementName: 'rejection',
-          query,
-        },
+        { elementName: 'reworkreasons' },
         { root: true },
       );
       if (records) {
-        commit('setAllRejections', records);
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          reasoncode,
+          reasonname,
+        }) => ({
+          reasoncode,
+          reasonname,
+        }));
+        commit('setReworkReasons', reasons);
         return true;
       }
       return false;
     },
-    addRejection: async ({ dispatch, commit, state }, rejectionData) => {
-      const { allRejections } = state;
+
+    fetchScrapReasons: async ({ commit, dispatch }) => {
       const records = await dispatch(
-        'element/postRecord', {
-          elementName: 'rejection',
-          payload: rejectionData,
-        }, {
-          root: true,
-        },
+        'element/getRecords',
+        { elementName: 'scrapreasons' },
+        { root: true },
       );
       if (records) {
-        //  TODO  - Success toast
-        rejectionData._id = records.id;
-        allRejections.unshift(rejectionData);
-        await dispatch('executeProductionReport');
-        commit('setAllRejections', allRejections);
+        let reasons = sortArray(records, 'reasonname');
+        reasons = reasons.map(({
+          reasoncode,
+          reasonname,
+        }) => ({
+          reasoncode,
+          reasonname,
+        }));
+        commit('setScrapReasons', reasons);
         return true;
       }
       return false;
     },
-    updateRejection: async ({ dispatch }, rejectionData) => {
-      const { id } = rejectionData;
-      const records = await dispatch(
-        'element/updateRecordById', {
-          elementName: 'rejection',
-          id,
-          payload: rejectionData,
-        }, {
-          root: true,
-        },
-      );
-      if (records) {
-        //  TODO  - Success toast
-        await dispatch('executeProductionReport');
-        await dispatch('getRejections');
-        return true;
-      }
-      return false;
-    },
-    executeProductionReport: async ({
-      state,
+
+    fetchProductionList: async ({
       commit,
       dispatch,
-      rootGetters,
+      state,
+      rootState,
     }) => {
-      const sites = rootGetters['user/sites'];
-      const { selectedMachine, selectedShift, selectedDate } = state;
-      let machineFilter = null;
-      let shiftFilter = null;
-      if (!selectedDate || !selectedMachine || !selectedShift) {
-        return false;
-      }
+      const { selectedDate } = state;
+      const { activeSite } = rootState.user;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       commit('setLoading', true);
-      // TODO - use common function
-      if (selectedMachine.includes('All ')) {
-        let machineList = rootGetters['productionLog/machineList'];
-        machineList = machineList.filter((machine) => !machine.includes('All ')).join();
-        machineFilter = `{${machineList}}`;
-      } else {
-        machineFilter = `{${selectedMachine}}`;
-      }
-      if (selectedShift.includes('All ')) {
-        let shifts = rootGetters['productionLog/shifts'];
-        shifts = shifts.filter((machine) => !machine.includes('All ')).join();
-        shiftFilter = `{${shifts}}`;
-      } else {
-        shiftFilter = `{${selectedShift}}`;
-      }
-      const reportData = await dispatch(
-        'report/executeReport', {
-          reportName: 'productionlogreport',
+      commit('setProductionList', []);
+      commit('setError', false);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftwiseproductionlog',
           payload: {
-            machineFilter,
-            shiftFilter,
-            start: parseInt(selectedDate.replace(/-/g, ''), 10),
-            end: parseInt(selectedDate.replace(/-/g, ''), 10),
-            siteid: sites[0].id,
+            siteid: activeSite,
+            dateVal: date,
           },
         },
         { root: true },
       );
-      if (reportData) {
-        try {
-          await commit('setProductionDetails', JSON.parse(reportData).reportData);
-          await dispatch('getRejections');
-          commit('setLoading', false);
-          return true;
-        } catch (error) {
-          console.error(`Exception while parsing production report data : ${error}`);
-        }
+      if (data) {
+        const { production, records } = JSON.parse(data);
+        commit('setProductionList', production);
+        commit('setProductionCount', records);
+        commit('setError', false);
+      } else {
+        commit('setProductionList', []);
+        commit('setProductionCount', 0);
+        commit('setError', true);
+      }
+      commit('setLoading', false);
+    },
+
+    reFetchProductionList: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { selectedDate } = state;
+      const { activeSite } = rootState.user;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftwiseproductionlog',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { production, records } = JSON.parse(data);
+        commit('setProductionList', production);
+        commit('setProductionCount', records);
+        commit('setError', false);
+      }
+    },
+
+    fetchHourlyProduction: async ({ dispatch, state, rootState }, {
+      machine,
+      part,
+      shift,
+      planId,
+    }) => {
+      const { selectedDate } = state;
+      const { activeSite } = rootState.user;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'hourlyproductionlog',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftFilter: `{${shift}}`,
+            machineFilter: `{${machine}}`,
+            partFilter: `{${part}}`,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { production } = JSON.parse(data);
+        const computedProduction = await Promise.all(production.map(async (prod) => {
+          let rejections = await dispatch('fetchRejections', {
+            planId,
+            hour: prod.hour,
+          });
+          rejections = rejections.map((rej) => ({
+            ...rej,
+            edit: false,
+          }));
+          const rejected = rejections.reduce((a, b) => a + (b.quantity || 0), 0);
+          return {
+            ...prod,
+            rejected,
+            accepted: parseInt(prod.produced, 10) - rejected,
+            rejections,
+            newRejection: {
+              qty: '',
+              reason: '',
+              remark: '',
+            },
+          };
+        }));
+        return computedProduction;
       }
       return false;
     },
+
+    fetchRejections: async ({ dispatch }, { planId, hour }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rejection',
+          query: `?query=planid=="${planId}"%26%26hour==${hour}`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
+    fetchRework: async ({ dispatch }, { planId, shift }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rework',
+          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
+    fetchScrap: async ({ dispatch }, { planId, shift }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'scrap',
+          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+        },
+        { root: true },
+      );
+      return records;
+    },
+
+    addRejection: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rejection',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
+    },
+
+    addRework: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rework',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
+    },
+
+    addScrap: async ({ dispatch }, payload) => {
+      const record = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'scrap',
+          payload,
+        },
+        { root: true },
+      );
+      // eslint-disable-next-line
+      return record && record.id;
+    },
+
+    updateOperator: async ({ dispatch, commit, state }, { payload, shift, machine }) => {
+      const { selectedDate } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const updated = await dispatch(
+        'element/upsertRecordByQuery',
+        {
+          elementName: 'operatorlog',
+          record: payload,
+          query: `?query=date==${date}%26%26shiftName=="${shift}"%26%26machinename=="${machine}"`,
+        },
+        { root: true },
+      );
+      if (updated) {
+        let { productionList } = state;
+        productionList = productionList.map((prod) => {
+          if (prod.shift === shift && prod.machinename === machine) {
+            return {
+              ...prod,
+              operatorcode: payload.operatorcode,
+              operatorname: payload.operatorname,
+            };
+          }
+          return prod;
+        });
+        commit('setProductionList', productionList);
+        commit('helper/setAlert', {
+          show: true,
+          type: 'success',
+          message: 'OPERATOR_UPDATE',
+        }, {
+          root: true,
+        });
+      } else {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'OPERATOR_UPDATE',
+        }, {
+          root: true,
+        });
+      }
+    },
   },
   getters: {
-    planProductionData: ({ productionDetails, allRejections }) => {
-      const data = [];
-      let res = null;
-      if (productionDetails && productionDetails.length && allRejections) {
-        productionDetails.forEach((plan) => {
-          const rejection = allRejections.filter(
-            (rej) => rej.planid === plan.planid
-            && rej.partname === plan.partname
-            && rej.shiftName === plan.shift,
-          );
-          data.push({
-            ...plan,
-            rejectionDetails: rejection,
-          });
-        });
-        res = data.reduce((acc, curr) => {
-          if (curr.firstcycle && curr.firstcycle !== '-') {
-            curr.firstcycle = new Date(curr.firstcycle).toLocaleTimeString('en-US');
-          }
-          if (curr.lastcycle && curr.lastcycle !== '-') {
-            curr.lastcycle = new Date(curr.lastcycle).toLocaleTimeString('en-US');
-          }
-          if (!acc[curr.machinename]) acc[curr.machinename] = [];
-          acc[curr.machinename].push(curr);
-          return acc;
-        }, {});
-      }
-      return res;
-    },
-    cells: ({ machines }) => {
-      let cells = [];
-      if (machines && machines.length) {
-        cells = [...new Set(machines.map((m) => (m.machinecell)))];
-        cells = cells.map((cell) => ({
-          name: cell,
-          value: cell,
-        }));
-        cells = [{ name: 'All cells', value: null }, ...cells];
-      }
-      return cells;
-    },
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
@@ -410,19 +644,93 @@ export default ({
       }
       return machineList;
     },
-    shifts: ({ shiftList }) => {
-      let shifts = [];
-      if (shiftList && shiftList.length) {
-        shifts = ['All Shift', ...shiftList];
+
+    shiftList: ({ shifts }) => {
+      let shiftList = [];
+      if (shifts && shifts.length) {
+        const allShifts = shifts.filter((rec) => rec.type === 'shift');
+        shiftList = [...new Set(allShifts.map((item) => item.name))];
+        shiftList = ['All Shifts', ...shiftList];
       }
-      return shifts;
+      return shiftList;
     },
-    filteredMachines: ({ machines, selectedCell }) => {
-      let filteredMachines = machines;
-      if (selectedCell && selectedCell.value && machines && machines.length) {
-        filteredMachines = machines.filter((m) => m.machinecell === selectedCell.value);
+
+    getShiftStart: ({ shifts, selectedDate }) => (shiftName) => {
+      const currentShift = shifts
+        .sort((a, b) => a.sortindex - b.sortindex)
+        .find((s) => s.shift === shiftName);
+      const [hr, min] = currentShift.starttime.split(':');
+      const [year, month, day] = selectedDate.split('-');
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
+    },
+
+    getHourStart: ({ selectedDate }) => (displayHour) => {
+      const [start] = displayHour.split('-');
+      const [hr, min] = start.split(':');
+      const [year, month, day] = selectedDate.split('-');
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
+    },
+
+    production: ({
+      productionList,
+      selectedShift,
+      selectedMachine,
+      selectedSort,
+    }) => {
+      let production = null;
+      if (productionList && productionList.length) {
+        production = productionList
+          .filter((prod) => {
+            if (selectedShift !== 'All Shifts' && selectedMachine !== 'All Machines') {
+              return (prod.shift === selectedShift && prod.machinename === selectedMachine);
+            }
+            if (selectedShift !== 'All Shifts' && selectedMachine === 'All Machines') {
+              return prod.shift === selectedShift;
+            }
+            if (selectedShift === 'All Shifts' && selectedMachine !== 'All Machines') {
+              return prod.machinename === selectedMachine;
+            }
+            return prod;
+          })
+          .sort((a, b) => {
+            if (selectedSort.value === 'new') {
+              return b.firstcycle - a.firstcycle;
+            }
+            return a.firstcycle - b.firstcycle;
+          })
+          .reduce((result, currentValue) => {
+            const {
+              shift,
+              machinename,
+              operatorname,
+              operatorcode,
+            } = currentValue;
+            if (!result[shift]) {
+              result[shift] = {};
+              result[shift][machinename] = {
+                operatorcode: operatorcode === '-' ? null : operatorcode,
+                operatorname: operatorname === '-' ? null : operatorname,
+                production: [],
+              };
+            }
+            if (!result[shift][machinename]) {
+              result[shift][machinename] = {
+                operatorcode: operatorcode === '-' ? null : operatorcode,
+                operatorname: operatorname === '-' ? null : operatorname,
+                production: [],
+              };
+            }
+            result[shift][machinename].production = [
+              ...result[shift][machinename].production,
+              currentValue,
+            ];
+            return result;
+          }, {});
       }
-      return filteredMachines;
+      if (!production || !Object.keys(production).length) {
+        production = null;
+      }
+      return production;
     },
   },
 });

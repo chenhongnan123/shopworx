@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **loading:** updated loading message ([9660224](https://bitbucket.org/entrib/shopworx/commits/9660224f0749bf111f32862aba8e8054cd587bab))
+* **production-log:** check for no production ([e8b0e23](https://bitbucket.org/entrib/shopworx/commits/e8b0e238215671a15742a5b14ab04a905f0ace04))
+* **production-log:** fetch operators after onboarding ([6812cf8](https://bitbucket.org/entrib/shopworx/commits/6812cf8ebbb3e723f4813da70f86deaf0a9ced48))
+* **production-log:** fix machine name tag ([fa1d557](https://bitbucket.org/entrib/shopworx/commits/fa1d5571b42b5237eae9b9338a8c2dcfc24c544d))
+* **production-log:** fixed on-boarding process for app ([0a51cf4](https://bitbucket.org/entrib/shopworx/commits/0a51cf4de9a56032a0d6b658c191e9b4e851b565))
+* **production-log:** fixed production count display on filter ([ca18ece](https://bitbucket.org/entrib/shopworx/commits/ca18ecee43d5c9dfa24bb647c82d1799852f2a86))
+* **production-log:** fixed production grouping by machine ([4a3cd17](https://bitbucket.org/entrib/shopworx/commits/4a3cd1716d4274d2fb8efde44a15f347d37cd3da))
+* **production-log:** fixed validation on adding rejection ([980c7b6](https://bitbucket.org/entrib/shopworx/commits/980c7b6af4eea54489010148ce7e705a5aa9c3ee))
+
+
+### Features
+
+* **production-log:** Added filters and sort options ([94c64ed](https://bitbucket.org/entrib/shopworx/commits/94c64edd1360d0a1936f5d4b63ed3f1c39209307))
+* **production-log:** assign operator to shift and machine ([a7ad598](https://bitbucket.org/entrib/shopworx/commits/a7ad5986cdd0e4972358b85fdaf10da98b213696))
+* **production-log:** assign rejection to production ([9d3a79a](https://bitbucket.org/entrib/shopworx/commits/9d3a79a6bde4701f8a675c5dd40246a627ebaa6d))
+* **production-log:** assign rework and scrap to production ([73df2de](https://bitbucket.org/entrib/shopworx/commits/73df2de25e24bb7dd3652c96d79e143558729a9a))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 
