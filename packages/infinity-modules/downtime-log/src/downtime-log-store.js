@@ -4,6 +4,7 @@ import { sortAlphaNum } from '@shopworx/services/util/sort.service';
 export default ({
   namespaced: true,
   state: {
+    masterData: [],
     drawer: false,
     onboarded: true,
     machines: [],
@@ -16,6 +17,7 @@ export default ({
     selectedDuration: null,
     selectedType: null,
     selectedSort: null,
+    selectedStatus: null,
     downtimeList: [],
     loading: false,
     error: false,
@@ -27,6 +29,7 @@ export default ({
     selectedDowntimes: [],
   },
   mutations: {
+    setMasterData: set('masterData'),
     setSelectedDowntimes: (state, payload) => {
       if (payload.selected) {
         state.selectedDowntimes.push(payload);
@@ -51,12 +54,11 @@ export default ({
     setSelectedDuration: set('selectedDuration'),
     setSelectedType: set('selectedType'),
     setSelectedSort: set('selectedSort'),
+    setSelectedStatus: set('selectedStatus'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
-    setFilters: set('filters'),
-    setSort: set('sort'),
     resetPageNumber: (state) => {
       state.pageNumber = 1;
     },
@@ -72,6 +74,84 @@ export default ({
     },
   },
   actions: {
+    getOnboardingState: async ({ commit, dispatch }) => {
+      const isDowntimeReasonElementAvailable = await dispatch('getDowntimeReasonsElement');
+      if (isDowntimeReasonElementAvailable) {
+        commit('setOnboarded', true);
+      } else {
+        commit('setOnboarded', false);
+      }
+    },
+
+    getMasterData: async ({
+      commit,
+      dispatch,
+      rootGetters,
+    }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => elem.masterElement.elementName === 'downtimereasons')
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
+    },
+
+    getDowntimeReasonsElement: async ({ dispatch }) => {
+      const downtimeReasonsElement = await dispatch(
+        'element/getElement',
+        'downtimereasons',
+        { root: true },
+      );
+      return downtimeReasonsElement;
+    },
+
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
@@ -126,13 +206,18 @@ export default ({
         selectedDuration,
         selectedType,
         selectedSort,
+        selectedStatus,
         pageNumber,
         pageSize,
       } = state;
       if (selectedSort) {
+        commit('clearCheckedItems');
         const date = parseInt(selectedDate.replace(/-/g, ''), 10);
         const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-        let query = `date==${date}%26%26status!="inProgress"`;
+        let query = `date==${date}`;
+        if (selectedStatus.value) {
+          query += `%26%26${selectedStatus.value}`;
+        }
         if (selectedMachine && selectedMachine !== 'All Machines') {
           query += `%26%26machinename=="${selectedMachine}"`;
         }
@@ -208,7 +293,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'success',
-          message: 'DOWNTIME_UPDATE_SUCCESS',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });
@@ -216,7 +301,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: 'DOWNTIME_UPDATE_ERROR',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });

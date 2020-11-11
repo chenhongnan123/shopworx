@@ -16,7 +16,6 @@
         </v-card-title>
 
         <v-card-text>
-        <!-- Do you really want to Delete this Station? -->
         <span class="red--text">
           while deleting this
           Station Coresponding Order and Roadmap also Deleted
@@ -61,9 +60,7 @@ export default {
     },
   },
   created() {
-    // this.getRunningOrder('?orderstatus=Running');
     this.getRoadMapDetailsRecord();
-    // this.btnDeleteStation();
     this.getRunningOrder();
     this.getSubStations();
   },
@@ -92,25 +89,16 @@ export default {
         });
         this.dialog = false;
       } else {
-        // get plc parameter
         const getSubStation = this.subStations
           .filter((s) => s.stationid === this.station.id);
         const matchSubStation = getSubStation.forEach(async (item) => {
           const element = await this.getSubStationIdElement(item.id);
-          const eleList = await this.inactiveElement(
+          await this.inactiveElement(
             {
               elementId: element.id,
               status: 'INACTIVE',
             },
           );
-          console.log(eleList);
-          // if (eleList) {
-          //   this.setAlert({
-          //     show: true,
-          //     type: 'success',
-          //     message: 'INACTIVE_PROCESS_ELEMENT',
-          //   });
-          // }
         });
         await Promise.all([matchSubStation]);
         const gotRoadmap = this.roadMapDetailsRecord
@@ -143,9 +131,6 @@ export default {
           }
         } else {
           const defaultRoadmId = 'roadmap-00';
-          // const deleteRoadmapId;
-          // deleteRoadmapId = deleteRoadmapId || defaultRoadmId;
-          // deleteRoadmapId = defaultRoadmId;
           const sutationObject = {
             id: this.station.id,
             lineid: this.station.lineid,

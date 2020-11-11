@@ -6,7 +6,7 @@
     >
       <v-expansion-panel v-if="missingTags && missingTags.length">
         <v-expansion-panel-header class="pa-0 ma-0">
-          {{ $tc('rejectionReasons.setup.importMaster.missingMapping', missingTags.length) }}
+          {{ $tc('production.setup.importMaster.missingMapping', missingTags.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in missingTags" :key="n">{{ data }}</div>

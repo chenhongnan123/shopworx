@@ -1,7 +1,6 @@
  <template>
 <v-dialog v-model="dialog"  max-width="700px">
     <template v-slot:activator="{ on }">
-    <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>
@@ -18,7 +17,6 @@
         </v-btn>
     </v-card-title>
     <v-card-text>
-      <!-- {{station}} -->
       <v-row>
       <v-col cols="6" md="6">
         <v-text-field label="Name *" v-model="newStation.name"
@@ -57,8 +55,6 @@
         v-model="newStation.supplier"   dense></v-text-field>
         <v-text-field label="Life time" type="text"
         v-model="newStation.lifetime"   dense></v-text-field>
-        <!-- <v-text-field label="Process" type="text"
-        v-model="newStation.process"  dense></v-text-field> -->
         <v-text-field label="PLC Ip Address" mask="###.###.###-##"
         :rules ="plcRules" required
         class="mb-3"

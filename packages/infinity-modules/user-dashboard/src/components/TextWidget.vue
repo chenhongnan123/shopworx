@@ -7,7 +7,6 @@
       ></span>
       <v-card :class="title === null ? 'mt-8' : ''">
         <v-card-text>
-          <!-- {{ details }} -->
           <v-row no-gutters>
             <span class="headline font-weight-regular success--text">PRODUCTION</span>
             <v-col cols="12" class="py-2">

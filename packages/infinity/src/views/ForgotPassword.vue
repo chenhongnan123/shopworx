@@ -4,8 +4,8 @@
     :illustration="resetPasswordIllustration"
     :subTitle="$t('forgotPassword.subTitle')"
   >
-    <validation-observer #default="{ passes }">
-      <v-form @submit.prevent="passes(onResetPassword)">
+    <validation-observer #default="{ handleSubmit }">
+      <v-form @submit.prevent="handleSubmit(onResetPassword)">
         <v-card-text>
           <identifier-input
             id="identifier_input"

@@ -13,9 +13,12 @@
         ></v-progress-circular>
       </v-col>
       <v-col cols="12" align="center">
-        <span class="headline">
+        <div class="headline">
           In God we trust. All others must bring data.
-        </span>
+        </div>
+        <div class="title">
+          Loading app configurations
+        </div>
       </v-col>
     </v-row>
   </v-container>

@@ -60,23 +60,6 @@
           prepend-icon="$production"
           label="Select Sub-Line name"
           @change="handleSubLineClick"/>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Sub-Line name"
-          :items="subLineList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="subLineSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
         <v-select
           v-model="input.stationname"
           :items="stationList"
@@ -103,23 +86,6 @@
             :rules="nameRules"
             :counter="10"
         ></v-text-field>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Station name"
-          :items="stationList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="stationSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -211,7 +177,6 @@ export default {
       const query = `?query=stationid=="${item.id}"`;
       await this.getSubStations(query);
     },
-    // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
       this.$refs.form.validate();
       const recipeNameFlag = this.recipeList
@@ -244,7 +209,6 @@ export default {
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
         && o.stationname === this.input.stationname);
-        //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';
           this.setAlert({
@@ -253,7 +217,6 @@ export default {
             message: 'ALREADY_EXSIST_RECIPE',
           });
         } else if (this.flagNewUpdate) {
-          // update recipe
           this.saving = true;
           this.recipe = {
             ...this.recipe,
@@ -288,7 +251,6 @@ export default {
           }
           this.saving = false;
         } else {
-          // add new recipe
           this.saving = true;
           this.recipe = {
             ...this.recipe,

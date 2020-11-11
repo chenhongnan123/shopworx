@@ -185,7 +185,6 @@ export default {
           .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
         if (finalSubstationFlag.length > 0) {
           this.newSubstation.finalsubstation = '';
-          // this.btnDisable = true;
           this.setAlert({
             show: true,
             type: 'error',

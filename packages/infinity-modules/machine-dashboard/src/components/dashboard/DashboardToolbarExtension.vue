@@ -7,7 +7,7 @@
     >
       <div class="mt-1">
         <span class="title">
-          {{ shift }} - {{ date }}
+          {{ currentShift }} - {{ date }}
         </span>
       </div>
       <div class="ml-4">
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 import TimeSelection from './TimeSelection.vue';
 import CellSelection from './CellSelection.vue';
@@ -39,13 +40,28 @@ export default {
     CellSelection,
     AutoRun,
   },
+  data() {
+    return {
+      interval: null,
+    };
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      this.getBusinessTime();
+    }, 60000);
+    this.getBusinessTime();
+  },
+  destroyed() {
+    clearInterval(this.interval);
+  },
   computed: {
-    shift() {
-      return 'Shift 1';
-    },
+    ...mapState('machineDashboard', ['currentShift', 'currentDate']),
     date() {
-      return formatDate(new Date(), 'PP');
+      return formatDate(new Date(this.currentDate), 'PP');
     },
+  },
+  methods: {
+    ...mapActions('machineDashboard', ['getBusinessTime']),
   },
 };
 </script>

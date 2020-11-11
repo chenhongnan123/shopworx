@@ -128,7 +128,6 @@ export default {
           this.assetId = getAssetId;
           this.newProcess = {
             ...this.newProcess,
-            // lineid: this.lineid,
             substationid: this.selectedSubstationLine.id,
             sublineid: this.selectedSubstationLine.sublineid,
             lineid: this.selectedSubstationLine.lineid,

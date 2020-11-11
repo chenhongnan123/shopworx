@@ -68,7 +68,10 @@ export default {
   },
   async created() {
     this.loading = true;
-    await this.getAppSchema();
+    await Promise.all([
+      this.getAppSchema(),
+      this.getShifts(),
+    ]);
     this.loading = false;
   },
   beforeMount() {
@@ -86,6 +89,7 @@ export default {
   methods: {
     ...mapMutations('machineDashboard', ['setAssetData']),
     ...mapActions('webApp', ['getAppSchema']),
+    ...mapActions('machineDashboard', ['getShifts']),
     startStream() {
       this.evtSource = new EventSource('/sse/asm');
     },

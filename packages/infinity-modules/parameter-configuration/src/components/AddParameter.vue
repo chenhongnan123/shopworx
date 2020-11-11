@@ -35,24 +35,6 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.description"
           ></v-text-field>
-           <!-- <v-autocomplete
-            clearable
-            label="Direction"
-            :items="directionList"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            prepend-icon="$production"
-            v-model="parameterObj.parameterdirection"
-            :rules="rules.parameterdirection"
-          >
-            <template v-slot:item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete> -->
           <v-autocomplete
             clearable
             label="Category*"
@@ -142,24 +124,6 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
-          <!-- <v-autocomplete
-            clearable
-            label="Is Conversion"
-            :items="boolList"
-            return-object
-            :disabled="saving"
-            item-text="name"
-            prepend-icon="$production"
-            v-model="parameterObj.isconversion"
-            :rules="rules.isconversion"
-          >
-            <template v-slot:item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete> -->
           <v-text-field
               v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
               :disabled="saving"
@@ -168,14 +132,6 @@
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.multiplicationfactor"
           ></v-text-field>
-          <!-- <v-text-field
-              v-if="parameterObj.isconversion && parameterObj.isconversion.id === 1"
-              :disabled="saving"
-              :rules="rules.divisionfactor"
-              label="Division Factor"
-              prepend-icon="mdi-tray-plus"
-              v-model="parameterObj.divisionfactor"
-          ></v-text-field> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.parameterunit"
@@ -211,7 +167,6 @@
 import {
   mapActions,
   mapState,
-  // mapGetters,
   mapMutations,
 } from 'vuex';
 
@@ -222,7 +177,6 @@ export default {
       parameterObj: {
         name: null,
         description: null,
-        // parameterdirection: null,
         parametercategory: null,
         datatype: null,
         booleanbit: null,
@@ -231,9 +185,6 @@ export default {
         startaddress: null,
         protocol: null,
         isconversion: null,
-        // multiplicationfactor: null,
-        // divisionfactor: null,
-        // currentvalue: null,
         parameterunit: null,
         paid: null,
       },
@@ -243,12 +194,6 @@ export default {
         name: [
           (v) => !!v || 'Parameter Name is required',
         ],
-        // description: [
-        //   (v) => !!v || 'Parameter Description is required',
-        // ],
-        // parameterdirection: [
-        //   (v) => !!v || 'Direction is required',
-        // ],
         parametercategory: [
           (v) => !!v || 'Category is required',
         ],
@@ -285,9 +230,6 @@ export default {
           (v) => !!v || 'Division Factor is required',
           (v) => v % 1 === 0 || 'Division Factor is Integer',
         ],
-        // currentvalue: [
-        //   (v) => !!v || 'Parameter Current Value',
-        // ],
         parameterunit: [
           (v) => !!v || 'Parameter Unit is required',
         ],
@@ -321,9 +263,6 @@ export default {
       handler(parameterObj) {
         if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean' && parameterObj.datatype.name !== 'String') {
           parameterObj.size = parameterObj.datatype.size;
-          // delete this.parameterObj.booleanbit;
-        } else if (parameterObj.datatype && parameterObj.datatype.name === 'Boolean') {
-          // this.parameterObj.booleanbit = null;
         }
       },
       deep: true,
@@ -394,7 +333,6 @@ export default {
         const payload = {
           ...parameterObj,
           assetid: 4,
-          // parameterdirection: parameterObj.parameterdirection.id,
           parametercategory: parameterObj.parametercategory.id,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,

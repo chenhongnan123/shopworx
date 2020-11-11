@@ -43,7 +43,7 @@
             <v-card-text
               :class="$vuetify.theme.dark ? 'white--text' : 'black--text'"
             >
-              <v-row style="height:100%">
+              <v-row no-gutters style="height:100%">
                 <v-col cols="7" class="my-auto">
                   <v-row>
                     <v-col cols="12">

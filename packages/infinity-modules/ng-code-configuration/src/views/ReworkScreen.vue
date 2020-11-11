@@ -112,23 +112,6 @@
           item-text="name"
           prepend-icon="$production"
           label="Select Sub-Line name"/>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Sub-Line name"
-          :items="subLineList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="subLineSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
         <v-select
           v-model="input.machinename"
           :items="stationList"
@@ -142,23 +125,6 @@
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
         ></v-text-field>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Station name"
-          :items="stationList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="stationSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -247,8 +213,6 @@
 </template>
 
 <script>
-// import { mapActions, mapState, mapMutations } from 'vuex';
-
 export default {
   name: 'NgCodeConfig',
   data() {

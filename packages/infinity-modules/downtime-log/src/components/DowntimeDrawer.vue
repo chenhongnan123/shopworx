@@ -10,6 +10,7 @@
       <shift-selection />
       <machine-selection />
       <type-selection />
+      <status-selection />
       <duration-selection />
       <sort-selection />
     </div>
@@ -24,6 +25,7 @@ import MachineSelection from './toolbar/MachineSelection.vue';
 import TypeSelection from './toolbar/TypeSelection.vue';
 import DurationSelection from './toolbar/DurationSelection.vue';
 import SortSelection from './toolbar/SortSelection.vue';
+import StatusSelection from './toolbar/StatusSelection.vue';
 
 export default {
   name: 'DowntimeDrawer',
@@ -34,6 +36,7 @@ export default {
     TypeSelection,
     DurationSelection,
     SortSelection,
+    StatusSelection,
   },
   computed: {
     ...mapState('downtimeLog', ['drawer']),

@@ -36,7 +36,6 @@ export default ({
     setSubStations: set('subStations'),
     setProcesses: set('processes'),
     setAddSublineDialog: set('addSublineDialog'),
-    // setAddStationDialog: set('addStationDialog'),
     setAddSubstationDialog: set('addSubstationDialog'),
     setAddProcessDialog: set('addProcessDialog'),
     setUpdateSublineDialog: set('updateSublineDialog'),
@@ -157,12 +156,6 @@ export default ({
         { root: true },
       );
       commit('setSublines', sublines);
-      // if (sublines.length) {
-      //   sublines.forEach((subline) => {
-      //     dispatch('getStations', `?query=sublineid==${subline.id}`);
-      //   });
-      // }
-      // // return true;
     },
     getStations: async ({ dispatch, commit, state }, query) => {
       const { stations } = state;
@@ -174,17 +167,11 @@ export default ({
         },
         { root: true },
       );
-      // if (localStations && localStations.length) {
-      //   localStations.forEach((station) => {
-      //     dispatch('getSubStations', `?query=stationid=="${station.id}"`);
-      //   });
-      // }
       stations.push(...localStations);
       commit('setStations', stations);
       return true;
     },
     getStationbyline: async ({ dispatch, commit }, query) => {
-      // const query = `?query=lineid==${this.selectedLine.id}`;
       const stationsbylines = await dispatch(
         'element/getRecords',
         {
@@ -197,7 +184,6 @@ export default ({
       return true;
     },
     getSubStationbyline: async ({ dispatch, commit }, query) => {
-      // const query = `?query=lineid==${this.selectedLine.id}`;
       const substationsbylines = await dispatch(
         'element/getRecords',
         {
@@ -247,7 +233,6 @@ export default ({
         subStations = list.map((l) => ({
           ...l,
           stationcolor: 0,
-          // numberIndex: index + 1,
         }));
       }
       commit('setSubStations', subStations);
@@ -310,10 +295,8 @@ export default ({
           commit('setSublines', []);
           list = sublines;
           commit('setSublines', list);
-          // return sublines;
         }
       }
-      // return created;
     },
     createStation: async ({ dispatch, commit }, payload) => {
       let list = [];
@@ -366,7 +349,6 @@ export default ({
         );
         if (substations) {
           list = substations;
-          // list = list.sort((a, b) => a.indexno - b.indexno);
           commit('setSubStations', list);
           return substations;
         }
@@ -436,10 +418,8 @@ export default ({
         );
         if (sublines) {
           commit('setSublines', sublines);
-          // return sublines;
         }
       }
-      // return created;
     },
     updateMainLineFlagToSubStations: async ({ dispatch }, payload) => {
       const created = await dispatch(
@@ -475,10 +455,8 @@ export default ({
         );
         if (processes) {
           commit('setProcesses', processes);
-          // return processes;
         }
       }
-      // return created;
     },
     updateSubstation: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
@@ -717,11 +695,6 @@ export default ({
           { root: true },
         );
       }
-      // commit('helper/setAlert', {
-      //   show: true,
-      //   type: 'success',
-      //   message: 'STATION_DEPENDANT_DELETED',
-      // });
       if (deleted) {
         const query = '';
         const stations = await dispatch(

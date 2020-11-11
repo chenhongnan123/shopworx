@@ -26,8 +26,8 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-    <validation-observer ref="form" #default="{ passes, invalid }">
-      <v-form @submit.prevent="passes(onSubmit)">
+    <validation-observer ref="form" #default="{ handleSubmit, invalid }">
+      <v-form @submit.prevent="handleSubmit(onSubmit)">
         <v-card-text>
           <validation-provider
             name="partname"
@@ -410,6 +410,7 @@ export default {
         this.partMatrixRecords = this.filteredPartMatrixRecords(this.filters);
       }
       if (this.partMatrixRecords.length === 1) {
+        this.familyPlan = [];
         const matrixKeys = Object.keys(this.partMatrix);
         matrixKeys.forEach((key) => {
           this.partMatrix[key] = this.partMatrixRecords[0][key];
@@ -632,6 +633,9 @@ export default {
       }
       this.plan = { ...this.planToEdit[0] };
       this.plan.scheduledstart = formatDate(this.planToEdit[0].scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
+      if (this.duplicate) {
+        delete this.plan._id;
+      }
     },
   },
 };

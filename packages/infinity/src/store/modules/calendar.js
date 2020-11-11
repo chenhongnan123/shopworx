@@ -15,7 +15,7 @@ export default ({
       const { data } = await SiteService.getBusinessTime(timestamp || Date.now());
       if (data) {
         commit('setBusinessTime', data);
-        return true;
+        return data;
       }
       return false;
     },

@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       ngcode: {},
-      // assetId: 4,
       default: false,
       dialog: false,
       deleting: false,

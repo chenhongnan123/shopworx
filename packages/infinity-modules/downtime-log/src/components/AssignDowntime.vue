@@ -4,19 +4,25 @@
     outlined
     hide-details
     return-object
+    :loading="loading"
+    :disabled="loading"
+    class="primary--text"
     :items="downtimeReasons"
     item-text="reasonname"
     item-value="reasonname"
     v-model="selectedReason"
   >
     <template #selection="data">
-      {{ data.item.reasonname }}
+      {{ data.item.reasoncode }} | {{ data.item.reasonname }}
     </template>
     <template #item="data">
       <v-list-item-content>
         <v-list-item-title>
           {{ data.item.reasonname }}
         </v-list-item-title>
+        <v-list-item-subtitle
+          v-text="data.item.reasoncode"
+        ></v-list-item-subtitle>
         <v-list-item-subtitle
           v-text="data.item.category"
         ></v-list-item-subtitle>
@@ -32,12 +38,17 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'EditDowntimeReason',
+  name: 'AssignDowntime',
   props: {
     downtime: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      loading: false,
+    };
   },
   computed: {
     ...mapState('downtimeLog', ['downtimeReasons']),
@@ -45,23 +56,25 @@ export default {
       get() {
         return this.downtime.reasonname;
       },
-      set({
+      async set({
         reasonname,
         reasoncode,
         category,
         department,
       }) {
+        this.loading = true;
         const payload = {
           reasonname,
           reasoncode,
           category,
           department,
         };
-        this.updateReason({
-        // eslint-disable-next-line
+        await this.updateReason({
+          // eslint-disable-next-line
           id: this.downtime._id,
           payload,
         });
+        this.loading = false;
       },
     },
   },

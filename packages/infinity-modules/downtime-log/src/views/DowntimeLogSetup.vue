@@ -7,7 +7,7 @@
     >
       <v-col v-if="$vuetify.breakpoint.mdAndUp" md="6" xl="5">
         <v-img
-          :src="require(`@shopworx/assets/illustrations/${planningIllustration}.svg`)"
+          :src="require(`@shopworx/assets/illustrations/${downtimeIllustration}.svg`)"
           contain
         />
       </v-col>
@@ -27,10 +27,10 @@ export default {
     DowntimeOnboarding,
   },
   computed: {
-    planningIllustration() {
+    downtimeIllustration() {
       return this.$vuetify.theme.dark
-        ? 'planning-dark'
-        : 'planning-light';
+        ? 'downtime-dark'
+        : 'downtime-light';
     },
   },
 };
