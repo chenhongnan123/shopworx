@@ -26,10 +26,18 @@
                 <td>
                   {{ new Date(item.downtimestart).toLocaleTimeString() }}
                 </td>
-                <td>
+                <td v-if="item.status !== 'inProgress'">
                   {{ new Date(item.downtimeend).toLocaleTimeString() }}
                 </td>
-                <td>{{ duration(item.downtimeduration) }}</td>
+                <td v-else>
+                  N.A
+                </td>
+                <td v-if="item.status !== 'inProgress'">
+                  {{ duration(item.downtimeduration) }}
+                </td>
+                <td v-else>
+                  Ongoing
+                </td>
               </tr>
             </template>
           </v-data-table>

@@ -17,7 +17,7 @@
           {{ new Date(downtime.downtimeend).toLocaleTimeString('en-US') }}
         </span>
         <span v-else>
-          now
+          N.A
         </span>
       </div>
       <v-spacer></v-spacer>
