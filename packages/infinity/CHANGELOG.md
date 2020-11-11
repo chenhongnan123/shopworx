@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **core:** fixed snackbar close button position ([fd54cc5](https://bitbucket.org/entrib/shopworx/commits/fd54cc5dfe0f15c50d747d6ed01e814130433aab))
+* **locale:** added missing vuetify locales ([6cbbdb8](https://bitbucket.org/entrib/shopworx/commits/6cbbdb80dad6e5e3fa6d68add2b2baf49d1abd8b))
+* **shopfloor-dashboard:** display real time shift and date ([b8f123f](https://bitbucket.org/entrib/shopworx/commits/b8f123f2529a9b716f93f9adcdcb4bc197f29a2f))
+
+
+### Features
+
+* **core:** added internal server error redirection ([56ad37c](https://bitbucket.org/entrib/shopworx/commits/56ad37c1c7be4b710903ccad092e445a58e215dc))
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **production-log:** assign operator to shift and machine ([a7ad598](https://bitbucket.org/entrib/shopworx/commits/a7ad5986cdd0e4972358b85fdaf10da98b213696))
+* **production-log:** assign rework and scrap to production ([73df2de](https://bitbucket.org/entrib/shopworx/commits/73df2de25e24bb7dd3652c96d79e143558729a9a))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 
