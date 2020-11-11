@@ -632,6 +632,9 @@ export default {
       }
       this.plan = { ...this.planToEdit[0] };
       this.plan.scheduledstart = formatDate(this.planToEdit[0].scheduledstart, 'yyyy-MM-dd\'T\'HH:mm');
+      if (this.duplicate) {
+        delete this.plan._id;
+      }
     },
   },
 };
