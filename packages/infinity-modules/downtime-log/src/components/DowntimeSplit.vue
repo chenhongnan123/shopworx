@@ -239,9 +239,8 @@ export default {
         category,
         department,
       } = this.downtime;
-      console.log(downtimeend);
       this.downtimes = [{
-        downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
+        downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
         downtimeend: '',
         selectedReason: {
           reasonname,
@@ -251,7 +250,7 @@ export default {
         },
       }, {
         downtimestart: '',
-        downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
+        downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
         selectedReason: null,
       }];
     },
@@ -259,7 +258,7 @@ export default {
       this.downtimes.push({
         downtimestart: '',
         downtimeend: new Date(this.downtime.downtimeend)
-          .toLocaleTimeString('en-GB'),
+          .toLocaleTimeString('en-US', { hour12: false }),
         selectedReason: null,
       });
     },
@@ -275,8 +274,8 @@ export default {
           department,
         } = this.downtime;
         this.downtimes[index] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
+          downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
+          downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
           selectedReason: {
             reasonname,
             reasoncode,
@@ -294,8 +293,8 @@ export default {
           department,
         } = this.downtime;
         this.downtimes[index - 1] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
+          downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
+          downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
           selectedReason: {
             reasonname,
             reasoncode,
@@ -330,12 +329,8 @@ export default {
         await Promise.all([this.downtimes.forEach((dt) => {
           const [sHrs, sMins, sSecs] = dt.downtimestart.split(':');
           const [eHrs, eMins, eSecs] = dt.downtimeend.split(':');
-          let endHour = eHrs;
-          if (parseInt(sHrs, 10) > parseInt(eHrs, 10) && parseInt(eHrs, 10) === 0) {
-            endHour = 24;
-          }
           const start = new Date(year, (month - 1), day, sHrs, sMins, sSecs || 0).getTime();
-          const end = new Date(year, (month - 1), day, endHour, eMins, eSecs || 0).getTime();
+          const end = new Date(year, (month - 1), day, eHrs, eMins, eSecs || 0).getTime();
           const {
             reasonname,
             reasoncode,
