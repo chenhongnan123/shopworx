@@ -102,7 +102,7 @@
                   open-on-click
                   return-object
                   v-model="item.permissions"
-                  :items="masterPermissions"
+                  :items="masterPermissions(item.roleName)"
                 ></v-treeview>
               </v-card-text>
               <v-card-actions>
@@ -197,45 +197,6 @@ export default {
       }
       return count;
     },
-    masterPermissions() {
-      const modules = [];
-      if (this.masterSolutions && this.masterSolutions.length) {
-        this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: module.details.map((detail) => ({
-                moduleId: module.id,
-                moduleName: module.moduleName,
-                id: detail.id,
-                name: this.$i18n.t(`modules.${detail.webAppName}`),
-              })),
-            });
-          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: this.removeDuplicates(module.details, 'id').map((detail) => ({
-                moduleId: module.id,
-                moduleName: module.moduleName,
-                id: detail.id,
-                name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
-              })),
-            });
-          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
-            modules.push({
-              moduleId: module.id,
-              moduleName: module.moduleName,
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-            });
-          }
-          return modules;
-        }));
-      }
-      return modules;
-    },
   },
   async created() {
     this.loading = true;
@@ -284,6 +245,47 @@ export default {
       if (success) {
         await this.fetchRoles();
       }
+    },
+    masterPermissions(roleName) {
+      const modules = [];
+      if (this.masterSolutions && this.masterSolutions.length) {
+        this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
+          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            modules.push({
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              children: module.details.map((detail) => ({
+                moduleId: module.id,
+                moduleName: module.moduleName,
+                id: detail.id,
+                name: this.$i18n.t(`modules.${detail.webAppName}`),
+              })),
+            });
+          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            modules.push({
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              children: this.removeDuplicates(module.details, 'id').map((detail) => ({
+                moduleId: module.id,
+                moduleName: module.moduleName,
+                id: detail.id,
+                name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
+              })),
+            });
+          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+            modules.push({
+              moduleId: module.id,
+              moduleName: module.moduleName,
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              disabled: module.moduleName.toUpperCase().trim() === 'ADMIN'
+                && roleName === 'admin',
+            });
+          }
+          return modules;
+        }));
+      }
+      return modules;
     },
     getRolePermissions(role) {
       let modules = [];
