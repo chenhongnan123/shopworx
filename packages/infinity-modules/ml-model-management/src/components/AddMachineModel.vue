@@ -14,7 +14,7 @@
     lazy-validation>
     <v-card>
     <v-card-title>
-        <span class="headline">Add Model</span>
+        <span class="headline">Add Files</span>
          <v-spacer></v-spacer>
         <v-btn icon small @click="(dialog = false);">
           <v-icon>mdi-close</v-icon>
@@ -23,33 +23,37 @@
     <v-card-text>
           <v-row>
             <v-col cols="6" md="12">
-            <v-text-field
-              outlined
-              v-model="name"
-              label="Name"
-            ></v-text-field>
-            <v-textarea outlined
-              v-model="description">
-              <template v-slot:label>
-                <div>Description</div>
-              </template>
-            </v-textarea>
-              <v-btn color="primary"
+              <!-- <v-btn color="primary"
                 class="text-none"
-                @click="importFile">Select Model file</v-btn>
-              <input
-              multiple
-              type="file"
-              accept=".csv"
-              ref="uploader"
-              class="d-none"
-              id="uploadFiles"
-            >
+                @click="importFile">Select Model file</v-btn> -->
             </v-col>
       </v-row>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
+        <!-- <v-btn
+                block
+                id="importFiles"
+                color="primary"
+                class="text-none"
+                @click="uploadFiles"
+              >
+                <v-icon
+                  left
+                  v-text="'$upload'"
+                ></v-icon>
+                Select Model files
+              </v-btn>
+              <input
+              multiple
+              type="file"
+              ref="uploader"
+              class="d-none"
+              id="uploadFiles"
+              @change="onFilesChanged"
+            > -->
+        <v-btn color="primary"
+        class="text-none">Upload file</v-btn>
         <v-btn color="primary"
         class="text-none"
          @click="saveModel">Save</v-btn>
@@ -59,11 +63,19 @@
 </v-dialog>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
+
+const contentEnum = Object.freeze({
+  image: 'image',
+  audio: 'audio',
+  video: 'video',
+  application: 'file',
+});
 
 export default {
   data() {
     return {
+      files: [],
       name: null,
       description: null,
       assetId: null,
@@ -75,32 +87,72 @@ export default {
     payload: {
       required: true,
     },
+    selectedmodel: {
+      required: true,
+    },
   },
   computed: {
+    ...mapState('modelManagement', ['processModelList']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement',
-      ['addProcessModel', 'getModelRecords']),
-    importFile() {
+      ['addModelFiles', 'getModelRecords', 'uploadFile', 'getInputRecords', 'getOutputRecords', 'getModelFiles']),
+    uploadFiles() {
       this.$refs.uploader.click();
+    },
+    async onFilesChanged(e) {
+      this.files = e && e !== undefined ? e.target.files : null;
+      // e.target.value = '';
+      console.log(this.files);
+      await Promise.all([this.files.forEach(async (file) => {
+        const { content, nameWithoutExt, extension } = this.getFileDetails(file);
+        const object = {
+          filename: nameWithoutExt,
+          fileextension: extension,
+          filecontent: content,
+          elementname: 'processmodels',
+          assetid: 4,
+        };
+        await this.uploadFile(object);
+      })]);
+    },
+    getFileDetails(file) {
+      const { name, type } = file;
+      const [nameWithoutExt] = name.split('.');
+      const temp = type.split('/');
+      console.log(temp);
+      const content = contentEnum[temp[0]] || 'file';
+      const extension = temp[1];
+      return { content, nameWithoutExt, extension };
     },
     async saveModel() {
       const object = {
         lineid: this.payload.lineid,
         stationid: this.payload.stationid,
-        processid: this.payload.processid,
-        modelname: this.name,
-        modeldescription: this.description,
+        subprocessid: this.payload.processid,
+        modelid: this.selectedmodel._id,
         assetid: 4,
       };
-      const response = await this.addProcessModel(object);
+      const response = await this.addModelFiles(object);
       if (response) {
         this.dialog = false;
-        this.name = '';
-        this.description = '';
-        await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
-        %26%26processid=="${this.payload.processid}"`);
+        await this.getModelRecords(`?query=lineid==${object.lineid}%26%26stationid=="${object.stationid}"%26%26subprocessid=="${object.subprocessid}"`);
+        // add new logic
+        this.processModelList.forEach(async (model) => {
+          model.inputlist = await this.getInputRecords(`?query=lineid==${object.lineid}%26%26stationid=="${object.stationid}"
+          %26%26subprocessid=="${object.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+          model.outputlist = await this.getOutputRecords(`?query=lineid==${object.lineid}%26%26stationid=="${object.stationid}"
+          %26%26subprocessid=="${object.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+          model.filelist = await this.getModelFiles(`?query=lineid==${object.lineid}%26%26stationid=="${object.stationid}"
+          %26%26subprocessid=="${object.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+        });
+        // this.name = '';
+        // this.description = '';
+        // await this.getModelRecords(`?query=lineid==$
+        // {this.payload.lineid}
+        // %26%26stationid=="${this.payload.stationid}"
+        // %26%26processid=="${this.payload.processid}"`);
         this.setAlert({
           show: true,
           type: 'success',

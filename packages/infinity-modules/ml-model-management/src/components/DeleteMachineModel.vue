@@ -11,7 +11,7 @@
     </template>
     <v-card>
       <v-card-title class="headline"
-        >Delete Model?
+        >Delete Files?
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
@@ -27,7 +27,7 @@
   </v-dialog>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   data() {
@@ -39,17 +39,34 @@ export default {
     payload: {
       required: true,
     },
+    selectedmodel: {
+      required: true,
+    },
+  },
+  computed: {
+    ...mapState('modelManagement', ['processModelList']),
   },
   methods: {
-    ...mapActions('modelManagement', ['deleteModel', 'getModelRecords']),
+    ...mapActions('modelManagement', ['deleteFileById', 'getModelRecords', 'getInputRecords', 'getOutputRecords', 'getModelFiles']),
     ...mapMutations('helper', ['setAlert']),
     async onBtnClick() {
       let deleted = false;
       console.log(this.payload);
-      deleted = await this.deleteModel(this.payload._id);
+      deleted = await this.deleteFileById(this.payload._id);
       if (deleted) {
-        await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
-          %26%26processid=="${this.payload.processid}"`);
+        // await this.getModelRecords(`?query=lineid==${this.payload.
+        // lineid}%26%26stationid=="${this.payload.stationid}"
+        //   %26%26processid=="${this.payload.processid}"`);
+        await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"%26%26subprocessid=="${this.payload.subprocessid}"`);
+        // add new logic
+        this.processModelList.forEach(async (model) => {
+          model.inputlist = await this.getInputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
+          %26%26subprocessid=="${this.payload.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+          model.outputlist = await this.getOutputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
+          %26%26subprocessid=="${this.payload.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+          model.filelist = await this.getModelFiles(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
+          %26%26subprocessid=="${this.payload.subprocessid}"%26%26modelid=="${this.selectedmodel._id}"`);
+        });
         this.setAlert({
           show: true,
           type: 'success',

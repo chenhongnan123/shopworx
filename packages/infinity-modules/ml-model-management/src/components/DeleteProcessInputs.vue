@@ -50,35 +50,55 @@ export default {
     ...mapState('parameterConfiguration', ['parameterList', 'categoryList']),
   },
   methods: {
-    ...mapActions('modelManagement', ['deleteInput', 'getInputRecords']),
+    ...mapActions('modelManagement', ['deleteInput', 'getInputRecords', 'getModelRecords', 'getOutputRecords']),
     ...mapActions('parameterConfiguration', [
       'getPageDataList',
       'getParameterListRecords',
     ]),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setSelectedParameterList']),
+    compare(a, b) {
+      if (a.description < b.description) {
+        return -1;
+      }
+      if (a.description > b.description) {
+        return 1;
+      }
+      return 0;
+    },
     async onBtnClick() {
       let deleted = false;
       console.log(this.payload);
       deleted = await this.deleteInput(this.payload._id);
       if (deleted) {
-        await this.getParameterListRecords('?pagenumber=1&pagesize=10');
-        this.parameterList.forEach((parameter) => {
-          if (parameter.parametercategory === 51) {
-            this.paramterSelected.push(parameter);
-          }
+        await this.getModelRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"%26%26subprocessid=="${this.payload.subprocessid}"`);
+        // add new logic
+        this.processModelList.forEach(async (model) => {
+          model.inputlist = await this.getInputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
+          %26%26subprocessid=="${this.payload.subprocessid}"%26%26modelid=="${this.payload.modelid}"`);
+          model.outputlist = await this.getOutputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
+          %26%26subprocessid=="${this.payload.subprocessid}"%26%26modelid=="${this.payload.modelid}"`);
         });
-        this.paramterSelected = this.paramterSelected.sort((a, b) => b.description - a.description);
-        console.log(this.paramterSelected);
+        // await this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        // this.parameterList.forEach((parameter) => {
+        //   if (parameter.parametercategory === 51) {
+        //     this.paramterSelected.push(parameter);
+        //   }
+        // });
+        // this.paramterSelected = this.paramterSelected.sort((a, b)
+        //  => b.description - a.description);
+        // console.log(this.paramterSelected);
         // this.setParameterList(this.parameterList);
-        await this.getInputRecords(`?query=lineid==${this.payload.lineid}%26%26stationid=="${this.payload.stationid}"
-          %26%26processid=="${this.payload.processid}"`);
-        this.processIntputList.forEach((f) => {
-          const usedObject = this.paramterSelected.find((p) => p.id === f.parameterid);
-          this.paramterSelected.splice(this.paramterSelected.indexOf(usedObject), 1);
-        });
-        console.log(this.paramterSelected);
-        this.setSelectedParameterList(this.paramterSelected);
+        // await this.getInputRecords(`?query=lineid==${this.payload.
+        // lineid}%26%26stationid=="${this.payload.stationid}"
+        //   %26%26processid=="${this.payload.processid}"`);
+        // this.processIntputList.forEach((f) => {
+        //   const usedObject = this.paramterSelected.find((p) => p.id === f.parameterid);
+        //   this.paramterSelected.splice(this.paramterSelected.indexOf(usedObject), 1);
+        // });
+        // console.log(this.paramterSelected);
+        // this.paramterSelected = this.paramterSelected.sort(this.compare);
+        // this.setSelectedParameterList(this.paramterSelected);
         this.setAlert({
           show: true,
           type: 'success',

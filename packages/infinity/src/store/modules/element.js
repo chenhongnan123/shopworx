@@ -323,7 +323,17 @@ export default ({
       }
       return false;
     },
-
+    uploadFiles: async (_, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.uploadFiles(elementName, payload);
+        if (data && data.errors) {
+          return data;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
     updateRecordByQuery: async (_, { elementName, queryParam, payload }) => {
       try {
         const { data } = await ElementService.updateRecordByQuery(

@@ -13,6 +13,7 @@ export default ({
     processIntputList: [],
     processModelList: [],
     selectedParameterList: [],
+    modelFilesList: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -25,13 +26,28 @@ export default ({
     setProcessInputList: set('processIntputList'),
     setProcessModelList: set('processModelList'),
     setSelectedParameterList: set('selectedParameterList'),
+    setModelFilesList: set('modelFilesList'),
   },
   actions: {
+    uploadFile: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/uploadFiles',
+        {
+          elementName: 'processmodels',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
     addOutputRecordss: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postRecord',
         {
-          elementName: 'processoutputs',
+          elementName: 'modeloutputs',
           payload,
         },
         { root: true },
@@ -59,7 +75,7 @@ export default ({
       const created = await dispatch(
         'element/postRecord',
         {
-          elementName: 'processinputs',
+          elementName: 'modelinputs',
           payload,
         },
         { root: true },
@@ -73,7 +89,7 @@ export default ({
       const created = await dispatch(
         'element/postRecord',
         {
-          elementName: 'processmodels',
+          elementName: 'models',
           payload,
         },
         { root: true },
@@ -83,25 +99,60 @@ export default ({
       }
       return false;
     },
-    getModelRecords: async ({ dispatch, commit }, query) => {
+    addModelFiles: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'modelfiles',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    getModelFiles: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
         {
-          elementName: 'processmodels',
+          elementName: 'modelfiles',
           query,
         },
         { root: true },
       );
       if (list) {
-        commit('setProcessModelList', list);
+        commit('setModelFilesList', list);
       }
       return list;
+    },
+    getModelRecords: async ({ dispatch, commit }, query) => {
+      let modelList = [];
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'models',
+          query,
+        },
+        { root: true },
+      );
+      if (list) {
+        modelList = list.map((l) => ({
+          ...l,
+          inputlist: [],
+          filelist: [],
+          outputlist: [],
+        }));
+        commit('setProcessModelList', modelList);
+      }
+      return modelList;
     },
     getOutputRecords: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
         {
-          elementName: 'processoutputs',
+          elementName: 'modeloutputs',
           query,
         },
         { root: true },
@@ -115,7 +166,7 @@ export default ({
       const list = await dispatch(
         'element/getRecords',
         {
-          elementName: 'processinputs',
+          elementName: 'modelinputs',
           query,
         },
         { root: true },
@@ -136,11 +187,22 @@ export default ({
       );
       return deleted;
     },
-    deleteModel: async ({ dispatch }, id) => {
+    deleteModelById: async ({ dispatch }, id) => {
       const deleted = await dispatch(
         'element/deleteRecordById',
         {
-          elementName: 'processmodels',
+          elementName: 'models',
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
+    },
+    deleteFileById: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'modelfiles',
           id,
         },
         { root: true },
