@@ -277,7 +277,7 @@ export default {
         assetid,
         planid: this.production.planid,
         partname: this.production.partname,
-        machine: this.production.machinename,
+        machinename: this.production.machinename,
         scrapweight: weight,
         remark,
         ...reason,

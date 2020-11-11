@@ -282,7 +282,7 @@ export default {
         assetid,
         planid: this.production.planid,
         partname: this.production.partname,
-        machine: this.production.machinename,
+        machinename: this.production.machinename,
         reworkquantity: qty,
         remark,
         ...reason,
