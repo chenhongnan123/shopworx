@@ -211,6 +211,7 @@ export default ({
         pageSize,
       } = state;
       if (selectedSort) {
+        commit('clearCheckedItems');
         const date = parseInt(selectedDate.replace(/-/g, ''), 10);
         const duration = parseInt(selectedDuration && selectedDuration.value, 10);
         let query = `date==${date}`;
