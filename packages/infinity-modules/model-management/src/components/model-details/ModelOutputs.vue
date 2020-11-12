@@ -7,8 +7,8 @@
         :key="outputTransformation.id"
         :label="outputTransformation.name"
         v-model="outputTransformation.selected"
-        @change="updateOutputTransformation(outputTransformation, index)"
-        v-for="(outputTransformation, index) in mappedOutputTransforamtions"
+        @change="updateOutputTransformation(outputTransformation)"
+        v-for="outputTransformation in mappedOutputTransforamtions"
       ></v-checkbox>
     </v-card-text>
   </v-card>
@@ -50,8 +50,7 @@ export default {
       'createOutputTransformation',
       'deleteOutputTransformation',
     ]),
-    async updateOutputTransformation(trans, index) {
-      console.log(index);
+    async updateOutputTransformation(trans) {
       if (trans.selected) {
         await this.createOutputTransformation({
           // eslint-disable-next-line

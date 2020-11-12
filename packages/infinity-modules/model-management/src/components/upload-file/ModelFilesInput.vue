@@ -125,7 +125,6 @@ export default {
     },
     async fileSuccess(file, response) {
       const res = JSON.parse(response);
-      console.log(res);
       await this.updateModelFile({
         modelId: this.modelId,
         id: res.id,

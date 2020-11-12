@@ -4,18 +4,44 @@
       <v-data-table
         :items="modelFiles"
         :headers="headers"
+        :loading="deleting"
         hide-default-footer
+        class="mb-2"
       >
-        <template #item.download>
-          <a
-            color="primary"
-            class="text-decoration-underline"
-          >
-            Download
-          </a>
+        <template #item.name="{ item }">
+          {{ item.originalFilename }}.{{item.extension}}
         </template>
-        <template #item.actions>
-          <v-icon>mdi-delete</v-icon>
+        <template #item.actions="{ item }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                icon
+                v-on="on"
+                color="primary"
+                v-bind="attrs"
+                :disabled="deleting"
+                @click="downloadModelFile(item.downloadLink)"
+              >
+                <v-icon>mdi-cloud-download-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>Download file</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                icon
+                v-on="on"
+                color="error"
+                v-bind="attrs"
+                :disabled="deleting"
+                @click="deleteModelFile(item)"
+              >
+                <v-icon>mdi-delete-outline</v-icon>
+              </v-btn>
+            </template>
+            <span>Delete file</span>
+          </v-tooltip>
         </template>
       </v-data-table>
       <model-files-input
@@ -38,7 +64,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import ModelFilesInput from '../upload-file/ModelFilesInput.vue';
 
 export default {
@@ -58,14 +84,9 @@ export default {
   },
   data() {
     return {
+      deleting: false,
       headers: [
-        { text: 'Name', value: 'originalFilename' },
-        { text: 'Extension', value: 'extension' },
-        {
-          text: 'Download',
-          value: 'download',
-          sortable: false,
-        },
+        { text: 'Name', value: 'name' },
         {
           text: 'Actions',
           value: 'actions',
@@ -77,14 +98,49 @@ export default {
   },
   computed: {
     ...mapState('modelManagement', ['files']),
-    ...mapGetters('modelManagement', ['getFileDetails']),
     modelFiles() {
       return this.modelDetails && this.modelDetails.modelFiles;
     },
   },
   methods: {
+    ...mapActions('file', ['downloadFile', 'deleteFile']),
+    ...mapActions('modelManagement', ['fetchModelDetails']),
+    ...mapMutations('helper', ['setAlert']),
     async uploadFiles() {
       this.$refs.dropzone.startQueueProcessing();
+    },
+    async downloadModelFile(link) {
+      this.downloadFile(link);
+    },
+    async deleteModelFile(file) {
+      if (await this.$root.$confirm.open(
+        'Delete model file',
+        `Are you sure you want to delete "${file.originalFilename}.${file.extension}"?
+        This action cannot be reverted.`,
+      )) {
+        this.deleting = true;
+        const deleted = await this.deleteFile({
+          elementName: 'modelfiles',
+          // eslint-disable-next-line
+          id: file.id,
+        });
+        if (deleted) {
+          // eslint-disable-next-line
+          await this.fetchModelDetails(this.model._id);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'FILE_DELETE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'FILE_DELETE',
+          });
+        }
+        this.deleting = false;
+      }
     },
   },
 };

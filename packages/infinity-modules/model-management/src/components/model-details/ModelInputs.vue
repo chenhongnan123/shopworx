@@ -19,8 +19,8 @@
         :key="inputParameter.id"
         v-model="inputParameter.selected"
         :label="inputParameter.description"
-        @change="updateInputParameter(inputParameter, index)"
-        v-for="(inputParameter, index) in filteredInputParameters"
+        @change="updateInputParameter(inputParameter)"
+        v-for="inputParameter in filteredInputParameters"
       ></v-checkbox>
     </v-card-text>
   </v-card>
@@ -71,8 +71,7 @@ export default {
       'createInputParameter',
       'deleteInputParameter',
     ]),
-    async updateInputParameter(param, index) {
-      console.log(index);
+    async updateInputParameter(param) {
       if (param.selected) {
         await this.createInputParameter({
           // eslint-disable-next-line
