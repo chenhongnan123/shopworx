@@ -96,15 +96,15 @@ export default {
       loading: false,
       expanded: 0,
       details: [{
-        header: 'Model input parameters',
+        header: 'Input parameters',
         icon: 'mdi-database-arrow-left-outline',
         component: 'model-inputs',
       }, {
-        header: 'Model files',
+        header: 'Files',
         icon: 'mdi-database-cog-outline',
         component: 'model-files',
       }, {
-        header: 'Model output transformations',
+        header: 'Output transformations',
         icon: 'mdi-database-arrow-right-outline',
         component: 'model-outputs',
       }],
