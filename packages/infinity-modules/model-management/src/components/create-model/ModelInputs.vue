@@ -1,11 +1,11 @@
 <template>
   <v-card-text>
-    Model info creation
+    Model inputs selection
   </v-card-text>
 </template>
 
 <script>
 export default {
-  name: 'ModelInfo',
+  name: 'ModelInputs',
 };
 </script>
