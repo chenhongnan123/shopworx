@@ -1,6 +1,21 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
+const ELEMENTS = {
+  LINE: 'line',
+  SUBLINE: 'subline',
+  STATION: 'station',
+  SUBSTATION: 'substation',
+  PROCESS: 'process',
+  MODELS: 'models',
+  PARAMETERS: 'parameters',
+  TRANSFORMATIONS: 'mltransformationoutput',
+  MODEL_INPUTS: 'modelinputs',
+  MODEL_FILES: 'modelfiles',
+  MODEL_OUTPUTS: 'modeloutputs',
+};
+const ASSETID = 4;
+
 export default ({
   namespaced: true,
   state: {
@@ -19,6 +34,7 @@ export default ({
     inputParameters: [],
     outputTransformations: [],
     modelDetails: null,
+    files: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -36,13 +52,14 @@ export default ({
     setInputParameters: set('inputParameters'),
     setOutputTransformations: set('outputTransformations'),
     setModelDetails: set('modelDetails'),
+    setFiles: set('files'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
       const lines = await dispatch(
         'element/getRecords',
         {
-          elementName: 'line',
+          elementName: ELEMENTS.LINE,
         },
         { root: true },
       );
@@ -90,7 +107,7 @@ export default ({
       const sublines = await dispatch(
         'element/getRecords',
         {
-          elementName: 'subline',
+          elementName: ELEMENTS.SUBLINE,
           query: `?query=lineid==${selectedLine}`,
         },
         { root: true },
@@ -102,7 +119,7 @@ export default ({
       const stations = await dispatch(
         'element/getRecords',
         {
-          elementName: 'station',
+          elementName: ELEMENTS.STATION,
           query: `?query=sublineid=="${sublineId}"`,
         },
         { root: true },
@@ -114,7 +131,7 @@ export default ({
       const substations = await dispatch(
         'element/getRecords',
         {
-          elementName: 'substation',
+          elementName: ELEMENTS.SUBSTATION,
           query: `?query=stationid=="${stationId}"`,
         },
         { root: true },
@@ -126,7 +143,7 @@ export default ({
       const processes = await dispatch(
         'element/getRecords',
         {
-          elementName: 'process',
+          elementName: ELEMENTS.PROCESS,
           query: `?query=substationid=="${substationId}"`,
         },
         { root: true },
@@ -141,7 +158,7 @@ export default ({
       const models = await dispatch(
         'element/getRecords',
         {
-          elementName: 'models',
+          elementName: ELEMENTS.MODELS,
           query: `?query=lineid==${selectedLine}%26%26stationid=="${selectedStation}"%26%26subprocessid=="${selectedProcess}"`,
         },
         { root: true },
@@ -154,7 +171,7 @@ export default ({
       const parameters = await dispatch(
         'element/getRecords',
         {
-          elementName: 'parameters',
+          elementName: ELEMENTS.PARAMETERS,
           query: '?query=parametercategory=="51"',
         },
         { root: true },
@@ -171,7 +188,7 @@ export default ({
       const transformations = await dispatch(
         'element/getRecords',
         {
-          elementName: 'mltransformationoutput',
+          elementName: ELEMENTS.TRANSFORMATIONS,
         },
         { root: true },
       );
@@ -197,10 +214,8 @@ export default ({
         const value = b[key];
         // eslint-disable-next-line
         a[key] = value;
-        console.log(a);
         return a;
       }, {});
-      console.log(modelDetails);
       commit('setModelDetails', modelDetails);
     },
 
@@ -208,12 +223,15 @@ export default ({
       const modelInputs = await dispatch(
         'element/getRecords',
         {
-          elementName: 'modelinputs',
+          elementName: ELEMENTS.MODEL_INPUTS,
           query,
         },
         { root: true },
       );
-      const inputs = modelInputs.map((output) => output.parameterid);
+      const inputs = modelInputs.map(({ parameterid, _id }) => ({
+        parameterId: parameterid,
+        id: _id,
+      }));
       return { modelInputs: inputs };
     },
 
@@ -221,25 +239,232 @@ export default ({
       const modelFiles = await dispatch(
         'element/getRecords',
         {
-          elementName: 'modelfiles',
+          elementName: ELEMENTS.MODEL_FILES,
           query,
         },
         { root: true },
       );
-      return { modelFiles };
+      const files = modelFiles.map(({
+        originalFilename,
+        _id,
+        extension,
+        downloadlink,
+      }) => ({
+        originalFilename,
+        extension,
+        downloadLink: downloadlink,
+        id: _id,
+      }));
+      return { modelFiles: files };
     },
 
     getModelOutputs: async ({ dispatch }, query) => {
       const modelOutputs = await dispatch(
         'element/getRecords',
         {
-          elementName: 'modeloutputs',
+          elementName: ELEMENTS.MODEL_OUTPUTS,
           query,
         },
         { root: true },
       );
-      const outputs = modelOutputs.map((output) => output.mltransformationoutputid);
+      const outputs = modelOutputs.map(({ mltransformationoutputid, _id }) => ({
+        transformationId: mltransformationoutputid,
+        id: _id,
+      }));
       return { modelOutputs: outputs };
+    },
+
+    createInputParameter: async (
+      { state, commit, dispatch },
+      { modelId, parameterId },
+    ) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+        modelid: modelId,
+        parameterid: parameterId,
+      };
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    deleteInputParameter: async ({ commit, dispatch }, modelInputId) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          id: modelInputId,
+        },
+        { root: true },
+      );
+      if (deleted) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'PARAMETER_DELETE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'PARAMETER_DELETE',
+          },
+          { root: true },
+        );
+      }
+      return deleted;
+    },
+
+    createOutputTransformation: async (
+      { state, commit, dispatch },
+      { modelId, transformationId },
+    ) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+        modelid: modelId,
+        mltransformationoutputid: transformationId,
+      };
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_OUTPUTS,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRANSFORMATION_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRANSFORMATION_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    deleteOutputTransformation: async ({ commit, dispatch }, modelOutputId) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: ELEMENTS.MODEL_OUTPUTS,
+          id: modelOutputId,
+        },
+        { root: true },
+      );
+      if (deleted) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRANSFORMATION_DELETE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRANSFORMATION_DELETE',
+          },
+          { root: true },
+        );
+      }
+      return deleted;
+    },
+
+    updateModelFile: async ({ state, dispatch }, { modelId, id }) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        modelid: modelId,
+      };
+      await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: ELEMENTS.MODEL_FILES,
+          id,
+          payload,
+        },
+        { root: true },
+      );
     },
   },
 });

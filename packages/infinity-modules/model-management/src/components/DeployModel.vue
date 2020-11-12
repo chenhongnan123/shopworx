@@ -8,7 +8,7 @@
         color="success"
         @click="deployModel"
       >
-        <v-icon>mdi-rocket-outline</v-icon>
+        <v-icon>mdi-rocket-launch-outline</v-icon>
       </v-btn>
     </template>
     <span>Deploy model</span>
