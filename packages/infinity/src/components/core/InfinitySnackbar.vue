@@ -11,22 +11,26 @@
       id="app_msg"
       v-text="message"
     ></span>
-    <v-btn
-      text
-      id="app_msg_close"
-      v-if="!reLogin"
-      class="text-none"
-      @click="snackbar = false"
-      v-text="$t('snackbar.close')"
-    ></v-btn>
-    <v-btn
-      text
-      v-else
-      id="app_relogin"
-      class="text-none"
-      @click="logout"
-      v-text="$t('snackbar.redirectToLogin', { time: logoutTimer })"
-    ></v-btn>
+    <template #action="{ attrs }">
+      <v-btn
+        text
+        v-bind="attrs"
+        id="app_msg_close"
+        v-if="!reLogin"
+        class="text-none"
+        @click="snackbar = false"
+        v-text="$t('snackbar.close')"
+      ></v-btn>
+      <v-btn
+        text
+        v-else
+        v-bind="attrs"
+        id="app_relogin"
+        class="text-none"
+        @click="logout"
+        v-text="$t('snackbar.redirectToLogin', { time: logoutTimer })"
+      ></v-btn>
+    </template>
   </v-snackbar>
 </template>
 

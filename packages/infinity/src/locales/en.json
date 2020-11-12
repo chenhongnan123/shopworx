@@ -9,9 +9,12 @@
     "dataTable": {
       "itemsPerPageText": "Rows per page:",
       "ariaLabel": {
-        "sortDescending": ": Sorted descending. Activate to remove sorting.",
-        "sortAscending": ": Sorted ascending. Activate to sort descending.",
-        "sortNone": ": Not sorted. Activate to sort ascending."
+        "sortDescending": "Sorted descending.",
+        "sortAscending": "Sorted ascending.",
+        "sortNone": "Not sorted.",
+        "activateNone": "Activate to remove sorting.",
+        "activateDescending": "Activate to sort descending.",
+        "activateAscending": "Activate to sort ascending."
       },
       "sortBy": "Sort by"
     },
@@ -25,7 +28,11 @@
       "pageText": "{0}-{1} of {2}"
     },
     "datePicker": {
-      "itemsSelected": "{0} selected"
+      "itemsSelected": "{0} selected",
+      "nextMonthAriaLabel": "Next month",
+      "nextYearAriaLabel": "Next year",
+      "prevMonthAriaLabel": "Previous month",
+      "prevYearAriaLabel": "Previous year"
     },
     "noDataText": "No data available",
     "carousel": {
@@ -45,6 +52,15 @@
     "timePicker": {
       "am": "AM",
       "pm": "PM"
+    },
+    "pagination": {
+      "ariaLabel": {
+        "wrapper": "Pagination Navigation",
+        "next": "Next page",
+        "previous": "Previous page",
+        "page": "Goto Page {0}",
+        "currentPage": "Current Page, Page {0}"
+      }
     }
   },
   "success": {
@@ -83,8 +99,8 @@
     "phone": "Phone",
     "password": "Password",
     "otp": "OTP",
-    "firstName":"First name",
-    "lastName":"Last name",
+    "firstName": "First name",
+    "lastName": "Last name",
     "name": "Name",
     "type": "Type",
     "startTime": "Start time",
@@ -208,7 +224,7 @@
     "searchMobile": "Search",
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
-    "reworkOperation": "Rework"    
+    "reworkOperation": "Rework"
   },
   "account": {
     "account": "Account",
@@ -233,7 +249,7 @@
     "profile": {
       "title": "Profile",
       "firstName": "First name",
-      "lastName":"Last name",
+      "lastName": "Last name",
       "email": "Email",
       "phone": "Phone",
       "reset": "Reset",
