@@ -6,11 +6,11 @@
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }">
+      <v-icon small color="primary">mdi-console</v-icon>
       <a
         v-on="on"
         v-bind="attrs"
         color="primary"
-        class="text-decoration-underline"
       >
         View logs
       </a>

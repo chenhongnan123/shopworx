@@ -118,7 +118,8 @@
     "rejectedQuantity": "Quantity",
     "downtimeReason": "Reason",
     "downtimeStart": "Start time",
-    "downtimeEnd": "End time"
+    "downtimeEnd": "End time",
+    "modelName": "Model name"
   },
   "snackbar": {
     "close": "Close",

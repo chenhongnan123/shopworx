@@ -58,7 +58,7 @@
         <template #item.logs="{ item }">
           <deployment-logs-dialog :model="item" />
         </template>
-        <template #item.details="{ item }">
+        <template #item.config="{ item }">
           <model-details-dialog :model="item" />
         </template>
         <template #item.actions="{ item }">
@@ -107,8 +107,8 @@ export default {
           filterable: false,
         },
         {
-          text: 'Details',
-          value: 'details',
+          text: 'Configuration',
+          value: 'config',
           sortable: false,
           filterable: false,
         },

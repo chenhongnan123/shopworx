@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-card-text>
+    <v-card-text class="pt-0">
       <v-data-table
         :items="modelFiles"
         :headers="headers"
@@ -58,6 +58,8 @@
         color="primary"
         class="text-none"
         @click="uploadFiles"
+        :disabled="!files.length"
+        :loading="uploadingFiles"
       >
         <v-icon left>mdi-cloud-upload-outline</v-icon>
         Upload attached files
@@ -100,7 +102,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('modelManagement', ['files']),
+    ...mapState('modelManagement', ['files', 'uploadingFiles']),
     modelFiles() {
       return this.modelDetails && this.modelDetails.modelFiles;
     },
@@ -109,7 +111,9 @@ export default {
     ...mapActions('file', ['downloadFile', 'deleteFile']),
     ...mapActions('modelManagement', ['fetchModelDetails']),
     ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('modelManagement', ['setUploadingFiles']),
     async uploadFiles() {
+      this.setUploadingFiles(true);
       this.$refs.dropzone.startQueueProcessing();
     },
     async downloadModelFile(link) {

@@ -81,7 +81,7 @@ export default {
       'fetchModelDetails',
       'updateModelFile',
     ]),
-    ...mapMutations('modelManagement', ['setFiles']),
+    ...mapMutations('modelManagement', ['setFiles', 'setUploadingFiles']),
     fileAdded(file) {
       const { files } = this;
       files.push(file);
@@ -130,9 +130,10 @@ export default {
         id: res.id,
       });
     },
-    queueComplete() {
-      this.fetchModelDetails(this.modelId);
+    async queueComplete() {
+      await this.fetchModelDetails(this.modelId);
       this.dropzone.removeAllFiles();
+      this.setUploadingFiles(false);
     },
   },
 };

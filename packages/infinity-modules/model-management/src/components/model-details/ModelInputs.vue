@@ -12,7 +12,7 @@
         append-icon="mdi-magnify"
       ></v-text-field>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="pt-0">
       <v-checkbox
         hide-details
         class="ma-0 pa-0"

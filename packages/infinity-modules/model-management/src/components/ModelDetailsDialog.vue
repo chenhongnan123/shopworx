@@ -7,13 +7,13 @@
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }">
+      <v-icon small color="primary">mdi-memory</v-icon>
       <a
         v-on="on"
         v-bind="attrs"
         color="primary"
-        class="text-decoration-underline"
       >
-        View details
+        Configure model
       </a>
     </template>
     <v-card>
@@ -23,12 +23,11 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-text class="px-0">
+      <v-card-text class="py-0" v-if="loading">
         <v-row
           no-gutters
           align="center"
           justify="center"
-          v-if="loading"
         >
           <v-col cols="12" align="center">
             <v-progress-circular
@@ -39,43 +38,19 @@
           </v-col>
           <v-col cols="12" align="center">
             <span>
-              Fetching model details...
+              Fetching model configurations...
             </span>
           </v-col>
         </v-row>
-        <v-expansion-panels
-          flat
-          v-else
-          accordion
-          v-model="expanded"
-        >
-          <v-expansion-panel v-for="(detail, index) in details" :key="index">
-            <v-expansion-panel-header>
-              <span>
-                <v-icon left>{{ detail.icon }}</v-icon>
-                {{ detail.header }}
-              </span>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <component
-                :model="model"
-                :is="detail.component"
-                :modelDetails="modelDetails"
-              >
-              </component>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
       </v-card-text>
+      <edit-model-config :model="model" v-else />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import ModelInputs from './model-details/ModelInputs.vue';
-import ModelFiles from './model-details/ModelFiles.vue';
-import ModelOutputs from './model-details/ModelOutputs.vue';
+import { mapActions } from 'vuex';
+import EditModelConfig from './EditModelConfig.vue';
 
 export default {
   name: 'ModelDetailsDialog',
@@ -86,32 +61,13 @@ export default {
     },
   },
   components: {
-    ModelInputs,
-    ModelFiles,
-    ModelOutputs,
+    EditModelConfig,
   },
   data() {
     return {
       dialog: false,
       loading: false,
-      expanded: 0,
-      details: [{
-        header: 'Input parameters',
-        icon: 'mdi-database-arrow-left-outline',
-        component: 'model-inputs',
-      }, {
-        header: 'Files',
-        icon: 'mdi-database-cog-outline',
-        component: 'model-files',
-      }, {
-        header: 'Output transformations',
-        icon: 'mdi-database-arrow-right-outline',
-        component: 'model-outputs',
-      }],
     };
-  },
-  computed: {
-    ...mapState('modelManagement', ['modelDetails']),
   },
   methods: {
     ...mapActions('modelManagement', ['fetchModelDetails']),

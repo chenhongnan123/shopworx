@@ -1,7 +1,7 @@
 <template>
   <v-dialog
+    persistent
     v-model="dialog"
-    scrollable
     max-width="500px"
     transition="dialog-transition"
   >
@@ -20,12 +20,10 @@
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
         <span>{{ currentTitle }}</span>
-        <v-avatar
-          color="secondary"
-          class="white--text"
-          size="24"
-          v-text="step"
-        ></v-avatar>
+        <span>
+          Step {{ step }} of {{ items.length }}
+          <v-progress-linear :value="progress"></v-progress-linear>
+        </span>
       </v-card-title>
       <v-window v-model="step">
         <v-window-item
@@ -33,51 +31,30 @@
           :key="item.id"
           :value="item.id"
         >
-          <model-info v-if="item.id === 1" />
-          <model-inputs v-if="item.id === 2" />
-          <model-files v-if="item.id === 3" />
-          <model-outputs v-if="item.id === 4" />
-          <model-review v-if="item.id === 5" />
+          <model-info
+            @on-cancel="dialog = false"
+            @on-save="step += 1"
+            v-if="item.id === 1"
+          />
+          <model-config
+            v-else
+            @on-cancel="onCancel"
+          />
         </v-window-item>
       </v-window>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-btn
-          text
-          @click="step--"
-          :disabled="step === 1"
-        >
-          Back
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          depressed
-          @click="step++"
-          color="primary"
-          :disabled="step === 5"
-        >
-          Next
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import ModelInfo from './create-model/ModelInfo.vue';
-import ModelInputs from './create-model/ModelInputs.vue';
-import ModelFiles from './create-model/ModelFiles.vue';
-import ModelOutputs from './create-model/ModelOutputs.vue';
-import ModelReview from './create-model/ModelReivew.vue';
+import ModelConfig from './create-model/ModelConfig.vue';
 
 export default {
   name: 'CreateModelDialog',
   components: {
     ModelInfo,
-    ModelInputs,
-    ModelFiles,
-    ModelOutputs,
-    ModelReview,
+    ModelConfig,
   },
   data() {
     return {
@@ -90,19 +67,7 @@ export default {
         },
         {
           id: 2,
-          title: 'Associate model inputs',
-        },
-        {
-          id: 3,
-          title: 'Upload model files',
-        },
-        {
-          id: 4,
-          title: 'Associate model outputs',
-        },
-        {
-          id: 5,
-          title: 'Review model details',
+          title: 'Configure model',
         },
       ],
     };
@@ -110,6 +75,15 @@ export default {
   computed: {
     currentTitle() {
       return this.items[this.step - 1].title;
+    },
+    progress() {
+      return (this.step / this.items.length) * 100;
+    },
+  },
+  methods: {
+    onCancel() {
+      this.dialog = false;
+      this.step = 1;
     },
   },
 };

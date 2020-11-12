@@ -6,6 +6,7 @@
         v-on="on"
         v-bind="attrs"
         color="success"
+        :loading="deploying"
         @click="deployModel"
       >
         <v-icon>mdi-rocket-launch-outline</v-icon>
@@ -16,6 +17,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'DeployModel',
   props: {
@@ -24,20 +27,23 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      deploying: false,
+    };
+  },
   methods: {
+    ...mapActions('modelManagement', ['createNewDeploymentOrder']),
     async deployModel() {
       if (await this.$root.$confirm.open(
         'Deploy model',
         `Please confirm the deployment for "${this.model.modelname}".
-        You cannot stop the deployment in the middle once it is started.`,
+        You cannot stop the deployment once it is started.`,
       )) {
-        /* await Promise.all([
-          this.plans.forEach((plan) => {
-            // eslint-disable-next-line
-            this.deletePlan(plan._id);
-          }),
-        ]); */
-        this.$emit('on-deploy');
+        this.deploying = true;
+        // eslint-disable-next-line
+        await this.createNewDeploymentOrder(this.model._id);
+        this.deploying = false;
       }
     },
   },

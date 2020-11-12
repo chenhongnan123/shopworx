@@ -13,6 +13,7 @@ const ELEMENTS = {
   MODEL_INPUTS: 'modelinputs',
   MODEL_FILES: 'modelfiles',
   MODEL_OUTPUTS: 'modeloutputs',
+  MODEL_DEPLOYMENT: 'modeldeploymentorder',
 };
 const ASSETID = 4;
 
@@ -31,10 +32,12 @@ export default ({
     models: [],
     fetchingModels: false,
     fetchingMaster: false,
+    uploadingFiles: false,
     inputParameters: [],
     outputTransformations: [],
     modelDetails: null,
     files: [],
+    createdModelId: null,
   },
   mutations: {
     setLines: set('lines'),
@@ -49,10 +52,12 @@ export default ({
     setModels: set('models'),
     setFetchingModels: set('fetchingModels'),
     setFetchingMaster: set('fetchingMaster'),
+    setUploadingFiles: set('uploadingFiles'),
     setInputParameters: set('inputParameters'),
     setOutputTransformations: set('outputTransformations'),
     setModelDetails: set('modelDetails'),
     setFiles: set('files'),
+    setCreatedModelId: set('createdModelId'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -465,6 +470,144 @@ export default ({
         },
         { root: true },
       );
+    },
+
+    createNewModel: async ({ state, commit, dispatch }, payload) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODELS,
+          payload: {
+            ...payload,
+            lineid: selectedLine,
+            stationid: selectedStation,
+            substationid: selectedSubstation,
+            subprocessid: selectedProcess,
+            assetid: ASSETID,
+          },
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        commit('setCreatedModelId', created.id);
+        await dispatch('getModels');
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'MODEL_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit('setCreatedModelId', null);
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'MODEL_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    getModelById: async ({ dispatch }, id) => {
+      const model = await dispatch(
+        'element/getRecordById',
+        {
+          elementName: ELEMENTS.MODELS,
+          id,
+        },
+        { root: true },
+      );
+      return model;
+    },
+
+    createNewDeploymentOrder: async ({
+      state,
+      commit,
+      dispatch,
+      getters,
+    }, modelId) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      await dispatch('fetchModelDetails', modelId);
+      const { isDeploymentAllowed } = getters;
+      if (isDeploymentAllowed) {
+        const created = await dispatch(
+          'element/postRecord',
+          {
+            elementName: ELEMENTS.MODEL_DEPLOYMENT,
+            payload: {
+              lineid: selectedLine,
+              stationid: selectedStation,
+              substationid: selectedSubstation,
+              subprocessid: selectedProcess,
+              modelid: modelId,
+              assetid: ASSETID,
+            },
+          },
+          { root: true },
+        );
+        if (created && created.id) {
+          commit(
+            'helper/setAlert',
+            {
+              show: true,
+              type: 'success',
+              message: 'MODEL_ORDER_CREATE',
+            },
+            { root: true },
+          );
+        } else {
+          commit(
+            'helper/setAlert',
+            {
+              show: true,
+              type: 'error',
+              message: 'MODEL_ORDER_CREATE',
+            },
+            { root: true },
+          );
+        }
+        return created;
+      }
+      commit(
+        'helper/setAlert',
+        {
+          show: true,
+          type: 'error',
+          message: 'MODEL_CONFIGURE',
+        },
+        { root: true },
+      );
+      return false;
+    },
+  },
+  getters: {
+    isDeploymentAllowed: ({ modelDetails }) => {
+      let isAllowed = false;
+      if (modelDetails) {
+        const isInputConfigured = modelDetails.modelInputs.length > 0;
+        const isFileConfigured = modelDetails.modelFiles.length > 0;
+        const isOutputConfigured = modelDetails.modelOutputs.length > 0;
+        isAllowed = isInputConfigured && isFileConfigured && isOutputConfigured;
+      }
+      return isAllowed;
     },
   },
 });
