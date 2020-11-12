@@ -42,6 +42,7 @@
         :headers="headers"
         hide-default-footer
         :loading="fetchingModels"
+        :custom-filter="filterModels"
       >
         <template #loading>
           Fetching models...
@@ -159,6 +160,14 @@ export default {
       const [date, hr, min, sec] = input.split(':');
       const [day, month, year] = date.split('-');
       return new Date(year, month - 1, day, hr, min, sec).toLocaleString();
+    },
+    filterModels(value, search, item) {
+      return item.modelname
+        .toLowerCase()
+        .indexOf(search.toLowerCase()) > -1
+        || item.modeldescription
+          .toLowerCase()
+          .indexOf(search.toLowerCase()) > -1;
     },
   },
 };
