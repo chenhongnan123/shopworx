@@ -18,6 +18,7 @@ export default ({
     fetchingMaster: false,
     inputParameters: [],
     outputTransformations: [],
+    modelDetails: null,
   },
   mutations: {
     setLines: set('lines'),
@@ -34,6 +35,7 @@ export default ({
     setFetchingMaster: set('fetchingMaster'),
     setInputParameters: set('inputParameters'),
     setOutputTransformations: set('outputTransformations'),
+    setModelDetails: set('modelDetails'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -157,7 +159,12 @@ export default ({
         },
         { root: true },
       );
-      commit('setInputParameters', sortArray(parameters, 'description'));
+      const params = sortArray(parameters, 'description')
+        .map(({ id, description }) => ({
+          id,
+          description,
+        }));
+      commit('setInputParameters', params);
     },
 
     getOutputTransformations: async ({ commit, dispatch }) => {
@@ -168,16 +175,71 @@ export default ({
         },
         { root: true },
       );
-      const sortedTransformations = transformations.sort((a, b) => a.sortorder - b.sortorder);
-      commit('setOutputTransformations', sortedTransformations);
+      const mappedTransformations = transformations
+        .sort((a, b) => a.sortorder - b.sortorder)
+        .map(({ _id, name }) => ({
+          id: _id,
+          name,
+        }));
+      commit('setOutputTransformations', mappedTransformations);
     },
 
-    /* fetchModelDetails: async ({ commit, dispatch }) => {
-      // fetch parameter list (parametercategory = 51)
-      // fetch model input records
-      // fetch model files
-      // ml transformatino ml list (to fetch output master)
-      // fetch model output records
-    }, */
+    fetchModelDetails: async ({ state, commit, dispatch }, modelId) => {
+      const { selectedLine, selectedStation, selectedProcess } = state;
+      const query = `?query=lineid==${selectedLine}%26%26stationid=="${selectedStation}"%26%26subprocessid=="${selectedProcess}"%26%26modelid=="${modelId}"`;
+      const data = await Promise.all([
+        dispatch('getModelInputs', query),
+        dispatch('getModelFiles', query),
+        dispatch('getModelOutputs', query),
+      ]);
+      const modelDetails = data.reduce((a, b) => {
+        const key = Object.keys(b)[0];
+        const value = b[key];
+        // eslint-disable-next-line
+        a[key] = value;
+        console.log(a);
+        return a;
+      }, {});
+      console.log(modelDetails);
+      commit('setModelDetails', modelDetails);
+    },
+
+    getModelInputs: async ({ dispatch }, query) => {
+      const modelInputs = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'modelinputs',
+          query,
+        },
+        { root: true },
+      );
+      const inputs = modelInputs.map((output) => output.parameterid);
+      return { modelInputs: inputs };
+    },
+
+    getModelFiles: async ({ dispatch }, query) => {
+      const modelFiles = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'modelfiles',
+          query,
+        },
+        { root: true },
+      );
+      return { modelFiles };
+    },
+
+    getModelOutputs: async ({ dispatch }, query) => {
+      const modelOutputs = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'modeloutputs',
+          query,
+        },
+        { root: true },
+      );
+      const outputs = modelOutputs.map((output) => output.mltransformationoutputid);
+      return { modelOutputs: outputs };
+    },
   },
 });

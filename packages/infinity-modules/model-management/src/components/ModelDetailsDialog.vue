@@ -16,18 +16,40 @@
       </a>
     </template>
     <v-card>
-      Details dialog (input, files and output)
+      {{ model }}
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'ModelDetailsDialog',
+  props: {
+    model: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       dialog: false,
+      loading: false,
     };
+  },
+  methods: {
+    ...mapActions('modelManagement', ['fetchModelDetails']),
+  },
+  watch: {
+    async dialog(val) {
+      if (val) {
+        this.loading = true;
+        // eslint-disable-next-line
+        await this.fetchModelDetails(this.model._id);
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
