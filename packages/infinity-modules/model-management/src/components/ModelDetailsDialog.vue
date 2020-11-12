@@ -43,7 +43,12 @@
             </span>
           </v-col>
         </v-row>
-        <v-expansion-panels flat accordion v-else>
+        <v-expansion-panels
+          flat
+          v-else
+          accordion
+          v-model="expanded"
+        >
           <v-expansion-panel v-for="(detail, index) in details" :key="index">
             <v-expansion-panel-header>
               <span>
@@ -89,6 +94,7 @@ export default {
     return {
       dialog: false,
       loading: false,
+      expanded: 0,
       details: [{
         header: 'Model input parameters',
         icon: 'mdi-database-arrow-left-outline',
