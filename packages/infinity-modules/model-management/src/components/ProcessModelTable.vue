@@ -23,6 +23,15 @@
         hide-default-footer
         :loading="fetchingModels"
       >
+        <template #loading>
+          Fetching models...
+        </template>
+        <template #no-data>
+          No model available
+        </template>
+        <template #no-results>
+          No matching model found for '{{ search }}'
+        </template>
         <template #item.status>
           <span class="success--text font-weight-medium">
             SUCCESS
@@ -34,9 +43,9 @@
         <template #item.details>
           <model-details-dialog />
         </template>
-        <template #item.actions>
-          <deploy-model />
-          <delete-model />
+        <template #item.actions="{ item }">
+          <deploy-model :model="item" />
+          <delete-model :model="item" />
         </template>
       </v-data-table>
     </v-card-text>
