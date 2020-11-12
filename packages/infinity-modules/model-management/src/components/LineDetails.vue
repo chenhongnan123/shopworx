@@ -76,6 +76,7 @@
                       <v-btn
                         small
                         color="primary"
+                        :disabled="fetchingModels || fetchingMaster"
                         class="text-none ma-0 pa-0"
                         @click="setSelected({
                           subline,
@@ -110,6 +111,8 @@ export default {
       'selectedProcess',
       'lineDetails',
       'fetchingLineDetails',
+      'fetchingModels',
+      'fetchingMaster',
     ]),
   },
   methods: {

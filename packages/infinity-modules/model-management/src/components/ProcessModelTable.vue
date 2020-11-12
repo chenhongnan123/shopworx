@@ -16,7 +16,27 @@
       <create-model-dialog />
     </v-card-title>
     <v-card-text>
+      <v-row
+        no-gutters
+        align="center"
+        justify="center"
+        v-if="fetchingMaster"
+      >
+        <v-col cols="12" align="center">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            size="36"
+          ></v-progress-circular>
+        </v-col>
+        <v-col cols="12" align="center">
+          <span>
+            Fetching parameters and transformations...
+          </span>
+        </v-col>
+      </v-row>
       <v-data-table
+        v-else
         :items="models"
         :search="search"
         :headers="headers"
@@ -32,16 +52,14 @@
         <template #no-results>
           No matching model found for '{{ search }}'
         </template>
-        <template #item.status>
-          <span class="success--text font-weight-medium">
-            SUCCESS
-          </span>
+        <template #item.status="{ item }">
+          <model-status :model="item" />
         </template>
-        <template #item.logs>
-          <deployment-logs-dialog />
+        <template #item.logs="{ item }">
+          <deployment-logs-dialog :model="item" />
         </template>
-        <template #item.details>
-          <model-details-dialog />
+        <template #item.details="{ item }">
+          <model-details-dialog :model="item" />
         </template>
         <template #item.actions="{ item }">
           <deploy-model :model="item" />
@@ -53,12 +71,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import CreateModelDialog from './CreateModelDialog.vue';
 import DeploymentLogsDialog from './DeploymentLogsDialog.vue';
 import ModelDetailsDialog from './ModelDetailsDialog.vue';
 import DeployModel from './DeployModel.vue';
 import DeleteModel from './DeleteModel.vue';
+import ModelStatus from './ModelStatus.vue';
 
 export default {
   name: 'ProcessModelTable',
@@ -68,6 +87,7 @@ export default {
     ModelDetailsDialog,
     DeployModel,
     DeleteModel,
+    ModelStatus,
   },
   data() {
     return {
@@ -101,15 +121,29 @@ export default {
       ],
     };
   },
+  async created() {
+    this.setFetchingMaster(true);
+    await Promise.all([
+      this.getInputParameters(),
+      this.getOutputTransformations(),
+    ]);
+    this.setFetchingMaster(false);
+  },
   computed: {
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
+      'fetchingMaster',
       'models',
     ]),
   },
   methods: {
-    ...mapActions('modelManagement', ['getModels']),
+    ...mapActions('modelManagement', [
+      'getModels',
+      'getInputParameters',
+      'getOutputTransformations',
+    ]),
+    ...mapMutations('modelManagement', ['setFetchingMaster']),
   },
 };
 </script>

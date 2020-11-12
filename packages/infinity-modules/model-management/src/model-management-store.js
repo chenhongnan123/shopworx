@@ -15,6 +15,9 @@ export default ({
     fetchingLineDetails: false,
     models: [],
     fetchingModels: false,
+    fetchingMaster: false,
+    inputParameters: [],
+    outputTransformations: [],
   },
   mutations: {
     setLines: set('lines'),
@@ -28,6 +31,9 @@ export default ({
     setFetchingLineDetails: set('fetchingLineDetails'),
     setModels: set('models'),
     setFetchingModels: set('fetchingModels'),
+    setFetchingMaster: set('fetchingMaster'),
+    setInputParameters: set('inputParameters'),
+    setOutputTransformations: set('outputTransformations'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -141,5 +147,37 @@ export default ({
       commit('setModels', sortArray(models, 'modelname'));
       commit('setFetchingModels', false);
     },
+
+    getInputParameters: async ({ commit, dispatch }) => {
+      const parameters = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query: '?query=parametercategory=="51"',
+        },
+        { root: true },
+      );
+      commit('setInputParameters', sortArray(parameters, 'description'));
+    },
+
+    getOutputTransformations: async ({ commit, dispatch }) => {
+      const transformations = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'mltransformationoutput',
+        },
+        { root: true },
+      );
+      const sortedTransformations = transformations.sort((a, b) => a.sortorder - b.sortorder);
+      commit('setOutputTransformations', sortedTransformations);
+    },
+
+    /* fetchModelDetails: async ({ commit, dispatch }) => {
+      // fetch parameter list (parametercategory = 51)
+      // fetch model input records
+      // fetch model files
+      // ml transformatino ml list (to fetch output master)
+      // fetch model output records
+    }, */
   },
 });
