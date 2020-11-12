@@ -1,6 +1,6 @@
 <template>
-  <span class="success--text font-weight-medium">
-    SUCCESS
+  <span class="warning--text font-weight-medium">
+    N.A
   </span>
 </template>
 

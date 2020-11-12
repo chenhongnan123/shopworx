@@ -52,18 +52,29 @@
         <template #no-results>
           No matching model found for '{{ search }}'
         </template>
-        <template #item.status="{ item }">
-          <model-status :model="item" />
-        </template>
-        <template #item.logs="{ item }">
-          <deployment-logs-dialog :model="item" />
-        </template>
-        <template #item.config="{ item }">
-          <model-details-dialog :model="item" />
-        </template>
-        <template #item.actions="{ item }">
-          <deploy-model :model="item" />
-          <delete-model :model="item" />
+        <template #item="{ item }">
+          <tr>
+            <td>
+              <div class="font-weight-medium">{{ item.modelname }}</div>
+              <div>{{ item.modeldescription }}</div>
+            </td>
+            <td>
+              {{ formatDate(item.modifiedtimestamp) }}
+            </td>
+            <td>
+              <model-status :model="item" />
+            </td>
+            <td>
+              <deployment-logs-dialog :model="item" />
+            </td>
+            <td>
+              <model-details-dialog :model="item" />
+            </td>
+            <td>
+              <deploy-model :model="item" />
+              <delete-model :model="item" />
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-card-text>
@@ -93,8 +104,8 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'Name', value: 'modelname' },
-        { text: 'Description', value: 'modeldescription' },
+        { text: 'Details', value: 'details' },
+        { text: 'Last modified', value: 'updatedAt' },
         {
           text: 'Last update status',
           value: 'status',
@@ -144,6 +155,11 @@ export default {
       'getOutputTransformations',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    formatDate(input) {
+      const [date, hr, min, sec] = input.split(':');
+      const [day, month, year] = date.split('-');
+      return new Date(year, month - 1, day, hr, min, sec).toLocaleString();
+    },
   },
 };
 </script>
