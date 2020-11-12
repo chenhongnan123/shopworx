@@ -37,6 +37,10 @@ class ElementService {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
   }
   
+  getRecordById(elementName, id) {
+    return this.request.get(`/server/elements/${elementName}/records/${id}`);
+  }
+  
   deleteRecordById(elementName, id) {
     return this.request.delete(`/server/elements/${elementName}/records/${id}`);
   }

@@ -273,6 +273,18 @@ export default ({
       }
     },
 
+    getRecordById: async (_, { elementName, id }) => {
+      try {
+        const { data } = await ElementService.getRecordById(elementName, id);
+        if (data && data._id) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecordsWithCount: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
