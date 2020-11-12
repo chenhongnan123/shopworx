@@ -8,6 +8,9 @@
         hide-default-footer
         class="mb-2"
       >
+        <template #no-data>
+          No file available
+        </template>
         <template #item.name="{ item }">
           {{ item.originalFilename }}.{{item.extension}}
         </template>
