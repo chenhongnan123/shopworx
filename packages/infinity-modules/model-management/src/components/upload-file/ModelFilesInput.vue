@@ -98,10 +98,11 @@ export default {
     },
     getFileDetails(file) {
       const { name, type } = file;
-      const [nameWithoutExt] = name.split('.');
+      const lastIndex = name.lastIndexOf('.');
+      const nameWithoutExt = name.substring(0, lastIndex);
+      const extension = name.substring(lastIndex + 1);
       const temp = type.split('/');
       const content = contentEnum[temp[0]] || 'file';
-      const extension = temp[1];
       return { content, nameWithoutExt, extension };
     },
     setUrl(file) {
