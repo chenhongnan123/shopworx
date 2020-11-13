@@ -1,0 +1,50 @@
+<template>
+  <v-tooltip bottom>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        icon
+        v-on="on"
+        v-bind="attrs"
+        color="success"
+        :loading="deploying"
+        @click="deployModel"
+      >
+        <v-icon>mdi-rocket-launch-outline</v-icon>
+      </v-btn>
+    </template>
+    <span>Deploy model</span>
+  </v-tooltip>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'DeployModel',
+  props: {
+    model: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      deploying: false,
+    };
+  },
+  methods: {
+    ...mapActions('modelManagement', ['createNewDeploymentOrder']),
+    async deployModel() {
+      if (await this.$root.$confirm.open(
+        'Deploy model',
+        `Please confirm the deployment for "${this.model.name}".
+        You cannot stop the deployment once it is started.`,
+      )) {
+        this.deploying = true;
+        await this.createNewDeploymentOrder(this.model.id);
+        this.deploying = false;
+      }
+    },
+  },
+};
+</script>
