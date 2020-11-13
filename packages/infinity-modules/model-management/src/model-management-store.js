@@ -207,7 +207,6 @@ export default ({
           return model;
         })
         .sort((a, b) => a.lastModified - b.lastModified));
-      console.log(mappedModels);
       commit('setModels', mappedModels);
       commit('setFetchingModels', false);
     },
@@ -585,7 +584,17 @@ export default ({
         },
         { root: true },
       );
-      return model;
+      if (model) {
+        return {
+          // eslint-disable-next-line
+          id: model._id,
+          name: model.modelname,
+          description: model.modeldescription,
+          lastModified: formatDate(model.modifiedtimestamp),
+          status: 'N.A',
+        };
+      }
+      return false;
     },
 
     createNewDeploymentOrder: async ({
