@@ -67,8 +67,18 @@
           <template #item="{ item }">
             <tr>
               <td>
-                <div class="font-weight-medium">{{ item.name }}</div>
-                <div>{{ item.description }}</div>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <div
+                      v-on="on"
+                      v-bind="attrs"
+                      class="font-weight-medium"
+                    >
+                      {{ item.name }}
+                    </div>
+                  </template>
+                  <span>{{ item.description || 'N.A' }}</span>
+                </v-tooltip>
               </td>
               <td>
                 {{ new Date(item.lastModified).toLocaleString() }}

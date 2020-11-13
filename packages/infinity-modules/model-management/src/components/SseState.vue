@@ -56,7 +56,6 @@ export default {
           key: modelid,
           status,
         };
-        console.log(eventData);
         this.setLastStatusUpdate(eventData);
       });
       this.sseClient.onerror = (event) => {
