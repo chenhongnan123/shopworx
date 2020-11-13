@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <infinity-snackbar />
+    <infinity-invalidate-session />
     <infinity-confirm ref="confirm" />
     <infinity-loading v-if="infinityLoading" />
     <router-view v-else />
@@ -9,13 +10,16 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import ApiService from '@shopworx/services/api/api.service';
 import InfinitySnackbar from '@/components/core/InfinitySnackbar.vue';
+import InfinityInvalidateSession from '@/components/core/InfinityInvalidateSession.vue';
 import InfinityConfirm from '@/components/core/InfinityConfirm.vue';
 import InfinityLoading from '@/components/core/InfinityLoading.vue';
 
 export default {
   components: {
     InfinitySnackbar,
+    InfinityInvalidateSession,
     InfinityConfirm,
     InfinityLoading,
   },
@@ -32,6 +36,15 @@ export default {
   },
   mounted() {
     this.$root.$confirm = this.$refs.confirm;
+    const instance = ApiService.getAxiosInstance();
+    instance.interceptors.response.use((res) => {
+      if (res.status === 202 && res.data.errors.errorCode === 'INVALID_SESSION') {
+        this.setIsSessionValid(false);
+      }
+      return res;
+    }, () => {
+      this.$router.push({ name: '500' });
+    });
   },
   watch: {
     isDark() {
@@ -41,7 +54,10 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['initAuth']),
-    ...mapMutations('helper', ['setIsDark']),
+    ...mapMutations('helper', [
+      'setIsDark',
+      'setIsSessionValid',
+    ]),
   },
 };
 </script>

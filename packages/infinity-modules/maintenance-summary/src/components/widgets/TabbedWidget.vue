@@ -292,19 +292,10 @@ export default {
       return this.widget && this.widget.definition.title;
     },
   },
-  /* async created() {
-    await this.executeTabReport();
-    await this.executeChartReport();
-    this.updateSeriesColor(this.isDark);
-  }, */
   watch: {
     isDark(val) {
       this.updateSeriesColor(val);
     },
-    /* async filter() {
-      await this.executeTabReport();
-      await this.executeChartReport();
-    }, */
   },
   props: {
     widget: {
@@ -319,36 +310,6 @@ export default {
   methods: {
     ...mapActions('calendar', ['getBusinessTime']),
     ...mapActions('report', ['executeReport']),
-    /* async executeChartReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionChartData = await this.executeReport({
-        reportName: this.chartReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentChartData, comparisionChartData });
-    },
-    async executeTabReport() {
-      const currentFilter = this.timeFilters.find((filter) => filter.value === this.filter);
-      const timestamp = currentFilter && currentFilter.timestamp;
-      const currentPayload = await this.getPayload(timestamp);
-      const currentTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: currentPayload,
-      });
-      const comparisionPayload = await this.getPayload(timestamp - 86400000);
-      const comparisionTabData = await this.executeReport({
-        reportName: this.tabReport,
-        payload: comparisionPayload,
-      });
-      console.log({ currentTabData, comparisionTabData });
-    }, */
     async getPayload(timestamp) {
       await this.getBusinessTime(timestamp);
       return {

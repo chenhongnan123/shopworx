@@ -104,12 +104,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -140,13 +134,13 @@ export default {
     },
     exportGridCSV() {
       const params = {
-        fileName: this.exportFileName,
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsCsv(params);
     },
     exportGridExcel() {
       const params = {
-        fileName: this.exportFileName,
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsExcel(params);
     },

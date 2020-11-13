@@ -56,10 +56,7 @@
          </v-chip>
         </div>
         <v-spacer></v-spacer>
-        <!-- <v-btn small color="primary" class="text-none ml-2"> -->
-                        <AddRecipe ref="addUpdateRecipe"/>
-            <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
-          <!-- </v-btn> -->
+          <AddRecipe ref="addUpdateRecipe"/>
           <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
@@ -112,7 +109,6 @@
       </v-data-table>
       </v-col>
     </v-row>
-    <!-- <AddRecipe /> -->
   <v-dialog
     scrollable
     persistent
@@ -271,7 +267,6 @@ export default {
     await this.getRecipeListRecords('');
   },
   async beforeDestroy() {
-    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
   },
@@ -323,7 +318,6 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
-      // await this.getRecipeListRecords('');
       await this.btnApply();
     },
     handleClick(value) {
@@ -434,96 +428,8 @@ export default {
       }
       this.dialogConfirm = false;
     },
-    // async saveRecipe() {
-    //   if (!this.recipe.recipename) {
-    //     this.setAlert({
-    //       show: true,
-    //       type: 'error',
-    //       message: 'RECIPE_NAME_EMPTY',
-    //     });
-    //   } else {
-    //     const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-    //     && o.machinename === this.input.machinename);
-    //     //  && !this.flagNewUpdate
-    //     if (recipeFlag.length > 0) {
-    //       this.recipe.recipename = '';
-    //       this.setAlert({
-    //         show: true,
-    //         type: 'error',
-    //         message: 'ALREADY_EXSIST_RECIPE',
-    //       });
-    //     } else if (this.flagNewUpdate) {
-    //       // update recipe
-    //       this.saving = true;
-    //       this.recipe = {
-    //         ...this.recipe,
-    //         line: 'Line1',
-    //         subline: this.input.sublinename,
-    //         machinename: this.input.machinename,
-    //         editedby: 'admin',
-    //         editedtime: new Date().getTime(),
-    //         versionnumber: this.editedVersionNumber + 1,
-    //       };
-    //       let created = false;
-    //       const request = this.recipe;
-    //       const object = {
-    //         payload: request,
-    //         query: `?query=recipenumber=="${this.updateRecipeNumber}"`,
-    //       };
-    //       created = await this.updateRecipe(object);
-    //       if (created) {
-    //         this.setAlert({
-    //           show: true,
-    //           type: 'success',
-    //           message: 'RECIPE_UPDATED',
-    //         });
-    //         this.dialog = false;
-    //         this.recipe = {};
-    //       } else {
-    //         this.setAlert({
-    //           show: true,
-    //           type: 'error',
-    //           message: 'ERROR_UPDATING_RECIPE',
-    //         });
-    //       }
-    //       this.saving = false;
-    //     } else {
-    //       // add new recipe
-    //       this.saving = true;
-    //       this.recipe = {
-    //         ...this.recipe,
-    //         line: 'Line1',
-    //         subline: this.input.sublinename,
-    //         versionnumber: 1,
-    //         assetid: 4,
-    //         machinename: this.input.machinename,
-    //         createdby: 'admin',
-    //       };
-    //       let created = false;
-    //       const payload = this.recipe;
-    //       created = await this.createRecipe(payload);
-    //       if (created) {
-    //         this.setAlert({
-    //           show: true,
-    //           type: 'success',
-    //           message: 'RECIPE_CREATED',
-    //         });
-    //         this.dialog = false;
-    //         this.recipe = {};
-    //       } else {
-    //         this.setAlert({
-    //           show: true,
-    //           type: 'error',
-    //           message: 'ERROR_CREATING_RECIPE',
-    //         });
-    //       }
-    //       this.saving = false;
-    //     }
-    //   }
-    // },
     async btnReset() {
       await this.getRecipeListRecords('');
-      // this.setRecipeList(this.filterBList);
       this.sublines = [];
       this.stations = [];
       this.setFilterSubLine(this.sublines);

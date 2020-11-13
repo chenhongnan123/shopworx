@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **loading:** updated loading message ([9660224](https://bitbucket.org/entrib/shopworx/commits/9660224f0749bf111f32862aba8e8054cd587bab))
+* **production-planning:** clear family parts on mold change ([28724ff](https://bitbucket.org/entrib/shopworx/commits/28724ffe04ddd4df4178caa81d55e107ed5efbb9))
+* **production-planning:** fixed duplicate plan ([0167ea4](https://bitbucket.org/entrib/shopworx/commits/0167ea44d49ff32add59341835b960633fadc62e))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 

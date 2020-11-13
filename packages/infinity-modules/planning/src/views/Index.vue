@@ -57,9 +57,6 @@
         </v-btn>
         <span>Plan {{ id }}</span>
       </portal>
-      <!-- <portal to="app-extension" v-if="!loading">
-        <plan-details-toolbar />
-      </portal> -->
     </template>
     <planning-loading v-if="loading" />
     <template v-else>
@@ -73,13 +70,11 @@
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
 import PlanningLoading from './PlanningLoading.vue';
-// import PlanDetailsToolbar from '../components/details/PlanDetailsToolbar.vue';
 
 export default {
   name: 'Planning',
   components: {
     PlanningLoading,
-    // PlanDetailsToolbar,
   },
   data() {
     return {

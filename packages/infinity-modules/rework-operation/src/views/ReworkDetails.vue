@@ -111,8 +111,6 @@
                 {{'-'}}
               </div>
             </v-col>
-            <!-- <v-col cols="12" md="4" class="py-2">
-            </v-col> -->
             </v-row>
           </v-col>
           <v-divider></v-divider>
@@ -283,11 +281,7 @@ export default {
     };
   },
   async created() {
-    // await this.getComponentRecords(`?query=mainid=="${this.reworkItem.mainid}"`);
-    // await this.getNgCodeRecords(`?query=ngcode==${this.reworkItem.checkoutngcode}`);
     await this.getNgCodeRecords('');
-    // this.getSingleNgCodeDetail('');
-    // this.getComponentRecords('');
     await this.getRoadmapList('?query=roadmaptype=="rework"');
     await this.getReworkList('?query=overallresult!="1"');
     await this.getRunningOrder('?query=orderstatus=="Running"');
@@ -331,18 +325,6 @@ export default {
     async onReworkRoadmapSelected() {
       await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
       this.setSelectedReworkRoadmap(this.selectedReworkRoadmap);
-      // await this.getReworkRoadMapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
-      // console.log(this.normalRoadMapDetails);
-      // const item = this.normalRoadMapDetails.find((i) => i.substationid
-      // === this.reworkRoadMapDetails[this.reworkRoadMapDetails.length - 1].substationid);
-      // const indexItem = this.normalRoadMapDetails.indexOf(item);
-      // if (this.normalRoadMapDetails[indexItem + 1]) {
-      //   this.rework.substationid = this.normalRoadMapDetails[indexItem + 1].substationid;
-      //   this.rework.substationname = this.normalRoadMapDetails[indexItem + 1].substationname;
-      // } else if (this.normalRoadMapDetails[indexItem]) {
-      //   this.rework.substationid = this.normalRoadMapDetails[indexItem].substationid;
-      //   this.rework.substationname = this.normalRoadMapDetails[indexItem].substationname;
-      // }
     },
     checkBoxQuality(event, item) {
       if (item.boundstatus === 1) {
@@ -388,11 +370,9 @@ export default {
       this.checkMainId = this.reworkList
         .filter((i) => i.mainid === this.rework.enterManinId);
       if (this.checkMainId.length > 0) {
-        // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
         await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"`);
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
-        // console.log(singlengcodeconfig);
         if (singlengcodeconfig.length === 0) {
           this.setAlert({
             show: true,

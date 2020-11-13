@@ -9,10 +9,6 @@
           :color="$vuetify.theme.dark ? '#121212': ''"
         >
         <v-spacer></v-spacer>
-        <!-- <v-btn small color="primary" class="text-none" @click="addNewRoadmap">
-            <v-icon small left>mdi-plus</v-icon>
-            Add roadmap
-          </v-btn> -->
           <AddRoadmapList />
           <v-btn v-if="roadmaps.length > 0"
             small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
@@ -76,35 +72,6 @@
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn></v-row>
         </template>
-        <!-- <template v-slot:item="{ item, index }">
-          <tr>
-          <td>{{ index+1 }}</td>
-          <td>{{ item.id}}</td>
-          <td>{{ item.roadmaptype }}</td>
-          <td>{{ item.versionnumber }}</td>
-          <td>{{ item.createdTimestamp }}</td>
-          <td>{{ item.createdby }}</td>
-          <td>{{ item.editedby }}</td>
-          <td><v-row justify="center"><v-btn
-              icon
-              small
-              color="primary"
-              @click="fnUpdateRoadmap(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$edit'"></v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              small
-              color="error"
-              @click="deleteRoadmapItem(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn></v-row></td>
-          </tr>
-        </template> -->
       </v-data-table>
       </v-col>
     </v-row>
@@ -388,7 +355,6 @@ export default {
     },
     fnUpdateRoadmap(item) {
       this.dialogUpdate = true;
-      // this.saving = true;
       this.updateRoadmapId = item.id;
       this.flagNewUpdate = true;
       this.roadmap.name = item.name;
@@ -396,10 +362,6 @@ export default {
       this.roadmap.roadmaptype = item.roadmaptype;
       this.roadmap.reworkdescription = item.reworkdescription;
     },
-    // addNewRoadmap() {
-    //   this.dialog = true;
-    //   this.flagNewUpdate = false;
-    // },
     async RefreshUI() {
       await this.getRecords('');
     },
@@ -448,7 +410,6 @@ export default {
             this.dialogDup = false;
             this.roadmap = {};
             this.$refs.formduplicate.reset();
-            // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(`?query=roadmapid=="${this.roadmaps[0].id}"`);
             const payloadDetails = [];
             roadmapDetailsList.forEach((roadmapDetail) => {
@@ -557,7 +518,6 @@ export default {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        // this.roadmap.name = '';
         this.validUpdate = false;
         this.setAlert({
           show: true,
@@ -565,7 +525,6 @@ export default {
           message: 'ALREADY_EXSIST',
         });
       } else {
-        // this.valid = true;
         this.validUpdate = true;
       }
     },

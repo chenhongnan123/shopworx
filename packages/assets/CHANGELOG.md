@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Features
+
+* **core:** added internal server error redirection ([56ad37c](https://bitbucket.org/entrib/shopworx/commits/56ad37c1c7be4b710903ccad092e445a58e215dc))
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **illustrations:** added illustration for downtime and production log ([e06ab8c](https://bitbucket.org/entrib/shopworx/commits/e06ab8cda26775a3aec7cfdd0a4524082756c240))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 **Note:** Version bump only for package @shopworx/assets

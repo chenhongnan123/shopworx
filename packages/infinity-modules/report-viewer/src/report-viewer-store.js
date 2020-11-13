@@ -185,7 +185,7 @@ export default ({
 
     exportFileName: ({ reportMapping }) => {
       if (reportMapping) {
-        return `${reportMapping.reportName}-${new Date().toLocaleString()}`;
+        return reportMapping.reportName;
       }
       return null;
     },

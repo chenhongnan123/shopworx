@@ -1,50 +1,78 @@
 {
   "$vuetify": {
-    "badge": "徽章",
-    "close": "关闭",
-    "dataIterator": {
-      "noResultsText": "没有符合条件的结果",
-      "loadingText": "加载中……"
+    "badge": "สัญลักษณ์",
+    "close": "ปิด",
+    "dataIterator": 
+    {
+      "noResultsText": "ไม่พบข้อมูลที่ค้นหา",
+      "loadingText": "กำลังโหลดข้อมูล... กรุณารอสักครู่"
     },
-    "dataTable": {
-      "itemsPerPageText": "每页数目：",
-      "ariaLabel": {
-        "sortDescending": "：降序排列。点击以移除排序。",
-        "sortAscending": "：升序排列。点击以降序排列。",
-        "sortNone": "：未排序。点击以升序排列。"
+    "dataTable": 
+    {
+      "itemsPerPageText": "แถวต่อหน้า:",
+      "ariaLabel": 
+      {
+        "sortDescending": "เรียงลำดับจากมากไปน้อย กดเพื่อปิดการเรียงลำดับ",
+        "sortAscending": "เรียงจากน้อยไปมาก กดเพื่อเรียงลำดับจากมากไปน้อย",
+        "sortNone": "ไม่ได้จัดเรียง กดเพื่อเรียงลำดับจากน้อยไปมาก",
+        "activateNone": "Activate to remove sorting.",
+        "activateDescending": "Activate to sort descending.",
+        "activateAscending": "Activate to sort ascending."
       },
-      "sortBy": "排序方式"
+      "sortBy": "จัดเรียงตาม"
     },
-    "dataFooter": {
-      "itemsPerPageText": "每页数目：",
-      "itemsPerPageAll": "全部",
-      "nextPage": "下一页",
-      "prevPage": "上一页",
-      "firstPage": "首页",
-      "lastPage": "尾页",
-      "pageText": "{0}-{1} 共 {2}"
+    "dataFooter": 
+    {
+      "itemsPerPageText": "รายการต่อหน้า:",
+      "itemsPerPageAll": "ทั้งหมด",
+      "nextPage": "หน้าต่อไป",
+      "prevPage": "หน้าที่แล้ว",
+      "firstPage": "หน้าแรก",
+      "lastPage": "หน้าสุดท้าย",
+      "pageText": "{0}-{1} จาก {2}"
     },
-    "datePicker": {
-      "itemsSelected": "已选择 {0}"
+    "datePicker": 
+    {
+      "itemsSelected": "เลือก {0} วัน",
+      "nextMonthAriaLabel": "เดือนหน้า",
+      "nextYearAriaLabel": "ปีหน้า",
+      "prevMonthAriaLabel": "เดือนที่แล้ว",
+      "prevYearAriaLabel": "ปีก่อน"
     },
-    "noDataText": "没有数据",
-    "carousel": {
-      "prev": "上一张",
-      "next": "下一张",
-      "ariaLabel": {
+    "noDataText": "ไม่มีข้อมูล",
+    "carousel": 
+    {
+      "prev": "ภาพก่อนหน้า",
+      "next": "ภาพต่อไป",
+      "ariaLabel": 
+      {
         "delimiter": "Carousel slide {0} of {1}"
       }
     },
-    "calendar": {
-      "moreEvents": "还有 {0} 项"
+    "calendar": 
+    {
+      "moreEvents": "อีก {0}"
     },
-    "fileInput": {
-      "counter": "{0} 个文件",
-      "counterSize": "{0} 个文件（共 {1}）"
+    "fileInput": 
+    {
+      "counter": "{0} ไฟล์",
+      "counterSize": "{0} ไฟล์ (รวม {1})"
     },
-    "timePicker": {
+    "timePicker": 
+    {
       "am": "AM",
       "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "การแบ่งหน้าการนำทาง",
+        "next": "หน้าต่อไป",
+        "previous": "หน้าที่แล้ว",
+        "page": "ไปที่หน้า {0}",
+        "currentPage": "หน้าปัจจุบันหน้า {0}"
+      }
     }
   },
   "success": {

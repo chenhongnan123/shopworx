@@ -49,6 +49,7 @@ export default {
       'selectedDuration',
       'selectedType',
       'selectedSort',
+      'selectedStatus',
     ]),
   },
   methods: {
@@ -92,6 +93,13 @@ export default {
       }
     },
     selectedSort(val) {
+      if (val) {
+        this.resetPageNumber();
+        this.setDowntimeList([]);
+        this.fetchDowntimeList();
+      }
+    },
+    selectedStatus(val) {
       if (val) {
         this.resetPageNumber();
         this.setDowntimeList([]);

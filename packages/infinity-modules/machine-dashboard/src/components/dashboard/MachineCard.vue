@@ -45,7 +45,7 @@
           <v-card-text
             :class="$vuetify.theme.dark ? 'white--text' : 'black--text'"
           >
-            <v-row style="height:100%">
+            <v-row no-gutters style="height:100%">
               <v-col cols="7" class="my-auto">
                 <v-row>
                   <v-col cols="12">
@@ -108,6 +108,12 @@
                   </div>
                 </v-progress-circular>
               </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-spacer></v-spacer>
+              <div>
+                Last updated at: {{ new Date(asset.updatedAt).toLocaleString('en-GB') }}
+              </div>
             </v-row>
           </v-card-text>
         </v-window-item>

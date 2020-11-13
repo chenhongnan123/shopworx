@@ -16,40 +16,26 @@
         text
         v-bind="attrs"
         id="app_msg_close"
-        v-if="!reLogin"
         class="text-none"
         @click="snackbar = false"
         v-text="$t('snackbar.close')"
-      ></v-btn>
-      <v-btn
-        text
-        v-else
-        v-bind="attrs"
-        id="app_relogin"
-        class="text-none"
-        @click="logout"
-        v-text="$t('snackbar.redirectToLogin', { time: logoutTimer })"
       ></v-btn>
     </template>
   </v-snackbar>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
   name: 'InfinitySnackbar',
   data() {
     return {
       timeout: 6000,
-      reLogin: null,
-      logoutTimer: 5,
-      logoutInterval: null,
-      snackbarTimeout: null,
     };
   },
   computed: {
-    alert() {
-      return this.$store.state.helper.alert;
-    },
+    ...mapState('helper', ['alert']),
     snackbar: {
       get() {
         return this.alert ? this.alert.show : null;
@@ -91,25 +77,13 @@ export default {
       if (val && val.toUpperCase().trim() === 'ERROR') {
         const { message } = this.alert;
         if (message === 'INVALID_SESSION') {
-          this.reLogin = true;
-          const self = this;
-          this.logoutInterval = setInterval(() => {
-            self.logoutTimer -= 1;
-          }, 1000);
-          this.snackbarTimeout = setTimeout(async () => {
-            await self.logout();
-          }, this.logoutTimer * 1000);
-        } else {
-          this.reLogin = null;
-          this.timeout = 6000;
+          this.cancel();
         }
       }
     },
   },
   methods: {
-    setAlert(alert) {
-      this.$store.commit('helper/setAlert', alert);
-    },
+    ...mapMutations('helper', ['setAlert']),
     cancel() {
       this.setAlert({
         show: false,
@@ -117,18 +91,6 @@ export default {
         message: null,
       });
       this.snackbar = false;
-    },
-    async logout() {
-      const success = await this.$store.dispatch('auth/logoutUser');
-      if (success) {
-        clearTimeout(this.snackbarTimeout);
-        clearInterval(this.logoutInterval);
-        this.cancel();
-        this.$router.replace({
-          name: 'login',
-          query: { redirect: this.$route.fullPath },
-        });
-      }
     },
   },
 };

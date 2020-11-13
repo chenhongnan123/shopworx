@@ -51,8 +51,6 @@ export default {
       fromdate: null,
       todate: null,
       rowData: [],
-      // gridOptions: null,
-      // gridOptionsPart: null,
       searchMainID: null,
       selectedSubLine: null,
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
@@ -131,7 +129,6 @@ export default {
     if (this.trecibilityState.selectedSubLine) {
       await this.btnSearchCheckOut();
     }
-    // await this.fetchRecords();
   },
   beforeMount() {
     this.componentList = null;
@@ -178,14 +175,11 @@ export default {
     },
     restoreState() {
       if (!this.isBaseReport) {
-        // this.setGridState(this.gridObject);
         const state = JSON.parse(this.gridObject);
         this.gridColumnApi.setColumnState(state.colState);
         this.gridColumnApi.setColumnGroupState(state.groupState);
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
-      } else {
-        // this.resetState();
       }
     },
     async fetchRecords() {
@@ -208,12 +202,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -231,7 +219,6 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
-        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
@@ -258,7 +245,6 @@ export default {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
         cFlag = 4;
       }
-      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -269,7 +255,6 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
-      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
       this.componentList.forEach((e) => {
         if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
@@ -329,7 +314,6 @@ export default {
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
       }
-      // console.log(this.trecibilityState.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
       }

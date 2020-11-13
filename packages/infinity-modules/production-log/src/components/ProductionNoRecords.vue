@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'RejectionNoRecords',
+  name: 'ProductionNoRecords',
   computed: {
     notFoundIllustration() {
       return this.$vuetify.theme.dark

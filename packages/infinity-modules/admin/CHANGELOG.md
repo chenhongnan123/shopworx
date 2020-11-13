@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **user-roles:** disabled admin console for admin role ([508440d](https://bitbucket.org/entrib/shopworx/commits/508440d50d46f77821c06319ae8c09ab44ef919c))
+* **user-roles:** fixed access delete ([3ea32a3](https://bitbucket.org/entrib/shopworx/commits/3ea32a3ce5f8cf9737877b3d673e759d1e3c4fbb))
+
+
+### Features
+
+* **user-roles:** admin can update multiple role permissions ([d5e77f6](https://bitbucket.org/entrib/shopworx/commits/d5e77f69635eb5469260cbd617da30b8ae01c186))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 **Note:** Version bump only for package @shopworx/admin

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **downtime-log:** clear selected items on downtime refresh ([695ccea](https://bitbucket.org/entrib/shopworx/commits/695cceacb58fdbc8649d740b5d473eb67cbca246))
+* **downtime-log:** display in progress downtimes ([619672e](https://bitbucket.org/entrib/shopworx/commits/619672ea2f546209ea449edadb7ceb3bd4561dcd))
+* **downtime-log:** display reason code ([e9f4357](https://bitbucket.org/entrib/shopworx/commits/e9f4357d5eaf68b180b807abae071f4b789d2eb0))
+* **downtime-log:** fixed display for in progress downtimes ([ebb4032](https://bitbucket.org/entrib/shopworx/commits/ebb403279a0f22351d36201c9ec8fd61adfa6263))
+* **loading:** updated loading message ([9660224](https://bitbucket.org/entrib/shopworx/commits/9660224f0749bf111f32862aba8e8054cd587bab))
+
+
+### Features
+
+* **downtime-log:** added downtime on-boarding ([8542d4d](https://bitbucket.org/entrib/shopworx/commits/8542d4df2a919cd0745c6026bb8bfffd84c8c987))
+* **downtime-log:** added status filter ([55e2018](https://bitbucket.org/entrib/shopworx/commits/55e20186927991f9d877914ba959bcdb58ec0a54))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 

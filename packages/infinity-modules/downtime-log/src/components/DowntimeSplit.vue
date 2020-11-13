@@ -29,8 +29,8 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <validation-observer ref="form" #default="{ passes, invalid }">
-        <v-form @submit.prevent="passes(splitDowntime)">
+      <validation-observer ref="form" #default="{ handleSubmit, invalid }">
+        <v-form @submit.prevent="handleSubmit(splitDowntime)">
           <v-card-text>
             <v-row>
               <v-col cols="4">
@@ -70,6 +70,7 @@
                     outlined
                     return-object
                     label="Reason"
+                    hide-details="auto"
                     :error-messages="errors"
                     :items="downtimeReasons"
                     item-text="reasonname"
@@ -77,13 +78,16 @@
                     v-model="dt.selectedReason"
                   >
                     <template #selection="data">
-                      {{ data.item.reasonname }}
+                      {{ data.item.reasoncode }} | {{ data.item.reasonname }}
                     </template>
                     <template #item="data">
                       <v-list-item-content>
                         <v-list-item-title>
                           {{ data.item.reasonname }}
                         </v-list-item-title>
+                        <v-list-item-subtitle
+                          v-text="data.item.reasoncode"
+                        ></v-list-item-subtitle>
                         <v-list-item-subtitle
                           v-text="data.item.category"
                         ></v-list-item-subtitle>

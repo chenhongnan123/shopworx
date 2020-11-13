@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **core:** fixed snackbar close button position ([fd54cc5](https://bitbucket.org/entrib/shopworx/commits/fd54cc5dfe0f15c50d747d6ed01e814130433aab))
+* **downtime-log:** clear selected items on downtime refresh ([695ccea](https://bitbucket.org/entrib/shopworx/commits/695cceacb58fdbc8649d740b5d473eb67cbca246))
+* **downtime-log:** display in progress downtimes ([619672e](https://bitbucket.org/entrib/shopworx/commits/619672ea2f546209ea449edadb7ceb3bd4561dcd))
+* **downtime-log:** display reason code ([e9f4357](https://bitbucket.org/entrib/shopworx/commits/e9f4357d5eaf68b180b807abae071f4b789d2eb0))
+* **downtime-log:** fixed display for in progress downtimes ([ebb4032](https://bitbucket.org/entrib/shopworx/commits/ebb403279a0f22351d36201c9ec8fd61adfa6263))
+* **loading:** updated loading message ([9660224](https://bitbucket.org/entrib/shopworx/commits/9660224f0749bf111f32862aba8e8054cd587bab))
+* **locale:** added missing vuetify locales ([6cbbdb8](https://bitbucket.org/entrib/shopworx/commits/6cbbdb80dad6e5e3fa6d68add2b2baf49d1abd8b))
+* **machine-dashboard:** machines are sorted alpha numerically ([1f56c1e](https://bitbucket.org/entrib/shopworx/commits/1f56c1ea6ac35a63e9ea8cc3ad9225d1620d29c5))
+* **production-log:** check for no production ([e8b0e23](https://bitbucket.org/entrib/shopworx/commits/e8b0e238215671a15742a5b14ab04a905f0ace04))
+* **production-log:** fetch operators after onboarding ([6812cf8](https://bitbucket.org/entrib/shopworx/commits/6812cf8ebbb3e723f4813da70f86deaf0a9ced48))
+* **production-log:** fix machine name tag ([fa1d557](https://bitbucket.org/entrib/shopworx/commits/fa1d5571b42b5237eae9b9338a8c2dcfc24c544d))
+* **production-log:** fixed on-boarding process for app ([0a51cf4](https://bitbucket.org/entrib/shopworx/commits/0a51cf4de9a56032a0d6b658c191e9b4e851b565))
+* **production-log:** fixed production count display on filter ([ca18ece](https://bitbucket.org/entrib/shopworx/commits/ca18ecee43d5c9dfa24bb647c82d1799852f2a86))
+* **production-log:** fixed production grouping by machine ([4a3cd17](https://bitbucket.org/entrib/shopworx/commits/4a3cd1716d4274d2fb8efde44a15f347d37cd3da))
+* **production-log:** fixed validation on adding rejection ([980c7b6](https://bitbucket.org/entrib/shopworx/commits/980c7b6af4eea54489010148ce7e705a5aa9c3ee))
+* **production-planning:** clear family parts on mold change ([28724ff](https://bitbucket.org/entrib/shopworx/commits/28724ffe04ddd4df4178caa81d55e107ed5efbb9))
+* **production-planning:** fixed duplicate plan ([0167ea4](https://bitbucket.org/entrib/shopworx/commits/0167ea44d49ff32add59341835b960633fadc62e))
+* **report-viewer:** fixed export report ([f303648](https://bitbucket.org/entrib/shopworx/commits/f3036484707e02cf1e2e029f58c30209c82481c4))
+* **shopfloor-dashboard:** display real time shift and date ([b8f123f](https://bitbucket.org/entrib/shopworx/commits/b8f123f2529a9b716f93f9adcdcb4bc197f29a2f))
+* **shopfloor-dashboard:** hide paginator if only one page ([2a8e033](https://bitbucket.org/entrib/shopworx/commits/2a8e0336ab01222a97c85f85df3bc4b0e8d7748a))
+* **user-roles:** disabled admin console for admin role ([508440d](https://bitbucket.org/entrib/shopworx/commits/508440d50d46f77821c06319ae8c09ab44ef919c))
+* **user-roles:** fixed access delete ([3ea32a3](https://bitbucket.org/entrib/shopworx/commits/3ea32a3ce5f8cf9737877b3d673e759d1e3c4fbb))
+
+
+### Features
+
+* **core:** added internal server error redirection ([56ad37c](https://bitbucket.org/entrib/shopworx/commits/56ad37c1c7be4b710903ccad092e445a58e215dc))
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **downtime-log:** added downtime on-boarding ([8542d4d](https://bitbucket.org/entrib/shopworx/commits/8542d4df2a919cd0745c6026bb8bfffd84c8c987))
+* **downtime-log:** added status filter ([55e2018](https://bitbucket.org/entrib/shopworx/commits/55e20186927991f9d877914ba959bcdb58ec0a54))
+* **illustrations:** added illustration for downtime and production log ([e06ab8c](https://bitbucket.org/entrib/shopworx/commits/e06ab8cda26775a3aec7cfdd0a4524082756c240))
+* **production-log:** Added filters and sort options ([94c64ed](https://bitbucket.org/entrib/shopworx/commits/94c64edd1360d0a1936f5d4b63ed3f1c39209307))
+* **production-log:** assign operator to shift and machine ([a7ad598](https://bitbucket.org/entrib/shopworx/commits/a7ad5986cdd0e4972358b85fdaf10da98b213696))
+* **production-log:** assign rejection to production ([9d3a79a](https://bitbucket.org/entrib/shopworx/commits/9d3a79a6bde4701f8a675c5dd40246a627ebaa6d))
+* **production-log:** assign rework and scrap to production ([73df2de](https://bitbucket.org/entrib/shopworx/commits/73df2de25e24bb7dd3652c96d79e143558729a9a))
+* **shopfloor-dashboard:** added last updated time ([c4139b1](https://bitbucket.org/entrib/shopworx/commits/c4139b1f514a4a22c4f0a06bd0c0511c04eafda8))
+* **user-roles:** admin can update multiple role permissions ([d5e77f6](https://bitbucket.org/entrib/shopworx/commits/d5e77f69635eb5469260cbd617da30b8ae01c186))
+
+
+
+
+
 ## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
 
 

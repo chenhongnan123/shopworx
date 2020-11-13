@@ -19,11 +19,6 @@ import ReportGrid from './ReportGrid.vue';
 
 export default {
   name: 'ReportContainer',
-  props: {
-    exportType: {
-      type: String,
-    },
-  },
   components: {
     ReportChart,
     ReportGrid,
@@ -39,9 +34,6 @@ export default {
     },
     dateRange() {
       this.runReport();
-    },
-    exportType(val) {
-      this.exportReport(val);
     },
   },
   methods: {

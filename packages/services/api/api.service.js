@@ -29,7 +29,7 @@ class ApiService {
   }
 
   getAxiosInstance() {
-    return axios;
+    return this.instance;
   }
 
   get(url, config = {}) {

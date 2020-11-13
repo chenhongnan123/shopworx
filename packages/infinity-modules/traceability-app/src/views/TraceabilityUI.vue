@@ -80,29 +80,6 @@
           </v-btn>
         </v-toolbar>
     </portal>
-    <!-- <v-toolbar
-          flat
-          dense
-          class="stick"
-          :color="$vuetify.theme.dark ? '#121212': ''"
-        >
-        <v-spacer></v-spacer>
-         <v-btn
-            small
-            color="normal"
-            outlined
-            class="text-none ml-2"
-            :disabled="prevDisabled"
-            @click="prevSearch((pageNumber-=1))">Prev
-            </v-btn>
-            <v-btn
-            small
-            color="normal"
-            outlined
-            class="text-none ml-2"
-            @click="nextSearch(pageNumber+=1)">Next
-            </v-btn>
-        </v-toolbar> -->
     <PartStatusView ref="partstatus" :pageNumber="pageNumber"/>
     <v-tabs
         dense
@@ -119,7 +96,6 @@
           Quality History
         </v-tab>
       </v-tabs>
-    <!-- <recipe-filter></recipe-filter> -->
     <template>
       <v-fade-transition mode="out-in">
           <overall-list v-if="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
@@ -157,12 +133,10 @@ export default {
     this.setExtendedHeader(true);
     await this.getSubLines('');
     await this.getSubStations();
-    // await this.fetchRecords();
     await this.showInput();
   },
   data() {
     return {
-      // recipeView: 0,
       pageNumber: 1,
       prevDisabled: false,
     };
@@ -214,11 +188,6 @@ export default {
       const subline = this.subLineList;
       const firstSubline = subline[0].name;
       this.newTrecibility.selectedSubLine = firstSubline;
-      // this.newTrecibility.fromdate = '2020-09-21T13:59';
-      // const tDate = (new Date()).toISOString().slice(0, 16).replace(/-/g, '-');
-      // const cDate = new Date(tDate).getTime();
-      // alert(tDate);
-      // this.newTrecibility.todate = tDate;
       this.setAlert({
         show: true,
         type: 'success',
@@ -249,21 +218,17 @@ export default {
         });
       } else {
         await this.$refs.partstatus.btnSearchCheckOut();
-        // this.$refs.partstatus.handleSubLineClick();
         if (this.recipeView === 0) {
           this.$refs.overall.btnSearchCheckOut();
           this.$refs.overall.handleSubLineClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
         if (this.recipeView === 1) {
           this.$refs.process.btnSearchProcessParameters();
           this.$refs.process.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
         if (this.recipeView === 2) {
           this.$refs.quality.btnSearchProcessParameters();
           this.$refs.quality.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
       }
     },
@@ -291,9 +256,6 @@ export default {
         this.$refs.quality.prevSearch();
       }
     },
-    // async clearInput() {
-    //   this.newTrecibility.selectedSubLine = '';
-    // },
   },
 };
 </script>

@@ -34,13 +34,6 @@
           </v-btn>
         </v-toolbar>
         <v-row justify="left">
-            <!-- <v-col cols="12" md="2" class="py-2">
-              <v-text-field
-            :disabled="!toggleDisable"
-            label="Line"
-            v-model="line"
-        ></v-text-field>
-            </v-col> -->
             <v-col cols="12" md="2" class="py-2">
               <v-text-field
               :disabled="!toggleDisable"
@@ -187,12 +180,6 @@
             v-model="roadmapDetail.amtpresubstation"
             @keyup="checkProcessCode"
         ></v-text-field>
-        <!-- <v-text-field
-            :disabled="saving"
-            label="Pre-Substation name"
-            prepend-icon="mdi-tray-plus"
-            v-model="roadmapDetail.presubstationname"
-        ></v-text-field> -->
         <v-select
           class="mt-2"
           hide-details
@@ -222,18 +209,6 @@
           prepend-icon="$production"
           :disabled="fieldDisabled"
           v-model="roadmapDetail.presubstationname"/>
-        <!-- <v-text-field
-            :disabled="saving"
-            label="Station name"
-            prepend-icon="mdi-tray-plus"
-            v-model="roadmapDetail.machinename"
-        ></v-text-field> -->
-        <!-- <v-text-field
-            :disabled="saving"
-            label="Pre-Station name"
-            prepend-icon="mdi-tray-plus"
-            v-model="roadmapDetail.prestationname"
-        ></v-text-field> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -356,9 +331,6 @@ export default {
     this.roadmapnumber = this.$route.params.id.id;
     this.toggleDisable = false;
     await this.getLineList('');
-    // await this.getSubStationList('');
-    // await this.getStationList('');
-    // await this.getSubLineList('');
   },
   computed: {
     ...mapState('roadmapManagement', ['roadmapDetails',
@@ -545,7 +517,6 @@ export default {
               message: 'ROADMAP_DETAILS_CREATED',
             });
             this.dialog = false;
-            // this.roadmapDetail = {};
             await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
             if (this.productList.length) {
               this.productList.forEach(async (products) => {

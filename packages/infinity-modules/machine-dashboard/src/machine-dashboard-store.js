@@ -1,4 +1,6 @@
 import { set, toggle, reactiveSet } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
+import HourService from '@shopworx/services/api/hour.service';
 
 export default ({
   namespaced: true,
@@ -6,6 +8,9 @@ export default ({
     page: 0,
     autorun: false,
     machines: [],
+    shifts: [],
+    currentShift: null,
+    currentDate: null,
     selectedCell: null,
     selectedTime: 1,
     customizeMode: false,
@@ -42,87 +47,6 @@ export default ({
         maxHeight: 5,
         config: null,
         configured: true,
-      },
-      {
-        component: 'parameter-widget',
-        title: 'Parameter visualization',
-        maxCount: 10,
-        minWidth: 5,
-        minHeight: 6,
-        maxWidth: 8,
-        maxHeight: 7,
-        config: {
-          availableParameters: [
-            {
-              title: 'Horizontal Temperature (°C)',
-              key: 'horizontaltemp',
-              val: 0,
-            },
-            {
-              title: 'Motor Speed',
-              key: 'motorspeed',
-              val: 1,
-            },
-            {
-              title: 'Vertical Temperature (°C)',
-              key: 'verticaltemp',
-              val: 2,
-            },
-          ],
-          selectedParameter: null,
-        },
-        configured: false,
-      },
-      {
-        component: 'stream-widget',
-        title: 'Text stream',
-        maxCount: 10,
-        minWidth: 3,
-        minHeight: 3,
-        maxWidth: 4,
-        maxHeight: 5,
-        config: {
-          availableParameters: [
-            {
-              title: 'Alarms',
-              values: [
-                {
-                  key: 'horztemplowalarm',
-                  val: 'horizontaltemp',
-                  text: 'Horizontal temp low: ##horizontaltemp##',
-                },
-                {
-                  key: 'horztemphighalarm',
-                  val: 'horizontaltemp',
-                  text: 'Horizontal temp high: ##horizontaltemp##',
-                },
-                {
-                  key: 'verttemplowalarm',
-                  val: 'verticaltemp',
-                  text: 'Vertical temp low: ##verticaltemp##',
-                },
-                {
-                  key: 'verttemphighalarm',
-                  val: 'verticaltemp',
-                  text: 'Vertical temp high: ##verticaltemp##',
-                },
-                {
-                  key: 'motoroverspeedalarm',
-                  val: 'motorspeed',
-                  text: 'Motor over-speed: ##motorspeed##',
-                },
-              ],
-              val: 0,
-            },
-            {
-              title: 'Maintenance',
-              key: 'maintenance',
-              val: 1,
-            },
-          ],
-          selectedParameter: null,
-        },
-        configured: false,
       },
       {
         component: 'timeline-widget',
@@ -220,6 +144,9 @@ export default ({
     setPage: set('page'),
     toggleAutorun: toggle('autorun'),
     setMachines: set('machines'),
+    setShifts: set('shifts'),
+    setCurrentShift: set('currentShift'),
+    setCurrentDate: set('currentDate'),
     setSelectedCell: set('selectedCell'),
     setSelectedTime: set('selectedTime'),
     setCustomizeMode: set('customizeMode'),
@@ -236,10 +163,54 @@ export default ({
         { root: true },
       );
       if (records) {
-        commit('setMachines', records);
+        const machines = sortArray(records, 'machinename');
+        commit('setMachines', machines);
         return true;
       }
       return false;
+    },
+
+    getShifts: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'businesshours',
+          query: '?sortquery=sortindex==1',
+        },
+        { root: true },
+      );
+      if (records && records.length) {
+        commit('setShifts', records);
+        return true;
+      }
+      return false;
+    },
+
+    getBusinessTime: async ({ commit, dispatch }) => {
+      const data = await dispatch(
+        'calendar/getBusinessTime',
+        null,
+        { root: true },
+      );
+      if (data) {
+        const year = data.date.substring(0, 4);
+        const month = data.date.substring(6, 4);
+        const day = data.date.substring(8, 6);
+        commit('setCurrentShift', data.shiftName);
+        commit('setCurrentDate', `${year}-${month}-${day}`);
+        return true;
+      }
+      return false;
+    },
+
+    getAvailableTime: async ({ getters }) => {
+      const start = getters.shiftStartTime;
+      const end = new Date().getTime();
+      const { data } = await HourService.getNonWorkingTime(start, end);
+      const nonWorkingTime = data.results;
+      const totalTime = end - start;
+      console.log(totalTime - nonWorkingTime);
+      return totalTime - nonWorkingTime;
     },
   },
   getters: {
@@ -262,6 +233,13 @@ export default ({
         filteredMachines = machines.filter((m) => m.machinecell === selectedCell.value);
       }
       return filteredMachines;
+    },
+
+    shiftStartTime: ({ shifts, currentShift, currentDate }) => {
+      const shift = shifts.find((s) => s.shift === currentShift);
+      const [hr, min] = shift.starttime.split(':');
+      const [year, month, day] = currentDate.split('-');
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },
 
     realTimeValue: ({ assetData }) => (machinename) => Object.keys(assetData)

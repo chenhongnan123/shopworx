@@ -13,9 +13,12 @@
         ></v-progress-circular>
       </v-col>
       <v-col cols="12" align="center">
-        <span class="headline">
+        <div class="headline">
           Plan your work and work your plan.
-        </span>
+        </div>
+        <div class="title">
+          Loading app configurations
+        </div>
       </v-col>
     </v-row>
   </v-container>

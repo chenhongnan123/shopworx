@@ -15,8 +15,8 @@
         </v-col>
       </template>
     </v-row>
-    <validation-observer ref="form" #default="{ passes }">
-      <v-form @submit.prevent="passes(onSubmit)">
+    <validation-observer ref="form" #default="{ handleSubmit }">
+      <v-form @submit.prevent="handleSubmit(onSubmit)">
         <v-card
           flat
           :key="index"

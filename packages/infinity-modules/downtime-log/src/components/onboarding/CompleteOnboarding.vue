@@ -3,11 +3,11 @@
     <template v-if="loading">
       <v-progress-circular indeterminate></v-progress-circular>
       <span>
-        Fetching rejection settings from ShopWorx servers
+        Fetching downtime log app settings from ShopWorx servers
       </span>
     </template>
     <template v-else-if="error">
-      We couldn't fetch rejection settings from ShopWorx servers.
+      We couldn't fetch downtime log app settings from ShopWorx servers.
       Please
       <a
         @click="fetchMaster"
@@ -18,11 +18,11 @@
     </template>
     <template v-else>
       <div class="headline mb-4">
-        {{ $t('rejectionReasons.setup.complete.title1') }}
+        {{ $t('downtime.setup.complete.title1') }}
         <span class="primary--text font-weight-medium">
-          {{ $t('rejectionReasons.setup.complete.title2') }}
+          {{ $t('downtime.setup.complete.title2') }}
         </span>
-        {{ $t('rejectionReasons.setup.complete.title3') }}
+        {{ $t('downtime.setup.complete.title3') }}
       </div>
       <v-btn
         block
@@ -37,14 +37,14 @@
           left
           v-text="'$forward'"
         ></v-icon>
-        {{ $t('rejectionReasons.setup.complete.next') }}
+        {{ $t('downtime.setup.complete.next') }}
       </v-btn>
     </template>
   </v-card>
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'CompleteOnboarding',
@@ -57,33 +57,12 @@ export default {
       tagsToProvision: [],
     };
   },
-  computed: {
-    ...mapState('downtimeLog', ['rejectionMaster']),
-  },
-  created() {
-    if (!this.rejectionMaster) {
-      this.fetchMaster();
-    }
-  },
   methods: {
     ...mapMutations('downtimeLog', ['setOnboarded']),
-    ...mapActions('downtimeLog', ['getMasterElements', 'createRejectionElement', 'getRejectionElement']),
-    async fetchMaster() {
-      this.loading = true;
-      const success = await this.getMasterElements();
-      this.error = !success;
-      this.loading = false;
-    },
-    async complete() {
+    complete() {
       this.creating = true;
-      const success = await this.createRejectionElement();
-      if (success) {
-        const element = await this.getRejectionElement();
-        if (element) {
-          localStorage.removeItem('rejectionStep');
-          this.setOnboarded(true);
-        }
-      }
+      localStorage.removeItem('downtimeStep');
+      this.setOnboarded(true);
       this.creating = false;
     },
   },

@@ -8,6 +8,7 @@ export default ({
       type: null,
       message: null,
     },
+    isSessionValid: true,
     locales: [
       {
         text: 'English',
@@ -37,6 +38,7 @@ export default ({
   },
   mutations: {
     setAlert: set('alert'),
+    setIsSessionValid: set('isSessionValid'),
     setIsDark: set('isDark'),
     toggleIsDark: toggle('isDark'),
     setExtendedHeader: set('extendedHeader'),
