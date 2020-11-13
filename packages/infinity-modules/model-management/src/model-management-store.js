@@ -557,6 +557,8 @@ export default ({
               stationid: selectedStation,
               substationid: selectedSubstation,
               subprocessid: selectedProcess,
+              status: 'Pending',
+              operationname: 'Deploy Model',
               modelid: modelId,
               assetid: ASSETID,
             },
