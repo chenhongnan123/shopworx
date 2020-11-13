@@ -669,6 +669,73 @@ export default ({
       );
       return false;
     },
+
+    deleteModel: async ({ state, commit, dispatch }, modelId) => {
+      const { modelDetails } = state;
+      const deleteInputs = dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          queryParam: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
+      const deleteOutputs = dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: ELEMENTS.MODEL_OUTPUTS,
+          queryParam: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
+      const { modelFiles } = modelDetails;
+      const deleteFiles = await Promise.all([
+        modelFiles.forEach((file) => dispatch(
+          'file/deleteFile',
+          {
+            elementName: ELEMENTS.MODEL_FILES,
+            id: file.id,
+          },
+          { root: true },
+        )),
+      ]);
+      const deleteModel = dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: ELEMENTS.MODEL_OUTPUTS,
+          id: modelId,
+        },
+        { root: true },
+      );
+      const deleted = await Promise.all([
+        deleteInputs,
+        deleteFiles,
+        deleteOutputs,
+        deleteModel,
+      ]);
+      if (deleted) {
+        await dispatch('getModels');
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'MODEL_DELETE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'MODEL_DELETE',
+          },
+          { root: true },
+        );
+      }
+    },
   },
   getters: {
     isDeploymentAllowed: ({ modelDetails }) => {

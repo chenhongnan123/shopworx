@@ -6,7 +6,8 @@
     "TRANSFORMATION_DELETE": "Output transformation removed!",
     "MODEL_CREATE": "ML model created!",
     "MODEL_ORDER_CREATE": "Model deployment started!",
-    "FILE_DELETE": "Model file removed!"
+    "FILE_DELETE": "Model file removed!",
+    "MODEL_DELETE": "Model deleted!"
   },
   "error": {
     "PARAMETER_CREATE": "Cannot add input parameter. Please retry!",
@@ -16,6 +17,7 @@
     "MODEL_CREATE": "Cannot create ML model. Please retry!",
     "MODEL_ORDER_CREATE": "Cannot start model deployment. Please retry!",
     "MODEL_CONFIGURE": "Please configure your ML model with atleast one input parameter, model file and a output transformation and try again.",
-    "FILE_DELETE": "Cannot remove model file. Please retry!"
+    "FILE_DELETE": "Cannot remove model file. Please retry!",
+    "MODEL_DELETE": "Cannot delete the model. Please retry!"
   }
 }
