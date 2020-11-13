@@ -1,4 +1,4 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, reactiveSet } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
 const ELEMENTS = {
@@ -16,6 +16,13 @@ const ELEMENTS = {
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
 };
 const ASSETID = 4;
+const OPERATION_NAME = 'Deploy Model';
+const DEPLOYMENT_STATUS = 'Pending';
+const formatDate = (input) => {
+  const [date, hr, min, sec] = input.split(':');
+  const [day, month, year] = date.split('-');
+  return new Date(year, month - 1, day, hr, min, sec).getTime();
+};
 
 export default ({
   namespaced: true,
@@ -38,6 +45,7 @@ export default ({
     modelDetails: null,
     files: [],
     createdModelId: null,
+    lastStatusUpdate: {},
   },
   mutations: {
     setLines: set('lines'),
@@ -58,6 +66,7 @@ export default ({
     setModelDetails: set('modelDetails'),
     setFiles: set('files'),
     setCreatedModelId: set('createdModelId'),
+    setLastStatusUpdate: reactiveSet('lastStatusUpdate'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -168,8 +177,54 @@ export default ({
         },
         { root: true },
       );
-      commit('setModels', sortArray(models, 'modelname'));
+      const mappedModels = await Promise.all(models
+        .map(async ({
+          _id,
+          modelname,
+          modeldescription,
+          modifiedtimestamp,
+        }) => {
+          let model = {
+            id: _id,
+            name: modelname,
+            description: modeldescription,
+            lastModified: formatDate(modifiedtimestamp),
+            status: 'N.A',
+          };
+          const deployment = await dispatch('getLastDeploymentStatus', _id);
+          if (deployment) {
+            model = {
+              ...model,
+              lastModified: formatDate(deployment.modifiedtimestamp),
+              status: deployment.status,
+            };
+          }
+          const eventData = {
+            key: model.id,
+            status: model.status,
+          };
+          commit('setLastStatusUpdate', eventData);
+          return model;
+        })
+        .sort((a, b) => a.lastModified - b.lastModified));
+      console.log(mappedModels);
+      commit('setModels', mappedModels);
       commit('setFetchingModels', false);
+    },
+
+    getLastDeploymentStatus: async ({ dispatch }, modelId) => {
+      const query = `modelid=="${modelId}"`;
+      const sortQuery = 'createdTimestamp==-1';
+      const paginatedQuery = 'pagenumber=1&pagesize=1';
+      const deployment = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          query: `?query=${query}&sortquery=${sortQuery}&${paginatedQuery}`,
+        },
+        { root: true },
+      );
+      return deployment[0];
     },
 
     getInputParameters: async ({ commit, dispatch }) => {
@@ -548,6 +603,7 @@ export default ({
       await dispatch('fetchModelDetails', modelId);
       const { isDeploymentAllowed } = getters;
       if (isDeploymentAllowed) {
+        const status = DEPLOYMENT_STATUS;
         const created = await dispatch(
           'element/postRecord',
           {
@@ -557,8 +613,8 @@ export default ({
               stationid: selectedStation,
               substationid: selectedSubstation,
               subprocessid: selectedProcess,
-              status: 'Pending',
-              operationname: 'Deploy Model',
+              status,
+              operationname: OPERATION_NAME,
               modelid: modelId,
               assetid: ASSETID,
             },
@@ -566,6 +622,11 @@ export default ({
           { root: true },
         );
         if (created && created.id) {
+          const eventData = {
+            key: modelId,
+            status,
+          };
+          commit('setLastStatusUpdate', eventData);
           commit(
             'helper/setAlert',
             {
