@@ -3,17 +3,18 @@
     <v-card-title primary-title class="px-2">
       Selected Subprocess: {{ selectedProcessName }}
       <v-spacer></v-spacer>
-      <v-text-field
-        dense
-        outlined
-        single-line
-        hide-details
-        v-model="search"
-        autocomplete="off"
-        label="Filter models"
-        append-icon="mdi-magnify"
-      ></v-text-field>
       <create-model-dialog />
+      <v-btn
+        small
+        outlined
+        color="primary"
+        @click="getModels"
+        class="text-none ml-5"
+        :disabled="fetchingMaster || fetchingModels"
+      >
+        <v-icon left small>mdi-refresh</v-icon>
+        Refresh
+      </v-btn>
     </v-card-title>
     <v-card-text>
       <v-row
@@ -35,49 +36,60 @@
           </span>
         </v-col>
       </v-row>
-      <v-data-table
-        v-else
-        :items="models"
-        :search="search"
-        :headers="headers"
-        hide-default-footer
-        :loading="fetchingModels"
-        :custom-filter="filterModels"
-      >
-        <template #loading>
-          Fetching models...
+      <template v-else>
+        <v-text-field
+          dense
+          outlined
+          single-line
+          hide-details
+          v-model="search"
+          autocomplete="off"
+          label="Filter models"
+          append-icon="mdi-magnify"
+        ></v-text-field>
+        <v-data-table
+          :items="models"
+          :search="search"
+          :headers="headers"
+          hide-default-footer
+          :loading="fetchingModels"
+          :custom-filter="filterModels"
+        >
+          <template #loading>
+            Fetching models...
+          </template>
+          <template #no-data>
+            No model available
+          </template>
+          <template #no-results>
+            No matching model found for '{{ search }}'
+          </template>
+          <template #item="{ item }">
+            <tr>
+              <td>
+                <div class="font-weight-medium">{{ item.name }}</div>
+                <div>{{ item.description }}</div>
+              </td>
+              <td>
+                {{ new Date(item.lastModified).toLocaleString() }}
+              </td>
+              <td>
+                <model-status :model="item" />
+              </td>
+              <td>
+                <deployment-logs-dialog :model="item" />
+              </td>
+              <td>
+                <model-details-dialog :model="item" />
+              </td>
+              <td>
+                <deploy-model :model="item" />
+                <delete-model :model="item" />
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
         </template>
-        <template #no-data>
-          No model available
-        </template>
-        <template #no-results>
-          No matching model found for '{{ search }}'
-        </template>
-        <template #item="{ item }">
-          <tr>
-            <td>
-              <div class="font-weight-medium">{{ item.modelname }}</div>
-              <div>{{ item.modeldescription }}</div>
-            </td>
-            <td>
-              {{ formatDate(item.modifiedtimestamp) }}
-            </td>
-            <td>
-              <model-status :model="item" />
-            </td>
-            <td>
-              <deployment-logs-dialog :model="item" />
-            </td>
-            <td>
-              <model-details-dialog :model="item" />
-            </td>
-            <td>
-              <deploy-model :model="item" />
-              <delete-model :model="item" />
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
     </v-card-text>
   </v-card>
 </template>
@@ -105,8 +117,8 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'Details', value: 'details' },
-        { text: 'Last modified', value: 'updatedAt' },
+        { text: 'Details', value: 'name' },
+        { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
           value: 'status',
@@ -156,16 +168,11 @@ export default {
       'getOutputTransformations',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
-    formatDate(input) {
-      const [date, hr, min, sec] = input.split(':');
-      const [day, month, year] = date.split('-');
-      return new Date(year, month - 1, day, hr, min, sec).toLocaleString();
-    },
     filterModels(value, search, item) {
-      return item.modelname
+      return item.name
         .toLowerCase()
         .indexOf(search.toLowerCase()) > -1
-        || item.modeldescription
+        || item.description
           .toLowerCase()
           .indexOf(search.toLowerCase()) > -1;
     },

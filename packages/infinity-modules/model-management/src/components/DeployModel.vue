@@ -37,12 +37,11 @@ export default {
     async deployModel() {
       if (await this.$root.$confirm.open(
         'Deploy model',
-        `Please confirm the deployment for "${this.model.modelname}".
+        `Please confirm the deployment for "${this.model.name}".
         You cannot stop the deployment once it is started.`,
       )) {
         this.deploying = true;
-        // eslint-disable-next-line
-        await this.createNewDeploymentOrder(this.model._id);
+        await this.createNewDeploymentOrder(this.model.id);
         this.deploying = false;
       }
     },

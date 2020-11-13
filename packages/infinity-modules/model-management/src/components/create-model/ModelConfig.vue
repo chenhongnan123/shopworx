@@ -65,7 +65,6 @@ export default {
   },
   async created() {
     this.loading = true;
-    // eslint-disable-next-line
     this.model = await this.getModelById(this.createdModelId);
     await this.fetchModelDetails(this.createdModelId);
     this.loading = false;

@@ -49,7 +49,7 @@
       </v-data-table>
       <model-files-input
         ref="dropzone"
-        :modelId="model._id"
+        :modelId="model.id"
       />
     </v-card-text>
     <v-card-actions>
@@ -128,12 +128,10 @@ export default {
         this.deleting = true;
         const deleted = await this.deleteFile({
           elementName: 'modelfiles',
-          // eslint-disable-next-line
           id: file.id,
         });
         if (deleted) {
-          // eslint-disable-next-line
-          await this.fetchModelDetails(this.model._id);
+          await this.fetchModelDetails(this.model.id);
           this.setAlert({
             show: true,
             type: 'success',

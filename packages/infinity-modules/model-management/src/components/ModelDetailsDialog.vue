@@ -18,7 +18,7 @@
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        Model details for {{ model.modelname }}
+        Model details for {{ model.name }}
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -76,8 +76,7 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        // eslint-disable-next-line
-        await this.fetchModelDetails(this.model._id);
+        await this.fetchModelDetails(this.model.id);
         this.loading = false;
       }
     },

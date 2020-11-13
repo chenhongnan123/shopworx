@@ -53,8 +53,7 @@ export default {
     async updateOutputTransformation(trans) {
       if (trans.selected) {
         await this.createOutputTransformation({
-          // eslint-disable-next-line
-          modelId: this.model._id,
+          modelId: this.model.id,
           transformationId: trans.id,
         });
       } else {

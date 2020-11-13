@@ -74,8 +74,7 @@ export default {
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createInputParameter({
-          // eslint-disable-next-line
-          modelId: this.model._id,
+          modelId: this.model.id,
           parameterId: param.id,
         });
       } else {

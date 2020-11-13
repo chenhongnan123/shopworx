@@ -28,7 +28,7 @@ export default {
     async deleteModel() {
       if (await this.$root.$confirm.open(
         'Delete model',
-        `Are you sure want to delete "${this.model.modelname}"?
+        `Are you sure want to delete "${this.model.name}"?
         This will also delete the associated model files.`,
       )) {
         /* await Promise.all([

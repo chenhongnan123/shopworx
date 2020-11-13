@@ -12,6 +12,7 @@
         v-bind="attrs"
         color="primary"
         class="text-none ml-5"
+        :disabled="fetchingMaster"
       >
         <v-icon left small>mdi-plus</v-icon>
         Create new model
@@ -47,6 +48,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ModelInfo from './create-model/ModelInfo.vue';
 import ModelConfig from './create-model/ModelConfig.vue';
 
@@ -73,6 +75,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('modelManagement', ['fetchingMaster']),
     currentTitle() {
       return this.items[this.step - 1].title;
     },
