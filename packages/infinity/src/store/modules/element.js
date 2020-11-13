@@ -302,6 +302,18 @@ export default ({
       }
     },
 
+    getRecordById: async (_, { elementName, id }) => {
+      try {
+        const { data } = await ElementService.getRecordById(elementName, id);
+        if (data && data._id) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecordsWithCount: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
@@ -352,7 +364,17 @@ export default ({
       }
       return false;
     },
-
+    uploadFiles: async (_, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.uploadFiles(elementName, payload);
+        if (data && data.errors) {
+          return data;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
     updateRecordByQuery: async (_, { elementName, queryParam, payload }) => {
       try {
         const { data } = await ElementService.updateRecordByQuery(

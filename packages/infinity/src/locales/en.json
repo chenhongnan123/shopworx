@@ -121,8 +121,8 @@
     "phone": "Phone",
     "password": "Password",
     "otp": "OTP",
-    "firstName":"First name",
-    "lastName":"Last name",
+    "firstName": "First name",
+    "lastName": "Last name",
     "name": "Name",
     "type": "Type",
     "startTime": "Start time",
@@ -145,7 +145,8 @@
     "scrapReason": "Reason",
     "downtimeReason": "Reason",
     "downtimeStart": "Start time",
-    "downtimeEnd": "End time"
+    "downtimeEnd": "End time",
+    "modelName": "Model name"
   },
   "snackbar": {
     "close": "Close",
@@ -244,6 +245,7 @@
     "recipeManagement": "Recipe",
     "productManagement": "Product Type",
     "productionLayout": "Production Layout",
+    "modelManagement": "ML Model",
     "materialManagement": "Material",
     "reports": "Reports",
     "production": "Production",
@@ -257,7 +259,7 @@
     "searchMobile": "Search",
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
-    "reworkOperation": "Rework"    
+    "reworkOperation": "Rework"
   },
   "account": {
     "account": "Account",
@@ -282,7 +284,7 @@
     "profile": {
       "title": "Profile",
       "firstName": "First name",
-      "lastName":"Last name",
+      "lastName": "Last name",
       "email": "Email",
       "phone": "Phone",
       "reset": "Reset",

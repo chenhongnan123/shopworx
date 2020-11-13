@@ -28,9 +28,17 @@ class ElementService {
   postRecord(elementName, payload) {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
+
+  uploadFiles(elementName, payload) {
+    return this.request.post(`/server/uploadfile/${payload.filecontent}/${payload.filename}?elementName=${elementName}&extension=${payload.fileextension}&assetId=${payload.assetid}`, '');
+  }
   
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
+  }
+  
+  getRecordById(elementName, id) {
+    return this.request.get(`/server/elements/${elementName}/records/${id}`);
   }
   
   deleteRecordById(elementName, id) {
