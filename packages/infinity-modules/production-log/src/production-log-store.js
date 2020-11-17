@@ -491,6 +491,7 @@ export default ({
         const computedProduction = await Promise.all(production.map(async (prod) => {
           let rejections = await dispatch('fetchRejections', {
             planId,
+            part,
             date,
             hour: prod.hour,
           });
@@ -516,12 +517,17 @@ export default ({
       return false;
     },
 
-    fetchRejections: async ({ dispatch }, { planId, date, hour }) => {
+    fetchRejections: async ({ dispatch }, {
+      planId,
+      part,
+      date,
+      hour,
+    }) => {
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'rejection',
-          query: `?query=planid=="${planId}"%26%26date==${date}%26%26hour==${hour}`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26hour==${hour}`,
         },
         { root: true },
       );
