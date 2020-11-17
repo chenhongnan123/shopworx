@@ -534,24 +534,28 @@ export default ({
       return records;
     },
 
-    fetchRework: async ({ dispatch }, { planId, shift }) => {
+    fetchRework: async ({ state, dispatch }, { planId, part, shift }) => {
+      const { selectedDate } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'rework',
-          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
         },
         { root: true },
       );
       return records;
     },
 
-    fetchScrap: async ({ dispatch }, { planId, shift }) => {
+    fetchScrap: async ({ state, dispatch }, { planId, part, shift }) => {
+      const { selectedDate } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'scrap',
-          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
         },
         { root: true },
       );
