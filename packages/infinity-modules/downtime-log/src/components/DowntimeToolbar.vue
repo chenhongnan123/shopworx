@@ -6,9 +6,9 @@
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
       <div class="mt-5 mr-4">
-        <toggle-selection />
+        <select-all />
       </div>
-      <div v-if="this.selectedDowntimes.length > 0 && toggleSelection">
+      <div v-if="selectedDowntimes.length > 0 && toggleSelection">
          <assign-reason-dialog />
       </div>
       <v-spacer></v-spacer>
@@ -37,13 +37,13 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import ToggleSelection from './toolbar/ToggleSelection.vue';
+import SelectAll from './toolbar/SelectAll.vue';
 import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
   components: {
-    ToggleSelection,
+    SelectAll,
     AssignReasonDialog,
   },
   data() {

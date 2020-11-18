@@ -5,7 +5,7 @@
         <v-checkbox
         class="ma-0 mb-2"
         hide-details
-        v-show="this.toggleSelection"
+        v-show="toggleSelection"
         v-model="downtime.selected"
         @change="setSelectedDowntimes(downtime)"
         ></v-checkbox>

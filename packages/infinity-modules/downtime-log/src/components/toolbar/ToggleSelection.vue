@@ -1,16 +1,16 @@
 <template>
-   <v-switch
-        v-model="multipleSelection"
-        :label="this.multipleSelection ?
-         'Disable multiple assignment' : 'Enable multiple assignment'"
-    ></v-switch>
+  <v-switch
+    v-model="multipleSelection"
+    :label="
+      this.multipleSelection
+        ? 'Disable multiple assignment'
+        : 'Enable multiple assignment'
+    "
+  ></v-switch>
 </template>
 
 <script>
-import {
-  mapMutations,
-  mapState,
-} from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ToggleSelection',
@@ -26,13 +26,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('downtimeLog', [
-      'setToggleSelection',
-    ]),
+    ...mapMutations('downtimeLog', ['setToggleSelection']),
   },
 };
 </script>
-
-<style>
-
-</style>

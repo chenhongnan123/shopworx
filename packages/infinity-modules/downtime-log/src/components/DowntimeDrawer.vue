@@ -13,6 +13,7 @@
       <status-selection />
       <duration-selection />
       <sort-selection />
+      <toggle-selection />
     </div>
   </v-navigation-drawer>
 </template>
@@ -26,6 +27,7 @@ import TypeSelection from './toolbar/TypeSelection.vue';
 import DurationSelection from './toolbar/DurationSelection.vue';
 import SortSelection from './toolbar/SortSelection.vue';
 import StatusSelection from './toolbar/StatusSelection.vue';
+import ToggleSelection from './toolbar/ToggleSelection.vue';
 
 export default {
   name: 'DowntimeDrawer',
@@ -37,6 +39,7 @@ export default {
     DurationSelection,
     SortSelection,
     StatusSelection,
+    ToggleSelection,
   },
   computed: {
     ...mapState('downtimeLog', ['drawer']),
