@@ -117,7 +117,8 @@ export default {
       this.$refs.dropzone.startQueueProcessing();
     },
     async downloadModelFile(link) {
-      this.downloadFile(link);
+      console.log(link);
+      await this.downloadFile(link);
     },
     async deleteModelFile(file) {
       if (await this.$root.$confirm.open(
