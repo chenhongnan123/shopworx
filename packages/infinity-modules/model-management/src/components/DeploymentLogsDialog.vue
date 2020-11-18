@@ -46,7 +46,7 @@
       <v-expansion-panel v-for="(detail) in deployedModels" :key="detail._id">
         <v-expansion-panel-header>
           <span>
-            {{ detail._id }}
+            Order ID: {{ detail._id }}
           </span>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
