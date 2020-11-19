@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-expansion-panels v-else accordion>
+      <v-expansion-panels v-else-if="deployedModels.length > 0" accordion>
       <v-expansion-panel v-for="(detail) in deployedModels" :key="detail._id">
         <v-expansion-panel-header>
           <span>
@@ -59,6 +59,9 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       </v-expansion-panels>
+      <v-card-text class="py-0" v-else>
+        No logs available
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>
