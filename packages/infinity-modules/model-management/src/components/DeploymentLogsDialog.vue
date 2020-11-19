@@ -2,7 +2,6 @@
   <v-dialog
     v-model="dialog"
     scrollable
-    max-width="850px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }">

@@ -755,7 +755,7 @@ export default ({
       const deleteModel = dispatch(
         'element/deleteRecordById',
         {
-          elementName: ELEMENTS.MODEL_OUTPUTS,
+          elementName: ELEMENTS.MODELS,
           id: modelId,
         },
         { root: true },
