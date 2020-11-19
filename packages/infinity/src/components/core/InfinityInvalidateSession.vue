@@ -14,9 +14,9 @@
             contain
           />
         </v-row>
-        <v-row no-gutters class="mt-4">
+        <v-row no-gutters class="mt-8">
           <v-col class="text-center title error--text">
-            Oh no! Your session is expired.
+            Oh no! Your session has expired.
           </v-col>
         </v-row>
       </v-card-text>
@@ -30,7 +30,7 @@
           @click="logout"
         >
           <v-icon left>mdi-logout</v-icon>
-          Log back in
+          Login again
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -59,8 +59,8 @@ export default {
     },
     logoutIllustration() {
       return this.$vuetify.theme.dark
-        ? 'logout-dark'
-        : 'logout-light';
+        ? 'forbidden-dark'
+        : 'forbidden-light';
     },
   },
   methods: {
@@ -70,11 +70,11 @@ export default {
       this.loading = true;
       const success = await this.logoutUser();
       if (success) {
-        this.setIsSessionValid(true);
         this.$router.replace({
           name: 'login',
           query: { redirect: this.$route.fullPath },
         });
+        this.setIsSessionValid(true);
       }
       this.loading = false;
     },
