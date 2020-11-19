@@ -10,7 +10,9 @@ class FileService {
   }
 
   downloadFile(downloadLink) {
-    return this.request.get(`${downloadLink}?disposition=inline`);
+    return this.request.get(`${downloadLink}?disposition=inline`, {
+      responseType: 'arraybuffer',
+    });
   }
 
   deleteFile(elementName, id) {
