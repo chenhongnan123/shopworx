@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'DeploymentLogsDialog',
@@ -73,12 +73,12 @@ export default {
     model: {
       type: Object,
       required: true,
-      loading: false,
     },
   },
   data() {
     return {
       dialog: false,
+      loading: false,
       headers: [
         { text: 'Date', value: 'modifiedtimestamp' },
         { text: 'Station', value: 'stationid' },
@@ -99,12 +99,14 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations('modelManagement', ['setDeployedModels']),
     ...mapActions('modelManagement', ['fetchDeployedModels']),
   },
   watch: {
     async dialog(val) {
       if (val) {
-        this.loading = false;
+        this.loading = true;
+        this.setDeployedModels([]);
         await this.fetchDeployedModels(this.model.id);
         this.loading = false;
       }

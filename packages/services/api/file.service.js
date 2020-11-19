@@ -11,7 +11,7 @@ class FileService {
 
   downloadFile(downloadLink) {
     return this.request.get(`${downloadLink}?disposition=inline`, {
-      responseType: 'blob',
+      responseType: 'arraybuffer',
     });
   }
 
