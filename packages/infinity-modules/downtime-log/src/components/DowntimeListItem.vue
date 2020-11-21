@@ -11,10 +11,10 @@
         ></v-checkbox>
       </div>
       <div>
-        {{ new Date(downtime.downtimestart).toLocaleTimeString('en-US') }}
+        {{ new Date(downtime.downtimestart).toLocaleTimeString('en-GB') }}
         to
         <span v-if="!inProgress">
-          {{ new Date(downtime.downtimeend).toLocaleTimeString('en-US') }}
+          {{ new Date(downtime.downtimeend).toLocaleTimeString('en-GB') }}
         </span>
         <span v-else>
           N.A

@@ -3,9 +3,9 @@
     <v-card-title>
       {{ production.partname }}
       <v-spacer></v-spacer>
-      {{ new Date(production.firstcycle).toLocaleTimeString('en-US') }}
+      {{ new Date(production.firstcycle).toLocaleTimeString('en-GB') }}
       to
-      {{ new Date(production.lastcycle).toLocaleTimeString('en-US') }}
+      {{ new Date(production.lastcycle).toLocaleTimeString('en-GB') }}
     </v-card-title>
     <v-card-text>
       <v-row no-gutters>
