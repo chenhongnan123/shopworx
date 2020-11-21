@@ -4,6 +4,7 @@
       <v-btn
         icon
         v-on="on"
+        color="info"
         @click="updatePlans"
       >
         <v-icon>
