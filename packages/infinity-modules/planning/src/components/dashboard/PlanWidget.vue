@@ -24,11 +24,14 @@
           @on-add="$emit('refresh-widget')"
         >
           <v-btn
-            icon
+            small
             v-on="on"
             v-if="addPlan"
+            color="primary"
+            class="text-none"
           >
-            <v-icon>mdi-plus</v-icon>
+            <v-icon small left>mdi-plus</v-icon>
+            Add plan
           </v-btn>
         </add-plan>
       </template>
