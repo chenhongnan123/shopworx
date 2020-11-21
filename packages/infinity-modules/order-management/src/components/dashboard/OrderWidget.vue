@@ -28,7 +28,7 @@
           <v-icon>mdi-close-octagon-outline</v-icon>
         </v-btn>
         <v-btn icon>
-          <v-icon>mdi-delete-outline</v-icon>
+          <v-icon v-text="'$delete'"></v-icon>
         </v-btn>
       </template>
     </v-toolbar>

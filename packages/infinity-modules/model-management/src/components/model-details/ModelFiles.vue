@@ -40,7 +40,7 @@
                 :disabled="deleting"
                 @click="deleteModelFile(item)"
               >
-                <v-icon>mdi-delete-outline</v-icon>
+                <v-icon v-text="'$delete'"></v-icon>
               </v-btn>
             </template>
             <span>Delete file</span>

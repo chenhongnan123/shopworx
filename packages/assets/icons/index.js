@@ -80,7 +80,7 @@ export default {
     list: 'mdi-clipboard-list-outline',
     tick: 'mdi-check-circle-outline',
     locale: 'mdi-web',
-    delete: 'mdi-delete-circle-outline',
+    delete: 'mdi-delete-outline',
     save: 'mdi-content-save',
     basicperformance: 'mdi-speedometer',
     understandingtrends: 'mdi-trending-up',

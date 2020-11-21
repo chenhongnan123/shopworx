@@ -4,11 +4,10 @@
       <v-btn
         icon
         v-on="on"
+        color="error"
         @click="deletePlans"
       >
-        <v-icon>
-          mdi-delete-outline
-        </v-icon>
+        <v-icon v-text="'$delete'"></v-icon>
       </v-btn>
     </template>
     <span>Delete plan</span>
