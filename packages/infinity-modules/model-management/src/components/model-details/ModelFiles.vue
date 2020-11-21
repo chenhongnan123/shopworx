@@ -15,7 +15,7 @@
           {{ item.originalFilename }}.{{item.extension}}
         </template>
         <template #item.actions="{ item }">
-          <v-tooltip bottom>
+          <!-- <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 icon
@@ -29,7 +29,7 @@
               </v-btn>
             </template>
             <span>Download file</span>
-          </v-tooltip>
+          </v-tooltip> -->
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -117,7 +117,8 @@ export default {
       this.$refs.dropzone.startQueueProcessing();
     },
     async downloadModelFile(link) {
-      this.downloadFile(link);
+      console.log(link);
+      await this.downloadFile(link);
     },
     async deleteModelFile(file) {
       if (await this.$root.$confirm.open(

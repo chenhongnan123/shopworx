@@ -11,6 +11,7 @@ const ELEMENTS = {
   PARAMETERS: 'parameters',
   TRANSFORMATIONS: 'mltransformationoutput',
   MODEL_INPUTS: 'modelinputs',
+  MODEL_LOGS: 'modeldeploymentorderslogs',
   MODEL_FILES: 'modelfiles',
   MODEL_OUTPUTS: 'modeloutputs',
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
@@ -31,7 +32,9 @@ export default ({
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,
+    selectedStationName: null,
     selectedSubstation: null,
+    selectedSubstationName: null,
     selectedProcess: null,
     selectedProcessName: null,
     lineDetails: [],
@@ -46,13 +49,16 @@ export default ({
     files: [],
     createdModelId: null,
     lastStatusUpdate: {},
+    deployedModels: [],
   },
   mutations: {
     setLines: set('lines'),
     setSelectedLine: set('selectedLine'),
     setSelectedSubline: set('selectedSubline'),
     setSelectedStation: set('selectedStation'),
+    setSelectedStationName: set('selectedStationName'),
     setSelectedSubstation: set('selectedSubstation'),
+    setSelectedSubstationName: set('selectedSubstationName'),
     setSelectedProcess: set('selectedProcess'),
     setSelectedProcessName: set('selectedProcessName'),
     setLineDetails: set('lineDetails'),
@@ -67,6 +73,7 @@ export default ({
     setFiles: set('files'),
     setCreatedModelId: set('createdModelId'),
     setLastStatusUpdate: reactiveSet('lastStatusUpdate'),
+    setDeployedModels: set('deployedModels'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -276,6 +283,52 @@ export default ({
         return a;
       }, {});
       commit('setModelDetails', modelDetails);
+    },
+
+    fetchDeployedModels: async ({ state, commit, dispatch }, modelId) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedProcess,
+        selectedStationName,
+        selectedSubstationName,
+        selectedProcessName,
+      } = state;
+      const query = `?query=lineid==${selectedLine}%26%26stationid=="${selectedStation}"%26%26subprocessid=="${selectedProcess}"%26%26modelid=="${modelId}"`;
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          query,
+        },
+        { root: true },
+      );
+      let modelList = [];
+      if (models) {
+        modelList = models.map((l) => ({
+          ...l,
+          logs: [],
+        }));
+        Promise.all(modelList.map(async (l) => {
+          let list = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'modeldeploymentorderslogs',
+              query: `?query=modeldeploymentorderid=="${l._id}"`,
+            },
+            { root: true },
+          );
+          list = list.map((m) => ({
+            ...m,
+            stationid: selectedStationName,
+            substationid: selectedSubstationName,
+            subprocessid: selectedProcessName,
+            operationname: l.operationname,
+          }));
+          l.logs = list;
+        }));
+      }
+      commit('setDeployedModels', modelList);
     },
 
     getModelInputs: async ({ dispatch }, query) => {
@@ -702,7 +755,7 @@ export default ({
       const deleteModel = dispatch(
         'element/deleteRecordById',
         {
-          elementName: ELEMENTS.MODEL_OUTPUTS,
+          elementName: ELEMENTS.MODELS,
           id: modelId,
         },
         { root: true },

@@ -119,7 +119,9 @@ export default {
     ...mapMutations('modelManagement', [
       'setSelectedSubline',
       'setSelectedStation',
+      'setSelectedStationName',
       'setSelectedSubstation',
+      'setSelectedSubstationName',
       'setSelectedProcess',
       'setSelectedProcessName',
     ]),
@@ -132,7 +134,9 @@ export default {
     }) {
       this.setSelectedSubline(subline.id);
       this.setSelectedStation(station.id);
+      this.setSelectedStationName(station.name);
       this.setSelectedSubstation(substation.id);
+      this.setSelectedSubstationName(substation.name);
       this.setSelectedProcess(process.id);
       this.setSelectedProcessName(process.name);
       this.getModels();
