@@ -3,18 +3,21 @@
     app
     right
     clipped
+    width="290"
     v-model="model"
   >
-    <div class="mt-4 mx-2" >
-      <date-selection />
-      <shift-selection />
-      <machine-selection />
-      <type-selection />
-      <status-selection />
-      <duration-selection />
-      <sort-selection />
-      <toggle-selection />
-    </div>
+    <perfect-scrollbar style="height: 100%">
+      <div class="mt-4 mx-2" >
+        <date-selection />
+        <toggle-selection />
+        <shift-selection />
+        <machine-selection />
+        <type-selection />
+        <status-selection />
+        <duration-selection />
+        <sort-selection />
+      </div>
+    </perfect-scrollbar>
   </v-navigation-drawer>
 </template>
 

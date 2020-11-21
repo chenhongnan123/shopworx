@@ -1,6 +1,7 @@
 <template>
   <v-switch
     v-model="multipleSelection"
+    class="ma-0"
     :label="
       this.multipleSelection
         ? 'Disable multiple assignment'
