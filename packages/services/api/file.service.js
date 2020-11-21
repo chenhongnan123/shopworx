@@ -10,8 +10,8 @@ class FileService {
   }
 
   downloadFile(downloadLink) {
-    return this.request.get(`${downloadLink}?disposition=inline`, {
-      responseType: 'arraybuffer',
+    return this.request.get(`${downloadLink}?disposition=attachment`, {
+      responseType: 'blob',
     });
   }
 
