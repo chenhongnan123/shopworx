@@ -74,5 +74,8 @@
         "currentPage": "Current Page, Page {0}"
       }
     }
+  },
+  "dashboards": {
+    "shopfloorDashboard": "Live Shopfloor"
   }
 }

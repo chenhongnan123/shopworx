@@ -1,39 +1,5 @@
 <template>
   <div style="height:100%">
-    <portal to="app-header" v-if="!id">
-      {{ $t('shopfloorDashboard.title') }}
-      <v-btn icon small class="ml-4 mb-1">
-        <v-icon
-          v-text="'$info'"
-        ></v-icon>
-      </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
-        <v-icon
-          v-text="'$settings'"
-        ></v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="enterFullscreen"
-      >
-        <v-icon
-          v-text="'$fullscreen'"
-        ></v-icon>
-      </v-btn>
-    </portal>
-    <portal to="app-header" v-else>
-      <v-btn
-        icon
-        v-if="!$vuetify.breakpoint.mdAndDown"
-        @click="$router.back()"
-      >
-        <v-icon v-text="'$left'"></v-icon>
-      </v-btn>
-      <span>{{ id }}</span>
-      <customize-toggle class="ml-2" />
-    </portal>
     <machine-dashboard-loading v-if="loading" />
     <template v-else>
       <v-fade-transition mode="out-in">
@@ -45,13 +11,11 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
-import CustomizeToggle from '../components/details/CustomizeToggle.vue';
 import MachineDashboardLoading from './MachineDashboardLoading.vue';
 
 export default {
   name: 'MachineDashboardIndex',
   components: {
-    CustomizeToggle,
     MachineDashboardLoading,
   },
   data() {

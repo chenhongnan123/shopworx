@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: 'shopfloor-dashboard',
+    path: '/shopfloor-dashboard',
     component: () => import(/* webpackChunkName: "machine-dashboard" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
