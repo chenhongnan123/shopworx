@@ -406,11 +406,11 @@ export default {
         if (hasQtyProperty) {
           const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
           const { rejections, produced } = this.hourlyData[hIndex];
-          const rejected = rejections.reduce((a, b) => a + (b.quantity || 0), 0);
+          const rejected = rejections.reduce((a, b) => a + (+b.quantity || 0), 0);
           const newData = {
             ...this.hourlyData[hIndex],
             rejected,
-            accepted: produced - rejected,
+            accepted: +produced - rejected,
           };
           this.hourlyData.splice(hIndex, 1, newData);
           await this.reFetchProductionList();
