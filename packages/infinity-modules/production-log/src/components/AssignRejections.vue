@@ -335,8 +335,8 @@ export default {
       };
       const id = await this.addRejection(payload);
       if (id) {
-        const rejectedQty = this.updateHourlyStats(payload, qty, data, id);
-        this.updateShiftStats(rejectedQty);
+        this.updateHourlyStats(payload, qty, data, id);
+        this.updateShiftStats(qty);
         this.$nextTick(() => {
           this.$refs.form[0].reset();
         });
@@ -364,7 +364,6 @@ export default {
         newRejection,
       };
       this.hourlyData.splice(index, 1, newData);
-      return newRejectionValue;
     },
     updateShiftStats(rejectedQty) {
       const shiftProduction = [...this.productionList];
