@@ -77,7 +77,7 @@ export default {
           return 'hourly';
       }
     },
-    enterFullscreen() {
+    preview() {
       const elem = document.querySelector('#machine-dashboard');
       elem.onfullscreenchange = (event) => {
         const e = event.target;

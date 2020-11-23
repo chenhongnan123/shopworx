@@ -25,6 +25,7 @@
         color="primary"
         outlined
         small
+        @click="previewDashboard"
       >
         <v-icon left>mdi-television</v-icon>
         Preview
@@ -52,7 +53,7 @@
     </v-app-bar>
     <v-main>
       <v-fade-transition mode="out-in">
-        <router-view />
+        <router-view ref="dashboard" />
       </v-fade-transition>
     </v-main>
   </v-app>
@@ -71,6 +72,11 @@ export default {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
         : 'shopworx-light';
+    },
+  },
+  methods: {
+    previewDashboard() {
+      this.$refs.dashboard.preview();
     },
   },
 };
