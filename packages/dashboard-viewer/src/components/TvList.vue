@@ -1,7 +1,8 @@
 <template>
   <v-card flat class="transparent">
     <v-card-title class="display-1 font-weight-medium justify-space-between primary--text">
-      Available dashboards
+      Available TVs
+      <register-tv @on-register="fetchDevices" />
     </v-card-title>
     <v-text-field
       dense
@@ -10,42 +11,35 @@
       hide-details
       v-model="search"
       autocomplete="off"
-      label="Filter dashboard"
+      label="Filter TV"
       append-icon="mdi-magnify"
     ></v-text-field>
     <v-data-table
-      :items="myDashboards"
+      :items="myTvs"
       :search="search"
       :headers="headers"
-      :loading="fetchingDashboards"
+      :loading="fetchingTvs"
       hide-default-footer
-      :custom-filter="filterDashboards"
     >
       <template #loading>
-        Fetching dashboards...
+        Fetching TVs...
       </template>
       <template #no-data>
-        No dashboard available
+        No TV available
       </template>
       <template #no-results>
-        No matching dashboard found for '{{ search }}'
+        No matching TV found for '{{ search }}'
       </template>
       <template #item="{ item }">
         <tr>
           <td>
-            <v-icon left v-text="item.icon"></v-icon>
-            {{ $t(`dashboards.${item.title}`) }}
+            {{ item.deviceid }}
           </td>
           <td>
-            <v-btn
-              color="primary"
-              small
-              text
-              class="text-none"
-              :to="{ name: item.title }"
-            >
-              Open
-            </v-btn>
+            {{ item.devicename }}
+          </td>
+          <td>
+            edit delete
           </td>
         </tr>
       </template>
@@ -54,16 +48,21 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import RegisterTv from './RegisterTv.vue';
 
 export default {
-  name: 'DashboardList',
+  name: 'TvList',
+  components: {
+    RegisterTv,
+  },
   data() {
     return {
-      fetchingDashboards: false,
+      fetchingTvs: false,
       search: '',
       headers: [
-        { text: 'Dashboard', value: 'title' },
+        { text: 'Device Id', value: 'deviceid' },
+        { text: 'TV Name', value: 'devicename' },
         {
           text: 'Actions',
           value: 'actions',
@@ -74,17 +73,28 @@ export default {
     };
   },
   async created() {
-    this.fetchingDashboards = true;
-    if (!this.myDashboards.length) {
-      await this.getMySolutions();
+    this.fetchingTvs = true;
+    let success = true;
+    if (!this.isDeviceElemAvailable) {
+      success = await this.getDeviceElement();
     }
-    this.fetchingDashboards = false;
+    if (success && !this.myTvs.length) {
+      await this.getMyDevices();
+    }
+    this.fetchingTvs = false;
   },
   computed: {
-    ...mapGetters('user', ['myDashboards']),
+    ...mapState('dashboard', ['isDeviceElemAvailable']),
+    ...mapGetters('user', ['myTvs']),
   },
   methods: {
-    ...mapActions('user', ['getMySolutions']),
+    ...mapActions('user', ['getMyDevices']),
+    ...mapActions('dashboard', ['getDeviceElement']),
+    async fetchDevices() {
+      this.fetchingTvs = true;
+      await this.getMyDevices();
+      this.fetchingTvs = false;
+    },
     filterDashboards(value, search, item) {
       return this.$i18n.t(`dashboards.${item.title}`)
         .toLowerCase()

@@ -9,6 +9,7 @@ export default ({
     userState: null,
     activeSite: null,
     mySolutions: [],
+    myDevices: [],
     licenses: [],
   },
   mutations: {
@@ -16,6 +17,7 @@ export default ({
     setUserState: set('userState'),
     setActiveSite: set('activeSite'),
     setMySolutions: set('mySolutions'),
+    setMyDevices: set('myDevices'),
     setLicenses: set('licenses'),
   },
   actions: {
@@ -90,6 +92,15 @@ export default ({
       }
       return true;
     },
+
+    getMyDevices: async ({ commit, dispatch }) => {
+      const devices = await dispatch(
+        'element/getRecords',
+        { elementName: 'devices' },
+        { root: true },
+      );
+      commit('setMyDevices', devices);
+    },
   },
   getters: {
     isOnboardingComplete: ({ me, activeSite }) => {
@@ -128,6 +139,16 @@ export default ({
           }));
       }
       return dashboards;
+    },
+
+    myTvs: ({ myDevices }) => {
+      let tvs = [];
+      if (myDevices && myDevices.length) {
+        tvs = myDevices.filter((device) => device.devicetype
+          .toUpperCase()
+          .trim() === 'TV');
+      }
+      return tvs;
     },
 
     isAppProvisioned: (_, { myDashboards }) => (appLink) => {

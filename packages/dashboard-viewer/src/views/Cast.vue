@@ -15,7 +15,7 @@
         <v-col cols="12" align="center">
           <span class="title">
             <v-icon left>mdi-cast</v-icon>
-            Ready to cast
+            Ready to connect
           </span>
         </v-col>
       </v-row>

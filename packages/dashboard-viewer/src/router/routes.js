@@ -5,8 +5,19 @@ const routes = [
   },
   {
     path: '/',
-    name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component: () => import(/* webpackChunkName: "home" */ '@/components/DashboardList.vue'),
+      },
+      {
+        path: 'tv',
+        name: 'tv',
+        component: () => import(/* webpackChunkName: "home" */ '@/components/TvList.vue'),
+      },
+    ],
   },
   {
     path: '/d',

@@ -55,20 +55,20 @@ export default ({
       element,
       tags,
     }) => {
-      let tagsCreated = false;
+      let elementId = null;
       try {
-        const elementId = await dispatch('createElement', element);
+        elementId = await dispatch('createElement', element);
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
             elementId,
           }));
-          tagsCreated = await dispatch('createElementTags', tagsToProvision);
+          await dispatch('createElementTags', tagsToProvision);
         }
       } catch (e) {
         return false;
       }
-      return tagsCreated;
+      return elementId;
     },
 
     createBulkRecords: async ({ dispatch }, {
