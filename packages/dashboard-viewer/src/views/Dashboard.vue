@@ -19,14 +19,7 @@
         Shift-wise shopfloor dashboard
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        class="text-none mr-2"
-        color="primary"
-        small
-      >
-        <v-icon left>mdi-cast</v-icon>
-        Send to TV
-      </v-btn>
+      <send-to-tv />
       <v-btn
         class="text-none mr-2"
         color="primary"
@@ -66,8 +59,13 @@
 </template>
 
 <script>
+import SendToTv from '../components/SendToTv.vue';
+
 export default {
   name: 'Dashboard',
+  components: {
+    SendToTv,
+  },
   computed: {
     shopworxLogo() {
       return this.$vuetify.theme.dark

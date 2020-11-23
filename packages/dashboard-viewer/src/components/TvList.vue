@@ -39,7 +39,7 @@
             {{ item.devicename }}
           </td>
           <td>
-            edit delete
+            edit delete cast
           </td>
         </tr>
       </template>

@@ -70,5 +70,18 @@ export default ({
       );
       return created;
     },
+
+    updateTV: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'devices',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
   },
 });
