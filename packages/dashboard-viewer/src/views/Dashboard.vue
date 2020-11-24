@@ -3,6 +3,7 @@
     <v-app-bar
       app
       flat
+      v-if="!isTV"
       :color="$vuetify.theme.dark ? '#121212' : 'white'"
     >
       <img
@@ -60,6 +61,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import SendToTv from '../components/SendToTv.vue';
 
 export default {
@@ -68,6 +70,7 @@ export default {
     SendToTv,
   },
   computed: {
+    ...mapGetters('helper', ['isTV']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
