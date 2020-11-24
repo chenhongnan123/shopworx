@@ -78,17 +78,25 @@ export default {
       }
     },
     preview() {
-      const elem = document.querySelector('#machine-dashboard');
-      elem.onfullscreenchange = (event) => {
-        const e = event.target;
-        this.isFullScreen = document.fullscreenElement === e;
-      };
-      if (document.fullscreenEnabled) {
-        if (!this.isFullScreen) {
-          elem.requestFullscreen();
-        } else {
-          document.exitFullscreen();
-        }
+      const doc = window.document;
+      const docEl = doc.querySelector('#machine-dashboard');
+
+      const requestFullScreen = docEl.requestFullscreen
+        || docEl.mozRequestFullScreen
+        || docEl.webkitRequestFullScreen
+        || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen
+        || doc.mozCancelFullScreen
+        || doc.webkitExitFullscreen
+        || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement
+        && !doc.mozFullScreenElement
+        && !doc.webkitFullscreenElement
+        && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+      } else {
+        cancelFullScreen.call(doc);
       }
     },
   },
