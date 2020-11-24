@@ -62,8 +62,9 @@ export default {
     $route: {
       immediate: true,
       handler(val) {
-        const isAppPermissionRequired = val.meta && val.meta.permissionRequired;
-        if (this.isTV && !isAppPermissionRequired) {
+        const isDashboardUrl = val.fullPath.includes('/d');
+        console.log(isDashboardUrl);
+        if (this.isTV && !isDashboardUrl) {
           this.$router.replace({ name: 'cast' });
         }
       },
