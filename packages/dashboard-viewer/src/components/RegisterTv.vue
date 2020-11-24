@@ -104,6 +104,7 @@ export default {
           deviceid: this.deviceid,
           devicename: this.devicename,
           devicetype: 'TV',
+          status: 'REGISTER',
         };
         const created = this.createTV(payload);
         if (created) {

@@ -39,17 +39,27 @@ export default {
     }
   },
   beforeMount() {
-    this.sseInit();
+    if (this.isTV) {
+      this.sseInit();
+    }
   },
   beforeDestroy() {
-    this.sseClient.close();
+    if (this.isTV) {
+      this.sseClient.close();
+    }
   },
   mounted() {
     this.$root.$confirm = this.$refs.confirm;
     const instance = ApiService.getAxiosInstance();
-    instance.interceptors.response.use((res) => {
+    instance.interceptors.response.use(async (res) => {
       if (res.status === 202 && res.data.errors.errorCode === 'INVALID_SESSION') {
         this.setIsSessionValid(false);
+        await this.logoutUser();
+        if (this.isTV) {
+          this.$router.replace({ name: 'cast' });
+        } else {
+          this.$router.replace({ name: 'login' });
+        }
       }
       return res;
     });
@@ -63,7 +73,6 @@ export default {
       immediate: true,
       handler(val) {
         const isDashboardUrl = val.fullPath.includes('/d');
-        console.log(isDashboardUrl);
         if (this.isTV && !isDashboardUrl) {
           this.$router.replace({ name: 'cast' });
         }
@@ -71,7 +80,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('auth', ['initAuth']),
+    ...mapActions('auth', ['initAuth', 'logoutUser']),
     ...mapMutations('dashboard', ['setReadyState']),
     ...mapMutations('helper', [
       'setIsDark',
@@ -88,10 +97,11 @@ export default {
       this.sseClient.addEventListener('123ABC', (e) => {
         this.setReadyState(e.target.readyState);
         const eventData = JSON.parse(JSON.parse(e.data));
-        this.timeout = setTimeout(() => {
-          this.setDashboard(eventData);
-        }, 2000);
-        console.log(eventData);
+        if (eventData.status === 'CAST') {
+          this.timeout = setTimeout(() => {
+            this.setDashboard(eventData);
+          }, 2000);
+        }
       });
       this.sseClient.onerror = (event) => {
         this.setReadyState(event.target.readyState);

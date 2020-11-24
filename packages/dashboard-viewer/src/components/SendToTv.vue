@@ -127,6 +127,7 @@ export default {
         const payload = {
           dashboardurl: this.$route.fullPath,
           sessionid: this.sessionId,
+          status: 'CAST',
           assetid: 0,
         };
         const updated = await this.updateTV({
