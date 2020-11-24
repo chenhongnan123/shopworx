@@ -6,9 +6,11 @@ const ELEMENTS = {
 
 export default ({
   state: {
+    readyState: 0,
     isDeviceElemAvailable: false,
   },
   mutations: {
+    setReadyState: set('readyState'),
     setIsDeviceElemAvailable: set('isDeviceElemAvailable'),
   },
   actions: {

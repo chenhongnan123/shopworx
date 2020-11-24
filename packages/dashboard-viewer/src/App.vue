@@ -6,8 +6,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import {
+  mapState,
+  mapMutations,
+  mapActions,
+  mapGetters,
+} from 'vuex';
 import ApiService from '@shopworx/services/api/api.service';
+import SessionService from '@shopworx/services/util/session.service';
 import DashboardLoading from './components/DashboardLoading.vue';
 
 export default {
@@ -17,12 +23,13 @@ export default {
   data() {
     return {
       sseClient: null,
-      readyState: 0,
     };
   },
   computed: {
     ...mapState('helper', ['isDark', 'dashboardLoading', 'userAgent']),
     ...mapState('auth', ['sessionId']),
+    ...mapState('dashboard', ['readyState']),
+    ...mapGetters('helper', ['isTV']),
   },
   async created() {
     const dark = localStorage.getItem('dark');
@@ -52,28 +59,41 @@ export default {
       this.$vuetify.theme.dark = this.isDark;
       localStorage.setItem('dark', this.isDark);
     },
+    $route: {
+      immediate: true,
+      handler(val) {
+        const isAppPermissionRequired = val.meta && val.meta.permissionRequired;
+        if (this.isTV && !isAppPermissionRequired) {
+          this.$router.replace({ name: 'cast' });
+        }
+      },
+    },
   },
   methods: {
     ...mapActions('auth', ['initAuth']),
+    ...mapMutations('dashboard', ['setReadyState']),
     ...mapMutations('helper', [
       'setIsDark',
       'setIsSessionValid',
     ]),
     sseInit() {
       this.sseClient = new EventSource('/sse/device');
-      this.readyState = this.sseClient.readyState;
+      this.setReadyState(this.sseClient.readyState);
       this.sseClient.onopen = () => {
         if (this.timeout != null) {
           clearTimeout(this.timeout);
         }
       };
       this.sseClient.addEventListener('123ABC', (e) => {
-        this.readyState = e.target.readyState;
+        this.setReadyState(e.target.readyState);
         const eventData = JSON.parse(JSON.parse(e.data));
+        this.timeout = setTimeout(() => {
+          this.setDashboard(eventData);
+        }, 2000);
         console.log(eventData);
       });
       this.sseClient.onerror = (event) => {
-        this.readyState = event.target.readyState;
+        this.setReadyState(event.target.readyState);
         this.sseClient.close();
         this.reconnectSse();
       };
@@ -85,10 +105,15 @@ export default {
       } else {
         sseOK = (this.sseClient.readyState !== EventSource.CLOSED);
       }
-      this.readyState = this.sseClient.readyState;
+      this.setReadyState(this.sseClient.readyState);
       if (!sseOK) {
         this.sseInit();
       }
+    },
+    setDashboard(data) {
+      SessionService.setSession(data.sessionid);
+      this.initAuth();
+      this.$router.replace({ path: data.dashboardurl });
     },
   },
 };

@@ -33,8 +33,6 @@ const isAppProvisioned = async (appLink) => {
   return permit;
 };
 
-const isTV = store.getters['helper/isTV'];
-
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
   if (!store.state.auth.sessionId) {
@@ -45,17 +43,9 @@ router.beforeEach(async (to, from, next) => {
   const appPermissionRequired = to.matched.some((record) => record.meta.permissionRequired);
   const loggedIn = store.getters['auth/isLoggedIn'];
   if (!isPublic && !loggedIn) {
-    if (!isTV) {
-      next({ name: 'login' });
-    } else {
-      next({ name: 'cast' });
-    }
+    next({ name: 'login' });
   } else if (loggedIn && onlyWhenLoggedOut) {
-    if (!isTV) {
-      next({ path: '/' });
-    } else {
-      next({ name: 'cast' });
-    }
+    next({ path: '/' });
   } else if (loggedIn && appPermissionRequired) {
     const appPath = to.fullPath.split('/');
     if (await isAppProvisioned(appPath[1])) {
