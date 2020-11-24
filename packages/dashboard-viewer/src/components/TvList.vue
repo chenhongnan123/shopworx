@@ -78,7 +78,7 @@ export default {
     if (!this.isDeviceElemAvailable) {
       success = await this.getDeviceElement();
     }
-    if (success && !this.myTvs.length) {
+    if (success) {
       await this.getMyDevices();
     }
     this.fetchingTvs = false;

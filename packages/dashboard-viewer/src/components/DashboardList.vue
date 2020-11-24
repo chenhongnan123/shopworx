@@ -75,9 +75,7 @@ export default {
   },
   async created() {
     this.fetchingDashboards = true;
-    if (!this.myDashboards.length) {
-      await this.getMySolutions();
-    }
+    await this.getMySolutions();
     this.fetchingDashboards = false;
   },
   computed: {
