@@ -14,6 +14,12 @@ export default {
   components: {
     DashboardLoading,
   },
+  data() {
+    return {
+      sseClient: null,
+      readyState: 0,
+    };
+  },
   computed: {
     ...mapState('helper', ['isDark', 'dashboardLoading', 'userAgent']),
     ...mapState('auth', ['sessionId']),
@@ -24,6 +30,12 @@ export default {
     if (!this.sessionId) {
       this.initAuth();
     }
+  },
+  beforeMount() {
+    this.sseInit();
+  },
+  beforeDestroy() {
+    this.sseClient.close();
   },
   mounted() {
     this.$root.$confirm = this.$refs.confirm;
@@ -47,6 +59,37 @@ export default {
       'setIsDark',
       'setIsSessionValid',
     ]),
+    sseInit() {
+      this.sseClient = new EventSource('/sse/device');
+      this.readyState = this.sseClient.readyState;
+      this.sseClient.onopen = () => {
+        if (this.timeout != null) {
+          clearTimeout(this.timeout);
+        }
+      };
+      this.sseClient.addEventListener('123ABC', (e) => {
+        this.readyState = e.target.readyState;
+        const eventData = JSON.parse(JSON.parse(e.data));
+        console.log(eventData);
+      });
+      this.sseClient.onerror = (event) => {
+        this.readyState = event.target.readyState;
+        this.sseClient.close();
+        this.reconnectSse();
+      };
+    },
+    reconnectSse() {
+      let sseOK = false;
+      if (this.sseClient === null) {
+        sseOK = false;
+      } else {
+        sseOK = (this.sseClient.readyState !== EventSource.CLOSED);
+      }
+      this.readyState = this.sseClient.readyState;
+      if (!sseOK) {
+        this.sseInit();
+      }
+    },
   },
 };
 </script>
