@@ -116,7 +116,7 @@
                   :key="index"
                   :plan="plan"
                   :planId="planId"
-                  @selection-changed="onSelectionChanged"
+                  :selectedPlans.sync="selectedPlans"
                 />
                 <v-divider
                   :key="`d-${index}`"
@@ -193,7 +193,6 @@ export default {
             return {
               ...plans[0],
               planid: planId,
-              selected: false,
             };
           });
         return items;
