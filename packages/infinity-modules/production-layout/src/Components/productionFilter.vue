@@ -155,8 +155,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productionLayout', ['setFilter', 'toggleFilter']),
-    ...mapActions('productionLayout', ['getfilteredSubline', 'getfilteredStation', 'getfilteredSubStation', 'getSublines']),
+    ...mapActions('productionLayout', ['getfilteredSubline', 'getfilteredStation', 'getfilteredSubStation', 'getSublines', 'getStations']),
     getSublinebyLine() {
       this.getfilteredSubline(`?query=lineid==${this.selectedLine.id}`);
     },
@@ -167,19 +168,21 @@ export default {
       this.getfilteredSubStation(`?query=stationid=="${this.selectedStation}"`);
     },
     btnApply() {
-      debugger;
       let query = '?query=';
-      if (this.selectedLine) {
+      if (this.selectedLine && !this.selectedLine) {
         query += `lineid==${this.selectedLine.id}}&`;
         this.getSublines(query);
-      }
-      if (this.selectedLine && this.selectedSubLine) {
-        query += `lineid=="${this.selectedLine.id}"&&id=="${this.selectedSubLine.id}"`;
+      } else if (this.selectedLine && this.selectedSubLine
+         && !this.selectedStation && !this.selectedSubstation) {
+        query += `id=="${this.selectedSubLine.id}"`;
         this.getSublines(query);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_INPUT',
+        });
       }
-      //   query += `lineid=="${this.lineValue || null}"`;
-      // const query = `?query=substationid=="${this.substationValue || null}"`;
-      //   this.getBomListRecords(query);
     },
     btnReset() {
       this.toggleFilter();

@@ -14,7 +14,7 @@
         Parameter filters
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click="toggleFilter">
+      <v-btn icon @click="closeFilter">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-toolbar>
@@ -337,6 +337,11 @@ export default {
       this.subline = '';
       this.station = '';
       this.substation = '';
+    },
+    closeFilter() {
+      debugger;
+      this.getParameterListRecords('?pagenumber=1&pagesize=10');
+      this.toggleFilter();
     },
   },
 };
