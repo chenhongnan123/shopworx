@@ -13,6 +13,7 @@
       <div v-for="(downtime, n) in downtimeList" :key="n">
         <downtime-list-item
           :downtime="downtime"
+          :selected.sync="selected"
           class="mb-2 mx-4"
         />
       </div>
@@ -38,9 +39,15 @@ export default {
     DowntimeListItem,
     DowntimeLoadMore,
   },
+  data() {
+    return {
+      selected: [],
+    };
+  },
   computed: {
     ...mapState('downtimeLog', [
       'downtimeList',
+      'selectedDowntimes',
       'loading',
       'error',
       'selectedMachine',
@@ -53,10 +60,26 @@ export default {
     ]),
   },
   methods: {
-    ...mapMutations('downtimeLog', ['resetPageNumber', 'setDowntimeList']),
+    ...mapMutations('downtimeLog', [
+      'resetPageNumber',
+      'setDowntimeList',
+      'setSelectedDowntimes',
+    ]),
     ...mapActions('downtimeLog', ['fetchDowntimeList']),
   },
   watch: {
+    selected: {
+      deep: true,
+      handler(val) {
+        this.setSelectedDowntimes(val);
+      },
+    },
+    selectedDowntimes: {
+      deep: true,
+      handler(val) {
+        this.selected = val;
+      },
+    },
     selectedMachine(val) {
       if (val) {
         this.resetPageNumber();

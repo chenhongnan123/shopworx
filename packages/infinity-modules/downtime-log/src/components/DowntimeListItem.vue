@@ -6,8 +6,8 @@
         class="ma-0 mb-2"
         hide-details
         v-show="toggleSelection"
-        v-model="downtime.selected"
-        @change="setSelectedDowntimes(downtime)"
+        v-model="selectedDowntime"
+        :value="downtime"
         ></v-checkbox>
       </div>
       <div>
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import DowntimeSplit from './DowntimeSplit.vue';
 import AssignDowntime from './AssignDowntime.vue';
 
@@ -102,13 +102,25 @@ export default {
       type: Object,
       required: true,
     },
+    selected: {
+      type: Array,
+      default: () => [],
+    },
   },
   components: {
     DowntimeSplit,
     AssignDowntime,
   },
   computed: {
-    ...mapState('downtimeLog', ['toggleSelection', 'selectedDowntimes']),
+    ...mapState('downtimeLog', ['toggleSelection']),
+    selectedDowntime: {
+      get() {
+        return this.selected;
+      },
+      set(val) {
+        this.$emit('update:selected', val);
+      },
+    },
     duration() {
       const d = this.downtime.downtimeduration;
       const h = Math.floor(d / 3600);
@@ -119,11 +131,6 @@ export default {
     inProgress() {
       return this.downtime.status === 'inProgress';
     },
-  },
-  methods: {
-    ...mapMutations('downtimeLog', [
-      'setSelectedDowntimes',
-    ]),
   },
 };
 </script>

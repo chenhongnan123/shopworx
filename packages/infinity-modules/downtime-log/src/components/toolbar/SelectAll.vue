@@ -2,7 +2,8 @@
   <v-checkbox
     class="ma-0"
     label="Select all"
-    v-model="checkbox"
+    v-model="isSelectAll"
+    @click="onSelectAllChange"
     :indeterminate="indeterminate"
     v-show="toggleSelection"
     ></v-checkbox>
@@ -15,35 +16,28 @@ export default {
   name: 'SelectAll',
   data() {
     return {
-      selectAll: false,
+      isSelectAll: false,
     };
   },
   computed: {
     ...mapState('downtimeLog', [
-      'downtimeCount',
+      'downtimeList',
       'selectedDowntimes',
       'toggleSelection',
     ]),
-    checkbox: {
-      get() {
-        return this.selectedDowntimes.length !== 0;
-      },
-      set(val) {
-        if (val) {
-          this.setSelectAllDowntimes();
-        } else {
-          this.setSelectAllDowntimes([]);
-        }
-        this.selectAll = val;
-      },
-    },
     indeterminate() {
       return this.selectedDowntimes.length !== 0
-        && this.selectedDowntimes.length < this.downtimeCount;
+        && this.selectedDowntimes.length < this.downtimeList.length;
     },
   },
   methods: {
-    ...mapMutations('downtimeLog', ['setSelectAllDowntimes']),
+    ...mapMutations('downtimeLog', ['setSelectedDowntimes']),
+    onSelectAllChange() {
+      this.setSelectedDowntimes([]);
+      if (this.isSelectAll) {
+        this.setSelectedDowntimes(this.downtimeList);
+      }
+    },
   },
 };
 </script>

@@ -141,7 +141,7 @@ export default {
     this.checkSelection();
   },
   methods: {
-    ...mapMutations('downtimeLog', ['clearCheckedItems', 'setToggleSelection', 'setDowntimeList']),
+    ...mapMutations('downtimeLog', ['setSelectedDowntimes', 'setToggleSelection', 'setDowntimeList']),
     ...mapActions('downtimeLog', ['updateReason']),
     duration(value) {
       const d = value;
@@ -178,7 +178,7 @@ export default {
         ...dt,
         selected: false,
       }));
-      this.clearCheckedItems();
+      this.setSelectedDowntimes([]);
       this.setDowntimeList([]);
       this.setDowntimeList(unchecked);
       this.setToggleSelection(this.toggleHide);
