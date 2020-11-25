@@ -1,4 +1,4 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
   namespaced: true,
@@ -27,8 +27,14 @@ export default ({
     parametersList: [],
     subStationsForIP: [],
     assets: {},
+    filter: false,
+    sublineByline: [],
+    stationBySubline: [],
+    subStationByStation: [],
   },
   mutations: {
+    toggleFilter: toggle('filter'),
+    setFilter: set('filter'),
     setSelectedLine: set('selectedLine'),
     setLines: set('lines'),
     setSublines: set('sublines'),
@@ -44,6 +50,9 @@ export default ({
     setUpdateProcessDialog: set('updateProcessDialog'),
     setAllSublines: set('allSublines'),
     setAllStations: set('allStations'),
+    setSublinesbyline: set('sublineByline'),
+    setStationbySubLines: set('stationBySubline'),
+    setSubStationbyStation: set('subStationByStation'),
     setStationsbyline: set('stationsbylines'),
     setSubStationsbyline: set('substationsbylines'),
     setSubStationName: set('subStationName'),
@@ -169,6 +178,42 @@ export default ({
       );
       stations.push(...localStations);
       commit('setStations', stations);
+      return true;
+    },
+    getfilteredSubline: async ({ dispatch, commit }, query) => {
+      const sublinebyLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'subline',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSublinesbyline', sublinebyLines);
+      return true;
+    },
+    getfilteredStation: async ({ dispatch, commit }, query) => {
+      const stationbySubLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationbySubLines', stationbySubLines);
+      return true;
+    },
+    getfilteredSubStation: async ({ dispatch, commit }, query) => {
+      const subStationbyStation = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationbyStation', subStationbyStation);
       return true;
     },
     getStationbyline: async ({ dispatch, commit }, query) => {

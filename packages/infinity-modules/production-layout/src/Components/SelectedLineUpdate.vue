@@ -1,6 +1,8 @@
 <template>
   <v-btn
+  small
   color="primary"
+  class="text-none"
   @click="saveline"
   :disabled="btndisable"
   >Save

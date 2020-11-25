@@ -29,10 +29,26 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <v-col cols="1" md="1" lg="1">
+            <!-- <v-col cols="1" md="1" lg="1">
               <SelectedLineUpdate />
-            </v-col>
+            </v-col> -->
           </template>
+          <div style="float:right"
+          class="mt-5">
+          <v-spacer></v-spacer>
+           <SelectedLineUpdate />
+           <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="toggleFilter"
+            >
+              <v-icon small left>mdi-filter-variant</v-icon>
+              Filters
+            </v-btn>
+            <productionFilter />
+          </div>
         </v-row>
            <v-row class="mb-6" v-if="selectedLine"
            no-gutters>
@@ -68,7 +84,7 @@
                   class="pa-2"
                   tile
                   outlined>
-                  <span class="ml-0">Process</span>
+                  <span class="ml-0">Sub-Process</span>
                   <AddProcess />
                   </v-card>
                 </v-col>
@@ -137,6 +153,7 @@ import DeleteStation from '../Components/DeleteStation.vue';
 import DeleteSubstation from '../Components/DeleteSubstation.vue';
 import DeleteProcess from '../Components/DeleteProcess.vue';
 import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
+import productionFilter from '../Components/productionFilter.vue';
 
 export default {
   name: 'ProductionLayout',
@@ -154,6 +171,7 @@ export default {
     DeleteSubstation,
     DeleteProcess,
     SelectedLineUpdate,
+    productionFilter,
   },
   data() {
     return {
@@ -209,6 +227,7 @@ export default {
       'setSubStations',
       'setProcesses',
       'setSelectedLine',
+      'toggleFilter',
     ]),
     async downloadFromToPLC() {
       this.socket = socketioclient.connect('http://:10190');
