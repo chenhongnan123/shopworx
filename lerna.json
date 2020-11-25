@@ -1,6 +1,8 @@
 {
   "packages": [
     "packages/assets",
+    "packages/dashboard-viewer",
+    "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
     "packages/origin",

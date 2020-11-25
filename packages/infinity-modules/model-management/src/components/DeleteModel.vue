@@ -9,7 +9,7 @@
         :loading="deleting"
         @click="removeModel"
       >
-        <v-icon>mdi-delete-outline</v-icon>
+        <v-icon v-text="'$delete'"></v-icon>
       </v-btn>
     </template>
     <span>Delete model</span>

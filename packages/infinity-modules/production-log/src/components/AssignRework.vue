@@ -269,6 +269,7 @@ export default {
       this.loading = true;
       this.reworks = await this.fetchRework({
         shift: this.production.shift,
+        part: this.production.partname,
         planId: this.production.planid,
       });
       this.loading = false;

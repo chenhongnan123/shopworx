@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 import { sortAlphaNum } from '@shopworx/services/util/sort.service';
 
@@ -37,6 +38,17 @@ export default ({
         // eslint-disable-next-line
         const index = state.selectedDowntimes.findIndex((item) => item._id === payload.id);
         state.selectedDowntimes.splice(index, 1);
+      }
+    },
+    setSelectAllDowntimes: (state, payload) => {
+      if (!payload) {
+        const downtimes = state.downtimeList.map((dt) => ({ ...dt, selected: true }));
+        Vue.set(state, 'downtimeList', [...downtimes]);
+        Vue.set(state, 'selectedDowntimes', [...downtimes]);
+      } else {
+        const downtimes = state.downtimeList.map((dt) => ({ ...dt, selected: false }));
+        Vue.set(state, 'downtimeList', [...downtimes]);
+        Vue.set(state, 'selectedDowntimes', []);
       }
     },
     clearCheckedItems: (state) => {

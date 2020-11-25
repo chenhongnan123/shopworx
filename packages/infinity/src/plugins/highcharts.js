@@ -5,7 +5,6 @@ import HighchartsMore from 'highcharts/highcharts-more';
 import xRange from 'highcharts/modules/xrange';
 import pareto from 'highcharts/modules/pareto';
 
-
 Highcharts.theme = {
   chart: {
     backgroundColor: null,

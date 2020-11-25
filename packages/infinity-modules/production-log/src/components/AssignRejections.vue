@@ -335,8 +335,8 @@ export default {
       };
       const id = await this.addRejection(payload);
       if (id) {
-        const rejectedQty = this.updateHourlyStats(payload, qty, data, id);
-        this.updateShiftStats(rejectedQty);
+        this.updateHourlyStats(payload, qty, data, id);
+        this.updateShiftStats(qty);
         this.$nextTick(() => {
           this.$refs.form[0].reset();
         });
@@ -364,7 +364,6 @@ export default {
         newRejection,
       };
       this.hourlyData.splice(index, 1, newData);
-      return newRejectionValue;
     },
     updateShiftStats(rejectedQty) {
       const shiftProduction = [...this.productionList];
@@ -406,11 +405,11 @@ export default {
         if (hasQtyProperty) {
           const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
           const { rejections, produced } = this.hourlyData[hIndex];
-          const rejected = rejections.reduce((a, b) => a + (b.quantity || 0), 0);
+          const rejected = rejections.reduce((a, b) => a + (+b.quantity || 0), 0);
           const newData = {
             ...this.hourlyData[hIndex],
             rejected,
-            accepted: produced - rejected,
+            accepted: +produced - rejected,
           };
           this.hourlyData.splice(hIndex, 1, newData);
           await this.reFetchProductionList();

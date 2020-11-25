@@ -264,6 +264,7 @@ export default {
       this.loading = true;
       this.scraps = await this.fetchScrap({
         shift: this.production.shift,
+        part: this.production.partname,
         planId: this.production.planid,
       });
       this.loading = false;

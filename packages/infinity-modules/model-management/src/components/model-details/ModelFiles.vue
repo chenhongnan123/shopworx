@@ -40,7 +40,7 @@
                 :disabled="deleting"
                 @click="deleteModelFile(item)"
               >
-                <v-icon>mdi-delete-outline</v-icon>
+                <v-icon v-text="'$delete'"></v-icon>
               </v-btn>
             </template>
             <span>Delete file</span>
@@ -117,7 +117,6 @@ export default {
       this.$refs.dropzone.startQueueProcessing();
     },
     async downloadModelFile(link) {
-      console.log(link);
       await this.downloadFile(link);
     },
     async deleteModelFile(file) {

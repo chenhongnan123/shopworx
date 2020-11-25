@@ -50,15 +50,7 @@
               >
                 Resend
               </v-btn>
-              <v-btn
-                icon
-                small
-                color="error"
-                :loading="deleting"
-                @click="deleteUser(item)"
-              >
-                <v-icon v-text="'$delete'"></v-icon>
-              </v-btn>
+              <delete-user :user="item" />
             </template>
           </v-data-table>
         </v-card-text>
@@ -83,6 +75,7 @@
           :headers="headers"
           disable-pagination
           hide-default-footer
+          :custom-filter="filterUsers"
         >
           <template v-slot:item.fullName="{ item }">
             <div>{{ item.fullName }}</div>
@@ -104,15 +97,7 @@
             ></v-select>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn
-              icon
-              small
-              color="error"
-              @click="deleteUser(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn>
+            <delete-user :user="item" />
           </template>
         </v-data-table>
       </v-card-text>
@@ -123,29 +108,30 @@
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
 import InviteUsers from './InviteUsers.vue';
+import DeleteUser from './DeleteUser.vue';
 
 export default {
   name: 'Users',
   components: {
     InviteUsers,
+    DeleteUser,
   },
   data() {
     return {
       search: null,
       loading: false,
-      deleting: false,
       inviteLoading: false,
       headers: [
         {
           text: 'Name',
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'fullName',
         },
         {
           text: 'Role',
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'role',
         },
         {
@@ -230,7 +216,6 @@ export default {
     ...mapActions('admin', [
       'getAllUsers',
       'resendInvitation',
-      'updateUser',
       'updateUserRole',
     ]),
     ...mapMutations('helper', ['setAlert']),
@@ -273,13 +258,6 @@ export default {
         userId: user.id,
         roleId: user.role,
       });
-    },
-    deleteUser(user) {
-      const payload = {
-        userId: user.id,
-        userState: 'INACTIVE',
-      };
-      this.updateUser(payload);
     },
   },
 };

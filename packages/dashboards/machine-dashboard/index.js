@@ -14,7 +14,7 @@ function loadLocaleMessages(i18nInstance) {
 
 export default {
   install(Vue, options) {
-    const routerData = options.router.options.routes.find((r) => r.path === '/');
+    const routerData = options.router.options.routes.find((r) => r.path === '/d');
     routerData.children = routes;
     options.router.addRoutes([routerData]);
     options.store.registerModule('machineDashboard', store);

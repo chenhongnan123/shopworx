@@ -17,5 +17,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'import/extensions': 'off',
     'no-param-reassign': 'off',
+    'vue/valid-v-slot': 'off',
+    'vue/vue/no-mutating-props': 'off',
   },
 };

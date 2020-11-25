@@ -13,19 +13,22 @@
   },
   "scripts": {
     "bootstrap:origin": "lerna bootstrap --scope @shopworx/origin --include-dependencies",
-    "bootstrap:infinity": "lerna bootstrap --scope @shopworx/infinity --include-dependencies",
     "serve:origin": "lerna exec --scope @shopworx/origin -- npm run serve",
-    "serve:infinity": "lerna exec --scope @shopworx/infinity -- npm run serve",
     "build:origin": "lerna exec --scope @shopworx/origin -- npm run build",
+    "bootstrap:infinity": "lerna bootstrap --scope @shopworx/infinity --include-dependencies",
+    "serve:infinity": "lerna exec --scope @shopworx/infinity -- npm run serve",
     "build:infinity": "lerna exec --scope @shopworx/infinity -- npm run build",
+    "bootstrap:dashboard-viewer": "lerna bootstrap --scope @shopworx/dashboard-viewer --include-dependencies",
+    "serve:dashboard-viewer": "lerna exec --scope @shopworx/dashboard-viewer -- npm run serve",
+    "build:dashboard-viewer": "lerna exec --scope @shopworx/dashboard-viewer -- npm run build",
     "release": "lerna version --conventional-commits",
     "release:pre": "lerna version --conventional-prerelease",
     "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
-    "commitizen": "^4.2.1",
-    "cz-conventional-changelog": "^3.2.0",
-    "husky": "^4.2.5",
-    "lerna": "^3.22.0"
+    "commitizen": "^4.2.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^5.0.1",
+    "lerna": "^3.22.1"
   }
 }

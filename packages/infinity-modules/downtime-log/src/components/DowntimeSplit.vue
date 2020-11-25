@@ -12,6 +12,7 @@
         outlined
         color="primary"
         class="text-none"
+        :disabled="inProgress"
       >
         <v-icon left>mdi-call-split</v-icon>
         Split
@@ -203,6 +204,10 @@ export default {
     },
     duration: {
       type: String,
+      required: true,
+    },
+    inProgress: {
+      type: Boolean,
       required: true,
     },
   },

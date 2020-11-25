@@ -51,17 +51,23 @@
     </v-list>
     <perfect-scrollbar :style="`height: calc(100% - ${scrollbarHeight}px);`">
       <v-list
+        nav
         dense
-        shaped
-        class="py-0"
+        :rounded="expandOnHover"
+        :shaped="!expandOnHover"
       >
         <template v-for="(item, index) in items">
           <v-subheader
             :key="index"
-            v-if="item.header"
+            v-if="item.header && !expandOnHover"
             class="text-uppercase"
             v-text="$t(`modules.${item.header}`)"
           ></v-subheader>
+          <v-divider
+            :key="index"
+            class="my-1"
+            v-else-if="item.header && expandOnHover"
+          ></v-divider>
           <v-list-item
             exact
             :key="index"
@@ -77,6 +83,23 @@
           </v-list-item>
           <v-list-item
             link
+            :key="index"
+            v-else-if="item.external"
+            target="_blank"
+            :href="item.to"
+            :title="$t(`modules.${item.title}`)"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+          >
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-action v-if="item.external">
+              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+          <v-list-item
+            link
             v-else
             :key="index"
             :to="{ name: item.title }"
@@ -88,16 +111,22 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-action v-if="item.external">
+              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
     </perfect-scrollbar>
     <template v-if="adminItems && adminItems.length">
-      <v-divider></v-divider>
+      <v-divider
+        class="mt-2"
+      ></v-divider>
       <v-list
+        nav
         dense
-        shaped
-        class="py-1"
+        :rounded="expandOnHover"
+        :shaped="!expandOnHover"
       >
         <v-list-item
           :key="item.title"
@@ -165,7 +194,7 @@ export default {
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 1 + 8);
+        totalHeight += (40 * this.adminItems.length + 16 + 16);
       }
       return totalHeight;
     },

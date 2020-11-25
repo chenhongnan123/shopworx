@@ -303,17 +303,26 @@ export default ({
         mySolutions.forEach((solution) => solution.modules
           .sort((a, b) => a.id - b.id)
           .map((module) => {
-            if (module.moduleName.toUpperCase().trim() === 'APPS'
-            || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            const isApp = module.moduleName.toUpperCase().trim() === 'APPS';
+            const isDashboard = module.moduleName.toUpperCase().trim() === 'DASHBOARDS';
+            const isReport = module.moduleName.toUpperCase().trim() === 'REPORTS';
+            const isMaster = module.moduleName.toUpperCase().trim() === 'MASTERS';
+            const isAdmin = module.moduleName.toUpperCase().trim() === 'ADMIN';
+            const isInsight = module.moduleName.toUpperCase().trim() === 'INSIGHTS';
+            if (isApp || isDashboard) {
+              if (isDashboard) {
+                modules.items.push({ header: module.moduleName });
+              }
               module.details.forEach((detail) => {
                 modules.items.push({
                   id: detail.id,
                   icon: detail.iconURL,
                   to: detail.webAppLink,
                   title: detail.webAppName,
+                  external: isDashboard,
                 });
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            } else if (isReport) {
               modules.items.push({ header: module.moduleName });
               module.details.forEach((detail) => {
                 modules.items.push({
@@ -323,21 +332,21 @@ export default ({
                   title: detail.reportsCategoryName,
                 });
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
+            } else if (isMaster) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
                 title: module.moduleName,
                 icon: `$${module.moduleName}`,
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
+            } else if (isAdmin) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
                 title: module.moduleName,
                 icon: `$${module.moduleName}`,
               });
-            } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+            } else if (!isInsight) {
               modules.items.push({ header: module.moduleName });
               module.details.forEach((detail) => {
                 modules.items.push({

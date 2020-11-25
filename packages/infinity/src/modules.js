@@ -2,7 +2,6 @@ import Vue from 'vue';
 import ParameterConfiguration from '@shopworx/parameter-configuration';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
-import MachineDashboard from '@shopworx/machine-dashboard';
 import Masters from '@shopworx/masters';
 import Planning from '@shopworx/planning';
 import ProductionLog from '@shopworx/production-log';
@@ -62,11 +61,6 @@ Vue.use(ProductionLayout, {
   i18n,
 });
 Vue.use(ProductManagement, {
-  router,
-  store,
-  i18n,
-});
-Vue.use(MachineDashboard, {
   router,
   store,
   i18n,

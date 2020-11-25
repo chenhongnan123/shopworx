@@ -1,5 +1,10 @@
  <template>
-  <v-dialog v-model="dialog" max-width="700px" persistent>
+  <v-dialog
+    v-model="dialog"
+    max-width="700px"
+    persistent
+    scrollable
+  >
     <template v-slot:activator="{ on }">
       <v-btn small v-on="on" class="text-none" color="primary"> Assign Reason </v-btn>
     </template>
