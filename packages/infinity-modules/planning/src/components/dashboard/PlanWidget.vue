@@ -200,16 +200,5 @@ export default {
       return [];
     },
   },
-  methods: {
-    onSelectionChanged(plan) {
-      if (plan.selected) {
-        this.selectedPlans.push(plan);
-      } else {
-        // eslint-disable-next-line
-        const index = this.selectedPlans.findIndex((p) => p._id === plan._id);
-        this.selectedPlans.splice(index, 1);
-      }
-    },
-  },
 };
 </script>
