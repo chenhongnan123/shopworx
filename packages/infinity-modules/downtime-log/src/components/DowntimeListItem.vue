@@ -115,11 +115,9 @@ export default {
     ...mapState('downtimeLog', ['toggleSelection']),
     selectedDowntime: {
       get() {
-        console.log(this.selected);
         return this.selected;
       },
       set(val) {
-        console.log(val);
         this.$emit('update:selected', val);
       },
     },
