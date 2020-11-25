@@ -464,7 +464,6 @@ export default ({
     },
 
     fetchHourlyProduction: async ({ dispatch, state, rootState }, {
-      machine,
       part,
       shift,
       planId,
@@ -480,7 +479,7 @@ export default ({
             siteid: activeSite,
             dateVal: date,
             shiftFilter: `{${shift}}`,
-            machineFilter: `{${machine}}`,
+            planFilter: `{${planId}}`,
             partFilter: `{${part}}`,
           },
         },

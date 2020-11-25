@@ -311,7 +311,6 @@ export default {
     async getHourlyData() {
       this.loading = true;
       this.hourlyData = await this.fetchHourlyProduction({
-        machine: this.production.machinename,
         part: this.production.partname,
         shift: this.production.shift,
         planId: this.production.planid,
