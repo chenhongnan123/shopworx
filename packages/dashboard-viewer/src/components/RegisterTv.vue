@@ -30,7 +30,7 @@
             label="TV name"
             prepend-icon="mdi-television"
             :disabled="saving"
-            :rules="[v => !!v || 'TV name is required']"
+            :rules="[(v) => !!v || 'TV name is required']"
           ></v-text-field>
           <v-text-field
             dense
@@ -39,18 +39,13 @@
             class="ml-8"
             label="Device ID*"
             :disabled="saving"
-            :rules="[v => !!v || 'Device ID is required']"
+            :rules="[(v) => !!v || 'Device ID is required']"
           ></v-text-field>
           <div class="caption">*Steps to find device ID</div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn
-            text
-            :disabled="saving"
-            class="text-none"
-            @click="cancel"
-          >
+          <v-btn text :disabled="saving" class="text-none" @click="cancel">
             Exit
           </v-btn>
           <v-spacer></v-spacer>
