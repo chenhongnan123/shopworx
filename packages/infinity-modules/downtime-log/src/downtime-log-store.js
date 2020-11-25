@@ -239,10 +239,7 @@ export default ({
           { root: true },
         );
         if (data && data.results) {
-          const downtimes = data.results.map((dt) => ({
-            ...dt,
-            selected: false,
-          }));
+          const downtimes = data.results;
           commit('setDowntimeList', downtimes);
           commit('setDowntimeCount', data.totalCount);
           commit('setError', false);

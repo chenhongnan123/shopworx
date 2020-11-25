@@ -39,5 +39,15 @@ export default {
       }
     },
   },
+  watch: {
+    selectedDowntimes: {
+      deep: true,
+      handler(val) {
+        if (!val.length) {
+          this.isSelectAll = false;
+        }
+      },
+    },
+  },
 };
 </script>

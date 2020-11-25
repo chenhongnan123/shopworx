@@ -134,14 +134,13 @@ export default {
     ...mapState('downtimeLog', [
       'downtimeReasons',
       'selectedDowntimes',
-      'downtimeList',
     ]),
   },
   created() {
     this.checkSelection();
   },
   methods: {
-    ...mapMutations('downtimeLog', ['setSelectedDowntimes', 'setToggleSelection', 'setDowntimeList']),
+    ...mapMutations('downtimeLog', ['setSelectedDowntimes', 'setToggleSelection']),
     ...mapActions('downtimeLog', ['updateReason']),
     duration(value) {
       const d = value;
@@ -174,13 +173,7 @@ export default {
           payload,
         });
       });
-      const unchecked = this.downtimeList.map((dt) => ({
-        ...dt,
-        selected: false,
-      }));
       this.setSelectedDowntimes([]);
-      this.setDowntimeList([]);
-      this.setDowntimeList(unchecked);
       this.setToggleSelection(this.toggleHide);
       this.saving = false;
       this.dialog = false;
