@@ -29,7 +29,7 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <v-col cols="4" md="4" lg="4">
+            <v-col cols="2" md="2" lg="2">
               <!-- <v-text-field
                 label="Line Description"
                 v-model="selectedLine.description"
@@ -40,6 +40,7 @@
           class="mt-5">
           <v-spacer></v-spacer>
            <SelectedLineUpdate />
+           <AddLine />
            <v-btn
             small
             color="primary"
@@ -147,6 +148,7 @@ import AddSubline from '../Components/AddSubline.vue';
 import AddStation from '../Components/AddStation.vue';
 import AddSubstation from '../Components/AddSubstation.vue';
 import AddProcess from '../Components/AddProcess.vue';
+import AddLine from '../Components/AddLine.vue';
 import UpdateSubline from '../Components/UpdateSubline.vue';
 import UpdateSubstation from '../Components/UpdateSubstation.vue';
 import UpdateStation from '../Components/UpdateStation.vue';
@@ -161,6 +163,7 @@ import productionFilter from '../Components/productionFilter.vue';
 export default {
   name: 'ProductionLayout',
   components: {
+    AddLine,
     AddSubline,
     AddStation,
     AddSubstation,

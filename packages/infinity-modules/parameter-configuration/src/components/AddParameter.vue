@@ -337,7 +337,6 @@ export default {
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
-          isconversion: parameterObj.isconversion.id,
           protocol: parameterObj.protocol.id,
           maxdecimal: 3,
           startaddress: Number(parameterObj.startaddress),

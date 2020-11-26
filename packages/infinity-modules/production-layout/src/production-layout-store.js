@@ -427,6 +427,30 @@ export default ({
       }
       return created;
     },
+    createLine: async ({ dispatch, commit }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'line',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = '';
+        const processes = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'line',
+            query,
+          },
+          { root: true },
+        );
+        commit('setLines', processes);
+        return processes;
+      }
+      return created;
+    },
     updateLine: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',

@@ -137,7 +137,7 @@ export default {
   data() {
     return {
       saving: false,
-      selectedLine: null,
+      // selectedLine: null,
       selectedSubLine: null,
       selectedStation: null,
       selectedSubstation: null,
@@ -145,7 +145,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionLayout', ['filter', 'lines', 'sublines', 'sublineByline', 'stationBySubline', 'subStationByStation', 'processes']),
+    ...mapState('productionLayout', ['filter', 'lines', 'sublines', 'sublineByline', 'stationBySubline', 'subStationByStation', 'processes', 'selectedLine']),
     showFilter: {
       get() {
         return this.filter;
@@ -212,12 +212,16 @@ export default {
         });
       }
     },
-    btnReset() {
+    async btnReset() {
       this.toggleFilter();
-      this.selectedLine = '';
+      // this.selectedLine = '';
       this.selectedSubLine = '';
       this.selectedStation = '';
       this.selectedSubstation = '';
+      await this.getSublines(`?query=lineid==${this.selectedLine.id}`);
+      await this.getStations('');
+      await this.getSubStations('');
+      await this.getProcesses('');
     },
   },
 };
