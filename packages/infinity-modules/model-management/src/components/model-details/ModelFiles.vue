@@ -12,7 +12,7 @@
           No file available
         </template>
         <template #item.name="{ item }">
-          {{ item.originalFilename }}.{{item.extension}}
+          {{ item.originalFilename }}.{{ item.extension }}
         </template>
         <template #item.actions="{ item }">
           <!-- <v-tooltip bottom>
@@ -113,6 +113,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
     async uploadFiles() {
+      console.log(this.$refs.dropzone);
       this.setUploadingFiles(true);
       this.$refs.dropzone.startQueueProcessing();
     },

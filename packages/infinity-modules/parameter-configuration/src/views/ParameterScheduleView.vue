@@ -431,26 +431,26 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     sublineValue(val) {
       if (!val) {
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     stationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     parameterList(parameterList) {
@@ -662,7 +662,7 @@ export default {
           });
         }
       });
-      await this.downloadToPLC(object);
+      // await this.downloadToPLC(object);
     },
     getQuery() {
       let query = '?query=';
@@ -874,43 +874,93 @@ export default {
         const createResult = await this.createParameterList(data);
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
-          const tagList = [];
-          await this.getSubStationIdElement(this.substationValue);
-          tagList.push({
-            assetId: 4,
-            tagName: 'mainid',
-            tagDescription: 'mainid',
-            emgTagType: 'String',
-            tagOrder: 1,
-            connectorId: 2,
-            defaultValue: '',
-            elementId: this.subStationElementDeatils.element.id,
-            hide: false,
-            identifier: true,
-            interactionType: '',
-            mode: '',
-            required: true,
-            sampling: true,
-            lowerRangeValue: 1,
-            upperRangeValue: 1,
-            alarmFlag: true,
-            alarmId: 1,
-            derivedField: false,
-            derivedFunctionName: '',
-            derivedFieldType: '',
-            displayType: true,
-            displayUnit: 1,
-            isFamily: true,
-            familyQueryTag: '',
-            filter: true,
-            filterFromElementName: '',
-            filterFromTagName: '',
-            filterQuery: '',
-          });
+          let tagList = [];
+          await this.getSubStationIdElement(`process_${this.substationValue}`);
+          // tagList.push({
+          //   assetId: 4,
+          //   tagName: 'mainid',
+          //   tagDescription: 'mainid',
+          //   emgTagType: 'String',
+          //   tagOrder: 1,
+          //   connectorId: 2,
+          //   defaultValue: '',
+          //   elementId: this.subStationElementDeatils.element.id,
+          //   hide: false,
+          //   identifier: true,
+          //   interactionType: '',
+          //   mode: '',
+          //   required: true,
+          //   sampling: true,
+          //   lowerRangeValue: 1,
+          //   upperRangeValue: 1,
+          //   alarmFlag: true,
+          //   alarmId: 1,
+          //   derivedField: false,
+          //   derivedFunctionName: '',
+          //   derivedFieldType: '',
+          //   displayType: true,
+          //   displayUnit: 1,
+          //   isFamily: true,
+          //   familyQueryTag: '',
+          //   filter: true,
+          //   filterFromElementName: '',
+          //   filterFromTagName: '',
+          //   filterQuery: '',
+          // });
           data.forEach((item) => {
             if (Number(item.parametercategory) === 15
             || Number(item.parametercategory) === 17
-            || Number(item.parametercategory) === 18) {
+            || Number(item.parametercategory) === 18
+            || Number(item.parametercategory) === 2) {
+              let dataTypeName = '';
+              if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
+                dataTypeName = 'String';
+              } else {
+                dataTypeName = 'Double';
+              }
+              const tagname = item.name;
+              tagList.push({
+                assetId: 4,
+                tagName: tagname.toLowerCase().trim(),
+                tagDescription: item.name,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: this.subStationElementDeatils.element.id,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
+              });
+            }
+          });
+          await this.createTagElement(tagList);
+          // add tags to real parameters
+          tagList = [];
+          await this.getSubStationIdElement(`real_${this.substationValue}`);
+          data.forEach((item) => {
+            if (Number(item.parametercategory) === 42
+            || Number(item.parametercategory) === 45
+            || Number(item.parametercategory) === 51
+            || Number(item.parametercategory) === 2) {
               let dataTypeName = '';
               if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
                 dataTypeName = 'String';

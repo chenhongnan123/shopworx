@@ -29,9 +29,12 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <!-- <v-col cols="1" md="1" lg="1">
-              <SelectedLineUpdate />
-            </v-col> -->
+            <v-col cols="4" md="4" lg="4">
+              <!-- <v-text-field
+                label="Line Description"
+                v-model="selectedLine.description"
+              ></v-text-field> -->
+            </v-col>
           </template>
           <div style="float:right"
           class="mt-5">
@@ -204,6 +207,14 @@ export default {
   computed: {
     ...mapState('productionLayout', ['lines', 'subStations', 'stations', 'sublines', 'processes']),
   },
+  watch: {
+    sublines: {
+      deep: true,
+      handler(val) {
+        console.log(val);
+      },
+    },
+  },
   async created() {
     const success = await this.getLines();
     if (success) {
@@ -229,6 +240,9 @@ export default {
       'setSelectedLine',
       'toggleFilter',
     ]),
+    updateLine() {
+      alert('changes');
+    },
     async downloadFromToPLC() {
       this.socket = socketioclient.connect('http://:10190');
       this.socket.on('connect', () => {
@@ -249,7 +263,7 @@ export default {
             }
           });
       });
-      await this.downloadToPLC(ObJ);
+      // await this.downloadToPLC(ObJ);
     },
     setStation(station) {
       this.selectedStation = station;

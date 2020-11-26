@@ -15,8 +15,9 @@
     "TRANSFORMATION_CREATE": "Cannot add output transformation. Please retry!",
     "TRANSFORMATION_DELETE": "Cannot remove output transformation. Please retry!",
     "MODEL_CREATE": "Cannot create ML model. Please retry!",
+    "MODEL_CREATE_NAME": "Model name already present. Please retry with different name!",
     "MODEL_ORDER_CREATE": "Cannot start model deployment. Please retry!",
-    "MODEL_CONFIGURE": "Please configure your ML model with atleast one input parameter, model file and a output transformation and try again.",
+    "MODEL_CONFIGURE": "Please configure your ML model with atleast one model file and try again.",
     "FILE_DELETE": "Cannot remove model file. Please retry!",
     "MODEL_DELETE": "Cannot delete the model. Please retry!"
   }

@@ -56,7 +56,9 @@
         :disabled="btnFindisable"
         ></v-switch>
         <v-checkbox v-model="checked" class="mx-2"
-         label="this Substation have Parameter Configuration"></v-checkbox>
+         label="Record process parameters"></v-checkbox>
+        <v-checkbox v-model="checkedReal" class="mx-2"
+         label="Record Real parameters"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -78,6 +80,7 @@ export default {
       newSubstation: {},
       assetId: null,
       checked: false,
+      checkedReal: false,
       selectedSubstationLine: null,
       default: false,
       dialog: false,
@@ -183,6 +186,7 @@ export default {
             )[0].ismainline,
             lineid: this.selectedSubstationLine.lineid,
             paramconfigured: this.checked,
+            realparamconfigured: this.checkedReal,
             assetid: this.assetId,
           };
           let created = false;
@@ -194,11 +198,10 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            this.dialog = false;
-            const checkedPlc = this.checked;
-            if (checkedPlc) {
-              this.newSubstation = {};
-              this.dialog = false;
+            console.log(this.checkedReal);
+            const realParam = this.checkedReal;
+            console.log(this.checkedReal);
+            if (realParam) {
               this.assetId = this.getAssetId;
               const substationid = this.subStations[0].id;
               const object = {
@@ -206,8 +209,8 @@ export default {
                 siteId: 197,
                 categoryType: 'ASSET',
                 collectionName: 'provisioning',
-                elementName: substationid,
-                elementDescription: this.subStations[0].name,
+                elementName: `real_${substationid}`,
+                elementDescription: `Real_${this.subStations[0].name}`,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',
@@ -229,9 +232,43 @@ export default {
                   message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
                 });
               }
-              this.dialog = false;
+            }
+            const checkedPlc = this.checked;
+            if (checkedPlc) {
+              this.newSubstation = {};
+              this.assetId = this.getAssetId;
+              const substationid = this.subStations[0].id;
+              const object = {
+                customerId: 195,
+                siteId: 197,
+                categoryType: 'ASSET',
+                collectionName: 'provisioning',
+                elementName: `process_${substationid}`,
+                elementDescription: `Process_${this.subStations[0].name}`,
+                status: 'ACTIVE',
+                elementType: 'PROVISIONING',
+                uniqueTagName: '',
+                uniqueTagValue: 0,
+                uniqueTagStartValue: 0,
+                uniqueTagValuePrefix: '',
+                uniqueTagValueSuffix: '',
+                businessTimeTagsRequired: false,
+                optional: false,
+                assetBased: true,
+                uniqueTag: false,
+              };
+              let createdElement = false;
+              createdElement = await this.createElement(object);
+              if (createdElement) {
+                this.setAlert({
+                  show: true,
+                  type: 'success',
+                  message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
+                });
+              }
               this.$refs.form.reset();
             }
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,

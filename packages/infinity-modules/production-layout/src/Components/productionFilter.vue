@@ -23,28 +23,7 @@
         <v-card-text style="height:calc(100vh - 220px)">
           <v-autocomplete
             class="mt-5"
-            :items="lines"
-            outlined
-            dense
-            hide-details
-            v-model="selectedLine"
-            name="name"
-            label="Select Line"
-            item-text="name"
-            item-value="id"
-            return-object
-            clearable
-            @change="getSublinebyLine"
-          >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-          </v-autocomplete>
-          <v-autocomplete
-            class="mt-5"
-            :items="sublineByline"
+            :items="sublines"
             outlined
             dense
             hide-details
@@ -96,6 +75,26 @@
             item-value="id"
             clearable
             return-object
+            @change="getProcessBySubStation"
+          >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          </v-autocomplete>
+          <v-autocomplete
+            class="mt-5"
+            :items="processes"
+            outlined
+            dense
+            hide-details
+            v-model="selectedProcess"
+            name="name"
+            label="Select Process"
+            item-text="name"
+            item-value="id"
+            clearable
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -105,7 +104,8 @@
           </v-autocomplete>
         </v-card-text>
       </perfect-scrollbar>
-      <v-card-actions>
+      <v-card-actions
+       class="mt-10">
         <v-btn
           class="text-none"
           color="primary"
@@ -141,10 +141,11 @@ export default {
       selectedSubLine: null,
       selectedStation: null,
       selectedSubstation: null,
+      selectedProcess: null,
     };
   },
   computed: {
-    ...mapState('productionLayout', ['filter', 'lines', 'sublineByline', 'stationBySubline', 'subStationByStation']),
+    ...mapState('productionLayout', ['filter', 'lines', 'sublines', 'sublineByline', 'stationBySubline', 'subStationByStation', 'processes']),
     showFilter: {
       get() {
         return this.filter;
@@ -157,9 +158,9 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productionLayout', ['setFilter', 'toggleFilter']),
-    ...mapActions('productionLayout', ['getfilteredSubline', 'getfilteredStation', 'getfilteredSubStation', 'getSublines', 'getStations']),
-    getSublinebyLine() {
-      this.getfilteredSubline(`?query=lineid==${this.selectedLine.id}`);
+    ...mapActions('productionLayout', ['getfilteredSubline', 'getfilteredStation', 'getfilteredSubStation', 'getSublines', 'getStations', 'getSubStations', 'getProcesses']),
+    getProcessBySubStation() {
+      this.getProcesses(`?query=substationid=="${this.selectedSubstation.id}"`);
     },
     getStationBySubline() {
       this.getfilteredStation(`?query=sublineid=="${this.selectedSubLine.id}"`);
@@ -167,15 +168,42 @@ export default {
     getSubstationByStation() {
       this.getfilteredSubStation(`?query=stationid=="${this.selectedStation}"`);
     },
-    btnApply() {
-      let query = '?query=';
-      if (this.selectedLine && !this.selectedLine) {
-        query += `lineid==${this.selectedLine.id}}&`;
-        this.getSublines(query);
-      } else if (this.selectedLine && this.selectedSubLine
-         && !this.selectedStation && !this.selectedSubstation) {
-        query += `id=="${this.selectedSubLine.id}"`;
-        this.getSublines(query);
+    async btnApply() {
+      // let query = '?query=';
+      if (this.selectedSubLine && !this.selectedStation
+         && !this.selectedSubstation && !this.selectedProcess) {
+        const querySubline = `?query=id=="${this.selectedSubLine.id}"`;
+        await this.getSublines(querySubline);
+      } else if (this.selectedSubLine && this.selectedStation
+         && !this.selectedSubstation && !this.selectedProcess) {
+        const querySubline = `?query=id=="${this.selectedSubLine.id}"`;
+        await this.getSublines(querySubline);
+        const querystation = `?query=sublineid=="${this.selectedSubLine.id}"%26%26id=="${this.selectedStation}"`;
+        await this.getStations(querystation);
+        const querySubstation = `?query=stationid=="${this.selectedStation}"%26%26id=="${this.selectedSubstation.id}"`;
+        await this.getSubStations(querySubstation);
+        const queryProcess = `?query=substationid=="${this.selectedSubstation.id}"`;
+        await this.getProcesses(queryProcess);
+      } else if (this.selectedSubLine && this.selectedStation
+         && this.selectedSubstation && !this.selectedProcess) {
+        const querySubline = `?query=id=="${this.selectedSubLine.id}"`;
+        await this.getSublines(querySubline);
+        const querystation = `?query=sublineid=="${this.selectedSubLine.id}"%26%26id=="${this.selectedStation}"`;
+        await this.getStations(querystation);
+        const querySubstation = `?query=stationid=="${this.selectedStation}"%26%26id=="${this.selectedSubstation.id}"`;
+        await this.getSubStations(querySubstation);
+        const queryProcess = `?query=substationid=="${this.selectedSubstation.id}`;
+        await this.getProcesses(queryProcess);
+      } else if (this.selectedSubLine && this.selectedStation
+         && this.selectedSubstation && this.selectedProcess) {
+        const querySubline = `?query=id=="${this.selectedSubLine.id}"`;
+        await this.getSublines(querySubline);
+        const querystation = `?query=sublineid=="${this.selectedSubLine.id}"%26%26id=="${this.selectedStation}"`;
+        await this.getStations(querystation);
+        const querySubstation = `?query=stationid=="${this.selectedStation}"%26%26id=="${this.selectedSubstation.id}"`;
+        await this.getSubStations(querySubstation);
+        const queryProcess = `?query=substationid=="${this.selectedSubstation.id}"%26%26id=="${this.selectedProcess}"`;
+        await this.getProcesses(queryProcess);
       } else {
         this.setAlert({
           show: true,

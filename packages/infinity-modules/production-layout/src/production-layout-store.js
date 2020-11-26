@@ -166,9 +166,8 @@ export default ({
       );
       commit('setSublines', sublines);
     },
-    getStations: async ({ dispatch, commit, state }, query) => {
-      const { stations } = state;
-      const localStations = await dispatch(
+    getStations: async ({ dispatch, commit }, query) => {
+      const stations = await dispatch(
         'element/getRecords',
         {
           elementName: 'station',
@@ -176,7 +175,6 @@ export default ({
         },
         { root: true },
       );
-      stations.push(...localStations);
       commit('setStations', stations);
       return true;
     },
