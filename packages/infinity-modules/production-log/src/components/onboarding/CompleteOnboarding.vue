@@ -65,13 +65,17 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations('productionLog', ['setElementOnboarded']),
+    ...mapMutations('productionLog', ['setElementOnboarded', 'setDataOnboarded']),
     ...mapActions('productionLog', ['getMasterElements', 'getElementOnboardingState', 'createElements']),
     async complete() {
       this.creating = true;
       const success = await this.createElements();
+      console.log(success);
       if (success) {
+        this.setDataOnboarded(false);
+        this.setElementOnboarded(false);
         localStorage.removeItem('productionStep');
+        this.setDataOnboarded(true);
         this.setElementOnboarded(true);
       }
       this.creating = false;
