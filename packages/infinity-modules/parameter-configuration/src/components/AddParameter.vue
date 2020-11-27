@@ -443,9 +443,7 @@ export default {
           }];
           await this.createTagElement(object);
         }
-        console.log('1');
         if (parameterList) {
-          console.log('1');
           this.getParameterListRecords(this.getQuery());
           Object.keys(this.parameterObj).forEach((k) => {
             this.parameterObj[k] = '';

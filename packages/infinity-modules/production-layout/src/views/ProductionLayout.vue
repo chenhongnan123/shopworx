@@ -212,9 +212,6 @@ export default {
   watch: {
     sublines: {
       deep: true,
-      handler(val) {
-        console.log(val);
-      },
     },
   },
   async created() {

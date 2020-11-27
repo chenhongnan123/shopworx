@@ -198,9 +198,7 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            console.log(this.checkedReal);
             const realParam = this.checkedReal;
-            console.log(this.checkedReal);
             if (realParam) {
               this.assetId = this.getAssetId;
               const substationid = this.subStations[0].id;
