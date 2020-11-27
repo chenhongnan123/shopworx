@@ -112,6 +112,7 @@ export default ({
                 return null;
               })
               .filter((e) => e !== null);
+            items.sort((a, b) => a.title.localeCompare(b.title));
             return [header, ...items];
           })
           .flat();

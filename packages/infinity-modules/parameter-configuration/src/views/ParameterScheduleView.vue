@@ -876,37 +876,6 @@ export default {
           await this.getParameterListRecords(this.getQuery());
           let tagList = [];
           await this.getSubStationIdElement(`process_${this.substationValue}`);
-          // tagList.push({
-          //   assetId: 4,
-          //   tagName: 'mainid',
-          //   tagDescription: 'mainid',
-          //   emgTagType: 'String',
-          //   tagOrder: 1,
-          //   connectorId: 2,
-          //   defaultValue: '',
-          //   elementId: this.subStationElementDeatils.element.id,
-          //   hide: false,
-          //   identifier: true,
-          //   interactionType: '',
-          //   mode: '',
-          //   required: true,
-          //   sampling: true,
-          //   lowerRangeValue: 1,
-          //   upperRangeValue: 1,
-          //   alarmFlag: true,
-          //   alarmId: 1,
-          //   derivedField: false,
-          //   derivedFunctionName: '',
-          //   derivedFieldType: '',
-          //   displayType: true,
-          //   displayUnit: 1,
-          //   isFamily: true,
-          //   familyQueryTag: '',
-          //   filter: true,
-          //   filterFromElementName: '',
-          //   filterFromTagName: '',
-          //   filterQuery: '',
-          // });
           data.forEach((item) => {
             if (Number(item.parametercategory) === 15
             || Number(item.parametercategory) === 17

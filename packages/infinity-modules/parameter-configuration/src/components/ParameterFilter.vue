@@ -339,7 +339,6 @@ export default {
       this.substation = '';
     },
     closeFilter() {
-      debugger;
       this.getParameterListRecords('?pagenumber=1&pagesize=10');
       this.toggleFilter();
       this.selectedParameterName = '';

@@ -169,7 +169,6 @@ export default {
       this.getfilteredSubStation(`?query=stationid=="${this.selectedStation}"`);
     },
     async btnApply() {
-      // let query = '?query=';
       if (this.selectedSubLine && !this.selectedStation
          && !this.selectedSubstation && !this.selectedProcess) {
         const querySubline = `?query=id=="${this.selectedSubLine.id}"`;
@@ -214,7 +213,6 @@ export default {
     },
     async btnReset() {
       this.toggleFilter();
-      // this.selectedLine = '';
       this.selectedSubLine = '';
       this.selectedStation = '';
       this.selectedSubstation = '';

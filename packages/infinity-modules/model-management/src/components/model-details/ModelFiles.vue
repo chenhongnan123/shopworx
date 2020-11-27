@@ -113,7 +113,6 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
     async uploadFiles() {
-      // console.log(this.$refs.dropzone);
       this.setUploadingFiles(true);
       this.$refs.dropzone.startQueueProcessing();
     },

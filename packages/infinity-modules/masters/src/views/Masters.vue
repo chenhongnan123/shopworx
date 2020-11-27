@@ -2,7 +2,7 @@
   <div>
     <settings-layout
       v-if="!loading"
-      :items="this.itemSorted"
+      :items="this.masterItems"
       headerTitle="Master Data"
       windowRouteName="masterWindow"
     >
@@ -36,16 +36,9 @@ export default {
     await this.getElements();
     await this.getAssets();
     this.loading = false;
-    this.ascOrder();
   },
   methods: {
     ...mapActions('masters', ['getElements', 'getAssets']),
-    async ascOrder() {
-      const res = this.masterItems.sort((a, b) => a.title.localeCompare(b.title));
-      const first = res.pop();
-      res.unshift(first);
-      this.itemSorted = res;
-    },
   },
 };
 </script>

@@ -30,10 +30,6 @@
               ></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">
-              <!-- <v-text-field
-                label="Line Description"
-                v-model="selectedLine.description"
-              ></v-text-field> -->
             </v-col>
           </template>
           <div style="float:right"
@@ -209,11 +205,6 @@ export default {
   computed: {
     ...mapState('productionLayout', ['lines', 'subStations', 'stations', 'sublines', 'processes']),
   },
-  watch: {
-    sublines: {
-      deep: true,
-    },
-  },
   async created() {
     const success = await this.getLines();
     if (success) {
@@ -239,9 +230,6 @@ export default {
       'setSelectedLine',
       'toggleFilter',
     ]),
-    updateLine() {
-      alert('changes');
-    },
     async downloadFromToPLC() {
       this.socket = socketioclient.connect('http://:10190');
       this.socket.on('connect', () => {
