@@ -146,7 +146,6 @@ export default {
         });
         await this.getReworkList('?query=overallresult!="1"');
         this.dialog = false;
-        // this.rework = [];
         this.setDisableSave(false);
         this.setSingleNgCodeConfig([]);
         this.setComponentList([]);
