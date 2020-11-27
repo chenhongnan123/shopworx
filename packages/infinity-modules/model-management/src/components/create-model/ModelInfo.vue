@@ -8,7 +8,9 @@
         label="Model name*"
         prepend-icon="mdi-memory"
         :disabled="saving || savingAndClosing"
-        :rules="[v => !!v || 'Model name is required']"
+        :rules="[(v) => !!v || 'Model name is required',
+          (v) => (v && v.length <= 20) || 'Name must be less than 20 characters']"
+        :counter="20"
       ></v-text-field>
       <v-textarea
         dense
@@ -19,6 +21,9 @@
         v-model="description"
         label="Model description goes here"
         :disabled="saving || savingAndClosing"
+        :rules="[(v) => (v.length <= 200) ||
+           'Description must be less than 200 characters']"
+        :counter="200"
       ></v-textarea>
       <div class="caption">*Required field</div>
     </v-card-text>
