@@ -29,10 +29,26 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
-            <v-col cols="1" md="1" lg="1">
-              <SelectedLineUpdate />
+            <v-col cols="2" md="2" lg="2">
             </v-col>
           </template>
+          <div style="float:right"
+          class="mt-5">
+          <v-spacer></v-spacer>
+           <SelectedLineUpdate />
+           <AddLine />
+           <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="toggleFilter"
+            >
+              <v-icon small left>mdi-filter-variant</v-icon>
+              Filters
+            </v-btn>
+            <ProductionFilter />
+          </div>
         </v-row>
            <v-row class="mb-6" v-if="selectedLine"
            no-gutters>
@@ -68,7 +84,7 @@
                   class="pa-2"
                   tile
                   outlined>
-                  <span class="ml-0">Process</span>
+                  <span class="ml-0">Sub-Process</span>
                   <AddProcess />
                   </v-card>
                 </v-col>
@@ -93,8 +109,7 @@
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
-                <div v-bind:style="
-                 substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
+                <div>
                 {{ substation.name }}
                 <DeleteSubstation :substation="substation" />
                 <UpdateSubstation :substation="substation" :lineid="selectedLine.id"/>
@@ -128,6 +143,7 @@ import AddSubline from '../Components/AddSubline.vue';
 import AddStation from '../Components/AddStation.vue';
 import AddSubstation from '../Components/AddSubstation.vue';
 import AddProcess from '../Components/AddProcess.vue';
+import AddLine from '../Components/AddLine.vue';
 import UpdateSubline from '../Components/UpdateSubline.vue';
 import UpdateSubstation from '../Components/UpdateSubstation.vue';
 import UpdateStation from '../Components/UpdateStation.vue';
@@ -137,10 +153,12 @@ import DeleteStation from '../Components/DeleteStation.vue';
 import DeleteSubstation from '../Components/DeleteSubstation.vue';
 import DeleteProcess from '../Components/DeleteProcess.vue';
 import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
+import ProductionFilter from '../Components/ProductionFilter.vue';
 
 export default {
   name: 'ProductionLayout',
   components: {
+    AddLine,
     AddSubline,
     AddStation,
     AddSubstation,
@@ -154,6 +172,7 @@ export default {
     DeleteSubstation,
     DeleteProcess,
     SelectedLineUpdate,
+    ProductionFilter,
   },
   data() {
     return {
@@ -192,9 +211,6 @@ export default {
       [this.selectedLine] = this.lines;
       await this.onLineChange();
     }
-    setInterval(() => {
-      this.downloadFromToPLC();
-    }, 10000);
   },
   methods: {
     ...mapActions('productionLayout', ['getLines',
@@ -209,6 +225,7 @@ export default {
       'setSubStations',
       'setProcesses',
       'setSelectedLine',
+      'toggleFilter',
     ]),
     async downloadFromToPLC() {
       this.socket = socketioclient.connect('http://:10190');
@@ -230,7 +247,6 @@ export default {
             }
           });
       });
-      await this.downloadToPLC(ObJ);
     },
     setStation(station) {
       this.selectedStation = station;

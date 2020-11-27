@@ -1,6 +1,6 @@
 <template>
   <portal to="app-header">
-    ML model management
+    ML Model Management
   </portal>
 </template>
 

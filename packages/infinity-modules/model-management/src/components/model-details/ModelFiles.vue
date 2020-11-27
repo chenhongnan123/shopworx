@@ -12,7 +12,7 @@
           No file available
         </template>
         <template #item.name="{ item }">
-          {{ item.originalFilename }}.{{item.extension}}
+          {{ item.originalFilename }}.{{ item.extension }}
         </template>
         <template #item.actions="{ item }">
           <!-- <v-tooltip bottom>
