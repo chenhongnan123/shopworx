@@ -113,8 +113,7 @@
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
-                <div v-bind:style="
-                 substation.stationcolor===0 ? 'color: red;' : 'color: green;' ">
+                <div>
                 {{ substation.name }}
                 <DeleteSubstation :substation="substation" />
                 <UpdateSubstation :substation="substation" :lineid="selectedLine.id"/>
@@ -224,9 +223,9 @@ export default {
       [this.selectedLine] = this.lines;
       await this.onLineChange();
     }
-    setInterval(() => {
-      this.downloadFromToPLC();
-    }, 10000);
+    // setInterval(() => {
+    //   this.downloadFromToPLC();
+    // }, 10000);
   },
   methods: {
     ...mapActions('productionLayout', ['getLines',
