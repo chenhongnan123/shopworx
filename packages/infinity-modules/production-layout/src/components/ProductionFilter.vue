@@ -137,6 +137,7 @@ export default {
   data() {
     return {
       saving: false,
+      loading: false,
       selectedSubLine: null,
       selectedStation: null,
       selectedSubstation: null,

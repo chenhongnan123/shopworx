@@ -139,21 +139,21 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
 import socketioclient from 'socket.io-client';
-import AddSubline from '../Components/AddSubline.vue';
-import AddStation from '../Components/AddStation.vue';
-import AddSubstation from '../Components/AddSubstation.vue';
-import AddProcess from '../Components/AddProcess.vue';
-import AddLine from '../Components/AddLine.vue';
-import UpdateSubline from '../Components/UpdateSubline.vue';
-import UpdateSubstation from '../Components/UpdateSubstation.vue';
-import UpdateStation from '../Components/UpdateStation.vue';
-import UpdateProcess from '../Components/UpdateProcess.vue';
-import DeleteSubline from '../Components/DeleteSubline.vue';
-import DeleteStation from '../Components/DeleteStation.vue';
-import DeleteSubstation from '../Components/DeleteSubstation.vue';
-import DeleteProcess from '../Components/DeleteProcess.vue';
-import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
-import ProductionFilter from '../Components/ProductionFilter.vue';
+import AddSubline from '../components/AddSubline.vue';
+import AddStation from '../components/AddStation.vue';
+import AddSubstation from '../components/AddSubstation.vue';
+import AddProcess from '../components/AddProcess.vue';
+import AddLine from '../components/AddLine.vue';
+import UpdateSubline from '../components/UpdateSubline.vue';
+import UpdateSubstation from '../components/UpdateSubstation.vue';
+import UpdateStation from '../components/UpdateStation.vue';
+import UpdateProcess from '../components/UpdateProcess.vue';
+import DeleteSubline from '../components/DeleteSubline.vue';
+import DeleteStation from '../components/DeleteStation.vue';
+import DeleteSubstation from '../components/DeleteSubstation.vue';
+import DeleteProcess from '../components/DeleteProcess.vue';
+import SelectedLineUpdate from '../components/SelectedLineUpdate.vue';
+import ProductionFilter from '../components/ProductionFilter.vue';
 
 export default {
   name: 'ProductionLayout',
