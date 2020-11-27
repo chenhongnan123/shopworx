@@ -18,6 +18,6 @@ module.exports = {
     'import/extensions': 'off',
     'no-param-reassign': 'off',
     'vue/valid-v-slot': 'off',
-    'vue/vue/no-mutating-props': 'off',
+    'vue/no-mutating-props': 'off',
   },
 };
