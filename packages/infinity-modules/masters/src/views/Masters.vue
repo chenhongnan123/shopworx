@@ -2,7 +2,7 @@
   <div>
     <settings-layout
       v-if="!loading"
-      :items="this.masterItems"
+      :items="masterItems"
       headerTitle="Master Data"
       windowRouteName="masterWindow"
     >

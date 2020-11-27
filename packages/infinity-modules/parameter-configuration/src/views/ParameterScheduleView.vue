@@ -662,7 +662,6 @@ export default {
           });
         }
       });
-      // await this.downloadToPLC(object);
     },
     getQuery() {
       let query = '?query=';

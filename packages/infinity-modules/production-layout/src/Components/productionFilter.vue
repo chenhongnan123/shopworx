@@ -131,13 +131,12 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: 'productionFilter',
+  name: 'ProductionFilter',
   created() {
   },
   data() {
     return {
       saving: false,
-      // selectedLine: null,
       selectedSubLine: null,
       selectedStation: null,
       selectedSubstation: null,

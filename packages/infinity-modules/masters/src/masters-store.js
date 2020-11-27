@@ -1,4 +1,5 @@
 import { set } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
@@ -112,7 +113,7 @@ export default ({
                 return null;
               })
               .filter((e) => e !== null);
-            items.sort((a, b) => a.title.localeCompare(b.title));
+            sortArray(items, 'title');
             return [header, ...items];
           })
           .flat();

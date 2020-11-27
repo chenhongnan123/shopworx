@@ -47,7 +47,7 @@
               <v-icon small left>mdi-filter-variant</v-icon>
               Filters
             </v-btn>
-            <productionFilter />
+            <ProductionFilter />
           </div>
         </v-row>
            <v-row class="mb-6" v-if="selectedLine"
@@ -153,7 +153,7 @@ import DeleteStation from '../Components/DeleteStation.vue';
 import DeleteSubstation from '../Components/DeleteSubstation.vue';
 import DeleteProcess from '../Components/DeleteProcess.vue';
 import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
-import productionFilter from '../Components/productionFilter.vue';
+import ProductionFilter from '../Components/ProductionFilter.vue';
 
 export default {
   name: 'ProductionLayout',
@@ -172,7 +172,7 @@ export default {
     DeleteSubstation,
     DeleteProcess,
     SelectedLineUpdate,
-    productionFilter,
+    ProductionFilter,
   },
   data() {
     return {
@@ -211,9 +211,6 @@ export default {
       [this.selectedLine] = this.lines;
       await this.onLineChange();
     }
-    // setInterval(() => {
-    //   this.downloadFromToPLC();
-    // }, 10000);
   },
   methods: {
     ...mapActions('productionLayout', ['getLines',
@@ -250,7 +247,6 @@ export default {
             }
           });
       });
-      // await this.downloadToPLC(ObJ);
     },
     setStation(station) {
       this.selectedStation = station;
