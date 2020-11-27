@@ -101,7 +101,7 @@ export default ({
         list = groups
           .map((group) => {
             const header = { header: group.toLowerCase() };
-            const items = provisioningElements
+            const items = sortArray(provisioningElements, 'elementDescription')
               .map((elem) => {
                 if (elem.categoryType === group) {
                   return {
@@ -113,7 +113,6 @@ export default ({
                 return null;
               })
               .filter((e) => e !== null);
-            sortArray(items, 'title');
             return [header, ...items];
           })
           .flat();

@@ -3,19 +3,19 @@
   "error": {  
     "ALREADY_EXSIST": "Name already exists",
     "ALREADY_EXSIST_NO": "Number already exists",
-    "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub station Already Assigned",
-    "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Station Already Assigned",    
-    "Number Required": "Number Field Should Not be Empty",
+    "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub station already assigned",
+    "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Station already assigned",    
+    "NUMBER_REQUIRED": "Number Field Should Not be Empty",
     "ERROR_CREATING_SUBLINE": "Error in creating Subline",
-    "SELECT_INPUT": "Select Atleast one Input"
+    "SELECT_INPUT": "Select atleast one input"
   },
   "success": {
-    "No_CHANGE_EXSIST_NO": "Again Saved with Existing Number",
-    "INITIAL_SUBSTATION_ASSIGNED": "This Substation is Updated as Initial Substation",
+    "No_CHANGE_EXSIST_NO": "Again Saved with existing number",
+    "INITIAL_SUBSTATION_ASSIGNED": "This Substation is Updated as initial substation",
     "FINAL_SUBSTATION_ASSIGNED": "This Substation is Updated as Final Substation",
-    "INITIAL_SUBSTATION_REMOVED": "This is Not Initial Sub Station Now",
-    "FINAL_SUBSTATION_REMOVED": "This is Not Final Sub Station Now",
-    "STATION_CREATED": "Station created, Now Next you can Add Substation",
+    "INITIAL_SUBSTATION_REMOVED": "This is not initial Sub Station now",
+    "FINAL_SUBSTATION_REMOVED": "This is not final Sub Station now",
+    "STATION_CREATED": "Station created, now next you can Add Substation",
     "SUBLINE_CREATED": "Subline created",
     "SUB-STATION_CREATED": "Sub-Station created",
     "PROCESS_CREATED": "Process created",
