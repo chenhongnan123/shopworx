@@ -29,6 +29,7 @@ export default ({
   namespaced: true,
   state: {
     lines: [],
+    searchData: '',
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,

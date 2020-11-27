@@ -10,6 +10,7 @@
     "MODEL_DELETE": "Model deleted!"
   },
   "error": {
+    "FILES_DEPLICATE": "Duplicate files, please check again",
     "PARAMETER_CREATE": "Cannot add input parameter. Please retry!",
     "PARAMETER_DELETE": "Cannot remove input parameter. Please retry!",
     "TRANSFORMATION_CREATE": "Cannot add output transformation. Please retry!",
