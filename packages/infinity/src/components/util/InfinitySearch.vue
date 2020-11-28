@@ -3,75 +3,76 @@
     v-model="menu"
     offset-y
     attach
+    rounded="lg"
   >
     <template #activator="{ on }">
-      <v-text-field
-        flat
-        dense
-        rounded
-        v-on="on"
-        outlined
-        id="search"
-        single-line
-        ref="search"
-        class="mr-2"
-        hide-details
-        :label="$t('modules.search')"
-        @blur="onBlur"
-        v-model="search"
-        @focus="onFocus"
-        autocomplete="off"
-        @keydown.esc="onEsc"
-        prepend-inner-icon="$search"
-      ></v-text-field>
+      <v-responsive :max-width="380">
+        <v-text-field
+          flat
+          dense
+          rounded
+          v-on="on"
+          outlined
+          id="search"
+          single-line
+          ref="search"
+          class="mr-2"
+          hide-details
+          :label="$t('modules.search')"
+          @blur="onBlur"
+          v-model="search"
+          @focus="onFocus"
+          autocomplete="off"
+          @keydown.esc="onEsc"
+          prepend-inner-icon="$search"
+        ></v-text-field>
+      </v-responsive>
     </template>
-    <v-card>
-      <v-list dense>
-        <template v-if="insightResults.length">
-          <v-subheader>INSIGHTS</v-subheader>
-          <v-list-item
-            v-for="(result, index) in insightResults"
-            :key="`insight-${index}`"
-            @click="executeInsight(result)"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-atom-variant</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ result.name }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-        <template v-if="noText">
-          <v-subheader>INSIGHTS</v-subheader>
-          <v-list-item
-            v-for="(result, index) in insights"
-            :key="`rinisght-${index}`"
-            @click="executeInsight(result)"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-atom-variant</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ result.name }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-        <template v-else-if="noResults">
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>
-                No result for '{{ search }}'
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
+    <v-list dense>
+      <template v-if="insightResults.length">
+        <v-subheader>INSIGHTS</v-subheader>
+        <v-list-item
+          v-for="(result, index) in insightResults"
+          :key="`insight-${index}`"
+          @click="executeInsight(result)"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-atom-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ result.name }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      <template v-if="noText">
+        <v-subheader>INSIGHTS</v-subheader>
+        <v-list-item
+          v-for="(result, index) in insights"
+          :key="`rinisght-${index}`"
+          @click="executeInsight(result)"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-atom-variant</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ result.name }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      <template v-else-if="noResults">
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>
+              No result for '{{ search }}'
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
   </v-menu>
 </template>
 

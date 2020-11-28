@@ -57,3 +57,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-toolbar .v-toolbar__extension {
+  z-index: -1;
+}
+</style>
