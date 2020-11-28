@@ -41,8 +41,6 @@ import DowntimeToolbar from '../components/DowntimeToolbar.vue';
 import DowntimeDrawer from '../components/DowntimeDrawer.vue';
 import DowntimeList from '../components/DowntimeList.vue';
 
-const CONFIG_LOC = 'downtimeConfig';
-
 export default {
   name: 'DowntimeLog',
   components: {
@@ -59,11 +57,11 @@ export default {
   },
   computed: {
     ...mapState('downtimeLog', ['onboarded']),
-    ...mapState('webApp', ['config']),
+    ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {
     this.loading = true;
-    const config = localStorage.getItem(CONFIG_LOC);
+    const config = localStorage.getItem(this.storageLocation.downtime);
     if (config) {
       this.setConfig(JSON.parse(config));
     }
@@ -103,7 +101,7 @@ export default {
     config: {
       deep: true,
       handler(val) {
-        localStorage.setItem(CONFIG_LOC, JSON.stringify(val));
+        localStorage.setItem(this.storageLocation.downtime, JSON.stringify(val));
       },
     },
   },

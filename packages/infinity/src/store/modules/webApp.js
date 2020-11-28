@@ -10,11 +10,21 @@ export default ({
       filters: {},
       sort: {},
     },
+    storageLocation: {
+      planning: 'planningConfig',
+      production: 'productionConfig',
+      downtime: 'downtimeConfig',
+    },
   },
   mutations: {
     setAppSchema: set('appSchema'),
     setActiveAppId: set('activeAppId'),
     setConfig: set('config'),
+    resetConfig: (state) => {
+      const { config } = state;
+      Vue.set(config, 'filters', {});
+      Vue.set(config, 'sort', {});
+    },
     setFilter: (state, { field, value }) => {
       const { config: { filters } } = state;
       Vue.set(filters, field, value);

@@ -41,8 +41,6 @@ import ProductionToolbar from '../components/ProductionToolbar.vue';
 import ProductionDrawer from '../components/ProductionDrawer.vue';
 import ProductionList from '../components/ProductionList.vue';
 
-const CONFIG_LOC = 'productionConfig';
-
 export default {
   name: 'ProductionLog',
   components: {
@@ -62,11 +60,11 @@ export default {
       'dataOnboarded',
       'elementOnboarded',
     ]),
-    ...mapState('webApp', ['config']),
+    ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {
     this.loading = true;
-    const config = localStorage.getItem(CONFIG_LOC);
+    const config = localStorage.getItem(this.storageLocation.production);
     if (config) {
       this.setConfig(JSON.parse(config));
     }
@@ -124,7 +122,7 @@ export default {
     config: {
       deep: true,
       handler(val) {
-        localStorage.setItem(CONFIG_LOC, JSON.stringify(val));
+        localStorage.setItem(this.storageLocation.production, JSON.stringify(val));
       },
     },
   },

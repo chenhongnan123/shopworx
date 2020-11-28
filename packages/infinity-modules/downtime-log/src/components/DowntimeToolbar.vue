@@ -15,7 +15,7 @@
             {{ downtimeCount }} records <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
           <span v-if="$vuetify.breakpoint.smAndUp">
-            {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
+            {{ machine }} | {{ shift }} - {{ date }}
           </span>
         </span>
       </div>
@@ -57,9 +57,6 @@ export default {
       'toggleSelection',
     ]),
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
-    duration() {
-      return this.selectedDuration ? this.selectedDuration.name : '';
-    },
     machine() {
       return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
