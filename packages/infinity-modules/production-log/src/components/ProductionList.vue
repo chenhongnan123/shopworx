@@ -24,10 +24,8 @@
           class="mt-2"
           v-for="(machineData, machineKey, j) in shiftData"
         >
-          <span class="title">
+          <div class="title d-inline-block">
             {{ machineKey }}
-          </span>
-          <span class="title float-right mr-4">
             <assign-operator
               :shift="shiftKey"
               :machine="machineKey"
@@ -36,17 +34,16 @@
                 operatorname: machineData.operatorname,
               }"
             />
-          </span>
-          <div
-            :key="k"
-            class="mb-4 mt-2"
-            v-for="(productionList, k) in machineData.production"
-          >
-            <production-list-item
-              :production="productionList"
-              class="mr-4"
-            />
           </div>
+          <v-data-table
+            :items="machineData.production"
+            :headers="headers"
+            hide-default-footer
+          >
+            <template #item="{ item }">
+              <production-list-item :production="item" />
+            </template>
+          </v-data-table>
         </div>
       </div>
     </template>
@@ -69,6 +66,25 @@ export default {
     ProductionNoRecords,
     ProductionListItem,
     AssignOperator,
+  },
+  data() {
+    return {
+      headers: [
+        { text: 'Plan', value: 'planid' },
+        {
+          text: 'Part',
+          value: 'partname',
+          width: '25%',
+        },
+        { text: 'Production start', value: 'firstcycle' },
+        { text: 'Production end', value: 'lastcycle' },
+        { text: 'Produced', value: 'produced' },
+        { text: 'Accepted', value: 'accepted' },
+        { text: 'Rejected', value: 'rejected' },
+        { text: 'Rework', value: 'rework' },
+        { text: 'Scrap (in Kg)', value: 'scrap' },
+      ],
+    };
   },
   computed: {
     ...mapState('productionLog', [

@@ -12,7 +12,7 @@
         small
         v-on="on"
         color="primary"
-        class="text-none ml-4 mb-1"
+        class="text-none mb-1"
       >
         <v-icon>mdi-update</v-icon>
       </v-btn>

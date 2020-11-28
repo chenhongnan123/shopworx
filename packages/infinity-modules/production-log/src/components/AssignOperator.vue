@@ -1,32 +1,35 @@
 <template>
-  <v-combobox
-    dense
-    outlined
-    hide-details
-    return-object
-    label="Operator"
-    :loading="loading"
-    :disabled="loading"
-    :items="operators"
-    item-text="operatorname"
-    item-value="operatorcode"
-    v-model="selectedOperator"
-    prepend-inner-icon="mdi-account-hard-hat"
-  >
-    <template #selection="data">
-      {{ data.item.operatorcode }} | {{ data.item.operatorname }}
-    </template>
-    <template #item="data">
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ data.item.operatorname }}
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          {{ data.item.operatorcode }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
-    </template>
-  </v-combobox>
+  <v-responsive :max-width="280">
+    <v-combobox
+      dense
+      filled
+      hide-details
+      single-line
+      return-object
+      label="Operator"
+      :loading="loading"
+      :disabled="loading"
+      :items="operators"
+      item-text="operatorname"
+      item-value="operatorcode"
+      v-model="selectedOperator"
+      prepend-inner-icon="mdi-account-hard-hat"
+    >
+      <template #selection="data">
+        {{ data.item.operatorcode }} {{ data.item.operatorname }}
+      </template>
+      <template #item="data">
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ data.item.operatorname }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ data.item.operatorcode }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </template>
+    </v-combobox>
+  </v-responsive>
 </template>
 
 <script>

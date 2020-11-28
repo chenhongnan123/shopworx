@@ -1,80 +1,52 @@
 <template>
-  <v-card outlined>
-    <v-card-title>
+  <tr>
+    <td>
+      {{ production.planid }}
+    </td>
+    <td class="truncate" :title="production.partname">
       {{ production.partname }}
-      <v-spacer></v-spacer>
+    </td>
+    <td>
       {{ new Date(production.firstcycle).toLocaleTimeString('en-GB') }}
-      to
+    </td>
+    <td>
       {{ new Date(production.lastcycle).toLocaleTimeString('en-GB') }}
-    </v-card-title>
-    <v-card-text>
-      <v-row no-gutters>
-        <v-col cols="12" sm="6">
-          <div class="body-2">
-            Plan
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2">
-            {{ production.planid }}
-          </div>
-          <div class="body-2">
-            Shift
-          </div>
-          <div class="text-uppercase title font-weight-regular mb-2">
-            {{ production.shift }}
-          </div>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <v-row no-gutters>
-            <v-col cols="12" sm="4">
-              <div class="body-2">
-                Produced
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 info--text">
-                {{ production.produced }}
-              </div>
-            </v-col>
-            <v-col cols="12" sm="4">
-              <div class="body-2">
-                Accepted
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 success--text">
-                {{ production.accepted }}
-              </div>
-            </v-col>
-          </v-row>
-          <v-row no-gutters>
-            <v-col cols="12" sm="4">
-              <div class="body-2">
-                Rejected
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                {{ production.rejected }}
-                <assign-rejections :production="production" />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="4">
-              <div class="body-2">
-                Rework
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 error--text">
-                {{ production.rework }}
-                <assign-rework :production="production" />
-              </div>
-            </v-col>
-            <v-col cols="12" sm="4">
-              <div class="body-2">
-                Scrap (in Kg)
-              </div>
-              <div class="text-uppercase title font-weight-regular mb-2 warning--text">
-                {{ parseFloat(production.scrap).toFixed(2) }}
-                <assign-scrap :production="production" />
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
+    </td>
+    <td>
+      <span class="info--text">
+        {{ production.produced }}
+      </span>
+    </td>
+    <td>
+      <span class="success--text">
+        {{ production.accepted }}
+      </span>
+    </td>
+    <td>
+      <div class="error--text d-inline-block mt-1">
+        {{ production.rejected }}
+      </div>
+      <span class="float-right">
+        <assign-rejections :production="production" />
+      </span>
+    </td>
+    <td>
+      <div class="error--text d-inline-block mt-1">
+        {{ production.rework }}
+      </div>
+      <span class="float-right">
+        <assign-rework :production="production" />
+      </span>
+    </td>
+    <td>
+      <div class="warning--text d-inline-block mt-1">
+        {{ parseFloat(production.scrap).toFixed(2) }}
+      </div>
+      <span class="float-right">
+        <assign-scrap :production="production" />
+      </span>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -95,14 +67,14 @@ export default {
       required: true,
     },
   },
-  computed: {
-    duration() {
-      const d = this.production.productionduration;
-      const h = Math.floor(d / 3600);
-      const m = Math.floor((d % 3600) / 60);
-      const s = Math.floor((d % 3600) % 60);
-      return `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
-    },
-  },
 };
 </script>
+
+<style>
+.truncate {
+  max-width: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
