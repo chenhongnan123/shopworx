@@ -9,9 +9,11 @@
       <div class="mt-1">
         <span class="title">
           <span v-if="productionCount">
-            {{ productionCount }} records |
+            {{ productionCount }} records <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
-          {{ machine }} | {{ shift }} - {{ date }}
+          <span v-if="$vuetify.breakpoint.smAndUp">
+            {{ machine }} | {{ shift }} - {{ date }}
+          </span>
         </span>
       </div>
       <v-btn

@@ -40,8 +40,52 @@
             :headers="headers"
             hide-default-footer
           >
-            <template #item="{ item }">
-              <production-list-item :production="item" />
+            <!-- eslint-disable-next-line -->
+            <template #item.firstcycle="{ item }">
+              {{ new Date(item.firstcycle).toLocaleTimeString('en-GB') }}
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.lastcycle="{ item }">
+              {{ new Date(item.lastcycle).toLocaleTimeString('en-GB') }}
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.produced="{ item }">
+              <span class="info--text">
+                {{ item.produced }}
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.accepted="{ item }">
+              <span class="success--text">
+                {{ item.accepted }}
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.rejected="{ item }">
+              <div class="error--text d-inline-block mt-1">
+                {{ item.rejected }}
+              </div>
+              <span class="float-right">
+                <assign-rejections :production="item" />
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.rework="{ item }">
+              <div class="warning--text d-inline-block mt-1">
+                {{ item.rework }}
+              </div>
+              <span class="float-right">
+                <assign-rework :production="item" />
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.scrap="{ item }">
+              <div class="warning--text d-inline-block mt-1">
+                {{ parseFloat(item.scrap).toFixed(2) }}
+              </div>
+              <span class="float-right">
+                <assign-scrap :production="item" />
+              </span>
             </template>
           </v-data-table>
         </div>
@@ -55,8 +99,10 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import ProductionLoading from './ProductionLoading.vue';
 import ProductionError from './ProductionError.vue';
 import ProductionNoRecords from './ProductionNoRecords.vue';
-import ProductionListItem from './ProductionListItem.vue';
 import AssignOperator from './AssignOperator.vue';
+import AssignRejections from './AssignRejections.vue';
+import AssignRework from './AssignRework.vue';
+import AssignScrap from './AssignScrap.vue';
 
 export default {
   name: 'ProductionList',
@@ -64,8 +110,10 @@ export default {
     ProductionLoading,
     ProductionError,
     ProductionNoRecords,
-    ProductionListItem,
     AssignOperator,
+    AssignRejections,
+    AssignRework,
+    AssignScrap,
   },
   data() {
     return {
@@ -91,7 +139,6 @@ export default {
       'loading',
       'error',
       'selectedDate',
-      'operators',
     ]),
     ...mapGetters('productionLog', ['production']),
   },
@@ -110,3 +157,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.truncate {
+  max-width: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

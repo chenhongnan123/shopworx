@@ -44,7 +44,8 @@
             :items="scraps"
             v-if="scraps.length"
           >
-            <template v-slot:item.scrapweight="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.scrapweight="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -55,7 +56,7 @@
                 :return-value.sync="item.scrapweight"
               >
                 {{ item.scrapweight }}
-                <template v-slot:input>
+                <template #input>
                   <v-text-field
                     v-model="item.scrapweight"
                     type="number"
@@ -65,7 +66,8 @@
                 </template>
               </v-edit-dialog>
             </template>
-            <template v-slot:item.reasonname="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.reasonname="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -76,7 +78,7 @@
                 :return-value.sync="item.reasonname"
               >
                 {{ item.reasonname }}
-                <template v-slot:input>
+                <template #input>
                   <v-autocomplete
                     single-line
                     label="Reason"
@@ -88,7 +90,8 @@
                 </template>
               </v-edit-dialog>
             </template>
-            <template v-slot:item.remark="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.remark="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -99,7 +102,7 @@
                 :return-value.sync="item.remark"
               >
                 {{ item.remark }}
-                <template v-slot:input>
+                <template #input>
                   <v-textarea
                     v-model="item.remark"
                     label="Remark"
