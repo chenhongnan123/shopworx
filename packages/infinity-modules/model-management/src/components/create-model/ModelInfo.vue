@@ -8,7 +8,9 @@
         label="Model name*"
         prepend-icon="mdi-memory"
         :disabled="saving || savingAndClosing"
-        :rules="[v => !!v || 'Model name is required']"
+        :rules="[(v) => !!v || 'Model name is required',
+          (v) => (v && v.length <= 20) || 'Name must be less than 20 characters']"
+        :counter="20"
       ></v-text-field>
       <v-textarea
         dense
@@ -19,6 +21,9 @@
         v-model="description"
         label="Model description goes here"
         :disabled="saving || savingAndClosing"
+        :rules="[(v) => (v.length <= 200) ||
+           'Description must be less than 200 characters']"
+        :counter="200"
       ></v-textarea>
       <div class="caption">*Required field</div>
     </v-card-text>
@@ -57,7 +62,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModelInfo',
@@ -70,7 +75,13 @@ export default {
       savingAndClosing: false,
     };
   },
+  computed: {
+    ...mapState('modelManagement', [
+      'models',
+    ]),
+  },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', ['createNewModel']),
     clear() {
       this.name = '';
@@ -84,11 +95,23 @@ export default {
       this.$emit('on-cancel');
     },
     async createModel() {
-      const payload = {
-        modelname: this.name,
-        modeldescription: this.description,
-      };
-      return this.createNewModel(payload);
+      let flag = false;
+      const checkNames = this.models.filter((f) => f.name === this.name);
+      if (checkNames.length === 0) {
+        const payload = {
+          modelname: this.name,
+          modeldescription: this.description,
+        };
+        flag = this.createNewModel(payload);
+      } else {
+        flag = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_CREATE_NAME',
+        });
+      }
+      return flag;
     },
     async saveAndExit() {
       if (this.isValid) {

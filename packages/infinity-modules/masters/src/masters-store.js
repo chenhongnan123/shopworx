@@ -1,4 +1,5 @@
 import { set } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
@@ -100,7 +101,7 @@ export default ({
         list = groups
           .map((group) => {
             const header = { header: group.toLowerCase() };
-            const items = provisioningElements
+            const items = sortArray(provisioningElements, 'elementDescription')
               .map((elem) => {
                 if (elem.categoryType === group) {
                   return {

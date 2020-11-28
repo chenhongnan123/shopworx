@@ -248,7 +248,8 @@ export default {
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
+    ...mapState('parameterConfiguration', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList', 'substationValue',
+      'subStationElementDeatils']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -337,7 +338,6 @@ export default {
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
-          isconversion: parameterObj.isconversion.id,
           protocol: parameterObj.protocol.id,
           maxdecimal: 3,
           startaddress: Number(parameterObj.startaddress),
@@ -357,8 +357,53 @@ export default {
         this.saving = false;
         if (Number(parameterObj.parametercategory.id) === 15
         || Number(parameterObj.parametercategory.id) === 17
-        || Number(parameterObj.parametercategory.id) === 18) {
-          await this.getSubStationIdElement(this.substationValue);
+        || Number(parameterObj.parametercategory.id) === 18
+        || Number(parameterObj.parametercategory.id) === 2) {
+          await this.getSubStationIdElement(`process_${this.substationValue}`);
+          let dataTypeName = '';
+          if (parameterObj.datatype.name === 'String') {
+            dataTypeName = 'String';
+          } else {
+            dataTypeName = 'Double';
+          }
+          const object = [{
+            assetId: 4,
+            tagName: parameterObj.name,
+            tagDescription: parameterObj.name,
+            emgTagType: dataTypeName,
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          }];
+          await this.createTagElement(object);
+        }
+        if (Number(parameterObj.parametercategory.id) === 42
+        || Number(parameterObj.parametercategory.id) === 45
+        || Number(parameterObj.parametercategory.id) === 51
+        || Number(parameterObj.parametercategory.id) === 2) {
+          await this.getSubStationIdElement(`real_${this.substationValue}`);
           let dataTypeName = '';
           if (parameterObj.datatype.name === 'String') {
             dataTypeName = 'String';

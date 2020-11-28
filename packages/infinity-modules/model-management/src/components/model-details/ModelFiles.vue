@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-text class="pt-0">
       <v-data-table
-        :items="modelFiles"
+        :items="fileList"
         :headers="headers"
         :loading="deleting"
         hide-default-footer
@@ -12,7 +12,7 @@
           No file available
         </template>
         <template #item.name="{ item }">
-          {{ item.originalFilename }}.{{item.extension}}
+          {{ item.originalFilename }}.{{ item.extension }}
         </template>
         <template #item.actions="{ item }">
           <!-- <v-tooltip bottom>
@@ -89,6 +89,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       deleting: false,
       headers: [
         { text: 'Name', value: 'name' },
@@ -101,6 +102,17 @@ export default {
       ],
     };
   },
+  async created() {
+    this.fileList = this.modelFiles;
+  },
+  watch: {
+    modelDetails: {
+      handler(val) {
+        this.updateProps(val);
+      },
+      deep: true,
+    },
+  },
   computed: {
     ...mapState('modelManagement', ['files', 'uploadingFiles']),
     modelFiles() {
@@ -112,9 +124,33 @@ export default {
     ...mapActions('modelManagement', ['fetchModelDetails']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
+    async updateProps(val) {
+      this.fileList = val.modelFiles;
+    },
     async uploadFiles() {
-      this.setUploadingFiles(true);
-      this.$refs.dropzone.startQueueProcessing();
+      let flag = false;
+      const demolList = [];
+      for (let i = 0; i < this.$refs.dropzone.files.length; i += 1) {
+        if (demolList.includes(this.$refs.dropzone.files[i].name)) {
+          flag = true;
+        } else {
+          demolList.push(this.$refs.dropzone.files[i].name);
+          const list = this.modelFiles.filter((f) => `${f.originalFilename}.${f.extension}` === this.$refs.dropzone.files[i].name);
+          if (list.length > 0) {
+            flag = true;
+          }
+        }
+      }
+      if (flag) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FILES_DEPLICATE',
+        });
+      } else {
+        this.setUploadingFiles(true);
+        this.$refs.dropzone.startQueueProcessing();
+      }
     },
     async downloadModelFile(link) {
       await this.downloadFile(link);

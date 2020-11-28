@@ -100,7 +100,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'Number Required',
+          message: 'NUMBER_REQUIRED',
         });
       } else if (mainline.length > 0) {
         this.checked = false;

@@ -14,7 +14,7 @@
         Parameter filters
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click="toggleFilter">
+      <v-btn icon @click="closeFilter">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-toolbar>
@@ -327,6 +327,19 @@ export default {
     },
     btnReset() {
       this.getParameterListRecords('?query=stationid==null');
+      this.toggleFilter();
+      this.selectedParameterName = '';
+      this.selectedParameterDirection = '';
+      this.selectedParameterCategory = '';
+      this.selectedParameterDatatype = '';
+      this.selectedParameterStartAdress = '';
+      this.line = '';
+      this.subline = '';
+      this.station = '';
+      this.substation = '';
+    },
+    closeFilter() {
+      this.getParameterListRecords('?pagenumber=1&pagesize=10');
       this.toggleFilter();
       this.selectedParameterName = '';
       this.selectedParameterDirection = '';

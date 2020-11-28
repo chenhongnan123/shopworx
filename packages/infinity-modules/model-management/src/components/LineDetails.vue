@@ -115,6 +115,9 @@ export default {
       'fetchingMaster',
     ]),
   },
+  created() {
+    this.fetchLineDetails();
+  },
   methods: {
     ...mapMutations('modelManagement', [
       'setSelectedSubline',

@@ -163,6 +163,13 @@ export default {
     ]);
     this.setFetchingMaster(false);
   },
+  watch: {
+    models: {
+      handler() {
+        this.search = '';
+      },
+    },
+  },
   computed: {
     ...mapState('modelManagement', [
       'selectedProcessName',

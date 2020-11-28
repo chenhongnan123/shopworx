@@ -794,10 +794,8 @@ export default ({
     isDeploymentAllowed: ({ modelDetails }) => {
       let isAllowed = false;
       if (modelDetails) {
-        const isInputConfigured = modelDetails.modelInputs.length > 0;
         const isFileConfigured = modelDetails.modelFiles.length > 0;
-        const isOutputConfigured = modelDetails.modelOutputs.length > 0;
-        isAllowed = isInputConfigured && isFileConfigured && isOutputConfigured;
+        isAllowed = isFileConfigured;
       }
       return isAllowed;
     },
