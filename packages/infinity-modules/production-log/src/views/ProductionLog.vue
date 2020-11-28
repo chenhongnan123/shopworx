@@ -41,6 +41,8 @@ import ProductionToolbar from '../components/ProductionToolbar.vue';
 import ProductionDrawer from '../components/ProductionDrawer.vue';
 import ProductionList from '../components/ProductionList.vue';
 
+const CONFIG_LOC = 'productionConfig';
+
 export default {
   name: 'ProductionLog',
   components: {
@@ -56,10 +58,18 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionLog', ['dataOnboarded', 'elementOnboarded']),
+    ...mapState('productionLog', [
+      'dataOnboarded',
+      'elementOnboarded',
+    ]),
+    ...mapState('webApp', ['config']),
   },
   async created() {
     this.loading = true;
+    const config = localStorage.getItem(CONFIG_LOC);
+    if (config) {
+      this.setConfig(JSON.parse(config));
+    }
     await this.getDataOnboardingState();
     if (this.dataOnboarded) {
       await this.getElementOnboardingState();
@@ -76,6 +86,7 @@ export default {
     this.loading = false;
   },
   methods: {
+    ...mapMutations('webApp', ['setConfig']),
     ...mapMutations('productionLog', ['setElementOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
@@ -109,6 +120,12 @@ export default {
       if (val) {
         await this.initApp();
       }
+    },
+    config: {
+      deep: true,
+      handler(val) {
+        localStorage.setItem(CONFIG_LOC, JSON.stringify(val));
+      },
     },
   },
 };

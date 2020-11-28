@@ -138,7 +138,6 @@ export default {
     ...mapState('productionLog', [
       'loading',
       'error',
-      'selectedDate',
     ]),
     ...mapGetters('productionLog', ['production']),
   },
@@ -147,13 +146,6 @@ export default {
   },
   created() {
     this.fetchProductionList();
-  },
-  watch: {
-    selectedDate(val) {
-      if (val) {
-        this.fetchProductionList();
-      }
-    },
   },
 };
 </script>

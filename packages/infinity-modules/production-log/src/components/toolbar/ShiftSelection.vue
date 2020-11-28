@@ -13,42 +13,61 @@
 import {
   mapGetters,
   mapMutations,
-  mapState,
   mapActions,
 } from 'vuex';
+
+const FIELD_NAME = 'shift';
 
 export default {
   name: 'ShiftSelection',
   computed: {
+    ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionLog', ['shiftList']),
-    ...mapState('productionLog', ['selectedShift']),
+    isShiftFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     shift: {
       get() {
-        return this.selectedShift;
+        const shiftFilter = this.filters && this.filters[FIELD_NAME];
+        if (shiftFilter) {
+          return shiftFilter.value;
+        }
+        return this.shiftList[0];
       },
-      set(val) {
-        this.setSelectedShift(val);
+      set(shiftVal) {
+        this.setShiftFilter(shiftVal);
       },
     },
   },
-  methods: {
-    ...mapMutations('productionLog', ['setSelectedShift']),
-    ...mapActions('productionLog', ['fetchShifts']),
-  },
   created() {
     if (this.shiftList && this.shiftList.length) {
-      if (!this.selectedShift) {
-        this.setSelectedShift(this.shiftList[0]);
+      if (this.isShiftFilterInactive) {
+        this.setShiftFilter(this.shiftList[0]);
       }
     } else {
       this.fetchShifts();
     }
   },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('productionLog', ['fetchShifts']),
+    setShiftFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
+  },
   watch: {
     shiftList(val) {
       if (val && val.length) {
-        if (!this.selectedShift) {
-          this.setSelectedShift(val[0]);
+        if (this.isShiftFilterInactive) {
+          this.setShiftFilter(val[0]);
         }
       }
     },

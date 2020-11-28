@@ -4,7 +4,7 @@
     outlined
     return-object
     item-text="name"
-    v-model="sort"
+    v-model="timeSort"
     :items="sortList"
     label="Order by"
     prepend-inner-icon="mdi-sort-variant"
@@ -14,8 +14,10 @@
 <script>
 import {
   mapMutations,
-  mapState,
+  mapGetters,
 } from 'vuex';
+
+const FIELD_NAME = 'firstcycle';
 
 export default {
   name: 'SortSelection',
@@ -23,31 +25,49 @@ export default {
     return {
       sortList: [{
         name: 'Newest first',
-        value: 'new',
+        value: 'DESC',
       }, {
         name: 'Oldest first',
-        value: 'old',
+        value: 'ASC',
       }],
     };
   },
   computed: {
-    ...mapState('productionLog', ['selectedSort']),
-    sort: {
+    ...mapGetters('webApp', ['sort']),
+    isTimeSortInactive() {
+      return !Object
+        .keys(this.sort)
+        .includes(FIELD_NAME);
+    },
+    timeSort: {
       get() {
-        return this.selectedSort;
+        const timeSort = this.sort && this.sort.time;
+        if (timeSort) {
+          const value = this.sortList.find((s) => s.value === timeSort.value);
+          if (value) {
+            return value;
+          }
+        }
+        return this.sortList[0];
       },
-      set(val) {
-        this.setSelectedSort(val);
+      set(sortVal) {
+        this.setTimeSort(sortVal);
       },
     },
   },
-  methods: {
-    ...mapMutations('productionLog', ['setSelectedSort']),
-  },
   created() {
-    if (!this.selectedSort) {
-      this.setSelectedSort(this.sortList[0]);
+    if (this.isTimeSortInactive) {
+      this.setTimeSort(this.sortList[0]);
     }
+  },
+  methods: {
+    ...mapMutations('webApp', ['setSort']),
+    setTimeSort(sort) {
+      this.setSort({
+        field: FIELD_NAME,
+        value: sort.value,
+      });
+    },
   },
 };
 </script>
