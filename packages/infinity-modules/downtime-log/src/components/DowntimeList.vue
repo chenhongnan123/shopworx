@@ -53,13 +53,13 @@
             <v-icon
               v-if="item.isBreak"
               v-text="'$downtime'"
-              color="primary"
+              color="accent"
               :title="item.breakName"
             ></v-icon>
             <v-icon
               v-if="item.isHoliday"
               v-text="'$holidays'"
-              color="primary"
+              color="accent"
               :title="item.holidayName"
             ></v-icon>
             <span v-if="!item.isBreak && !item.isHoliday">-</span>

@@ -283,11 +283,10 @@ export default ({
             return prod;
           })
           .sort((a, b) => {
-            const [key, direction] = selectedSort.value.split('==');
-            if (direction === '-1') {
-              return b[key] - a[key];
+            if (selectedSort.value === 'new') {
+              return b.downtimestart - a.downtimestart;
             }
-            return a[key] - b[key];
+            return a.downtimestart - b.downtimestart;
           })
           .reduce((result, currentValue) => {
             const { shiftName: shift } = currentValue;
