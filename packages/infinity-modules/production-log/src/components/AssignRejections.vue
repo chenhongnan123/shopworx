@@ -373,6 +373,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const rejected = parseInt(this.productionList[index].rejected, 10)
         + parseInt(rejectedQty, 10);

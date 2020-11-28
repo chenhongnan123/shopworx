@@ -316,6 +316,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const rework = parseInt(this.productionList[index].rework, 10) + parseInt(reworkQty, 10);
       shiftProduction.splice(index, 1, {
