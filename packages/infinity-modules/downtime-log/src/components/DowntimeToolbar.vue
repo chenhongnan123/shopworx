@@ -11,7 +11,7 @@
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
-          <span v-if="downtimeList.length">
+          <span v-if="downtimeCount">
             {{ downtimeCount }} records <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
           <span v-if="$vuetify.breakpoint.smAndUp">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 import AssignReasonDialog from './AssignReasonDialog.vue';
 
@@ -52,25 +52,26 @@ export default {
     ...mapState('downtimeLog', [
       'drawer',
       'downtimeList',
-      'downtimeCount',
       'selectedDuration',
-      'selectedMachine',
-      'selectedShift',
-      'selectedDate',
       'selectedDowntimes',
       'toggleSelection',
     ]),
+    ...mapGetters('webApp', ['filters', 'filteredRecords']),
     duration() {
       return this.selectedDuration ? this.selectedDuration.name : '';
     },
     machine() {
-      return this.selectedMachine ? this.selectedMachine : '';
+      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
     shift() {
-      return this.selectedShift ? this.selectedShift : '';
+      return this.filters && this.filters.shiftName ? this.filters.shiftName.value : '';
     },
     date() {
-      return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
+      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
+    },
+    downtimeCount() {
+      const downtime = this.filteredRecords(this.downtimeList);
+      return downtime.length;
     },
   },
   methods: {

@@ -46,7 +46,7 @@ export default {
       'drawer',
       'productionList',
     ]),
-    ...mapGetters('webApp', ['filters']),
+    ...mapGetters('webApp', ['filters', 'filteredRecords']),
     machine() {
       return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
@@ -57,18 +57,7 @@ export default {
       return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
     },
     productionCount() {
-      let production = [];
-      Object
-        .keys(this.filters)
-        .forEach((filter) => {
-          production = this.productionList
-            .filter((record) => {
-              if (!this.filters[filter].value.includes('All')) {
-                return record[filter] === this.filters[filter].value;
-              }
-              return record;
-            });
-        });
+      const production = this.filteredRecords(this.productionList);
       return production.length;
     },
   },

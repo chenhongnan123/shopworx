@@ -692,31 +692,9 @@ export default ({
 
     production: ({ productionList }, getters, rootState, rootGetters) => {
       let production = null;
-      const filters = rootGetters['webApp/filters'];
-      const sort = rootGetters['webApp/sort'];
       if (productionList && productionList.length) {
-        Object
-          .keys(filters)
-          .forEach((filter) => {
-            production = productionList
-              .filter((record) => {
-                if (!filters[filter].value.includes('All')) {
-                  return record[filter] === filters[filter].value;
-                }
-                return record;
-              });
-          });
-        Object
-          .keys(sort)
-          .forEach((s) => {
-            production = production
-              .sort((a, b) => {
-                if (sort[s] === 'DESC') {
-                  return b[s] - a[s];
-                }
-                return a[s] - b[s];
-              });
-          });
+        production = rootGetters['webApp/filteredRecords'](productionList);
+        production = rootGetters['webApp/sortedRecords'](production);
         production = production.reduce((result, currentValue) => {
           const {
             shift,

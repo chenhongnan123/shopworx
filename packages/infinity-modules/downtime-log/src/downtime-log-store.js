@@ -9,15 +9,6 @@ export default ({
     onboarded: true,
     machines: [],
     shifts: [],
-    filters: {},
-    sort: {},
-    selectedMachine: null,
-    selectedShift: null,
-    selectedDate: null,
-    selectedDuration: null,
-    selectedType: null,
-    selectedSort: null,
-    selectedStatus: null,
     downtimeList: [],
     loading: false,
     error: false,
@@ -35,13 +26,6 @@ export default ({
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
-    setSelectedMachine: set('selectedMachine'),
-    setSelectedShift: set('selectedShift'),
-    setSelectedDate: set('selectedDate'),
-    setSelectedDuration: set('selectedDuration'),
-    setSelectedType: set('selectedType'),
-    setSelectedSort: set('selectedSort'),
-    setSelectedStatus: set('selectedStatus'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
@@ -173,9 +157,9 @@ export default ({
       return false;
     },
 
-    fetchDowntimeList: async ({ commit, dispatch, state }) => {
-      const { selectedDate } = state;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+    fetchDowntimeList: async ({ commit, dispatch, rootGetters }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       commit('setLoading', true);
       commit('setDowntimeList', []);
       commit('setError', false);
@@ -261,45 +245,23 @@ export default ({
       return shiftList;
     },
 
-    downtime: ({
-      downtimeList,
-      selectedShift,
-      selectedMachine,
-      selectedSort,
-    }) => {
+    downtime: ({ downtimeList }, getters, rootState, rootGetters) => {
       let downtime = null;
       if (downtimeList && downtimeList.length) {
-        downtime = downtimeList
-          .filter((prod) => {
-            if (selectedShift !== 'All Shifts' && selectedMachine !== 'All Machines') {
-              return (prod.shift === selectedShift && prod.machinename === selectedMachine);
-            }
-            if (selectedShift !== 'All Shifts' && selectedMachine === 'All Machines') {
-              return prod.shift === selectedShift;
-            }
-            if (selectedShift === 'All Shifts' && selectedMachine !== 'All Machines') {
-              return prod.machinename === selectedMachine;
-            }
-            return prod;
-          })
-          .sort((a, b) => {
-            if (selectedSort.value === 'new') {
-              return b.downtimestart - a.downtimestart;
-            }
-            return a.downtimestart - b.downtimestart;
-          })
-          .reduce((result, currentValue) => {
-            const { shiftName: shift } = currentValue;
-            if (!result[shift]) {
-              result[shift] = {};
-              result[shift].downtime = [];
-            }
-            result[shift].downtime = [
-              ...result[shift].downtime,
-              currentValue,
-            ];
-            return result;
-          }, {});
+        downtime = rootGetters['webApp/filteredRecords'](downtimeList);
+        downtime = rootGetters['webApp/sortedRecords'](downtime);
+        downtime = downtime.reduce((result, currentValue) => {
+          const { shiftName: shift } = currentValue;
+          if (!result[shift]) {
+            result[shift] = {};
+            result[shift].downtime = [];
+          }
+          result[shift].downtime = [
+            ...result[shift].downtime,
+            currentValue,
+          ];
+          return result;
+        }, {});
       }
       if (!downtime || !Object.keys(downtime).length) {
         downtime = null;

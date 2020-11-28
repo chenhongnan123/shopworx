@@ -55,7 +55,72 @@ export default ({
   },
   getters: {
     filters: ({ config }) => config.filters,
-
     sort: ({ config }) => config.sort,
+    filteredRecords: (_, { filters }) => (records) => {
+      let filteredRecords = records;
+      Object
+        .keys(filters)
+        .filter((f) => f !== 'date')
+        .forEach((filter) => {
+          const { value, operation } = filters[filter];
+          const isValueString = typeof value === 'string';
+          const applyStringFilter = isValueString && !value.includes('All');
+          const isValueNumber = typeof value === 'number';
+          filteredRecords = filteredRecords
+            .filter((record) => {
+              if (applyStringFilter) {
+                if (operation === 'eq') {
+                  return record[filter] === value;
+                }
+                if (operation === 'neq') {
+                  return record[filter] !== value;
+                }
+                if (operation === 'exists') {
+                  return record[filter] !== undefined;
+                }
+                if (operation === 'notexists') {
+                  return record[filter] === undefined;
+                }
+              }
+              if (isValueNumber) {
+                if (operation === 'eq') {
+                  return record[filter] === value;
+                }
+                if (operation === 'neq') {
+                  return record[filter] !== value;
+                }
+                if (operation === 'gte') {
+                  return record[filter] >= value;
+                }
+                if (operation === 'gt') {
+                  return record[filter] > value;
+                }
+                if (operation === 'lte') {
+                  return record[filter] <= value;
+                }
+                if (operation === 'lt') {
+                  return record[filter] < value;
+                }
+              }
+              return record;
+            });
+        });
+      return filteredRecords;
+    },
+    sortedRecords: (_, { sort }) => (records) => {
+      let sortedRecords = records;
+      Object
+        .keys(sort)
+        .forEach((s) => {
+          sortedRecords = sortedRecords
+            .sort((a, b) => {
+              if (sort[s] === 'DESC') {
+                return b[s] - a[s];
+              }
+              return a[s] - b[s];
+            });
+        });
+      return sortedRecords;
+    },
   },
 });

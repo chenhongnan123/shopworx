@@ -34,7 +34,7 @@ export default {
     },
     date: {
       get() {
-        const dateFilter = this.filters && this.filters.date;
+        const dateFilter = this.filters && this.filters[FIELD_NAME];
         if (dateFilter) {
           return dateFilter.value;
         }

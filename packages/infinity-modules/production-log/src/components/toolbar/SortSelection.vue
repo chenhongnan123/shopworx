@@ -41,7 +41,7 @@ export default {
     },
     timeSort: {
       get() {
-        const timeSort = this.sort && this.sort.time;
+        const timeSort = this.sort && this.sort[FIELD_NAME];
         if (timeSort) {
           const value = this.sortList.find((s) => s.value === timeSort.value);
           if (value) {

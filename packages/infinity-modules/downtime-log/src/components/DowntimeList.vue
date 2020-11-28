@@ -126,7 +126,6 @@ export default {
     ...mapState('downtimeLog', [
       'loading',
       'error',
-      'selectedDate',
       'toggleSelection',
     ]),
     ...mapGetters('downtimeLog', ['downtime']),
@@ -146,13 +145,6 @@ export default {
   },
   created() {
     this.fetchDowntimeList();
-  },
-  watch: {
-    selectedDate(val) {
-      if (val) {
-        this.fetchDowntimeList();
-      }
-    },
   },
 };
 </script>
