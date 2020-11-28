@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import SiteService from '@shopworx/services/api/site.service';
 import { set } from '@shopworx/services/util/store.helper';
 
@@ -5,10 +6,23 @@ export default ({
   state: {
     appSchema: null,
     activeAppId: null,
+    config: {
+      filters: {},
+      sort: {},
+    },
   },
   mutations: {
     setAppSchema: set('appSchema'),
     setActiveAppId: set('activeAppId'),
+    setConfig: set('config'),
+    setFilter: (state, { field, value }) => {
+      const { config: { filters } } = state;
+      Vue.set(filters, field, value);
+    },
+    setSort: (state, { field, value }) => {
+      const { config: { sort } } = state;
+      Vue.set(sort, field, value);
+    },
   },
   actions: {
     getAppSchema: async ({ commit, state, rootState }, appId = null) => {
@@ -38,5 +52,10 @@ export default ({
       }
       return true;
     },
+  },
+  getters: {
+    filters: ({ config }) => config.filters,
+
+    sort: ({ config }) => config.sort,
   },
 });
