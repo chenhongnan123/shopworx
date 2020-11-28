@@ -31,7 +31,7 @@
       </span>
     </td>
     <td>
-      <div class="error--text d-inline-block mt-1">
+      <div class="warning--text d-inline-block mt-1">
         {{ production.rework }}
       </div>
       <span class="float-right">
