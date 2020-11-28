@@ -5,9 +5,6 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <div class="mt-5 mr-4">
-        <select-all />
-      </div>
       <div v-if="selectedDowntimes.length > 0 && toggleSelection">
          <assign-reason-dialog />
       </div>
@@ -15,9 +12,11 @@
       <div class="mt-1">
         <span class="title">
           <span v-if="downtimeList.length">
-            Showing {{ downtimeList.length }} of {{ downtimeCount }} |
+            {{ downtimeCount }} records <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
-          {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
+          <span v-if="$vuetify.breakpoint.smAndUp">
+            {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
+          </span>
         </span>
       </div>
       <v-btn
@@ -37,13 +36,11 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import SelectAll from './toolbar/SelectAll.vue';
 import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
   components: {
-    SelectAll,
     AssignReasonDialog,
   },
   data() {

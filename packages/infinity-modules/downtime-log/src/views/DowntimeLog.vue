@@ -72,7 +72,6 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapMutations('downtimeLog', ['resetPageNumber']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('downtimeLog', [
       'getOnboardingState',
@@ -80,7 +79,6 @@ export default {
       'fetchDowntimeList',
     ]),
     refreshDowntimes() {
-      this.resetPageNumber();
       this.fetchDowntimeList();
     },
   },

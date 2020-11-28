@@ -6,29 +6,85 @@
     <template v-else-if="error">
       <downtime-error />
     </template>
-    <template v-else-if="!error && downtimeList.length === 0">
+    <template v-else-if="!error && !downtime">
       <downtime-no-records />
     </template>
     <template v-else>
-      <div v-for="(downtime, n) in downtimeList" :key="n">
-        <downtime-list-item
-          :downtime="downtime"
-          :selected.sync="selected"
-          class="mb-2 mx-4"
-        />
+      <div
+        :key="i"
+        :class="i !== 0 ? 'mt-8 mb-2' : 'mb-2'"
+        class="headline ml-4 font-weight-medium"
+        v-for="(shiftData, shiftKey, i) in downtime"
+      >
+        <div class="primary--text">
+          {{ shiftKey }}
+        </div>
+        <v-data-table
+          v-model="selected"
+          :items="shiftData.downtime"
+          :headers="headers"
+          hide-default-footer
+          :show-select="toggleSelection"
+        >
+          <!-- eslint-disable-next-line -->
+          <template #item.downtimestart="{ item }">
+            {{ new Date(item.downtimestart).toLocaleTimeString('en-GB') }}
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.downtimeend="{ item }">
+            <span v-if="!inProgress(item)">
+              {{ new Date(item.downtimeend).toLocaleTimeString('en-GB') }}
+            </span>
+            <span v-else>-</span>
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.downtimeduration="{ item }">
+            <span v-if="!inProgress(item)">
+              {{ duration(item) }}
+            </span>
+            <span v-else>-</span>
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.reasonname="{ item }">
+            <assign-downtime :downtime="item" />
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.isPlanned="{ item }">
+            <v-icon
+              v-if="item.isBreak"
+              v-text="'$downtime'"
+              color="primary"
+              :title="item.breakName"
+            ></v-icon>
+            <v-icon
+              v-if="item.isHoliday"
+              v-text="'$holidays'"
+              color="primary"
+              :title="item.holidayName"
+            ></v-icon>
+            <span v-if="!item.isBreak && !item.isHoliday">-</span>
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.action="{ item }">
+            <downtime-split
+              :downtime="item"
+              :duration="duration(item)"
+              :inProgress="inProgress(item)"
+            />
+          </template>
+        </v-data-table>
       </div>
-      <downtime-load-more />
     </template>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import DowntimeLoading from './DowntimeLoading.vue';
 import DowntimeError from './DowntimeError.vue';
 import DowntimeNoRecords from './DowntimeNoRecords.vue';
-import DowntimeListItem from './DowntimeListItem.vue';
-import DowntimeLoadMore from './DowntimeLoadMore.vue';
+import DowntimeSplit from './DowntimeSplit.vue';
+import AssignDowntime from './AssignDowntime.vue';
 
 export default {
   name: 'DowntimeList',
@@ -36,96 +92,64 @@ export default {
     DowntimeLoading,
     DowntimeError,
     DowntimeNoRecords,
-    DowntimeListItem,
-    DowntimeLoadMore,
+    DowntimeSplit,
+    AssignDowntime,
   },
   data() {
     return {
       selected: [],
+      headers: [
+        { text: 'Machine', value: 'machinename' },
+        { text: 'Downtime start', value: 'downtimestart' },
+        { text: 'Downtime end', value: 'downtimeend' },
+        { text: 'Duration', value: 'downtimeduration' },
+        {
+          text: 'Reason',
+          value: 'reasonname',
+          sortable: false,
+          width: '30%',
+        },
+        {
+          text: 'Is planned',
+          value: 'isPlanned',
+          sortable: false,
+        },
+        {
+          text: 'Action',
+          value: 'action',
+          sortable: false,
+        },
+      ],
     };
   },
   computed: {
     ...mapState('downtimeLog', [
-      'downtimeList',
-      'selectedDowntimes',
       'loading',
       'error',
-      'selectedMachine',
-      'selectedShift',
       'selectedDate',
-      'selectedDuration',
-      'selectedType',
-      'selectedSort',
-      'selectedStatus',
+      'toggleSelection',
     ]),
+    ...mapGetters('downtimeLog', ['downtime']),
   },
   methods: {
-    ...mapMutations('downtimeLog', [
-      'resetPageNumber',
-      'setDowntimeList',
-      'setSelectedDowntimes',
-    ]),
     ...mapActions('downtimeLog', ['fetchDowntimeList']),
+    duration(item) {
+      const d = item.downtimeduration;
+      const h = Math.floor(d / 3600);
+      const m = Math.floor((d % 3600) / 60);
+      const s = Math.floor((d % 3600) % 60);
+      return `${h.toString().padStart(2, 0)}:${m.toString().padStart(2, 0)}:${s.toString().padStart(2, 0)}`;
+    },
+    inProgress(item) {
+      return item.status === 'inProgress';
+    },
+  },
+  created() {
+    this.fetchDowntimeList();
   },
   watch: {
-    selected: {
-      deep: true,
-      handler(val) {
-        this.setSelectedDowntimes(val);
-      },
-    },
-    selectedDowntimes: {
-      deep: true,
-      handler(val) {
-        this.selected = val;
-      },
-    },
-    selectedMachine(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
-    selectedShift(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
     selectedDate(val) {
       if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
-    selectedDuration(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
-    selectedType(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
-    selectedSort(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
-        this.fetchDowntimeList();
-      }
-    },
-    selectedStatus(val) {
-      if (val) {
-        this.resetPageNumber();
-        this.setDowntimeList([]);
         this.fetchDowntimeList();
       }
     },

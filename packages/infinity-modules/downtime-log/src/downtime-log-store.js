@@ -23,8 +23,6 @@ export default ({
     error: false,
     downtimeReasons: [],
     downtimeCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
     toggleSelection: false,
     selectedDowntimes: [],
   },
@@ -48,19 +46,7 @@ export default ({
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
-    resetPageNumber: (state) => {
-      state.pageNumber = 1;
-    },
-    incrementPageNumber: (state) => {
-      state.pageNumber += 1;
-    },
-    setDowntimeList: (state, payload) => {
-      if (payload && payload.length) {
-        state.downtimeList = [...state.downtimeList, ...payload];
-      } else {
-        state.downtimeList = [];
-      }
-    },
+    setDowntimeList: set('downtimeList'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -188,68 +174,29 @@ export default ({
     },
 
     fetchDowntimeList: async ({ commit, dispatch, state }) => {
-      const {
-        selectedMachine,
-        selectedDate,
-        selectedShift,
-        selectedDuration,
-        selectedType,
-        selectedSort,
-        selectedStatus,
-        pageNumber,
-        pageSize,
-      } = state;
-      if (selectedSort) {
-        commit('setSelectedDowntimes', []);
-        const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-        const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-        let query = `date==${date}`;
-        if (selectedStatus.value) {
-          query += `%26%26${selectedStatus.value}`;
-        }
-        if (selectedMachine && selectedMachine !== 'All Machines') {
-          query += `%26%26machinename=="${selectedMachine}"`;
-        }
-        if (selectedShift && selectedShift !== 'All Shifts') {
-          query += `%26%26shiftName=="${selectedShift}"`;
-        }
-        if (duration) {
-          query += `%26%26downtimeduration%3E${duration}`;
-        }
-        if (selectedType && selectedType.value) {
-          if (selectedType.value === 'reason') {
-            query += '%26%26exists%20reasonname';
-          } else {
-            query += '%26%26notexists%20reasonname';
-          }
-        }
-        const sortQuery = selectedSort.value;
-        const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
-        if (pageNumber === 1) {
-          commit('setDowntimeList', []);
-          commit('setLoading', true);
-          commit('setError', false);
-        }
-        const data = await dispatch(
-          'element/getRecordsWithCount',
-          {
-            elementName: 'downtime',
-            query: `?query=${query}&sortquery=${sortQuery}&${paginatedQuery}`,
-          },
-          { root: true },
-        );
-        if (data && data.results) {
-          const downtimes = data.results;
-          commit('setDowntimeList', downtimes);
-          commit('setDowntimeCount', data.totalCount);
-          commit('setError', false);
-        } else {
-          commit('setDowntimeList', []);
-          commit('setDowntimeCount', 0);
-          commit('setError', true);
-        }
-        commit('setLoading', false);
+      const { selectedDate } = state;
+      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      commit('setLoading', true);
+      commit('setDowntimeList', []);
+      commit('setError', false);
+      const data = await dispatch(
+        'element/getRecordsWithCount',
+        {
+          elementName: 'downtime',
+          query: `?query=date==${date}`,
+        },
+        { root: true },
+      );
+      if (data && data.results) {
+        commit('setDowntimeList', data.results);
+        commit('setDowntimeCount', data.totalCount);
+        commit('setError', false);
+      } else {
+        commit('setDowntimeList', []);
+        commit('setDowntimeCount', 0);
+        commit('setError', true);
       }
+      commit('setLoading', false);
     },
 
     updateReason: async ({ dispatch, commit, state }, { id, payload }) => {
@@ -312,6 +259,53 @@ export default ({
         shiftList = ['All Shifts', ...shifts];
       }
       return shiftList;
+    },
+
+    downtime: ({
+      downtimeList,
+      selectedShift,
+      selectedMachine,
+      selectedSort,
+    }) => {
+      let downtime = null;
+      if (downtimeList && downtimeList.length) {
+        downtime = downtimeList
+          .filter((prod) => {
+            if (selectedShift !== 'All Shifts' && selectedMachine !== 'All Machines') {
+              return (prod.shift === selectedShift && prod.machinename === selectedMachine);
+            }
+            if (selectedShift !== 'All Shifts' && selectedMachine === 'All Machines') {
+              return prod.shift === selectedShift;
+            }
+            if (selectedShift === 'All Shifts' && selectedMachine !== 'All Machines') {
+              return prod.machinename === selectedMachine;
+            }
+            return prod;
+          })
+          .sort((a, b) => {
+            const [key, direction] = selectedSort.value.split('==');
+            if (direction === '-1') {
+              return b[key] - a[key];
+            }
+            return a[key] - b[key];
+          })
+          .reduce((result, currentValue) => {
+            const { shiftName: shift } = currentValue;
+            if (!result[shift]) {
+              result[shift] = {};
+              result[shift].downtime = [];
+            }
+            result[shift].downtime = [
+              ...result[shift].downtime,
+              currentValue,
+            ];
+            return result;
+          }, {});
+      }
+      if (!downtime || !Object.keys(downtime).length) {
+        downtime = null;
+      }
+      return downtime;
     },
   },
 });
