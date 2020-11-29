@@ -12,14 +12,21 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshProductionPlans"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshProductionPlans"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+      </v-tooltip>
     </portal>
     <planning-toolbar />
     <planning-drawer />
@@ -28,7 +35,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import PlanningToolbar from '../components/PlanningToolbar.vue';
 import PlanningDrawer from '../components/PlanningDrawer.vue';
 import PlanningList from '../components/PlanningList.vue';
@@ -39,6 +46,9 @@ export default {
     PlanningToolbar,
     PlanningDrawer,
     PlanningList,
+  },
+  computed: {
+    ...mapState('productionPlanning', ['lastRefreshedAt']),
   },
   created() {
     this.setExtendedHeader(true);

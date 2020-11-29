@@ -10,27 +10,37 @@
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshProductionPlans"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshProductionPlans"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedReorder }}</strong>
+      </v-tooltip>
     </portal>
     <reorder-plan-list />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ReorderPlanList from '../components/ReorderPlanList.vue';
 
 export default {
   name: 'ReorderProductionPlans',
   components: {
     ReorderPlanList,
+  },
+  computed: {
+    ...mapState('productionPlanning', ['lastRefreshedReorder']),
   },
   methods: {
     ...mapActions('productionPlanning', ['fetchReorderPlanList']),

@@ -16,6 +16,8 @@ export default ({
     error: false,
     planningCount: 0,
     toggleSelection: false,
+    lastRefreshedAt: null,
+    lastRefreshedReorder: null,
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -31,6 +33,8 @@ export default ({
     setPlanningCount: set('planningCount'),
     setPlanningList: set('planningList'),
     setReorderPlanList: set('reorderPlanList'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
+    setLastRefreshedReorder: set('lastRefreshedReorder'),
   },
   actions: {
     fetchMachines: async ({ commit, dispatch }) => {
@@ -111,6 +115,7 @@ export default ({
         commit('setPlanningList', plans);
         commit('setPlanningCount', data.totalCount);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setPlanningList', []);
         commit('setPlanningCount', 0);
@@ -141,6 +146,7 @@ export default ({
         });
         commit('setReorderPlanList', plans);
         commit('setError', false);
+        commit('setLastRefreshedReorder', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setReorderPlanList', []);
         commit('setError', true);

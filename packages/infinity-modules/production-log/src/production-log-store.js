@@ -21,6 +21,7 @@ export default ({
     rejectionReasons: [],
     reworkReasons: [],
     scrapReasons: [],
+    lastRefreshedAt: null,
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -41,6 +42,7 @@ export default ({
     setScrapReasons: set('scrapReasons'),
     setUnavailableDataElements: set('unavailableDataElements'),
     setUnavailableElements: set('unavailableElements'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
   },
   actions: {
     getDataOnboardingState: async ({ commit, dispatch }) => {
@@ -417,6 +419,7 @@ export default ({
         commit('setProductionList', production);
         commit('setProductionCount', records);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setProductionList', []);
         commit('setProductionCount', 0);
@@ -450,6 +453,7 @@ export default ({
         commit('setProductionList', production);
         commit('setProductionCount', records);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       }
     },
 

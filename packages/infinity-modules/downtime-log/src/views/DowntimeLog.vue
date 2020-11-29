@@ -12,14 +12,21 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshDowntimes"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshDowntimes"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+      </v-tooltip>
     </portal>
     <downtime-log-loading v-if="loading" />
     <template v-else>
@@ -56,7 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['onboarded']),
+    ...mapState('downtimeLog', ['onboarded', 'lastRefreshedAt']),
     ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {

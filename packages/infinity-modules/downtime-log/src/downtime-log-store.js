@@ -16,6 +16,7 @@ export default ({
     downtimeCount: 0,
     toggleSelection: false,
     selectedDowntimes: [],
+    lastRefreshedAt: null,
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -31,6 +32,7 @@ export default ({
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
     setDowntimeList: set('downtimeList'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -175,6 +177,7 @@ export default ({
         commit('setDowntimeList', data.results);
         commit('setDowntimeCount', data.totalCount);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setDowntimeList', []);
         commit('setDowntimeCount', 0);
