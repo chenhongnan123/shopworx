@@ -24,6 +24,7 @@
           :items="shiftData.downtime"
           :headers="headers"
           hide-default-footer
+          item-key="_id"
           :show-select="toggleSelection"
         >
           <!-- eslint-disable-next-line -->
@@ -79,7 +80,12 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapState,
+  mapActions,
+  mapGetters,
+  mapMutations,
+} from 'vuex';
 import DowntimeLoading from './DowntimeLoading.vue';
 import DowntimeError from './DowntimeError.vue';
 import DowntimeNoRecords from './DowntimeNoRecords.vue';
@@ -97,7 +103,6 @@ export default {
   },
   data() {
     return {
-      selected: [],
       headers: [
         { text: 'Machine', value: 'machinename' },
         { text: 'Downtime start', value: 'downtimestart' },
@@ -126,12 +131,22 @@ export default {
     ...mapState('downtimeLog', [
       'loading',
       'error',
+      'selectedDowntimes',
       'toggleSelection',
     ]),
     ...mapGetters('downtimeLog', ['downtime']),
+    selected: {
+      get() {
+        return this.selectedDowntimes;
+      },
+      set(val) {
+        this.setSelectedDowntimes(val);
+      },
+    },
   },
   methods: {
     ...mapActions('downtimeLog', ['fetchDowntimeList']),
+    ...mapMutations('downtimeLog', ['setSelectedDowntimes']),
     duration(item) {
       const d = item.downtimeduration;
       const h = Math.floor(d / 3600);
