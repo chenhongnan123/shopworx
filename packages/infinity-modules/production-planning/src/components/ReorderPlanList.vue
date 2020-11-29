@@ -23,6 +23,7 @@
           :items="groupData.values"
           :headers="headers"
           hide-default-footer
+          disable-pagination
           item-key="_id"
         >
           <template #body="{ items }">
@@ -43,7 +44,7 @@
                   {{ index + 1 }}
                 </td>
                 <td>
-                  {{ item.planid }}
+                  <plan-id-template :planid="item.planid" />
                 </td>
                 <td>
                   {{ item.partname }}
@@ -53,6 +54,9 @@
                 </td>
                 <td>
                   {{ item.plannedquantity }}
+                </td>
+                <td>
+                  <plan-actions-template :plan="item" />
                 </td>
               </tr>
             </draggable>
@@ -69,6 +73,8 @@ import Draggable from 'vuedraggable';
 import PlanningLoading from './PlanningLoading.vue';
 import PlanningError from './PlanningError.vue';
 import PlanningNoRecords from './PlanningNoRecords.vue';
+import PlanIdTemplate from './data-table/PlanIdTemplate.vue';
+import PlanActionsTemplate from './data-table/PlanActionsTemplate.vue';
 
 export default {
   name: 'ReorderPlanList',
@@ -77,6 +83,8 @@ export default {
     PlanningLoading,
     PlanningError,
     PlanningNoRecords,
+    PlanIdTemplate,
+    PlanActionsTemplate,
   },
   data() {
     return {
@@ -97,6 +105,12 @@ export default {
         {
           text: 'Planned Qty',
           value: 'plannedquantity',
+        },
+        {
+          text: 'Action',
+          value: 'action',
+          sortable: false,
+          width: '10%',
         },
       ],
     };

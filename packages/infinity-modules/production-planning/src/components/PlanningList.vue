@@ -16,41 +16,13 @@
         class="headline ml-4 font-weight-medium"
         v-for="(groupData, groupKey, i) in planning"
       >
-        <!-- <div class="primary--text">
+        <div class="primary--text" v-if="component === 'status-view'">
           {{ getPlanStatus(groupKey).text }}
-        </div> -->
-        <div class="primary--text">
+        </div>
+        <div class="primary--text" v-else>
           {{ groupKey }}
         </div>
-        <v-data-table
-          v-model="selected"
-          :items="groupData.values"
-          :headers="headers"
-          hide-default-footer
-          item-key="_id"
-        >
-          <!-- eslint-disable-next-line -->
-          <template #item.status="{ item }">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-avatar
-                  size="16"
-                  class="mb-1"
-                  v-bind="attrs"
-                  v-on="on"
-                  :color="getPlanStatus(item.status).color"
-                ></v-avatar>
-              </template>
-              {{ getPlanStatus(item.status).text }}
-            </v-tooltip>
-          </template>
-          <!-- eslint-disable-next-line -->
-          <template #item.planid="{ item }">
-            <span>
-              {{ item.planid }}
-            </span>
-          </template>
-        </v-data-table>
+        <component :is="component" :items="groupData.values" />
       </div>
     </template>
   </div>
@@ -61,11 +33,13 @@ import {
   mapState,
   mapActions,
   mapGetters,
-  mapMutations,
 } from 'vuex';
 import PlanningLoading from './PlanningLoading.vue';
 import PlanningError from './PlanningError.vue';
 import PlanningNoRecords from './PlanningNoRecords.vue';
+import MachineView from './data-table/MachineView.vue';
+import PartView from './data-table/PartView.vue';
+import StatusView from './data-table/StatusView.vue';
 
 export default {
   name: 'PlanningList',
@@ -73,53 +47,32 @@ export default {
     PlanningLoading,
     PlanningError,
     PlanningNoRecords,
-  },
-  data() {
-    return {
-      headers: [
-        { text: '', value: 'status' },
-        { text: 'Plan', value: 'planid' },
-        {
-          text: 'Part',
-          value: 'partname',
-          width: '25%',
-        },
-        {
-          text: 'Equipment',
-          value: 'equipmentname',
-          width: '25%',
-        },
-        {
-          text: 'Planned Qty',
-          value: 'plannedquantity',
-        },
-        {
-          text: 'Action',
-          value: 'action',
-          sortable: false,
-        },
-      ],
-    };
+    MachineView,
+    PartView,
+    StatusView,
   },
   computed: {
     ...mapState('productionPlanning', [
       'loading',
       'error',
-      'selectedPlans',
     ]),
     ...mapGetters('productionPlanning', ['planning', 'planStatus']),
-    selected: {
-      get() {
-        return this.selectedPlans;
-      },
-      set(val) {
-        this.setSelectedPlans(val);
-      },
+    ...mapGetters('webApp', ['group']),
+    component() {
+      const [key] = this.group;
+      let component = '';
+      if (key === 'machinename') {
+        component = 'machine-view';
+      } else if (key === 'partname') {
+        component = 'part-view';
+      } else if (key === 'status') {
+        component = 'status-view';
+      }
+      return component;
     },
   },
   methods: {
     ...mapActions('productionPlanning', ['fetchPlanningList']),
-    ...mapMutations('productionPlanning', ['setSelectedPlans']),
     getPlanStatus(status) {
       return this.planStatus(status);
     },
