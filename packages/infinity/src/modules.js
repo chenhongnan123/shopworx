@@ -3,7 +3,7 @@ import ParameterConfiguration from '@shopworx/parameter-configuration';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
 import Masters from '@shopworx/masters';
-import Planning from '@shopworx/planning';
+import ProductionPlanning from '@shopworx/production-planning';
 import ProductionLog from '@shopworx/production-log';
 import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
@@ -80,7 +80,7 @@ Vue.use(Masters, {
   store,
   i18n,
 });
-Vue.use(Planning, {
+Vue.use(ProductionPlanning, {
   router,
   store,
   i18n,
