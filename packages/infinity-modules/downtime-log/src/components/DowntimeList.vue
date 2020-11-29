@@ -14,14 +14,14 @@
         :key="i"
         :class="i !== 0 ? 'mt-8 mb-2' : 'mb-2'"
         class="headline ml-4 font-weight-medium"
-        v-for="(shiftData, shiftKey, i) in downtime"
+        v-for="(groupData, groupKey, i) in downtime"
       >
         <div class="primary--text">
-          {{ shiftKey }}
+          {{ groupKey }}
         </div>
         <v-data-table
           v-model="selected"
-          :items="shiftData.downtime"
+          :items="groupData.values"
           :headers="headers"
           hide-default-footer
           item-key="_id"

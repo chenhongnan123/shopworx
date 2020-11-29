@@ -9,7 +9,7 @@ export default ({
     config: {
       filters: {},
       sort: {},
-      group: {},
+      group: [],
     },
     storageLocation: {
       planning: 'planningConfig',
@@ -25,7 +25,7 @@ export default ({
       const { config } = state;
       Vue.set(config, 'filters', {});
       Vue.set(config, 'sort', {});
-      Vue.set(config, 'group', {});
+      Vue.set(config, 'group', []);
     },
     setFilter: (state, { field, value }) => {
       const { config: { filters } } = state;
@@ -35,9 +35,9 @@ export default ({
       const { config: { sort } } = state;
       Vue.set(sort, field, value);
     },
-    setGroup: (state, { field, value }) => {
-      const { config: { group } } = state;
-      Vue.set(group, field, value);
+    setGroup: (state, value) => {
+      const { config } = state;
+      Vue.set(config, 'group', [...value]);
     },
   },
   actions: {
@@ -81,6 +81,7 @@ export default ({
         .forEach((filter) => {
           const { value, operation } = filters[filter];
           const isTypeString = typeof value === 'string';
+          const isTypeArray = Array.isArray(value);
           const applyStringFilter = isTypeString && !value.includes('All');
           const isTypeNumber = typeof value === 'number';
           filteredRecords = filteredRecords
@@ -98,6 +99,11 @@ export default ({
                 }
                 if (operation === 'notexists') {
                   return !valueExists;
+                }
+              }
+              if (isTypeArray) {
+                if (operation === 'includes') {
+                  return value.includes(record[filter]);
                 }
               }
               if (valueExists && isTypeNumber) {
@@ -142,23 +148,21 @@ export default ({
     },
     groupedRecords: (_, { group }) => (records) => {
       let groupedRecords = records;
-      Object
-        .keys(group)
-        .forEach((g) => {
-          groupedRecords = groupedRecords
-            .reduce((result, currentValue) => {
-              const key = currentValue[g];
-              if (!result[key]) {
-                result[key] = {};
-                result[key][group[g]] = [];
-              }
-              result[key][group[g]] = [
-                ...result[key][group[g]],
-                currentValue,
-              ];
-              return result;
-            }, {});
-        });
+      group.forEach((g) => {
+        groupedRecords = groupedRecords
+          .reduce((result, currentValue) => {
+            const key = currentValue[g];
+            if (!result[key]) {
+              result[key] = {};
+              result[key].values = [];
+            }
+            result[key].values = [
+              ...result[key].values,
+              currentValue,
+            ];
+            return result;
+          }, {});
+      });
       return groupedRecords;
     },
   },

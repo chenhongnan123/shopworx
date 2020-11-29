@@ -67,10 +67,7 @@ export default {
     } else {
       this.resetConfig();
     }
-    this.setGroup({
-      field: 'shiftName',
-      value: 'downtime',
-    });
+    this.setGroup(['shiftName']);
     await this.getOnboardingState();
     if (this.onboarded) {
       await Promise.all([
