@@ -67,6 +67,8 @@ export default {
     const config = localStorage.getItem(this.storageLocation.production);
     if (config) {
       this.setConfig(JSON.parse(config));
+    } else {
+      this.resetConfig();
     }
     await this.getDataOnboardingState();
     if (this.dataOnboarded) {
@@ -84,7 +86,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations('webApp', ['setConfig']),
+    ...mapMutations('webApp', ['setConfig', 'resetConfig']),
     ...mapMutations('productionLog', ['setElementOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),

@@ -64,6 +64,8 @@ export default {
     const config = localStorage.getItem(this.storageLocation.downtime);
     if (config) {
       this.setConfig(JSON.parse(config));
+    } else {
+      this.resetConfig();
     }
     await this.getOnboardingState();
     if (this.onboarded) {
@@ -76,7 +78,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations('webApp', ['setConfig']),
+    ...mapMutations('webApp', ['setConfig', 'resetConfig']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('downtimeLog', [
