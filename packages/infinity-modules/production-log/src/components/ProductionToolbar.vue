@@ -8,8 +8,9 @@
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
-          <span v-if="productionCount">
-            {{ productionCount }} records <span v-if="$vuetify.breakpoint.smAndUp">|</span>
+          <span v-if="filterCount">
+            {{ filterCount }} of {{ productionCount }} records
+            <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
           <span v-if="$vuetify.breakpoint.smAndUp">
             {{ machine }} | {{ shift }} - {{ date }}
@@ -45,6 +46,7 @@ export default {
     ...mapState('productionLog', [
       'drawer',
       'productionList',
+      'productionCount',
     ]),
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
     machine() {
@@ -56,7 +58,7 @@ export default {
     date() {
       return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
     },
-    productionCount() {
+    filterCount() {
       const production = this.filteredRecords(this.productionList);
       return production.length;
     },
