@@ -250,18 +250,7 @@ export default ({
       if (downtimeList && downtimeList.length) {
         downtime = rootGetters['webApp/filteredRecords'](downtimeList);
         downtime = rootGetters['webApp/sortedRecords'](downtime);
-        downtime = downtime.reduce((result, currentValue) => {
-          const { shiftName: shift } = currentValue;
-          if (!result[shift]) {
-            result[shift] = {};
-            result[shift].downtime = [];
-          }
-          result[shift].downtime = [
-            ...result[shift].downtime,
-            currentValue,
-          ];
-          return result;
-        }, {});
+        downtime = rootGetters['webApp/groupedRecords'](downtime);
       }
       if (!downtime || !Object.keys(downtime).length) {
         downtime = null;

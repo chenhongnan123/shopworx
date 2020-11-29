@@ -9,6 +9,7 @@ export default ({
     config: {
       filters: {},
       sort: {},
+      group: {},
     },
     storageLocation: {
       planning: 'planningConfig',
@@ -24,6 +25,7 @@ export default ({
       const { config } = state;
       Vue.set(config, 'filters', {});
       Vue.set(config, 'sort', {});
+      Vue.set(config, 'group', {});
     },
     setFilter: (state, { field, value }) => {
       const { config: { filters } } = state;
@@ -32,6 +34,10 @@ export default ({
     setSort: (state, { field, value }) => {
       const { config: { sort } } = state;
       Vue.set(sort, field, value);
+    },
+    setGroup: (state, { field, value }) => {
+      const { config: { group } } = state;
+      Vue.set(group, field, value);
     },
   },
   actions: {
@@ -66,6 +72,7 @@ export default ({
   getters: {
     filters: ({ config }) => config.filters,
     sort: ({ config }) => config.sort,
+    group: ({ config }) => config.group,
     filteredRecords: (_, { filters }) => (records) => {
       let filteredRecords = records;
       Object
@@ -132,6 +139,27 @@ export default ({
             });
         });
       return sortedRecords;
+    },
+    groupedRecords: (_, { group }) => (records) => {
+      let groupedRecords = records;
+      Object
+        .keys(group)
+        .forEach((g) => {
+          groupedRecords = groupedRecords
+            .reduce((result, currentValue) => {
+              const key = currentValue[g];
+              if (!result[key]) {
+                result[key] = {};
+                result[key][group[g]] = [];
+              }
+              result[key][group[g]] = [
+                ...result[key][group[g]],
+                currentValue,
+              ];
+              return result;
+            }, {});
+        });
+      return groupedRecords;
     },
   },
 });

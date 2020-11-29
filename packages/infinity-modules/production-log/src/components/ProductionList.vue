@@ -149,12 +149,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.truncate {
-  max-width: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>

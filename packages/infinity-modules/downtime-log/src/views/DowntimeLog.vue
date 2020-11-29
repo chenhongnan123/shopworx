@@ -67,6 +67,10 @@ export default {
     } else {
       this.resetConfig();
     }
+    this.setGroup({
+      field: 'shiftName',
+      value: 'downtime',
+    });
     await this.getOnboardingState();
     if (this.onboarded) {
       await Promise.all([
@@ -78,7 +82,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations('webApp', ['setConfig', 'resetConfig']),
+    ...mapMutations('webApp', ['setConfig', 'resetConfig', 'setGroup']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('downtimeLog', [
