@@ -16,6 +16,7 @@
         icon
         small
         class="ml-2 mb-1"
+        @click="refreshProductionPlans"
       >
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
 import PlanningToolbar from '../components/PlanningToolbar.vue';
 import PlanningDrawer from '../components/PlanningDrawer.vue';
 import PlanningList from '../components/PlanningList.vue';
@@ -37,6 +39,16 @@ export default {
     PlanningToolbar,
     PlanningDrawer,
     PlanningList,
+  },
+  created() {
+    this.setExtendedHeader(true);
+  },
+  methods: {
+    ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapActions('productionPlanning', ['fetchPlanningList']),
+    refreshProductionPlans() {
+      this.fetchPlanningList();
+    },
   },
 };
 </script>

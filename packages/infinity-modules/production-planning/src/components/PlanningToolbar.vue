@@ -5,6 +5,25 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
+      <v-btn
+        small
+        class="text-none"
+        color="primary"
+        :to="{ name: 'addProductionPlan' }"
+      >
+        <v-icon left small>mdi-plus</v-icon>
+        Add new plan
+      </v-btn>
+      <v-btn
+        small
+        outlined
+        color="primary"
+        :to="{ name: 'reorderPlans' }"
+        class="text-none ml-2"
+      >
+        <v-icon left small>mdi-swap-vertical</v-icon>
+        Re-order plans
+      </v-btn>
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">

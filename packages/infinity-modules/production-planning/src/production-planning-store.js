@@ -11,6 +11,7 @@ export default ({
     parts: [],
     shifts: [],
     planningList: [],
+    reorderPlanList: [],
     loading: false,
     error: false,
     planningCount: 0,
@@ -29,6 +30,7 @@ export default ({
     setError: set('error'),
     setPlanningCount: set('planningCount'),
     setPlanningList: set('planningList'),
+    setReorderPlanList: set('reorderPlanList'),
   },
   actions: {
     fetchMachines: async ({ commit, dispatch }) => {
@@ -116,6 +118,35 @@ export default ({
       }
       commit('setLoading', false);
     },
+
+    fetchReorderPlanList: async ({ commit, dispatch }) => {
+      commit('setLoading', true);
+      commit('setReorderPlanList', []);
+      commit('setError', false);
+      const data = await dispatch(
+        'element/getRecordsWithCount',
+        {
+          elementName: 'planning',
+          query: '?query=status=="notStarted"',
+        },
+        { root: true },
+      );
+      if (data && data.results) {
+        const plans = data.results.map((plan) => {
+          const equipmentname = plan.moldname || plan.toolname;
+          return {
+            ...plan,
+            equipmentname,
+          };
+        });
+        commit('setReorderPlanList', plans);
+        commit('setError', false);
+      } else {
+        commit('setReorderPlanList', []);
+        commit('setError', true);
+      }
+      commit('setLoading', false);
+    },
   },
   getters: {
     machineList: ({ machines }) => {
@@ -188,6 +219,30 @@ export default ({
           planning = sortArray(planning, key);
         });
         planning = rootGetters['webApp/groupedRecords'](planning);
+      }
+      if (!planning || !Object.keys(planning).length) {
+        planning = null;
+      }
+      return planning;
+    },
+
+    notStartedPlans: ({ reorderPlanList }) => {
+      let planning = null;
+      if (reorderPlanList && reorderPlanList.length) {
+        planning = reorderPlanList.sort((a, b) => a.sortindex - b.sortindex);
+        planning = sortArray(planning, 'machinename');
+        planning = planning.reduce((result, currentValue) => {
+          const key = currentValue.machinename;
+          if (!result[key]) {
+            result[key] = {};
+            result[key].values = [];
+          }
+          result[key].values = [
+            ...result[key].values,
+            currentValue,
+          ];
+          return result;
+        }, {});
       }
       if (!planning || !Object.keys(planning).length) {
         planning = null;

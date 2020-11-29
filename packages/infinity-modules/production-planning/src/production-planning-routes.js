@@ -18,6 +18,12 @@ const routes = [
         props: true,
       },
       {
+        path: 'reorder',
+        name: 'reorderPlans',
+        component: () => import(/* webpackChunkName: "production-planning" */ './views/ReorderProductionPlans.vue'),
+        props: true,
+      },
+      {
         path: 'p/:id',
         name: 'productionPlanDetails',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanDetails.vue'),

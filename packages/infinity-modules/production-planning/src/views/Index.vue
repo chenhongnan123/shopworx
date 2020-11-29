@@ -38,12 +38,10 @@ export default {
       this.fetchShifts(),
       this.fetchParts(),
     ]);
-    this.setExtendedHeader(true);
     this.loading = false;
   },
   methods: {
     ...mapMutations('webApp', ['setConfig', 'resetConfig']),
-    ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('productionPlanning', [
       'fetchShifts',
       'fetchParts',
