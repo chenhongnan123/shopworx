@@ -182,7 +182,6 @@ export default ({
       let planning = null;
       if (planningList && planningList.length) {
         const group = rootGetters['webApp/group'];
-        console.log(group);
         planning = rootGetters['webApp/filteredRecords'](planningList);
         planning = rootGetters['webApp/sortedRecords'](planning);
         group.forEach((key) => {

@@ -70,7 +70,6 @@ export default {
     async complete() {
       this.creating = true;
       const success = await this.createElements();
-      console.log(success);
       if (success) {
         this.setDataOnboarded(false);
         this.setElementOnboarded(false);
