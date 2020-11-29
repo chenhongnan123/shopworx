@@ -38,6 +38,7 @@
           <v-data-table
             :items="machineData.production"
             :headers="headers"
+            disable-pagination
             hide-default-footer
           >
             <!-- eslint-disable-next-line -->

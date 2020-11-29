@@ -6,7 +6,15 @@
     scrollable
   >
     <template v-slot:activator="{ on }">
-      <v-btn small v-on="on" class="text-none" color="primary"> Assign Reason </v-btn>
+      <v-btn
+        small
+        v-on="on"
+        class="text-none"
+        color="primary"
+      >
+        <v-icon small left>mdi-playlist-check</v-icon>
+        Assign Reason
+      </v-btn>
     </template>
     <v-form ref="form" lazy-validation>
       <v-card>
@@ -22,6 +30,7 @@
             :headers="headers"
             :items="selectedDowntimes"
             item-key="_id"
+            disable-pagination
             hide-default-footer
           >
             <template v-slot:item="{ item }">

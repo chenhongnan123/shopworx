@@ -42,6 +42,7 @@
             :headers="headers"
             hide-default-footer
             :items="scraps"
+            disable-pagination
             v-if="scraps.length"
           >
             <!-- eslint-disable-next-line -->

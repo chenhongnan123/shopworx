@@ -78,6 +78,7 @@
                 dense
                 :headers="headers"
                 hide-default-footer
+                disable-pagination
                 :items="data.rejections"
                 v-if="data.rejections.length"
               >

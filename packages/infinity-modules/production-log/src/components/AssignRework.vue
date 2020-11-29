@@ -42,6 +42,7 @@
             :headers="headers"
             hide-default-footer
             :items="reworks"
+            disable-pagination
             v-if="reworks.length"
           >
             <!-- eslint-disable-next-line -->

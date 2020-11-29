@@ -25,6 +25,7 @@
           :headers="headers"
           hide-default-footer
           item-key="_id"
+          disable-pagination
           :show-select="toggleSelection"
         >
           <!-- eslint-disable-next-line -->
