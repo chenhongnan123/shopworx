@@ -73,11 +73,12 @@ export default ({
         .filter((f) => f !== 'date')
         .forEach((filter) => {
           const { value, operation } = filters[filter];
-          const isValueString = typeof value === 'string';
-          const applyStringFilter = isValueString && !value.includes('All');
-          const isValueNumber = typeof value === 'number';
+          const isTypeString = typeof value === 'string';
+          const applyStringFilter = isTypeString && !value.includes('All');
+          const isTypeNumber = typeof value === 'number';
           filteredRecords = filteredRecords
             .filter((record) => {
+              const valueExists = record[filter] !== undefined;
               if (applyStringFilter) {
                 if (operation === 'eq') {
                   return record[filter] === value;
@@ -86,13 +87,13 @@ export default ({
                   return record[filter] !== value;
                 }
                 if (operation === 'exists') {
-                  return record[filter] !== undefined;
+                  return valueExists;
                 }
                 if (operation === 'notexists') {
-                  return record[filter] === undefined;
+                  return !valueExists;
                 }
               }
-              if (isValueNumber) {
+              if (valueExists && isTypeNumber) {
                 if (operation === 'eq') {
                   return record[filter] === value;
                 }
