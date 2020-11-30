@@ -10,8 +10,16 @@
     :event-color="getEventColor"
     @click:more="viewDay"
     @click:date="viewDay"
-    @change="updateRange"
-  ></v-calendar>
+    @change="fetchEvents"
+  >
+    <template #event="{ event }">
+      <div>
+        <strong>{{ event.planid }}</strong>
+        {{ event.machinename }}
+        {{ event.partname }}
+      </div>
+    </template>
+  </v-calendar>
 </template>
 
 <script>
@@ -79,7 +87,7 @@ export default {
       const a = new Date(timestamp);
       return `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`;
     },
-    async updateRange({ start, end }) {
+    async fetchEvents({ start, end }) {
       const min = start.date;
       const max = end.date;
       this.setFilter({
