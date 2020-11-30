@@ -72,6 +72,7 @@ export default {
           operatorcode,
           machinename: this.machine,
           timestamp: this.getShiftStart(this.shift),
+          timeType: 'BUSINESS_TIME',
         };
         await this.updateOperator({
           payload,

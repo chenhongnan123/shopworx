@@ -292,6 +292,7 @@ export default {
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addRework(payload);
       if (id) {

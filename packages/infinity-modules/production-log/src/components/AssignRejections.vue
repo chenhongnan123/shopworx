@@ -335,6 +335,7 @@ export default {
         remark,
         ...reason,
         timestamp: this.getHourStart(data.displayhour),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addRejection(payload);
       if (id) {
