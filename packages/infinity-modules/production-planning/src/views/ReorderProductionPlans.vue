@@ -4,7 +4,7 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Re-order Plans</span>
+      <span>Re-order plans</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"

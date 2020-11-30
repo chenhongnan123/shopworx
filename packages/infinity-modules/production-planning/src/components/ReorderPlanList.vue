@@ -90,17 +90,21 @@ export default {
     return {
       headers: [
         { text: '', value: 'drag' },
-        { text: 'Execution order', value: 'sortindex' },
+        {
+          text: 'Execution order',
+          value: 'sortindex',
+          width: '5%',
+        },
         { text: 'Plan', value: 'planid' },
         {
           text: 'Part',
           value: 'partname',
-          width: '30%',
+          width: '25%',
         },
         {
           text: 'Equipment',
           value: 'equipmentname',
-          width: '30%',
+          width: '25%',
         },
         {
           text: 'Planned Qty',
@@ -110,7 +114,7 @@ export default {
           text: 'Action',
           value: 'action',
           sortable: false,
-          width: '10%',
+          width: '15%',
         },
       ],
     };

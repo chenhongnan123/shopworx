@@ -160,6 +160,22 @@ export default ({
       }
       commit('setLoading', false);
     },
+
+    fetchPartMatrix: async ({ dispatch }, { partname }) => {
+      const payload = {
+        elementName: 'partmatrix',
+        query: `?query=partname=="${encodeURIComponent(partname)}"`,
+      };
+      const partMatrixRecords = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (partMatrixRecords && partMatrixRecords.length) {
+        return partMatrixRecords;
+      }
+      return [];
+    },
   },
   getters: {
     isCalendarView: ({ view }) => view !== 'default',

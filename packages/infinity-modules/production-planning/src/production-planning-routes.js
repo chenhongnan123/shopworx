@@ -12,7 +12,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanning.vue'),
       },
       {
-        path: 'add',
+        path: 'plan',
         name: 'addProductionPlan',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/AddProductionPlan.vue'),
       },

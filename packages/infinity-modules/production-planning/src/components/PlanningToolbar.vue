@@ -29,11 +29,11 @@
         >
           <v-icon v-text="'$next'"></v-icon>
         </v-btn>
-        <span class="headline ml-2" v-if="calendarRef">
+        <span class="title ml-2" v-if="calendarRef">
           {{ calendarRef.title }}
         </span>
       </template>
-      <span class="headline" v-else>
+      <span class="title" v-else>
         {{ date }}
       </span>
       <v-spacer></v-spacer>
