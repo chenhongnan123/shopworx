@@ -22,6 +22,9 @@ export default {
   data() {
     return {
       groupList: [{
+        name: 'Date',
+        value: 'date',
+      }, {
         name: 'Machine',
         value: 'machinename',
       }, {

@@ -5,9 +5,41 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
+      <template v-if="isCalendarView">
+        <v-btn
+          class="text-none"
+          color="primary"
+          outlined
+          small
+          @click="setToday"
+        >
+          Today
+        </v-btn>
+        <v-btn
+          icon
+          class="ml-2"
+          @click="setPrev"
+        >
+          <v-icon v-text="'$prev'"></v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          class="ml-2"
+          @click="setNext"
+        >
+          <v-icon v-text="'$next'"></v-icon>
+        </v-btn>
+        <span class="headline ml-2" v-if="calendarRef">
+          {{ calendarRef.title }}
+        </span>
+      </template>
+      <span class="headline" v-else>
+        {{ date }}
+      </span>
+      <v-spacer></v-spacer>
       <v-btn
         small
-        class="text-none"
+        class="text-none mr-2"
         color="primary"
         :to="{ name: 'addProductionPlan' }"
       >
@@ -19,33 +51,58 @@
         outlined
         color="primary"
         :to="{ name: 'reorderPlans' }"
-        class="text-none ml-2"
+        class="text-none mr-2"
       >
         <v-icon left small>mdi-swap-vertical</v-icon>
         Re-order plans
       </v-btn>
-      <v-spacer></v-spacer>
-      <div class="mt-1">
-        <span class="title">
-          <span v-if="filterCount">
-            {{ filterCount }} of {{ planningCount }} records
-            <span v-if="$vuetify.breakpoint.smAndUp">|</span>
-          </span>
-          <span v-if="$vuetify.breakpoint.smAndUp">
-            {{ machine }} | {{ date }}
-          </span>
-        </span>
-      </div>
-      <v-btn
-        icon
-        small
-        outlined
-        class="ml-2"
-        @click="toggleDrawer(true)"
+      <v-menu bottom right>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="text-none mr-2"
+            color="primary"
+            outlined
+            small
+            v-bind="attrs"
+            v-on="on"
+          >
+            <span>{{ typeToLabel[viewType] }}</span>
+            <v-icon right v-text="'mdi-menu-down'"></v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="viewType = 'default'">
+            <v-list-item-title>List</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="viewType = 'month'">
+            <v-list-item-title>Month</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="viewType = 'week'">
+            <v-list-item-title>Week</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="viewType = 'day'">
+            <v-list-item-title>Day</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-badge
+        overlap
+        bordered
+        color="primary"
+        icon="mdi-check-outline"
+        :value="showBadge"
       >
-        <v-icon small v-if="!drawer">mdi-pencil</v-icon>
-        <v-icon small v-else>mdi-check</v-icon>
-      </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none"
+          @click="toggleDrawer(true)"
+        >
+          <v-icon small left>mdi-filter-variant</v-icon>
+          Filters
+        </v-btn>
+      </v-badge>
     </v-toolbar>
   </portal>
 </template>
@@ -58,18 +115,36 @@ export default {
   name: 'PlanningToolbar',
   data() {
     return {
-      edit: false,
+      typeToLabel: {
+        default: 'List',
+        month: 'Month',
+        week: 'Week',
+        day: 'Day',
+      },
     };
   },
   computed: {
     ...mapState('productionPlanning', [
       'drawer',
-      'planningList',
-      'planningCount',
+      'view',
+      'today',
+      'calendarRef',
     ]),
-    ...mapGetters('webApp', ['filters', 'filteredRecords']),
-    machine() {
-      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
+    ...mapGetters('webApp', ['filters']),
+    ...mapGetters('productionPlanning', ['isCalendarView']),
+    viewType: {
+      get() {
+        return this.view;
+      },
+      set(view) {
+        this.setView(view);
+      },
+    },
+    showBadge() {
+      const isMachineFilter = !this.filters.machinename.value.includes('All');
+      const isPartFilter = !this.filters.partname.value.includes('All');
+      const isStatusFilter = this.filters.status.value.length !== 4;
+      return isMachineFilter || isPartFilter || isStatusFilter;
     },
     date() {
       let dateText = '';
@@ -84,13 +159,22 @@ export default {
       }
       return dateText;
     },
-    filterCount() {
-      const planning = this.filteredRecords(this.planningList);
-      return planning.length;
-    },
   },
   methods: {
-    ...mapMutations('productionPlanning', ['toggleDrawer']),
+    ...mapMutations('productionPlanning', [
+      'toggleDrawer',
+      'setView',
+      'setCalendarFocus',
+    ]),
+    setToday() {
+      this.setCalendarFocus(this.today);
+    },
+    setPrev() {
+      this.calendarRef.prev();
+    },
+    setNext() {
+      this.calendarRef.next();
+    },
   },
 };
 </script>

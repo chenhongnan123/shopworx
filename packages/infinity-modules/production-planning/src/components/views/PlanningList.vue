@@ -1,12 +1,6 @@
 <template>
   <div style="height:100%">
-    <template v-if="loading">
-      <planning-loading />
-    </template>
-    <template v-else-if="error">
-      <planning-error />
-    </template>
-    <template v-else-if="!error && !planning">
+    <template v-if="!error && !planning">
       <planning-no-records />
     </template>
     <template v-else>
@@ -34,18 +28,14 @@ import {
   mapActions,
   mapGetters,
 } from 'vuex';
-import PlanningLoading from './PlanningLoading.vue';
-import PlanningError from './PlanningError.vue';
-import PlanningNoRecords from './PlanningNoRecords.vue';
-import MachineView from './data-table/MachineView.vue';
-import PartView from './data-table/PartView.vue';
-import StatusView from './data-table/StatusView.vue';
+import PlanningNoRecords from '../PlanningNoRecords.vue';
+import MachineView from '../data-table/MachineView.vue';
+import PartView from '../data-table/PartView.vue';
+import StatusView from '../data-table/StatusView.vue';
 
 export default {
   name: 'PlanningList',
   components: {
-    PlanningLoading,
-    PlanningError,
     PlanningNoRecords,
     MachineView,
     PartView,

@@ -30,25 +30,52 @@
     </portal>
     <planning-toolbar />
     <planning-drawer />
-    <planning-list />
+    <template v-if="loading">
+      <planning-loading />
+    </template>
+    <template v-else-if="error">
+      <planning-error />
+    </template>
+    <component :is="component" />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import {
+  mapState,
+  mapActions,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
+import PlanningLoading from '../components/PlanningLoading.vue';
+import PlanningError from '../components/PlanningError.vue';
 import PlanningToolbar from '../components/PlanningToolbar.vue';
 import PlanningDrawer from '../components/PlanningDrawer.vue';
-import PlanningList from '../components/PlanningList.vue';
+import PlanningList from '../components/views/PlanningList.vue';
+import PlanningCalendar from '../components/views/PlanningCalendar.vue';
 
 export default {
   name: 'ProductionPlanning',
   components: {
+    PlanningLoading,
+    PlanningError,
     PlanningToolbar,
     PlanningDrawer,
     PlanningList,
+    PlanningCalendar,
   },
   computed: {
-    ...mapState('productionPlanning', ['lastRefreshedAt']),
+    ...mapState('productionPlanning', [
+      'loading',
+      'error',
+      'lastRefreshedAt',
+    ]),
+    ...mapGetters('productionPlanning', ['isCalendarView']),
+    component() {
+      return this.isCalendarView
+        ? 'planning-calendar'
+        : 'planning-list';
+    },
   },
   created() {
     this.setExtendedHeader(true);

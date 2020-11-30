@@ -8,27 +8,30 @@
   >
     <perfect-scrollbar style="height: 100%">
       <div class="mt-4 mx-2" >
-        <date-selection />
+        <calendar-date-selection v-if="isCalendarView" />
+        <date-selection v-else />
         <machine-selection />
         <part-selection />
         <status-selection />
-        <group-selection />
+        <group-selection v-if="!isCalendarView" />
       </div>
     </perfect-scrollbar>
   </v-navigation-drawer>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import DateSelection from './toolbar/DateSelection.vue';
-import MachineSelection from './toolbar/MachineSelection.vue';
-import PartSelection from './toolbar/PartSelection.vue';
-import StatusSelection from './toolbar/StatusSelection.vue';
-import GroupSelection from './toolbar/GroupSelection.vue';
+import { mapState, mapMutations, mapGetters } from 'vuex';
+import CalendarDateSelection from './filters/CalendarDateSelection.vue';
+import DateSelection from './filters/DateSelection.vue';
+import MachineSelection from './filters/MachineSelection.vue';
+import PartSelection from './filters/PartSelection.vue';
+import StatusSelection from './filters/StatusSelection.vue';
+import GroupSelection from './filters/GroupSelection.vue';
 
 export default {
   name: 'PlanningDrawer',
   components: {
+    CalendarDateSelection,
     DateSelection,
     MachineSelection,
     PartSelection,
@@ -37,6 +40,7 @@ export default {
   },
   computed: {
     ...mapState('productionPlanning', ['drawer']),
+    ...mapGetters('productionPlanning', ['isCalendarView']),
     model: {
       get() {
         return this.drawer;

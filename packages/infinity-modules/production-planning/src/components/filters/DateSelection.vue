@@ -4,7 +4,6 @@
     range
     no-title
     full-width
-    :max="today"
     v-model="date"
   ></v-date-picker>
 </template>

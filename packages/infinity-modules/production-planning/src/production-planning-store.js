@@ -4,9 +4,13 @@ import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 export default ({
   namespaced: true,
   state: {
+    calendarRef: null,
+    calendarFocus: '',
+    today: new Date().toISOString().substr(0, 10),
     masterData: [],
     drawer: false,
     onboarded: true,
+    view: 'default',
     machines: [],
     parts: [],
     shifts: [],
@@ -20,11 +24,14 @@ export default ({
     lastRefreshedReorder: null,
   },
   mutations: {
+    setCalendarRef: set('calendarRef'),
+    setCalendarFocus: set('calendarFocus'),
     setMasterData: set('masterData'),
     setToggleSelection: set('toggleSelection'),
     setDrawer: set('drawer'),
     toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
+    setView: set('view'),
     setMachines: set('machines'),
     setParts: set('parts'),
     setShifts: set('shifts'),
@@ -94,7 +101,7 @@ export default ({
       commit('setError', false);
       const completedOrAbortedPlans = `(actualstart<${max}%26%26actualend>${min})`;
       const inProgressPlans = `(status=="inProgress"%26%26actualstart<${max})`;
-      const newPlans = `(status=="notStarted"%26%26scheduledstart<${max})`;
+      const newPlans = `(status=="notStarted"%26%26scheduledstart>${min}%26%26scheduledend<${max})`;
       const or = '%7C%7C';
       const data = await dispatch(
         'element/getRecordsWithCount',
@@ -155,6 +162,8 @@ export default ({
     },
   },
   getters: {
+    isCalendarView: ({ view }) => view !== 'default',
+
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
@@ -215,16 +224,23 @@ export default ({
       ];
     },
 
-    planning: ({ planningList }, getters, rootState, rootGetters) => {
+    planning: (
+      { planningList },
+      { isCalendarView },
+      rootState,
+      rootGetters,
+    ) => {
       let planning = null;
       if (planningList && planningList.length) {
         const group = rootGetters['webApp/group'];
         planning = rootGetters['webApp/filteredRecords'](planningList);
-        planning = rootGetters['webApp/sortedRecords'](planning);
-        group.forEach((key) => {
-          planning = sortArray(planning, key);
-        });
-        planning = rootGetters['webApp/groupedRecords'](planning);
+        if (!isCalendarView) {
+          planning = rootGetters['webApp/sortedRecords'](planning);
+          group.forEach((key) => {
+            planning = sortArray(planning, key);
+          });
+          planning = rootGetters['webApp/groupedRecords'](planning);
+        }
       }
       if (!planning || !Object.keys(planning).length) {
         planning = null;
