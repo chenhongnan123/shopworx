@@ -30,12 +30,10 @@
     </portal>
     <planning-toolbar />
     <planning-drawer />
-    <template v-if="loading">
-      <planning-loading />
-    </template>
-    <template v-else-if="error">
-      <planning-error />
-    </template>
+    <v-progress-linear
+      :indeterminate="true"
+      v-if="loading"
+    ></v-progress-linear>
     <component :is="component" />
   </div>
 </template>
@@ -47,8 +45,6 @@ import {
   mapMutations,
   mapGetters,
 } from 'vuex';
-import PlanningLoading from '../components/PlanningLoading.vue';
-import PlanningError from '../components/PlanningError.vue';
 import PlanningToolbar from '../components/PlanningToolbar.vue';
 import PlanningDrawer from '../components/PlanningDrawer.vue';
 import PlanningList from '../components/views/PlanningList.vue';
@@ -57,19 +53,13 @@ import PlanningCalendar from '../components/views/PlanningCalendar.vue';
 export default {
   name: 'ProductionPlanning',
   components: {
-    PlanningLoading,
-    PlanningError,
     PlanningToolbar,
     PlanningDrawer,
     PlanningList,
     PlanningCalendar,
   },
   computed: {
-    ...mapState('productionPlanning', [
-      'loading',
-      'error',
-      'lastRefreshedAt',
-    ]),
+    ...mapState('productionPlanning', ['loading', 'lastRefreshedAt']),
     ...mapGetters('productionPlanning', ['isCalendarView']),
     component() {
       return this.isCalendarView

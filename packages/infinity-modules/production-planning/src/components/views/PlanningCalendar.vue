@@ -8,6 +8,7 @@
     color="accent"
     :events="events"
     :event-color="getEventColor"
+    @click:event="showEvent"
     @click:more="viewDay"
     @click:date="viewDay"
     @change="fetchEvents"
@@ -35,6 +36,9 @@ export default {
   data() {
     return {
       events: [],
+      selectedEvent: {},
+      selectedElement: null,
+      selectedOpen: false,
     };
   },
   mounted() {
@@ -123,6 +127,12 @@ export default {
         });
         this.events = events;
       }
+    },
+    showEvent({ event }) {
+      this.$router.push({
+        name: 'productionPlanDetails',
+        params: { id: event.planid },
+      });
     },
   },
   watch: {

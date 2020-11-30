@@ -15,13 +15,11 @@ const routes = [
         path: 'add',
         name: 'addProductionPlan',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/AddProductionPlan.vue'),
-        props: true,
       },
       {
         path: 'reorder',
         name: 'reorderPlans',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ReorderProductionPlans.vue'),
-        props: true,
       },
       {
         path: 'p/:id',

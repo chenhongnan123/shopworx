@@ -1,7 +1,7 @@
 <template>
-  <span>
+  <a @click="goToPlan">
     {{ planid }}
-  </span>
+  </a>
 </template>
 
 <script>
@@ -11,6 +11,14 @@ export default {
     planid: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    goToPlan() {
+      this.$router.push({
+        name: 'productionPlanDetails',
+        params: { id: this.planid },
+      });
     },
   },
 };

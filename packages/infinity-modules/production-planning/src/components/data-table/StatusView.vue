@@ -72,7 +72,7 @@ export default {
           text: 'Action',
           value: 'action',
           sortable: false,
-          width: '10%',
+          width: '15%',
         },
       ],
     };
