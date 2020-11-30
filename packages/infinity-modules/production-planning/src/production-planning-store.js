@@ -232,13 +232,11 @@ export default ({
     ) => {
       let planning = null;
       if (planningList && planningList.length) {
-        const group = rootGetters['webApp/group'];
+        const [group] = rootGetters['webApp/group'];
         planning = rootGetters['webApp/filteredRecords'](planningList);
         if (!isCalendarView) {
           planning = rootGetters['webApp/sortedRecords'](planning);
-          group.forEach((key) => {
-            planning = sortArray(planning, key);
-          });
+          planning = sortArray(planning, group);
           planning = rootGetters['webApp/groupedRecords'](planning);
         }
       }
