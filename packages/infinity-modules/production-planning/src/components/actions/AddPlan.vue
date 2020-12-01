@@ -26,6 +26,7 @@
                         :disabled="saving"
                         item-text="partname"
                         v-model="selectedPart"
+                        :title="selectedPart ? selectedPart.partname : ''"
                         @change="onPartSelection"
                       >
                         <template #item="{ item }">
@@ -54,6 +55,7 @@
                         item-text="machinename"
                         item-value="machinename"
                         v-model="selectedMachine"
+                        :title="selectedMachine || ''"
                         @change="setPlanParameters"
                       ></v-autocomplete>
                     </validation-provider>
@@ -75,6 +77,7 @@
                         item-text="equipmentname"
                         item-value="equipmentname"
                         v-model="selectedEquipment"
+                        :title="selectedEquipment || ''"
                         @change="setPlanParameters"
                       ></v-autocomplete>
                     </validation-provider>
@@ -154,10 +157,25 @@
                         outlined
                         v-model="plan.activecavity"
                         hide-details="auto"
+                        @change="onCavityChange"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
                 </v-row>
+                <div class="caption" v-if="areParamsEdited">
+                  <span class="error--text">
+                    Operational parameters are edited.
+                  </span>
+                  <div>
+                    Standard cycletime <strong>{{ selectedMatrix.stdcycletime }}</strong> secs.
+                  </div>
+                  <div>
+                    Standard delaytime <strong>{{ selectedMatrix.delaytime }}</strong> secs.
+                  </div>
+                  <div>
+                    Standard cavity <strong>{{ selectedMatrix.cavity }}</strong>.
+                  </div>
+                </div>
                 <div class="title mt-4">
                   Plan details
                 </div>
@@ -177,6 +195,7 @@
                         outlined
                         v-model="plan.plannedquantity"
                         hide-details="auto"
+                        @change="onQuantityChange"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
@@ -195,6 +214,7 @@
                         v-model="plan.scheduledstart"
                         hide-details="auto"
                         :disabled="saving"
+                        @change="fetchEstimatedEnd"
                       >
                         <template #append-outer>
                           <v-tooltip bottom>
@@ -246,7 +266,7 @@
                 </v-row>
                 <div>
                   *Estimated end time:
-                  <strong>Nov 23, 2020 03:22</strong>
+                  <strong>{{ estimatedEndDisplay }}</strong>
                 </div>
                 <template v-if="familyParts.length">
                   <div class="title mt-4">
@@ -259,7 +279,36 @@
                     disable-pagination
                     item-key="_id"
                     show-select
-                  ></v-data-table>
+                    v-model="selectedFamilyParts"
+                  >
+                    <!-- eslint-disable-next-line -->
+                    <template #item.activecavity="{ item }">
+                      <v-edit-dialog
+                        large
+                        persistent
+                        @save="updateFamilyCavity({
+                          id: item._id,
+                          payload: item.activecavity,
+                        })"
+                        :return-value.sync="item.activecavity"
+                      >
+                        {{ item.activecavity }}
+                        <template #input>
+                          <v-text-field
+                            v-model="item.activecavity"
+                            type="number"
+                            label="Active cavity"
+                            :rules="[(v) => (
+                              Number.isInteger(Number(v)) > 0
+                              && v <= parseInt(item.cavity, 10)
+                            )
+                              || 'Should be less than or equal to available cavities']"
+                            single-line
+                          ></v-text-field>
+                        </template>
+                      </v-edit-dialog>
+                    </template>
+                  </v-data-table>
                 </template>
               </v-card-text>
               <v-card-actions>
@@ -312,8 +361,8 @@ export default {
     return {
       headers: [
         { text: 'Part', value: 'partname' },
-        { text: 'Active cavity', value: '' },
-        { text: 'Quantity', value: '' },
+        { text: 'Active cavity', value: 'activecavity' },
+        { text: 'Quantity', value: 'plannedquantity' },
       ],
       editParams: false,
       savingAndExit: false,
@@ -322,6 +371,7 @@ export default {
       selectedPart: null,
       partMatrixList: [],
       familyParts: [],
+      selectedFamilyParts: [],
       plan: null,
       selectedMachine: null,
       selectedEquipment: null,
@@ -343,6 +393,19 @@ export default {
         result = this.selectedAsset(this.plan.assetid) === 'press';
       }
       return result;
+    },
+    areParamsEdited() {
+      if (this.selectedMatrix) {
+        const {
+          stdcycletime,
+          delaytime,
+          cavity,
+        } = this.selectedMatrix;
+        return +this.plan.stdcycletime !== stdcycletime
+          || +this.plan.delaytime !== delaytime
+          || +this.plan.activecavity !== cavity;
+      }
+      return false;
     },
     saving() {
       return this.savingAndExit || this.savingAndNew;
@@ -368,6 +431,16 @@ export default {
       }
       return sortArray(list, 'equipmentname');
     },
+    estimatedEndDisplay() {
+      let res = '';
+      if (this.plan.scheduledend) {
+        res = formatDate(
+          new Date(this.plan.scheduledend),
+          'dd-MM-yyyy\' \'HH:mm',
+        );
+      }
+      return res;
+    },
     selectedMatrix() {
       if (this.selectedPart && this.selectedMachine && this.selectedEquipment) {
         return this.partMatrixList.find((matrix) => (
@@ -378,6 +451,12 @@ export default {
       }
       return null;
     },
+    shots() {
+      if (this.plan.plannedquantity && this.plan.activecavity) {
+        return +this.plan.plannedquantity / +this.plan.activecavity;
+      }
+      return 0;
+    },
   },
   created() {
     this.initPlan();
@@ -387,6 +466,7 @@ export default {
       'fetchPartMatrix',
       'isFamilyMold',
       'getFamilyParts',
+      'getScheduledEnd',
     ]),
     initPlan() {
       this.plan = {
@@ -410,6 +490,7 @@ export default {
       this.editParams = false;
       this.partMatrixList = [];
       this.familyParts = [];
+      this.selectedFamilyParts = [];
       this.selectedMachine = null;
       this.selectedEquipment = null;
       this.$nextTick(() => {
@@ -427,6 +508,7 @@ export default {
     async setPlanParameters() {
       if (this.selectedMachine && this.selectedEquipment) {
         this.familyParts = [];
+        this.selectedFamilyParts = [];
         const {
           stdcycletime,
           delaytime,
@@ -435,26 +517,67 @@ export default {
           machinename,
           partname,
         } = this.selectedMatrix;
-        console.log(cavity);
         this.plan.assetid = this.selectedPart.assetid;
         this.plan.selectedPart = partname;
         this.plan.machinename = machinename;
-        this.plan.stdcycletime = stdcycletime;
-        this.plan.delaytime = delaytime;
-        this.plan.cavity = cavity;
-        this.plan.activecavity = cavity;
+        this.plan.stdcycletime = +stdcycletime;
+        this.plan.delaytime = +delaytime;
+        this.plan.cavity = +cavity;
+        this.plan.activecavity = +cavity;
         if (this.isInjectionMolding) {
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,
           );
           if (isFamily) {
-            this.familyParts = await this.getFamilyParts(
+            const familyParts = await this.getFamilyParts(
               `?query=moldname=="${encodeURIComponent(moldname)}"%26%26machinename=="${encodeURIComponent(machinename)}"%26%26partname!="${encodeURIComponent(partname)}"`,
             );
-            console.log(this.familyParts);
+            this.familyParts = familyParts.map((p) => ({
+              ...p,
+              activecavity: p.cavity,
+              plannedquantity: '',
+            }));
+            this.selectedFamilyParts = [...this.familyParts];
           }
         }
       }
+    },
+    async fetchEstimatedEnd() {
+      if (this.plan.plannedquantity && this.plan.scheduledstart) {
+        const runTime = (+this.plan.plannedquantity / +this.plan.activecavity)
+          * (+this.plan.stdcycletime * 1000);
+        this.plan.scheduledend = await this.getScheduledEnd({
+          start: new Date(this.plan.scheduledstart).getTime(),
+          duration: runTime,
+        });
+      } else {
+        this.plan.scheduledend = '';
+      }
+    },
+    onCavityChange() {
+      if (this.familyParts && this.familyParts.length) {
+        this.updateFamilyParams();
+      }
+    },
+    onQuantityChange() {
+      this.fetchEstimatedEnd();
+      if (this.familyParts && this.familyParts.length) {
+        this.updateFamilyParams();
+      }
+    },
+    updateFamilyParams() {
+      this.familyParts = this.familyParts.map((p) => ({
+        ...p,
+        plannedquantity: +p.activecavity * this.shots,
+      }));
+    },
+    updateFamilyCavity({ id, payload }) {
+      // eslint-disable-next-line
+      const index = this.familyParts.findIndex((p) => p._id === id);
+      this.$set(this.familyParts, index, {
+        ...this.familyParts[index],
+        plannedquantity: +payload * this.shots,
+      });
     },
     exit() {
       this.clear();

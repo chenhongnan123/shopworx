@@ -1,5 +1,6 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
 import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
+import HourService from '@shopworx/services/api/hour.service';
 
 export default ({
   namespaced: true,
@@ -225,6 +226,14 @@ export default ({
         return partMatrixRecords;
       }
       return [];
+    },
+
+    getScheduledEnd: async (_, { start, duration }) => {
+      const { data } = await HourService.getPlanEndTime(start, duration);
+      if (data && data.results) {
+        return data.results;
+      }
+      return start + duration;
     },
   },
   getters: {
