@@ -442,7 +442,7 @@ export default ({
         'element/getRecords',
         {
           elementName: 'planning',
-          query: '?sortquery=sortindex==1&pagenumber=1&pagesize=1',
+          query: '?sortquery=sortindex==-1&pagenumber=1&pagesize=1',
         },
         { root: true },
       );

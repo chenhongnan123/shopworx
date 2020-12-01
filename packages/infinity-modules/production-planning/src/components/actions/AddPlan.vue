@@ -1,6 +1,6 @@
 <template>
   <validation-observer ref="form" #default="{ handleSubmit }">
-    <v-form ref="form" @submit.prevent="handleSubmit(onSaveAndAddNew)">
+    <v-form @submit.prevent="handleSubmit(onSaveAndAddNew)">
       <v-container fluid>
         <v-row
           justify="center"
@@ -588,12 +588,7 @@ export default {
     async setSortIndex() {
       const lastPlan = await this.fetchLastPlan();
       if (lastPlan) {
-        if (lastPlan.sortindex) {
-          this.plan.sortindex = lastPlan.sortindex;
-        } else {
-          const lastPlanId = lastPlan.planid.split('-');
-          this.plan.sortindex = +lastPlanId[1] * 100;
-        }
+        this.plan.sortindex = lastPlan.sortindex + 100;
       } else {
         this.plan.sortindex = 0;
       }
@@ -652,12 +647,15 @@ export default {
       this.savingAndNew = false;
     },
     async onSaveAndExit() {
-      this.savingAndExit = true;
-      const created = await this.save();
-      if (created) {
-        this.exit();
+      const isValid = await this.$refs.form.validate();
+      if (isValid) {
+        this.savingAndExit = true;
+        const created = await this.save();
+        if (created) {
+          this.exit();
+        }
+        this.savingAndExit = false;
       }
-      this.savingAndExit = false;
     },
   },
 };
