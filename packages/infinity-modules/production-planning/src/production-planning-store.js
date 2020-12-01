@@ -11,6 +11,7 @@ export default ({
     drawer: false,
     onboarded: true,
     view: 'default',
+    assets: [],
     machines: [],
     parts: [],
     shifts: [],
@@ -32,6 +33,7 @@ export default ({
     toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
     setView: set('view'),
+    setAssets: set('assets'),
     setMachines: set('machines'),
     setParts: set('parts'),
     setShifts: set('shifts'),
@@ -44,6 +46,19 @@ export default ({
     setLastRefreshedReorder: set('lastRefreshedReorder'),
   },
   actions: {
+    fetchAssets: async ({ commit, dispatch }) => {
+      const assets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (assets && assets.length) {
+        commit('setAssets', assets);
+        return true;
+      }
+      return false;
+    },
+
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
@@ -172,6 +187,41 @@ export default ({
         { root: true },
       );
       if (partMatrixRecords && partMatrixRecords.length) {
+        return partMatrixRecords.map((matrix) => ({
+          ...matrix,
+          equipmentname: matrix.moldname || matrix.toolname,
+        }));
+      }
+      return [];
+    },
+
+    isFamilyMold: async ({ dispatch }, query) => {
+      const payload = {
+        elementName: 'mold',
+        query,
+      };
+      const molds = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (molds && molds.length === 1) {
+        return molds[0].isfamilymold;
+      }
+      return false;
+    },
+
+    getFamilyParts: async ({ dispatch }, query) => {
+      const payload = {
+        elementName: 'partmatrix',
+        query,
+      };
+      const partMatrixRecords = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (partMatrixRecords && partMatrixRecords.length) {
         return partMatrixRecords;
       }
       return [];
@@ -179,6 +229,17 @@ export default ({
   },
   getters: {
     isCalendarView: ({ view }) => view !== 'default',
+
+    selectedAsset: ({ assets }) => (assetId) => {
+      let asset = null;
+      if (assets && assets.length && assetId) {
+        asset = assets.find((a) => a.id === assetId);
+        if (asset) {
+          asset = asset.assetName;
+        }
+      }
+      return asset;
+    },
 
     machineList: ({ machines }) => {
       let machineList = [];

@@ -54,6 +54,7 @@
                         item-text="machinename"
                         item-value="machinename"
                         v-model="selectedMachine"
+                        @change="setPlanParameters"
                       ></v-autocomplete>
                     </validation-provider>
                   </v-col>
@@ -74,12 +75,30 @@
                         item-text="equipmentname"
                         item-value="equipmentname"
                         v-model="selectedEquipment"
+                        @change="setPlanParameters"
                       ></v-autocomplete>
                     </validation-provider>
                   </v-col>
                 </v-row>
                 <div class="title">
                   Operational parameters
+                  <v-btn
+                    small
+                    outlined
+                    class="text-none"
+                    :disabled="!selectedMatrix || saving"
+                    @click="editParams = !editParams"
+                    color="primary"
+                  >
+                    <template v-if="!editParams">
+                      <v-icon left small>mdi-pencil-outline</v-icon>
+                      Edit
+                    </template>
+                    <template v-else>
+                      <v-icon left small>mdi-check</v-icon>
+                      Done
+                    </template>
+                  </v-btn>
                 </div>
                 <v-row>
                   <v-col cols="12" sm="4">
@@ -91,27 +110,31 @@
                       <v-text-field
                         label="Cycle time"
                         type="number"
-                        :disabled="!isMatrixSelected || saving"
+                        :disabled="!editParams || saving"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-clock-fast"
                         outlined
+                        suffix="secs"
+                        v-model="plan.stdcycletime"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="4">
                     <validation-provider
-                      name="setuptime"
+                      name="delaytime"
                       rules="required"
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Setup time"
+                        label="Delay time"
                         type="number"
-                        :disabled="!isMatrixSelected || saving"
+                        :disabled="!editParams || saving"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-cached"
                         outlined
+                        suffix="secs"
+                        v-model="plan.delaytime"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
@@ -125,10 +148,11 @@
                       <v-text-field
                         label="Active cavity"
                         type="number"
-                        :disabled="!isMatrixSelected || saving"
+                        :disabled="!editParams || saving"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-tray-full"
                         outlined
+                        v-model="plan.activecavity"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
@@ -151,6 +175,7 @@
                         :error-messages="errors"
                         prepend-inner-icon="mdi-package-variant-closed"
                         outlined
+                        v-model="plan.plannedquantity"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
@@ -167,10 +192,11 @@
                         :error-messages="errors"
                         prepend-inner-icon="mdi-calendar-check-outline"
                         outlined
+                        v-model="plan.scheduledstart"
                         hide-details="auto"
                         :disabled="saving"
                       >
-                        <template #append>
+                        <template #append-outer>
                           <v-tooltip bottom>
                             <template #activator="{ on, attrs }">
                               <v-icon
@@ -206,6 +232,7 @@
                       hide-details
                       label="Mark as star"
                       :disabled="saving"
+                      v-model="plan.starred"
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="6" sm="2">
@@ -213,6 +240,7 @@
                       hide-details
                       label="Mark as trial"
                       :disabled="saving"
+                      v-model="plan.trial"
                     ></v-checkbox>
                   </v-col>
                 </v-row>
@@ -220,17 +248,19 @@
                   *Estimated end time:
                   <strong>Nov 23, 2020 03:22</strong>
                 </div>
-                <div class="title mt-4">
-                  Family equipment parts
-                </div>
-                <v-data-table
-                  :items="[]"
-                  :headers="headers"
-                  hide-default-footer
-                  disable-pagination
-                  item-key="_id"
-                  show-select
-                ></v-data-table>
+                <template v-if="familyParts.length">
+                  <div class="title mt-4">
+                    Family mold parts
+                  </div>
+                  <v-data-table
+                    :items="familyParts"
+                    :headers="headers"
+                    hide-default-footer
+                    disable-pagination
+                    item-key="_id"
+                    show-select
+                  ></v-data-table>
+                </template>
               </v-card-text>
               <v-card-actions>
                 <v-btn
@@ -245,7 +275,6 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   outlined
-                        hide-details="auto"
                   color="primary"
                   class="text-none"
                   :disabled="savingAndNew"
@@ -273,29 +302,48 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'AddPlan',
   data() {
     return {
       headers: [
-        { text: 'Part', value: '' },
+        { text: 'Part', value: 'partname' },
         { text: 'Active cavity', value: '' },
         { text: 'Quantity', value: '' },
       ],
+      editParams: false,
       savingAndExit: false,
       savingAndNew: false,
       fetchingMatrix: false,
       selectedPart: null,
       partMatrixList: [],
+      familyParts: [],
+      plan: null,
       selectedMachine: null,
       selectedEquipment: null,
     };
   },
   computed: {
     ...mapState('productionPlanning', ['parts', 'partMatrix']),
+    ...mapGetters('productionPlanning', ['selectedAsset']),
+    isInjectionMolding() {
+      let result = false;
+      if (this.plan && this.plan.assetid) {
+        result = this.selectedAsset(this.plan.assetid) === 'injectionmolding';
+      }
+      return result;
+    },
+    isPress() {
+      let result = false;
+      if (this.plan && this.plan.assetid) {
+        result = this.selectedAsset(this.plan.assetid) === 'press';
+      }
+      return result;
+    },
     saving() {
       return this.savingAndExit || this.savingAndNew;
     },
@@ -303,42 +351,65 @@ export default {
       return sortArray(this.parts, 'partname');
     },
     machineList() {
+      let list = [...this.partMatrixList];
       if (this.selectedEquipment) {
-        const list = this.partMatrixList
-          .map((val) => ({
-            ...val,
-            equipmentname: val.moldname || val.toolname,
-          }))
+        list = this.partMatrixList
           .filter((val) => (val.equipmentname === this.selectedEquipment));
         return sortArray(list, 'machinename');
       }
-      return sortArray(this.partMatrixList, 'machinename');
+      return sortArray(list, 'machinename');
     },
     equipmentList() {
+      let list = [...this.partMatrixList];
       if (this.selectedMachine) {
-        const list = this.partMatrixList
-          .filter((val) => (val.machinename === this.selectedMachine))
-          .map((val) => ({
-            ...val,
-            equipmentname: val.moldname || val.toolname,
-          }));
+        list = this.partMatrixList
+          .filter((val) => (val.machinename === this.selectedMachine));
         return sortArray(list, 'equipmentname');
       }
-      const list = this.partMatrixList
-        .map((val) => ({
-          ...val,
-          equipmentname: val.moldname || val.toolname,
-        }));
       return sortArray(list, 'equipmentname');
     },
-    isMatrixSelected() {
-      return this.selectedPart && this.selectedMachine && this.selectedEquipment;
+    selectedMatrix() {
+      if (this.selectedPart && this.selectedMachine && this.selectedEquipment) {
+        return this.partMatrixList.find((matrix) => (
+          matrix.partname === this.selectedPart.partname
+          && matrix.machinename === this.selectedMachine
+          && (matrix.equipmentname === this.selectedEquipment)
+        ));
+      }
+      return null;
     },
   },
+  created() {
+    this.initPlan();
+  },
   methods: {
-    ...mapActions('productionPlanning', ['fetchPartMatrix']),
+    ...mapActions('productionPlanning', [
+      'fetchPartMatrix',
+      'isFamilyMold',
+      'getFamilyParts',
+    ]),
+    initPlan() {
+      this.plan = {
+        assetid: 0,
+        partname: '',
+        machinename: '',
+        stdcycletime: '',
+        delaytime: '',
+        cavity: '',
+        activecavity: '',
+        plannedquantity: '',
+        scheduledstart: formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm'),
+        scheduledend: '',
+        starred: false,
+        trial: false,
+        sortindex: 0,
+      };
+    },
     clear() {
+      this.initPlan();
+      this.editParams = false;
       this.partMatrixList = [];
+      this.familyParts = [];
       this.selectedMachine = null;
       this.selectedEquipment = null;
       this.$nextTick(() => {
@@ -351,6 +422,38 @@ export default {
         this.fetchingMatrix = true;
         this.partMatrixList = await this.fetchPartMatrix(this.selectedPart);
         this.fetchingMatrix = false;
+      }
+    },
+    async setPlanParameters() {
+      if (this.selectedMachine && this.selectedEquipment) {
+        this.familyParts = [];
+        const {
+          stdcycletime,
+          delaytime,
+          cavity,
+          moldname,
+          machinename,
+          partname,
+        } = this.selectedMatrix;
+        console.log(cavity);
+        this.plan.assetid = this.selectedPart.assetid;
+        this.plan.selectedPart = partname;
+        this.plan.machinename = machinename;
+        this.plan.stdcycletime = stdcycletime;
+        this.plan.delaytime = delaytime;
+        this.plan.cavity = cavity;
+        this.plan.activecavity = cavity;
+        if (this.isInjectionMolding) {
+          const isFamily = await this.isFamilyMold(
+            `?query=moldname=="${encodeURIComponent(moldname)}"`,
+          );
+          if (isFamily) {
+            this.familyParts = await this.getFamilyParts(
+              `?query=moldname=="${encodeURIComponent(moldname)}"%26%26machinename=="${encodeURIComponent(machinename)}"%26%26partname!="${encodeURIComponent(partname)}"`,
+            );
+            console.log(this.familyParts);
+          }
+        }
       }
     },
     exit() {

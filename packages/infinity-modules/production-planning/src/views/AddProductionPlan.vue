@@ -4,7 +4,15 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Add new plan</span>
+      <span>Add new plans</span>
+      <v-btn
+        small
+        outlined
+        color="primary"
+        class="text-none ml-2"
+      >
+        ...or import instead
+      </v-btn>
     </portal>
     <v-container fill-height v-if="loading">
       <v-row

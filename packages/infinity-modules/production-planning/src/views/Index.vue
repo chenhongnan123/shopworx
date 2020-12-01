@@ -37,6 +37,7 @@ export default {
     await Promise.all([
       this.fetchShifts(),
       this.fetchParts(),
+      this.fetchAssets(),
     ]);
     this.loading = false;
   },
@@ -45,6 +46,7 @@ export default {
     ...mapActions('productionPlanning', [
       'fetchShifts',
       'fetchParts',
+      'fetchAssets',
     ]),
   },
   watch: {
