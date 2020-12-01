@@ -245,7 +245,7 @@ export default {
         department,
       } = this.downtime;
       this.downtimes = [{
-        downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
+        downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
         downtimeend: '',
         selectedReason: {
           reasonname,
@@ -255,7 +255,7 @@ export default {
         },
       }, {
         downtimestart: '',
-        downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
+        downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
         selectedReason: null,
       }];
     },
@@ -263,7 +263,7 @@ export default {
       this.downtimes.push({
         downtimestart: '',
         downtimeend: new Date(this.downtime.downtimeend)
-          .toLocaleTimeString('en-US', { hour12: false }),
+          .toLocaleTimeString('en-GB'),
         selectedReason: null,
       });
     },
@@ -279,8 +279,8 @@ export default {
           department,
         } = this.downtime;
         this.downtimes[index] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
+          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
+          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
           selectedReason: {
             reasonname,
             reasoncode,
@@ -298,8 +298,8 @@ export default {
           department,
         } = this.downtime;
         this.downtimes[index - 1] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-US', { hour12: false }),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-US', { hour12: false }),
+          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
+          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
           selectedReason: {
             reasonname,
             reasoncode,
@@ -353,6 +353,7 @@ export default {
             downtimeinms: end - start,
             downtimeduration: (end - start) / 1000,
             timestamp: start,
+            timeType: 'BUSINESS_TIME',
           };
           this.postRecord({
             elementName: 'downtime',
