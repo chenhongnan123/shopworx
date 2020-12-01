@@ -351,7 +351,9 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapState, mapActions, mapGetters, mapMutations,
+} from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import { formatDate } from '@shopworx/services/util/date.service';
 
@@ -379,7 +381,7 @@ export default {
   },
   computed: {
     ...mapState('productionPlanning', ['parts', 'partMatrix']),
-    ...mapGetters('productionPlanning', ['selectedAsset']),
+    ...mapGetters('productionPlanning', ['selectedAsset', 'partMatrixTags']),
     isInjectionMolding() {
       let result = false;
       if (this.plan && this.plan.assetid) {
@@ -462,12 +464,14 @@ export default {
     this.initPlan();
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionPlanning', [
       'fetchPartMatrix',
       'isFamilyMold',
       'getFamilyParts',
       'getScheduledEnd',
       'fetchLastPlan',
+      'createPlans',
     ]),
     initPlan() {
       this.plan = {
@@ -601,21 +605,59 @@ export default {
     },
     async save() {
       await this.setSortIndex();
-      const payload = {
+      const matrixTags = this.partMatrixTags(this.plan.assetid);
+      const partMatrix = matrixTags.reduce((acc, cur) => {
+        acc[cur.tagName] = this.selectedMatrix[cur.tagName];
+        return acc;
+      }, {});
+      let payload = [{
+        ...partMatrix,
         ...this.plan,
-        scheduledstart: (this.plan.scheduledstart).getTime(),
-      };
-      console.log(payload);
-      console.log(this.selectedFamilyParts);
+        scheduledstart: new Date(this.plan.scheduledstart).getTime(),
+        familyName: 'family',
+      }];
+      if (this.selectedFamilyParts && this.selectedFamilyParts.length) {
+        const familyPayload = this.selectedFamilyParts.map((p) => ({
+          ...payload[0],
+          cavity: p.cavity,
+          activecavity: p.activecavity,
+          plannedquantity: p.plannedquantity,
+          partname: p.partname,
+        }));
+        payload = [...payload, ...familyPayload];
+      }
+      const created = await this.createPlans(payload);
+      if (created) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_CREATED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_CREATING_PLAN',
+        });
+      }
+      return created;
     },
     async onSaveAndAddNew() {
-      await this.save();
-      this.clear();
-      this.selectedPart = null;
+      this.savingAndNew = true;
+      const created = await this.save();
+      if (created) {
+        this.clear();
+        this.selectedPart = null;
+      }
+      this.savingAndNew = false;
     },
     async onSaveAndExit() {
-      await this.save();
-      this.exit();
+      this.savingAndExit = true;
+      const created = await this.save();
+      if (created) {
+        this.exit();
+      }
+      this.savingAndExit = false;
     },
   },
 };

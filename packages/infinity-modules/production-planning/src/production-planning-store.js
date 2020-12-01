@@ -356,7 +356,7 @@ export default ({
         'element/getRecordsWithCount',
         {
           elementName: 'planning',
-          query: '?query=status=="notStarted"',
+          query: '?query=status=="notStarted"&sortquery=sortindex==1',
         },
         { root: true },
       );
@@ -451,6 +451,18 @@ export default ({
       }
       return null;
     },
+
+    createPlans: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'planning',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
@@ -482,6 +494,14 @@ export default ({
         }
       }
       return asset;
+    },
+
+    partMatrixTags: ({ partMatrixElement }) => (assetId) => {
+      let tags = [];
+      if (partMatrixElement && assetId) {
+        tags = partMatrixElement.tags.filter((tag) => tag.assetId === assetId && !tag.hide);
+      }
+      return tags;
     },
 
     machineList: ({ machines }) => {
@@ -569,8 +589,7 @@ export default ({
     notStartedPlans: ({ reorderPlanList }) => {
       let planning = null;
       if (reorderPlanList && reorderPlanList.length) {
-        planning = reorderPlanList.sort((a, b) => a.sortindex - b.sortindex);
-        planning = sortArray(planning, 'machinename');
+        planning = sortArray(reorderPlanList, 'machinename');
         planning = planning.reduce((result, currentValue) => {
           const key = currentValue.machinename;
           if (!result[key]) {
