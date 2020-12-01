@@ -139,7 +139,7 @@ export default {
     planning: {
       deep: true,
       handler(plans) {
-        this.setEvents(plans);
+        this.setEvents(plans || []);
       },
     },
   },

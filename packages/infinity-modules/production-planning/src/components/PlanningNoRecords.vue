@@ -20,9 +20,10 @@
         <v-btn
           color="primary"
           class="text-none"
-          @click="resetFilters"
+          @click="addNew"
         >
-          Reset filters
+          <v-icon left>mdi-plus</v-icon>
+          Add new plan
         </v-btn>
       </v-col>
     </v-row>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'PlanningNoRecords',
@@ -43,11 +44,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('webApp', ['resetConfig']),
-    resetFilters() {
-      localStorage.removeItem(this.storageLocation.planning);
-      this.resetConfig();
-      this.$router.go();
+    addNew() {
+      this.$router.push({ name: 'addProductionPlan' });
     },
   },
 };
