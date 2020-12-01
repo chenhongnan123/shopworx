@@ -3,6 +3,7 @@
     <v-autocomplete
       dense
       filled
+      clearable
       single-line
       hide-details
       return-object
@@ -58,19 +59,28 @@ export default {
       get() {
         return this.downtime.reasonname;
       },
-      async set({
-        reasonname,
-        reasoncode,
-        category,
-        department,
-      }) {
+      async set(val) {
         this.loading = true;
-        const payload = {
-          reasonname,
-          reasoncode,
-          category,
-          department,
+        let payload = {
+          reasonname: '',
+          reasoncode: '',
+          category: '',
+          department: '',
         };
+        if (val) {
+          const {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          } = val;
+          payload = {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          };
+        }
         await this.updateReason({
           // eslint-disable-next-line
           id: this.downtime._id,
