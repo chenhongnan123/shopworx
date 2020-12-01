@@ -56,13 +56,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionPlanning', ['machines', 'parts']),
+    ...mapState('productionPlanning', ['machines', 'parts', 'partMatrixElement']),
   },
   async created() {
     const machinesNotAvailable = this.machines.length === 0;
     const partsNotAvailable = this.parts.length === 0;
     if (machinesNotAvailable || partsNotAvailable) {
       this.loading = true;
+      if (!this.partMatrixElement) {
+        await this.getPartMatrixElement();
+      }
       await Promise.all([
         this.fetchMachines(),
         this.fetchParts(),
@@ -71,7 +74,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('productionPlanning', ['fetchMachines', 'fetchParts']),
+    ...mapActions('productionPlanning', [
+      'getPartMatrixElement',
+      'fetchMachines',
+      'fetchParts',
+    ]),
     goBack() {
       this.$router.push({ name: 'productionPlanning' });
     },

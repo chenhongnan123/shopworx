@@ -5,6 +5,10 @@ import HourService from '@shopworx/services/api/hour.service';
 export default ({
   namespaced: true,
   state: {
+    partMatrixElement: null,
+    unavailableAssets: [],
+    planningMaster: null,
+    partMatrixMaster: [],
     calendarRef: null,
     calendarFocus: '',
     today: new Date().toISOString().substr(0, 10),
@@ -26,6 +30,10 @@ export default ({
     lastRefreshedReorder: null,
   },
   mutations: {
+    setPartMatrixElement: set('partMatrixElement'),
+    setUnavailableAssets: set('unavailableAssets'),
+    setPlanningMaster: set('planningMaster'),
+    setPartMatrixMaster: set('partMatrixMaster'),
     setCalendarRef: set('calendarRef'),
     setCalendarFocus: set('calendarFocus'),
     setMasterData: set('masterData'),
@@ -47,6 +55,199 @@ export default ({
     setLastRefreshedReorder: set('lastRefreshedReorder'),
   },
   actions: {
+    getOnboardingState: async ({ commit, dispatch, rootGetters }) => {
+      const partMatrix = await dispatch('getPartMatrixElement');
+      if (partMatrix) {
+        const licensedAssets = rootGetters['user/licensedAssets'];
+        const sortedLicense = licensedAssets.sort().toString();
+        const { tags: matrixTags } = partMatrix;
+        const matrixAssets = matrixTags.map((t) => t.assetId);
+        const uniqueMatrixAssets = [...new Set(matrixAssets)];
+        const sortedMatrixAssets = uniqueMatrixAssets.sort().toString();
+        if (sortedLicense !== sortedMatrixAssets) {
+          commit('setOnboarded', false);
+          commit('setUnavailableAssets', licensedAssets
+            .filter((a) => !uniqueMatrixAssets.includes(a)));
+        } else {
+          const planning = await dispatch('getPlanningElement');
+          if (planning) {
+            const { tags } = planning;
+            const assets = tags.map((tag) => tag.assetId);
+            const uniqueAssets = [...new Set(assets)];
+            const sortedAssets = uniqueAssets.sort().toString();
+            if (sortedLicense === sortedAssets) {
+              commit('setOnboarded', true);
+            } else {
+              await dispatch('createPlanningElement');
+            }
+          } else {
+            await dispatch('createPlanningElement');
+          }
+        }
+      } else {
+        commit('setOnboarded', false);
+      }
+    },
+
+    getPlanningElement: async ({ dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'planning',
+        { root: true },
+      );
+      return element;
+    },
+
+    getPartMatrixElement: async ({ commit, dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'partmatrix',
+        { root: true },
+      );
+      commit('setPartMatrixElement', element);
+      return element;
+    },
+
+    getPlanningMaster: async ({ commit, dispatch }) => {
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const planningMaster = masterElements
+          .find((elem) => elem.masterElement.elementName === 'planning');
+        commit('setPlanningMaster', planningMaster);
+        return true;
+      }
+      return false;
+    },
+
+    createPlanningElement: async ({ dispatch, state }) => {
+      await Promise.all([
+        dispatch('getPlanningMaster'),
+        dispatch('getPartMatrixElement'),
+      ]);
+      const { planningMaster, partMatrixElement } = state;
+
+      if (partMatrixElement) {
+        const element = planningMaster.masterElement;
+        const tags = [
+          ...partMatrixElement.tags.filter((tag) => !tag.hide),
+          ...planningMaster.masterTags,
+        ];
+        const payload = {
+          element,
+          tags,
+        };
+        const success = await dispatch(
+          'element/createElementAndTags',
+          payload,
+          { root: true },
+        );
+        return success;
+      }
+      return false;
+    },
+
+    getPartMatrixMaster: async ({
+      commit,
+      dispatch,
+      getters,
+      state,
+    }, { generateData = false }) => {
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const planningMaster = masterElements
+          .find((elem) => elem.masterElement.elementName === 'planning');
+        commit('setPlanningMaster', planningMaster);
+        const { unavailableAssets } = state;
+        const matrixMasterElement = masterElements
+          .find((elem) => elem.masterElement.elementName === 'partmatrix');
+        let assets = [...unavailableAssets];
+        if (unavailableAssets.length === 0) {
+          const availableAssets = matrixMasterElement.masterTags.map((tag) => tag.assetId);
+          const provisionedAssets = [...new Set(availableAssets)];
+          assets = [...provisionedAssets];
+        }
+        const filteredMasterElements = assets.map(async (provisionedAsset) => {
+          const tags = matrixMasterElement.masterTags
+            .filter((tag) => tag.assetId === provisionedAsset);
+          const { assetName, assetDescription } = masterAssets
+            .find((asset) => asset.id === provisionedAsset);
+          const partMatrixElements = getters.partMatrixComposition(provisionedAsset);
+          const partMatrix = partMatrixElements.map((element) => {
+            const e = masterElements
+              .find((master) => master.masterElement.elementName === element);
+            const tag = e.masterTags
+              .filter((t) => t.assetId === provisionedAsset)
+              .find((t) => t.tagName === e.masterElement.uniqueTagName);
+            return {
+              tag,
+              element: e.masterElement.elementName,
+              tagName: tag.tagName,
+              tagDescription: tag.tagDescription,
+            };
+          });
+          let data = [];
+          if (generateData) {
+            data = await dispatch('generateMatrix', {
+              matrixMaster: partMatrix,
+              assetId: provisionedAsset,
+            });
+          }
+          return {
+            tags: [...partMatrix.map((t) => t.tag), ...tags.filter((t) => !t.hide)],
+            hiddenTags: tags.filter((t) => t.hide),
+            success: false,
+            loading: false,
+            data,
+            assetId: provisionedAsset,
+            element: matrixMasterElement.masterElement,
+            title: `${matrixMasterElement.masterElement.elementDescription} - ${assetDescription}`,
+            expectedFileName: `${matrixMasterElement.masterElement.elementName}-${assetName}.csv`,
+          };
+        });
+        commit('setPartMatrixMaster', await Promise.all(filteredMasterElements));
+        return true;
+      }
+      return false;
+    },
+
+    generateMatrix: async ({ dispatch }, { matrixMaster, assetId }) => {
+      let result = [];
+      if (matrixMaster && matrixMaster.length) {
+        const getAllRecords = matrixMaster
+          .map(async (master) => {
+            const { element, tagName, tagDescription } = master;
+            const data = await dispatch(
+              'element/getRecords',
+              {
+                elementName: element,
+                query: `?query=assetid==${assetId}`,
+              },
+              { root: true },
+            );
+            return data.map((d) => ({
+              [tagDescription]: d[tagName],
+            }));
+          });
+        const records = await Promise.all(getAllRecords);
+        result = records.reduce((acc, cur) => acc
+          .flatMap((x) => cur.map((y) => ({ ...x, ...y }))), [[]]);
+      }
+      return result;
+    },
+
     fetchAssets: async ({ commit, dispatch }) => {
       const assets = await dispatch(
         'industry/getAssets',
@@ -252,6 +453,24 @@ export default ({
     },
   },
   getters: {
+    planningSchema: (_, __, rootState, rootGetters) => {
+      const { appSchema } = rootState.webApp;
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      if (appSchema) {
+        return appSchema.filter((schema) => licensedAssets.includes(schema.assetId));
+      }
+      return [];
+    },
+
+    partMatrixComposition: (_, { planningSchema }) => (assetId) => {
+      if (planningSchema && planningSchema.length) {
+        return planningSchema
+          .find((schema) => schema.assetId === assetId)
+          .partMatrixComposition;
+      }
+      return [];
+    },
+
     isCalendarView: ({ view }) => view !== 'default',
 
     selectedAsset: ({ assets }) => (assetId) => {

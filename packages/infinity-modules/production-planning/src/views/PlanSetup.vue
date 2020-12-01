@@ -22,7 +22,7 @@
 import PlanOnboarding from '../components/onboarding/PlanOnboarding.vue';
 
 export default {
-  name: 'ProductionPlanningSetup',
+  name: 'PlanSetup',
   components: {
     PlanOnboarding,
   },
