@@ -1,6 +1,6 @@
 <template>
   <validation-observer ref="form" #default="{ handleSubmit }">
-    <v-form ref="form" @submit.prevent="handleSubmit(onSubmit)">
+    <v-form ref="form" @submit.prevent="handleSubmit(onSaveAndAddNew)">
       <v-container fluid>
         <v-row
           justify="center"
@@ -8,7 +8,7 @@
         >
           <v-col cols="12" xl="9" class="text-justify">
             <v-card flat class="transparent">
-              <v-card-text>
+              <v-card-text class="pt-0">
                 <v-row>
                   <v-col cols="12" sm="4">
                     <validation-provider
@@ -107,7 +107,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="cycletime"
-                      rules="required"
+                      rules="required|min_value:1"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -126,7 +126,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="delaytime"
-                      rules="required"
+                      rules="required|min_value:0"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -145,7 +145,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="activecavity"
-                      rules="required"
+                      :rules="`required|numeric|max_value:${plan.cavity}|min_value:1`"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -183,7 +183,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="quantity"
-                      rules="required"
+                      :rules="`required|numeric|min_value:1|multiple_of:${plan.activecavity}`"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -196,13 +196,14 @@
                         v-model="plan.plannedquantity"
                         hide-details="auto"
                         @change="onQuantityChange"
+                        :hint="`Should be multiple of active cavity(${plan.activecavity})`"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="scheduledstart"
-                      rules="required"
+                      rules="required|greater_than_now"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -272,41 +273,40 @@
                   <div class="title mt-4">
                     Family mold parts
                   </div>
-                  <v-data-table
-                    :items="familyParts"
-                    :headers="headers"
-                    hide-default-footer
-                    disable-pagination
-                    item-key="_id"
-                    show-select
-                    v-model="selectedFamilyParts"
-                  >
-                    <!-- eslint-disable-next-line -->
-                    <template #item.activecavity="{ item }">
-                      <v-edit-dialog
-                        large
-                        persistent
-                        @save="updateFamilyCavity({
-                          id: item._id,
-                          payload: item.activecavity,
-                        })"
-                        :return-value.sync="item.activecavity"
-                      >
-                        {{ item.activecavity }}
-                        <template #input>
-                          <v-text-field
-                            v-model="item.activecavity"
-                            type="number"
-                            label="Active cavity"
-                            :rules="[(v) => (
-                              Number.isInteger(Number(v)) > 0
-                              && v <= parseInt(item.cavity, 10)
-                            )
-                              || 'Should be less than or equal to available cavities']"
-                            single-line
-                          ></v-text-field>
-                        </template>
-                      </v-edit-dialog>
+                    <v-data-table
+                      :items="familyParts"
+                      :headers="headers"
+                      hide-default-footer
+                      disable-pagination
+                      item-key="_id"
+                      show-select
+                      dense
+                      v-model="selectedFamilyParts"
+                    >
+                      <!-- eslint-disable-next-line -->
+                      <template #item.activecavity="{ item }">
+                        <v-responsive :max-width="100">
+                          <validation-provider
+                            name="familyactivecavity"
+                            :vid="`cavity-${item._id}`"
+                            :rules="`required|numeric|max_value:${item.cavity}|min_value:1`"
+                            #default="{ errors }"
+                          >
+                            <v-text-field
+                              v-model="item.activecavity"
+                              type="number"
+                              label="Active cavity"
+                              :error-messages="errors"
+                              single-line
+                              dense
+                              hide-details="auto"
+                              @change="updateFamilyCavity({
+                                id: item._id,
+                                payload: item.activecavity,
+                              })"
+                            ></v-text-field>
+                        </validation-provider>
+                      </v-responsive>
                     </template>
                   </v-data-table>
                 </template>
@@ -328,7 +328,7 @@
                   class="text-none"
                   :disabled="savingAndNew"
                   :loading="savingAndExit"
-                  type="submit"
+                  @click="onSaveAndExit"
                 >
                   Save & Exit
                 </v-btn>
@@ -483,6 +483,7 @@ export default {
         starred: false,
         trial: false,
         sortindex: 0,
+        status: 'notStarted',
       };
     },
     clear() {
@@ -518,7 +519,7 @@ export default {
           partname,
         } = this.selectedMatrix;
         this.plan.assetid = this.selectedPart.assetid;
-        this.plan.selectedPart = partname;
+        this.plan.partname = this.selectedPart.partname;
         this.plan.machinename = machinename;
         this.plan.stdcycletime = +stdcycletime;
         this.plan.delaytime = +delaytime;
@@ -535,7 +536,7 @@ export default {
             this.familyParts = familyParts.map((p) => ({
               ...p,
               activecavity: p.cavity,
-              plannedquantity: '',
+              plannedquantity: +p.cavity * this.shots,
             }));
             this.selectedFamilyParts = [...this.familyParts];
           }
@@ -583,6 +584,11 @@ export default {
       this.clear();
       this.$router.push({ name: 'productionPlanning' });
     },
+    onSaveAndAddNew() {
+      console.log(this.plan);
+      console.log(this.selectedFamilyParts);
+    },
+    onSaveAndExit() {},
   },
 };
 </script>
