@@ -235,6 +235,21 @@ export default ({
       }
       return start + duration;
     },
+
+    fetchLastPlan: async ({ dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'planning',
+          query: '?sortquery=sortindex==1&pagenumber=1&pagesize=1',
+        },
+        { root: true },
+      );
+      if (records && records.length === 1) {
+        return records[0];
+      }
+      return null;
+    },
   },
   getters: {
     isCalendarView: ({ view }) => view !== 'default',

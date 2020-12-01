@@ -467,6 +467,7 @@ export default {
       'isFamilyMold',
       'getFamilyParts',
       'getScheduledEnd',
+      'fetchLastPlan',
     ]),
     initPlan() {
       this.plan = {
@@ -580,15 +581,42 @@ export default {
         plannedquantity: +payload * this.shots,
       });
     },
+    async setSortIndex() {
+      const lastPlan = await this.fetchLastPlan();
+      if (lastPlan) {
+        if (lastPlan.sortindex) {
+          this.plan.sortindex = lastPlan.sortindex;
+        } else {
+          const lastPlanId = lastPlan.planid.split('-');
+          this.plan.sortindex = +lastPlanId[1] * 100;
+        }
+      } else {
+        this.plan.sortindex = 0;
+      }
+    },
     exit() {
       this.clear();
+      this.selectedPart = null;
       this.$router.push({ name: 'productionPlanning' });
     },
-    onSaveAndAddNew() {
-      console.log(this.plan);
+    async save() {
+      await this.setSortIndex();
+      const payload = {
+        ...this.plan,
+        scheduledstart: (this.plan.scheduledstart).getTime(),
+      };
+      console.log(payload);
       console.log(this.selectedFamilyParts);
     },
-    onSaveAndExit() {},
+    async onSaveAndAddNew() {
+      await this.save();
+      this.clear();
+      this.selectedPart = null;
+    },
+    async onSaveAndExit() {
+      await this.save();
+      this.exit();
+    },
   },
 };
 </script>
