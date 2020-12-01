@@ -29,8 +29,8 @@
           <template #body="{ items }">
             <draggable
               :list="items"
+              @change="updateExecutionOrder"
               tag="tbody"
-              group="plans"
             >
               <tr
                 v-for="(item, index) in items"
@@ -68,7 +68,9 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapState, mapActions, mapGetters, mapMutations,
+} from 'vuex';
 import Draggable from 'vuedraggable';
 import PlanningLoading from './PlanningLoading.vue';
 import PlanningError from './PlanningError.vue';
@@ -127,7 +129,44 @@ export default {
     ...mapGetters('productionPlanning', ['notStartedPlans']),
   },
   methods: {
-    ...mapActions('productionPlanning', ['fetchReorderPlanList']),
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('productionPlanning', [
+      'fetchReorderPlanList',
+      'updatePlan',
+    ]),
+    async updateExecutionOrder(evt) {
+      const { moved } = evt;
+      const { newIndex } = moved;
+      const { planid, machinename } = moved.element;
+      const plans = this.notStartedPlans[machinename].values;
+      const end = plans[newIndex].sortindex;
+      let newSortIndex = 0;
+      if (newIndex === 0) {
+        newSortIndex = Math.ceil(end / 2);
+      } else if (newIndex === plans.length - 1) {
+        newSortIndex = end + 100;
+      } else {
+        const start = plans[newIndex - 1].sortindex;
+        newSortIndex = Math.ceil((start + end) / 2);
+      }
+      const updated = await this.updatePlan({
+        queryParam: `?query=planid=="${planid}"`,
+        payload: { sortindex: newSortIndex },
+      });
+      if (updated) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_EXECUTION_UPDATE',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PLAN_EXECUTION_UPDATE',
+        });
+      }
+    },
   },
   created() {
     this.fetchReorderPlanList();

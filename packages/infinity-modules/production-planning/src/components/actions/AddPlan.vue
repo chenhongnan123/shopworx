@@ -590,7 +590,7 @@ export default {
       if (lastPlan) {
         this.plan.sortindex = lastPlan.sortindex + 100;
       } else {
-        this.plan.sortindex = 0;
+        this.plan.sortindex = 100;
       }
     },
     exit() {

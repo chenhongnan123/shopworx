@@ -463,6 +463,19 @@ export default ({
       );
       return created;
     },
+
+    updatePlan: async ({ dispatch }, { queryParam, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'planning',
+          queryParam,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
