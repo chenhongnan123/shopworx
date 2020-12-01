@@ -30,7 +30,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <validation-observer ref="form" #default="{ handleSubmit, invalid }">
+      <validation-observer ref="form" #default="{ handleSubmit }">
         <v-form @submit.prevent="handleSubmit(splitDowntime)">
           <v-card-text>
             <v-row>
@@ -62,7 +62,7 @@
             <v-row v-for="(dt, index) in downtimes" :key="index">
               <v-col cols="9">
                 <validation-provider
-                  name="downtimeReason"
+                  name="downtimereason"
                   rules="required"
                   #default="{ errors }"
                 >
@@ -76,6 +76,7 @@
                     :items="downtimeReasons"
                     item-text="reasonname"
                     item-value="reasonname"
+                    :id="`downtimereason-${index}`"
                     v-model="dt.selectedReason"
                   >
                     <template #selection="data">
@@ -102,7 +103,7 @@
                 <v-row>
                   <v-col cols="6">
                     <validation-provider
-                      name="downtimeStart"
+                      name="downtimestart"
                       rules="required"
                       #default="{ errors }"
                     >
@@ -122,7 +123,7 @@
                   </v-col>
                   <v-col cols="6">
                     <validation-provider
-                      name="downtimeStart"
+                      name="downtimeend"
                       rules="required"
                       #default="{ errors }"
                     >
@@ -158,7 +159,7 @@
                   class="pa-0"
                   :id="`remove-${index}`"
                   @click="removeDowntime(index)"
-                  :disabled="downtimes.length === 1"
+                  :disabled="downtimes.length === 2"
                 >
                   <v-icon v-text="'$remove'"></v-icon>
                 </v-btn>
@@ -181,7 +182,6 @@
               class="text-none"
               :loading="loading"
               type="submit"
-              :disabled="saveDisabled || invalid"
             >
               Split
             </v-btn>
@@ -220,9 +220,6 @@ export default {
   },
   computed: {
     ...mapState('downtimeLog', ['downtimeReasons']),
-    saveDisabled() {
-      return this.downtimes.length === 1;
-    },
   },
   watch: {
     dialog(val) {
@@ -247,12 +244,12 @@ export default {
       this.downtimes = [{
         downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
         downtimeend: '',
-        selectedReason: {
+        selectedReason: reasonname ? {
           reasonname,
           reasoncode,
           category,
           department,
-        },
+        } : null,
       }, {
         downtimestart: '',
         downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
@@ -269,45 +266,6 @@ export default {
     },
     removeDowntime(index) {
       this.downtimes.splice(index, 1);
-      if (this.downtimes.length === 1 && index === 0) {
-        const {
-          downtimestart,
-          downtimeend,
-          reasonname,
-          reasoncode,
-          category,
-          department,
-        } = this.downtime;
-        this.downtimes[index] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
-          selectedReason: {
-            reasonname,
-            reasoncode,
-            category,
-            department,
-          },
-        };
-      } else if (this.downtimes.length === 1 && index === 1) {
-        const {
-          downtimestart,
-          downtimeend,
-          reasonname,
-          reasoncode,
-          category,
-          department,
-        } = this.downtime;
-        this.downtimes[index - 1] = {
-          downtimestart: new Date(downtimestart).toLocaleTimeString('en-GB'),
-          downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
-          selectedReason: {
-            reasonname,
-            reasoncode,
-            category,
-            department,
-          },
-        };
-      }
     },
     close() {
       this.dialog = false;
