@@ -95,10 +95,10 @@ export default ({
                   return record[filter] !== value;
                 }
                 if (operation === 'exists') {
-                  return valueExists;
+                  return valueExists && record[filter] !== '';
                 }
                 if (operation === 'notexists') {
-                  return !valueExists;
+                  return !valueExists || record[filter] === '';
                 }
               }
               if (isTypeArray) {
