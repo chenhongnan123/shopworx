@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -282,6 +282,7 @@ export default {
         { text: 'Qty', value: 'quantity' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
       ],
       saving: false,
       loading: false,
@@ -357,7 +358,7 @@ export default {
       const { rejections, rejected, accepted } = this.hourlyData[index];
       const newRejectionValue = parseInt(rejected, 10) + parseInt(qty, 10);
       const rejectionsArray = [
-        { ...payload, _id: id },
+        { ...payload, _id: id, modifiedtimestamp: 'now' },
         ...rejections,
       ];
       const newData = {
@@ -402,6 +403,14 @@ export default {
         payload,
       });
       if (updated) {
+        const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+        const { rejections } = this.hourlyData[hourIndex];
+        // eslint-disable-next-line
+        const updatedIndex = rejections.findIndex((s) => s._id === id);
+        this.$set(rejections, updatedIndex, {
+          ...rejections[updatedIndex],
+          modifiedtimestamp: 'now',
+        });
         this.setAlert({
           show: true,
           type: 'success',
@@ -409,8 +418,8 @@ export default {
         });
         if (hasQtyProperty) {
           const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-          const { rejections, produced } = this.hourlyData[hIndex];
-          const rejected = rejections.reduce((a, b) => a + (+b.quantity || 0), 0);
+          const { rejections: rej, produced } = this.hourlyData[hIndex];
+          const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
           const newData = {
             ...this.hourlyData[hIndex],
             rejected,

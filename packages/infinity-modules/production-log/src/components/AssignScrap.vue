@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -237,6 +237,7 @@ export default {
         { text: 'Weight (in Kg)', value: 'scrapweight' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
       ],
     };
   },
@@ -297,7 +298,7 @@ export default {
           remark: '',
         };
         this.scraps = [
-          { ...payload, _id: id },
+          { ...payload, _id: id, modifiedtimestamp: 'now' },
           ...this.scraps,
         ];
         this.updateShiftStats(weight);
@@ -336,6 +337,12 @@ export default {
         payload,
       });
       if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.scraps.findIndex((s) => s._id === id);
+        this.$set(this.scraps, updatedIndex, {
+          ...this.scraps[updatedIndex],
+          modifiedtimestamp: 'now',
+        });
         this.setAlert({
           show: true,
           type: 'success',

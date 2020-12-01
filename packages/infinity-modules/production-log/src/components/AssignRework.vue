@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -242,6 +242,7 @@ export default {
         { text: 'Qty', value: 'reworkquantity' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
       ],
     };
   },
@@ -302,7 +303,7 @@ export default {
           remark: '',
         };
         this.reworks = [
-          { ...payload, _id: id },
+          { ...payload, _id: id, modifiedtimestamp: 'now' },
           ...this.reworks,
         ];
         this.updateShiftStats(qty);
@@ -341,6 +342,12 @@ export default {
         payload,
       });
       if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.reworks.findIndex((s) => s._id === id);
+        this.$set(this.reworks, updatedIndex, {
+          ...this.reworks[updatedIndex],
+          modifiedtimestamp: 'now',
+        });
         this.setAlert({
           show: true,
           type: 'success',
