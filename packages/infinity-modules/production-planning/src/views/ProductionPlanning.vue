@@ -7,11 +7,23 @@
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
-        <v-icon
-          v-text="'$settings'"
-        ></v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="gotToSettings"
+          >
+            <v-icon
+              v-text="'$settings'"
+            ></v-icon>
+          </v-btn>
+        </template>
+        Settings
+      </v-tooltip>
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -75,6 +87,9 @@ export default {
     ...mapActions('productionPlanning', ['fetchPlanningList']),
     refreshProductionPlans() {
       this.fetchPlanningList();
+    },
+    gotToSettings() {
+      this.$router.push({ name: 'productionPlanSettings' });
     },
   },
 };

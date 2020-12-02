@@ -9,6 +9,7 @@
         small
         outlined
         color="primary"
+        @click="goToImport"
         class="text-none ml-2"
       >
         ...or import instead
@@ -81,6 +82,12 @@ export default {
     ]),
     goBack() {
       this.$router.push({ name: 'productionPlanning' });
+    },
+    goToImport() {
+      this.$router.push({
+        name: 'productionPlanSettings',
+        params: { id: 'import' },
+      });
     },
   },
 };

@@ -47,6 +47,13 @@
         "title3": "app. Other settings are available in the app for you to change.",
         "next": "Let's go"
       }
+    },
+    "settings": {
+      "general": "General",
+      "partMaster": "Part master",
+      "assetConfig": "Asset configuration",
+      "importExport": "Import & Export",
+      "importPlans": "Import plans"
     }
   }
 }

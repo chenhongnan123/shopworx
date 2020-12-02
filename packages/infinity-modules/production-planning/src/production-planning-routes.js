@@ -12,6 +12,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanning.vue'),
       },
       {
+        path: 'settings/:id?',
+        name: 'productionPlanSettings',
+        component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanSettings.vue'),
+      },
+      {
         path: 'plan',
         name: 'addProductionPlan',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/AddProductionPlan.vue'),
@@ -22,7 +27,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ReorderProductionPlans.vue'),
       },
       {
-        path: 'p/:id',
+        path: 'plan/:id',
         name: 'productionPlanDetails',
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanDetails.vue'),
         props: true,
