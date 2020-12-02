@@ -476,6 +476,19 @@ export default ({
       );
       return updated;
     },
+
+    updateMachine: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'machine',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
