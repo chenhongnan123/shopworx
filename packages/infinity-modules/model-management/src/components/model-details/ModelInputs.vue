@@ -1,27 +1,43 @@
 <template>
   <v-card flat>
-    <v-card-title>
-      <v-text-field
-        dense
-        outlined
-        single-line
-        hide-details
-        v-model="search"
-        autocomplete="off"
-        label="Filter inputs"
-        append-icon="mdi-magnify"
-      ></v-text-field>
-    </v-card-title>
     <v-card-text class="pt-0">
-      <v-checkbox
-        hide-details
-        class="ma-0 pa-0"
-        :key="inputParameter.id"
-        v-model="inputParameter.selected"
-        :label="inputParameter.description"
-        @change="updateInputParameter(inputParameter)"
-        v-for="inputParameter in filteredInputParameters"
-      ></v-checkbox>
+      <v-autocomplete
+          v-model="parameterList"
+          :items="inputParameters"
+          filled
+          class="ma-0 pa-0"
+          chips
+          color="primary"
+          label="Select"
+          item-text="name"
+          item-value="parameterId"
+          hide-details
+          multiple
+        >
+        <template v-slot:selection="data">
+          <v-chip
+            v-bind="data.attrs"
+            :input-value="data.selected"
+            color="primary"
+            close
+            @click="data.select"
+            @click:close="remove(data.item)"
+          >
+            {{ data.item.name }}
+          </v-chip>
+          </template>
+            <template v-slot:item="data">
+              <template v-if="typeof data.item !== 'object'">
+                <v-list-item-content v-text="data.item"></v-list-item-content>
+              </template>
+              <template v-else>
+                <v-list-item-content>
+                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+              <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </template>
+      </v-autocomplete>
     </v-card-text>
   </v-card>
 </template>
@@ -51,19 +67,13 @@ export default {
     modelInputs() {
       return this.modelDetails && this.modelDetails.modelInputs;
     },
-    filteredInputParameters() {
-      return this.inputParameters
-        .filter((param) => param.description
-          .trim()
-          .toUpperCase()
-          .includes(this.search.trim().toUpperCase()))
-        .map((param) => ({
-          ...param,
-          loading: false,
-          selected: this.modelInputs
-            .map((input) => input.parameterId)
-            .includes(param.id),
-        }));
+    parameterList: {
+      get() {
+        return this.modelInputs;
+      },
+      set(val) {
+        this.saveInputParam(val);
+      },
     },
   },
   methods: {
@@ -71,6 +81,24 @@ export default {
       'createInputParameter',
       'deleteInputParameter',
     ]),
+    async remove(param) {
+      const modelInputId = this.modelInputs
+        .find((input) => input.parameterId === param.parameterId)
+        .id;
+      const deleted = await this.deleteInputParameter(modelInputId);
+      if (deleted) {
+        const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
+        if (index >= 0) this.parameterList.splice(index, 1);
+      }
+    },
+    async saveInputParam(param) {
+      console.log(param);
+      const object = param[param.length - 1];
+      await this.createInputParameter({
+        modelId: this.model.id,
+        parameterId: object,
+      });
+    },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createInputParameter({

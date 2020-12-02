@@ -233,21 +233,58 @@ export default ({
       return deployment[0];
     },
 
-    getInputParameters: async ({ commit, dispatch }) => {
+    getInputParameters: async ({ commit, dispatch, state }) => {
+      const {
+        selectedSubstation,
+      } = state;
+      const list = [];
+      list.push({
+        header: 'Real Parameters',
+      });
       const parameters = await dispatch(
         'element/getRecords',
         {
           elementName: ELEMENTS.PARAMETERS,
-          query: '?query=parametercategory=="51"',
+          query: `?query=substationid=="${selectedSubstation}"`,
         },
         { root: true },
       );
-      const params = sortArray(parameters, 'description')
-        .map(({ id, description }) => ({
-          id,
+      const realParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '42'
+          || p.parametercategory === '45'
+          || p.parametercategory === '51'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
           description,
+          group: 'Real Parameters',
         }));
-      commit('setInputParameters', params);
+      realParam.forEach((f) => {
+        list.push(f);
+      });
+      list.push({
+        divider: true,
+      });
+      list.push({
+        header: 'Non Real Parameters',
+      });
+      const nonRealParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '15'
+          || p.parametercategory === '17'
+          || p.parametercategory === '18'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
+          description,
+          group: 'Non Real Parameters',
+        }));
+      nonRealParam.forEach((n) => {
+        list.push(n);
+      });
+      console.log(list);
+      commit('setInputParameters', list);
     },
 
     getOutputTransformations: async ({ commit, dispatch }) => {

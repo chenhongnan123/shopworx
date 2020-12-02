@@ -42,6 +42,14 @@
               counter="10"
               v-model="name" required>
               </v-text-field>
+              <v-text-field label="IP Address"
+              v-model="ipaddr"
+              :rules ="plcRules"
+              required>
+              </v-text-field>
+              <v-text-field label="Host Name"
+              v-model="hostname" required>
+              </v-text-field>
             </v-col>
       </v-row>
     </v-card-text>
@@ -67,7 +75,10 @@ export default {
       getAssetId: '',
       dialog: false,
       name: null,
+      ipaddr: null,
+      hostname: null,
       valid: true,
+      plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
   props: {
@@ -89,6 +100,8 @@ export default {
       this.newProcess = {
         id: this.id,
         name: this.name,
+        ipaddr: this.ipaddr,
+        hostname: this.hostname,
         assetid: this.assetId,
       };
       let created = false;
