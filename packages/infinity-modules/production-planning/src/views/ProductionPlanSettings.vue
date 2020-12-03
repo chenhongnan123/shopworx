@@ -39,8 +39,7 @@
             </template>
           </v-list>
         </v-col>
-        <v-divider vertical></v-divider>
-        <v-col cols="12" md="8" xl="7">
+        <v-col cols="12" md="9" xl="7">
           <v-card
             flat
             class="transparent"
