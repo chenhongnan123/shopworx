@@ -193,6 +193,7 @@
                         :error-messages="errors"
                         prepend-inner-icon="mdi-package-variant-closed"
                         outlined
+                        suffix="pcs"
                         v-model="plan.plannedquantity"
                         hide-details="auto"
                         @change="onQuantityChange"
@@ -307,6 +308,10 @@
                             ></v-text-field>
                         </validation-provider>
                       </v-responsive>
+                    </template>
+                      <!-- eslint-disable-next-line -->
+                      <template #item.plannedquantity="{ item }">
+                        {{ item.plannedquantity }} pcs
                     </template>
                   </v-data-table>
                 </template>

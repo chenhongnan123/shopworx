@@ -4,7 +4,7 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Add new plans</span>
+      <span>Add new plan</span>
       <v-btn
         small
         outlined
