@@ -62,6 +62,7 @@
                     v-model="item.reworkquantity"
                     type="number"
                     label="Qty"
+                    suffix="pcs"
                     :rules="[(v) => (
                       Number.isInteger(Number(v)) > 0
                       && v <= parseInt(production.accepted, 10)
@@ -135,6 +136,7 @@
                       dense
                       outlined
                       type="number"
+                      suffix="pcs"
                       label="Quantity"
                       :disabled="saving"
                       hide-details="auto"

@@ -36,14 +36,26 @@
             Loading...
           </div>
         </template>
-        <v-expansion-panels accordion v-else>
+        <v-expansion-panels
+          v-else
+          accordion
+          :value="hourlyData.length - 1"
+        >
           <v-expansion-panel
             v-for="(data, index) in hourlyData"
             :key="index"
           >
-            <v-expansion-panel-header class="primary--text">
+            <v-expansion-panel-header
+              :class="data.rejections.length ? 'error--text' : 'primary--text'"
+            >
               <span>
-                <v-icon left class="primary--text">mdi-clock-outline</v-icon>
+                <v-icon
+                  left
+                  class="primary--text"
+                  :class="data.rejections.length ? 'error--text' : 'primary--text'"
+                >
+                  mdi-clock-outline
+                </v-icon>
                 {{ data.displayhour }}
               </span>
             </v-expansion-panel-header>
@@ -100,6 +112,7 @@
                         v-model="item.quantity"
                         type="number"
                         label="Qty"
+                        suffix="pcs"
                         :rules="[(v) => (
                           Number.isInteger(Number(v)) > 0
                           && v <= parseInt(data.accepted, 10)
@@ -175,6 +188,7 @@
                           dense
                           outlined
                           type="number"
+                          suffix="pcs"
                           label="Quantity"
                           :disabled="saving"
                           hide-details="auto"

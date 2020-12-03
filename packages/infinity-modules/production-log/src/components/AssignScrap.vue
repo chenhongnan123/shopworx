@@ -61,7 +61,8 @@
                   <v-text-field
                     v-model="item.scrapweight"
                     type="number"
-                    label="Weight (in Kg)"
+                    label="Weight"
+                    suffix="kg"
                     single-line
                   ></v-text-field>
                 </template>
@@ -130,7 +131,8 @@
                       dense
                       outlined
                       type="number"
-                      label="Weight (in Kg)"
+                      label="Weight"
+                      suffix="kg"
                       :disabled="saving"
                       hide-details="auto"
                       v-model="newScrap.weight"
