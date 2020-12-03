@@ -36,14 +36,54 @@
         </template>
       </v-autocomplete>
     </v-responsive>
+    <v-text-field
+      dense
+      rounded
+      outlined
+      single-line
+      hide-details
+      class="mt-4"
+      v-model="search"
+      prepend-inner-icon="$search"
+      label="Filter by machine or equipment"
+    ></v-text-field>
     <v-data-table
       :items="partMatrixList"
       :headers="headers"
       item-key="_id"
       dense
+      class="transparent mt-2"
+      :search="search"
       show-select
       :loading="loading"
-    ></v-data-table>
+      show-expand
+      single-expand
+      disable-pagination
+      hide-default-footer
+      :expanded.sync="expanded"
+      :custom-filter="filterMatrix"
+    >
+      <template #loading>
+        Fetching matrix...
+      </template>
+      <template #no-data>
+        No matrix available
+      </template>
+      <template #no-results>
+        No matching matrix found for '{{ search }}'
+      </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <v-card-text>
+            <template v-for="(field, i) in partMatrixFields">
+              <div :key="i">
+                {{ field.text }}: <strong>{{ item[field.value] }}</strong>
+              </div>
+            </template>
+          </v-card-text>
+        </td>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -57,18 +97,19 @@ export default {
   name: 'AssetConfig',
   data() {
     return {
+      expanded: [],
+      search: '',
       selectedPart: '',
       partMatrixList: [],
       loading: false,
       headers: [{
         text: 'Machine',
         value: 'machinename',
-        width: '20%',
       }, {
         text: 'Equipment',
         value: 'equipmentname',
-        width: '20%',
       }],
+      partMatrixFields: [],
     };
   },
   computed: {
@@ -94,39 +135,27 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionPlanning', ['fetchPartMatrix']),
-    filterParts(value, search, item) {
-      return item.partname
+    filterMatrix(value, search, item) {
+      return item.machinename
         .toLowerCase()
         .indexOf(search.toLowerCase()) > -1
-        || item.partnumber
+        || item.equipmentname
           .toLowerCase()
           .indexOf(search.toLowerCase()) > -1;
     },
     async onPartSelection() {
       this.partMatrixList = [];
-      this.headers = [{
-        text: 'Machine',
-        value: 'machinename',
-        width: '20%',
-      }, {
-        text: 'Equipment',
-        value: 'equipmentname',
-        width: '20%',
-      }];
+      this.partMatrixFields = [];
       if (this.selectedPart) {
         this.loading = true;
         const matrixTags = this.partMatrixTags(this.selectedPart.assetid);
         const tagsToRemove = ['partname', 'machinename', 'moldname', 'toolname'];
-        const partMatrixHeaders = matrixTags
+        this.partMatrixFields = matrixTags
           .filter((tag) => !tagsToRemove.includes(tag.tagName))
           .map((tag) => ({
             text: tag.tagDescription,
             value: tag.tagName,
           }));
-        this.headers = [
-          ...this.headers,
-          ...partMatrixHeaders,
-        ];
         this.partMatrixList = await this.fetchPartMatrix(this.selectedPart);
         this.loading = false;
       }
