@@ -79,11 +79,3 @@ export const setSessionId = (sessionId) => {
 };
 
 export const getDeviceId = () => `${Dashboard.getDeviceId()}`;
-// Keep Alive Timer
-
-// setInterval(function() {
-//    try {
-//        Dashboard.keepAlive(true);
-//    } catch(e) {
-//            console.log("Not run through Dashboard loader app.")
-//    }}, 4000); //send keep alive every 4 seconds - max. 30 seconds

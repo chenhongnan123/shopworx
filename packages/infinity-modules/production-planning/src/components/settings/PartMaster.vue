@@ -4,6 +4,7 @@
       <span>
         <v-btn
           small
+          disabled
           color="primary"
           class="text-none"
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"

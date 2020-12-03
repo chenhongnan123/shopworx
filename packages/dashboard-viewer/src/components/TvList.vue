@@ -19,6 +19,7 @@
       :search="search"
       :headers="headers"
       :loading="fetchingTvs"
+      disable-pagination
       hide-default-footer
     >
       <template #loading>

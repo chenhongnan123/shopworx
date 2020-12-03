@@ -14,7 +14,9 @@ function loadLocaleMessages(i18nInstance) {
 
 export default {
   install(Vue, options) {
-    options.router.addRoutes(routes);
+    const routerData = options.router.options.routes.find((r) => r.path === '/d');
+    routerData.children = routes;
+    options.router.addRoutes([routerData]);
     options.store.registerModule('shopfloor', store);
     loadLocaleMessages(options.i18n);
   },
