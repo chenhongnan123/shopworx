@@ -17,12 +17,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <v-row
-        no-gutters
-        align="center"
-        justify="center"
-        v-if="fetchingMaster"
-      >
+      <v-row no-gutters align="center" justify="center" v-if="fetchingMaster">
         <v-col cols="12" align="center">
           <v-progress-circular
             indeterminate
@@ -31,9 +26,7 @@
           ></v-progress-circular>
         </v-col>
         <v-col cols="12" align="center">
-          <span>
-            Fetching parameters and transformations...
-          </span>
+          <span> Fetching parameters and transformations... </span>
         </v-col>
       </v-row>
       <template v-else>
@@ -51,16 +44,13 @@
           :items="models"
           :search="search"
           :headers="headers"
-          hide-default-footer
           :loading="fetchingModels"
           :custom-filter="filterModels"
+          :options.sync="options"
+          :items-per-page="5"
         >
-          <template #loading>
-            Fetching models...
-          </template>
-          <template #no-data>
-            No model available
-          </template>
+          <template #loading> Fetching models... </template>
+          <template #no-data> No model available </template>
           <template #no-results>
             No matching model found for '{{ search }}'
           </template>
@@ -69,15 +59,11 @@
               <td>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <div
-                      v-on="on"
-                      v-bind="attrs"
-                      class="font-weight-medium"
-                    >
+                    <div v-on="on" v-bind="attrs" class="font-weight-medium">
                       {{ item.name }}
                     </div>
                   </template>
-                  <span>{{ item.description || 'N.A' }}</span>
+                  <span>{{ item.description || "N.A" }}</span>
                 </v-tooltip>
               </td>
               <td>
@@ -99,7 +85,7 @@
             </tr>
           </template>
         </v-data-table>
-        </template>
+      </template>
     </v-card-text>
   </v-card>
 </template>
@@ -126,6 +112,11 @@ export default {
   data() {
     return {
       search: '',
+      options: {
+        descending: true,
+        page: 1,
+        rowsPerPage: 5,
+      },
       headers: [
         { text: 'Details', value: 'name' },
         { text: 'Last modified', value: 'lastModified' },
@@ -177,6 +168,12 @@ export default {
       'fetchingMaster',
       'models',
     ]),
+    pages() {
+      if (this.options.rowsPerPage == null
+         || this.options.totalItems == null
+      ) return 0;
+      return Math.ceil(this.options.totalItems / this.options.rowsPerPage);
+    },
   },
   methods: {
     ...mapActions('modelManagement', [
@@ -186,12 +183,13 @@ export default {
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
     filterModels(value, search, item) {
-      return item.name
-        .toLowerCase()
-        .indexOf(search.toLowerCase()) > -1
-        || item.description
-          .toLowerCase()
-          .indexOf(search.toLowerCase()) > -1;
+      if (item.description) {
+        return (
+          item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+           || item.description.toLowerCase().indexOf(search.toLowerCase()) > -1
+        );
+      }
+      return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
     },
   },
 };
