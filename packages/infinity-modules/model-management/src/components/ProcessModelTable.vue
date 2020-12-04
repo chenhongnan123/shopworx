@@ -57,13 +57,16 @@
           <template #item="{ item }">
             <tr>
               <td>
-                <v-tooltip bottom>
+                <v-tooltip
+                 right
+                 max-width="300"
+                 >
                   <template v-slot:activator="{ on, attrs }">
                     <div v-on="on" v-bind="attrs" class="font-weight-medium">
                       {{ item.name }}
                     </div>
                   </template>
-                  <span>{{ item.description || "N.A" }}</span>
+                  <span class="toolTipProperty">{{ item.description || "N.A" }}</span>
                 </v-tooltip>
               </td>
               <td>
@@ -168,12 +171,6 @@ export default {
       'fetchingMaster',
       'models',
     ]),
-    pages() {
-      if (this.options.rowsPerPage == null
-         || this.options.totalItems == null
-      ) return 0;
-      return Math.ceil(this.options.totalItems / this.options.rowsPerPage);
-    },
   },
   methods: {
     ...mapActions('modelManagement', [
@@ -194,3 +191,16 @@ export default {
   },
 };
 </script>
+<style scoped>
+.toolTipProperty:before {
+  content:"DESCRIPTION:";
+  font-size: 15PX;
+  display: block;
+}
+ .toolTipProperty {
+  display: inline-block !important;
+  padding: 2px;
+  width: fit-content;
+  height: fit-content;
+}
+</style>
