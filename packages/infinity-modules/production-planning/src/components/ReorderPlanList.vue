@@ -37,7 +37,7 @@
                 :key="index"
                 handle=".handle"
               >
-                <td>
+                <td style="cursor: move;">
                   <v-icon class="handle">mdi-drag</v-icon>
                 </td>
                 <td>

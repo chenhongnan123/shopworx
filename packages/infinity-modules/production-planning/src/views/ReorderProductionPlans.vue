@@ -48,7 +48,7 @@ export default {
       this.fetchReorderPlanList();
     },
     goBack() {
-      this.$router.push({ name: 'productionPlanning' });
+      this.$router.go(-1);
     },
   },
 };

@@ -81,7 +81,7 @@ export default {
       'fetchParts',
     ]),
     goBack() {
-      this.$router.push({ name: 'productionPlanning' });
+      this.$router.go(-1);
     },
     goToImport() {
       this.$router.push({
