@@ -100,11 +100,9 @@ export default {
     },
   },
   async created() {
-    if (this.machines.length === 0) {
-      this.loading = true;
-      await this.fetchMachines();
-      this.loading = false;
-    }
+    this.loading = true;
+    await this.fetchMachines();
+    this.loading = false;
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

@@ -116,6 +116,8 @@ export default {
           if (plan.status === 'notStarted') {
             s = this.formatDate(plan.scheduledstart);
             e = this.formatDate(plan.scheduledend);
+          } else if (plan.status === 'inProgress') {
+            e = this.formatDate(plan.scheduledend);
           }
           return {
             ...plan,
