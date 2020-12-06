@@ -68,7 +68,7 @@
           id="searchUsers"
           v-model="search"
           prepend-inner-icon="$search"
-          label="Search users by name"
+          label="Filter users by name"
         ></v-text-field>
         <v-data-table
           item-key="id"
@@ -78,7 +78,6 @@
           :headers="headers"
           disable-pagination
           hide-default-footer
-          :custom-filter="filterUsers"
         >
           <!-- eslint-disable-next-line -->
           <template #item.fullName="{ item }">
