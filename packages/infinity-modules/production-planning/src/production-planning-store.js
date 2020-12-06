@@ -1,4 +1,6 @@
-import { set, toggle, reactiveSetArray } from '@shopworx/services/util/store.helper';
+import {
+  set, toggle, reactiveSetArray, reactiveRemoveArray,
+} from '@shopworx/services/util/store.helper';
 import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
@@ -53,6 +55,8 @@ export default ({
     setPlanningList: set('planningList'),
     setPlan: reactiveSetArray('planningList'),
     setNotStartedPlan: reactiveSetArray('reorderPlanList'),
+    removePlan: reactiveRemoveArray('planningList'),
+    removeNotStartedPlan: reactiveRemoveArray('reorderPlanList'),
     setReorderPlanList: set('reorderPlanList'),
     setLastRefreshedAt: set('lastRefreshedAt'),
     setLastRefreshedReorder: set('lastRefreshedReorder'),
@@ -472,7 +476,7 @@ export default ({
       state,
       commit,
       dispatch,
-    }, { planId, payload, notStarted = false }) => {
+    }, { planId, payload, reOrderList }) => {
       const updated = await dispatch(
         'element/updateRecordByQuery',
         {
@@ -482,7 +486,7 @@ export default ({
         },
         { root: true },
       );
-      if (notStarted) {
+      if (reOrderList) {
         const { reorderPlanList } = state;
         for (let i = 0; i < reorderPlanList.length; i += 1) {
           if (reorderPlanList[i].planid === planId) {
@@ -522,6 +526,57 @@ export default ({
           show: true,
           type: 'error',
           message: 'PLAN_UPDATED',
+        }, {
+          root: true,
+        });
+      }
+    },
+
+    deletePlanByPlanId: async ({
+      state,
+      commit,
+      dispatch,
+    }, { planId, reOrderList }) => {
+      const deleted = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'planning',
+          queryParam: `?query=planid=="${planId}"`,
+        },
+        { root: true },
+      );
+      if (reOrderList) {
+        const { reorderPlanList } = state;
+        for (let i = 0; i < reorderPlanList.length; i += 1) {
+          if (reorderPlanList[i].planid === planId) {
+            commit('removeNotStartedPlan', {
+              index: i,
+            });
+          }
+        }
+      } else {
+        const { planningList } = state;
+        for (let i = 0; i < planningList.length; i += 1) {
+          if (planningList[i].planid === planId) {
+            commit('removePlan', {
+              index: i,
+            });
+          }
+        }
+      }
+      if (deleted) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'success',
+          message: 'PLAN_DELETED',
+        }, {
+          root: true,
+        });
+      } else {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'PLAN_DELETED',
         }, {
           root: true,
         });

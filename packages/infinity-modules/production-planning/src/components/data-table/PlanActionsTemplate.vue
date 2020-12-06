@@ -1,6 +1,7 @@
 <template>
   <div>
     <star-plan
+      :reOrderList="reOrderList"
       :starred="starred"
       :planId="planId"
     />
@@ -39,10 +40,12 @@
     </v-tooltip>
     <abort-plan
       v-if="inProgress"
+      :reOrderList="reOrderList"
       :planId="planId"
     />
     <delete-plan
       v-else-if="notStarted"
+      :reOrderList="reOrderList"
       :planId="planId"
     />
   </div>
@@ -56,6 +59,10 @@ import DeletePlan from '../actions/DeletePlan.vue';
 export default {
   name: 'PlanActionsTemplate',
   props: {
+    reOrderList: {
+      type: Boolean,
+      default: false,
+    },
     plan: {
       type: Object,
       required: true,

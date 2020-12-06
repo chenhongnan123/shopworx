@@ -35,6 +35,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    reOrderList: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     ...mapActions('productionPlanning', ['updatePlanByPlanId']),
@@ -42,6 +46,7 @@ export default {
       await this.updatePlanByPlanId({
         planId: this.planId,
         payload: { starred: !this.starred },
+        reOrderList: this.reOrderList,
       });
     },
   },

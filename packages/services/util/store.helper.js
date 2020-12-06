@@ -6,5 +6,7 @@ export const reactiveSet = (property) => (state, payload) => (Vue.set(state[prop
 
 export const reactiveSetArray = (property) => (state, { index, payload }) => (Vue.set(state[property], index, payload));
 
+export const reactiveRemoveArray = (property) => (state, { index }) => (Vue.delete(state[property], index));
+
 export const toggle = (property) => (state) => (state[property] = !state[property]);
 
