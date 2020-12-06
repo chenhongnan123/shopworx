@@ -30,7 +30,7 @@ export default ({
     toggleSelection: false,
     lastRefreshedAt: null,
     lastRefreshedReorder: null,
-    selectedPlan: null,
+    selectedPlan: [],
   },
   mutations: {
     setPartMatrixElement: set('partMatrixElement'),
@@ -458,6 +458,23 @@ export default ({
         return records[0];
       }
       return null;
+    },
+
+    fetchPlan: async ({ commit, dispatch }, planId) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'planning',
+          query: `?query=planid=="${planId}"`,
+        },
+        { root: true },
+      );
+      if (records && records.length) {
+        commit('setSelectedPlan', records);
+        return true;
+      }
+      commit('setSelectedPlan', []);
+      return false;
     },
 
     createPlans: async ({ dispatch }, payload) => {

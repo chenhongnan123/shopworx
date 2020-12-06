@@ -29,17 +29,20 @@
         </v-col>
       </v-row>
     </v-container>
+    <plan-not-found v-else-if="!loading && error" />
     <duplicate-plan v-else />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import PlanNotFound from '../components/PlanNotFound.vue';
 import DuplicatePlan from '../components/actions/DuplicatePlan.vue';
 
 export default {
   name: 'DuplicateProductionPlan',
   components: {
+    PlanNotFound,
     DuplicatePlan,
   },
   data() {
@@ -57,10 +60,10 @@ export default {
   async created() {
     const machinesNotAvailable = this.machines.length === 0;
     const partsNotAvailable = this.parts.length === 0;
-    if (machinesNotAvailable || partsNotAvailable) {
-      this.loading = true;
-      const plan = await this.fetchPlan();
-      if (plan) {
+    this.loading = true;
+    const plan = await this.fetchPlan(this.id);
+    if (plan) {
+      if (machinesNotAvailable || partsNotAvailable) {
         this.error = false;
         if (!this.partMatrixElement) {
           await this.getPartMatrixElement();
@@ -69,11 +72,11 @@ export default {
           this.fetchMachines(),
           this.fetchParts(),
         ]);
-      } else {
-        this.error = true;
       }
-      this.loading = false;
+    } else {
+      this.error = true;
     }
+    this.loading = false;
   },
   methods: {
     ...mapActions('productionPlanning', [
