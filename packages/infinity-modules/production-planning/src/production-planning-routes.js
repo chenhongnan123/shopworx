@@ -32,6 +32,18 @@ const routes = [
         component: () => import(/* webpackChunkName: "production-planning" */ './views/ProductionPlanDetails.vue'),
         props: true,
       },
+      {
+        path: 'plan/:id/edit',
+        name: 'editProductionPlan',
+        component: () => import(/* webpackChunkName: "production-planning" */ './views/EditProductionPlan.vue'),
+        props: true,
+      },
+      {
+        path: 'plan/:id/duplicate',
+        name: 'duplicateProductionPlan',
+        component: () => import(/* webpackChunkName: "production-planning" */ './views/DuplicateProductionPlan.vue'),
+        props: true,
+      },
     ],
   },
 ];
