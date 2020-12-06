@@ -12,7 +12,17 @@
         <oee-summary />
       </v-col>
       <v-col cols="12" lg="6" xl="8">
-        Production
+        <v-row>
+          <v-col cols="12">
+            Production
+          </v-col>
+          <v-col cols="12">
+            Machines with no operator
+          </v-col>
+          <v-col cols="12">
+            Downtimes with no reason
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </div>

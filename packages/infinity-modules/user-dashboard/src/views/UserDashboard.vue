@@ -1,5 +1,10 @@
 <template>
-  <component :is="component" />
+  <v-container fluid>
+    <portal to="app-header">
+      Home
+    </portal>
+    <component :is="component" />
+  </v-container>
 </template>
 
 <script>
@@ -28,7 +33,7 @@ export default {
         case 'supervisor':
           return 'production-supervisor-dashboard';
         default:
-          return 'admin-dashboard';
+          return 'production-supervisor-dashboard';
       }
     },
   },
