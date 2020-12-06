@@ -600,6 +600,31 @@ export default ({
       }
     },
 
+    updatePlanById: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'planning',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
+    deletePlanById: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: 'planning',
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
+    },
+
     updateMachine: async ({ dispatch }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',

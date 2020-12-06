@@ -23,7 +23,7 @@
                         :items="partList"
                         return-object
                         :error-messages="errors"
-                        :disabled="saving"
+                        :disabled="saving || inProgress"
                         item-text="partname"
                         v-model="selectedPart"
                         :title="selectedPart ? selectedPart.partname : ''"
@@ -50,7 +50,7 @@
                         label="Machine"
                         :items="machineList"
                         :error-messages="errors"
-                        :disabled="saving || !selectedPart"
+                        :disabled="saving || !selectedPart || inProgress"
                         :loading="fetchingMatrix"
                         item-text="machinename"
                         item-value="machinename"
@@ -72,7 +72,7 @@
                         label="Equipment"
                         :items="equipmentList"
                         :error-messages="errors"
-                        :disabled="saving || !selectedPart"
+                        :disabled="saving || !selectedPart || inProgress"
                         :loading="fetchingMatrix"
                         item-text="equipmentname"
                         item-value="equipmentname"
@@ -189,7 +189,7 @@
                       <v-text-field
                         label="Quantity"
                         type="number"
-                        :disabled="saving"
+                        :disabled="saving || inProgress"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-package-variant-closed"
                         outlined
@@ -215,7 +215,7 @@
                         outlined
                         v-model="plan.scheduledstart"
                         hide-details="auto"
-                        :disabled="saving"
+                        :disabled="saving || inProgress"
                         @change="fetchEstimatedEnd"
                       >
                         <template #append-outer>
@@ -261,7 +261,7 @@
                     <v-checkbox
                       hide-details
                       label="Mark as trial"
-                      :disabled="saving"
+                      :disabled="saving || inProgress"
                       v-model="plan.trial"
                     ></v-checkbox>
                   </v-col>
@@ -280,7 +280,7 @@
                       hide-default-footer
                       disable-pagination
                       item-key="_id"
-                      show-select
+                      :show-select="notStarted"
                       dense
                       v-model="selectedFamilyParts"
                     >
@@ -370,10 +370,15 @@ export default {
       plan: null,
       selectedMachine: null,
       selectedEquipment: null,
+      familyToEdit: [],
     };
   },
   computed: {
-    ...mapState('productionPlanning', ['parts', 'partMatrix']),
+    ...mapState('productionPlanning', [
+      'parts',
+      'partMatrix',
+      'selectedPlan',
+    ]),
     ...mapGetters('productionPlanning', ['selectedAsset', 'partMatrixTags']),
     isInjectionMolding() {
       let result = false;
@@ -388,6 +393,12 @@ export default {
         result = this.selectedAsset(this.plan.assetid) === 'press';
       }
       return result;
+    },
+    inProgress() {
+      return this.selectedPlan[0].status === 'inProgress';
+    },
+    notStarted() {
+      return this.selectedPlan[0].status === 'notStarted';
     },
     areParamsEdited() {
       if (this.selectedMatrix) {
@@ -451,7 +462,8 @@ export default {
     },
   },
   created() {
-    this.initPlan();
+    this.clear();
+    this.setPlan();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -462,9 +474,12 @@ export default {
       'getScheduledEnd',
       'fetchLastPlan',
       'createPlans',
+      'deletePlanById',
+      'updatePlanById',
     ]),
     initPlan() {
       this.plan = {
+        id: null,
         assetid: 0,
         partname: '',
         machinename: '',
@@ -480,6 +495,68 @@ export default {
         sortindex: 0,
         status: 'notStarted',
       };
+    },
+    async setPlan() {
+      const [plan, ...family] = this.selectedPlan;
+      this.selectedPart = this.partList
+        .find((p) => p.partname === plan.partname);
+      this.fetchingMatrix = true;
+      this.partMatrixList = await this.fetchPartMatrix(this.selectedPart);
+      this.fetchingMatrix = false;
+      this.selectedMachine = this.machineList
+        .find((m) => m.machinename === plan.machinename)
+        .machinename;
+      this.selectedEquipment = this.equipmentList.find((e) => {
+        if (plan.moldname) {
+          return e.equipmentname === plan.moldname;
+        }
+        return e.equipmentname === plan.toolname;
+      }).equipmentname;
+      await this.setEditParams(plan, family);
+    },
+    async setEditParams(plan, family) {
+      this.familyToEdit = [...family];
+      this.plan = {
+        // eslint-disable-next-line
+        assetid: plan.assetid,
+        partname: plan.partname,
+        machinename: plan.machinename,
+        stdcycletime: plan.stdcycletime,
+        delaytime: plan.delaytime,
+        cavity: plan.cavity,
+        activecavity: plan.activecavity,
+        plannedquantity: plan.plannedquantity,
+        scheduledstart: formatDate(new Date(plan.scheduledstart), 'yyyy-MM-dd\'T\'HH:mm'),
+        scheduledend: formatDate(new Date(plan.scheduledend), 'yyyy-MM-dd\'T\'HH:mm'),
+        starred: plan.starred,
+        trial: plan.trial,
+        sortindex: plan.sortindex,
+        status: plan.status,
+      };
+      if (this.isInjectionMolding && this.notStarted) {
+        const isFamily = await this.isFamilyMold(
+          `?query=moldname=="${encodeURIComponent(plan.moldname)}"`,
+        );
+        if (isFamily) {
+          const familyParts = await this.getFamilyParts(
+            `?query=moldname=="${encodeURIComponent(plan.moldname)}"%26%26machinename=="${encodeURIComponent(plan.machinename)}"%26%26partname!="${encodeURIComponent(plan.partname)}"`,
+          );
+          this.familyParts = familyParts.map((p) => ({
+            ...p,
+            activecavity: p.cavity,
+            plannedquantity: +p.cavity * this.shots,
+          }));
+          const partNames = this.familyToEdit.map((f) => f.partname);
+          this.selectedFamilyParts = this.familyParts
+            .filter((f) => partNames.includes(f.partname));
+        }
+      } else if (this.isInjectionMolding && this.familyToEdit.length && this.inProgress) {
+        this.familyParts = this.familyToEdit.map(({ _id, ...p }) => ({
+          ...p,
+          // eslint-disable-next-line
+          id: _id,
+        }));
+      }
     },
     clear() {
       this.initPlan();
@@ -503,8 +580,6 @@ export default {
     },
     async setPlanParameters() {
       if (this.selectedMachine && this.selectedEquipment) {
-        this.familyParts = [];
-        this.selectedFamilyParts = [];
         const {
           stdcycletime,
           delaytime,
@@ -520,7 +595,9 @@ export default {
         this.plan.delaytime = +delaytime;
         this.plan.cavity = +cavity;
         this.plan.activecavity = +cavity;
-        if (this.isInjectionMolding) {
+        if (this.isInjectionMolding && this.selectedEquipment !== moldname) {
+          this.familyParts = [];
+          this.selectedFamilyParts = [];
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,
           );
@@ -575,21 +652,25 @@ export default {
         plannedquantity: +payload * this.shots,
       });
     },
-    async setSortIndex() {
-      const lastPlan = await this.fetchLastPlan();
-      if (lastPlan) {
-        this.plan.sortindex = lastPlan.sortindex + 100;
-      } else {
-        this.plan.sortindex = 100;
-      }
-    },
     exit() {
       this.clear();
       this.selectedPart = null;
       this.$router.go(-1);
     },
+    async delete() {
+      const ids = [
+        // eslint-disable-next-line
+        this.selectedPlan[0]._id,
+        // eslint-disable-next-line
+        ...this.familyToEdit.map((p) => p._id),
+      ];
+      const deleted = await Promise.all(ids.map((id) => this.deletePlanById(id)));
+      if (deleted.every((d) => d)) {
+        return true;
+      }
+      return false;
+    },
     async save() {
-      await this.setSortIndex();
       const matrixTags = this.partMatrixTags(this.plan.assetid);
       const partMatrix = matrixTags.reduce((acc, cur) => {
         acc[cur.tagName] = this.selectedMatrix[cur.tagName];
@@ -599,6 +680,7 @@ export default {
         ...partMatrix,
         ...this.plan,
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
+        scheduledend: new Date(this.plan.scheduledend).getTime(),
         familyName: 'family',
       }];
       if (this.selectedFamilyParts && this.selectedFamilyParts.length) {
@@ -616,24 +698,68 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'PLAN_CREATED',
+          message: 'PLAN_UPDATED',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_CREATING_PLAN',
+          message: 'PLAN_UPDATED',
         });
       }
       return created;
+    },
+    setEditPayload(payload) {
+      return {
+        stdcycletime: +payload.stdcycletime,
+        delaytime: +payload.delaytime,
+        activecavity: +payload.activecavity,
+        starred: this.plan.starred,
+      };
+    },
+    async update() {
+      let updatePayload = this.familyParts.map(({ id, ...p }) => ({
+        id,
+        payload: this.setEditPayload(...p),
+      }));
+      updatePayload = [{
+        // eslint-disable-next-line
+        id: this.selectedPlan[0]._id,
+        payload: this.setEditPayload(this.plan),
+      }, ...updatePayload];
+      const updated = await Promise.all(updatePayload.map((p) => this.updatePlanById(p)));
+      if (updated.every((d) => d)) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_UPDATED',
+        });
+        return true;
+      }
+      this.setAlert({
+        show: true,
+        type: 'error',
+        message: 'PLAN_UPDATED',
+      });
+      return false;
     },
     async onSaveAndExit() {
       const isValid = await this.$refs.form.validate();
       if (isValid) {
         this.saving = true;
-        const created = await this.save();
-        if (created) {
-          this.exit();
+        if (this.inProgress) {
+          const updated = await this.update();
+          if (updated) {
+            this.exit();
+          }
+        } else {
+          const deleted = await this.delete();
+          if (deleted) {
+            const created = await this.save();
+            if (created) {
+              this.exit();
+            }
+          }
         }
         this.saving = false;
       }
