@@ -518,8 +518,6 @@ export default {
     },
     async setPlanParameters() {
       if (this.selectedMachine && this.selectedEquipment) {
-        this.familyParts = [];
-        this.selectedFamilyParts = [];
         const {
           stdcycletime,
           delaytime,
@@ -535,7 +533,9 @@ export default {
         this.plan.delaytime = +delaytime;
         this.plan.cavity = +cavity;
         this.plan.activecavity = +cavity;
-        if (this.isInjectionMolding) {
+        if (this.isInjectionMolding && this.selectedEquipment !== moldname) {
+          this.familyParts = [];
+          this.selectedFamilyParts = [];
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,
           );
