@@ -14,12 +14,12 @@
         class="text-none ml-5"
       >
         <v-icon left small>mdi-plus</v-icon>
-        Register TV
+        Add holiday
       </v-btn>
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        Register new TV
+        Add new holiday
       </v-card-title>
       <v-form ref="form" v-model="isValid">
         <v-card-text>

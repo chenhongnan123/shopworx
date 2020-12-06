@@ -1,6 +1,5 @@
 <template>
   <v-card
-    flat
     height="100%"
     rounded="lg"
   >

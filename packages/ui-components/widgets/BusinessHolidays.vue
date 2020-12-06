@@ -1,11 +1,12 @@
 <template>
   <v-card
-    flat
     height="100%"
     rounded="lg"
   >
     <v-card-title>
       Business holidays
+      <v-spacer></v-spacer>
+      <add-holiday @on-register="fetchRecords" />
     </v-card-title>
     <v-card-text>
       <v-data-table
@@ -13,6 +14,7 @@
         class="transparent"
         disable-pagination
         :items="holidays"
+        :loading="loading"
         hide-default-footer
         :headers="headers"
       >
@@ -26,9 +28,13 @@
 
 <script>
 import { mapActions } from 'vuex';
+import AddHoliday from './AddHoliday.vue';
 
 export default {
   name: 'BusinessHolidays',
+  components: {
+    AddHoliday,
+  },
   data() {
     return {
       loading: false,
