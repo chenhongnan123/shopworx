@@ -81,9 +81,10 @@ export default ({
         .forEach((filter) => {
           const { value, operation } = filters[filter];
           const isTypeString = typeof value === 'string';
+          const isTypeBoolean = typeof value === 'boolean';
+          const isTypeNumber = typeof value === 'number';
           const isTypeArray = Array.isArray(value);
           const applyStringFilter = isTypeString && !value.includes('All');
-          const isTypeNumber = typeof value === 'number';
           filteredRecords = filteredRecords
             .filter((record) => {
               const valueExists = record[filter] !== undefined;
@@ -99,6 +100,11 @@ export default ({
                 }
                 if (operation === 'notexists') {
                   return !valueExists || record[filter] === '';
+                }
+              }
+              if (isTypeBoolean) {
+                if (operation === 'eq') {
+                  return record[filter] === value;
                 }
               }
               if (isTypeArray) {

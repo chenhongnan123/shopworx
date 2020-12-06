@@ -14,6 +14,8 @@
         <part-selection />
         <status-selection />
         <group-selection v-if="!isCalendarView" />
+        <star-selection />
+        <trial-selection />
       </div>
     </perfect-scrollbar>
   </v-navigation-drawer>
@@ -27,6 +29,8 @@ import MachineSelection from './filters/MachineSelection.vue';
 import PartSelection from './filters/PartSelection.vue';
 import StatusSelection from './filters/StatusSelection.vue';
 import GroupSelection from './filters/GroupSelection.vue';
+import StarSelection from './filters/StarSelection.vue';
+import TrialSelection from './filters/TrialSelection.vue';
 
 export default {
   name: 'PlanningDrawer',
@@ -37,6 +41,8 @@ export default {
     PartSelection,
     StatusSelection,
     GroupSelection,
+    StarSelection,
+    TrialSelection,
   },
   computed: {
     ...mapState('productionPlanning', ['drawer']),
