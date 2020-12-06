@@ -373,7 +373,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionPlanning', ['parts', 'partMatrix']),
+    ...mapState('productionPlanning', [
+      'parts',
+      'partMatrix',
+      'selectedPlan',
+    ]),
     ...mapGetters('productionPlanning', ['selectedAsset', 'partMatrixTags']),
     isInjectionMolding() {
       let result = false;
@@ -451,7 +455,8 @@ export default {
     },
   },
   created() {
-    this.initPlan();
+    this.clear();
+    this.setPlan();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -481,6 +486,62 @@ export default {
         status: 'notStarted',
       };
     },
+    async setPlan() {
+      const [plan, ...family] = this.selectedPlan;
+      this.selectedPart = this.partList
+        .find((p) => p.partname === plan.partname);
+      this.fetchingMatrix = true;
+      this.partMatrixList = await this.fetchPartMatrix(this.selectedPart);
+      this.fetchingMatrix = false;
+      this.selectedMachine = this.machineList
+        .find((m) => m.machinename === plan.machinename)
+        .machinename;
+      this.selectedEquipment = this.equipmentList.find((e) => {
+        if (plan.moldname) {
+          return e.equipmentname === plan.moldname;
+        }
+        return e.equipmentname === plan.toolname;
+      }).equipmentname;
+      await this.setEditParams(plan, family);
+    },
+    async setEditParams(plan, family) {
+      this.plan = {
+        // eslint-disable-next-line
+        assetid: plan.assetid,
+        partname: plan.partname,
+        machinename: plan.machinename,
+        stdcycletime: plan.stdcycletime,
+        delaytime: plan.delaytime,
+        cavity: plan.cavity,
+        activecavity: plan.activecavity,
+        plannedquantity: plan.plannedquantity,
+        starred: plan.starred,
+        trial: plan.trial,
+        scheduledstart: formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm'),
+        scheduledend: '',
+        sortindex: 0,
+        status: 'notStarted',
+      };
+      await this.fetchEstimatedEnd();
+      if (this.isInjectionMolding) {
+        const isFamily = await this.isFamilyMold(
+          `?query=moldname=="${encodeURIComponent(plan.moldname)}"`,
+        );
+        if (isFamily) {
+          const familyParts = await this.getFamilyParts(
+            `?query=moldname=="${encodeURIComponent(plan.moldname)}"%26%26machinename=="${encodeURIComponent(plan.machinename)}"%26%26partname!="${encodeURIComponent(plan.partname)}"`,
+          );
+          this.familyParts = familyParts.map((p) => ({
+            ...p,
+            activecavity: p.cavity,
+            plannedquantity: +p.cavity * this.shots,
+          }));
+          const partNames = family.map((f) => f.partname);
+          this.selectedFamilyParts = this.familyParts
+            .filter((f) => partNames.includes(f.partname));
+        }
+      }
+    },
     clear() {
       this.initPlan();
       this.editParams = false;
@@ -503,8 +564,6 @@ export default {
     },
     async setPlanParameters() {
       if (this.selectedMachine && this.selectedEquipment) {
-        this.familyParts = [];
-        this.selectedFamilyParts = [];
         const {
           stdcycletime,
           delaytime,
@@ -520,7 +579,9 @@ export default {
         this.plan.delaytime = +delaytime;
         this.plan.cavity = +cavity;
         this.plan.activecavity = +cavity;
-        if (this.isInjectionMolding) {
+        if (this.isInjectionMolding && this.selectedEquipment !== moldname) {
+          this.familyParts = [];
+          this.selectedFamilyParts = [];
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,
           );
