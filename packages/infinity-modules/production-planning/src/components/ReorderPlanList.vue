@@ -69,7 +69,7 @@
 
 <script>
 import {
-  mapState, mapActions, mapGetters, mapMutations,
+  mapState, mapActions, mapGetters,
 } from 'vuex';
 import Draggable from 'vuedraggable';
 import PlanningLoading from './PlanningLoading.vue';
@@ -129,10 +129,9 @@ export default {
     ...mapGetters('productionPlanning', ['notStartedPlans']),
   },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionPlanning', [
       'fetchReorderPlanList',
-      'updatePlan',
+      'updatePlanByPlanId',
     ]),
     async updateExecutionOrder(evt) {
       const { moved } = evt;
@@ -149,23 +148,11 @@ export default {
         const start = plans[newIndex - 1].sortindex;
         newSortIndex = Math.ceil((start + end) / 2);
       }
-      const updated = await this.updatePlan({
-        queryParam: `?query=planid=="${planid}"`,
+      await this.updatePlanByPlanId({
+        planId: planid,
         payload: { sortindex: newSortIndex },
+        notStarted: true,
       });
-      if (updated) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'PLAN_EXECUTION_UPDATE',
-        });
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'PLAN_EXECUTION_UPDATE',
-        });
-      }
     },
   },
   created() {

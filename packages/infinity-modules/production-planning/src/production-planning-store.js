@@ -1,4 +1,4 @@
-import { set, toggle } from '@shopworx/services/util/store.helper';
+import { set, toggle, reactiveSetArray } from '@shopworx/services/util/store.helper';
 import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
@@ -28,6 +28,7 @@ export default ({
     toggleSelection: false,
     lastRefreshedAt: null,
     lastRefreshedReorder: null,
+    selectedPlan: null,
   },
   mutations: {
     setPartMatrixElement: set('partMatrixElement'),
@@ -50,9 +51,12 @@ export default ({
     setError: set('error'),
     setPlanningCount: set('planningCount'),
     setPlanningList: set('planningList'),
+    setPlan: reactiveSetArray('planningList'),
+    setNotStartedPlan: reactiveSetArray('reorderPlanList'),
     setReorderPlanList: set('reorderPlanList'),
     setLastRefreshedAt: set('lastRefreshedAt'),
     setLastRefreshedReorder: set('lastRefreshedReorder'),
+    setSelectedPlan: set('selectedPlan'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch, rootGetters }) => {
@@ -464,17 +468,64 @@ export default ({
       return created;
     },
 
-    updatePlan: async ({ dispatch }, { queryParam, payload }) => {
+    updatePlanByPlanId: async ({
+      state,
+      commit,
+      dispatch,
+    }, { planId, payload, notStarted = false }) => {
       const updated = await dispatch(
         'element/updateRecordByQuery',
         {
           elementName: 'planning',
-          queryParam,
+          queryParam: `?query=planid=="${planId}"`,
           payload,
         },
         { root: true },
       );
-      return updated;
+      if (notStarted) {
+        const { reorderPlanList } = state;
+        for (let i = 0; i < reorderPlanList.length; i += 1) {
+          if (reorderPlanList[i].planid === planId) {
+            commit('setNotStartedPlan', {
+              index: i,
+              payload: {
+                ...reorderPlanList[i],
+                ...payload,
+              },
+            });
+          }
+        }
+      } else {
+        const { planningList } = state;
+        for (let i = 0; i < planningList.length; i += 1) {
+          if (planningList[i].planid === planId) {
+            commit('setPlan', {
+              index: i,
+              payload: {
+                ...planningList[i],
+                ...payload,
+              },
+            });
+          }
+        }
+      }
+      if (updated) {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'success',
+          message: 'PLAN_UPDATED',
+        }, {
+          root: true,
+        });
+      } else {
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'PLAN_UPDATED',
+        }, {
+          root: true,
+        });
+      }
     },
 
     updateMachine: async ({ dispatch }, { id, payload }) => {
@@ -616,6 +667,7 @@ export default ({
       let planning = null;
       if (reorderPlanList && reorderPlanList.length) {
         planning = sortArray(reorderPlanList, 'machinename');
+        planning = planning.sort((a, b) => a.sortindex - b.sortindex);
         planning = planning.reduce((result, currentValue) => {
           const key = currentValue.machinename;
           if (!result[key]) {

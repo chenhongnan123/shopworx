@@ -1,6 +1,9 @@
 <template>
   <div>
-    <star-plan />
+    <star-plan
+      :starred="starred"
+      :planId="planId"
+    />
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
         <v-btn
@@ -34,8 +37,14 @@
       </template>
       Duplicate plan
     </v-tooltip>
-    <abort-plan v-if="inProgress" />
-    <delete-plan v-else-if="notStarted" />
+    <abort-plan
+      v-if="inProgress"
+      :planId="planId"
+    />
+    <delete-plan
+      v-else-if="notStarted"
+      :planId="planId"
+    />
   </div>
 </template>
 
@@ -66,6 +75,9 @@ export default {
     },
     notStarted() {
       return this.plan.status === 'notStarted';
+    },
+    starred() {
+      return this.plan.starred;
     },
   },
 };

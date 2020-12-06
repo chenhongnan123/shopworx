@@ -103,7 +103,7 @@ export default ({
                 }
               }
               if (isTypeBoolean) {
-                if (operation === 'eq') {
+                if (operation === 'eq' && value) {
                   return record[filter] === value;
                 }
               }
