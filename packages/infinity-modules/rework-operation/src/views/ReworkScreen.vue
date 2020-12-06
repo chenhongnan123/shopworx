@@ -39,7 +39,7 @@
         :items="reworkList"
         item-key="_id"
         >
-        <template v-slot:item="{ item, index }">
+        <template #item="{ item, index }">
           <tr>
           <td>{{ index+1 }}</td>
           <td>{{ item.createdTimestamp }}</td>

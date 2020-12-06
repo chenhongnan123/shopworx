@@ -1,128 +1,69 @@
 <template>
-  <div>
-    <portal to="settings-header">
-      <span>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          disabled
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'$addRole'"
-          ></v-icon>
-          Create new role
-        </v-btn>
-        <v-btn
-          small
-          outlined
-          color="primary"
-          @click="refresh"
-          class="text-none ml-2"
-        >
-          <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
-        </v-btn>
-      </span>
-    </portal>
-    <v-progress-circular
-      indeterminate
-      v-if="loading"
-    ></v-progress-circular>
-    <v-card flat class="transparent" v-else>
-      <v-card-text class="pa-0">
-        <v-row justify="center">
-          <v-col cols="6">
-            <v-card outlined class="text-center">
-              <div class="title">
-                Admin roles
-              </div>
-              <div class="headline">
-                {{ adminCount }}
-              </div>
-            </v-card>
-          </v-col>
-          <v-col cols="6">
-            <v-card outlined class="text-center">
-              <div class="title">
-                Other roles
-              </div>
-              <div class="headline">
-                {{ nonAdminCount }}
-              </div>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-data-table
-          item-key="roleId"
-          class="transparent"
-          :search="search"
-          :items="userRoles"
-          :headers="headers"
-          show-expand
-          single-expand
-          :expanded.sync="expanded"
-          disable-pagination
-          hide-default-footer
-        >
-          <template #item.roleType="{ item }">
-            <v-switch
-              value
-              dense
-              :disabled="item.roleName === 'admin'"
-              :input-value="item.roleType === roleTypes.admin"
-              @change="updateRoleType(item)"
-            ></v-switch>
-          </template>
-          <template #item.actions="{ item }">
-            <v-btn
-              icon
-              small
-              disabled
-              color="error"
-              @click="deleteRole(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn>
-          </template>
-          <template #expanded-item="{ headers, item }">
-            <td :colspan="headers.length">
-              <v-card-text>
-                <v-treeview
-                  dense
-                  rounded
-                  open-all
-                  hoverable
-                  selectable
-                  transition
-                  open-on-click
-                  return-object
-                  v-model="item.permissions"
-                  :items="masterPermissions(item.roleName)"
-                ></v-treeview>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  :loading="saving"
-                  color="primary"
-                  class="text-none"
-                  @click="updatePermission(item)"
-                  :disabled="!item.permissions.length"
-                >
-                  Update permissions
-                </v-btn>
-              </v-card-actions>
-            </td>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </div>
+  <v-card
+    flat
+    height="100%"
+    rounded="lg"
+  >
+    <v-card-title>
+      User roles
+    </v-card-title>
+    <v-card-text>
+      <v-data-table
+        item-key="roleId"
+        class="transparent"
+        :search="search"
+        :items="userRoles"
+        :headers="headers"
+        show-expand
+        dense
+        single-expand
+        :expanded.sync="expanded"
+        disable-pagination
+        hide-default-footer
+      >
+        <!-- eslint-disable-next-line -->
+        <template #item.roleType="{ item }">
+          <v-switch
+            value
+            dense
+            :disabled="item.roleName === 'admin'"
+            :input-value="item.roleType === roleTypes.admin"
+            @change="updateRoleType(item)"
+          ></v-switch>
+        </template>
+        <template #expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <v-card-text>
+              <v-treeview
+                dense
+                rounded
+                open-all
+                hoverable
+                selectable
+                transition
+                open-on-click
+                return-object
+                v-model="item.permissions"
+                :items="masterPermissions(item.roleName)"
+              ></v-treeview>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                :loading="saving"
+                color="primary"
+                class="text-none"
+                @click="updatePermission(item)"
+                :disabled="!item.permissions.length"
+              >
+                Update permissions
+              </v-btn>
+            </v-card-actions>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -155,12 +96,6 @@ export default {
           sortable: false,
           value: 'roleType',
         },
-        {
-          text: 'Actions',
-          align: 'start',
-          sortable: false,
-          value: 'actions',
-        },
       ],
     };
   },
@@ -176,26 +111,6 @@ export default {
         }));
       }
       return [];
-    },
-    adminCount() {
-      let count = 0;
-      if (this.roles && this.roles.length) {
-        const roles = this.roles.filter((role) => (
-          role.roleType.toUpperCase() === this.roleTypes.admin
-        ));
-        count = roles.length;
-      }
-      return count;
-    },
-    nonAdminCount() {
-      let count = 0;
-      if (this.roles && this.roles.length) {
-        const roles = this.roles.filter((role) => (
-          role.roleType.toUpperCase() !== this.roleTypes.admin
-        ));
-        count = roles.length;
-      }
-      return count;
     },
   },
   async created() {
@@ -368,6 +283,7 @@ export default {
         const permissionsByModule = item.permissions.reduce((result, currentValue) => {
           const { moduleId } = currentValue;
           if (!result[moduleId]) {
+            // eslint-disable-next-line
             result[moduleId] = [];
           }
           result[moduleId].push(currentValue);

@@ -5,7 +5,7 @@
     persistent
     scrollable
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         small
         v-on="on"
@@ -33,7 +33,7 @@
             disable-pagination
             hide-default-footer
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
                 <td>{{ item.machinename }}</td>
                 <td>{{ item.shiftName }}</td>

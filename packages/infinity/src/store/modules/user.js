@@ -273,6 +273,13 @@ export default ({
       return '';
     },
 
+    roleName: ({ me }) => {
+      if (me && me.user) {
+        return me.role.roleName;
+      }
+      return '';
+    },
+
     sites: ({ me }) => {
       if (me && me.site && me.site.length) {
         return me.site.map((s) => ({

@@ -32,7 +32,7 @@
             item-text="ordername"
             @change="onOrderNameSelection()"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.ordername"></v-list-item-title>
             </v-list-item-content>

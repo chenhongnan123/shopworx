@@ -73,7 +73,7 @@
       <template #no-results>
         No matching matrix found for '{{ search }}'
       </template>
-      <template v-slot:expanded-item="{ headers, item }">
+      <template #expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <v-card-text>
             <template v-for="(field, i) in partMatrixFields">

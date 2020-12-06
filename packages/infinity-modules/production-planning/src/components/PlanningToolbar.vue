@@ -57,7 +57,7 @@
         Re-order plans
       </v-btn>
       <v-menu bottom right>
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <v-btn
             class="text-none mr-2"
             color="primary"

@@ -57,7 +57,7 @@
             </v-col>
           </v-row>
           <v-data-table :headers="headers" :items="recipeListDetails" item-key="tagname">
-            <template v-slot:item="{ item, index }">
+            <template #item="{ item, index }">
               <tr>
                 <td>{{ index+1 }}</td>
                 <td>{{ item.tagname }}</td>

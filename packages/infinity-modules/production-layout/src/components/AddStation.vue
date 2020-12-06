@@ -4,7 +4,7 @@
  v-model="dialog"
  transition="dialog-transition"
  max-width="700px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>

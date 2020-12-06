@@ -47,7 +47,7 @@
               prepend-icon="$production"
               @change="onPartSelection(selectedPart)"
             >
-              <template v-slot:item="{ item }">
+              <template #item="{ item }">
                 <v-list-item-content>
                   <v-list-item-title v-text="item.partname"></v-list-item-title>
                   <v-list-item-subtitle v-text="item.partnumber"></v-list-item-subtitle>

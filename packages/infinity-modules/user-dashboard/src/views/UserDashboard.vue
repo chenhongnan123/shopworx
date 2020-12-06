@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import AdminDashboard from '../components/AdminDashboard.vue';
 import PlanHeadDashboard from '../components/PlanHeadDashboard.vue';
 import ProductionPlannerDashboard from '../components/ProductionPlannerDashboard.vue';
@@ -17,8 +18,18 @@ export default {
     ProductionSupervisorDashboard,
   },
   computed: {
+    ...mapGetters('user', ['roleName']),
     component() {
-      return 'production-supervisor-dashboard';
+      switch (this.roleName) {
+        case 'planthead':
+          return 'plant-head-dashboard';
+        case 'planner':
+          return 'production-planner-dashboard';
+        case 'supervisor':
+          return 'production-supervisor-dashboard';
+        default:
+          return 'admin-dashboard';
+      }
     },
   },
 };

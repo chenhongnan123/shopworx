@@ -16,7 +16,7 @@
         </template>
         <template #item.actions="{ item }">
           <!-- <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 icon
                 v-on="on"
@@ -31,7 +31,7 @@
             <span>Download file</span>
           </v-tooltip> -->
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 icon
                 v-on="on"
