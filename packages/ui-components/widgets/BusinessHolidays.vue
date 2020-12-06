@@ -6,42 +6,18 @@
   >
     <v-card-title>
       Business holidays
-      <v-spacer></v-spacer>
-      <invite-users @invited="onInvited" />
     </v-card-title>
     <v-card-text>
       <v-data-table
-        item-key="id"
+        item-key="_id"
         class="transparent"
         disable-pagination
-        :items="pendingUsers"
+        :items="holidays"
         hide-default-footer
-        :headers="pendingHeaders"
+        :headers="headers"
       >
         <template #no-data>
-          No pending invites
-        </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.email="{ item }">
-          <div>{{ item.email || item.phone }}</div>
-        </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.role="{ item }">
-          <div>{{ roles.find((role) => role.roleId === item.role).roleDescription }}</div>
-        </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.actions="{ item }">
-          <v-btn
-            small
-            outlined
-            color="primary"
-            class="text-none"
-            @click="resendInvite(item)"
-            :loading="inviteLoading"
-          >
-            Resend
-          </v-btn>
-          <delete-user :user="item" />
+          No business holidays
         </template>
       </v-data-table>
     </v-card-text>
@@ -49,32 +25,24 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapState } from 'vuex';
-import InviteUsers from './InviteUsers.vue';
-import DeleteUser from './DeleteUser.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'BusinessHolidays',
-  components: {
-    InviteUsers,
-    DeleteUser,
-  },
   data() {
     return {
       loading: false,
-      inviteLoading: false,
-      pendingHeaders: [
+      holidays: [],
+      headers: [
         {
-          text: 'Email or phone',
+          text: 'Date',
           align: 'start',
-          sortable: false,
-          value: 'email',
+          value: 'date',
         },
         {
-          text: 'Role',
+          text: 'Name',
           align: 'start',
-          sortable: false,
-          value: 'role',
+          value: 'name',
         },
         {
           text: 'Actions',
@@ -85,95 +53,23 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapState('user', ['roles']),
-    ...mapState('admin', ['users']),
-    mappedUsers() {
-      let users = [];
-      if (this.users && this.users.length) {
-        users = this.users
-          .filter((user) => (
-            user.userState !== 'REGISTERED'
-            && user.userState !== 'INACTIVE'
-            && user.loginType.toUpperCase() === 'INFINITY'
-          ))
-          .map((user) => {
-            const fullName = user.firstname ? `${user.firstname} ${user.lastname}` : '';
-            return {
-              fullName,
-              id: user.id,
-              role: user.roleId,
-              email: user.emailId,
-              phone: user.phoneNumber,
-              status: user.userState,
-            };
-          });
-      }
-      return users;
-    },
-    pendingUsers() {
-      let users = [];
-      if (this.users && this.users.length) {
-        users = this.users
-          .filter((user) => (
-            user.userState === 'REGISTERED'
-            && user.loginType.toUpperCase() === 'INFINITY'
-          ))
-          .map((user) => ({
-            id: user.id,
-            role: user.roleId,
-            email: user.emailId,
-            phone: user.phoneNumber,
-          }));
-      }
-      return users;
-    },
-  },
-  async created() {
-    await this.getUserRoles();
-    await this.fetchUsers();
+  created() {
+    this.fetchRecords();
   },
   methods: {
-    ...mapActions('user', ['inviteUsers', 'getUserRoles']),
-    ...mapActions('admin', [
-      'getAllUsers',
-      'resendInvitation',
-      'updateUserRole',
-    ]),
-    ...mapMutations('helper', ['setAlert']),
-    async fetchUsers() {
+    ...mapActions('element', ['getRecords']),
+    async fetchRecords() {
       this.loading = true;
-      await this.getAllUsers();
+      const records = await this.getRecords({
+        elementName: 'businessholidays',
+      });
+      if (records && records.length) {
+        this.holidays = records.map((rec) => ({
+          name: rec.name,
+          date: rec.date,
+        }));
+      }
       this.loading = false;
-    },
-    async onInvited() {
-      await this.fetchUsers();
-    },
-    async resendInvite(user) {
-      this.inviteLoading = true;
-      let payload = null;
-      if (user.email) {
-        payload = [user.email];
-      } else if (user.phone) {
-        payload = [user.phone];
-      }
-      const invited = await this.resendInvitation(payload);
-      if (invited && invited.length) {
-        if (invited.some((u) => !u.created)) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'INVITE_FAILED',
-          });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'INVITE_SENT',
-          });
-        }
-      }
-      this.inviteLoading = false;
     },
   },
 };

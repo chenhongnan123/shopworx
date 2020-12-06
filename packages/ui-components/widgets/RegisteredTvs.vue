@@ -7,41 +7,37 @@
     <v-card-title>
       Registered TVs
       <v-spacer></v-spacer>
-      <invite-users @invited="onInvited" />
+      <register-tv @on-register="fetchDevices" />
     </v-card-title>
     <v-card-text>
       <v-data-table
-        item-key="id"
-        class="transparent"
+        :items="myTvs"
+        :headers="headers"
+        :loading="fetchingTvs"
         disable-pagination
-        :items="pendingUsers"
         hide-default-footer
-        :headers="pendingHeaders"
       >
+        <template #loading>
+          Fetching TVs...
+        </template>
         <template #no-data>
-          No pending invites
+          No TV available
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.email="{ item }">
-          <div>{{ item.email || item.phone }}</div>
+        <template #no-results>
+          No matching TV found for '{{ search }}'
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.role="{ item }">
-          <div>{{ roles.find((role) => role.roleId === item.role).roleDescription }}</div>
-        </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.actions="{ item }">
-          <v-btn
-            small
-            outlined
-            color="primary"
-            class="text-none"
-            @click="resendInvite(item)"
-            :loading="inviteLoading"
-          >
-            Resend
-          </v-btn>
-          <delete-user :user="item" />
+        <template #item="{ item }">
+          <tr>
+            <td>
+              {{ item.deviceid }}
+            </td>
+            <td>
+              {{ item.devicename }}
+            </td>
+            <td>
+              edit delete cast
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-card-text>
@@ -49,131 +45,51 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapState } from 'vuex';
-import InviteUsers from './InviteUsers.vue';
-import DeleteUser from './DeleteUser.vue';
+import { mapGetters, mapActions, mapState } from 'vuex';
+import RegisterTv from './RegisterTv.vue';
 
 export default {
   name: 'RegisteredTvs',
   components: {
-    InviteUsers,
-    DeleteUser,
+    RegisterTv,
   },
   data() {
     return {
-      loading: false,
-      inviteLoading: false,
-      pendingHeaders: [
-        {
-          text: 'Email or phone',
-          align: 'start',
-          sortable: false,
-          value: 'email',
-        },
-        {
-          text: 'Role',
-          align: 'start',
-          sortable: false,
-          value: 'role',
-        },
+      fetchingTvs: false,
+      headers: [
+        { text: 'Device Id', value: 'deviceid' },
+        { text: 'TV Name', value: 'devicename' },
         {
           text: 'Actions',
-          align: 'start',
-          sortable: false,
           value: 'actions',
+          sortable: false,
+          filterable: false,
         },
       ],
     };
   },
-  computed: {
-    ...mapState('user', ['roles']),
-    ...mapState('admin', ['users']),
-    mappedUsers() {
-      let users = [];
-      if (this.users && this.users.length) {
-        users = this.users
-          .filter((user) => (
-            user.userState !== 'REGISTERED'
-            && user.userState !== 'INACTIVE'
-            && user.loginType.toUpperCase() === 'INFINITY'
-          ))
-          .map((user) => {
-            const fullName = user.firstname ? `${user.firstname} ${user.lastname}` : '';
-            return {
-              fullName,
-              id: user.id,
-              role: user.roleId,
-              email: user.emailId,
-              phone: user.phoneNumber,
-              status: user.userState,
-            };
-          });
-      }
-      return users;
-    },
-    pendingUsers() {
-      let users = [];
-      if (this.users && this.users.length) {
-        users = this.users
-          .filter((user) => (
-            user.userState === 'REGISTERED'
-            && user.loginType.toUpperCase() === 'INFINITY'
-          ))
-          .map((user) => ({
-            id: user.id,
-            role: user.roleId,
-            email: user.emailId,
-            phone: user.phoneNumber,
-          }));
-      }
-      return users;
-    },
-  },
   async created() {
-    await this.getUserRoles();
-    await this.fetchUsers();
+    this.fetchingTvs = true;
+    let success = true;
+    if (!this.isDeviceElemAvailable) {
+      success = await this.getDeviceElement();
+    }
+    if (success) {
+      await this.getMyDevices();
+    }
+    this.fetchingTvs = false;
+  },
+  computed: {
+    ...mapState('user', ['isDeviceElemAvailable']),
+    ...mapGetters('user', ['myTvs']),
   },
   methods: {
-    ...mapActions('user', ['inviteUsers', 'getUserRoles']),
-    ...mapActions('admin', [
-      'getAllUsers',
-      'resendInvitation',
-      'updateUserRole',
-    ]),
-    ...mapMutations('helper', ['setAlert']),
-    async fetchUsers() {
-      this.loading = true;
-      await this.getAllUsers();
-      this.loading = false;
-    },
-    async onInvited() {
-      await this.fetchUsers();
-    },
-    async resendInvite(user) {
-      this.inviteLoading = true;
-      let payload = null;
-      if (user.email) {
-        payload = [user.email];
-      } else if (user.phone) {
-        payload = [user.phone];
-      }
-      const invited = await this.resendInvitation(payload);
-      if (invited && invited.length) {
-        if (invited.some((u) => !u.created)) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'INVITE_FAILED',
-          });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'INVITE_SENT',
-          });
-        }
-      }
-      this.inviteLoading = false;
+    ...mapActions('user', ['getMyDevices']),
+    ...mapActions('user', ['getDeviceElement']),
+    async fetchDevices() {
+      this.fetchingTvs = true;
+      await this.getMyDevices();
+      this.fetchingTvs = false;
     },
   },
 };

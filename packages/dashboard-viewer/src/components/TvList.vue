@@ -96,11 +96,6 @@ export default {
       await this.getMyDevices();
       this.fetchingTvs = false;
     },
-    filterDashboards(value, search, item) {
-      return this.$i18n.t(`dashboards.${item.title}`)
-        .toLowerCase()
-        .indexOf(search.toLowerCase()) > -1;
-    },
   },
 };
 </script>
