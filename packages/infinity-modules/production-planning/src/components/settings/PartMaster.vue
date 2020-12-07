@@ -1,23 +1,5 @@
 <template>
   <div>
-    <portal to="settings-header">
-      <span>
-        <v-btn
-          small
-          disabled
-          color="primary"
-          class="text-none"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'mdi-plus'"
-          ></v-icon>
-        Add new part
-        </v-btn>
-      </span>
-    </portal>
     <v-responsive :max-width="400">
       <v-autocomplete
         filled
@@ -55,7 +37,6 @@
       dense
       class="transparent mt-2"
       :search="search"
-      show-select
       :loading="loading"
       show-expand
       single-expand
