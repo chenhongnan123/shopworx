@@ -56,6 +56,9 @@
                   {{ item.plannedquantity }}
                 </td>
                 <td>
+                  <plan-start-template :datetime="item.scheduledstart" />
+                </td>
+                <td>
                   <plan-actions-template
                     listType="reorder"
                     :plan="item"
@@ -80,6 +83,7 @@ import PlanningError from './PlanningError.vue';
 import PlanningNoRecords from './PlanningNoRecords.vue';
 import PlanIdTemplate from './data-table/PlanIdTemplate.vue';
 import PlanActionsTemplate from './data-table/PlanActionsTemplate.vue';
+import PlanStartTemplate from './data-table/PlanStartTemplate.vue';
 
 export default {
   name: 'ReorderPlanList',
@@ -90,6 +94,7 @@ export default {
     PlanningNoRecords,
     PlanIdTemplate,
     PlanActionsTemplate,
+    PlanStartTemplate,
   },
   data() {
     return {
@@ -115,6 +120,7 @@ export default {
           text: 'Planned Qty',
           value: 'plannedquantity',
         },
+        { text: 'Start at', value: 'scheduledstart' },
         {
           text: 'Action',
           value: 'action',

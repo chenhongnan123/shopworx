@@ -1,5 +1,5 @@
 <template>
-  <a @click="goToPlan">
+  <a @click="goToPlan" class="text-decoration-underline">
     {{ planid }}
   </a>
 </template>

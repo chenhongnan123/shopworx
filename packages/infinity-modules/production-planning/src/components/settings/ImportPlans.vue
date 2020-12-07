@@ -134,9 +134,15 @@ export default {
     ]),
     async importRecords() {
       this.saving = true;
+      const dateTime = (rec) => {
+        const [date, time] = rec.toString().split(' ');
+        const [day, month, year] = date.split('-');
+        const [hr, min] = time.split(':');
+        return new Date(year, month - 1, day, hr, min, 0).getTime();
+      };
       const payload = await Promise.all(this.records.map(async ({ equipmentname, ...rec }) => ({
         ...rec,
-        scheduledstart: new Date(rec.scheduledstart).getTime(),
+        scheduledstart: dateTime(rec.scheduledstart),
         scheduledend: await this.fetchEstimatedEnd(rec),
       })));
       const created = await this.createPlans(payload);
@@ -441,23 +447,6 @@ export default {
         }
       });
       return res;
-    },
-    async createRecords() {
-      this.message = this.$i18n.t('planning.setup.importMaster.importing');
-      const recordsCreated = await this.createBulkRecords({
-        element: this.masterElement,
-        tags: [...this.tags, ...this.hiddenTags],
-        records: this.records,
-        assetId: this.assetId,
-      });
-      if (recordsCreated) {
-        this.error = false;
-        this.message = this.$i18n.tc('planning.setup.importMaster.recordsImported', this.records.length);
-      } else {
-        this.error = true;
-        this.reviewType = 'connection';
-        this.message = this.$i18n.t('planning.setup.importMaster.recordsNotCreated');
-      }
     },
     async processColumnReview(matchedColumns) {
       this.loading = true;
