@@ -25,9 +25,9 @@ export default {
       type: String,
       required: true,
     },
-    reOrderList: {
-      type: Boolean,
-      default: false,
+    listType: {
+      type: String,
+      default: 'all',
     },
   },
   methods: {
@@ -37,10 +37,13 @@ export default {
         'Delete plan',
         `Are you you want to delete ${this.planId}?`,
       )) {
-        await this.deletePlanByPlanId({
+        const deleted = await this.deletePlanByPlanId({
           planId: this.planId,
-          reOrderList: this.reOrderList,
+          listType: this.listType,
         });
+        if (this.$route.name === 'productionPlanDetails' && deleted) {
+          this.$router.go(-1);
+        }
       }
     },
   },

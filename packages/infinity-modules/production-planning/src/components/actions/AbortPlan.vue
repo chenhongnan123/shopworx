@@ -25,9 +25,9 @@ export default {
       type: String,
       required: true,
     },
-    reOrderList: {
-      type: Boolean,
-      default: false,
+    listType: {
+      type: String,
+      default: 'all',
     },
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
             status: 'abort',
             actualend: new Date().getTime(),
           },
-          reOrderList: this.reOrderList,
+          listType: this.listType,
         });
       }
     },

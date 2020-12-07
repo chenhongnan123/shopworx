@@ -55,6 +55,7 @@ export default ({
     setPlanningList: set('planningList'),
     setPlan: reactiveSetArray('planningList'),
     setNotStartedPlan: reactiveSetArray('reorderPlanList'),
+    setPlanView: reactiveSetArray('selectedPlan'),
     removePlan: reactiveRemoveArray('planningList'),
     removeNotStartedPlan: reactiveRemoveArray('reorderPlanList'),
     setReorderPlanList: set('reorderPlanList'),
@@ -461,6 +462,7 @@ export default ({
     },
 
     fetchPlan: async ({ commit, dispatch }, planId) => {
+      commit('setSelectedPlan', []);
       const records = await dispatch(
         'element/getRecords',
         {
@@ -493,7 +495,7 @@ export default ({
       state,
       commit,
       dispatch,
-    }, { planId, payload, reOrderList }) => {
+    }, { planId, payload, listType }) => {
       const updated = await dispatch(
         'element/updateRecordByQuery',
         {
@@ -503,7 +505,7 @@ export default ({
         },
         { root: true },
       );
-      if (reOrderList) {
+      if (listType === 'reorder') {
         const { reorderPlanList } = state;
         for (let i = 0; i < reorderPlanList.length; i += 1) {
           if (reorderPlanList[i].planid === planId) {
@@ -516,7 +518,7 @@ export default ({
             });
           }
         }
-      } else {
+      } else if (listType === 'all') {
         const { planningList } = state;
         for (let i = 0; i < planningList.length; i += 1) {
           if (planningList[i].planid === planId) {
@@ -524,6 +526,19 @@ export default ({
               index: i,
               payload: {
                 ...planningList[i],
+                ...payload,
+              },
+            });
+          }
+        }
+      } else {
+        const { selectedPlan } = state;
+        for (let i = 0; i < selectedPlan.length; i += 1) {
+          if (selectedPlan[i].planid === planId) {
+            commit('setPlanView', {
+              index: i,
+              payload: {
+                ...selectedPlan[i],
                 ...payload,
               },
             });
@@ -553,7 +568,7 @@ export default ({
       state,
       commit,
       dispatch,
-    }, { planId, reOrderList }) => {
+    }, { planId, listType }) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
@@ -562,7 +577,7 @@ export default ({
         },
         { root: true },
       );
-      if (reOrderList) {
+      if (listType === 'reorder') {
         const { reorderPlanList } = state;
         for (let i = 0; i < reorderPlanList.length; i += 1) {
           if (reorderPlanList[i].planid === planId) {
@@ -571,7 +586,7 @@ export default ({
             });
           }
         }
-      } else {
+      } else if (listType === 'all') {
         const { planningList } = state;
         for (let i = 0; i < planningList.length; i += 1) {
           if (planningList[i].planid === planId) {
@@ -598,6 +613,7 @@ export default ({
           root: true,
         });
       }
+      return deleted;
     },
 
     updatePlanById: async ({ dispatch }, { id, payload }) => {

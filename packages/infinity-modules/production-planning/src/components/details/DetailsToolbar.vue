@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <span>
     <star-plan
       :listType="listType"
       :starred="starred"
@@ -48,7 +48,7 @@
       :listType="listType"
       :planId="planId"
     />
-  </div>
+  </span>
 </template>
 
 <script>
@@ -57,11 +57,11 @@ import AbortPlan from '../actions/AbortPlan.vue';
 import DeletePlan from '../actions/DeletePlan.vue';
 
 export default {
-  name: 'PlanActionsTemplate',
+  name: 'DetailsToolbar',
   props: {
     listType: {
       type: String,
-      default: 'all',
+      default: '',
     },
     plan: {
       type: Object,

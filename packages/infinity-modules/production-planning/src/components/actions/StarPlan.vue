@@ -35,9 +35,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    reOrderList: {
-      type: Boolean,
-      default: false,
+    listType: {
+      type: String,
+      default: 'all',
     },
   },
   methods: {
@@ -46,7 +46,7 @@ export default {
       await this.updatePlanByPlanId({
         planId: this.planId,
         payload: { starred: !this.starred },
-        reOrderList: this.reOrderList,
+        listType: this.listType,
       });
     },
   },

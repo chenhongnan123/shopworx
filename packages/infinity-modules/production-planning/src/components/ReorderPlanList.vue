@@ -56,7 +56,10 @@
                   {{ item.plannedquantity }}
                 </td>
                 <td>
-                  <plan-actions-template :reOrderList="true" :plan="item" />
+                  <plan-actions-template
+                    listType="reorder"
+                    :plan="item"
+                  />
                 </td>
               </tr>
             </draggable>
@@ -151,7 +154,7 @@ export default {
       await this.updatePlanByPlanId({
         planId: planid,
         payload: { sortindex: newSortIndex },
-        reOrderList: true,
+        listType: 'reorder',
       });
     },
   },
