@@ -204,7 +204,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="scheduledstart"
-                      rules="required|greater_than_now"
+                      rules="required"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -711,6 +711,7 @@ export default {
     },
     setEditPayload(payload) {
       return {
+        plannedquantity: +payload.plannedquantity,
         stdcycletime: +payload.stdcycletime,
         delaytime: +payload.delaytime,
         activecavity: +payload.activecavity,
@@ -720,7 +721,7 @@ export default {
     async update() {
       let updatePayload = this.familyParts.map(({ id, ...p }) => ({
         id,
-        payload: this.setEditPayload(...p),
+        payload: this.setEditPayload(p),
       }));
       updatePayload = [{
         // eslint-disable-next-line
