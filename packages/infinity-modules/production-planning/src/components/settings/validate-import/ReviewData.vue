@@ -12,12 +12,12 @@
           <div v-for="(data, n) in requiredData" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel v-if="duplicateColumnData && duplicateColumnData.length">
+      <v-expansion-panel v-if="invalidPartMatrix && invalidPartMatrix.length">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $tc('planning.setup.importMaster.duplicateData', duplicateColumnData.length) }}
+          {{ $tc('planning.setup.importMaster.invalidPartMatrix', invalidPartMatrix.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div v-for="(data, n) in duplicateColumnData" :key="n">{{ data }}</div>
+          <div v-for="(data, n) in invalidPartMatrix" :key="n">Row: {{ data.row }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="invalidDataTypes && invalidDataTypes.length">
@@ -67,7 +67,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    duplicateColumnData: {
+    invalidPartMatrix: {
       type: Array,
       default: () => [],
     },

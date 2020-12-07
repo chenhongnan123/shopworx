@@ -24,6 +24,7 @@
         filled
         hide-details
         single-line
+        ref="fileupload"
         label="Select file from your computer"
         prepend-inner-icon="mdi-upload-outline"
         prepend-icon=""
@@ -48,15 +49,15 @@
         :matchedColumns="matchedColumns"
         @data-reviewed="processDataReview"
         :invalidDataTypes="invalidDataTypes"
+        :invalidPartMatrix="invalidPartMatrix"
         @column-reviewed="processColumnReview"
-        :duplicateColumnData="duplicateColumnData"
       />
     </div>
     <v-btn
       class="text-none mt-8"
       color="primary"
       :disabled="loading || error || !file"
-      @click="createRecords"
+      @click="importRecords"
     >
       Import
     </v-btn>
@@ -64,6 +65,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ReviewPlans from './validate-import/ReviewPlans.vue';
 
@@ -80,6 +82,7 @@ export default {
       message: '',
       error: false,
       loading: false,
+      saving: false,
       records: null,
       reviewType: '',
       mappedTags: null,
@@ -89,7 +92,7 @@ export default {
       matchedColumns: null,
       importedColumns: null,
       invalidDataTypes: null,
-      duplicateColumnData: null,
+      invalidPartMatrix: null,
       masterTags: [{
         tagName: 'partname',
         tagDescription: 'Part name',
@@ -112,13 +115,64 @@ export default {
         emgTagType: 'int',
       }, {
         tagName: 'scheduledstart',
-        tagDescription: 'Scheduled start',
+        tagDescription: 'Scheduled start (DD-MM-YYYY HH:mm)',
         required: true,
-        emgTagType: 'string',
+        emgTagType: 'date',
       }],
     };
   },
+  computed: {
+    ...mapGetters('productionPlanning', ['partMatrixTags']),
+  },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('productionPlanning', [
+      'fetchPartMatrix',
+      'fetchLastPlan',
+      'getScheduledEnd',
+      'createPlans',
+    ]),
+    async importRecords() {
+      this.saving = true;
+      const payload = await Promise.all(this.records.map(async ({ equipmentname, ...rec }) => ({
+        ...rec,
+        scheduledstart: new Date(rec.scheduledstart).getTime(),
+        scheduledend: await this.fetchEstimatedEnd(rec),
+      })));
+      console.log(payload);
+      const created = await this.createPlans(payload);
+      if (created) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PLAN_IMPORTED',
+        });
+        this.$refs.fileupload.value = null;
+        this.file = null;
+        this.fileImported = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ERROR_CREATING_PLAN',
+        });
+      }
+      this.saving = false;
+    },
+    async fetchEstimatedEnd(plan) {
+      const {
+        plannedquantity, scheduledstart, activecavity, stdcycletime,
+      } = plan;
+      if (plannedquantity && scheduledstart) {
+        const runTime = (+plannedquantity / +activecavity)
+          * (+stdcycletime * 1000);
+        return this.getScheduledEnd({
+          start: new Date(scheduledstart).getTime(),
+          duration: runTime,
+        });
+      }
+      return '';
+    },
     generateCSV({ fields, data = [] }) {
       const csvParser = new CSVParser();
       const content = csvParser.unparse({ fields, data });
@@ -257,21 +311,22 @@ export default {
     async validateData() {
       this.missingData = this.missingRequiredData();
       this.invalidDataTypes = this.validateDataType();
+      this.invalidPartMatrix = await this.validatePartMatrix();
       if (this.missingData && this.missingData.length) {
         this.error = true;
         this.reviewType = 'data';
         this.message = `Missing required data for ${this.missingData[0].tag}
           at row ${this.missingData[0].row} ${this.missingData.length > 1 ? 'and more' : ''}!`;
-      } else if (this.duplicateColumnData && this.duplicateColumnData.length) {
-        this.error = true;
-        this.reviewType = 'data';
-        this.message = `Duplicate data for ${this.duplicateColumnData[0]}
-          ${this.duplicateColumnData.length > 1 ? 'and more' : ''}!`;
       } else if (this.invalidDataTypes && this.invalidDataTypes.length) {
         this.error = true;
         this.reviewType = 'data';
         this.message = `Invalid data type for ${this.invalidDataTypes[0]}
           ${this.invalidDataTypes.length > 1 ? 'and more' : ''}!`;
+      } else if (this.invalidPartMatrix && this.invalidPartMatrix.length) {
+        this.error = true;
+        this.reviewType = 'data';
+        this.message = `Invalid part matrix at ${this.invalidPartMatrix[0].row}
+          ${this.invalidPartMatrix.length > 1 ? 'and more' : ''}!`;
       } else {
         this.message = 'Data successfully reviewed!';
       }
@@ -288,6 +343,54 @@ export default {
           }
         });
       });
+      return res;
+    },
+    async setSortIndex() {
+      const lastPlan = await this.fetchLastPlan();
+      if (lastPlan) {
+        return lastPlan.sortindex + 100;
+      }
+      return 100;
+    },
+    async validatePartMatrix() {
+      const res = [];
+      await Promise.all(this.records.map(async (rec, index) => {
+        const partMatrixList = await this.fetchPartMatrix({ partname: rec.partname });
+        if (partMatrixList && partMatrixList.length) {
+          const selectedMatrix = partMatrixList.find((m) => (
+            m.partname === rec.partname
+            && m.machinename === rec.machinename
+            && (m.equipmentname === rec.equipmentname)
+          ));
+          if (selectedMatrix) {
+            const matrixTags = this.partMatrixTags(selectedMatrix.assetid);
+            const partMatrix = matrixTags.reduce((acc, cur) => {
+              acc[cur.tagName] = selectedMatrix[cur.tagName];
+              return acc;
+            }, {});
+            let sortindex = 0;
+            if (index === 0) {
+              sortindex = await this.setSortIndex();
+            } else {
+              ({ sortindex } = this.records[index - 1]);
+            }
+            this.records[index] = {
+              ...rec,
+              ...partMatrix,
+              sortindex,
+              assetid: selectedMatrix.assetid,
+              activecavity: partMatrix.cavity,
+              starred: false,
+              trial: false,
+              status: 'notStarted',
+            };
+          } else {
+            res.push({ row: index + 1 });
+          }
+        } else {
+          res.push({ row: index + 1 });
+        }
+      }));
       return res;
     },
     validateDataType() {
@@ -321,6 +424,20 @@ export default {
           });
           if (invalid) {
             res.push(`${t.tagDescription}(Boolean)`);
+          }
+        } else if (t.emgTagType.toLowerCase() === 'date') {
+          const isDateTime = (rec) => {
+            const [date, time] = rec.toString().split(' ');
+            if (date && time) {
+              const [day, month, year] = date.split('-');
+              const [hr, min] = time.split(':');
+              return new Date(year, month - 1, day, hr, min, 0).toString() !== 'Invalid Date';
+            }
+            return false;
+          };
+          const invalid = matchedRecords.some((rec) => !isDateTime(rec));
+          if (invalid) {
+            res.push(`${t.tagDescription}`);
           }
         }
       });

@@ -80,6 +80,7 @@
     "PASSWORD_RESET": "New password sent on registered email/phone.",
     "UPDATED": "Updated!",
     "PLAN_CREATED": "Plan created!",
+    "PLAN_IMPORTED": "Plans imported!",
     "PLAN_UPDATED": "Plan updated!",
     "PLAN_DELETED": "Plan deleted!",
     "ASSET_UPDATE": "Asset updated!",

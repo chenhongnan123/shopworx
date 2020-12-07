@@ -38,7 +38,8 @@
         "missingMapping": "Missing required mapping for one column | Missing required mappings for {count} columns",
         "requiredData": "Missing required data for one record | Missing required data for {count} records",
         "duplicateData": "Duplicate data for one column | Duplicate data for {count} columns",
-        "invalidDataType": "Invalid data type for one column | Invalid data type for {count} columns"
+        "invalidDataType": "Invalid data type for one column | Invalid data type for {count} columns",
+        "invalidPartMatrix": "Invalid part matrix for one record | Invalid part matrix for {count} records"
       },
       "complete": {
         "title": "Complete setup",

@@ -43,7 +43,7 @@
           :missingData="missingData"
           @row-selected="toggleDelete"
           :invalidDataTypes="invalidDataTypes"
-          :duplicateColumnData="duplicateColumnData"
+          :invalidPartMatrix="invalidPartMatrix"
           v-else
         />
       </v-card-text>
@@ -123,7 +123,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    duplicateColumnData: {
+    invalidPartMatrix: {
       type: Array,
       default: () => [],
     },
