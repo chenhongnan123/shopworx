@@ -1,9 +1,10 @@
 <template>
-  <span>
+  <span class="ml-4">
     <star-plan
       :listType="listType"
       :starred="starred"
       :planId="planId"
+      small
     />
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
@@ -11,6 +12,8 @@
           icon
           v-on="on"
           v-bind="attrs"
+          small
+          class="ml-2"
           v-if="inProgress || notStarted"
           @click="$router.push({
             name: 'editProductionPlan',
@@ -28,6 +31,8 @@
           icon
           v-on="on"
           v-bind="attrs"
+          small
+          class="mx-2"
           @click="$router.push({
             name: 'duplicateProductionPlan',
             params: { id: planId },
@@ -42,11 +47,13 @@
       v-if="inProgress"
       :listType="listType"
       :planId="planId"
+      small
     />
     <delete-plan
       v-else-if="notStarted"
       :listType="listType"
       :planId="planId"
+      small
     />
   </span>
 </template>

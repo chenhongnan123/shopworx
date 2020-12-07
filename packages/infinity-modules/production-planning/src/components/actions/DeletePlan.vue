@@ -5,6 +5,7 @@
         icon
         v-on="on"
         v-bind="attrs"
+        :small="small"
         color="error"
         @click="deletePlan"
       >
@@ -24,6 +25,10 @@ export default {
     planId: {
       type: String,
       required: true,
+    },
+    small: {
+      type: Boolean,
+      default: false,
     },
     listType: {
       type: String,

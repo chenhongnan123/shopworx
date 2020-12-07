@@ -4,6 +4,7 @@
       <v-btn
         icon
         v-on="on"
+        :small="small"
         v-bind="attrs"
         color="warning"
         @click="toggleStar"
@@ -32,6 +33,10 @@ export default {
       required: true,
     },
     starred: {
+      type: Boolean,
+      default: false,
+    },
+    small: {
       type: Boolean,
       default: false,
     },
