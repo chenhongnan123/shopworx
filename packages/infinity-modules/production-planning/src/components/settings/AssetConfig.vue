@@ -41,6 +41,7 @@
         <v-checkbox
           :input-value="!item.manualplanstart"
           hide-details
+          disabled
           class="ma-0 pa-0"
           @change="updateAssetConfig({
             id: item._id,
@@ -53,6 +54,7 @@
         <v-checkbox
           :input-value="!item.manualplanstop"
           hide-details
+          disabled
           class="ma-0 pa-0"
           @change="updateAssetConfig({
             id: item._id,
