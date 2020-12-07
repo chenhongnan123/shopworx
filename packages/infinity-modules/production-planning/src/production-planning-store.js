@@ -653,6 +653,19 @@ export default ({
       );
       return updated;
     },
+
+    updatePartMatrix: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'partmatrix',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {

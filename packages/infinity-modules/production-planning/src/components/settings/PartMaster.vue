@@ -76,11 +76,11 @@
       <template #expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <v-card-text>
-            <template v-for="(field, i) in partMatrixFields">
-              <div :key="i">
-                {{ field.text }}: <strong>{{ item[field.value] }}</strong>
-              </div>
-            </template>
+            <edit-matrix
+              :partMatrixFields="partMatrixFields"
+              :partMatrixData="item"
+              @on-edit="updateMatrixList"
+            />
           </v-card-text>
         </td>
       </template>
@@ -93,9 +93,13 @@ import {
   mapState, mapActions, mapMutations, mapGetters,
 } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import EditMatrix from './part/EditMatrix.vue';
 
 export default {
   name: 'AssetConfig',
+  components: {
+    EditMatrix,
+  },
   data() {
     return {
       expanded: [],
@@ -156,10 +160,16 @@ export default {
           .map((tag) => ({
             text: tag.tagDescription,
             value: tag.tagName,
+            type: tag.emgTagType,
           }));
         this.partMatrixList = await this.fetchPartMatrix(this.selectedPart);
         this.loading = false;
       }
+    },
+    updateMatrixList(e) {
+      // eslint-disable-next-line
+      const index = this.partMatrixList.findIndex((p) => p._id === e._id);
+      this.$set(this.partMatrixList, index, e);
     },
   },
 };

@@ -93,7 +93,8 @@
     "REJECTION_UPDATE": "Rejection updated!",
     "REWORK_UPDATE": "Rework updated!",
     "SCRAP_UPDATE": "Scrap updated!",
-    "PERMISSION_UPDATE": "Role permission updated!"
+    "PERMISSION_UPDATE": "Role permission updated!",
+    "MATRIX_UPDATE": "Part matrix updated!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -120,7 +121,8 @@
     "REJECTION_UPDATE": "Error while updating rejection. Plese retry.",
     "REWORK_UPDATE": "Error while updating rework. Plese retry.",
     "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
-    "PERMISSION_UPDATE": "Error while updating role permission. Plese retry."
+    "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
+    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry."
   },
   "fields": {
     "email": "Email",
