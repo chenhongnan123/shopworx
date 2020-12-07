@@ -1,4 +1,4 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { reactiveSetArray, set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
@@ -23,6 +23,7 @@ export default ({
     setSelectedTheme: set('selectedTheme'),
     setDashboardType: set('dashboardType'),
     setMachines: set('machines'),
+    setMachine: reactiveSetArray('machines'),
   },
   actions: {
     getBusinessTime: async ({ commit, dispatch }) => {
@@ -59,7 +60,31 @@ export default ({
       );
       if (data) {
         const { machines } = JSON.parse(data);
-        commit('setMachines', sortArray(machines, 'machinename'));
+        const mappedMachines = machines.map((m) => {
+          const payload = {
+            planid: '',
+            updatedat: '',
+            runtime: 0,
+            stdcycletime: 0,
+          };
+          if (m.production.length) {
+            const {
+              planid,
+              runtime,
+              stdcycletime,
+              updatedat,
+            } = m.production[0];
+            payload.planid = planid;
+            payload.updatedat = updatedat;
+            payload.runtime = runtime;
+            payload.stdcycletime = stdcycletime;
+          }
+          return {
+            ...m,
+            ...payload,
+          };
+        });
+        commit('setMachines', sortArray(mappedMachines, 'machinename'));
       } else {
         commit('setMachines', []);
       }
