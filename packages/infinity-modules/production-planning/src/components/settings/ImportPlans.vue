@@ -139,7 +139,6 @@ export default {
         scheduledstart: new Date(rec.scheduledstart).getTime(),
         scheduledend: await this.fetchEstimatedEnd(rec),
       })));
-      console.log(payload);
       const created = await this.createPlans(payload);
       if (created) {
         this.setAlert({
