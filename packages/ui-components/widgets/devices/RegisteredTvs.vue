@@ -33,9 +33,9 @@
             <td>
               {{ item.devicename }}
             </td>
-            <td>
+            <!-- <td>
               edit delete cast
-            </td>
+            </td> -->
           </tr>
         </template>
       </v-data-table>
@@ -58,12 +58,12 @@ export default {
       headers: [
         { text: 'Device Id', value: 'deviceid' },
         { text: 'TV Name', value: 'devicename' },
-        {
+        /* {
           text: 'Actions',
           value: 'actions',
           sortable: false,
           filterable: false,
-        },
+        }, */
       ],
     };
   },

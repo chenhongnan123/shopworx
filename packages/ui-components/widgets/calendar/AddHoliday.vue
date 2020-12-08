@@ -11,6 +11,7 @@
         v-on="on"
         v-bind="attrs"
         color="primary"
+        disabled
         class="text-none ml-5"
       >
         <v-icon left small>mdi-plus</v-icon>

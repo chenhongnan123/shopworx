@@ -32,10 +32,6 @@ export default {
   methods: {
     onResize() {
       this.cHeight = window.innerHeight;
-      console.log({
-        x: window.innerWidth,
-        y: window.innerHeight,
-      });
     },
   },
 };
