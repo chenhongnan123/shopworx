@@ -25,7 +25,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('productionPlanning', ['planning', 'planStatus']),
+    ...mapGetters('productionPlanning', ['planStatus']),
   },
   methods: {
     getPlanStatus(status) {

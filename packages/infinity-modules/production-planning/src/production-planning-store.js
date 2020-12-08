@@ -666,6 +666,26 @@ export default ({
       );
       return updated;
     },
+
+    getReportData: async ({ state, dispatch, rootState }, reportName) => {
+      const { selectedPlan } = state;
+      const { activeSite } = rootState.user;
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName,
+          payload: {
+            siteid: activeSite,
+            planFilter: `{${selectedPlan[0].planid}}`,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        return JSON.parse(data);
+      }
+      return null;
+    },
   },
   getters: {
     planningSchema: (_, __, rootState, rootGetters) => {
