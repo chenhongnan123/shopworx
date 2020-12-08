@@ -205,7 +205,7 @@
                       item-key="_id"
                       :single-select="true"
                       >
-                      <template v-slot:item.rework="{ item }">
+                      <template #item.rework="{ item }">
                         <v-checkbox
                             v-if="item.boundstatus === 1"
                             primary
@@ -214,7 +214,7 @@
                             @change="checkBoxRework($event, item)"
                             ></v-checkbox>
                       </template>
-                      <template v-slot:item.quality="{ item }">
+                      <template #item.quality="{ item }">
                         <v-checkbox
                             v-if="item.boundstatus === 1 && item.reworkstatus !== 1"
                             primary
@@ -223,7 +223,7 @@
                             @change="checkBoxQuality($event, item)"
                             ></v-checkbox>
                       </template>
-                      <template v-slot:item.bound>
+                      <template #item.bound>
                         <span>1</span>
                       </template>
                     </v-data-table>

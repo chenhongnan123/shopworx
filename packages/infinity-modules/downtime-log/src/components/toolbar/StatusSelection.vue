@@ -14,8 +14,10 @@
 <script>
 import {
   mapMutations,
-  mapState,
+  mapGetters,
 } from 'vuex';
+
+const FIELD_NAME = 'status';
 
 export default {
   name: 'StatusSelection',
@@ -23,34 +25,55 @@ export default {
     return {
       statusList: [{
         name: 'All',
-        value: null,
+        value: 'All',
       }, {
         name: 'Ongoing',
-        value: 'status=="inProgress"',
+        value: 'inProgress',
       }, {
         name: 'Completed',
-        value: 'status!="inProgress"',
+        value: 'complete',
       }],
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['selectedStatus']),
+    ...mapGetters('webApp', ['filters']),
+    isStatusFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     status: {
       get() {
-        return this.selectedStatus;
+        const statusFilter = this.filters && this.filters[FIELD_NAME];
+        if (statusFilter) {
+          const value = this.statusList.find((s) => s.value === statusFilter.value);
+          if (value) {
+            return value;
+          }
+        }
+        return this.statusList[0];
       },
-      set(val) {
-        this.setSelectedStatus(val);
+      set(statusVal) {
+        this.setStatusFilter(statusVal);
       },
     },
   },
-  methods: {
-    ...mapMutations('downtimeLog', ['setSelectedStatus']),
-  },
   created() {
-    if (!this.selectedStatus) {
-      this.setSelectedStatus(this.statusList[0]);
+    if (this.isStatusFilterInactive) {
+      this.setStatusFilter(this.statusList[0]);
     }
+  },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    setStatusFilter(status) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: status.value,
+          operation: 'eq',
+        },
+      });
+    },
   },
 };
 </script>

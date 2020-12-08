@@ -55,7 +55,7 @@
         item-key="id"
         class="tableContainer"
         >
-        <template v-slot:item.savedata="{ item }">
+        <template #item.savedata="{ item }">
          <v-checkbox
                primary
                hide-details
@@ -64,7 +64,7 @@
                @change="checkSaveData($event, item)"
                ></v-checkbox>
         </template>
-        <template v-slot:item.boundsubstationname="{ item }">
+        <template #item.boundsubstationname="{ item }">
          <v-select
           v-if="item.parametercategory === '24'"
           label="-"
@@ -78,14 +78,14 @@
           v-model="item.stationSelected"
           @change="chanageStation(item)"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
          </v-select>
          </template>
-         <template v-slot:item.componentstatus="{ item }">
+         <template #item.componentstatus="{ item }">
          <v-select
           label="-"
           :items="item.componentStatusList"
@@ -99,14 +99,14 @@
           v-model="item.componentStatusSelected"
           @change="chanageComponentStatus(item)"
         >
-        <template v-slot:item="{ item }">
+        <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
          </v-select>
          </template>
-        <template v-slot:item.materialname="props">
+        <template #item.materialname="props">
           <v-select
             :disabled="saving"
             :items="materialListChoice"
@@ -119,12 +119,12 @@
             depressed
           ></v-select>
         </template>
-        <template v-slot:item.materialcategory="props" v-if="categoryList.length">
+        <template #item.materialcategory="props" v-if="categoryList.length">
         {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
         && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
         [0].name}}
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-btn
             icon
             small
@@ -134,7 +134,7 @@
             <v-icon v-text="'$delete'"></v-icon>
           </v-btn>
         </template>
-        <template v-slot:top>
+        <template #top>
           <v-dialog
             persistent
             scrollable

@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-btn v-on="on"
     small color="primary" outlined class="text-none ml-2" @click="checkMainId">
             {{ $t('displayTags.buttons.cancel') }}

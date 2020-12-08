@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -12,7 +12,7 @@
         small
         v-on="on"
         color="primary"
-        class="text-none ml-4 mb-1"
+        class="text-none mb-1"
       >
         <v-icon>mdi-update</v-icon>
       </v-btn>
@@ -36,14 +36,26 @@
             Loading...
           </div>
         </template>
-        <v-expansion-panels accordion v-else>
+        <v-expansion-panels
+          v-else
+          accordion
+          :value="hourlyData.length - 1"
+        >
           <v-expansion-panel
             v-for="(data, index) in hourlyData"
             :key="index"
           >
-            <v-expansion-panel-header class="primary--text">
+            <v-expansion-panel-header
+              :class="data.rejections.length ? 'error--text' : 'primary--text'"
+            >
               <span>
-                <v-icon left class="primary--text">mdi-clock-outline</v-icon>
+                <v-icon
+                  left
+                  class="primary--text"
+                  :class="data.rejections.length ? 'error--text' : 'primary--text'"
+                >
+                  mdi-clock-outline
+                </v-icon>
                 {{ data.displayhour }}
               </span>
             </v-expansion-panel-header>
@@ -78,10 +90,12 @@
                 dense
                 :headers="headers"
                 hide-default-footer
+                disable-pagination
                 :items="data.rejections"
                 v-if="data.rejections.length"
               >
-                <template v-slot:item.quantity="{ item }">
+                <!-- eslint-disable-next-line -->
+                <template #item.quantity="{ item }">
                   <v-edit-dialog
                     large
                     persistent
@@ -93,11 +107,12 @@
                     :return-value.sync="item.quantity"
                   >
                     {{ item.quantity }}
-                    <template v-slot:input>
+                    <template #input>
                       <v-text-field
                         v-model="item.quantity"
                         type="number"
                         label="Qty"
+                        suffix="pcs"
                         :rules="[(v) => (
                           Number.isInteger(Number(v)) > 0
                           && v <= parseInt(data.accepted, 10)
@@ -108,7 +123,8 @@
                     </template>
                   </v-edit-dialog>
                 </template>
-                <template v-slot:item.reasonname="{ item }">
+                <!-- eslint-disable-next-line -->
+                <template #item.reasonname="{ item }">
                   <v-edit-dialog
                     large
                     persistent
@@ -120,7 +136,7 @@
                     :return-value.sync="item.reasonname"
                   >
                     {{ item.reasonname }}
-                    <template v-slot:input>
+                    <template #input>
                       <v-autocomplete
                         single-line
                         label="Reason"
@@ -132,7 +148,8 @@
                     </template>
                   </v-edit-dialog>
                 </template>
-                <template v-slot:item.remark="{ item }">
+                <!-- eslint-disable-next-line -->
+                <template #item.remark="{ item }">
                   <v-edit-dialog
                     large
                     persistent
@@ -144,7 +161,7 @@
                     :return-value.sync="item.remark"
                   >
                     {{ item.remark }}
-                    <template v-slot:input>
+                    <template #input>
                       <v-textarea
                         v-model="item.remark"
                         label="Remark"
@@ -171,6 +188,7 @@
                           dense
                           outlined
                           type="number"
+                          suffix="pcs"
                           label="Quantity"
                           :disabled="saving"
                           hide-details="auto"
@@ -278,6 +296,7 @@ export default {
         { text: 'Qty', value: 'quantity' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
       ],
       saving: false,
       loading: false,
@@ -311,7 +330,6 @@ export default {
     async getHourlyData() {
       this.loading = true;
       this.hourlyData = await this.fetchHourlyProduction({
-        machine: this.production.machinename,
         part: this.production.partname,
         shift: this.production.shift,
         planId: this.production.planid,
@@ -332,6 +350,7 @@ export default {
         remark,
         ...reason,
         timestamp: this.getHourStart(data.displayhour),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addRejection(payload);
       if (id) {
@@ -353,7 +372,7 @@ export default {
       const { rejections, rejected, accepted } = this.hourlyData[index];
       const newRejectionValue = parseInt(rejected, 10) + parseInt(qty, 10);
       const rejectionsArray = [
-        { ...payload, _id: id },
+        { ...payload, _id: id, modifiedtimestamp: 'now' },
         ...rejections,
       ];
       const newData = {
@@ -371,6 +390,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const rejected = parseInt(this.productionList[index].rejected, 10)
         + parseInt(rejectedQty, 10);
@@ -397,6 +417,14 @@ export default {
         payload,
       });
       if (updated) {
+        const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+        const { rejections } = this.hourlyData[hourIndex];
+        // eslint-disable-next-line
+        const updatedIndex = rejections.findIndex((s) => s._id === id);
+        this.$set(rejections, updatedIndex, {
+          ...rejections[updatedIndex],
+          modifiedtimestamp: 'now',
+        });
         this.setAlert({
           show: true,
           type: 'success',
@@ -404,8 +432,8 @@ export default {
         });
         if (hasQtyProperty) {
           const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-          const { rejections, produced } = this.hourlyData[hIndex];
-          const rejected = rejections.reduce((a, b) => a + (+b.quantity || 0), 0);
+          const { rejections: rej, produced } = this.hourlyData[hIndex];
+          const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
           const newData = {
             ...this.hourlyData[hIndex],
             rejected,

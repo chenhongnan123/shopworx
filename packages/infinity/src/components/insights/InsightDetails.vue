@@ -2,7 +2,7 @@
   <v-card flat class="transparent">
     <v-card-text class="pa-0 px-2 font-weight-medium text-justify">
       <span>You asked:&nbsp;</span>
-      <span v-text="query.name"></span>
+      <strong v-text="query.name"></strong>
     </v-card-text>
     <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
     <v-card-text

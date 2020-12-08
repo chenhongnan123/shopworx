@@ -19,6 +19,7 @@
       :search="search"
       :headers="headers"
       :loading="fetchingTvs"
+      disable-pagination
       hide-default-footer
     >
       <template #loading>
@@ -38,9 +39,9 @@
           <td>
             {{ item.devicename }}
           </td>
-          <td>
+          <!-- <td>
             edit delete cast
-          </td>
+          </td> -->
         </tr>
       </template>
     </v-data-table>
@@ -63,12 +64,12 @@ export default {
       headers: [
         { text: 'Device Id', value: 'deviceid' },
         { text: 'TV Name', value: 'devicename' },
-        {
+        /* {
           text: 'Actions',
           value: 'actions',
           sortable: false,
           filterable: false,
-        },
+        }, */
       ],
     };
   },
@@ -94,11 +95,6 @@ export default {
       this.fetchingTvs = true;
       await this.getMyDevices();
       this.fetchingTvs = false;
-    },
-    filterDashboards(value, search, item) {
-      return this.$i18n.t(`dashboards.${item.title}`)
-        .toLowerCase()
-        .indexOf(search.toLowerCase()) > -1;
     },
   },
 };

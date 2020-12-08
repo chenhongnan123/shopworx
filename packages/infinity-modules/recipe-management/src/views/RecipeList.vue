@@ -79,14 +79,14 @@
         :single-select="true"
         show-select
         >
-        <template v-slot:item.recipename="{ item }">
+        <template #item.recipename="{ item }">
           <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
         </template>
-        <template v-slot:item.editedtime="{ item }">
+        <template #item.editedtime="{ item }">
           <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
           <span v-else></span>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-row><v-btn
               icon
               small

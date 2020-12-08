@@ -29,7 +29,7 @@
         item-key="_id"
         :items="dataTypeList"
         >
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-row>
             <v-btn
               icon

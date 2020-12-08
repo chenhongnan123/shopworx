@@ -5,8 +5,16 @@
     persistent
     scrollable
   >
-    <template v-slot:activator="{ on }">
-      <v-btn small v-on="on" class="text-none" color="primary"> Assign Reason </v-btn>
+    <template #activator="{ on }">
+      <v-btn
+        small
+        v-on="on"
+        class="text-none"
+        color="primary"
+      >
+        <v-icon small left>mdi-playlist-check</v-icon>
+        Assign Reason
+      </v-btn>
     </template>
     <v-form ref="form" lazy-validation>
       <v-card>
@@ -22,9 +30,10 @@
             :headers="headers"
             :items="selectedDowntimes"
             item-key="_id"
+            disable-pagination
             hide-default-footer
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <tr>
                 <td>{{ item.machinename }}</td>
                 <td>{{ item.shiftName }}</td>
@@ -134,14 +143,13 @@ export default {
     ...mapState('downtimeLog', [
       'downtimeReasons',
       'selectedDowntimes',
-      'downtimeList',
     ]),
   },
   created() {
     this.checkSelection();
   },
   methods: {
-    ...mapMutations('downtimeLog', ['clearCheckedItems', 'setToggleSelection', 'setDowntimeList']),
+    ...mapMutations('downtimeLog', ['setSelectedDowntimes', 'setToggleSelection']),
     ...mapActions('downtimeLog', ['updateReason']),
     duration(value) {
       const d = value;
@@ -174,13 +182,7 @@ export default {
           payload,
         });
       });
-      const unchecked = this.downtimeList.map((dt) => ({
-        ...dt,
-        selected: false,
-      }));
-      this.clearCheckedItems();
-      this.setDowntimeList([]);
-      this.setDowntimeList(unchecked);
+      this.setSelectedDowntimes([]);
       this.setToggleSelection(this.toggleHide);
       this.saving = false;
       this.dialog = false;

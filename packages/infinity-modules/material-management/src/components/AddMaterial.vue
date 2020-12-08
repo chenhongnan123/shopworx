@@ -53,7 +53,7 @@
             :rules="rules.materialcategory"
             required
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>

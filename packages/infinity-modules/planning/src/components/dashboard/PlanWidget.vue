@@ -116,7 +116,7 @@
                   :key="index"
                   :plan="plan"
                   :planId="planId"
-                  @selection-changed="onSelectionChanged"
+                  :selectedPlans.sync="selectedPlans"
                 />
                 <v-divider
                   :key="`d-${index}`"
@@ -193,23 +193,11 @@ export default {
             return {
               ...plans[0],
               planid: planId,
-              selected: false,
             };
           });
         return items;
       }
       return [];
-    },
-  },
-  methods: {
-    onSelectionChanged(plan) {
-      if (plan.selected) {
-        this.selectedPlans.push(plan);
-      } else {
-        // eslint-disable-next-line
-        const index = this.selectedPlans.findIndex((p) => p._id === plan._id);
-        this.selectedPlans.splice(index, 1);
-      }
     },
   },
 };

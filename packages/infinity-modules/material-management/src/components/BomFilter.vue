@@ -34,7 +34,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -52,7 +52,7 @@
             item-text="name"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -70,7 +70,7 @@
             item-text="bomnumber"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.bomnumber"></v-list-item-title>
             </v-list-item-content>

@@ -5,7 +5,7 @@
       accordion
     >
       <v-expansion-panel v-if="missingTags && missingTags.length">
-        <v-expansion-panel-header class="pa-0 ma-0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $tc('production.setup.importMaster.missingMapping', missingTags.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>

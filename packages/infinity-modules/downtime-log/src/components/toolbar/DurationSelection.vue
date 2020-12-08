@@ -14,8 +14,10 @@
 <script>
 import {
   mapMutations,
-  mapState,
+  mapGetters,
 } from 'vuex';
+
+const FIELD_NAME = 'downtimeduration';
 
 export default {
   name: 'DurationSelection',
@@ -34,23 +36,44 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['selectedDuration']),
+    ...mapGetters('webApp', ['filters']),
+    isDurationFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     duration: {
       get() {
-        return this.selectedDuration;
+        const durationFilter = this.filters && this.filters[FIELD_NAME];
+        if (durationFilter) {
+          const value = this.durationList.find((s) => s.value === durationFilter.value);
+          if (value) {
+            return value;
+          }
+        }
+        return this.durationList[1];
       },
-      set(val) {
-        this.setSelectedDuration(val);
+      set(durationVal) {
+        this.setDurationFilter(durationVal);
       },
     },
   },
-  methods: {
-    ...mapMutations('downtimeLog', ['setSelectedDuration']),
-  },
   created() {
-    if (!this.selectedDuration) {
-      this.setSelectedDuration(this.durationList[0]);
+    if (this.isDurationFilterInactive) {
+      this.setDurationFilter(this.durationList[1]);
     }
+  },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    setDurationFilter(duration) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: duration.value,
+          operation: 'gte',
+        },
+      });
+    },
   },
 };
 </script>

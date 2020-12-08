@@ -1,37 +1,40 @@
 <template>
-  <v-autocomplete
-    dense
-    outlined
-    hide-details
-    return-object
-    :loading="loading"
-    :disabled="loading"
-    class="primary--text"
-    :items="downtimeReasons"
-    item-text="reasonname"
-    item-value="reasonname"
-    v-model="selectedReason"
-  >
-    <template #selection="data">
-      {{ data.item.reasoncode }} | {{ data.item.reasonname }}
-    </template>
-    <template #item="data">
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ data.item.reasonname }}
-        </v-list-item-title>
-        <v-list-item-subtitle
-          v-text="data.item.reasoncode"
-        ></v-list-item-subtitle>
-        <v-list-item-subtitle
-          v-text="data.item.category"
-        ></v-list-item-subtitle>
-        <v-list-item-subtitle
-          v-text="data.item.department"
-        ></v-list-item-subtitle>
-      </v-list-item-content>
-    </template>
-  </v-autocomplete>
+  <v-responsive :max-width="350">
+    <v-autocomplete
+      dense
+      filled
+      clearable
+      single-line
+      hide-details
+      return-object
+      :loading="loading"
+      :disabled="loading"
+      :items="downtimeReasons"
+      item-text="reasonname"
+      item-value="reasonname"
+      v-model="selectedReason"
+    >
+      <template #selection="data">
+        {{ data.item.reasoncode }} | {{ data.item.reasonname }}
+      </template>
+      <template #item="data">
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ data.item.reasonname }}
+          </v-list-item-title>
+          <v-list-item-subtitle
+            v-text="data.item.reasoncode"
+          ></v-list-item-subtitle>
+          <v-list-item-subtitle
+            v-text="data.item.category"
+          ></v-list-item-subtitle>
+          <v-list-item-subtitle
+            v-text="data.item.department"
+          ></v-list-item-subtitle>
+        </v-list-item-content>
+      </template>
+    </v-autocomplete>
+  </v-responsive>
 </template>
 
 <script>
@@ -56,19 +59,28 @@ export default {
       get() {
         return this.downtime.reasonname;
       },
-      async set({
-        reasonname,
-        reasoncode,
-        category,
-        department,
-      }) {
+      async set(val) {
         this.loading = true;
-        const payload = {
-          reasonname,
-          reasoncode,
-          category,
-          department,
+        let payload = {
+          reasonname: '',
+          reasoncode: '',
+          category: '',
+          department: '',
         };
+        if (val) {
+          const {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          } = val;
+          payload = {
+            reasonname,
+            reasoncode,
+            category,
+            department,
+          };
+        }
         await this.updateReason({
           // eslint-disable-next-line
           id: this.downtime._id,

@@ -68,7 +68,7 @@
           disable-pagination
           hide-default-footer
         >
-          <template v-slot:item.roleType="{ item }">
+          <template #item.roleType="{ item }">
             <v-switch
               value
               dense
@@ -77,7 +77,7 @@
               @change="updateRoleType(item)"
             ></v-switch>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template #item.actions="{ item }">
             <v-btn
               icon
               small
@@ -89,7 +89,7 @@
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn>
           </template>
-          <template v-slot:expanded-item="{ headers, item }">
+          <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-card-text>
                 <v-treeview

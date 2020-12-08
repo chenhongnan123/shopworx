@@ -36,6 +36,7 @@
         color="primary"
         outlined
         small
+        @click="toggleConfigDrawer"
       >
         <v-icon left>mdi-cog-outline</v-icon>
         Configure
@@ -54,14 +55,14 @@
     </v-app-bar>
     <v-main>
       <v-fade-transition mode="out-in">
-        <router-view ref="dashboard" />
+        <router-view id="dashboard-container" />
       </v-fade-transition>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import SendToTv from '../components/SendToTv.vue';
 
 export default {
@@ -78,8 +79,35 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['toggleConfigDrawer', 'setIsFullscreen']),
     previewDashboard() {
-      this.$refs.dashboard.preview();
+      const doc = window.document;
+      const docEl = doc.querySelector('#dashboard-container');
+
+      docEl.onfullscreenchange = (event) => {
+        const e = event.target;
+        this.setIsFullscreen(document.fullscreenElement === e);
+      };
+
+      const requestFullScreen = docEl.requestFullscreen
+        || docEl.mozRequestFullScreen
+        || docEl.webkitRequestFullScreen
+        || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen
+        || doc.mozCancelFullScreen
+        || doc.webkitExitFullscreen
+        || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement
+        && !doc.mozFullScreenElement
+        && !doc.webkitFullscreenElement
+        && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+        this.setIsFullscreen(true);
+      } else {
+        cancelFullScreen.call(doc);
+        this.setIsFullscreen(false);
+      }
     },
   },
 };

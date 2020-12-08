@@ -46,7 +46,7 @@
             v-model="parameterObj.parametercategory"
             :rules="rules.parametercategory"
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -64,7 +64,7 @@
             v-model="parameterObj.datatype"
             :rules="rules.datatype"
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -117,7 +117,7 @@
             v-model="parameterObj.protocol"
             :rules="rules.protocol"
           >
-            <template v-slot:item="{ item }">
+            <template #item="{ item }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>

@@ -19,7 +19,7 @@
     "@shopworx/ng-code-configuration": "^4.1.3",
     "@shopworx/order-management": "^4.1.3",
     "@shopworx/parameter-configuration": "^4.1.3",
-    "@shopworx/planning": "^4.1.3",
+    "@shopworx/production-planning": "^4.1.3",
     "@shopworx/product-management": "^4.1.3",
     "@shopworx/production-layout": "^4.1.3",
     "@shopworx/production-log": "^4.1.3",
@@ -50,7 +50,7 @@
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.4.8",
     "vue2-perfect-scrollbar": "^1.5.0",
-    "vuetify": "^2.3.18",
+    "vuetify": "^2.3.19",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

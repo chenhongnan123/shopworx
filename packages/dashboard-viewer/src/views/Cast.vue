@@ -15,7 +15,7 @@
             Dashboards that make you lookup and take notice!
           </div>
           <div class="headline font-weight-medium primary--text">
-            Device ID: 123ABC
+            Device ID: {{ deviceId }}
           </div>
         </v-col>
         <v-col
@@ -55,7 +55,7 @@ export default {
     DashboardHeader,
   },
   computed: {
-    ...mapState('dashboard', ['readyState']),
+    ...mapState('dashboard', ['readyState', 'deviceId']),
     connected() {
       return this.readyState === 1;
     },

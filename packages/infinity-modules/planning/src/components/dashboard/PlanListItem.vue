@@ -5,8 +5,8 @@
     <v-list-item-action class="mb-auto">
       <v-checkbox
         hide-details
-        v-model="plan.selected"
-        @change="$emit('selection-changed', plan)"
+        v-model="selected"
+        :value="plan"
       ></v-checkbox>
     </v-list-item-action>
     <v-list-item-content>
@@ -57,6 +57,10 @@ export default {
       type: Array,
       required: true,
     },
+    selectedPlans: {
+      type: Array,
+      default: () => [],
+    },
     planId: {
       type: String,
       required: true,
@@ -64,6 +68,14 @@ export default {
   },
   computed: {
     ...mapGetters('planning', ['planStatusClass', 'realTimeValue']),
+    selected: {
+      get() {
+        return this.selectedPlans;
+      },
+      set(val) {
+        this.$emit('update:selectedPlans', val);
+      },
+    },
   },
   methods: {
     getPartQty(partname) {

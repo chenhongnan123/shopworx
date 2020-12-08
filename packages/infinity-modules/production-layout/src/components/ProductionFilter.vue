@@ -36,7 +36,7 @@
             return-object
             @change="getStationBySubline"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -56,7 +56,7 @@
             clearable
             @change="getSubstationByStation"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -77,7 +77,7 @@
             return-object
             @change="getProcessBySubStation"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -96,7 +96,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>

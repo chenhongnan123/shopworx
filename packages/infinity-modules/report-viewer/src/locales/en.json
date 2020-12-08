@@ -4,8 +4,8 @@
       "production": "Production reports",
       "maintenance": "Maintenance reports",
       "downtime": "Downtime reports",
-      "rejection": "Rejection reports",
-      "oee": "OEE reports"
+      "quality": "Quality reports",
+      "performance": "Performance reports"
     }
   }
 }

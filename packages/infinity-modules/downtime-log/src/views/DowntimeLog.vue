@@ -12,14 +12,21 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshDowntimes"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshDowntimes"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+      </v-tooltip>
     </portal>
     <downtime-log-loading v-if="loading" />
     <template v-else>
@@ -56,10 +63,18 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['onboarded']),
+    ...mapState('downtimeLog', ['onboarded', 'lastRefreshedAt']),
+    ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {
     this.loading = true;
+    const config = localStorage.getItem(this.storageLocation.downtime);
+    if (config) {
+      this.setConfig(JSON.parse(config));
+    } else {
+      this.resetConfig();
+    }
+    this.setGroup(['shiftName']);
     await this.getOnboardingState();
     if (this.onboarded) {
       await Promise.all([
@@ -71,8 +86,8 @@ export default {
     this.loading = false;
   },
   methods: {
+    ...mapMutations('webApp', ['setConfig', 'resetConfig', 'setGroup']),
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapMutations('downtimeLog', ['resetPageNumber']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('downtimeLog', [
       'getOnboardingState',
@@ -80,7 +95,6 @@ export default {
       'fetchDowntimeList',
     ]),
     refreshDowntimes() {
-      this.resetPageNumber();
       this.fetchDowntimeList();
     },
   },
@@ -93,6 +107,12 @@ export default {
         ]);
         this.setExtendedHeader(true);
       }
+    },
+    config: {
+      deep: true,
+      handler(val) {
+        localStorage.setItem(this.storageLocation.downtime, JSON.stringify(val));
+      },
     },
   },
 };

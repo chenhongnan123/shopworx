@@ -7,7 +7,7 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
-  <template v-slot:activator="{ on }">
+  <template #activator="{ on }">
     <v-btn v-on="on" small color="primary" class="text-none ml-2">
     <v-icon small left>mdi-plus</v-icon>
     {{ $t('displayTags.buttons.addNewRecipe') }}
@@ -43,7 +43,7 @@
           prepend-icon="$production"
           @change="handleLineClick"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>

@@ -20,7 +20,7 @@
         <v-btn
           color="primary"
           class="text-none"
-          @click="fetchProductionList"
+          @click="getProduction"
         >
           Retry
         </v-btn>
@@ -30,18 +30,24 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ProductionError',
-  methods: {
-    ...mapActions('productionLog', ['fetchProductionList']),
-  },
   computed: {
+    ...mapState('webApp', ['storageLocation']),
     reportViewerIllustration() {
       return this.$vuetify.theme.dark
         ? 'report-viewer-dark'
         : 'report-viewer-light';
+    },
+  },
+  methods: {
+    ...mapMutations('webApp', ['resetConfig']),
+    getProduction() {
+      localStorage.removeItem(this.storageLocation.production);
+      this.resetConfig();
+      this.$router.go();
     },
   },
 };

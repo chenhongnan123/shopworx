@@ -68,7 +68,7 @@
             <tr>
               <td>
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ on, attrs }">
                     <div
                       v-on="on"
                       v-bind="attrs"
