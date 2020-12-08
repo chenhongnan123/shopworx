@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/rework-operation",
-  "version": "4.1.3",
+  "version": "4.2.0-alpha.1",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.1.3",
+    "@shopworx/services": "^4.2.0-alpha.1",
     "vuex": "^3.3.0"
   },
   "devDependencies": {

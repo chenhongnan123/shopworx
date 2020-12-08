@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **shopfloor-dashboard:** fixed fullscreen mode for all browsers ([b6108fc](https://bitbucket.org/entrib/shopworx/commits/b6108fcc951a0d144a4ec552ad0ad316a67d4a95))
+
+
+### Features
+
+* **dashboard-viewer:** added preview functionality ([7f68aac](https://bitbucket.org/entrib/shopworx/commits/7f68aac1124b5805b3a6c7d3712ff54e693ed477))
+* **dashboard-viewer:** added toolbar to dashboard viewer ([67f5d03](https://bitbucket.org/entrib/shopworx/commits/67f5d034f48170adc047b2a6890d1f440c375ba4))
+* **dashboard-viewer:** added tv dashboard viewer ([32a3f37](https://bitbucket.org/entrib/shopworx/commits/32a3f378c1078bb62e07670495a75250b0b1795b))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 

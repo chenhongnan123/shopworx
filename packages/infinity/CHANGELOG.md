@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **core:** fixed exists and not exists filter ([30c28c7](https://bitbucket.org/entrib/shopworx/commits/30c28c7cb057c2772fbc10b97dca38dbb20bb506))
+* **filter:** fixed number filter ([67350ac](https://bitbucket.org/entrib/shopworx/commits/67350ac7a1f016d17ad8ad89ef803275a5c77b67))
+* **group:** updated group from object to array ([5d04ca8](https://bitbucket.org/entrib/shopworx/commits/5d04ca8957e3cf56add614d200138cfa386bc755))
+* **insight:** highlight insight query ([41c6deb](https://bitbucket.org/entrib/shopworx/commits/41c6deb4c359a69b990b2ef5f144805063508cd6))
+* **log:** fixed filter and sort for production/downtime log ([6f1e39c](https://bitbucket.org/entrib/shopworx/commits/6f1e39cdf61670d5a21d5d64db1c2597a5d71b49))
+* **log-app:** fixed refresh on error / no records ([73e7c51](https://bitbucket.org/entrib/shopworx/commits/73e7c519a31a81a98f85d642efc06ecc62a41826))
+* **production-planning:** fixed plan update ([0112460](https://bitbucket.org/entrib/shopworx/commits/0112460baf59b05fad5e9e50ec5ca85982b73d62))
+* **search:** display search menu in front ([3f27d38](https://bitbucket.org/entrib/shopworx/commits/3f27d388eb6101326cb7abb1dc9c01dc0133b81b))
+
+
+### Features
+
+* **dashboard-viewer:** added tv dashboard viewer ([32a3f37](https://bitbucket.org/entrib/shopworx/commits/32a3f378c1078bb62e07670495a75250b0b1795b))
+* **element-service:** fetch record by id ([b09ad04](https://bitbucket.org/entrib/shopworx/commits/b09ad04c7968ecd624d1d64850580d3dbb5a15b7))
+* **production-planning:** added asset configurations ([08b994c](https://bitbucket.org/entrib/shopworx/commits/08b994c8c311aad9a91d40b59e2d0ac8697a67f7))
+* **production-planning:** added delete and abort plan feature ([ff4d417](https://bitbucket.org/entrib/shopworx/commits/ff4d417e9dff2e35ee2c0688057f50b119c41592))
+* **production-planning:** added import plans feature ([e27f2aa](https://bitbucket.org/entrib/shopworx/commits/e27f2aa35aa1bff707f8b5f3b2e929a76110b05b))
+* **production-planning:** added trial and star filters ([57225da](https://bitbucket.org/entrib/shopworx/commits/57225dab9b8ca66716092892c287c519a0f97dd7))
+* **production-planning:** user can now update part matrix ([05658eb](https://bitbucket.org/entrib/shopworx/commits/05658ebd231ffce36771a3d090dff5e2d411eeec))
+* **production-planning:** user can now update the plan execution order ([e7bbfe1](https://bitbucket.org/entrib/shopworx/commits/e7bbfe106a4a29f9596a44ad976b98c451417e4b))
+* **report-viewer:** added quality as a report category ([a9a290f](https://bitbucket.org/entrib/shopworx/commits/a9a290fa4b0e5f442a08896d4159daee1c452fa2))
+* mL Model UI added ([303bab7](https://bitbucket.org/entrib/shopworx/commits/303bab7a0968488f0e849a7251e1bc98cacf2ca8))
+
+
+### Reverts
+
+* package.json added ([87c8dfa](https://bitbucket.org/entrib/shopworx/commits/87c8dfa4dc2450f3d47e30aef451b15ae7413796))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 

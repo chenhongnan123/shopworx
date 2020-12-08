@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **onboarding:** updated error heading to error color ([c9c16ba](https://bitbucket.org/entrib/shopworx/commits/c9c16ba894ae00dcd3c5b31cd8a7638c6f63c12c))
+* **planning:** added accent color to plan options ([55b1ef8](https://bitbucket.org/entrib/shopworx/commits/55b1ef8c1147449fc3a441d715a7b040cdd3ee33))
+* **planning:** highlight CTA - add plan ([b2e1e22](https://bitbucket.org/entrib/shopworx/commits/b2e1e22b36247e168884c6718b62cdc1394a5b84))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 
