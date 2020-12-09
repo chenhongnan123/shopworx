@@ -14,6 +14,7 @@
       :suppressRowClickSelection="true"
       style="width: 100%; height: 400px;"
       @selection-changed="onSelectionChanged"
+      @cellValueChanged="editMethod"
     ></ag-grid-vue>
   </v-card>
 </template>
@@ -57,6 +58,8 @@ export default {
       gridColumnApi: null,
       defaultColDef: null,
       rowsSelected: false,
+      showUpdateBtn: false,
+      updateData: [],
     };
   },
   created() {
@@ -102,7 +105,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('masters', ['getRecords']),
+    ...mapActions('masters', ['getRecords', 'updateRecord']),
     ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
       this.loading = true;
@@ -142,6 +145,35 @@ export default {
       const selectedRows = this.gridApi.getSelectedRows();
       this.gridApi.applyTransaction({ remove: selectedRows });
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
+    },
+    editMethod(event) {
+      const makevisible = true;
+      this.updateData.push(event.data);
+      this.$emit('showupdatebtnemt', makevisible);
+    },
+    async updateValue() {
+      const elementName = this.id;
+      const data = this.updateData;
+      const multipleRows = data.forEach(async (item) => {
+        const changedRow = await this.updateRecord(
+          {
+            query: item._id, payload: item, name: elementName,
+          },
+        );
+        console.log(changedRow);
+      });
+      let update = false;
+      update = await Promise.all([multipleRows]);
+      if (update) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'DATA_SAVED',
+        });
+      }
+      const makeunvisible = false;
+      this.$emit('showupdatebtnemt', makeunvisible);
+      this.updateData = [];
     },
     async exportData() {
       const nameEement = this.id;

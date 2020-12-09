@@ -29,6 +29,17 @@
         <v-btn
           small
           outlined
+          color="success"
+          class="text-none"
+          @click="updateValueFun"
+          :class="'ml-2'"
+          v-if="showUpdateBtn"
+        >
+          Update
+        </v-btn>
+        <v-btn
+          small
+          outlined
           color="error"
           class="text-none"
           @click="deleteEntry"
@@ -86,6 +97,7 @@
       v-else
       :id="id"
       ref="base"
+      @showupdatebtnemt="visibleUpdateBtn"
     />
   </div>
 </template>
@@ -103,6 +115,7 @@ export default {
     return {
       base: '',
       tab: 0,
+      showUpdateBtn: false,
     };
   },
   mounted() {
@@ -111,6 +124,9 @@ export default {
   methods: {
     ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    visibleUpdateBtn(value) {
+      this.showUpdateBtn = value;
+    },
     addNewEntry() {
       this.base.addRow();
     },
@@ -167,6 +183,9 @@ export default {
           message: 'ERROR_CREATING_RECORD',
         });
       }
+    },
+    updateValueFun() {
+      this.base.updateValue();
     },
     onBtnExport() {
       this.base.exportData();

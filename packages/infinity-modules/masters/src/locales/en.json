@@ -3,5 +3,8 @@
   "success": {
     "DOWNLOADED": "Downloaded the Data in CSV format",
     "DATA_SAVED": "Data Saved Successfully!"
+  },
+  "error": {
+    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)"
   }
 }
