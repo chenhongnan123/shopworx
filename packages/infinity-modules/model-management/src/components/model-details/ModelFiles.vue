@@ -108,10 +108,13 @@ export default {
   watch: {
     modelFiles: {
       handler(val) {
-        this.fileList = [];
-        val.forEach((v, i) => {
-          this.$set(this.fileList, i, v);
-        });
+        if (val && val.length) {
+          val.forEach((v, i) => {
+            this.$set(this.fileList, i, v);
+          });
+        } else {
+          this.fileList = [];
+        }
       },
       deep: true,
     },

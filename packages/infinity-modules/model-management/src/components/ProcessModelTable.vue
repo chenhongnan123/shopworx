@@ -58,7 +58,7 @@
             <tr>
               <td>
                 <v-tooltip
-                 right
+                 top
                  max-width="300"
                  >
                   <template v-slot:activator="{ on, attrs }">
