@@ -43,7 +43,7 @@ export default ({
       try {
         const { data } = await ElementService.createElementTags(payload);
         if (data && data.results) {
-          return true;
+          return data.results;
         }
       } catch (e) {
         return false;

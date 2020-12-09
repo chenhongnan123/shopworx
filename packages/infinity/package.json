@@ -27,6 +27,7 @@
     "@shopworx/report-viewer": "^4.1.3",
     "@shopworx/rework-operation": "^4.1.3",
     "@shopworx/roadmap-management": "^4.1.3",
+    "@shopworx/rawdata": "^4.1.3",
     "@shopworx/services": "^4.1.3",
     "@shopworx/setup": "^4.1.3",
     "@shopworx/traceability-app": "^4.1.3",

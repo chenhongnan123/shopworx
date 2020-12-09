@@ -12,6 +12,7 @@ import ProductionLayout from '@shopworx/production-layout';
 import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
+import RawData from '@shopworx/rawdata';
 import TraceabilityApp from '@shopworx/traceability-app';
 import NgCodeConfiguration from '@shopworx/ng-code-configuration';
 import ReportViewer from '@shopworx/report-viewer';
@@ -24,6 +25,11 @@ import router from './router';
 import i18n from './i18n';
 
 Vue.use(ParameterConfiguration, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(RawData, {
   router,
   store,
   i18n,

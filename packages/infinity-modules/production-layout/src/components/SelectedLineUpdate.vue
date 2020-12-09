@@ -34,6 +34,8 @@ export default {
       this.newSaveLine = {
         description: this.selectedLine.description,
         expectedoee: this.selectedLine.expectedoee,
+        ipaddr: this.selectedLine.ipaddr,
+        hostname: this.selectedLine.hostname,
         expectedcycletime: this.selectedLine.expectedcycletime,
       };
       let created = false;

@@ -307,6 +307,7 @@ export default ({
             const isDashboard = module.moduleName.toUpperCase().trim() === 'DASHBOARDS';
             const isReport = module.moduleName.toUpperCase().trim() === 'REPORTS';
             const isMaster = module.moduleName.toUpperCase().trim() === 'MASTERS';
+            const isRawData = module.moduleName.toUpperCase().trim() === 'RAWDATA';
             const isAdmin = module.moduleName.toUpperCase().trim() === 'ADMIN';
             const isInsight = module.moduleName.toUpperCase().trim() === 'INSIGHTS';
             if (isApp || isDashboard) {
@@ -333,6 +334,13 @@ export default ({
                 });
               });
             } else if (isMaster) {
+              modules.adminItems.push({
+                id: module.id,
+                to: module.moduleLink,
+                title: module.moduleName,
+                icon: `$${module.moduleName}`,
+              });
+            } else if (isRawData) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
