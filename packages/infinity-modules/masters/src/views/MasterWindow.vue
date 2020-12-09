@@ -50,6 +50,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
           Export
@@ -165,6 +166,9 @@ export default {
           message: 'ERROR_CREATING_RECORD',
         });
       }
+    },
+    onBtnExport() {
+      this.base.exportData();
     },
   },
   computed: {

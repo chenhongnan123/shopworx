@@ -19,9 +19,16 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+  mapState,
+  mapMutations,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import CSVParser from '@shopworx/services/util/csv.service';
+import ZipService from '@shopworx/services/util/zip.service';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -54,6 +61,7 @@ export default {
   },
   created() {
     this.fetchRecords();
+    this.zipService = ZipService;
   },
   computed: {
     ...mapState('masters', ['records']),
@@ -95,6 +103,7 @@ export default {
   },
   methods: {
     ...mapActions('masters', ['getRecords']),
+    ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
       this.loading = true;
       await this.getRecords({
@@ -133,6 +142,40 @@ export default {
       const selectedRows = this.gridApi.getSelectedRows();
       this.gridApi.applyTransaction({ remove: selectedRows });
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
+    },
+    async exportData() {
+      const nameEement = this.id;
+      const fileName = `${nameEement}_Master_Table`;
+      const parameterSelected = this.rowData.map((item) => ({ ...item }));
+      const column = parameterSelected[0].questions;
+      const csvContent = [];
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(parameter[key]);
+        });
+        csvContent.push(arr);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'DOWNLOADED',
+      });
+      return content;
+    },
+    addToZip(file) {
+      this.zipService.addFile(file);
     },
   },
 };
