@@ -41,6 +41,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
@@ -169,6 +170,9 @@ export default {
     },
     onBtnExport() {
       this.base.exportData();
+    },
+    refreshUi() {
+      this.base.fetchRecords();
     },
   },
   computed: {
