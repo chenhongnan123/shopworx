@@ -283,7 +283,6 @@ export default ({
       nonRealParam.forEach((n) => {
         list.push(n);
       });
-      console.log(list);
       commit('setInputParameters', list);
     },
 
