@@ -147,9 +147,11 @@ export default {
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
     editMethod(event) {
-      const makevisible = true;
-      this.updateData.push(event.data);
-      this.$emit('showupdatebtnemt', makevisible);
+      if (event.data.assetid) {
+        const makevisible = true;
+        this.updateData.push(event.data);
+        this.$emit('showupdatebtnemt', makevisible);
+      }
     },
     async updateValue() {
       const elementName = this.id;

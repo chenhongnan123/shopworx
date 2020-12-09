@@ -26,7 +26,7 @@
         >
           Save
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           small
           outlined
           color="success"
@@ -36,7 +36,7 @@
           v-if="showUpdateBtn"
         >
           Update
-        </v-btn>
+        </v-btn> -->
         <v-btn
           small
           outlined
@@ -158,30 +158,34 @@ export default {
       }
     },
     async saveNewEntry() {
-      const name = this.id;
-      const payload = [];
-      this.base.rowData.forEach((data) => {
-        if (!data.elementName) {
-          payload.push({
-            ...data,
-            assetid: 4,
+      if (this.base.updateData.length > 0) {
+        this.base.updateValue();
+      } else {
+        const name = this.id;
+        const payload = [];
+        this.base.rowData.forEach((data) => {
+          if (!data.elementName) {
+            payload.push({
+              ...data,
+              assetid: 4,
+            });
+          }
+        });
+        const postData = await this.postBulkRecords({ payload, name });
+        if (postData) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'CREATED_RECORD',
+          });
+          this.base.fetchRecords();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_CREATING_RECORD',
           });
         }
-      });
-      const postData = await this.postBulkRecords({ payload, name });
-      if (postData) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'CREATED_RECORD',
-        });
-        this.base.fetchRecords();
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ERROR_CREATING_RECORD',
-        });
       }
     },
     updateValueFun() {
