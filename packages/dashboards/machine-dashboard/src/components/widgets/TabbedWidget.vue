@@ -259,8 +259,10 @@ export default {
       this.tabs.forEach((tab) => {
         tab.options.series.forEach((s) => {
           if (val) {
+            // eslint-disable-next-line
             s.color = '#21C77C';
           } else {
+            // eslint-disable-next-line
             s.color = '#354493';
           }
         });

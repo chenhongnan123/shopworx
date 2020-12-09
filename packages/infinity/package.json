@@ -13,7 +13,6 @@
     "@shopworx/admin": "^4.2.0-alpha.1",
     "@shopworx/assets": "^4.2.0-alpha.1",
     "@shopworx/downtime-log": "^4.2.0-alpha.1",
-    "@shopworx/maintenance-summary": "^4.2.0-alpha.1",
     "@shopworx/masters": "^4.2.0-alpha.1",
     "@shopworx/material-management": "^4.2.0-alpha.1",
     "@shopworx/model-management": "^4.2.0-alpha.1",
