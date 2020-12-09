@@ -314,7 +314,6 @@ export default {
       }), {});
     },
     async validateData() {
-      console.log('hi');
       this.missingData = this.missingRequiredData();
       this.invalidDataTypes = this.validateDataType();
       this.invalidPartMatrix = await this.validatePartMatrix();
