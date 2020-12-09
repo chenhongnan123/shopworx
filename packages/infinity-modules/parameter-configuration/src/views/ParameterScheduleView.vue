@@ -606,7 +606,7 @@ export default {
         (parameter) => this.deleteParameter(parameter.id),
       ));
       const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
-      await this.getSubStationIdElement(selectedSubStaionlist[0]);
+      await this.getSubStationIdElement(`real_${selectedSubStaionlist[0]}`);
       const listT = this.subStationElementDeatils;
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
       const payloadData = [];
@@ -618,6 +618,19 @@ export default {
         });
       });
       await this.updateTagStatus(payloadData);
+      await this.getSubStationIdElement(`process_${selectedSubStaionlist[0]}`);
+      const listProcess = this.subStationElementDeatils;
+      const FilteredTagsProcess = listProcess.tags
+        .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+      const payloadDataProcess = [];
+      FilteredTagsProcess.forEach(async (tag) => {
+        payloadDataProcess.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
+          status: 'INACTIVE',
+        });
+      });
+      await this.updateTagStatus(payloadDataProcess);
       if (results.every((bool) => bool === true)) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
@@ -802,6 +815,7 @@ export default {
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       data.forEach((item) => {
+        console.log(item);
         item.lineid = this.lineValue;
         item.sublineid = this.sublineValue;
         item.stationid = this.stationValue;
@@ -817,7 +831,11 @@ export default {
           item.isswapped = this.datatypeList
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
             .isswapped === 1;
-          if (Number(item.datatypeList) === 11) {
+          // if (Number(item.datatypeList) === 11) {
+          //   item.size = this.datatypeList
+          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+          // }
+          if (Number(item.datatype) !== 11) {
             item.size = this.datatypeList
               .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
           }
