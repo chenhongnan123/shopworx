@@ -9,7 +9,6 @@ import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import ProductionLayout from '@shopworx/production-layout';
-import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
 import TraceabilityApp from '@shopworx/traceability-app';
@@ -44,12 +43,6 @@ Vue.use(TraceabilityApp, {
   i18n,
 });
 Vue.use(RoadmapManagement, {
-  router,
-  store,
-  i18n,
-});
-
-Vue.use(MaintenanceSummary, {
   router,
   store,
   i18n,

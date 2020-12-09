@@ -330,7 +330,7 @@ export default {
       } else if (this.invalidPartMatrix && this.invalidPartMatrix.length) {
         this.error = true;
         this.reviewType = 'data';
-        this.message = `Invalid part matrix at ${this.invalidPartMatrix[0].row}
+        this.message = `Invalid part matrix at row ${this.invalidPartMatrix[0].row}
           ${this.invalidPartMatrix.length > 1 ? 'and more' : ''}!`;
       } else {
         this.message = 'Data successfully reviewed!';
