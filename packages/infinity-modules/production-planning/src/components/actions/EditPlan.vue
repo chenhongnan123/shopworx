@@ -1,6 +1,32 @@
 <template>
   <validation-observer ref="form" #default="{ handleSubmit }">
     <v-form @submit.prevent="handleSubmit(onSaveAndExit)">
+      <v-dialog
+        v-model="dialog"
+        scrollable
+        persistent
+        max-width="500px"
+        transition="dialog-transition"
+      >
+        <v-card>
+          <v-card-title>
+            Cannot edit plan
+          </v-card-title>
+          <v-card-text>
+            You cannot edit a completed or aborted plan.
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              class="text-none"
+              color="primary"
+              @click="exit"
+            >
+              Go back
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-container fluid>
         <v-row
           justify="center"
@@ -355,6 +381,7 @@ export default {
   name: 'EditPlan',
   data() {
     return {
+      dialog: false,
       headers: [
         { text: 'Part', value: 'partname' },
         { text: 'Active cavity', value: 'activecavity' },
@@ -399,6 +426,12 @@ export default {
     },
     notStarted() {
       return this.selectedPlan[0].status === 'notStarted';
+    },
+    complete() {
+      return this.selectedPlan[0].status === 'complete';
+    },
+    abort() {
+      return this.selectedPlan[0].status === 'abort';
     },
     areParamsEdited() {
       if (this.selectedMatrix) {
@@ -464,6 +497,9 @@ export default {
   created() {
     this.clear();
     this.setPlan();
+    if (this.complete || this.abort) {
+      this.dialog = true;
+    }
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -655,6 +691,7 @@ export default {
     exit() {
       this.clear();
       this.selectedPart = null;
+      this.dialog = false;
       this.$router.go(-1);
     },
     async delete() {
