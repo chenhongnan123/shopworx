@@ -91,5 +91,15 @@ export default ({
     },
   },
   getters: {
+    totalMachines: ({ machines }) => machines.length,
+
+    operatingMachines: ({ machines }) => machines
+      .filter((m) => m.machinestatus === 'UP').length,
+
+    stoppedMachines: ({ machines }) => machines
+      .filter((m) => m.machinestatus === 'DOWN').length,
+
+    idleMachines: ({ machines }) => machines
+      .filter((m) => m.machinestatus === 'NOPLAN').length,
   },
 });

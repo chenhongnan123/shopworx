@@ -123,6 +123,7 @@ export default {
     async sendDashboardToTv() {
       if (this.selectedTv) {
         this.sending = true;
+        // eslint-disable-next-line
         const id = this.selectedTv._id;
         const payload = {
           dashboardurl: this.$route.fullPath,

@@ -1,13 +1,14 @@
 <template>
   <v-row>
     <v-col v-for="(machine, n) in machines" :key="n" cols="4">
-      <v-responsive max-height="492" min-height="492">
+      <v-responsive max-height="226" min-height="226">
         <v-card
           flat
           outlined
           class="flex"
           height="100%"
           rounded="lg"
+          color="success darken-2"
         >
           <v-card-title class="headline font-weight-medium justify-space-between pb-0">
             <div>
@@ -16,14 +17,15 @@
           </v-card-title>
           <div v-if="machine.production.length" class="px-4">
             <div v-for="(prod, n) in machine.production" :key="n">
-              <div class="d-inline-block text-truncate mt-3" style="max-width: 65%">
+              <div
+                class="d-inline-block text-truncate mt-3 success--text text--lighten-4"
+                style="max-width: 65%"
+              >
                 {{ prod.partname }}
               </div>
               <span class="float-right">
-                <span class="display-1">
-                  {{ prod.produced }}
-                </span>
-                /{{ prod.target }}
+                <span class="display-1 success--text text--lighten-4">
+                  {{ prod.produced }}</span>/{{ prod.target }}
               </span>
               <v-progress-linear
                 color="success lighten-2"
