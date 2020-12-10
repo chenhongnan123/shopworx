@@ -21,7 +21,7 @@ export default {
       meanPid,
     ] = chart.series;
     for (let i = 0; i < 15; i += 1) {
-      const x = new Date().getTime() - ((i + 1) * 1000);
+      const x = new Date().getTime() - ((i + 1) * 5000);
       const f = parseFloat(((Math.random() * 40) + 30).toFixed(2), 10);
       const s = parseFloat(((Math.random() * 60) + 50).toFixed(2), 10);
       const c = ((Math.random() * 2) + 1);
@@ -46,7 +46,7 @@ export default {
       cfPid.addPoint([x, c], true, shift);
       maxPid.addPoint([x, ma], true, shift);
       meanPid.addPoint([x, me], true, shift);
-    }, 1000);
+    }, 5000);
   },
   beforeDestroy() {
     clearInterval(this.interval);

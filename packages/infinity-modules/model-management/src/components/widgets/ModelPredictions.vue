@@ -15,7 +15,7 @@ export default {
     const { chart } = this.$refs.predictionChart;
     const [goodClass, badClass] = chart.series;
     for (let i = 0; i < 15; i += 1) {
-      const x = new Date().getTime() - ((i + 1) * 1000);
+      const x = new Date().getTime() - ((i + 1) * 5000);
       const good = Math.random();
       const bad = 1 - good;
       goodClass.addPoint([x, good], true, false);
@@ -28,7 +28,7 @@ export default {
       const shift = chart.series[0].data.length > 20;
       goodClass.addPoint([x, good], true, shift);
       badClass.addPoint([x, bad], true, shift);
-    }, 1000);
+    }, 5000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
