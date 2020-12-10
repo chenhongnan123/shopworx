@@ -144,7 +144,9 @@ export default {
       const isMachineFilter = !this.filters.machinename.value.includes('All');
       const isPartFilter = !this.filters.partname.value.includes('All');
       const isStatusFilter = this.filters.status.value.length !== 4;
-      return isMachineFilter || isPartFilter || isStatusFilter;
+      const isStarredFilter = this.filters.starred.value;
+      const isTrialFilter = this.filters.trial.value;
+      return isMachineFilter || isPartFilter || isStatusFilter || isStarredFilter || isTrialFilter;
     },
     date() {
       let dateText = '';
