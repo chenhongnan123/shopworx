@@ -174,6 +174,7 @@ export default {
         });
         if (deleted) {
           await this.fetchModelDetails(this.model.id);
+          this.fileList = this.modelFiles;
           this.setAlert({
             show: true,
             type: 'success',

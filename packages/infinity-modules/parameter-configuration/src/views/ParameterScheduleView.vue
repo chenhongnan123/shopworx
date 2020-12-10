@@ -1022,6 +1022,8 @@ export default {
           data.forEach((item) => {
             if (Number(item.parametercategory) === 42
             || Number(item.parametercategory) === 45
+            || Number(item.parametercategory) === 38
+            || Number(item.parametercategory) === 11
             || Number(item.parametercategory) === 2) {
               let dataTypeName = '';
               if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
