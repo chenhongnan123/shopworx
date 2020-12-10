@@ -53,9 +53,9 @@ export default {
     report(val) {
       console.log(val);
       if (val && val.cols) {
-        const categoryColumns = val.cols.filter((c) => c.emgTagType.toLowerCase() === 'string');
+        // const categoryColumns = val.cols.filter((c) => c.emgTagType.toLowerCase() === 'string');
         const seriesName = val.cols
-          .filter((c) => c.emgTagType.toLowerCase() !== 'string' && c.emgTagType.toLowerCase() !== 'boolean')
+          .filter((c) => c.hide === false && c.emgTagType.toLowerCase() !== 'string' && c.emgTagType.toLowerCase() !== 'boolean')
           .map((c) => c.tagName);
         const seriesDescription = seriesName.map((key) => {
           const column = val.cols.find((c) => c.tagName === key);
@@ -64,8 +64,8 @@ export default {
             description: column.tagDescription,
           };
         });
-        console.log(categoryColumns);
-        console.log(seriesDescription);
+        // console.log(categoryColumns);
+        // console.log(seriesDescription);
         const categories = val && val.reportData
           ? val.reportData.map((data) => data.createdTimestamp)
           : [];
@@ -74,7 +74,6 @@ export default {
         const series = val && val.reportData
           ? val.reportData.map((data) => subset(data, seriesName))
           : [];
-        console.log(categories);
         this.updateCategory(categories);
         this.updateSeries(series, seriesName, seriesDescription);
       }
