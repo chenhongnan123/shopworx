@@ -50,6 +50,7 @@ export default ({
     createdModelId: null,
     lastStatusUpdate: {},
     deployedModels: [],
+    selectedModel: null,
   },
   mutations: {
     setLines: set('lines'),
@@ -74,6 +75,7 @@ export default ({
     setCreatedModelId: set('createdModelId'),
     setLastStatusUpdate: reactiveSet('lastStatusUpdate'),
     setDeployedModels: set('deployedModels'),
+    setSelectedModel: set('selectedModel'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -350,6 +352,7 @@ export default ({
             'element/getRecords',
             {
               elementName: 'modeldeploymentorderslogs',
+              // eslint-disable-next-line
               query: `?query=modeldeploymentorderid=="${l._id}"`,
             },
             { root: true },
@@ -361,6 +364,7 @@ export default ({
             subprocessid: selectedProcessName,
             operationname: l.operationname,
           }));
+          // eslint-disable-next-line
           l.logs = list;
         }));
       }
@@ -682,6 +686,32 @@ export default ({
           lastModified: formatDate(model.modifiedtimestamp),
           status: 'N.A',
         };
+      }
+      return false;
+    },
+
+    fetchModelByName: async ({ commit, dispatch }, modelname) => {
+      commit('setSelectedModel', null);
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODELS,
+          query: `?query=modelname=="${modelname}"`,
+        },
+        { root: true },
+      );
+      if (models && models.length === 1) {
+        const [model] = models;
+        const payload = {
+          // eslint-disable-next-line
+          id: model._id,
+          name: model.modelname,
+          description: model.modeldescription,
+          lastModified: formatDate(model.modifiedtimestamp),
+          status: 'N.A',
+        };
+        commit('setSelectedModel', payload);
+        return true;
       }
       return false;
     },

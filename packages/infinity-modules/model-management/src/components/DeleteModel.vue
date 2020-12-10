@@ -4,8 +4,10 @@
       <v-btn
         icon
         v-on="on"
-        color="error"
         v-bind="attrs"
+        color="error"
+        :small="small"
+        :class="spaceClass"
         :loading="deleting"
         @click="removeModel"
       >
@@ -26,6 +28,14 @@ export default {
       type: Object,
       required: true,
     },
+    small: {
+      type: Boolean,
+      default: false,
+    },
+    spaceClass: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
@@ -43,6 +53,9 @@ export default {
         this.deleting = true;
         await this.fetchModelDetails(this.model.id);
         await this.deleteModel(this.model.id);
+        if (this.$route.name === 'modelDetails') {
+          this.$router.push({ name: 'modelManagement' });
+        }
         this.deleting = false;
       }
     },

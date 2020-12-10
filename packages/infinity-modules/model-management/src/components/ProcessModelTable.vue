@@ -62,9 +62,17 @@
                  max-width="300"
                  >
                   <template v-slot:activator="{ on, attrs }">
-                    <div v-on="on" v-bind="attrs" class="font-weight-medium">
+                    <a
+                      v-on="on"
+                      v-bind="attrs"
+                      class="font-weight-medium text-decoration-underline"
+                      @click="$router.push({
+                        name: 'modelDetails',
+                        params: { id: item.name },
+                      })"
+                    >
                       {{ item.name }}
-                    </div>
+                    </a>
                   </template>
                   <span class="toolTipProperty">{{ item.description || "N.A" }}</span>
                 </v-tooltip>

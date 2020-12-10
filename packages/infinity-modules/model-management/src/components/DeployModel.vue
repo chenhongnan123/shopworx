@@ -6,6 +6,8 @@
         v-on="on"
         v-bind="attrs"
         color="success"
+        :small="small"
+        :class="spaceClass"
         :loading="deploying"
         @click="deployModel"
       >
@@ -25,6 +27,14 @@ export default {
     model: {
       type: Object,
       required: true,
+    },
+    small: {
+      type: Boolean,
+      default: false,
+    },
+    spaceClass: {
+      type: String,
+      required: false,
     },
   },
   data() {
