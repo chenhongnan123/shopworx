@@ -1,94 +1,78 @@
 <template>
-  <div style="height:100%">
+  <div style="height: 100%">
     <portal to="app-header">
-      <span>Raw Data</span>
+      <span>Data Visualizer</span>
     </portal>
     <v-toolbar
       flat
       dense
       class="stick"
-      :color="$vuetify.theme.dark ? '#121212': ''"
+      :color="$vuetify.theme.dark ? '#121212' : ''"
     >
-      <v-col cols="2" md="2" lg="2">
-        <!-- <v-select
-          filled
-          label="Select Element"
+      <v-responsive :max-width="340">
+        <v-autocomplete
           :items="masterItems"
-          item-text="title"
+          filled
+          dense
           hide-details
+          v-model="selectedProcess"
+          name="name"
+          label="Select Element"
+          item-text="title"
           single-line
           return-object
-          v-model="selectedLine"
           @change="onElementSelect"
         >
-        </v-select> -->
-        <v-autocomplete
-            :items="masterItems"
-            outlined
-            dense
-            hide-details
-            v-model="selectedProcess"
-            name="name"
-            label="Select Element"
-            item-text="title"
-            single-line
-            return-object
-            @change="onElementSelect"
-            clearable
-          >
           <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.title"></v-list-item-title>
             </v-list-item-content>
           </template>
-          </v-autocomplete>
-      </v-col>
+        </v-autocomplete>
+      </v-responsive>
       <v-spacer></v-spacer>
       <report-date-picker />
       <report-chart-type />
-      <export-report @on-export="onExport"/>
+      <export-report @on-export="onExport" />
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
-      <v-row justify="center">
-        <v-col cols="12" xl="10" class="py-0">
-          <report-chart />
-        </v-col>
-      </v-row>
-      <ag-grid-vue
-        :sideBar="true"
-        v-model="rowData"
-        multiSortKey="ctrl"
-        rowGroupPanelShow="always"
-        rowSelection="multiple"
-        class="ag-theme-balham"
-        :columnDefs="columnDefs"
-        :gridOptions="gridOptions"
-        :defaultColDef="defaultColDef"
-        :suppressRowClickSelection="true"
-        style="width: 100%; height: 450px;"
-        @sort-changed="onStateChange"
-        @filter-changed="onStateChange"
-        @column-pinned="onStateChange"
-        @column-visible="onStateChange"
-        @column-resized="onStateChange"
-        @column-moved="onStateChange"
-        @column-row-group-changed="onStateChange"
-        @column-pivot-changed="onStateChange"
-        @column-value-changed="onStateChange"
-        :pagination="true"
-      ></ag-grid-vue>
-    </v-container>
-  </template>
-</div>
+        <v-row justify="center">
+          <v-col cols="12" xl="10" class="py-0">
+            <report-chart />
+          </v-col>
+        </v-row>
+        <ag-grid-vue
+          :sideBar="true"
+          v-model="rowData"
+          multiSortKey="ctrl"
+          rowGroupPanelShow="always"
+          rowSelection="multiple"
+          class="ag-theme-balham"
+          :columnDefs="columnDefs"
+          :gridOptions="gridOptions"
+          :defaultColDef="defaultColDef"
+          :suppressRowClickSelection="true"
+          style="width: 100%; height: 450px"
+          @sort-changed="onStateChange"
+          @filter-changed="onStateChange"
+          @column-pinned="onStateChange"
+          @column-visible="onStateChange"
+          @column-resized="onStateChange"
+          @column-moved="onStateChange"
+          @column-row-group-changed="onStateChange"
+          @column-pivot-changed="onStateChange"
+          @column-value-changed="onStateChange"
+          :pagination="true"
+        ></ag-grid-vue>
+      </v-container>
+    </template>
+  </div>
 </template>
 
 <script>
 import {
-  mapActions,
-  mapGetters,
-  mapState,
-  mapMutations,
+  mapActions, mapGetters, mapState, mapMutations,
 } from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
