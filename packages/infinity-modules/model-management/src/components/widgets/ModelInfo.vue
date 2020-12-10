@@ -4,6 +4,8 @@
       flat
       rounded="lg"
       outlined
+      :class="$vuetify.theme.dark ? 'secondary' : 'primary'"
+      dark
       style="height:100%"
     >
       <v-card-title primary-title>
@@ -40,7 +42,7 @@
             <div>
               Subprocess
             </div>
-            <div class="title primary--text">
+            <div class="title warning--text">
               {{ selectedProcessName }}
             </div>
           </v-col>

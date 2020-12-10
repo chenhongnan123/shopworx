@@ -19,13 +19,13 @@
     <template #activator="{ on, attrs }" v-else>
       <v-btn
         class="text-none mr-2"
-        color="primary"
+        color="white"
         small
         outlined
         v-on="on"
         v-bind="attrs"
       >
-        <v-icon left small color="primary">mdi-memory</v-icon>
+        <v-icon left small color="white">mdi-memory</v-icon>
         Configure model
       </v-btn>
     </template>

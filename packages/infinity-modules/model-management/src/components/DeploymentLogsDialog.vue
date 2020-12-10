@@ -17,13 +17,13 @@
     <template #activator="{ on, attrs }" v-else>
       <v-btn
         class="text-none"
-        color="primary"
+        color="white"
         small
         outlined
         v-on="on"
         v-bind="attrs"
       >
-        <v-icon left small color="primary">mdi-console</v-icon>
+        <v-icon left small color="white">mdi-console</v-icon>
         View logs
       </v-btn>
     </template>

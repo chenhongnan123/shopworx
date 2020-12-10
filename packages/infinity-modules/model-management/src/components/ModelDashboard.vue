@@ -12,14 +12,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" lg="6" xl="7">
-        <v-row>
-          <v-col cols="12" class="pt-0">
-            <model-predictions />
-          </v-col>
-          <v-col cols="12">
-            <model-features />
-          </v-col>
-        </v-row>
+        <model-output />
       </v-col>
     </v-row>
   </v-container>
@@ -27,16 +20,14 @@
 
 <script>
 import ModelInfo from './widgets/ModelInfo.vue';
-import ModelPredictions from './widgets/ModelPredictions.vue';
-import ModelFeatures from './widgets/ModelFeatures.vue';
+import ModelOutput from './widgets/ModelOutput.vue';
 import ModelWarnings from './widgets/ModelWarnings.vue';
 
 export default {
   name: 'ModelDashboard',
   components: {
     ModelInfo,
-    ModelPredictions,
-    ModelFeatures,
+    ModelOutput,
     ModelWarnings,
   },
 };
