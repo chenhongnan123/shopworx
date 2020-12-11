@@ -830,7 +830,11 @@ export default {
           item.isswapped = this.datatypeList
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
             .isswapped === 1;
-          if (Number(item.datatypeList) === 11) {
+          // if (Number(item.datatypeList) === 11) {
+          //   item.size = this.datatypeList
+          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+          // }
+          if (Number(item.datatype) !== 11) {
             item.size = this.datatypeList
               .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
           }

@@ -1,3 +1,47 @@
 {
-  "productionLog": "Production Log"
+  "title": "Rework",
+  "appTitle": "返工",
+  "headers": {
+    "list": "List",
+    "changeover": "Changeover"
+  },
+  "displayTags": {
+    "reworkList": "返工列表",
+    "reworkDetails": "返工详情",
+      "mainid": "Main Id",
+      "ngcode": "Ng Code",
+      "ngcodedescription": "Ng Code Description",
+      "duplicate_title": "Create Duplicate Recipe",
+      "lineName": "Line",
+      "stationName": "Station",
+      "sublineName": "Subline",
+    "buttons" : {
+      "btnRefresh": "刷新",
+      "btnSearch" : "搜索",
+      "confirmrework" : "返工确认",
+      "confirmok": "确认OK",
+      "confirmng": "NG确认",
+      "cancel": "Cancel",
+      "save": "Save"
+    }
+  },
+  "error": {
+    "RECIPE_NAME_EMPTY": "Recipe name is Empty.",
+    "ALREADY_EXSIST_RECIPE": "Recipe Name already present",
+    "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
+    "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
+    "MAINID_EMPTY": "Please Enter MainId First.",
+    "MAINID_NOT_PRESENT": "MainId doesn't Exists.",
+    "EITHER_DATE_EMPTY": "Either one of {from Date} OR {to Date} is empty!",
+    "SELECT_DATE": "Please Select Date.",
+    "NO_SUMMARY": "No NG-Code found for this Mainid!",
+    "NO_PRODUCT_TYPE": "Product Type is not same for Running order",
+    "ALREADY_REWORK": "Already rework selected.",
+    "BOUND_STATUS_NOT_PRESENT": "Not Bound station",
+    "VALUES_UPDATE_ERROR": "Error in updating Values"
+  },
+  "success": {
+    "RECIPE_CREATED": "Recipe created!",
+    "VALUES_UPDATE": "Values updated"
+  }
 }

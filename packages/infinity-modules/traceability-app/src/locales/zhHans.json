@@ -1,3 +1,23 @@
 {
-  "planning": "Planning"
+  "traceabilityApp": "Traceability",
+  "appTitleTraceability": "追溯",
+  "headers": {
+    "list": "Overall",
+    "changeover": "Process parameters"
+  },
+  "error": {
+    "SELECT_SUBSTATION": "Select SubStation !",
+    "EITHER_DATE_EMPTY": "Either one of from Date OR to Date is empty!",
+    "NOT_VALID_INPUT": "Get Record by Substation ID is not Allowed!",
+    "NOT_VALID_INPUT_SUB": "Get Record by Subline ID is not Allowed!",
+    "SELECT_SUBLINE": "Select Subline (Mandetory)"
+  },
+  "success": {
+    "GET_RECORDS_DATE_RANGE": "Fetched the records in given Date Range!",
+    "GET_RECORDS_BY_SUBLINEID": "Fetched the records by selected Subline",
+    "GET_RECORDS_BY_MAINID": "Fetched the records by provided MainID",
+    "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
+    "GET_RECORDS": "Fetched the records!",
+    "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
+  }
 }

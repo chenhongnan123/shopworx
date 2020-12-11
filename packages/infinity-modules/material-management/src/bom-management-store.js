@@ -212,6 +212,8 @@ export default ({
         list = substationList.map((l) => ({
           ...l,
           componentStatusList: [],
+          parameterlist: [],
+          substationid: '',
           bomid: request.bomid,
           configstatus: [{
             text: 'Update quality',
@@ -225,18 +227,29 @@ export default ({
           }],
         }));
       }
-      console.log(list);
+      const parameters = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters', // 21, 24, 26 21 also
+          query: '?query=parametercategory=="21"%7C%7Cparametercategory=="24"%7C%7Cparametercategory=="26"',
+        },
+        { root: true },
+      );
+      const finalParameterList = [];
+      parameters.forEach((para) => {
+        if (finalParameterList.filter((p) => p.name === para.name).length === 0) {
+          const object = {
+            name: para.name,
+            parametercategory: para.parametercategory,
+            id: para.id,
+          };
+          finalParameterList.push(object);
+        }
+      });
+      // name, category , parameter id
       await Promise.all(list.map(async (f) => {
         delete f._id;
-        const parameterList = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'parameters', // 21, 24, 26
-            query: `?query=substationid=="${f.id}"%26%26(parametercategory=="21"%7C%7Cparametercategory=="24"%7C%7Cparametercategory=="26")`,
-          },
-          { root: true },
-        );
-        parameterList.forEach((element) => {
+        parameters.forEach((element) => {
           f.configstatus.forEach((status) => {
             if (status.name === 'componentstatus') {
               f[`${status.name}_component_${element.name}`] = '';
@@ -258,8 +271,10 @@ export default ({
         }];
         clist.push(...componentStatusList);
         f.componentStatusList = clist;
-        console.log('store');
+        f.parameterlist = finalParameterList;
+        f.substationid = f.id;
       }));
+      // id = substationid
       console.log(list);
       commit('setSubStationListForConfig', list);
       return list;

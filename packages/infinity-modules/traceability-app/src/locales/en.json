@@ -1,6 +1,6 @@
 {
   "traceabilityApp": "Traceability",
-  "title": "Traceability",
+  "appTitleTraceability": "Traceability",
   "headers": {
     "list": "Overall",
     "changeover": "Process parameters"

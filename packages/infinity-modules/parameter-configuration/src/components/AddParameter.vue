@@ -352,7 +352,7 @@ export default {
     },
     async saveParameter() {
       const { parameterObj } = this;
-      if (this.$refs.form.validate()) {
+      if (parameterObj) {
         const {
           name,
           dbaddress,

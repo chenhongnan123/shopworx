@@ -1,11 +1,13 @@
 {
   "title": "Rework",
-  "appTitle": "Rework Details",
+  "appTitle": "Rework",
   "headers": {
     "list": "List",
     "changeover": "Changeover"
   },
   "displayTags": {
+    "reworkList": "Rework List",
+    "reworkDetails": "Rework Details",
       "mainid": "Main Id",
       "ngcode": "Ng Code",
       "ngcodedescription": "Ng Code Description",
@@ -14,6 +16,8 @@
       "stationName": "Station",
       "sublineName": "Subline",
     "buttons" : {
+      "btnRefresh": "Refresh",
+      "btnSearch" : "Search",
       "confirmrework" : "Confirm Rework",
       "confirmok": "Confirm Ok",
       "confirmng": "Confirm Ng",

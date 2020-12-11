@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>NG-Codes</span>
+       <span v-text="$t('appTitleNGCode')"></span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"

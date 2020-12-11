@@ -1,7 +1,7 @@
 <template>
 <div style="height:100%">
     <portal to="app-header">
-      <span>Traceability</span>
+      <span v-text="$t('appTitleTraceability')"></span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -75,7 +75,7 @@
           label="To date"
         ></v-text-field>
         <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
-            Search
+            {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
         <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
             Export
@@ -185,6 +185,7 @@ export default {
       'recipeViewState',
       'subLineList',
       'subStationList',
+      'subStationListData',
       'trecibilityState',
       'partStatusList',
       'componentList',
@@ -224,6 +225,7 @@ export default {
       'getParametersList',
       'getRunningOrder',
       'getBOMDetails',
+      'getSubStationElementsData',
     ]),
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
@@ -359,19 +361,28 @@ export default {
       console.log(this.subStationList);
       const componenetData = await this.getComponentList(param);
       const processSendDataArray = [];
+      // const duplicateMainIdCheck = [];
       componenetData.forEach((component) => {
-        this.$refs.process.processParametersList.forEach((process) => {
-          if (process.mainid === component.mainid) {
-            const subStationName = this.subStationList.find((u) => u.id === component.substationid);
-            if (!this.$refs.process.headerForCSV.includes(`${subStationName.name}_${component.componentname}`)) {
-              this.$refs.process.headerForCSV.push(`${subStationName.name}_${component.componentname}`);
+        // if (!duplicateMainIdCheck.includes(component.mainid)) {
+        //  duplicateMainIdCheck.push(component.mainid);
+        const dataPresentFlag = processSendDataArray.filter((f) => f.componentvalue
+          === component.componentvalue);
+        if (dataPresentFlag.length === 0) {
+          this.$refs.process.processParametersList.forEach((process) => {
+            if (process.mainid === component.mainid) {
+              const subStationName = this.subStationList.find((u) => u
+                .id === component.substationid);
+              if (!this.$refs.process.headerForCSV.includes(`${subStationName.name}_${component.componentname}`)) {
+                this.$refs.process.headerForCSV.push(`${subStationName.name}_${component.componentname}`);
+              }
+              process[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
+              component[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
+              component.substationname = subStationName.name;
+              processSendDataArray.push(component);
             }
-            process[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
-            component[`${subStationName.name}_${component.componentname}`] = component.componentvalue;
-            component.substationname = subStationName.name;
-            processSendDataArray.push(component);
-          }
-        });
+          });
+        }
+        // }
       });
       console.log(processSendDataArray);
       await this.getK2RouterData(processSendDataArray);
@@ -406,15 +417,23 @@ export default {
       return content;
     },
     async getK2RouterData(mainidList) {
+      await this.getParametersList(`?query=(parametercategory=="15"%7C%7Cparametercategory=="17"%7
+            C%7Cparametercategory=="18")`);
+      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
+      const toDate = new Date(this.trecibilityState.todate).getTime();
+      await this.getSubStationElementsData(`?datefrom=${fromDate}&dateto=${toDate}`);
+      console.log(this.subStationListData);
+      console.log(mainidList);
       await Promise.all(mainidList.map(async (request) => {
         const bomData = this.bomDetailsList.filter((bom) => bom.sublineid === request.sublineid
           && bom.parametername === 'subassemblyid' && bom.substationid === request.substationid);
         console.log(bomData);
-        await this.getSubStations(`?query=sublineid=="${bomData[0].boundsublineid}"`);
-        await Promise.all(this.subStationList.map(async (s) => {
-          const elementDetails = await this.getProcessElement(s.id);
-          if (elementDetails) {
-            elementDetails.tags.forEach(async (element) => {
+        const subStationDataList = this.subStationListData
+          .filter((sub) => sub.sublineid === bomData[0].boundsublineid);
+        await Promise.all(subStationDataList.map(async (s) => {
+          // const elementDetails = await this.getProcessElement(s.id);
+          if (s[`headers_${s.id}`]) {
+            s[`headers_${s.id}`].tags.forEach(async (element) => {
               if (element.tagName !== 'mainid') {
                 const data = this.$refs.process.headerForCSV.includes(`${s.name}_${element.tagName}`);
                 if (!data) {
@@ -422,16 +441,19 @@ export default {
                 }
               }
             });
-            await this.getParametersList(`?query=substationid=="${s.id}"%26%26
-            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
             const subAssemblyIdFieldName = `${request.substationname}_subassemblyid`;
             console.log(subAssemblyIdFieldName);
             console.log(request[subAssemblyIdFieldName]);
-            const processData = await this.getProcessParameters({
-              elementname: s.id,
-              payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
-            });
+            let processData = s[`data_${s.id}`];
+            console.log(processData);
+            if (processData.length > 0) {
+              processData = processData.filter((a) => a.mainid === request[subAssemblyIdFieldName]);
+            }
+            console.log(processData);
+            // await this.getProcessParameters({
+            //   elementname: s.id,
+            //   payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
+            // });
             if (this.$refs.process.processParametersList.find((pro) => pro
               .mainid === request.mainid)) {
               const object = this.$refs.process.processParametersList.find((pp) => pp
@@ -440,7 +462,7 @@ export default {
                 .process.processParametersList
                 .indexOf(object), 1);
               const processDataObject = processData[0];
-              this.parametersList.forEach((para) => {
+              this.parametersList.filter((p) => p.substationid === s.id).forEach((para) => {
                 if (processDataObject && object) {
                   if (processDataObject[para.name]) {
                     object[`${s.name}_${para.name}`] = processDataObject[para.name];
@@ -469,26 +491,6 @@ export default {
             }
           }
         }));
-        // const parameterSelected = this.$refs.process.processParametersList.map
-        // ((item) => ({ ...item }));
-        // const column = processParametersheader;
-        // const csvContent = [];
-        // parameterSelected.forEach((parameter) => {
-        //   const arr = [];
-        //   column.forEach((key) => {
-        //     arr.push(parameter[key]);
-        //   });
-        //   csvContent.push(arr);
-        // });
-        // const csvParser = new CSVParser();
-        // const content = csvParser.unparse({
-        //   fields: column,
-        //   data: csvContent,
-        // });
-        // this.addToZip({
-        //   fileName: `${request.sublineid}.csv`,
-        //   fileContent: content,
-        // });
       }));
     },
     async btnComponentLogic() {

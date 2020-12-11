@@ -15,7 +15,7 @@
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refreshRecipe') }}
+            {{ $t('displayTags.buttons.btnRefresh') }}
           </v-btn>
           <!-- <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>

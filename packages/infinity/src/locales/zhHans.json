@@ -176,7 +176,11 @@
     "masters": "主数据（仅查看）",
     "admin": "管理控制台",
     "search": "搜索报告和见解",
-    "insights": "见解"
+    "insights": "见解",
+    "traceabilityApp": "追溯",
+    "traceability": "追溯",
+    "ngCodeConfiguration": "NG码",
+    "reworkOperation": "返工"
   },
   "account": {
     "account": "帐户",

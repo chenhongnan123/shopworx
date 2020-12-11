@@ -19,6 +19,7 @@ export default ({
     parametersList: [],
     runningOrder: [],
     bomDetailsList: [],
+    subStationListData: [],
   },
   mutations: {
     setLineList: set('lineList'),
@@ -37,6 +38,7 @@ export default ({
     setParametersList: set('parametersList'),
     setRunningOrderList: set('runningOrder'),
     setBOMDetailsList: set('bomDetailsList'),
+    setSubStationListData: set('subStationListData'),
   },
   actions: {
     getRunningOrder: async ({ dispatch, commit }, query) => {
@@ -203,6 +205,38 @@ export default ({
         console.log(list);
       }
       commit('setSubStationList', list);
+      return station;
+    },
+    // new logic
+    getSubStationElementsData: async ({ dispatch, commit }, payload) => {
+      const station = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query: '',
+        },
+        { root: true },
+      );
+      if (station) {
+        await Promise.all(station.map(async (element) => {
+          const elementHeaders = await dispatch(
+            'element/getElement',
+            element.id,
+            { root: true },
+          );
+          element[`headers_${element.id}`] = elementHeaders;
+          const paramters = await dispatch(
+            'element/getRecords',
+            {
+              elementName: element.id,
+              query: payload,
+            },
+            { root: true },
+          );
+          element[`data_${element.id}`] = paramters;
+        }));
+      }
+      commit('setSubStationListData', station);
       return station;
     },
     getSortedSubStations: async ({ dispatch, commit }, query) => {

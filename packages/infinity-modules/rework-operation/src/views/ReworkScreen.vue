@@ -23,11 +23,15 @@
             label="To date"
             dense
             ></v-text-field>
-            <v-btn small color="primary" outlined class="text-none ml-2" @click="btnSearch">
-            Search
+            <v-btn small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="btnSearch">
+            {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
               <v-btn small color="primary" outlined class="text-none ml-2" @click="refreshUi">
-            Refresh
+            {{ $t('displayTags.buttons.btnRefresh') }}
             </v-btn>
             </v-toolbar>
         </v-col>
