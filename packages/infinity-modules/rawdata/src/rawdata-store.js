@@ -11,6 +11,7 @@ export default ({
     report: null,
     dateRange: [new Date().toISOString().substr(0, 10),
       new Date().toISOString().substr(0, 10)],
+    gridState: '',
   },
   mutations: {
     setAssets: set('assets'),
@@ -19,6 +20,7 @@ export default ({
     setChartType: set('chartType'),
     setReport: set('report'),
     setDateRange: set('dateRange'),
+    setGridState: set('gridState'),
   },
   actions: {
     updateRecord: async ({ dispatch, commit }, payloadData) => {
@@ -122,7 +124,7 @@ export default ({
         const provisioningElements = elements
           .map((elem) => elem.element)
           .filter((elem) => (
-            elem.elementType.toUpperCase().trim() === 'PROVISIONING'
+            elem.elementType.toUpperCase().trim() !== 'PROVISIONING'
             && elem.categoryType.toUpperCase().trim() !== 'CALENDAR'
           ));
         const groupedElements = provisioningElements
@@ -195,7 +197,7 @@ export default ({
           ({ tags } = elem);
           tags = tags.filter((tag) => {
             if (assetId) {
-              return !tag.hide && tag.assetId === assetId;
+              return tag.assetId === assetId;
             }
             return !tag.hide;
           });

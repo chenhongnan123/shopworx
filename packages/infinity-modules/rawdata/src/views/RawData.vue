@@ -37,37 +37,37 @@
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
-        <v-row justify="center">
-          <v-col cols="12" xl="10" class="py-0">
-            <report-chart />
-          </v-col>
-        </v-row>
-        <ag-grid-vue
-          :sideBar="true"
-          v-model="rowData"
-          multiSortKey="ctrl"
-          rowGroupPanelShow="always"
-          rowSelection="multiple"
-          class="ag-theme-balham"
-          :columnDefs="columnDefs"
-          :gridOptions="gridOptions"
-          :defaultColDef="defaultColDef"
-          :suppressRowClickSelection="true"
-          style="width: 100%; height: 450px"
-          @sort-changed="onStateChange"
-          @filter-changed="onStateChange"
-          @column-pinned="onStateChange"
-          @column-visible="onStateChange"
-          @column-resized="onStateChange"
-          @column-moved="onStateChange"
-          @column-row-group-changed="onStateChange"
-          @column-pivot-changed="onStateChange"
-          @column-value-changed="onStateChange"
-          :pagination="true"
-        ></ag-grid-vue>
-      </v-container>
-    </template>
-  </div>
+      <ag-grid-vue
+        :sideBar="true"
+        v-model="rowData"
+        multiSortKey="ctrl"
+        rowGroupPanelShow="always"
+        rowSelection="multiple"
+        class="ag-theme-balham"
+        :columnDefs="columnDefs"
+        :gridOptions="gridOptions"
+        :defaultColDef="defaultColDef"
+        :suppressRowClickSelection="true"
+        style="width: 100%; height: 450px;"
+        @sort-changed="onStateChange"
+        @filter-changed="onStateChange"
+        @column-pinned="onStateChange"
+        @column-visible="onStateChangeVisible"
+        @column-resized="onStateChange"
+        @column-moved="onStateChange"
+        @column-row-group-changed="onStateChange"
+        @column-pivot-changed="onStateChange"
+        @column-value-changed="onStateChange"
+        :pagination="true"
+      ></ag-grid-vue>
+      <v-row justify="center" class="mt-2">
+        <v-col cols="12" xl="10" class="py-0">
+          <report-chart />
+        </v-col>
+      </v-row>
+    </v-container>
+  </template>
+</div>
 </template>
 
 <script>
@@ -122,7 +122,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   computed: {
-    ...mapState('rawdata', ['records', 'dateRange']),
+    ...mapState('rawdata', ['records', 'dateRange', 'report']),
     ...mapGetters('rawdata', ['masterItems', 'getTags']),
     tags() {
       return this.getTags(this.id, 4);
@@ -138,7 +138,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('rawdata', ['setReport']),
+    ...mapMutations('rawdata', ['setReport', 'setGridState']),
     ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets']),
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
@@ -151,6 +151,32 @@ export default {
         sortState,
         filterState,
       };
+      console.log(state);
+      this.setGridState(JSON.stringify(state));
+    },
+    onStateChangeVisible() {
+      const colState = this.gridColumnApi.getColumnState();
+      const groupState = this.gridColumnApi.getColumnGroupState();
+      const sortState = this.gridApi.getSortModel();
+      const filterState = this.gridApi.getFilterModel();
+      const state = {
+        colState,
+        groupState,
+        sortState,
+        filterState,
+      };
+      this.tags.forEach((element) => {
+        const data = colState.find((f) => f.colId === element.tagName);
+        console.log(data);
+        if (data) {
+          element.hide = data.hide;
+        }
+      });
+      const data = {
+        cols: this.tags,
+        reportData: this.rowData,
+      };
+      this.setReport(data);
       this.setGridState(JSON.stringify(state));
     },
     onExport(e) {
