@@ -1,6 +1,8 @@
 <template>
   <v-card
     flat
+    :class="isDark ? 'secondary' : 'primary'"
+    dark
     rounded="lg"
   >
     <v-card-title primary-title>
@@ -17,20 +19,20 @@
       <div>
         Equipment
       </div>
-      <div class="title">
+      <div class="title white--text">
         {{ equipment }}
       </div>
       <template v-if="status === 'notStarted'">
         <div class="mt-4">
           Scheduled start
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ scheduledstart }}
         </div>
         <div class="mt-4">
           Scheduled end
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ scheduledend }}
         </div>
       </template>
@@ -38,13 +40,13 @@
         <div class="mt-4">
           Actual start
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ actualstart }}
         </div>
         <div class="mt-4">
           Scheduled end
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ scheduledend }}
         </div>
       </template>
@@ -52,13 +54,13 @@
         <div class="mt-4">
           Actual start
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ actualstart }}
         </div>
         <div class="mt-4">
           Actual end
         </div>
-        <div class="title">
+        <div class="title white--text">
           {{ actualend }}
         </div>
       </template>
@@ -67,7 +69,7 @@
           <div>
             Plan CT
           </div>
-          <div class="title">
+          <div class="title white--text">
             {{ planCt }} secs
           </div>
         </v-col>
@@ -75,7 +77,7 @@
           <div>
             Standard CT
           </div>
-          <div class="title">
+          <div class="title white--text">
             {{ standardCt }} secs
           </div>
         </v-col>
@@ -83,7 +85,7 @@
           <div>
             Avergae CT
           </div>
-          <div class="title">
+          <div class="title white--text">
             {{ averageCt }} secs
           </div>
         </v-col>
@@ -91,23 +93,27 @@
       <div class="mt-4">
         Runtime
       </div>
-      <div class="title">
+      <div class="title white--text">
         {{ runtime }}
       </div>
       <div v-for="(p, n) in selectedPlan" :key="n" class="mt-4">
         <div>
-          CAVITY: <span class="title">{{ p.activecavity}}</span>/{{p.cavity }}
+          CAVITY: <span class="title white--text">{{ p.activecavity}}</span>/{{p.cavity }}
         </div>
         <v-progress-linear
           :height="25"
           class="mt-1"
-          color="secondary"
+          :color="isDark ? 'primary' : 'secondary'"
           :value="(p.actualquantity / p.plannedquantity) * 100"
         >
-          <span class="font-weight-medium mr-auto ml-2">
+          <div
+            class="d-inline-block text-truncate font-weight-medium mr-auto ml-2"
+            style="max-width: 65%"
+            :title="p.partname"
+          >
             {{ p.partname }}
-          </span>
-          <span class="font-weight-medium ml-auto mr-2">
+          </div>
+          <span class="float-right font-weight-medium mr-2">
             {{ p.actualquantity || 0 }}/{{ p.plannedquantity }}
           </span>
         </v-progress-linear>
@@ -127,6 +133,7 @@ import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'RejectionPareto',
+  inject: ['theme'],
   data() {
     return {
       loading: false,
@@ -136,6 +143,9 @@ export default {
   computed: {
     ...mapState('productionPlanning', ['selectedPlan']),
     ...mapGetters('productionPlanning', ['planStatus']),
+    isDark() {
+      return this.theme.isDark;
+    },
     status() {
       return this.selectedPlan[0].status;
     },

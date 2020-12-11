@@ -11,10 +11,10 @@
           </v-col>
           <v-col cols="12" class="py-0">
             <v-row>
-              <v-col cols="12" lg="6" class="py-0">
+              <v-col cols="12" lg="6">
                 <rejection-pareto />
               </v-col>
-              <v-col cols="12" lg="6" class="py-0">
+              <v-col cols="12" lg="6">
                 <downtime-pareto />
               </v-col>
             </v-row>
