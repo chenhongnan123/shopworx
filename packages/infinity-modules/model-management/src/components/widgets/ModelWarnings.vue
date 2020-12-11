@@ -1,7 +1,21 @@
 <template>
   <v-responsive :min-height="220">
     <v-card flat rounded="lg" style="height: 100%">
-      <v-card-title primary-title> Alerts </v-card-title>
+      <v-card-title primary-title>
+        Alerts
+        <v-spacer></v-spacer>
+        <span>
+          <v-btn
+            small
+            color="error"
+            icon
+            v-if="customizeMode"
+            @click="$emit('remove-widget', widget.i)"
+          >
+            <v-icon>mdi-minus-circle</v-icon>
+          </v-btn>
+        </span>
+      </v-card-title>
       <v-card-text>
         <v-timeline dense>
           <v-slide-x-reverse-transition group hide-on-leave>
@@ -30,6 +44,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 const COLORS = ['info', 'warning', 'error'];
 const ICONS = {
   info: 'mdi-information',
@@ -38,6 +54,12 @@ const ICONS = {
 };
 export default {
   name: 'ModelWarnings',
+  props: {
+    widget: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       interval: null,
@@ -56,6 +78,9 @@ export default {
   },
   created() {
     this.start();
+  },
+  computed: {
+    ...mapState('modelManagement', ['customizeMode']),
   },
   methods: {
     addEvent() {

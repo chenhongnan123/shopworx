@@ -11,6 +11,12 @@
 <script>
 export default {
   name: 'ModelFeatures',
+  props: {
+    chartType: {
+      type: String,
+      required: true,
+    },
+  },
   mounted() {
     const { chart } = this.$refs.featureChart;
     const [
@@ -51,11 +57,17 @@ export default {
   beforeDestroy() {
     clearInterval(this.interval);
   },
+  watch: {
+    chartType(val) {
+      this.options.chart.type = val;
+    },
+  },
   data() {
     return {
       interval: null,
       options: {
         chart: {
+          type: 'line',
           height: 350,
         },
         title: {

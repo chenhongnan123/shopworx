@@ -11,6 +11,12 @@
 <script>
 export default {
   name: 'ModelPredictions',
+  props: {
+    chartType: {
+      type: String,
+      required: true,
+    },
+  },
   mounted() {
     const { chart } = this.$refs.predictionChart;
     const [goodClass, badClass] = chart.series;
@@ -32,6 +38,11 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
+  },
+  watch: {
+    chartType(val) {
+      this.options.chart.type = val;
+    },
   },
   data() {
     return {

@@ -16,6 +16,7 @@
           small
           spaceClass="ml-2"
         />
+        <customize-toggle />
       </template>
     </portal>
     <v-container fill-height v-if="loading">
@@ -52,6 +53,7 @@ import ModelNotFound from '../components/ModelNotFound.vue';
 import ModelDashboard from '../components/ModelDashboard.vue';
 import DeployModel from '../components/DeployModel.vue';
 import DeleteModel from '../components/DeleteModel.vue';
+import CustomizeToggle from '../components/dashboard/CustomizeToggle.vue';
 
 export default {
   name: 'ModelDetails',
@@ -60,6 +62,7 @@ export default {
     ModelDashboard,
     DeployModel,
     DeleteModel,
+    CustomizeToggle,
   },
   data() {
     return {
