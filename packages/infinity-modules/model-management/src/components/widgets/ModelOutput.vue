@@ -7,7 +7,7 @@
     >
       <v-card-title primary-title>
         Model output
-        <v-spacer></v-spacer>
+        <!-- <v-spacer></v-spacer>
         <v-responsive :max-width="270">
           <v-select
             dense
@@ -18,7 +18,7 @@
             hide-details
             single-line
           ></v-select>
-        </v-responsive>
+        </v-responsive> -->
       </v-card-title>
       <model-predictions />
       <model-features />
