@@ -12,6 +12,8 @@ export default ({
     selectedDisplay: null,
     selectedTheme: null,
     machines: [],
+    rows: 0,
+    cols: 0,
   },
   mutations: {
     setLoading: set('loading'),
@@ -24,6 +26,8 @@ export default ({
     setDashboardType: set('dashboardType'),
     setMachines: set('machines'),
     setMachine: reactiveSetArray('machines'),
+    setRows: set('rows'),
+    setCols: set('cols'),
   },
   actions: {
     getBusinessTime: async ({ commit, dispatch }) => {
@@ -101,5 +105,46 @@ export default ({
 
     idleMachines: ({ machines }) => machines
       .filter((m) => m.machinestatus === 'NOPLAN').length,
+
+    screens: (
+      { machineList, rows, cols },
+      /* rootState,
+      rootGetters, */
+    ) => {
+      let machines = null;
+      if (machineList && machineList.length) {
+        const cardsPerScreen = rows * cols;
+        if (cardsPerScreen) {
+          const screens = Math.ceil(machineList.length / cardsPerScreen);
+          const screenArray = [];
+          for (let i = 0; i < screens; i += 1) {
+            screenArray.push(i);
+          }
+          machines = screenArray
+            .reduce((result, current) => {
+              // eslint-disable-next-line
+              result[current] = {
+                title: 'Shift-wise shopfloor dashboard',
+                rows,
+                cols,
+                machines: machineList.filter((_, index) => (
+                  index >= cardsPerScreen * current
+                  && index < (cardsPerScreen * (current + 1))
+                )),
+              };
+              return result;
+            }, {});
+        }
+        /* const [group] = rootGetters['webApp/group'];
+        machines = rootGetters['webApp/filteredRecords'](machineList);
+        machines = rootGetters['webApp/sortedRecords'](machines);
+        machines = sortArray(machines, group);
+        machines = rootGetters['webApp/groupedRecords'](machines); */
+      }
+      if (!machines || !Object.keys(machines).length) {
+        machines = null;
+      }
+      return machines;
+    },
   },
 });

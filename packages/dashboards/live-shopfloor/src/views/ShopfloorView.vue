@@ -1,18 +1,19 @@
 <template>
-  <tv-layout v-if="isTV"/>
-  <non-tv-layout v-else />
+  <div>
+    <shopfloor-layout />
+    <!-- <tv-layout v-if="isTV"/>
+    <non-tv-layout v-else /> -->
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import NonTvLayout from '../components/non-tv/Index.vue';
-import TvLayout from '../components/tv/Index.vue';
+import ShopfloorLayout from '../components/ShopfloorLayout.vue';
 
 export default {
   name: 'ShopfloorView',
   components: {
-    NonTvLayout,
-    TvLayout,
+    ShopfloorLayout,
   },
   computed: {
     ...mapGetters('helper', ['isTV']),
