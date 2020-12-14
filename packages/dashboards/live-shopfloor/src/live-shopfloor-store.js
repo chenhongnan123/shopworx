@@ -1,6 +1,19 @@
 import { reactiveSetArray, set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
+const parseDate = (datetime) => {
+  const [date, hr, min, sec] = datetime.split(':');
+  const [year, month, day] = date.split('-');
+  return new Date(
+    year,
+    month - 1,
+    day,
+    hr,
+    min,
+    sec,
+  ).getTime();
+};
+
 export default ({
   namespaced: true,
   state: {
@@ -67,7 +80,7 @@ export default ({
         const mappedMachines = machines.map((m) => {
           const payload = {
             planid: '',
-            updatedat: '',
+            updatedAt: new Date().getTime(),
             runtime: 0,
             stdcycletime: 0,
           };
@@ -76,10 +89,10 @@ export default ({
               planid,
               runtime,
               stdcycletime,
-              updatedat,
+              updatedAt,
             } = m.production[0];
             payload.planid = planid;
-            payload.updatedat = updatedat;
+            payload.updatedAt = parseDate(updatedAt);
             payload.runtime = runtime;
             payload.stdcycletime = stdcycletime;
           }

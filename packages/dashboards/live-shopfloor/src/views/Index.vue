@@ -108,42 +108,92 @@ export default {
         this.sseInit();
       }
     },
-    setEventData(data) {
-      const {
-        elementName, machinename, planid, partname, qty, target, updatedAt, actm_sum: runtime, sctm,
-      } = data;
+    async setEventData(data) {
+      const { elementName } = data;
       if (elementName === 'cycletime') {
-        this.machines.forEach((m, index) => {
-          if (m.machinename === machinename) {
-            const payload = {
-              ...m,
-              updatedat: updatedAt,
-            };
-            if (planid === m.planid) {
-              let productions = [...m.production];
-              const partIndex = m.production.findIndex((prod) => prod.partname === partname);
-              if (partIndex > -1) {
-                productions[partIndex].produced = qty;
-              } else {
-                productions = [...productions, {
-                  partname,
-                  produced: qty,
-                  rejected: 0,
-                  target,
-                }];
-              }
-              payload.production = productions;
-            } else {
-              payload.planid = planid;
-              payload.runtime = runtime;
-              payload.stdcycletime = sctm;
-            }
-            this.setMachine({ index, payload });
-          }
-        });
+        this.setProduction(data);
+      } else if (elementName === 'rejection') {
+        await this.setRejection(data);
+      } else if (elementName === 'downtime') {
+        this.setDowntime(data);
       }
       // if element name rejection - fetch from rejection element
       // if element name downtime - update machine record
+    },
+    setProduction(data) {
+      const {
+        machinename, planid, partname, qty, target, updatedAt, actm_sum: runtime, sctm,
+      } = data;
+      this.machines.forEach((m, index) => {
+        if (m.machinename === machinename) {
+          const payload = {
+            ...m,
+            updatedAt: new Date(updatedAt).getTime(),
+          };
+          if (planid === m.planid) {
+            let productions = [...m.production];
+            const partIndex = m.production.findIndex((prod) => prod.partname === partname);
+            if (partIndex > -1) {
+              productions[partIndex].produced = qty;
+            } else {
+              productions = [...productions, {
+                partname,
+                produced: qty,
+                rejected: 0,
+                target,
+              }];
+            }
+            payload.production = productions;
+          } else {
+            payload.planid = planid;
+            payload.runtime = runtime;
+            payload.stdcycletime = sctm;
+          }
+          this.setMachine({ index, payload });
+        }
+      });
+    },
+    async setRejection(data) {
+      const {
+        machinename, planid, partname,
+      } = data;
+      for (let i = 0; i < this.machines.length; i += 1) {
+        if (this.machines[i].machinename === machinename) {
+          const payload = {
+            ...this.machines[i],
+            updatedAt: new Date().getTime(),
+          };
+          const { production } = this.machines[i];
+          for (let j = 0; j < production.length; j += 1) {
+            if (production.planid === planid && production.partname === partname) {
+              const rejected = 0;// fetch rejections
+              payload.production[i] = {
+                ...production[i],
+                rejected,
+              };
+            } else {
+              payload.production[i] = { ...production[i] };
+            }
+          }
+          this.setMachine({ index: i, payload });
+        }
+      }
+    },
+    setDowntime(data) {
+      const {
+        machinename, actualdowntimestart,
+      } = data;
+      for (let i = 0; i < this.machines.length; i += 1) {
+        if (this.machines[i].machinename === machinename) {
+          const payload = {
+            ...this.machines[i],
+            updatedAt: new Date().getTime(),
+            downsince: actualdowntimestart,
+            downreason: '',
+          };
+          this.setMachine({ index: i, payload });
+        }
+      }
     },
   },
 };

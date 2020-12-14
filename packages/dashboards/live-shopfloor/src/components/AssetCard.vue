@@ -35,26 +35,66 @@
           ></v-progress-linear>
         </div>
       </div>
-      <div
-        v-if="machine.machinestatus === 'DOWN'"
-        :class="`${color}--text text--lighten-4`"
-        style="position: absolute; bottom: 0;"
-      >
-        <span
-          class="text-truncate mt-3"
-          style="max-width: 65%"
-        >
-          {{ machine.downreason }}
-        </span>
-        <span class="float-right">
-          {{ machine.downsince }}
-        </span>
+      <div class="d-inline-block">
+        <div v-if="machine.machinestatus === 'UP'" class="px-4 mt-2">
+          <div :class="`${color}--text text--lighten-4`">
+            Availability
+          </div>
+          <div class="display-1">
+            -
+          </div>
+          <div :class="`${color}--text text--lighten-4 mt-1`">
+            Quality
+          </div>
+          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
+            98.6%
+          </div>
+        </div>
+        <div v-if="machine.machinestatus === 'DOWN'" class="px-4 mt-2">
+          <div :class="`${color}--text text--lighten-4`">
+            Down since
+          </div>
+          <div class="display-1">
+            {{ getStrictDistance(machine.downsince) }}
+          </div>
+          <div :class="`${color}--text text--lighten-4 mt-1`">
+            Down reason
+          </div>
+          <div class="display-1">
+            -
+          </div>
+        </div>
+        <div v-if="machine.machinestatus === 'NOPLAN'" class="px-4 mt-2">
+          <div :class="`${color}--text text--lighten-4 display-1`">
+            No plan
+          </div>
+          <div :class="`${color}--text text--lighten-4 display-1`">
+            available
+          </div>
+        </div>
       </div>
+      <div class="float-right">
+        <v-progress-circular
+          size="160"
+          :value="20"
+          rotate="-90"
+          width="12"
+          class="mt-2 mr-4"
+          :color="`${color} lighten-4`"
+        >
+          <span class="display-1 font-weight-medium">20%</span>
+        </v-progress-circular>
+      </div>
+      <v-card-actions style="position: absolute; bottom: 0;">
+        Last update {{ getDistance(machine.updatedAt) }}
+      </v-card-actions>
     </v-card>
   </v-responsive>
 </template>
 
 <script>
+import { timeDistance, distanceInWordsToNow } from '@shopworx/services/util/date.service';
+
 export default {
   name: 'AssetCard',
   props: {
@@ -91,6 +131,14 @@ export default {
         return 'lighten';
       }
       return 'darken';
+    },
+  },
+  methods: {
+    getStrictDistance(datetime) {
+      return timeDistance(datetime, new Date().getTime());
+    },
+    getDistance(datetime) {
+      return distanceInWordsToNow(datetime, { addSuffix: true });
     },
   },
 };
