@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* **api:** fixed create access api ([94989a5](https://bitbucket.org/entrib/shopworx/commits/94989a51094a6277eb36ca67c505d92e432af451))
+* **production-og:** fixed accepted qty calculation ([bd1ad0b](https://bitbucket.org/entrib/shopworx/commits/bd1ad0bc3c09895cbc6be027495d79a7f3f29288))
+* **production-planning:** fixed active filter state ([4ec882e](https://bitbucket.org/entrib/shopworx/commits/4ec882e492ce280d2cb19307455f371b9af8b0bc))
+* **production-planning:** fixed plan actions ([e3b4095](https://bitbucket.org/entrib/shopworx/commits/e3b4095b768e697bd65ed8f74614dd8aa5b8fbb2))
+* **production-planning:** fixed sort order of not started plans ([347118d](https://bitbucket.org/entrib/shopworx/commits/347118d90d8dcad6cfcec238298751272a123558))
+* **production-planning:** restrict user to edit complete or aborted plan ([63b6e95](https://bitbucket.org/entrib/shopworx/commits/63b6e956bd9e20674af5948e6c1a7c69ff58da6b))
+
+
+### Features
+
+* **production-planning:** integrated sse events to the app ([4cf36a3](https://bitbucket.org/entrib/shopworx/commits/4cf36a34856828cb9d217d6d0b8e93ca0279ea3c))
+* **production-planning:** updated plan info widget style ([9dae3df](https://bitbucket.org/entrib/shopworx/commits/9dae3df65a99ded17fb538ae65a752ce69212e9b))
+* **shopfloor-dashboard:** added paginator ([76d8a9c](https://bitbucket.org/entrib/shopworx/commits/76d8a9c1ed8c8b727217c829f163533b87d26340))
+
+
+
+
+
 # [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
 
 
