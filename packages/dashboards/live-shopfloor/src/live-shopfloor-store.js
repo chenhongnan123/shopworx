@@ -144,7 +144,6 @@ export default ({
       if (!screens || !Object.keys(screens).length) {
         screens = null;
       }
-      console.log(screens);
       return screens;
     },
   },
