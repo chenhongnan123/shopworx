@@ -18,9 +18,10 @@
     <perfect-scrollbar style="height: calc(100% - 64px)">
       <v-card flat class="transparent">
         <v-card-text>
-          <view-type />
+          <theme />
+          <view-type class="mt-4" />
           <display-type class="mt-4" />
-          <theme class="mt-4"/>
+          <group class="mt-4" />
         </v-card-text>
       </v-card>
     </perfect-scrollbar>
@@ -32,6 +33,7 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 import ViewType from './config/ViewType.vue';
 import DisplayType from './config/DisplayType.vue';
 import Theme from './config/Theme.vue';
+import Group from './config/Group.vue';
 
 export default {
   name: 'ConfigDrawer',
@@ -39,6 +41,7 @@ export default {
     ViewType,
     DisplayType,
     Theme,
+    Group,
   },
   computed: {
     ...mapState('helper', ['configDrawer', 'isFullscreen']),

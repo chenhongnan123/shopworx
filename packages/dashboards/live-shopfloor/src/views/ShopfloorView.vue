@@ -1,37 +1,84 @@
 <template>
-  <v-container
-    grid-list-lg
-    fluid
-    style="height: 100%"
-    ref="container"
-    :class="theme.isDark ? '' : 'grey lighten-5'"
-    v-resize="onResize"
-  >
-    <summary-layout v-if="!isTV && !isFullscreen" />
-    <v-responsive :max-height="cHeight" :min-height="cHeight">
-      <v-window
-        v-model="window"
-        v-if="screens"
-        style="height: 100%"
-      >
-        <v-window-item
-          v-for="(screenData, screen) in screens"
-          :key="screen"
+  <div>
+    <v-container
+      grid-list-lg
+      fluid
+      style="height: 100%"
+      ref="container"
+      :class="theme.isDark ? '' : 'grey lighten-5'"
+      class="py-0"
+      v-resize="onResize"
+    >
+      <summary-layout v-if="!isTV && !isFullscreen" />
+      <v-responsive :max-height="cHeight" :min-height="cHeight">
+        <v-window
+          v-model="window"
+          v-if="screens"
           style="height: 100%"
         >
-          <v-row>
-            <v-col
-              :cols="12 / screenData.cols"
-              :key="n"
-              v-for="(machine, n) in screenData.machines"
+          <v-window-item
+            v-for="(screenData, screen) in screens"
+            :key="screen"
+            style="height: 100%"
+          >
+            <v-row>
+              <v-col
+                :cols="12 / screenData.cols"
+                :key="n"
+                v-for="(machine, n) in screenData.machines"
+              >
+                <asset-card :machine="machine" />
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
+      </v-responsive>
+      <summary-layout v-if="isTV || isFullscreen" />
+      <v-footer padless fixed v-if="!isTV && !isFullscreen">
+        <v-col
+          class="text-center py-1"
+          cols="12"
+        >
+          <v-btn
+            icon
+            small
+            class="d-inline-block mr-4"
+            @click="prev"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <v-item-group
+            v-model="window"
+            class="text-center d-inline-block"
+            mandatory
+            v-if="$vuetify.breakpoint.mdAndUp"
+          >
+            <v-item
+              v-for="n in totalScreens"
+              :key="`btn-${n}`"
+              #default="{ active }"
             >
-              <asset-card :machine="machine" />
-            </v-col>
-          </v-row>
-        </v-window-item>
-      </v-window>
-    </v-responsive>
-    <summary-layout v-if="isTV || isFullscreen" />
+              <v-btn
+                :input-value="active"
+                icon
+                small
+                @click="toggle(n)"
+              >
+                <v-icon small>mdi-record</v-icon>
+              </v-btn>
+            </v-item>
+          </v-item-group>
+          <v-btn
+            icon
+            small
+            class="d-inline-block ml-4"
+            @click="next"
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </v-col>
+      </v-footer>
+    </v-container>
     <v-app-bar
       flat
       v-if="isTV || isFullscreen"
@@ -55,48 +102,7 @@
         11:46 | Shift 2
       </span>
     </v-app-bar>
-    <v-footer padless fixed v-else>
-      <v-col
-        class="text-center py-1"
-        cols="12"
-      >
-        <v-btn
-          icon
-          class="d-inline-block mr-4"
-          @click="prev"
-        >
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-item-group
-          v-model="window"
-          class="text-center d-inline-block"
-          mandatory
-          v-if="$vuetify.breakpoint.mdAndUp"
-        >
-          <v-item
-            v-for="n in totalScreens"
-            :key="`btn-${n}`"
-            #default="{ active }"
-          >
-            <v-btn
-              :input-value="active"
-              icon
-              @click="toggle(n)"
-            >
-              <v-icon small>mdi-record</v-icon>
-            </v-btn>
-          </v-item>
-        </v-item-group>
-        <v-btn
-          icon
-          class="d-inline-block ml-4"
-          @click="next"
-        >
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-col>
-    </v-footer>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -138,9 +144,9 @@ export default {
     ...mapMutations('shopfloor', ['setRows', 'setCols']),
     onResize() {
       if (!this.isTV && !this.isFullscreen) {
-        this.cHeight = window.innerHeight - 168 - 24 - 32;
+        this.cHeight = window.innerHeight - 168 - 36;
       } else {
-        this.cHeight = window.innerHeight - 168 - 24;
+        this.cHeight = window.innerHeight - 168;
       }
       this.cWidth = window.innerWidth;
       const rows = Math.floor(this.cHeight / (274 + 14));

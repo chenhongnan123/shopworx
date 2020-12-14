@@ -1,6 +1,10 @@
 <template>
   <v-row>
-    <v-col v-for="(option, n) in options" :key="n" cols="3">
+    <v-col
+      v-for="(option, n) in options"
+      :key="n"
+      cols="3"
+    >
       <v-responsive max-height="80" min-height="80">
         <v-card
           flat

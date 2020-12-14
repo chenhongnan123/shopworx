@@ -5,6 +5,7 @@
     </div>
     <v-radio-group
       dense
+      disabled
       hide-details
       class="ma-0 pa-0"
       v-model="view"
