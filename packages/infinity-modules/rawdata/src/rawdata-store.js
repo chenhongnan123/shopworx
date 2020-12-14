@@ -7,6 +7,7 @@ export default ({
     assets: [],
     records: [],
     elements: [],
+    paramList: [],
     chartType: null,
     report: null,
     dateRange: [new Date().toISOString().substr(0, 10),
@@ -21,8 +22,36 @@ export default ({
     setReport: set('report'),
     setDateRange: set('dateRange'),
     setGridState: set('gridState'),
+    setParamList: set('paramList'),
   },
   actions: {
+    getParameters: async ({ commit, dispatch }, substation) => {
+      const list = [];
+      const param = await dispatch(
+        'element/getRecords',
+        { elementName: 'parameters', query: `?query=showparameter==true%26%26substationid=="${substation}"` },
+        { root: true },
+      );
+      if (param) {
+        param.forEach((element) => {
+          list.push(element.name);
+        });
+        commit('setParamList', list);
+      }
+      return param;
+    },
+
+    getRecordsByTags: async ({ commit, dispatch }, payload) => {
+      const records = await dispatch(
+        'element/getRecordsByTags',
+        payload,
+        { root: true },
+      );
+      if (records) {
+        commit('setRecords', records);
+      }
+    },
+
     updateRecord: async ({ dispatch, commit }, payloadData) => {
       const created = await dispatch(
         'element/updateRecordById',
@@ -97,12 +126,12 @@ export default ({
       }
     },
 
-    getRecords: async ({ commit, dispatch }, { elementName, assetId }) => {
+    getRecords: async ({ commit, dispatch }, { elementName, request }) => {
       let payload = {
         elementName,
-        query: `?query=assetid==${assetId}`,
+        query: request,
       };
-      if (!assetId) {
+      if (!request) {
         payload = {
           elementName,
         };

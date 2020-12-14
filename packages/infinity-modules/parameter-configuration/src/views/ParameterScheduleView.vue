@@ -168,6 +168,14 @@
               </template>
             </v-edit-dialog>
           </template>
+          <template v-slot:item.showparameter="{ item }">
+            <v-checkbox
+              primary
+              hide-details
+              v-model="item.showparameter"
+              @change="showParameters($event, item)"
+            ></v-checkbox>
+          </template>
           <template v-slot:item.description="props">
             <v-edit-dialog
               :return-value.sync="props.item.description"
@@ -387,6 +395,7 @@ export default {
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
         { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Show Real/Non Real', value: 'showparameter', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -464,6 +473,22 @@ export default {
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
+    async showParameters(event, item) {
+      const object = {
+        id: item._id,
+        payload: {
+          showparameter: event,
+        },
+      };
+      const updateResult = await this.updateParameter(object);
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'Data Updated',
+        });
+      }
+    },
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];

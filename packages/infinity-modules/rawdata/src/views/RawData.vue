@@ -122,7 +122,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   computed: {
-    ...mapState('rawdata', ['records', 'dateRange', 'report']),
+    ...mapState('rawdata', ['records', 'dateRange', 'report', 'paramList']),
     ...mapGetters('rawdata', ['masterItems', 'getTags']),
     tags() {
       return this.getTags(this.id, 4);
@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     ...mapMutations('rawdata', ['setReport', 'setGridState']),
-    ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets']),
+    ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getRecordsByTags']),
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
@@ -206,10 +206,24 @@ export default {
     },
     async fetchRecords() {
       this.loading = true;
-      await this.getRecords({
-        elementName: this.id,
-        assetId: 4,
-      });
+      const today = new Date(this.dateRange[1]).getTime();
+      const yesterday = new Date(this.dateRange[0]).getTime();
+      if (this.id.includes('real_') || this.id.includes('process_')) {
+        const element = this.id.split('_');
+        await this.getParameters(element[1]);
+        await this.getRecordsByTags({
+          elementName: this.id,
+          queryParam: `?datefrom=${yesterday}&dateto=${today}`,
+          request: {
+            tags: this.paramList,
+          },
+        });
+      } else {
+        await this.getRecords({
+          elementName: this.id,
+          request: `?datefrom=${yesterday}&dateto=${today}`,
+        });
+      }
       this.loading = false;
     },
     async onElementSelect(item) {

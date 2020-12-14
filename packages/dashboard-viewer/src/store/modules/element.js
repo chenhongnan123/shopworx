@@ -14,6 +14,18 @@ export default ({
       return false;
     },
 
+    getRecordsByTags: async (_, payload) => {
+      try {
+        const { data } = await ElementService.getRecordsByTags(payload);
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     getElementsBySite: async (_, siteId) => {
       try {
         const { data } = await ElementService.getElementsBySite(siteId);
