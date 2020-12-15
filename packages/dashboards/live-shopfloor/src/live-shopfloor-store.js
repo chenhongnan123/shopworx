@@ -3,7 +3,7 @@ import { sortArray } from '@shopworx/services/util/sort.service';
 
 const parseDate = (datetime) => {
   const [date, hr, min, sec] = datetime.split(':');
-  const [year, month, day] = date.split('-');
+  const [day, month, year] = date.split('-');
   return new Date(
     year,
     month - 1,

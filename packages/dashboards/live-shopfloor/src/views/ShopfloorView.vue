@@ -120,6 +120,7 @@ export default {
   data() {
     return {
       window: 0,
+      interval: null,
       cHeight: window.innerHeight,
       cWidth: window.innerWidth,
     };
@@ -171,6 +172,17 @@ export default {
     toggle(val) {
       this.window = val - 1;
     },
+  },
+  created() {
+    const self = this;
+    this.interval = setInterval(() => {
+      if (self.isFullscreen || self.isTV) {
+        self.next();
+      }
+    }, 5000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
 };
 </script>

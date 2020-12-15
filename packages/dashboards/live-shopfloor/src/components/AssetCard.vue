@@ -41,13 +41,13 @@
             Availability
           </div>
           <div class="display-1">
-            -
+            {{ availabilityText }}
           </div>
           <div :class="`${color}--text text--lighten-4 mt-1`">
             Quality
           </div>
           <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-            98.6%
+            {{ qualityText }}
           </div>
         </div>
         <div v-if="machine.machinestatus === 'DOWN'" class="px-4 mt-2">
@@ -86,7 +86,7 @@
         </v-progress-circular>
       </div>
       <v-card-actions style="position: absolute; bottom: 0;">
-        Last update {{ getDistance(machine.updatedAt) }}
+        Last update {{ lastUpdate }}
       </v-card-actions>
     </v-card>
   </v-responsive>
@@ -103,6 +103,12 @@ export default {
     },
   },
   inject: ['theme'],
+  data() {
+    return {
+      interval: null,
+      lastUpdate: '',
+    };
+  },
   computed: {
     color() {
       let color = '';
@@ -132,6 +138,32 @@ export default {
       }
       return 'darken';
     },
+    updatedAt() {
+      return this.machine.updatedAt;
+    },
+    production() {
+      return this.machine.production;
+    },
+    availability() {
+      return this.production.length ? this.production[0].runtime : 0;
+    },
+    performance() {
+      return this.production.length
+        ? (this.production[0].produced / this.production[0].target)
+        : 0;
+    },
+    quailty() {
+      return this.production.length
+        ? ((this.production[0].produced - this.production[0].rejected)
+          / this.production[0].produced)
+        : 1;
+    },
+    qualityText() {
+      return `${(this.quailty * 100).toFixed(2)}%`;
+    },
+    availabilityText() {
+      return `${(this.availability * 100).toFixed(2)}%`;
+    },
   },
   methods: {
     getStrictDistance(datetime) {
@@ -139,6 +171,23 @@ export default {
     },
     getDistance(datetime) {
       return distanceInWordsToNow(datetime, { addSuffix: true });
+    },
+  },
+  created() {
+    const self = this;
+    this.interval = setInterval(() => {
+      self.lastUpdate = self.getDistance(self.updatedAt);
+    }, 60000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
+  },
+  watch: {
+    updatedAt: {
+      immediate: true,
+      handler(val) {
+        this.lastUpdate = this.getDistance(val);
+      },
     },
   },
 };
