@@ -99,7 +99,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="headline font-weight-medium">
-        11:46 | Shift 2
+        {{ now }} | {{ currentShift }}
       </span>
     </v-app-bar>
   </div>
@@ -107,6 +107,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapState } from 'vuex';
+import { formatDate } from '@shopworx/services/util/date.service';
 import SummaryLayout from '../components/SummaryLayout.vue';
 import AssetCard from '../components/AssetCard.vue';
 
@@ -120,7 +121,9 @@ export default {
   data() {
     return {
       window: 0,
+      now: null,
       interval: null,
+      timeInterval: null,
       cHeight: window.innerHeight,
       cWidth: window.innerWidth,
     };
@@ -132,6 +135,7 @@ export default {
     ...mapGetters('shopfloor', ['screens']),
     ...mapGetters('helper', ['isTV']),
     ...mapState('helper', ['isFullscreen']),
+    ...mapState('shopfloor', ['currentShift']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
@@ -179,10 +183,14 @@ export default {
       if (self.isFullscreen || self.isTV) {
         self.next();
       }
-    }, 5000);
+    }, 10000);
+    this.timeInterval = setInterval(() => {
+      self.now = formatDate(new Date().getTime(), 'HH:mm');
+    }, 1000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
+    clearInterval(this.timeInterval);
   },
 };
 </script>

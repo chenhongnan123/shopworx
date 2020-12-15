@@ -40,7 +40,7 @@
           <div :class="`${color}--text text--lighten-4`">
             Availability
           </div>
-          <div class="display-1">
+          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
             {{ availabilityText }}
           </div>
           <div :class="`${color}--text text--lighten-4 mt-1`">
@@ -51,13 +51,13 @@
           </div>
         </div>
         <div v-if="machine.machinestatus === 'DOWN'" class="px-4 mt-2">
-          <div :class="`${color}--text text--lighten-4`">
+          <div :class="`${color}--text text--lighten-4 mt-2`">
             Down since
           </div>
           <div class="display-1">
             {{ getStrictDistance(machine.downsince) }}
           </div>
-          <div :class="`${color}--text text--lighten-4 mt-1`">
+          <div :class="`${color}--text text--lighten-4 mt-2`">
             Down reason
           </div>
           <div class="display-1">
@@ -75,14 +75,14 @@
       </div>
       <div class="float-right">
         <v-progress-circular
-          size="160"
-          :value="20"
+          size="155"
+          :value="oee"
           rotate="-90"
           width="12"
           class="mt-2 mr-4"
           :color="`${color} lighten-4`"
         >
-          <span class="display-1 font-weight-medium">20%</span>
+          <span class="display-1 font-weight-medium">{{ oeeText }}</span>
         </v-progress-circular>
       </div>
       <v-card-actions style="position: absolute; bottom: 0;">
@@ -145,7 +145,9 @@ export default {
       return this.machine.production;
     },
     availability() {
-      return this.production.length ? this.production[0].runtime : 0;
+      return this.production.length
+        ? this.production[0].runtime / this.machine.shiftWorkingTime
+        : 0;
     },
     performance() {
       return this.production.length
@@ -158,11 +160,17 @@ export default {
           / this.production[0].produced)
         : 1;
     },
+    oee() {
+      return (this.availability * this.performance * this.quailty) * 100;
+    },
     qualityText() {
       return `${(this.quailty * 100).toFixed(2)}%`;
     },
     availabilityText() {
       return `${(this.availability * 100).toFixed(2)}%`;
+    },
+    oeeText() {
+      return `${(this.oee).toFixed(2)}%`;
     },
   },
   methods: {

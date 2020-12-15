@@ -1,5 +1,6 @@
 import { reactiveSetArray, set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import HourService from '@shopworx/services/api/hour.service';
 
 const parseDate = (datetime) => {
   const [date, hr, min, sec] = datetime.split(':');
@@ -20,11 +21,13 @@ export default ({
     loading: false,
     currentShift: null,
     currentHour: null,
+    displayHour: null,
     currentDate: null,
     selectedView: null,
     selectedDisplay: null,
     selectedTheme: null,
     machines: [],
+    shifts: [],
     rows: 0,
     cols: 0,
   },
@@ -32,17 +35,35 @@ export default ({
     setLoading: set('loading'),
     setCurrentShift: set('currentShift'),
     setCurrentHour: set('currentHour'),
+    setDisplayHour: set('displayHour'),
     setCurrentDate: set('currentDate'),
     setSelectedView: set('selectedView'),
     setSelectedDisplay: set('selectedDisplay'),
     setSelectedTheme: set('selectedTheme'),
     setDashboardType: set('dashboardType'),
     setMachines: set('machines'),
+    setShifts: set('shifts'),
     setMachine: reactiveSetArray('machines'),
     setRows: set('rows'),
     setCols: set('cols'),
   },
   actions: {
+    getShifts: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'businesshours',
+          query: '?sortquery=sortindex==1',
+        },
+        { root: true },
+      );
+      if (records && records.length) {
+        commit('setShifts', records);
+        return true;
+      }
+      return false;
+    },
+
     getBusinessTime: async ({ commit, dispatch }) => {
       const data = await dispatch(
         'calendar/getBusinessTime',
@@ -52,10 +73,21 @@ export default ({
       if (data) {
         commit('setCurrentShift', data.shiftName);
         commit('setCurrentHour', data.hour);
+        commit('setDisplayHour', data.displayHour);
         commit('setCurrentDate', data.date);
         return true;
       }
       return false;
+    },
+
+    getShiftAvailableTime: async ({ getters }) => {
+      const { shiftStartTime } = getters;
+      const now = new Date().getTime();
+      const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
+      if (data) {
+        return now - shiftStartTime - data.results;
+      }
+      return now - shiftStartTime;
     },
 
     getMachines: async ({
@@ -77,6 +109,7 @@ export default ({
       );
       if (data) {
         const { machines } = JSON.parse(data);
+        const shiftWorkingTime = await dispatch('getShiftAvailableTime');
         const mappedMachines = machines.map((m) => {
           const payload = {
             planid: '',
@@ -99,6 +132,7 @@ export default ({
           return {
             ...m,
             ...payload,
+            shiftWorkingTime,
           };
         });
         commit('setMachines', sortArray(mappedMachines, 'machinename'));
@@ -118,6 +152,15 @@ export default ({
 
     idleMachines: ({ machines }) => machines
       .filter((m) => m.machinestatus === 'NOPLAN').length,
+
+    shiftStartTime: ({ shifts, currentShift, currentDate }) => {
+      const shift = shifts.find((s) => s.shift === currentShift);
+      const [hr, min] = shift.starttime.split(':');
+      const year = currentDate.substring(0, 4);
+      const month = currentDate.substring(6, 4);
+      const day = currentDate.substring(8, 6);
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
+    },
 
     screens: (
       { machines, rows, cols },

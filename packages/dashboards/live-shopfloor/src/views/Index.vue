@@ -35,6 +35,7 @@ export default {
   },
   async created() {
     this.setLoading(true);
+    await this.getShifts();
     await this.getBusinessTime();
     if (this.isLoaded) {
       await this.getMachines();
@@ -75,8 +76,20 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('shopfloor', ['setLoading', 'setMachine']),
-    ...mapActions('shopfloor', ['getBusinessTime', 'getMachines']),
+    ...mapMutations('shopfloor', [
+      'setLoading',
+      'setMachine',
+      'setCurrentShift',
+      'setCurrentHour',
+      'setDisplayHour',
+      'setCurrentDate',
+    ]),
+    ...mapActions('shopfloor', [
+      'getBusinessTime',
+      'getMachines',
+      'getShifts',
+      'getShiftAvailableTime',
+    ]),
     sseInit() {
       this.sseClient = new EventSource('/sse/asm');
       this.readyState = this.sseClient.readyState;
@@ -110,19 +123,25 @@ export default {
     },
     async setEventData(data) {
       const { elementName } = data;
+      this.setTime(data);
+      const shiftWorkingTime = await this.getShiftAvailableTime();
+      const payload = {
+        ...data,
+        shiftWorkingTime,
+      };
       if (elementName === 'cycletime') {
-        this.setProduction(data);
+        this.setProduction(payload);
       } else if (elementName === 'rejection') {
-        await this.setRejection(data);
+        await this.setRejection(payload);
       } else if (elementName === 'downtime') {
-        this.setDowntime(data);
+        this.setDowntime(payload);
       }
       // if element name rejection - fetch from rejection element
       // if element name downtime - update machine record
     },
     setProduction(data) {
       const {
-        machinename, planid, partname, qty, target, updatedAt, actm_sum: runtime, sctm,
+        machinename, planid, partname, qty, cavity, updatedAt, actm_sum: runtime, sctm,
       } = data;
       this.machines.forEach((m, index) => {
         if (m.machinename === machinename) {
@@ -133,8 +152,10 @@ export default {
           if (planid === m.planid) {
             let productions = [...m.production];
             const partIndex = m.production.findIndex((prod) => prod.partname === partname);
+            const target = Math.ceil((runtime / sctm) * cavity);
             if (partIndex > -1) {
               productions[partIndex].produced = qty;
+              productions[partIndex].target = target;
             } else {
               productions = [...productions, {
                 partname,
@@ -194,6 +215,14 @@ export default {
           this.setMachine({ index: i, payload });
         }
       }
+    },
+    setTime(data) {
+      const {
+        shift, hour, displayHour,
+      } = data;
+      this.setCurrentShift(shift);
+      this.setCurrentHour(hour);
+      this.setDisplayHour(displayHour);
     },
   },
 };
