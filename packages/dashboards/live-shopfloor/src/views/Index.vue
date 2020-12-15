@@ -89,6 +89,7 @@ export default {
       'getMachines',
       'getShifts',
       'getShiftAvailableTime',
+      'fetchRejections',
     ]),
     sseInit() {
       this.sseClient = new EventSource('/sse/asm');
@@ -178,27 +179,26 @@ export default {
       const {
         machinename, planid, partname,
       } = data;
-      for (let i = 0; i < this.machines.length; i += 1) {
-        if (this.machines[i].machinename === machinename) {
+      this.machines.forEach(async (m, index) => {
+        if (m.machinename === machinename) {
           const payload = {
-            ...this.machines[i],
+            ...m,
             updatedAt: new Date().getTime(),
           };
-          const { production } = this.machines[i];
-          for (let j = 0; j < production.length; j += 1) {
-            if (production.planid === planid && production.partname === partname) {
-              const rejected = 0;// fetch rejections
-              payload.production[i] = {
-                ...production[i],
-                rejected,
-              };
-            } else {
-              payload.production[i] = { ...production[i] };
+          if (planid === m.planid) {
+            const productions = [...m.production];
+            const partIndex = m.production.findIndex((prod) => prod.partname === partname);
+            if (partIndex > -1) {
+              productions[partIndex].rejected = await this.fetchRejections({
+                planId: planid,
+                part: partname,
+              });
             }
+            payload.production = productions;
           }
-          this.setMachine({ index: i, payload });
+          this.setMachine({ index, payload });
         }
-      }
+      });
     },
     setDowntime(data) {
       const {

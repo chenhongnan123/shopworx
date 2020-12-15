@@ -90,6 +90,29 @@ export default ({
       return now - shiftStartTime;
     },
 
+    fetchRejections: async ({ state, dispatch }, {
+      planId,
+      part,
+    }) => {
+      const { currentDate: date, currentShift: shift } = state;
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'rejection',
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
+        },
+        { root: true },
+      );
+      if (records && records.length) {
+        return records.reduce((acc, cur) => {
+          // eslint-disable-next-line
+          acc += cur.quantity;
+          return acc;
+        }, 0);
+      }
+      return 0;
+    },
+
     getMachines: async ({
       state, commit, dispatch, rootState,
     }) => {
