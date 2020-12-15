@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     ...mapMutations('rawdata', ['setReport', 'setGridState']),
-    ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getRecordsByTags']),
+    ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getRecordsByTagData']),
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
@@ -211,7 +211,7 @@ export default {
       if (this.id.includes('real_') || this.id.includes('process_')) {
         const element = this.id.split('_');
         await this.getParameters(element[1]);
-        await this.getRecordsByTags({
+        await this.getRecordsByTagData({
           elementName: this.id,
           queryParam: `?datefrom=${yesterday}&dateto=${today}`,
           request: {

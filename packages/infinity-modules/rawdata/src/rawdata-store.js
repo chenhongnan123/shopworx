@@ -41,10 +41,11 @@ export default ({
       return param;
     },
 
-    getRecordsByTags: async ({ commit, dispatch }, payload) => {
+    getRecordsByTagData: async ({ commit, dispatch }, payload) => {
+      console.log(payload);
       const records = await dispatch(
         'element/getRecordsByTags',
-        payload,
+        { payload },
         { root: true },
       );
       if (records) {
