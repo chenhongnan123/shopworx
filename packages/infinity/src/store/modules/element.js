@@ -26,6 +26,19 @@ export default ({
       return false;
     },
 
+    getRecordsByTags: async (_, { payload }) => {
+      try {
+        console.log(payload);
+        const { data } = await ElementService.getRecordsByTags(payload);
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, element) => {
       try {
         const { data } = await ElementService.createElement(element);
