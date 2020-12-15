@@ -379,7 +379,8 @@ export default {
   data() {
     return {
       parameterSelected: [],
-      headers: [
+      headers: [],
+      headersSnap7: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
         { text: 'subline', value: 'subline', width: 120 },
@@ -396,6 +397,22 @@ export default {
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
       ],
+      headersMelsec: [
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Line', value: 'line', width: 120 },
+        { text: 'subline', value: 'subline', width: 120 },
+        { text: 'station', value: 'station', width: 120 },
+        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Category', value: 'parametercategory' },
+        { text: 'Data type', value: 'datatype' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'Start Address', value: 'startaddress', width: 140 },
+        { text: 'Boolean Bit', value: 'bitnumber', width: 120 },
+        { text: 'Monitor', value: 'monitorvalue', width: 130 },
+        { text: 'Status', value: 'status', width: 130 },
+      ],
       parameterListSave: [],
       confirmDialog: false,
       socket: null,
@@ -405,7 +422,6 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getParameterListRecords('?pagenumber=1&pagesize=10');
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
     });
@@ -413,7 +429,7 @@ export default {
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-      'subStationElementDeatils', 'createElementResponse']),
+      'subStationElementDeatils', 'createElementResponse', 'protocol']),
     isAddButtonOK() {
       if (this.lineValue
         && this.sublineValue
@@ -455,6 +471,16 @@ export default {
     },
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
+    },
+    protocol(val) {
+      console.log(val);
+      if (val === 'SNAP7') {
+        this.headers = this.headersSnap7;
+        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+      } else {
+        this.headers = this.headersMelsec;
+        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+      }
     },
   },
   methods: {
@@ -703,24 +729,45 @@ export default {
       const fileName = `${lineName}-${sublineName}-${stationName}-${substationName}`;
       const parameterSelected = this.parameterSelected.map((item) => ({ ...item }));
       const csvContent = [];
-      const column = [
-        'name',
-        'description',
-        'protocol',
-        'datatype',
-        'bitnumber',
-        'dbaddress',
-        'startaddress',
-        'size',
-        // 'isconversion',
-        'multiplicationfactor',
-        // 'divisionfactor',
-        // 'currentvalue',
-        'parameterunit',
-        'parametercategory',
-        'plcaddress',
-        'paid',
-      ];
+      let column = [];
+      if (this.protocol === 'SNAP7') {
+        column = [
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'dbaddress',
+          'startaddress',
+          'size',
+          // 'isconversion',
+          'multiplicationfactor',
+          // 'divisionfactor',
+          // 'currentvalue',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+        ];
+      } else {
+        column = [
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'startaddress',
+          'size',
+          // 'isconversion',
+          'multiplicationfactor',
+          // 'divisionfactor',
+          // 'currentvalue',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+        ];
+      }
       parameterSelected.forEach((parameter) => {
         const arr = [];
         column.forEach((key) => {
@@ -752,24 +799,45 @@ export default {
     },
     async exportSampleData() {
       const fileName = 'sample-file';
-      const column = [
-        'name',
-        'description',
-        'protocol',
-        'datatype',
-        'bitnumber',
-        'dbaddress',
-        'startaddress',
-        'size',
-        // 'isconversion',
-        'multiplicationfactor',
-        // 'divisionfactor',
-        // 'currentvalue',
-        'parameterunit',
-        'parametercategory',
-        'plcaddress',
-        'paid',
-      ];
+      let column = [];
+      if (this.protocol === 'SNAP7') {
+        column = [
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'dbaddress',
+          'startaddress',
+          'size',
+          // 'isconversion',
+          'multiplicationfactor',
+          // 'divisionfactor',
+          // 'currentvalue',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+        ];
+      } else {
+        column = [
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'startaddress',
+          'size',
+          // 'isconversion',
+          'multiplicationfactor',
+          // 'divisionfactor',
+          // 'currentvalue',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+        ];
+      }
       const csvContent = [];
       const arr = [
         'parametername',
@@ -848,41 +916,43 @@ export default {
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
-        const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
-        const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
-        if (isBooleanList.length) {
-          for (let i = 0; i < isBooleanList.length; i += 1) {
-            for (let k = i + 1; k < isBooleanList.length; k += 1) {
-              if (
-                Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
-                && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
-                && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_Boolean_Bit',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
+        if (this.protocol === 'SNAP7') {
+          const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
+          const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
+          if (isBooleanList.length) {
+            for (let i = 0; i < isBooleanList.length; i += 1) {
+              for (let k = i + 1; k < isBooleanList.length; k += 1) {
+                if (
+                  Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
+                  && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
+                  && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
+                ) {
+                  this.setAlert({
+                    show: true,
+                    type: 'error',
+                    message: 'duplicate_parameter_Boolean_Bit',
+                  });
+                  document.getElementById('uploadFiles').value = null;
+                  return;
+                }
               }
             }
           }
-        }
-        if (noBooleanList.length) {
-          for (let i = 0; i < noBooleanList.length; i += 1) {
-            for (let k = i + 1; k < noBooleanList.length; k += 1) {
-              if (
-                Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
-                && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_startaddress',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
+          if (noBooleanList.length) {
+            for (let i = 0; i < noBooleanList.length; i += 1) {
+              for (let k = i + 1; k < noBooleanList.length; k += 1) {
+                if (
+                  Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
+                  && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
+                ) {
+                  this.setAlert({
+                    show: true,
+                    type: 'error',
+                    message: 'duplicate_parameter_startaddress',
+                  });
+                  document.getElementById('uploadFiles').value = null;
+                  return;
+                }
               }
             }
           }

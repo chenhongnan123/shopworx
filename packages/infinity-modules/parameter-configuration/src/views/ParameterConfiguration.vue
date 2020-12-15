@@ -16,28 +16,42 @@
     <portal
       to="app-extension"
     >
-      <v-tabs
+    <v-responsive :max-width="200">
+    <v-select
+      filled
+      dense
+      hide-details
+      :items="protocolList"
+      item-value="name"
+      v-model="selectedProtocol"
+      item-text="name"
+      @change="onSelectProtocol"
+      label="Select Protocol"
+    ></v-select>
+    </v-responsive>
+      <!-- <v-tabs
         dense
         center-active
         v-model="parameterView"
       >
         <v-tab class="text-none">
           Add parameters
-        </v-tab>
+        </v-tab> -->
         <!-- <v-tab class="text-none">
           PLC datatypes
         </v-tab>
         <v-tab class="text-none">
           PLC category
         </v-tab> -->
-      </v-tabs>
+      <!-- </v-tabs> -->
     </portal>
     <template>
-      <v-fade-transition mode="out-in">
-        <parameter-schedule-view v-if="parameterView === 0" />
+      <parameter-schedule-view/>
+      <!-- <v-fade-transition mode="out-in">
+        <parameter-schedule-view v-if="parameterView === 0" /> -->
         <!-- <plc-datatypes v-else-if="parameterView === 1" />
         <plc-category v-else-if="parameterView === 2" /> -->
-      </v-fade-transition>
+      <!-- </v-fade-transition> -->
     </template>
   </div>
 </template>
@@ -59,6 +73,14 @@ export default {
     return {
       parameterView: 0,
       loading: false,
+      protocolList: [
+        {
+          name: 'SNAP7',
+        },
+        {
+          name: 'MELSEC',
+        },
+      ],
     };
   },
   created() {
@@ -69,6 +91,10 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapMutations('parameterConfiguration', ['setProtocol']),
+    onSelectProtocol(value) {
+      this.setProtocol(value);
+    },
   },
 };
 </script>

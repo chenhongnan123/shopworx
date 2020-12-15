@@ -26,8 +26,10 @@ export default ({
     selectedParameterDatatype: '',
     subStationElementDeatils: [],
     createElementResponse: [],
+    protocol: '',
   },
   mutations: {
+    setProtocol: set('protocol'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
     setApply: set('isApply'),
