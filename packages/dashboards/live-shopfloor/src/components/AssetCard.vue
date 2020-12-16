@@ -119,7 +119,7 @@ export default {
         } else if (machinestatus === 'DOWN') {
           color = 'error';
         } else if (machinestatus === 'NOPLAN') {
-          color = 'warning';
+          color = 'info';
         }
       }
       return color;

@@ -61,7 +61,7 @@ export default {
       }, {
         text: 'Idle',
         value: 'idleMachines',
-        color: 'warning',
+        color: 'info',
       }],
     };
   },
