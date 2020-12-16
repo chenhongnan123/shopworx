@@ -142,7 +142,16 @@ export default {
     },
     setProduction(data) {
       const {
-        machinename, planid, partname, qty, cavity, updatedAt, actm_sum: runtime, sctm,
+        machinename,
+        planid,
+        partname,
+        qty,
+        cavity,
+        activecavity,
+        updatedAt,
+        actm_sum: runtime,
+        shiftAvailableTime,
+        sctm,
       } = data;
       this.machines.forEach((m, index) => {
         if (m.machinename === machinename) {
@@ -150,26 +159,44 @@ export default {
             ...m,
             updatedAt: new Date(updatedAt).getTime(),
           };
+          const performanceTarget = Math.floor((runtime / sctm) * cavity);
+          const timeTarget = Math.floor((shiftAvailableTime / sctm) * activecavity);
           if (planid === m.planid) {
             let productions = [...m.production];
             const partIndex = m.production.findIndex((prod) => prod.partname === partname);
-            const target = Math.ceil((runtime / sctm) * cavity);
             if (partIndex > -1) {
               productions[partIndex].produced = qty;
-              productions[partIndex].target = target;
+              productions[partIndex].performanceTarget = performanceTarget;
+              productions[partIndex].stdcycletime = sctm;
+              productions[partIndex].timeTarget = timeTarget;
+              productions[partIndex].runtime = runtime;
             } else {
               productions = [...productions, {
+                cavity,
                 partname,
+                performanceTarget,
+                planid,
                 produced: qty,
                 rejected: 0,
-                target,
+                runtime,
+                stdcycletime: sctm,
+                timeTarget,
               }];
             }
             payload.production = productions;
           } else {
             payload.planid = planid;
-            payload.runtime = runtime;
-            payload.stdcycletime = sctm;
+            payload.production = [{
+              cavity,
+              partname,
+              performanceTarget,
+              planid,
+              produced: qty,
+              rejected: 0,
+              runtime,
+              stdcycletime: sctm,
+              timeTarget,
+            }];
           }
           this.setMachine({ index, payload });
         }
@@ -218,8 +245,11 @@ export default {
     },
     setTime(data) {
       const {
-        shift, hour, displayHour,
+        shift, hour, displayHour, elementName, date,
       } = data;
+      if (elementName === 'cycletime') {
+        this.setCurrentDate(date.toString());
+      }
       this.setCurrentShift(shift);
       this.setCurrentHour(hour);
       this.setDisplayHour(displayHour);

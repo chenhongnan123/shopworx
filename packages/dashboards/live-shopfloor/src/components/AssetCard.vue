@@ -15,8 +15,12 @@
           {{ machine.machinename }}
         </div>
       </v-card-title>
-      <div v-if="machine.production.length" class="px-4">
-        <div v-for="(prod, n) in machine.production" :key="n">
+      <v-window
+        v-model="card"
+        v-if="machine.production.length"
+        class="px-4"
+      >
+        <v-window-item v-for="(prod, n) in machine.production" :key="n">
           <div
             :class="`d-inline-block text-truncate
               pt-2 title font-weight-regular ${color}--text text--lighten-4`"
@@ -27,14 +31,14 @@
           <span class="float-right">
             <span :class="`display-1 ${color}--text text--lighten-4 font-weight-medium`">
               {{ prod.produced }}</span>
-              <span :class="`title ${color}--text text--lighten-4`">/{{ prod.target }}</span>
+              <span :class="`title ${color}--text text--lighten-4`">/{{ prod.timeTarget }}</span>
           </span>
           <v-progress-linear
             :color="`${color} lighten-2`"
-            :value="(prod.produced/prod.target)* 100"
+            :value="(prod.produced/prod.timeTarget)* 100"
           ></v-progress-linear>
-        </div>
-      </div>
+        </v-window-item>
+      </v-window>
       <div class="d-inline-block">
         <div v-if="machine.machinestatus === 'UP'" class="px-4 mt-2">
           <div :class="`${color}--text text--lighten-4`">
@@ -105,7 +109,9 @@ export default {
   inject: ['theme'],
   data() {
     return {
+      card: 0,
       interval: null,
+      cardInterval: null,
       lastUpdate: '',
     };
   },
@@ -151,7 +157,7 @@ export default {
     },
     performance() {
       return this.production.length
-        ? (this.production[0].produced / this.production[0].target)
+        ? (this.production[0].produced / this.production[0].performanceTarget)
         : 0;
     },
     quailty() {
@@ -161,7 +167,7 @@ export default {
         : 1;
     },
     oee() {
-      return (this.availability * this.performance * this.quailty) * 100;
+      return ((this.availability * this.performance * this.quailty) * 100) || 0;
     },
     qualityText() {
       return `${(this.quailty * 100).toFixed(2)}%`;
@@ -180,15 +186,26 @@ export default {
     getDistance(datetime) {
       return distanceInWordsToNow(datetime, { addSuffix: true });
     },
+    next() {
+      if (this.card + 1 === this.production.length) {
+        this.card = 0;
+      } else {
+        this.card += 1;
+      }
+    },
   },
   created() {
     const self = this;
     this.interval = setInterval(() => {
       self.lastUpdate = self.getDistance(self.updatedAt);
     }, 60000);
+    this.cardInterval = setInterval(() => {
+      self.next();
+    }, 3000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
+    clearInterval(this.cardInterval);
   },
   watch: {
     updatedAt: {

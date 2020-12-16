@@ -141,11 +141,16 @@ export default {
       },
     },
     showBadge() {
-      const isMachineFilter = !this.filters.machinename.value.includes('All');
-      const isPartFilter = !this.filters.partname.value.includes('All');
-      const isStatusFilter = this.filters.status.value.length !== 4;
-      const isStarredFilter = this.filters.starred.value;
-      const isTrialFilter = this.filters.trial.value;
+      const isMachineFilter = this.filters.machinename
+        && !this.filters.machinename.value.includes('All');
+      const isPartFilter = this.filters.partname
+        && !this.filters.partname.value.includes('All');
+      const isStatusFilter = this.filters.status
+        && this.filters.status.value.length !== 4;
+      const isStarredFilter = this.filters.starred
+        && this.filters.starred.value;
+      const isTrialFilter = this.filters.trial
+        && this.filters.trial.value;
       return isMachineFilter || isPartFilter || isStatusFilter || isStarredFilter || isTrialFilter;
     },
     date() {

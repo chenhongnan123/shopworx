@@ -137,20 +137,14 @@ export default ({
           const payload = {
             planid: '',
             updatedAt: new Date().getTime(),
-            runtime: 0,
-            stdcycletime: 0,
           };
           if (m.production.length) {
             const {
               planid,
-              runtime,
-              stdcycletime,
               updatedAt,
             } = m.production[0];
             payload.planid = planid;
             payload.updatedAt = parseDate(updatedAt);
-            payload.runtime = runtime;
-            payload.stdcycletime = stdcycletime;
           }
           return {
             ...m,
