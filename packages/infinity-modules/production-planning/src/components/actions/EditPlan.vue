@@ -121,11 +121,11 @@
                   >
                     <template v-if="!editParams">
                       <v-icon left small>mdi-pencil-outline</v-icon>
-                      Edit
+                      Update
                     </template>
                     <template v-else>
                       <v-icon left small>mdi-check</v-icon>
-                      Done
+                      Save
                     </template>
                   </v-btn>
                 </div>
@@ -230,7 +230,9 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="scheduledstart"
-                      rules="required"
+                      :rules="`${notStarted
+                        ? 'required|greater_than_now'
+                        : 'required'}`"
                       #default="{ errors }"
                     >
                       <v-text-field

@@ -95,11 +95,11 @@
                   >
                     <template v-if="!editParams">
                       <v-icon left small>mdi-pencil-outline</v-icon>
-                      Edit
+                      Update
                     </template>
                     <template v-else>
                       <v-icon left small>mdi-check</v-icon>
-                      Done
+                      Save
                     </template>
                   </v-btn>
                 </div>
