@@ -257,6 +257,7 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `componentvalue=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
         cFlag = 1;
       }
