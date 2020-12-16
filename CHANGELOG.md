@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+
+### Bug Fixes
+
+* **core:** remove app configuration on logout ([294e54e](https://bitbucket.org/entrib/shopworx/commits/294e54e0886c07f01f97ae9bdc4603877acca261))
+* **dashboard-viewer:** fixed infinity navigation ([db37075](https://bitbucket.org/entrib/shopworx/commits/db370753d52cec4c602da0ba3938d8d2e1747c2e))
+* **production-planning:** added date validtion to edit plan ([458d5a9](https://bitbucket.org/entrib/shopworx/commits/458d5a9adf9590ef5a859d82d3dc5bd3a8b2e7c0))
+* **production-planning:** fixed production filter badge ([3a4056f](https://bitbucket.org/entrib/shopworx/commits/3a4056f60b89b6232cdb344e82b18ec707cec9d2))
+* **shopfloor-dashboard:** fixed oee calculations ([e8cc4a3](https://bitbucket.org/entrib/shopworx/commits/e8cc4a3c715d08f1da9689b1c601722093fd65f4))
+* **shopfloor-dashboard:** fixed oee calculations ([ae70219](https://bitbucket.org/entrib/shopworx/commits/ae70219d86a41e92b538a4e46b6c451cab1d5c56))
+* **shopfloor-dashboard:** fixed quality calculation ([1c5792d](https://bitbucket.org/entrib/shopworx/commits/1c5792d8240c8d9a7472e24d264ae79eb31153b4))
+* **shopfloor-view:** updated no plan card color ([dbb3fce](https://bitbucket.org/entrib/shopworx/commits/dbb3fceec7ce9e8f7dbc6cb966d32143e2b2c261))
+
+
+
+
+
 # [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
 
 

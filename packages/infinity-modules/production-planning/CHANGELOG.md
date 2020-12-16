@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+
+### Bug Fixes
+
+* **production-planning:** added date validtion to edit plan ([458d5a9](https://bitbucket.org/entrib/shopworx/commits/458d5a9adf9590ef5a859d82d3dc5bd3a8b2e7c0))
+* **production-planning:** fixed production filter badge ([3a4056f](https://bitbucket.org/entrib/shopworx/commits/3a4056f60b89b6232cdb344e82b18ec707cec9d2))
+
+
+
+
+
 # [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
 
 
