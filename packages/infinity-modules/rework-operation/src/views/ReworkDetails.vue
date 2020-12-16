@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Rework Details</span>
+      <span>{{ $t('displayTags.reworkDetails') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -18,7 +18,7 @@
         <v-col cols="12" md="7" justify="start">
             <div style="float:left;width: 246px;">
               <v-text-field class="text-none ml-2"
-                label="Main ID"
+                :label="$t('Main ID')"
                 v-on:keyup.enter="submitMainid"
                 v-model="rework.enterManinId"
               ></v-text-field>
@@ -38,11 +38,13 @@
        <v-card>
         <v-card-text>
           <v-col>
-            <span class="headline font-weight-regular success--text">Product History Info</span>
+            <span class="headline font-weight-regular success--text">
+              {{ $t('Product History Info') }}
+            </span>
             <v-row no-gutters>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Created Time
+                {{ $t('Created Time') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{partStatusList[0].createdTimestamp}}
@@ -51,7 +53,7 @@
                 {{'-'}}
               </div>
               <div>
-                Previous Order
+                {{ $t('Previous Order') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{partStatusList[0].ordername}}
@@ -60,7 +62,7 @@
                 {{'-'}}
               </div>
               <div>
-                NG Description
+                {{ $t('NG Description') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{ngCodeDetails.filter((f) => f.ngcode ===
@@ -72,7 +74,7 @@
             </v-col>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                NG Sub Station
+                {{ $t('NG Sub Station') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{partStatusList[0].substationname}}
@@ -81,7 +83,7 @@
                 {{'-'}}
               </div>
               <div>
-                NG Code
+                {{ $t('NG Code') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{partStatusList[0].checkoutngcode}}
@@ -92,7 +94,7 @@
             </v-col>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Reworkable
+                {{ $t('Reworkable') }}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{ngCodeDetails.filter((f) => f.ngcode ===
@@ -102,7 +104,7 @@
                 {{'-'}}
               </div>
               <div>
-                Product Type
+                {{ $t('Product Type' )}}
               </div>
               <div class="title" v-if="partStatusList.length">
                 {{partStatusList[0].producttypename}}
@@ -117,11 +119,13 @@
           </v-col>
           <v-divider></v-divider>
           <v-col>
-            <span class="headline font-weight-regular success--text">Rework Description</span>
+            <span class="headline font-weight-regular success--text">
+              {{ $t('Rework Description') }}
+            </span>
             <v-row no-gutters>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Target Substation
+                {{ $t('Target Substation') }}
               </div>
               <div class="title" v-if="roadmapDetailsList.length">
                 {{roadmapDetailsList[roadmapDetailsList.length - 1].substationname}}
@@ -132,7 +136,7 @@
             </v-col>
             <v-col cols="12" md="4" class="py-2">
               <div>
-               Process Code
+               {{ $t('Process Code') }}
               </div>
               <div class="title" v-if="roadmapDetailsList.length">
                 {{roadmapDetailsList[roadmapDetailsList.length - 1].process}}
@@ -143,12 +147,12 @@
             </v-col>
             </v-row>
              <div>
-                Select Rework Roadmap
+                {{ $t('Select Rework Roadmap') }}
             </div>
             <div class="title" v-if="singlengcodeconfig.length">
                 <v-select
                   hide-details
-                  label="Rework Roadmap"
+                  :label="$t('Select Rework Roadmap')"
                   :items="roadmapList"
                   return-object
                   item-text="name"
@@ -159,7 +163,7 @@
               {{'-'}}
             </div>
             <div>
-                Rework Description
+                {{ $t('Rework Description') }}
               </div>
               <div class="title" v-if="selectedReworkRoadmap">
                 {{selectedReworkRoadmap.reworkdescription}}
@@ -175,11 +179,13 @@
             <v-card :class="title === null ? 'mt-8' : ''">
                 <v-card-text>
                   <v-col>
-                    <span class="headline font-weight-regular success--text">Current Info</span>
+                    <span class="headline font-weight-regular success--text">
+                      {{ $t('Current Info') }}
+                    </span>
                     <v-row no-gutters>
                       <v-col cols="12" md="4" class="py-2">
                         <div>
-                          Running Order
+                          {{ $t('Running Order') }}
                         </div>
                         <div class="title" v-if="singlengcodeconfig.length">
                           {{checkMainId[0].ordername}}
@@ -188,7 +194,7 @@
                           {{'-'}}
                         </div>
                         <div>
-                          Running Product Type
+                          {{ $t('Running Product Type') }}
                         </div>
                         <div class="title" v-if="singlengcodeconfig.length">
                           {{checkMainId[0].productname}}
@@ -301,19 +307,19 @@ export default {
       ],
       headers: [
         {
-          text: 'Component',
+          text: this.$t('Component'),
           value: 'componentname',
         },
         {
-          text: 'Component Value',
+          text: this.$t('Component Value'),
           value: 'componentvalue',
         },
         {
-          text: 'Sub-Station name',
+          text: this.$t('Sub-Station name'),
           value: 'substationname',
         },
-        { text: 'Current Quality', value: 'checkquality' },
-        { text: 'Set Quality', value: 'qualitystatus' },
+        { text: this.$t('Current Quality'), value: 'checkquality' },
+        { text: this.$t('Set Quality'), value: 'qualitystatus' },
         // { text: 'Bound?', value: 'boundstatus' },
         // { text: 'Keep?', value: 'rework' },
         // { text: 'Good?', value: 'quality' },

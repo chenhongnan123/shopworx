@@ -10,7 +10,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Create Order
+          {{ $t('Create Order') }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
@@ -20,7 +20,7 @@
       <v-card-text>
         <v-autocomplete
           clearable
-          label="Select Line"
+          :label="$t('Select Line')"
           :items="lineList"
           return-object
           :disabled="saving"
@@ -38,7 +38,7 @@
         </v-autocomplete>
         <v-autocomplete
           clearable
-          label="Select Product Name"
+          :label="$t('Select Product Name')"
           :items="parts"
           return-object
           :disabled="saving"
@@ -57,7 +57,7 @@
         </v-autocomplete>
         <v-text-field
             :disabled="saving"
-            label="Order Name"
+            :label="$t('Order Name')"
             prepend-icon="mdi-tray-plus"
             :counter="10"
             :rules="nameRules"
@@ -65,7 +65,7 @@
         ></v-text-field>
         <v-autocomplete
           clearable
-          label="Select Order Type"
+          :label="$t('Order Type')"
           :items="orderTypeList"
           :disabled="saving"
           item-text="name"
@@ -81,7 +81,7 @@
         </v-autocomplete>
         <v-text-field
             :disabled="true"
-            label="Customer"
+            :label="$t('Customer')"
             prepend-icon="mdi-tray-plus"
             v-model="plan.customername"
         ></v-text-field>
@@ -124,7 +124,7 @@
           :loading="saving"
           @click="saveOrder"
         >
-          Save
+          {{ $t('Save') }}
         </v-btn>
       </v-card-actions>
     </v-card>

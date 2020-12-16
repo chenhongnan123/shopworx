@@ -11,7 +11,7 @@
     </v-btn>
     </template>
       <v-card>
-        <v-card-title class="headline">Confirm OK?
+        <v-card-title class="headline">{{ $t('Comfirm OK') }}
            <v-spacer></v-spacer>
            <v-btn icon small @click="dialog = false">
            <v-icon>mdi-close</v-icon>

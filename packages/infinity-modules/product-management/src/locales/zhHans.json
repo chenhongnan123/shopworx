@@ -1,6 +1,16 @@
 {
   "appTitle": "产品类型管理",
   "productDetails": "Product Type Details",
+  "Product Type":	"产品类型",
+  "No.":	"编号",
+  "Line":	"产线",
+  "Product Type Name":	"产线类型名称",
+  "Customer":	"客户",	
+  "Filter":	"筛选",
+  "Product filters":	"产品筛选",
+  "BOM name":	"BOM名称",
+  "Roadmap name":	"路线图名称",
+  "Apply":	"应用",
   "error": {
     "PRODUCT_NAME_EMPTY": "产品名称为空.",
     "ALREADY_EXSIST_PRODUCT": "产品名称已存在.",

@@ -26,7 +26,7 @@
         class="mt-2 mr-2"
         v-model="newTrecibility.searchMainID"
         append-icon="mdi-magnify"
-        label="Search ID"
+        :label="$t('Search ID')"
         single-line
         hide-details
         clearable
@@ -34,7 +34,7 @@
         <v-autocomplete
           clearable
           class="mt-8 mr-4"
-          label="Select Subline"
+          :label="$t('Select Sub-Line')"
           :items="subLineList"
           return-object
           item-text="name"
@@ -50,7 +50,7 @@
         <v-autocomplete
           clearable
           class="mt-8 mr-4"
-          label="Select SubStation"
+          :label="$t('Select Sub-Station')"
           :items="sortedSubStation"
           return-object
           item-text="name"
@@ -66,19 +66,19 @@
           class="mt-8"
           type="datetime-local"
           v-model="newTrecibility.fromdate"
-          label="From date"
+          :label="$t('From date')"
         ></v-text-field>
         <v-text-field
           class="mt-8 ml-4"
           type="datetime-local"
           v-model="newTrecibility.todate"
-          label="To date"
+          :label="$t('To date')"
         ></v-text-field>
         <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
             {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
         <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
-            Export
+            {{ $t('Export') }}
           </v-btn>
           <!-- <v-btn small
             :loading="saving"
@@ -117,13 +117,13 @@
         v-model="recipeView"
       >
         <v-tab class="text-none">
-          Components
+          {{ $t('Components') }}
         </v-tab>
         <v-tab class="text-none">
-          Parameters
+          {{ $t('Parameters') }}
         </v-tab>
         <v-tab class="text-none">
-          Quality History
+          {{ $t('Quality History') }}
         </v-tab>
       </v-tabs>
     <!-- <recipe-filter></recipe-filter> -->
@@ -507,6 +507,7 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `componentvalue=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
       }
       if (this.trecibilityState.selectedSubStation) {
@@ -544,6 +545,7 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `componentvalue=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
       }
       if (this.trecibilityState.selectedSubStation) {

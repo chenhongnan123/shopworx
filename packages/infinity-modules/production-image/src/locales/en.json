@@ -1,3 +1,13 @@
 {
-  "spc": "Statistical Process Control"
+  "spc": "Statistical Process Control",
+  "Production Image":	"Production Image",
+  "Search Main ID":	"Search Main ID",
+  "Select Line":	"Select Line",
+  "Select Sub-Line":	"Select Sub-Line",
+  "Select Station":	"Select Station",
+  "Select Sub-Station":	"Select Sub-Station",
+  "From date":	"From date",
+  "To date":	"To date",
+  "Search":	"Search",
+  "dd/mm/yyyy":	"dd/mm/yyyy"
 }

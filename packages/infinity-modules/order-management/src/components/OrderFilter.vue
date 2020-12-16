@@ -11,7 +11,7 @@
       :color="$vuetify.theme.dark ? '#1E1E1E' : 'white'"
     >
       <v-toolbar-title>
-        Order filters
+        {{ $t('Order filters') }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="toggleFilter">
@@ -29,7 +29,7 @@
             v-model="selectedOrderName"
             name="ordername"
             return-object
-            label="Order Name"
+            :label="$t('Order Name')"
             item-text="ordername"
             @change="onOrderNameSelection()"
           >
@@ -39,18 +39,20 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <div class="subheading font-weight-regular mt-4">Order status</div>
+          <div class="subheading font-weight-regular mt-4">
+            {{ $t('Order status') }}
+          </div>
           <v-chip-group
             v-model="orderStatusSelected"
             column
             single
             mandatory
           >
-            <v-chip outlined active-class="info--text">New</v-chip>
-            <v-chip outlined active-class="warning--text">Released</v-chip>
-            <v-chip outlined active-class="success--text">Running</v-chip>
-            <v-chip outlined active-class="error--text">Interrupted</v-chip>
-            <v-chip outlined active-class="accent--text">Completed</v-chip>
+            <v-chip outlined active-class="info--text">{{ $t('New') }}</v-chip>
+            <v-chip outlined active-class="warning--text">{{ $t('Released') }}</v-chip>
+            <v-chip outlined active-class="success--text">{{ $t('Running') }}</v-chip>
+            <v-chip outlined active-class="error--text">{{ $t('Interrupted') }}</v-chip>
+            <v-chip outlined active-class="accent--text">{{ $t('Completed') }}</v-chip>
           </v-chip-group>
         </v-card-text>
       </perfect-scrollbar>

@@ -19,5 +19,14 @@
     "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
     "GET_RECORDS": "Fetched the records!",
     "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
-  }
+  },
+  "Search ID":	"Search ID",
+  "Select Sub-Line":	"Select Subline",
+  "Select Sub-Station":	"Select Sub-Station",
+  "From date":	"From date",
+  "To date":	"To date",
+  "Export":	"Export",	
+  "Components":	"Components",
+  "Parameters":	"Parameters",
+  "Quality History":	"Quality History"
 }

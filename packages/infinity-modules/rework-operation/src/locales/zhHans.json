@@ -18,9 +18,9 @@
     "buttons" : {
       "btnRefresh": "刷新",
       "btnSearch" : "搜索",
-      "confirmrework" : "返工确认",
+      "confirmrework" : "确认返工",
       "confirmok": "确认OK",
-      "confirmng": "NG确认",
+      "confirmng": "确认NG",
       "cancel": "Cancel",
       "save": "Save"
     }
@@ -43,5 +43,37 @@
   "success": {
     "RECIPE_CREATED": "Recipe created!",
     "VALUES_UPDATE": "Values updated"
-  }
+  },
+  "From date":	"从…",
+  "To date":	"至…",
+  "dd/mm/yyyy":	"日/月/年",
+  "No.":	"编号",
+  "Date":	"日期",
+  "Main ID":	"Main ID",
+  "NG Code":	"NG码",
+  "NG Description":	"NG描述",
+  "Order Name":	"订单名称",
+  "Sub-Station":	"子站",
+  "Product History Info":	"产品历史信息",
+  "Created Time":	"创建时间",
+  "NG Sub Station":	"NG工位",
+  "Reworkable":	"是否可返工",
+  "Previous Order":	"原订单",
+  "Product Type":	"产品类型",
+  "Rework Description":	"返工信息",
+  "Target Substation":	"目标站",
+  "Process Code":	"流程代码",
+  "Select Rework Roadmap":	"选择返工路线",
+  "Current Info":	"当前信息",
+  "Running Order":	"生产中订单",
+  "Running Product Type":	"生产中产品类型",
+  "Component":	"配件",
+  "Component Value":	"配件号",
+  "Sub-Station name":	"子站名",
+  "Current Quality":	"当前质量状态",
+  "Set Quality":	"设置状态",
+  "Comfirm Rework":	"确认返工",
+  "Comfirm OK":	"确认OK",
+  "Comfirm NG":	"确认NG",
+  "Rework Roadmap": "返工路线图"
 }

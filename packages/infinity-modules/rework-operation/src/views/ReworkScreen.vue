@@ -13,14 +13,14 @@
             class="mt-10 mr-2"
             type="datetime-local"
             v-model="fromdate"
-            label="From date"
+            :label="$t('From date')"
             dense
             ></v-text-field>
             <v-text-field
             class="mt-10 mr-2"
             type="datetime-local"
             v-model="todate"
-            label="To date"
+            :label="$t('To date')"
             dense
             ></v-text-field>
             <v-btn small
@@ -70,25 +70,25 @@ export default {
     return {
       headers: [
         {
-          text: 'No.',
+          text: this.$t('No.'),
           value: 'number',
         },
         {
-          text: 'Date',
+          text: this.$t('Date'),
           value: 'createdTimestamp',
         },
         {
-          text: 'Main ID',
+          text: this.$t('Main ID'),
           value: 'mainid',
         },
-        { text: 'NG Code', value: 'checkoutngcode' },
-        { text: 'NG Description', value: 'ngcodematch' },
+        { text: this.$t('NG Code'), value: 'checkoutngcode' },
+        { text: this.$t('NG Description'), value: 'ngcodematch' },
         {
-          text: 'Order name',
+          text: this.$t('Order Name'),
           value: 'ordername',
         },
         {
-          text: 'Sub-Station',
+          text: this.$t('Sub-Station'),
           value: 'substationmatch',
         },
       ],

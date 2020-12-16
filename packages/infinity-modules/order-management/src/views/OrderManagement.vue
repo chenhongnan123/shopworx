@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Order</span>
+      <span>{{ $t('orderManagement') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <!-- <v-icon
           v-text="'$info'"
@@ -97,16 +97,16 @@
         v-model="planView"
       >
         <v-tab class="text-none">
-          Dashboard
+          {{ $t('Dashboard') }}
         </v-tab>
         <v-tab class="text-none">
-          Calendar
+          {{ $t('Calendar') }}
         </v-tab>
         <v-tab class="text-none">
-          Order
+          {{ $t('Order') }}
         </v-tab>
         <v-tab class="text-none">
-          Archive
+          {{ $t('Archive') }}
         </v-tab>
       </v-tabs>
     </portal>

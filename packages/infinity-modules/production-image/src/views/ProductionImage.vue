@@ -1,6 +1,6 @@
 <template>
   <v-container id="production-image" fluid class="py-0">
-    <portal to="app-header">Production Image</portal>
+    <portal to="app-header">{{ $t('Production Image') }}</portal>
     <v-row id="form">
       <v-col cols="11" md="11" lg="11">
         <v-toolbar
@@ -13,14 +13,14 @@
           <v-text-field
             class="mr-2"
             v-model="mainid"
-            label="Search MainID"
+            :label="$t('Search Main ID')"
             single-line
             hide-details
           ></v-text-field>
           <v-autocomplete
             clearable
             class="mt-6 mr-4"
-            label="Select Line"
+            :label="$t('Select Line')"
             return-object
             item-text="name"
             :items="lineList"
@@ -36,7 +36,7 @@
           <v-autocomplete
             clearable
             class="mt-6 mr-4"
-            label="Select Subline"
+            :label="$t('Select Sub-Line')"
             return-object
             item-text="name"
             :items="subLineList"
@@ -52,7 +52,7 @@
           <v-autocomplete
             clearable
             class="mt-6 mr-4"
-            label="Select Station"
+            :label="$t('Select Station')"
             return-object
             item-text="name"
             :items="stationList"
@@ -68,7 +68,7 @@
           <v-autocomplete
             clearable
             class="mt-6 mr-4"
-            label="Select SubStation"
+            :label="$t('Select Sub-Station')"
             return-object
             item-text="name"
             :items="subStationList"
@@ -135,13 +135,13 @@
           <v-text-field
             class="mt-6"
             type="datetime-local"
-            label="From date"
             v-model="fromdate"
+            :label="$t('From date')"
           ></v-text-field>
           <v-text-field
             class="mt-6 ml-6"
             type="datetime-local"
-            label="To date"
+            :label="$t('To date')"
             v-model="todate"
           ></v-text-field>
           <v-spacer></v-spacer>
@@ -158,7 +158,9 @@
             !selectedStation &&
             !selectedSubStation
           "
-          >Search</v-btn
+          >
+          {{ $t('Search') }}
+          </v-btn
         >
       </v-col>
     </v-row>

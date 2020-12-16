@@ -19,5 +19,14 @@
     "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
     "GET_RECORDS": "Fetched the records!",
     "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
-  }
+  },
+  "Search ID":	"搜索ID",
+  "Select Sub-Line":	"选择子线",
+  "Select Sub-Station":	"选择子站",
+  "From date":	"从…",
+  "To date":	"至…",
+  "Export":	"导出",	
+  "Components":	"部件",
+  "Parameters":	"参数",
+  "Quality History":	"质量历史"
 }

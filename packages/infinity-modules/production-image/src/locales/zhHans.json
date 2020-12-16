@@ -1,3 +1,13 @@
 {
-  "spc": "Statistical Process Control"
+  "spc": "Statistical Process Control",
+  "Production Image":	"产品图像",
+  "Search Main ID":	"搜索",
+  "Select Line":	"选择产线",
+  "Select Sub-Line":	"选择子线",
+  "Select Station":	"选择站",
+  "Select Sub-Station":	"选择子站",
+  "From date":	"从…",
+  "To date":	"至…",
+  "Search":	"搜索",
+  "dd/mm/yyyy":	"日/月/年"
 }

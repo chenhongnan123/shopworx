@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <span>Product Type</span>
+      <span>{{$t('Product Type')}}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -105,13 +105,13 @@ export default {
     return {
       headers: [
         {
-          text: 'No.',
+          text: this.$t('No.'),
           value: 'numberIndex',
         },
-        { text: this.$i18n.t('displayTags.lineName'), value: 'linename' },
-        { text: this.$i18n.t('displayTags.productTypeNameHeader'), value: 'productname' },
+        { text: this.$t('Line'), value: 'linename' },
+        { text: this.$t('Product Type Name'), value: 'productname' },
         { text: this.$i18n.t('displayTags.productTypeNumber'), value: 'productnumber' },
-        { text: this.$i18n.t('displayTags.customerHeader'), value: 'customername' },
+        { text: this.$i18n.t('Customer'), value: 'customername' },
         { text: this.$i18n.t('displayTags.roadmap'), value: 'roadmapname' },
         { text: this.$i18n.t('displayTags.bom'), value: 'bomname' },
         { text: this.$i18n.t('displayTags.version'), value: 'productversionnumber' },

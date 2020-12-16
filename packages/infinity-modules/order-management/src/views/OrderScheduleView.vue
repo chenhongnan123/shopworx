@@ -11,17 +11,17 @@
           <v-spacer></v-spacer>
           <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
             <v-icon small left>mdi-plus</v-icon>
-            Add order
+            {{ $t('Add order') }}
           </v-btn>
           <v-btn
           small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            Refresh
+            {{ $t('Refresh') }}
           </v-btn>
           <v-btn
           v-if="orders.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="archiveRecord">
-            Archive
+            {{ $t('Archive') }}
           </v-btn>
           <v-btn
           v-if="orders.length > 0"
@@ -45,7 +45,7 @@
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
-            Filters
+            {{ $t('Filter') }}
           </v-btn>
         </v-toolbar>
         <v-data-table
@@ -197,28 +197,28 @@ export default {
       orderStatusToChangeFromRunning: ['Running', 'Interrupted', 'Completed'],
       headers: [
         {
-          text: 'Line',
+          text: this.$t('Line'),
           value: 'linename',
         },
         {
-          text: 'Order Name',
+          text: this.$t('Order Name'),
           value: 'ordername',
         },
         {
-          text: 'Order Number',
+          text: this.$t('Order Number'),
           value: 'ordernumber',
         },
-        { text: 'Order Type', value: 'ordertype' },
-        { text: 'Product Name', value: 'productname' },
-        { text: 'Customer Name', value: 'customername' },
-        { text: 'Order Status', value: 'orderstatus' },
-        { text: 'Order Created Time', value: 'ordercreatedtime' },
-        { text: 'Order Start Time', value: 'scheduledstart' },
-        { text: 'Order Exp End Time', value: 'orderexpendtime' },
-        { text: 'Target Count', value: 'targetcount' },
-        { text: 'Actual Count', value: 'actualcount' },
-        { text: 'Ok Count', value: 'okcount' },
-        { text: 'NG Count', value: 'ngcount' },
+        { text: this.$t('Order Type'), value: 'ordertype' },
+        { text: this.$t('Product Name'), value: 'productname' },
+        { text: this.$t('Customer Name'), value: 'customername' },
+        { text: this.$t('Order Status'), value: 'orderstatus' },
+        { text: this.$t('Order Created Time'), value: 'ordercreatedtime' },
+        { text: this.$t('Order Start Time'), value: 'scheduledstart' },
+        { text: this.$t('Order Exp End Time'), value: 'orderexpendtime' },
+        { text: this.$t('Target Count'), value: 'targetcount' },
+        { text: this.$t('Actual Count'), value: 'actualcount' },
+        { text: this.$t('OK Count'), value: 'okcount' },
+        { text: this.$t('NG Count'), value: 'ngcount' },
       ],
     };
   },

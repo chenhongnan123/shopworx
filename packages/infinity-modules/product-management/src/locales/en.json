@@ -1,6 +1,16 @@
 {
   "appTitle": "Product Type Management",
   "productDetails": "Product Type Details",
+  "Product Type":	"Product Type",
+  "No.":	"No.",
+  "Line":	"Line",
+  "Product Type Name":	"Product Type Name",
+  "Customer":	"Customer",	
+  "Filter":	"Filter",
+  "Product filters":	"Product filters",
+  "BOM name":	"BOM name",
+  "Roadmap name":	"oadmap name",
+  "Apply":	"Apply",
   "error": {
     "PRODUCT_NAME_EMPTY": "Product name is empty.",
     "ALREADY_EXSIST_PRODUCT": "Product name already exsist.",
