@@ -157,6 +157,7 @@ export default {
         if (m.machinename === machinename) {
           const payload = {
             ...m,
+            machinestatus: 'UP',
             updatedAt: new Date(updatedAt).getTime(),
           };
           const performanceTarget = Math.floor((runtime / sctm) * cavity);
@@ -235,6 +236,7 @@ export default {
         if (this.machines[i].machinename === machinename) {
           const payload = {
             ...this.machines[i],
+            machinestatus: 'DOWN',
             updatedAt: new Date().getTime(),
             downsince: actualdowntimestart,
             downreason: '',
