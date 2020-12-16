@@ -812,8 +812,8 @@ export default ({
     notStartedPlans: ({ reorderPlanList }) => {
       let planning = null;
       if (reorderPlanList && reorderPlanList.length) {
-        planning = sortArray(reorderPlanList, 'machinename');
-        planning = planning.sort((a, b) => a.sortindex - b.sortindex);
+        planning = reorderPlanList.sort((a, b) => a.sortindex - b.sortindex);
+        planning = sortArray(planning, 'machinename');
         planning = planning.reduce((result, currentValue) => {
           const key = currentValue.machinename;
           if (!result[key]) {

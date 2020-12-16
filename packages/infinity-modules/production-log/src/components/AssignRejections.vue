@@ -369,7 +369,7 @@ export default {
         remark: '',
       };
       const index = this.hourlyData.findIndex((d) => d.hour === data.hour);
-      const { rejections, rejected, accepted } = this.hourlyData[index];
+      const { rejections, rejected, produced } = this.hourlyData[index];
       const newRejectionValue = parseInt(rejected, 10) + parseInt(qty, 10);
       const rejectionsArray = [
         { ...payload, _id: id, modifiedtimestamp: 'now' },
@@ -378,7 +378,7 @@ export default {
       const newData = {
         ...this.hourlyData[index],
         rejected: newRejectionValue,
-        accepted: parseInt(accepted, 10) - newRejectionValue,
+        accepted: parseInt(produced, 10) - newRejectionValue,
         rejections: rejectionsArray,
         newRejection,
       };

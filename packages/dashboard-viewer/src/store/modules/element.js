@@ -128,6 +128,7 @@ export default ({
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecordById', {
                   elementName: element.elementName,
+                  // eslint-disable-next-line
                   id: r._id,
                 });
               })]);
@@ -169,6 +170,7 @@ export default ({
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecordById', {
                   elementName: element.elementName,
+                  // eslint-disable-next-line
                   id: r._id,
                 });
               })]);
@@ -197,6 +199,7 @@ export default ({
           await Promise.all([rec.forEach((r) => {
             dispatch('deleteRecordById', {
               elementName,
+              // eslint-disable-next-line
               id: r._id,
             });
           })]);
@@ -252,6 +255,7 @@ export default ({
           await Promise.all([rec.forEach((r) => {
             dispatch('deleteRecordById', {
               elementName,
+              // eslint-disable-next-line
               id: r._id,
             });
           })]);
@@ -305,6 +309,7 @@ export default ({
     getRecordById: async (_, { elementName, id }) => {
       try {
         const { data } = await ElementService.getRecordById(elementName, id);
+        // eslint-disable-next-line
         if (data && data._id) {
           return data;
         }

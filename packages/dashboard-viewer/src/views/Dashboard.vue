@@ -3,8 +3,8 @@
     <v-app-bar
       app
       flat
-      v-if="!isTV"
-      :color="$vuetify.theme.dark ? '#121212' : 'white'"
+      v-if="!isTV && !isFullscreen"
+      :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
     >
       <img
         :src="require(`@shopworx/assets/logo/${shopworxLogo}.png`)"
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import SendToTv from '../components/SendToTv.vue';
 
 export default {
@@ -72,6 +72,7 @@ export default {
   },
   computed: {
     ...mapGetters('helper', ['isTV']),
+    ...mapState('helper', ['isFullscreen']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'

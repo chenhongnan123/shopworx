@@ -1,6 +1,7 @@
 import {
   differenceInMilliseconds,
   formatDistanceToNow,
+  formatDistanceStrict,
   isWithinInterval,
   formatDistance,
   startOfDay,
@@ -17,6 +18,14 @@ export const now = () => new Date().getTime();
  * @param {Object} options
  */
 export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(date, baseDate, optoins);
+
+/**
+ * 
+ * @param {Date} date
+ * @param {Date} baseDate
+ * @param {Object} options
+ */
+export const timeDistance = (date, baseDate, optoins = {}) => formatDistanceStrict(date, baseDate, optoins);
 
 /**
  * 
