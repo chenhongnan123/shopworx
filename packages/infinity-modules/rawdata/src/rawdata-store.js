@@ -43,14 +43,22 @@ export default ({
 
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
       console.log(payload);
-      const records = await dispatch(
+      let data = await dispatch(
         'element/getRecordsByTags',
         { payload },
         { root: true },
       );
-      if (records) {
-        commit('setRecords', records);
+      if (data) {
+        commit('setRecords', data.results);
+        data = {
+          ...data,
+          results: data.results.map((d) => ({
+            ...d,
+            id: d._id,
+          })),
+        };
       }
+      return data;
     },
 
     updateRecord: async ({ dispatch, commit }, payloadData) => {
@@ -137,14 +145,22 @@ export default ({
           elementName,
         };
       }
-      const records = await dispatch(
-        'element/getRecords',
+      let data = await dispatch(
+        'element/getRecordsWithCount',
         payload,
         { root: true },
       );
-      if (records) {
-        commit('setRecords', records);
+      if (data) {
+        commit('setRecords', data.results);
+        data = {
+          ...data,
+          results: data.results.map((d) => ({
+            ...d,
+            id: d._id,
+          })),
+        };
       }
+      return data;
     },
   },
   getters: {

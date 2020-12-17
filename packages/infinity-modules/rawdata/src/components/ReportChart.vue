@@ -51,7 +51,6 @@ export default {
       }
     },
     report(val) {
-      console.log(val);
       if (val && val.cols) {
         // const categoryColumns = val.cols.filter((c) => c.emgTagType.toLowerCase() === 'string');
         const seriesName = val.cols
@@ -64,8 +63,6 @@ export default {
             description: column.tagDescription,
           };
         });
-        // console.log(categoryColumns);
-        // console.log(seriesDescription);
         const categories = val && val.reportData
           ? val.reportData.map((data) => data.createdTimestamp)
           : [];

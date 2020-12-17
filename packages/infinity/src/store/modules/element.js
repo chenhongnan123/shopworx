@@ -31,7 +31,7 @@ export default ({
         console.log(payload);
         const { data } = await ElementService.getRecordsByTags(payload);
         if (data && data.results) {
-          return data.results;
+          return data;
         }
       } catch (e) {
         return false;

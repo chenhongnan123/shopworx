@@ -15,7 +15,6 @@
           filled
           dense
           hide-details
-          v-model="selectedProcess"
           name="name"
           label="Select Element"
           item-text="title"
@@ -39,7 +38,6 @@
       <v-container fluid class="py-0">
       <ag-grid-vue
         :sideBar="true"
-        v-model="rowData"
         multiSortKey="ctrl"
         rowGroupPanelShow="always"
         rowSelection="multiple"
@@ -59,6 +57,9 @@
         @column-pivot-changed="onStateChange"
         @column-value-changed="onStateChange"
         :pagination="true"
+        rowModelType="serverSide"
+        :paginationPageSize="pagesize"
+        :cacheBlockSize="pagesize"
       ></ag-grid-vue>
       <v-row justify="center" class="mt-2">
         <v-col cols="12" xl="10" class="py-0">
@@ -74,9 +75,9 @@
 import {
   mapActions, mapGetters, mapState, mapMutations,
 } from 'vuex';
+import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { AgGridVue } from 'ag-grid-vue';
 import ReportChart from '../components/ReportChart.vue';
 import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
 import ReportChartType from '../components/toolbar/ReportChartType.vue';
@@ -93,13 +94,15 @@ export default {
   },
   data() {
     return {
-      rowData: [],
+      rowData: null,
       columnDefs: [],
       gridOptions: null,
       gridColumnApi: null,
       defaultColDef: null,
       id: null,
       gridApi: null,
+      pagenumber: 0,
+      pagesize: 20,
     };
   },
   beforeMount() {
@@ -113,7 +116,6 @@ export default {
       headerCheckboxSelection: this.isFirstColumn,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
     };
-    this.setRowData();
     this.setColumnDefs();
   },
   mounted() {
@@ -130,7 +132,6 @@ export default {
   },
   async created() {
     await this.getElements();
-    console.log(this.masterItems);
   },
   watch: {
     dateRange() {
@@ -151,7 +152,6 @@ export default {
         sortState,
         filterState,
       };
-      console.log(state);
       this.setGridState(JSON.stringify(state));
     },
     onStateChangeVisible() {
@@ -167,14 +167,13 @@ export default {
       };
       this.tags.forEach((element) => {
         const data = colState.find((f) => f.colId === element.tagName);
-        console.log(data);
         if (data) {
           element.hide = data.hide;
         }
       });
       const data = {
         cols: this.tags,
-        reportData: this.rowData,
+        reportData: this.rowData ? this.rowData.results : [],
       };
       this.setReport(data);
       this.setGridState(JSON.stringify(state));
@@ -202,43 +201,47 @@ export default {
       this.gridApi.exportDataAsExcel(params);
     },
     async fetchDateRecords() {
-      console.log(this.dateRange);
+      this.pagenumber = 0;
+      await this.setRowData();
     },
     async fetchRecords() {
+      this.pagenumber += 1;
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
       if (this.id.includes('real_') || this.id.includes('process_')) {
         const element = this.id.split('_');
         await this.getParameters(element[1]);
-        await this.getRecordsByTagData({
+        this.rowData = await this.getRecordsByTagData({
           elementName: this.id,
-          queryParam: `?datefrom=${yesterday}&dateto=${today}`,
+          queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
           request: {
             tags: this.paramList,
           },
         });
       } else {
-        await this.getRecords({
+        this.rowData = await this.getRecords({
           elementName: this.id,
-          request: `?datefrom=${yesterday}&dateto=${today}`,
+          request: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
         });
       }
       this.loading = false;
+      return this.rowData;
     },
     async onElementSelect(item) {
+      this.pagenumber = 0;
       this.id = item.to;
-      await this.fetchRecords();
       await this.setColumnDefs();
       await this.setRowData();
-      const data = {
+      const reportData = {
         cols: this.tags,
-        reportData: this.rowData,
+        reportData: this.rowData ? this.rowData.results : [],
       };
-      this.setReport(data);
+      this.setReport(reportData);
     },
     setRowData() {
-      this.rowData = this.records;
+      const datasource = new window.ServerSideDatasource(this.fetchRecords);
+      this.gridApi.setServerSideDatasource(datasource);
     },
     setColumnDefs() {
       this.columnDefs = this.tags.map((tag) => ({
@@ -248,4 +251,25 @@ export default {
     },
   },
 };
+
+window.ServerSideDatasource = (fetchRecords) => ({
+  getRows: async (params) => {
+    const data = await fetchRecords();
+    const { startRow, endRow } = params.request;
+    const pagesize = endRow - startRow;
+    const pagenumber = (endRow / pagesize);
+    if (data) {
+      const response = {
+        rows: data.results,
+        lastRow: pagenumber * pagesize >= data.totalCount
+          ? data.totalCount
+          : -1,
+      };
+      params.successCallback(response.rows, response.lastRow);
+    } else {
+      params.failCallback();
+    }
+  },
+});
+
 </script>
