@@ -33,7 +33,7 @@ export default {
         case 'supervisor':
           return 'production-supervisor-dashboard';
         default:
-          return 'admin-dashboard';
+          return 'production-supervisor-dashboard';
       }
     },
   },

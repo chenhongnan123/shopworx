@@ -8,10 +8,10 @@
       </v-btn>
     </portal>
     <v-row>
-      <v-col cols="12" lg="6" xl="4">
+      <v-col cols="12" lg="6" xl="5">
         <oee-summary />
       </v-col>
-      <v-col cols="12" lg="6" xl="8">
+      <v-col cols="12" lg="6" xl="7">
         <v-row>
           <v-col cols="12">
             Production
