@@ -353,7 +353,8 @@ export default ({
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'
-          || p.parametercategory === '51'
+          || p.parametercategory === '38'
+          || p.parametercategory === '11'
           || p.parametercategory === '2'), 'description')
         .map(({ id, name, description }) => ({
           parameterId: id,

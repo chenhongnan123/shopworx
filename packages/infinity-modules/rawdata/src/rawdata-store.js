@@ -13,6 +13,7 @@ export default ({
     dateRange: [new Date().toISOString().substr(0, 10),
       new Date().toISOString().substr(0, 10)],
     gridState: '',
+    categoryList: [],
   },
   mutations: {
     setAssets: set('assets'),
@@ -23,6 +24,7 @@ export default ({
     setDateRange: set('dateRange'),
     setGridState: set('gridState'),
     setParamList: set('paramList'),
+    setCategoryList: set('categoryList'),
   },
   actions: {
     getParameters: async ({ commit, dispatch }, substation) => {
@@ -37,6 +39,28 @@ export default ({
           list.push(element.name);
         });
         commit('setParamList', list);
+      }
+      return param;
+    },
+
+    getParameterCatgory: async ({ commit, dispatch }, request) => {
+      const param = await dispatch(
+        'element/getRecords',
+        { elementName: 'category', query: request.payload },
+        { root: true },
+      );
+      if (param) {
+        let list = [];
+        list = await Promise.all(param.map(async (f) => {
+          const paramList = await dispatch(
+            'element/getRecords',
+            { elementName: 'parameters', query: `?query=parametercategory=="${f.id}"%26%26substationid=="${request.substation}"` },
+            { root: true },
+          );
+          return paramList.map((p) => p.name);
+        }));
+        console.log(list.flat());
+        commit('setParamList', list.flat());
       }
       return param;
     },

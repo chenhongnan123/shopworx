@@ -111,6 +111,7 @@
             outlined
             class="text-none ml-2"
             :disabled="isAddButtonOK"
+            :loading="savingImport"
             @click="importData">
               Import
             </v-btn>
@@ -395,7 +396,7 @@ export default {
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
         { text: 'substation', value: 'substation', width: 120 },
-        { text: 'Show Real/Non Real', value: 'showparameter', width: 120 },
+        // { text: 'Show Real/Non Real', value: 'showparameter', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -411,6 +412,7 @@ export default {
       confirmDialog: false,
       socket: null,
       saving: false,
+      savingImport: false,
     };
   },
   async created() {
@@ -420,6 +422,12 @@ export default {
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
     });
+  },
+  destroyed() {
+    this.setLineValue('');
+    this.setSublineValue('');
+    this.setStationValue('');
+    this.setSubstationValue('');
   },
   computed: {
     ...mapState('parameterConfiguration', [
@@ -794,7 +802,6 @@ export default {
         'multiplicationfactor',
         'parameterunit',
         'parametercategory',
-        'plcaddress',
         'paid',
       ];
       const csvContent = [];
@@ -812,7 +819,6 @@ export default {
         2,
         '2',
         '2',
-        2,
         2,
       ];
       csvContent.push(arr);
@@ -838,6 +844,7 @@ export default {
       this.$refs.uploader.click();
     },
     async onFilesChanged(e) {
+      this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
@@ -1103,6 +1110,7 @@ export default {
             }
           });
           await this.updateTagStatus(payloadData);
+          this.savingImport = false;
           this.setAlert({
             show: true,
             type: 'success',

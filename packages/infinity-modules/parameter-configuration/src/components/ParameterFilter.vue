@@ -115,7 +115,7 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="directionList"
             outlined
@@ -133,7 +133,7 @@
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete>
+        </v-autocomplete> -->
         <v-autocomplete
             class="mt-5"
             :items="categoryList"
@@ -227,14 +227,6 @@ export default {
         this.setSelectedParameterName(val);
       },
     },
-    parameterDirection: {
-      get() {
-        return this.selectedParameterDirection;
-      },
-      set(val) {
-        this.setSelectedParameterDirection(val);
-      },
-    },
     parameterCategory: {
       get() {
         return this.selectedParameterCategory;
@@ -305,9 +297,6 @@ export default {
       if (this.selectedParameterName) {
         query += `name=="${this.selectedParameterName}"%26%26`;
       }
-      if (this.selectedParameterDirection) {
-        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
-      }
       if (this.selectedParameterCategory) {
         query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
       }
@@ -329,7 +318,6 @@ export default {
       this.getParameterListRecords('?query=stationid==null');
       this.toggleFilter();
       this.selectedParameterName = '';
-      this.selectedParameterDirection = '';
       this.selectedParameterCategory = '';
       this.selectedParameterDatatype = '';
       this.selectedParameterStartAdress = '';
@@ -342,7 +330,6 @@ export default {
       this.getParameterListRecords('?pagenumber=1&pagesize=10');
       this.toggleFilter();
       this.selectedParameterName = '';
-      this.selectedParameterDirection = '';
       this.selectedParameterCategory = '';
       this.selectedParameterDatatype = '';
       this.selectedParameterStartAdress = '';
