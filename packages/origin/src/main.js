@@ -14,7 +14,7 @@ import './plugins/vee-validate';
 import './plugins/highcharts';
 import './plugins/portal';
 
-// import './modules';
+import './modules';
 
 Vue.config.productionTip = false;
 

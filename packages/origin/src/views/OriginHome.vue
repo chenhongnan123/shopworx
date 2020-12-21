@@ -103,7 +103,7 @@ export default {
     ...mapMutations('helper', ['setExtendedHeader']),
     redirect(path) {
       if (path === '/') {
-        // this.$router.push({ name: 'customerAssets' });
+        this.$router.push({ name: 'customerDeployment' });
       }
     },
     setDrawer(val) {
