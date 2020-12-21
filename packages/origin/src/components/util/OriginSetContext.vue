@@ -32,6 +32,7 @@
           label="Customer"
           filled
           :loading="loading"
+          :disabled="saving"
           item-text="description"
         ></v-combobox>
         <v-combobox
@@ -39,7 +40,8 @@
           v-model="customerSite"
           label="Site"
           filled
-          :disabled="loading"
+          :loading="fetchingSites"
+          :disabled="loading || saving"
           item-text="siteDescription"
         ></v-combobox>
       </v-card-text>
@@ -49,6 +51,8 @@
           class="text-none"
           color="primary"
           @click="save"
+          :disabled="loading || fetchingSites"
+          :loading="saving"
         >
           Save
         </v-btn>
@@ -70,6 +74,8 @@ export default {
   data() {
     return {
       loading: false,
+      fetchingSites: false,
+      saving: false,
     };
   },
   computed: {
@@ -95,8 +101,10 @@ export default {
         return this.selectedCustomer;
       },
       async set(val) {
+        this.fetchingSites = true;
         await this.setActiveCustomer(val);
         await this.getCustomerSites(val.id);
+        this.fetchingSites = false;
       },
     },
     customerSite: {
@@ -131,10 +139,12 @@ export default {
       'setActiveSite',
     ]),
     async save() {
+      this.saving = true;
       await this.setActiveCustomer(this.customer);
       await this.setActiveSite(this.customerSite);
       await this.getMe();
       this.dialog = false;
+      this.saving = false;
     },
   },
   watch: {
@@ -146,7 +156,9 @@ export default {
         }
         if (this.isContextSet) {
           const selectedCustomer = this.customers.find((c) => c.id === this.me.customer.id);
+          this.fetchingSites = true;
           await this.getCustomerSites(selectedCustomer.id);
+          this.fetchingSites = false;
           const selectedSite = this.customerSites.find((s) => s.id === this.activeSite);
           this.setSelectedCustomer(selectedCustomer);
           this.setSelectedCustomerSite(selectedSite);

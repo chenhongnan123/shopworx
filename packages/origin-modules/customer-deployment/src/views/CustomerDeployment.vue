@@ -7,7 +7,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'CustomerDeployment',
+  computed: {
+    ...mapState('user', ['me']),
+  },
+  watch: {
+    me(val) {
+      console.log(val);
+    },
+  },
 };
 </script>

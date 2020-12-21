@@ -102,7 +102,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
     redirect(path) {
-      if (path === '/') {
+      if (path === '/' || path === '/customer' || path === '/customer/') {
         this.$router.push({ name: 'customerDeployment' });
       }
     },
