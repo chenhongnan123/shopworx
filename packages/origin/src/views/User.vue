@@ -25,7 +25,7 @@
             {{ role }}
           </div>
           <div class="title font-weight-regular">
-            {{ customer }}, {{ currentSite }}
+            {{ currentCustomer }}, {{ currentSite }}
           </div>
         </v-card-text>
         <v-card-text>
@@ -123,7 +123,7 @@ export default {
   computed: {
     ...mapState('helper', ['version']),
     ...mapState('user', ['activeSite']),
-    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer', 'role']),
+    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'currentCustomer', 'role']),
   },
   methods: {
     ...mapActions('auth', ['logoutUser']),

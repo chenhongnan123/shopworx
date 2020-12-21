@@ -16,7 +16,7 @@
         {{ fullName }}
       </div>
       <div class="title">
-        {{ customer }}, {{ currentSite }}
+        {{ currentCustomer }}, {{ currentSite }}
       </div>
     </v-col>
   </v-row>
@@ -28,7 +28,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'UserAvatar',
   computed: {
-    ...mapGetters('user', ['fullName', 'currentSite', 'customer']),
+    ...mapGetters('user', ['fullName', 'currentSite', 'currentCustomer']),
   },
 };
 </script>

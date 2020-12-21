@@ -77,6 +77,8 @@ export default ({
           SessionService.removeSession();
           commit('setSessionId', null);
           commit('user/setMe', null, { root: true });
+          commit('customer/setSelectedCustomer', null, { root: true });
+          commit('customer/setSelectedCustomerSite', null, { root: true });
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,

@@ -131,6 +131,8 @@ export default {
       'setActiveSite',
     ]),
     async save() {
+      await this.setActiveCustomer(this.customer);
+      await this.setActiveSite(this.customerSite);
       await this.getMe();
       this.dialog = false;
     },
@@ -139,7 +141,9 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.getContextDetails();
+        if (this.customers.length === 0) {
+          await this.getContextDetails();
+        }
         if (this.isContextSet) {
           const selectedCustomer = this.customers.find((c) => c.id === this.me.customer.id);
           await this.getCustomerSites(selectedCustomer.id);

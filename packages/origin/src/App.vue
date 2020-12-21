@@ -33,6 +33,7 @@ export default {
     if (!this.sessionId) {
       this.initAuth();
     }
+    await this.getMe();
   },
   mounted() {
     this.$root.$confirm = this.$refs.confirm;
@@ -54,6 +55,7 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['initAuth']),
+    ...mapActions('user', ['getMe']),
     ...mapMutations('helper', [
       'setIsDark',
       'setIsSessionValid',
