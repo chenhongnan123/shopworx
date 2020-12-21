@@ -17,7 +17,7 @@
         <v-list-item-icon>
           <v-icon
             :color="$vuetify.theme.dark ? 'primary': 'secondary'"
-            v-text="'$infinity'"
+            v-text="'$origin'"
           ></v-icon>
         </v-list-item-icon>
         <v-list-item-title>
@@ -69,36 +69,6 @@
             v-else-if="item.header && expandOnHover"
           ></v-divider>
           <v-list-item
-            exact
-            :key="index"
-            v-else-if="item.to === 'reports'"
-            :title="$t(`modules.${item.title}`)"
-            :to="{ name: item.to, query: { id: item.title } }"
-            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            link
-            :key="index"
-            v-else-if="item.external"
-            target="_blank"
-            :href="item.to"
-            :title="$t(`modules.${item.title}`)"
-            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-            <v-list-item-action v-if="item.external">
-              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
-            </v-list-item-action>
-          </v-list-item>
-          <v-list-item
             link
             v-else
             :key="index"
@@ -111,6 +81,9 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-action v-if="item.external">
+              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
@@ -135,6 +108,9 @@
             <v-icon v-text="item.icon"></v-icon>
           </v-list-item-icon>
           <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-action v-if="item.external">
+              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+            </v-list-item-action>
         </v-list-item>
       </v-list>
     </template>
@@ -145,7 +121,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'InfinityDrawer',
+  name: 'OriginDrawer',
   props: {
     showDrawer: {
       default: null,
@@ -191,7 +167,7 @@ export default {
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 16 + 16);
+        totalHeight += (40 * this.adminItems.length + 16 + 16 + 2);
       }
       return totalHeight;
     },
