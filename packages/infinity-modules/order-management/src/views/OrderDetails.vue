@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Order Details</span>
+      <span>{{ $t('Order Details') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -17,7 +17,7 @@
     <v-btn icon @click="$router.push({ name: 'orderManagement' })">
     <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
-    <span>Order number: </span>
+    <span>{{ $t('Order Number') }} </span>
     <span>{{id.ordernumber}}</span>
     <v-card flat class="transparent">
       <v-row>
@@ -25,17 +25,19 @@
        <v-card :class="title === null ? 'mt-8' : ''">
         <v-card-text>
           <v-col>
-            <span class="headline font-weight-regular success--text">Order Summary</span>
+            <span class="headline font-weight-regular success--text">
+              {{ $t('Order Summary') }}
+            </span>
             <v-row no-gutters>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Order name
+                {{ $t('Order name') }}
               </div>
               <div class="title">
                 {{ id.ordername }}
               </div>
               <div>
-                Order type
+                {{ $t('Order type') }}
               </div>
               <div class="title">
                 {{ id.ordertype }}
@@ -43,7 +45,7 @@
             </v-col>
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Order status
+                {{ $t('Order status') }}
               </div>
               <div class="title">
                 {{ id.orderstatus }}
@@ -53,7 +55,7 @@
               </div> -->
               <div class="title">
                 <v-text-field
-                 label="Target Count"
+                 :label="$t('Target Count')"
                  append-icon="mdi-pencil"
                  v-model="id.targetcount"
                  v-on:keyup.enter="updateTargetCount(id)"
@@ -66,16 +68,18 @@
           </v-col>
           <v-divider></v-divider>
           <v-row no-gutters>
-            <span class="headline font-weight-regular info--text mt-2">Roadmap Summary</span>
+            <span class="headline font-weight-regular info--text mt-2">
+              {{ $t('Roadmap Summary') }}
+             </span>
             <v-col cols="12" class="py-2">
               <div>
-                Roadmap name
+                {{ $t('Roadmap name') }}
               </div>
               <div class="title">
                 {{ id.roadmapname }}
               </div>
               <div>
-                Roadmap type
+                {{ $t('Roadmap type') }}
               </div>
               <div class="title" v-if="roadmapList">
                 {{ roadmapList[0].roadmaptype }}
@@ -89,7 +93,7 @@
           <v-row no-gutters>
             <v-col cols="12" class="py-2">
               <div class="title">
-                Roadmap Details
+                {{ $t('Roadmap Details') }}
               </div>
               <div>
                 <v-data-table
@@ -108,7 +112,7 @@
           <v-row no-gutters v-if="id.orderstatus == 'Running'">
             <v-col cols="12" class="py-2">
               <div class="title">
-                Running Order
+                {{ $t('Running Order') }}
               </div>
               <div>
                 <v-data-table
@@ -130,30 +134,32 @@
             <v-card :class="title === null ? 'mt-8' : ''">
         <v-card-text>
           <v-col>
-            <span class="headline font-weight-regular error--text mt-2">Product Summary</span>
+            <span class="headline font-weight-regular error--text mt-2">
+              {{ $t('Product Summary') }}
+            </span>
             <v-row justify="left">
             <v-col cols="12" md="4" class="py-2">
               <div>
-                Product name
+                {{ $t('Product type') }}
               </div>
               <div class="title">
                 {{ id.productname }}
               </div>
               <div>
-                Customer name
+                {{ $t('Customer name') }}
               </div>
               <div class="title">
                 {{ id.customername }}
               </div>
             </v-col>
-            <v-col cols="12" md="4" class="py-2">
+            <!-- <v-col cols="12" md="4" class="py-2">
               <div>
-                Product type
+                {{ $t('Product type') }}
               </div>
               <div class="title">
                 {{ id.producttype }}
               </div>
-            </v-col>
+            </v-col> -->
             </v-row>
           </v-col>
           <v-divider></v-divider>
@@ -178,7 +184,7 @@
           <v-row no-gutters>
             <v-col cols="12" class="py-2">
               <div class="title">
-                Recipe Details
+                {{ $t('Recipe Details') }}
               </div>
               <v-data-table
                 v-model="orders"
@@ -229,26 +235,26 @@ export default {
       showFlag: true,
       headers: [
         {
-          text: 'Station Name',
+          text: this.$t('Station Name'),
           value: 'machinename',
         },
         {
-          text: 'Sub-Station Name',
+          text: this.$t('Sub-Station Name'),
           value: 'substationname',
         },
         {
-          text: 'Recipe Name',
+          text: this.$t('Recipe Name'),
           value: 'recipename',
         },
-        { text: 'Recipe Version', value: 'recipeversion' },
+        { text: this.$t('Recipe Version'), value: 'recipeversion' },
       ],
       headersRunning: [
         {
-          text: 'Station Name',
+          text: this.$t('Station Name'),
           value: 'substationname',
         },
-        { text: 'OK Count', value: 'okcount' },
-        { text: 'NG Count', value: 'ngcount' },
+        { text: this.$t('OK Count'), value: 'okcount' },
+        { text: this.$t('NG Count'), value: 'ngcount' },
       ],
       runningOrders: [
         {
@@ -268,17 +274,17 @@ export default {
       ],
       headersRoadmap: [
         {
-          text: 'Substation Name',
+          text: this.$t('Substation Name'),
           value: 'substationname',
         },
         {
-          text: 'Process code',
+          text: this.$t('Process code'),
           value: 'process',
         },
-        { text: 'No. of Pre-Substation', value: 'amtpresubstation' },
-        { text: 'Station name', value: 'machinename' },
-        { text: 'Pre-SubStation name', value: 'presubstationname' },
-        { text: 'Pre-Station name', value: 'prestationname' },
+        { text: this.$t('No. of Pre-Substation'), value: 'amtpresubstation' },
+        { text: this.$t('Station Name'), value: 'machinename' },
+        { text: this.$t('Pre-Substation name'), value: 'presubstationname' },
+        { text: this.$t('Pre-Station name'), value: 'prestationname' },
       ],
     };
   },

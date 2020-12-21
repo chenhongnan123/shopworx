@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <span>{{$t('Product Type')}}</span>
+      <span>{{$t('productManagement')}}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"

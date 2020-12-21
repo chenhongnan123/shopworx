@@ -1,6 +1,6 @@
 {
   "title": "Rework",
-  "appTitle": "返工",
+  "appTitle": "返工管理",
   "headers": {
     "list": "List",
     "changeover": "Changeover"
@@ -44,8 +44,8 @@
     "RECIPE_CREATED": "Recipe created!",
     "VALUES_UPDATE": "Values updated"
   },
-  "From date":	"从…",
-  "To date":	"至…",
+  "From date":	"起始时间",
+  "To date":	"截止时间",
   "dd/mm/yyyy":	"日/月/年",
   "No.":	"编号",
   "Date":	"日期",

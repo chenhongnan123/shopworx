@@ -1,5 +1,5 @@
 {
-  "productionLayout": "产线配置",
+  "productionLayout": "生产布局",
   "error": {  
     "ALREADY_EXSIST": "名称已存在",
     "ALREADY_EXSIST_NO": "编号已存在",

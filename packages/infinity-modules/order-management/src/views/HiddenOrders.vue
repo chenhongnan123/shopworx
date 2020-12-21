@@ -214,7 +214,7 @@ export default {
         { text: this.$t('Order Exp End Time'), value: 'orderexpendtime' },
         { text: this.$t('Target Count'), value: 'targetcount' },
         { text: this.$t('Actual Count'), value: 'actualcount' },
-        { text: this.$t('Ok Count'), value: 'okcount' },
+        { text: this.$t('OK Count'), value: 'okcount' },
         { text: this.$t('NG Count'), value: 'ngcount' },
       ],
     };

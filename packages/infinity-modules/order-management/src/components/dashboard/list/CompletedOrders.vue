@@ -4,7 +4,7 @@
     :error="error"
     :addPlan="false"
     :loading="loading"
-    :title="'Completed Orders'"
+    :title="$t('Completed Orders')"
     @refresh-widget="fetchPlans"
   ></order-widget>
 </template>

@@ -1,6 +1,6 @@
 {
   "traceabilityApp": "Traceability",
-  "appTitleTraceability": "追溯",
+  "appTitleTraceability": "追溯报表",
   "headers": {
     "list": "Overall",
     "changeover": "Process parameters"
@@ -23,10 +23,10 @@
   "Search ID":	"搜索ID",
   "Select Sub-Line":	"选择子线",
   "Select Sub-Station":	"选择子站",
-  "From date":	"从…",
-  "To date":	"至…",
+  "From date":	"起始时间",
+  "To date":	"截止时间",
   "Export":	"导出",	
-  "Components":	"部件",
-  "Parameters":	"参数",
-  "Quality History":	"质量历史"
+  "Components":	"零部件信息",
+  "Parameters":	"生产档案",
+  "Quality History":	"质量信息"
 }

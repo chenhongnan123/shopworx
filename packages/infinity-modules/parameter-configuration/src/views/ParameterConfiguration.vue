@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      Parameter Configuration
+      {{ $t('parameterConfiguration') }}
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"

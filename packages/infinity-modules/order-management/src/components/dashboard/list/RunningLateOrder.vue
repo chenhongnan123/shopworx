@@ -3,7 +3,7 @@
     :plans="plans"
     :error="error"
     :loading="loading"
-    :title="'Orders Running late'"
+    :title="$t('Orders Running late')"
     @refresh-widget="fetchPlans"
   ></order-widget>
 </template>

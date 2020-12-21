@@ -1,4 +1,5 @@
 {
+  "materialManagement": "物料管理",
   "error": {
     "MATERIAL_NAME_PRESENT": "物料名称已存在",
     "MATERIAL_NUMBER_PRESENT": "物料号已存在",

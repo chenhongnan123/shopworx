@@ -1,4 +1,5 @@
 {
+  "materialManagement": "Material",
   "error": {
     "MATERIAL_NAME_PRESENT": "Material name already present",
     "MATERIAL_NUMBER_PRESENT": "Material number already present",

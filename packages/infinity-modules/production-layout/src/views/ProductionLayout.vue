@@ -2,7 +2,7 @@
   <v-container fluid class="py-0">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
-        <portal to="app-header">Production Layout</portal>
+        <portal to="app-header">{{ $t('productionLayout') }}</portal>
         <v-row>
           <!-- {{lines}} -->
           <v-col cols="2" md="2" lg="2">
