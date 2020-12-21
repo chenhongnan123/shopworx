@@ -240,14 +240,21 @@
     "provision": "Provision",
     "devTools": "Dev Tools",
     "customerSupport": "Customer Support",
-    "customers": "Customers",
+    "customers": "Customer",
     "industries": "Industries",
     "users": "Origin Users",
     "solutions": "Solutions",
     "reports": "Reports",
     "insights": "Insights",
     "dashboards": "Dashboards",
-    "models": "ML Models"
+    "models": "ML Models",
+    "customerAssets": "Assets & License",
+    "customerSms": "SMS settings",
+    "customerWebhooks": "Webhooks",
+    "customerSolutions": "Roles & Access",
+    "customerUsers": "Users",
+    "customerDeployment": "Deployment",
+    "customerData": "Data export"
   },
   "account": {
     "account": "Account",

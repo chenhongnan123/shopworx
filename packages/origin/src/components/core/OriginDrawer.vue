@@ -68,12 +68,45 @@
             class="my-1"
             v-else-if="item.header && expandOnHover"
           ></v-divider>
+          <v-list-group
+            v-else-if="item.group"
+            :group="item.group"
+            :key="index"
+            :value="true"
+            no-action
+            :prepend-icon="item.icon"
+            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+          >
+            <template #activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="$t(`modules.${item.group}`)">
+                </v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              link
+              :class="j === item.children.length - 1 ? 'mb-1' : ''"
+              v-for="(child, j) in item.children"
+              :key="`child-${j}`"
+              :to="{ name: child.title }"
+              :title="$t(`modules.${child.title}`)"
+              :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+            >
+              <!-- <v-list-item-icon>
+                <v-icon v-text="child.icon"></v-icon>
+              </v-list-item-icon> -->
+              <v-list-item-title v-text="$t(`modules.${child.title}`)"></v-list-item-title>
+            </v-list-item>
+            <v-divider
+              :key="index"
+              class="my-2"
+            ></v-divider>
+          </v-list-group>
           <v-list-item
             link
             v-else
             :key="index"
             :to="{ name: item.title }"
-            @click="setActiveApp(item)"
             :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
@@ -118,8 +151,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
 export default {
   name: 'OriginDrawer',
   props: {
@@ -172,12 +203,7 @@ export default {
       return totalHeight;
     },
   },
-  created() {
-    const appId = localStorage.getItem('appId');
-    this.setActiveAppId(appId ? JSON.parse(appId) : null);
-  },
   methods: {
-    ...mapMutations('webApp', ['setActiveAppId']),
     toggleExpand() {
       this.expandOnHover = !this.expandOnHover;
       if (!this.expandOnHover) {
@@ -188,10 +214,6 @@ export default {
       if (this.expandOnHover) {
         this.miniVariant = this.expandOnHover;
       }
-    },
-    setActiveApp(item) {
-      this.setActiveAppId(item.id);
-      localStorage.setItem('appId', item.id);
     },
   },
 };

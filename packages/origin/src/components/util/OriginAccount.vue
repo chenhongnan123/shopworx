@@ -26,7 +26,7 @@
         <span class="text-center">
           <div class="font-weight-medium">{{ fullName }}</div>
           <div>{{ role }}</div>
-          <div>{{ customer }}, {{ currentSite }}</div>
+          <div>{{ currentCustomer }}, {{ currentSite }}</div>
         </span>
       </v-tooltip>
     </template>
@@ -78,7 +78,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('user', ['activeSite']),
-    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer', 'role']),
+    ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'currentCustomer', 'role']),
     items() {
       let items = [
         {

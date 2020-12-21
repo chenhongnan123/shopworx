@@ -45,8 +45,30 @@ export default {
     return {
       drawer: null,
       items: [{
-        title: 'customers',
-        icon: 'mdi-face',
+        group: 'customers',
+        icon: 'mdi-face-agent',
+        children: [{
+          icon: 'mdi-license',
+          title: 'customerAssets',
+        }, {
+          icon: 'mdi-message-text-outline',
+          title: 'customerSms',
+        }, {
+          icon: 'mdi-webhook',
+          title: 'customerWebhooks',
+        }, {
+          icon: 'mdi-shield-key-outline',
+          title: 'customerSolutions',
+        }, {
+          icon: 'mdi-account-multiple-outline',
+          title: 'customerUsers',
+        }, {
+          icon: 'mdi-rocket-launch-outline',
+          title: 'customerDeployment',
+        }, {
+          icon: 'mdi-database-export-outline',
+          title: 'customerData',
+        }],
       }, {
         title: 'industries',
         icon: 'mdi-domain',
@@ -71,11 +93,7 @@ export default {
         title: 'models',
         icon: 'mdi-memory',
       }],
-      adminItems: [{
-        title: 'customerSupport',
-        icon: 'mdi-face-agent',
-        external: true,
-      }],
+      adminItems: [],
     };
   },
   computed: {
@@ -85,9 +103,7 @@ export default {
     ...mapMutations('helper', ['setExtendedHeader']),
     redirect(path) {
       if (path === '/') {
-        const index = this.items.findIndex((elem) => elem.title);
-        const { to } = this.items.find((item, i) => index === i);
-        this.$router.push({ path: to });
+        // this.$router.push({ name: 'customerAssets' });
       }
     },
     setDrawer(val) {

@@ -28,6 +28,7 @@
       <portal-target name="app-extension" slim />
     </template>
     <v-spacer></v-spacer>
+    <origin-set-context v-if="$route.path.includes('customer')" />
     <template v-if="$vuetify.breakpoint.mdAndUp">
       <origin-help />
       <origin-account />
@@ -37,12 +38,14 @@
 
 <script>
 import { mapState } from 'vuex';
+import OriginSetContext from '@/components/util/OriginSetContext.vue';
 import OriginAccount from '@/components/util/OriginAccount.vue';
 import OriginHelp from '@/components/util/OriginHelp.vue';
 
 export default {
   name: 'OriginHeader',
   components: {
+    OriginSetContext,
     OriginAccount,
     OriginHelp,
   },
