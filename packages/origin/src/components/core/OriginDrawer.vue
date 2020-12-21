@@ -69,8 +69,7 @@
             v-else-if="item.header && expandOnHover"
           ></v-divider>
           <v-list-group
-            v-else-if="item.group"
-            :group="item.group"
+            v-else-if="item.children"
             :key="index"
             :value="true"
             no-action

@@ -11,7 +11,13 @@
   "dependencies": {
     "@mdi/font": "^5.8.55",
     "@shopworx/assets": "^4.2.0-alpha.3",
+    "@shopworx/customer-assets": "^4.2.0-alpha.3",
+    "@shopworx/customer-data": "^4.2.0-alpha.3",
     "@shopworx/customer-deployment": "^4.2.0-alpha.3",
+    "@shopworx/customer-sms": "^4.2.0-alpha.3",
+    "@shopworx/customer-solutions": "^4.2.0-alpha.3",
+    "@shopworx/customer-users": "^4.2.0-alpha.3",
+    "@shopworx/customer-webhooks": "^4.2.0-alpha.3",
     "@shopworx/services": "^4.2.0-alpha.3",
     "core-js": "^3.6.5",
     "lodash.camelcase": "^4.3.0",
