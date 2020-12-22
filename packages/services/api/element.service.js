@@ -13,6 +13,10 @@ class ElementService {
     return this.request.get(`/server/elements/site/${id}`);
   }
 
+  getRecordsByTags(payload) {
+    return this.request.post(`/server/elements/${payload.elementName}/getrecords${payload.queryParam}`, payload.request);
+  }
+
   createElement(payload) {
     return this.request.post('/server/elements', payload);
   }

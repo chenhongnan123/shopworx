@@ -9,7 +9,9 @@
         prepend-icon="mdi-memory"
         :disabled="saving || savingAndClosing"
         :rules="[(v) => !!v || 'Model name is required',
-          (v) => (v && v.length <= 20) || 'Name must be less than 20 characters']"
+          (v) => (v && v.length <= 20) || 'Name must be less than 20 characters',
+          (v) => !!v || 'Required', (v) => /^[a-z0-9]+([\s]{1}[a-z0-9]+)*$/i.test(v)
+            || 'Invalid format(No Blank Space or special character)']"
         :counter="20"
       ></v-text-field>
       <v-textarea

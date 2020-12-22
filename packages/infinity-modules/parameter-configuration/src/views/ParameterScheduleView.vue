@@ -82,10 +82,10 @@
             <v-btn small color="error"
               outlined
               class="text-none ml-2"
-              @click="confirmDialog = true"
-              v-if="parameterList.length && parameterSelected.length">
+              :disabled="isAddButtonOK"
+              @click="confirmDialog = true">
               <v-icon small left>mdi-delete</v-icon>
-              Delete
+              Delete All Parameters
             </v-btn>
             <v-btn
             small
@@ -111,6 +111,7 @@
             outlined
             class="text-none ml-2"
             :disabled="isAddButtonOK"
+            :loading="savingImport"
             @click="importData">
               Import
             </v-btn>
@@ -140,7 +141,9 @@
         :headers="headers"
         item-key="_id"
         :items="parameterList"
-        :options="{itemsPerPage:5}"
+        :footer-props="{
+        'items-per-page-options': [100, 300, 500, 1000]}"
+        :items-per-page="100"
         show-select
         >
           <template #item.name="props">
@@ -337,7 +340,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          Are you sure to delete the items selected ?
+          Are you sure to delete all the Parameters ?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -385,6 +388,7 @@ export default {
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
         { text: 'substation', value: 'substation', width: 120 },
+        // { text: 'Show Real/Non Real', value: 'showparameter', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -400,6 +404,7 @@ export default {
       confirmDialog: false,
       socket: null,
       saving: false,
+      savingImport: false,
     };
   },
   async created() {
@@ -409,6 +414,12 @@ export default {
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
     });
+  },
+  destroyed() {
+    this.setLineValue('');
+    this.setSublineValue('');
+    this.setStationValue('');
+    this.setSubstationValue('');
   },
   computed: {
     ...mapState('parameterConfiguration', [
@@ -462,6 +473,22 @@ export default {
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
+    async showParameters(event, item) {
+      const object = {
+        id: item._id,
+        payload: {
+          showparameter: event,
+        },
+      };
+      const updateResult = await this.updateParameter(object);
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'Data Updated',
+        });
+      }
+    },
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -602,11 +629,11 @@ export default {
       await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
-      const results = await Promise.all(this.parameterSelected.map(
-        (parameter) => this.deleteParameter(parameter.id),
-      ));
-      const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
-      await this.getSubStationIdElement(selectedSubStaionlist[0]);
+      // const results = await Promise.all(this.parameterSelected.map(
+      //   (parameter) => this.deleteParameter(parameter.id),
+      // ));
+      const results = await this.deleteParameter(this.substationValue);
+      await this.getSubStationIdElement(`real_${this.substationValue}`);
       const listT = this.subStationElementDeatils;
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
       const payloadData = [];
@@ -618,7 +645,20 @@ export default {
         });
       });
       await this.updateTagStatus(payloadData);
-      if (results.every((bool) => bool === true)) {
+      await this.getSubStationIdElement(`process_${this.substationValue}`);
+      const listProcess = this.subStationElementDeatils;
+      const FilteredTagsProcess = listProcess.tags
+        .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+      const payloadDataProcess = [];
+      FilteredTagsProcess.forEach(async (tag) => {
+        payloadDataProcess.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
+          status: 'INACTIVE',
+        });
+      });
+      await this.updateTagStatus(payloadDataProcess);
+      if (results) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
         if (parameterList.length === 0) {
@@ -754,7 +794,6 @@ export default {
         'multiplicationfactor',
         'parameterunit',
         'parametercategory',
-        'plcaddress',
         'paid',
       ];
       const csvContent = [];
@@ -772,7 +811,6 @@ export default {
         2,
         '2',
         '2',
-        2,
         2,
       ];
       csvContent.push(arr);
@@ -798,6 +836,7 @@ export default {
       this.$refs.uploader.click();
     },
     async onFilesChanged(e) {
+      this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
@@ -817,7 +856,11 @@ export default {
           item.isswapped = this.datatypeList
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
             .isswapped === 1;
-          if (Number(item.datatypeList) === 11) {
+          // if (Number(item.datatypeList) === 11) {
+          //   item.size = this.datatypeList
+          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+          // }
+          if (Number(item.datatype) !== 11) {
             item.size = this.datatypeList
               .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
           }
@@ -875,6 +918,38 @@ export default {
           await this.getParameterListRecords(this.getQuery());
           let tagList = [];
           await this.getSubStationIdElement(`process_${this.substationValue}`);
+          // add by default timestamp
+          tagList.push({
+            assetId: 4,
+            tagName: 'timestamp',
+            tagDescription: 'timestamp',
+            emgTagType: 'Long',
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          });
           data.forEach((item) => {
             if (Number(item.parametercategory) === 15
             || Number(item.parametercategory) === 17
@@ -921,13 +996,58 @@ export default {
             }
           });
           await this.createTagElement(tagList);
+          let payloadData = [];
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
           // add tags to real parameters
           tagList = [];
           await this.getSubStationIdElement(`real_${this.substationValue}`);
+          // add by default timestamp
+          tagList.push({
+            assetId: 4,
+            tagName: 'timestamp',
+            tagDescription: 'timestamp',
+            emgTagType: 'Long',
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          });
           data.forEach((item) => {
             if (Number(item.parametercategory) === 42
             || Number(item.parametercategory) === 45
-            || Number(item.parametercategory) === 51
+            || Number(item.parametercategory) === 38
+            || Number(item.parametercategory) === 11
             || Number(item.parametercategory) === 2) {
               let dataTypeName = '';
               if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
@@ -970,7 +1090,7 @@ export default {
             }
           });
           await this.createTagElement(tagList);
-          const payloadData = [];
+          payloadData = [];
           tagList.forEach((l) => {
             const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
@@ -982,6 +1102,7 @@ export default {
             }
           });
           await this.updateTagStatus(payloadData);
+          this.savingImport = false;
           this.setAlert({
             show: true,
             type: 'success',

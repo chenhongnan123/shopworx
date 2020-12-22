@@ -1,4 +1,4 @@
-import { set, reactiveSet } from '@shopworx/services/util/store.helper';
+import { set, reactiveSet, toggle } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
 const ELEMENTS = {
@@ -50,6 +50,102 @@ export default ({
     createdModelId: null,
     lastStatusUpdate: {},
     deployedModels: [],
+    selectedModel: null,
+    customizeMode: false,
+    allWidgets: [
+      {
+        component: 'model-info',
+        title: 'Model details',
+        maxCount: 1,
+        minWidth: 5,
+        minHeight: 7,
+        maxWidth: 6,
+        maxHeight: 7,
+        config: null,
+        configured: true,
+      },
+      {
+        component: 'model-output',
+        title: 'Model output',
+        maxCount: 1,
+        minWidth: 6,
+        minHeight: 18,
+        maxWidth: 7,
+        maxHeight: 18,
+        config: null,
+        configured: true,
+      },
+      {
+        component: 'model-warnings',
+        title: 'Alerts',
+        maxCount: 1,
+        minWidth: 5,
+        minHeight: 10,
+        maxWidth: 6,
+        maxHeight: 10,
+        config: null,
+        configured: true,
+      },
+    ],
+    widgets: [
+      {
+        x: 0,
+        y: 0,
+        w: 5,
+        h: 7,
+        i: 0,
+        definition: {
+          component: 'model-info',
+          title: 'Model details',
+          maxCount: 1,
+          minWidth: 5,
+          minHeight: 7,
+          maxWidth: 6,
+          maxHeight: 7,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 5,
+        y: 0,
+        w: 7,
+        h: 18,
+        i: 1,
+        definition: {
+          component: 'model-output',
+          title: 'Model output',
+          maxCount: 1,
+          minWidth: 6,
+          minHeight: 18,
+          maxWidth: 7,
+          maxHeight: 18,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 0,
+        y: 7,
+        w: 5,
+        h: 10,
+        i: 2,
+        definition: {
+          component: 'model-warnings',
+          title: 'Alerts',
+          maxCount: 1,
+          minWidth: 5,
+          minHeight: 10,
+          maxWidth: 6,
+          maxHeight: 10,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+    ],
   },
   mutations: {
     setLines: set('lines'),
@@ -74,6 +170,11 @@ export default ({
     setCreatedModelId: set('createdModelId'),
     setLastStatusUpdate: reactiveSet('lastStatusUpdate'),
     setDeployedModels: set('deployedModels'),
+    setSelectedModel: set('selectedModel'),
+    setCustomizeMode: set('customizeMode'),
+    toggleCustomizeMode: toggle('customizeMode'),
+    setAllWidgets: set('allWidgets'),
+    setWidgets: set('widgets'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -233,21 +334,58 @@ export default ({
       return deployment[0];
     },
 
-    getInputParameters: async ({ commit, dispatch }) => {
+    getInputParameters: async ({ commit, dispatch, state }) => {
+      const {
+        selectedSubstation,
+      } = state;
+      const list = [];
+      list.push({
+        header: 'Real Parameters',
+      });
       const parameters = await dispatch(
         'element/getRecords',
         {
           elementName: ELEMENTS.PARAMETERS,
-          query: '?query=parametercategory=="51"',
+          query: `?query=substationid=="${selectedSubstation}"`,
         },
         { root: true },
       );
-      const params = sortArray(parameters, 'description')
-        .map(({ id, description }) => ({
-          id,
+      const realParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '42'
+          || p.parametercategory === '45'
+          || p.parametercategory === '38'
+          || p.parametercategory === '11'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
           description,
+          group: 'Real Parameters',
         }));
-      commit('setInputParameters', params);
+      realParam.forEach((f) => {
+        list.push(f);
+      });
+      list.push({
+        divider: true,
+      });
+      list.push({
+        header: 'Non Real Parameters',
+      });
+      const nonRealParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '15'
+          || p.parametercategory === '17'
+          || p.parametercategory === '18'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
+          description,
+          group: 'Non Real Parameters',
+        }));
+      nonRealParam.forEach((n) => {
+        list.push(n);
+      });
+      commit('setInputParameters', list);
     },
 
     getOutputTransformations: async ({ commit, dispatch }) => {
@@ -314,6 +452,7 @@ export default ({
             'element/getRecords',
             {
               elementName: 'modeldeploymentorderslogs',
+              // eslint-disable-next-line
               query: `?query=modeldeploymentorderid=="${l._id}"`,
             },
             { root: true },
@@ -325,6 +464,7 @@ export default ({
             subprocessid: selectedProcessName,
             operationname: l.operationname,
           }));
+          // eslint-disable-next-line
           l.logs = list;
         }));
       }
@@ -646,6 +786,32 @@ export default ({
           lastModified: formatDate(model.modifiedtimestamp),
           status: 'N.A',
         };
+      }
+      return false;
+    },
+
+    fetchModelByName: async ({ commit, dispatch }, modelname) => {
+      commit('setSelectedModel', null);
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODELS,
+          query: `?query=modelname=="${modelname}"`,
+        },
+        { root: true },
+      );
+      if (models && models.length === 1) {
+        const [model] = models;
+        const payload = {
+          // eslint-disable-next-line
+          id: model._id,
+          name: model.modelname,
+          description: model.modeldescription,
+          lastModified: formatDate(model.modifiedtimestamp),
+          status: 'N.A',
+        };
+        commit('setSelectedModel', payload);
+        return true;
       }
       return false;
     },

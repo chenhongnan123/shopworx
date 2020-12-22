@@ -28,6 +28,7 @@ export default {
     quality: 'mdi-package-variant',
     performance: 'mdi-chart-multiline',
     masters: 'mdi-database-outline',
+    rawdata: 'mdi-database-outline',
     admin: 'mdi-account-tie-outline',
     help: 'mdi-help-circle-outline',
     identifier: 'mdi-account-outline',

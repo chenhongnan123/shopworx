@@ -26,6 +26,17 @@
         >
           Save
         </v-btn>
+        <!-- <v-btn
+          small
+          outlined
+          color="success"
+          class="text-none"
+          @click="updateValueFun"
+          :class="'ml-2'"
+          v-if="showUpdateBtn"
+        >
+          Update
+        </v-btn> -->
         <v-btn
           small
           outlined
@@ -41,6 +52,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
@@ -50,6 +62,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
           Export
@@ -84,6 +97,7 @@
       v-else
       :id="id"
       ref="base"
+      @showupdatebtnemt="visibleUpdateBtn"
     />
   </div>
 </template>
@@ -101,6 +115,7 @@ export default {
     return {
       base: '',
       tab: 0,
+      showUpdateBtn: false,
     };
   },
   mounted() {
@@ -109,6 +124,9 @@ export default {
   methods: {
     ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    visibleUpdateBtn(value) {
+      this.showUpdateBtn = value;
+    },
     addNewEntry() {
       this.base.addRow();
     },
@@ -140,31 +158,44 @@ export default {
       }
     },
     async saveNewEntry() {
-      const name = this.id;
-      const payload = [];
-      this.base.rowData.forEach((data) => {
-        if (!data.elementName) {
-          payload.push({
-            ...data,
-            assetid: 4,
+      if (this.base.updateData.length > 0) {
+        this.base.updateValue();
+      } else {
+        const name = this.id;
+        const payload = [];
+        this.base.rowData.forEach((data) => {
+          if (!data.elementName) {
+            payload.push({
+              ...data,
+              assetid: 4,
+            });
+          }
+        });
+        const postData = await this.postBulkRecords({ payload, name });
+        if (postData) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'CREATED_RECORD',
+          });
+          this.base.fetchRecords();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_CREATING_RECORD',
           });
         }
-      });
-      const postData = await this.postBulkRecords({ payload, name });
-      if (postData) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'CREATED_RECORD',
-        });
-        this.base.fetchRecords();
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ERROR_CREATING_RECORD',
-        });
       }
+    },
+    updateValueFun() {
+      this.base.updateValue();
+    },
+    onBtnExport() {
+      this.base.exportData();
+    },
+    refreshUi() {
+      this.base.fetchRecords();
     },
   },
   computed: {
