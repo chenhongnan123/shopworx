@@ -105,7 +105,6 @@
             link
             v-else
             :key="index"
-            :to="{ name: item.title }"
             :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
@@ -113,9 +112,6 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-            <v-list-item-action v-if="item.external">
-              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
-            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
