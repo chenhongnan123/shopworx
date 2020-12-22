@@ -25,6 +25,7 @@ export default ({
     selectedParameterCategory: '',
     selectedParameterDatatype: '',
     subStationElementDeatils: [],
+    createElementResponse: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -50,6 +51,7 @@ export default ({
     setSelectedParameterCategory: set('selectedParameterCategory'),
     setSelectedParameterDatatype: set('selectedParameterDatatype'),
     setSubStationIdDeatils: set('subStationElementDeatils'),
+    setCreateElementResponse: set('createElementResponse'),
   },
   actions: {
     createTagElement: async ({ commit, dispatch }, payload) => {
@@ -59,7 +61,7 @@ export default ({
         { root: true },
       );
       if (element) {
-        commit('setSubStationIdDeatils', element);
+        commit('setCreateElementResponse', element);
       }
     },
     getSubStationIdElement: async ({ commit, dispatch }, elementName) => {
@@ -317,7 +319,7 @@ export default ({
         'element/deleteRecordByQuery',
         {
           elementName: 'parameters',
-          queryParam: `?query=id=="${id}"`,
+          queryParam: `?query=substationid=="${id}"`,
         },
         { root: true },
       );

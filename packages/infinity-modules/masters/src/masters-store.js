@@ -14,6 +14,32 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
+    updateRecord: async ({ dispatch, commit }, payloadData) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: payloadData.name,
+          id: payloadData.query,
+          payload: payloadData.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = '';
+        const record = await dispatch(
+          'element/getRecords',
+          {
+            elementName: payloadData.name,
+            query,
+          },
+          { root: true },
+        );
+        if (record) {
+          commit('setRecords', record);
+          // return record;
+        }
+      }
+    },
     postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
         'element/postBulkRecords',

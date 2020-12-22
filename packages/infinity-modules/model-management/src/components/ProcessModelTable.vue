@@ -17,12 +17,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <v-row
-        no-gutters
-        align="center"
-        justify="center"
-        v-if="fetchingMaster"
-      >
+      <v-row no-gutters align="center" justify="center" v-if="fetchingMaster">
         <v-col cols="12" align="center">
           <v-progress-circular
             indeterminate
@@ -31,9 +26,7 @@
           ></v-progress-circular>
         </v-col>
         <v-col cols="12" align="center">
-          <span>
-            Fetching parameters and transformations...
-          </span>
+          <span> Fetching parameters and transformations... </span>
         </v-col>
       </v-row>
       <template v-else>
@@ -51,33 +44,37 @@
           :items="models"
           :search="search"
           :headers="headers"
-          hide-default-footer
           :loading="fetchingModels"
           :custom-filter="filterModels"
+          :options.sync="options"
+          :items-per-page="5"
         >
-          <template #loading>
-            Fetching models...
-          </template>
-          <template #no-data>
-            No model available
-          </template>
+          <template #loading> Fetching models... </template>
+          <template #no-data> No model available </template>
           <template #no-results>
             No matching model found for '{{ search }}'
           </template>
           <template #item="{ item }">
             <tr>
               <td>
-                <v-tooltip bottom>
-                  <template #activator="{ on, attrs }">
-                    <div
+                <v-tooltip
+                 top
+                 max-width="300"
+                 >
+                  <template v-slot:activator="{ on, attrs }">
+                    <a
                       v-on="on"
                       v-bind="attrs"
-                      class="font-weight-medium"
+                      class="font-weight-medium text-decoration-underline"
+                      @click="$router.push({
+                        name: 'modelDetails',
+                        params: { id: item.name },
+                      })"
                     >
                       {{ item.name }}
-                    </div>
+                    </a>
                   </template>
-                  <span>{{ item.description || 'N.A' }}</span>
+                  <span class="toolTipProperty">{{ item.description || "N.A" }}</span>
                 </v-tooltip>
               </td>
               <td>
@@ -99,7 +96,7 @@
             </tr>
           </template>
         </v-data-table>
-        </template>
+      </template>
     </v-card-text>
   </v-card>
 </template>
@@ -126,6 +123,11 @@ export default {
   data() {
     return {
       search: '',
+      options: {
+        descending: true,
+        page: 1,
+        rowsPerPage: 5,
+      },
       headers: [
         { text: 'Details', value: 'name' },
         { text: 'Last modified', value: 'lastModified' },
@@ -186,13 +188,27 @@ export default {
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
     filterModels(value, search, item) {
-      return item.name
-        .toLowerCase()
-        .indexOf(search.toLowerCase()) > -1
-        || item.description
-          .toLowerCase()
-          .indexOf(search.toLowerCase()) > -1;
+      if (item.description) {
+        return (
+          item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+           || item.description.toLowerCase().indexOf(search.toLowerCase()) > -1
+        );
+      }
+      return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
     },
   },
 };
 </script>
+<style scoped>
+.toolTipProperty:before {
+  content:"DESCRIPTION:";
+  font-size: 15PX;
+  display: block;
+}
+ .toolTipProperty {
+  display: inline-block !important;
+  padding: 2px;
+  width: fit-content;
+  height: fit-content;
+}
+</style>

@@ -401,7 +401,8 @@ export default {
         }
         if (Number(parameterObj.parametercategory.id) === 42
         || Number(parameterObj.parametercategory.id) === 45
-        || Number(parameterObj.parametercategory.id) === 51
+        || Number(parameterObj.parametercategory.id) === 38
+        || Number(parameterObj.parametercategory.id) === 11
         || Number(parameterObj.parametercategory.id) === 2) {
           await this.getSubStationIdElement(`real_${this.substationValue}`);
           let dataTypeName = '';

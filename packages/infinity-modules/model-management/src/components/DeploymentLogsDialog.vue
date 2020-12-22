@@ -4,7 +4,7 @@
     scrollable
     transition="dialog-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ on, attrs }" v-if="!isDashboardView">
       <v-icon small color="primary">mdi-console</v-icon>
       <a
         v-on="on"
@@ -13,6 +13,19 @@
       >
         View logs
       </a>
+    </template>
+    <template #activator="{ on, attrs }" v-else>
+      <v-btn
+        class="text-none"
+        color="white"
+        small
+        outlined
+        v-on="on"
+        v-bind="attrs"
+      >
+        <v-icon left small color="white">mdi-console</v-icon>
+        View logs
+      </v-btn>
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
@@ -75,6 +88,10 @@ export default {
     model: {
       type: Object,
       required: true,
+    },
+    isDashboardView: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

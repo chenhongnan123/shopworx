@@ -30,10 +30,21 @@
               ></v-text-field>
             </v-col>
             <v-col cols="2" md="2" lg="2">
+              <v-text-field
+                label="IP Address"
+                v-model="selectedLine.ipaddr"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2" md="2" lg="2">
+              <v-text-field
+                label="Host Name"
+                v-model="selectedLine.hostname"
+              ></v-text-field>
             </v-col>
           </template>
-          <div style="float:right"
-          class="mt-5">
+        </v-row>
+        <v-row class="mb-6" no-gutters>
+          <div style="float:right">
           <v-spacer></v-spacer>
            <SelectedLineUpdate />
            <AddLine />
@@ -49,7 +60,7 @@
             </v-btn>
             <ProductionFilter />
           </div>
-        </v-row>
+          </v-row>
            <v-row class="mb-6" v-if="selectedLine"
            no-gutters>
                 <v-col>

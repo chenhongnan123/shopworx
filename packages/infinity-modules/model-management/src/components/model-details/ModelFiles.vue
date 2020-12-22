@@ -106,9 +106,15 @@ export default {
     this.fileList = this.modelFiles;
   },
   watch: {
-    modelDetails: {
+    modelFiles: {
       handler(val) {
-        this.updateProps(val);
+        if (val && val.length) {
+          val.forEach((v, i) => {
+            this.$set(this.fileList, i, v);
+          });
+        } else {
+          this.fileList = [];
+        }
       },
       deep: true,
     },
@@ -125,7 +131,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
     async updateProps(val) {
-      this.fileList = val.modelFiles;
+      this.fileList.push(val.modelFiles);
     },
     async uploadFiles() {
       let flag = false;
@@ -168,6 +174,7 @@ export default {
         });
         if (deleted) {
           await this.fetchModelDetails(this.model.id);
+          this.fileList = this.modelFiles;
           this.setAlert({
             show: true,
             type: 'success',

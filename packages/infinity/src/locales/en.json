@@ -236,6 +236,7 @@
     "updated": "Your ShopWorx account is updated!"
   },
   "modules": {
+    "rawdata": "Data Visualizer",
     "apps": "Apps",
     "operation": "Operation",
     "dashboards": "Dashboards",
