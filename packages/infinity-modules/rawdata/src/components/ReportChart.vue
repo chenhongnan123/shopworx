@@ -3,7 +3,7 @@
     <highcharts
       v-if="chartType && chartType.value"
       :options="options"
-      style="height: 300px;"
+      style="height: 550px;"
       ref="chart"
     ></highcharts>
   </div>

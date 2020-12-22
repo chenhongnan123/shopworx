@@ -162,7 +162,6 @@ export default {
             query: item._id, payload: item, name: elementName,
           },
         );
-        console.log(changedRow);
       });
       let update = false;
       update = await Promise.all([multipleRows]);

@@ -59,14 +59,12 @@ export default ({
           );
           return paramList.map((p) => p.name);
         }));
-        console.log(list.flat());
         commit('setParamList', list.flat());
       }
       return param;
     },
 
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
-      console.log(payload);
       let data = await dispatch(
         'element/getRecordsByTags',
         { payload },

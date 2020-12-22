@@ -28,7 +28,6 @@ export default ({
 
     getRecordsByTags: async (_, { payload }) => {
       try {
-        console.log(payload);
         const { data } = await ElementService.getRecordsByTags(payload);
         if (data && data.results) {
           return data;

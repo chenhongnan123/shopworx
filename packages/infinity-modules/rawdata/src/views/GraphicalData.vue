@@ -31,7 +31,7 @@
       </v-responsive>
       <v-responsive :max-width="340">
         <v-autocomplete
-          :items="paramList"
+          :items="tags"
           class="ml-2"
           filled
           dense
@@ -40,6 +40,7 @@
           deletable-chips
           hide-details
           label="Select Parameters"
+          item-text="tagName"
           single-line
           return-object
           v-model="selectedParameters"
@@ -59,7 +60,7 @@
       </v-btn>
       <report-date-picker />
       <report-chart-type />
-      <export-report @on-export="onExport" />
+      <!-- <export-report @on-export="onExport" /> -->
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
@@ -80,14 +81,16 @@ import {
 
 import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
 import ReportChartType from '../components/toolbar/ReportChartType.vue';
-import ExportReport from '../components/toolbar/ExportReport.vue';
+import ReportChart from '../components/ReportChart.vue';
+// import ExportReport from '../components/toolbar/ExportReport.vue';
 
 export default {
   name: 'ProductionLog',
   components: {
     ReportDatePicker,
     ReportChartType,
-    ExportReport,
+    ReportChart,
+    // ExportReport,
   },
   data() {
     return {
@@ -153,15 +156,24 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     async btnRefresh() {
+      const list = [];
+      await this.selectedParameters.forEach((f) => {
+        list.push(f.tagName);
+      });
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
       this.rowData = await this.getRecordsByTagData({
         elementName: this.id,
         queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
         request: {
-          tags: this.selectedParameters,
+          tags: list,
         },
       });
+      const reportData = {
+        cols: this.selectedParameters,
+        reportData: this.rowData ? this.rowData.results : [],
+      };
+      this.setReport(reportData);
     },
     onExport(e) {
       this.exportReport(e);
@@ -211,12 +223,12 @@ export default {
         });
       }
       this.loading = false;
-      console.log(this.rowData);
       return this.rowData;
     },
     async onElementSelect(item) {
       this.pagenumber = 0;
       this.id = item.to;
+      await this.fetchRecords();
       const reportData = {
         cols: this.tags,
         reportData: this.rowData ? this.rowData.results : [],

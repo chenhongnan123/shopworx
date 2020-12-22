@@ -58,7 +58,6 @@
         Load Data
       </v-btn>
       <report-date-picker />
-      <report-chart-type />
       <export-report @on-export="onExport" />
     </v-toolbar>
     <template>
@@ -107,7 +106,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 // import ReportChart from '../components/ReportChart.vue';
 import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
-import ReportChartType from '../components/toolbar/ReportChartType.vue';
+// import ReportChartType from '../components/toolbar/ReportChartType.vue';
 import ExportReport from '../components/toolbar/ExportReport.vue';
 
 export default {
@@ -116,11 +115,12 @@ export default {
     AgGridVue,
     // ReportChart,
     ReportDatePicker,
-    ReportChartType,
+    // ReportChartType,
     ExportReport,
   },
   data() {
     return {
+      parametersChanged: false,
       rowData: null,
       columnDefs: [],
       gridOptions: null,
@@ -193,51 +193,22 @@ export default {
         sortState,
         filterState,
       };
-      this.tags.forEach((element) => {
-        const data = colState.find((f) => f.colId === element.tagName);
-        if (data) {
-          element.hide = data.hide;
-        }
-      });
-      const data = {
-        cols: this.tags,
-        reportData: this.rowData ? this.rowData.results : [],
-      };
-      this.setReport(data);
+      this.parametersChanged = true;
+      // this.tags.forEach((element) => {
+      //   const data = colState.find((f) => f.colId === element.tagName);
+      //   if (data) {
+      //     element.hide = data.hide;
+      //   }
+      // });
+      // const data = {
+      //   cols: this.tags,
+      //   reportData: this.rowData ? this.rowData.results : [],
+      // };
+      // this.setReport(data);
       this.setGridState(JSON.stringify(state));
     },
     async btnRefresh() {
-      // console.log(this.selectedParameters);
-      // const tagData = this.selectedParameters.map((tag) => ({
-      //   headerName: `${tag}`,
-      //   field: tag,
-      //   hide: true,
-      // }));
-      // await tagData.forEach((f) => {
-      //   this.columnDefs.push(f);
-      // });
-      const colState = this.gridColumnApi.getColumnState();
-      const today = new Date(this.dateRange[1]).getTime();
-      const yesterday = new Date(this.dateRange[0]).getTime();
-      const tagList = [];
-      console.log(colState);
-      colState.forEach((f) => {
-        if (f.hide === false) {
-          if (f.colId.includes('_1')) {
-            const data = f.colId.split('_1');
-            tagList.push(data[0]);
-          } else {
-            tagList.push(f.colId);
-          }
-        }
-      });
-      this.rowData = await this.getRecordsByTagData({
-        elementName: this.id,
-        queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
-        request: {
-          tags: tagList,
-        },
-      });
+      await this.setRowData();
     },
     onExport(e) {
       this.exportReport(e);
@@ -270,7 +241,7 @@ export default {
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
-      if (this.id.includes('real_') || this.id.includes('process_')) {
+      if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === false) {
         const element = this.id.split('_');
         await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
         const changeTags = this.tags;
@@ -287,19 +258,36 @@ export default {
           field: tag.tagName,
           hide: tag.hide,
         }));
-        if (this.id.includes('real_') || this.id.includes('process_')) {
-          this.columnDefs.push({
-            headerName: 'Created Timestamp',
-            field: 'createdTimestamp',
-            hide: false,
-          });
-        }
-        console.log(this.columnDefs);
+        this.columnDefs.push({
+          headerName: 'Created Timestamp',
+          field: 'createdTimestamp',
+          hide: false,
+        });
         this.rowData = await this.getRecordsByTagData({
           elementName: this.id,
           queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
           request: {
             tags: this.paramList,
+          },
+        });
+      } else if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === true) {
+        const colState = this.gridColumnApi.getColumnState();
+        const tagList = [];
+        colState.forEach((f) => {
+          if (f.hide === false) {
+            if (f.colId.includes('_1')) {
+              const data = f.colId.split('_1');
+              tagList.push(data[0]);
+            } else {
+              tagList.push(f.colId);
+            }
+          }
+        });
+        this.rowData = await this.getRecordsByTagData({
+          elementName: this.id,
+          queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
+          request: {
+            tags: tagList,
           },
         });
       } else {
@@ -309,10 +297,10 @@ export default {
         });
       }
       this.loading = false;
-      console.log(this.rowData);
       return this.rowData;
     },
     async onElementSelect(item) {
+      this.parametersChanged = false;
       this.pagenumber = 0;
       this.id = item.to;
       await this.setColumnDefs();
@@ -328,17 +316,19 @@ export default {
       this.gridApi.setServerSideDatasource(datasource);
     },
     setColumnDefs() {
-      this.columnDefs = this.tags.map((tag) => ({
-        headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
-        field: tag.tagName,
-        hide: true,
-      }));
-      if (this.id.includes('real_') || this.id.includes('process_')) {
-        this.columnDefs.push({
-          headerName: 'Created Timestamp',
-          field: 'createdTimestamp',
-          hide: false,
-        });
+      if (this.parametersChanged === false) {
+        this.columnDefs = this.tags.map((tag) => ({
+          headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
+          field: tag.tagName,
+          hide: true,
+        }));
+        if (this.id.includes('real_') || this.id.includes('process_')) {
+          this.columnDefs.push({
+            headerName: 'Created Timestamp',
+            field: 'createdTimestamp',
+            hide: false,
+          });
+        }
       }
     },
   },
