@@ -9,7 +9,6 @@
     @vdropzone-file-added="fileAdded"
     @vdropzone-removed-file="fileRemoved"
     @vdropzone-processing="processingUpload"
-    @vdropzone-queue-complete="queueComplete"
     @vdropzone-upload-progress="uploadProgress"
   >
     <div class="text-center py-2">
@@ -130,8 +129,12 @@ export default {
         modelId: this.modelId,
         id: res.id,
       });
+      await this.fetchModelDetails(this.modelId);
+      this.dropzone.removeAllFiles();
+      this.setUploadingFiles(false);
     },
     async queueComplete() {
+      // @vdropzone-queue-complete="queueComplete"
       await this.fetchModelDetails(this.modelId);
       this.dropzone.removeAllFiles();
       this.setUploadingFiles(false);

@@ -11,7 +11,7 @@
         style="widht: 0%;border-radius:10px"
         data-dz-uploadprogress
         color="success"
-        class="text-xs-center font-weight-bold white--text"
+        class="text-xs-center white--text"
       >
         <span class="progress-text"></span>
       </v-sheet>

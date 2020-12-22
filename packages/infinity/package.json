@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "^5.8.55",
+    "@shopworx/rawdata": "^4.2.0-alpha.3",
     "@shopworx/admin": "^4.2.0-alpha.3",
     "@shopworx/assets": "^4.2.0-alpha.3",
     "@shopworx/downtime-log": "^4.2.0-alpha.3",
