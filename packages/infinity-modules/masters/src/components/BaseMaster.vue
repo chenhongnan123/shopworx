@@ -157,7 +157,7 @@ export default {
       const elementName = this.id;
       const data = this.updateData;
       const multipleRows = data.forEach(async (item) => {
-        const changedRow = await this.updateRecord(
+        await this.updateRecord(
           {
             query: item._id, payload: item, name: elementName,
           },
