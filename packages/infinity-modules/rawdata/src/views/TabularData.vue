@@ -167,6 +167,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('rawdata', ['setReport', 'setGridState']),
     ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getParameterCatgory', 'getRecordsByTagData']),
     onStateChange() {
@@ -206,6 +207,11 @@ export default {
       // };
       // this.setReport(data);
       this.setGridState(JSON.stringify(state));
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'LOAD_DATA',
+      });
     },
     async btnRefresh() {
       await this.setRowData();
