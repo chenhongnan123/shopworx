@@ -27,6 +27,8 @@
               rounded
               color="primary"
               class="text-none"
+              target="_blank"
+              href="/infinity/#/"
             >
               <v-icon
                 left

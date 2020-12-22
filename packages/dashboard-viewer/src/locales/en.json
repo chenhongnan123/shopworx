@@ -76,6 +76,6 @@
     }
   },
   "dashboards": {
-    "shopfloorDashboard": "Live Shopfloor"
+    "liveShopfloor": "Live Shopfloor"
   }
 }

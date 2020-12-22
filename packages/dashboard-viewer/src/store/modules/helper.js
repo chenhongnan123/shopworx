@@ -33,13 +33,18 @@ export default ({
       },
     ],
     isDark: null,
+    isFullscreen: false,
     dashboardLoading: false,
+    configDrawer: false,
   },
   mutations: {
     setAlert: set('alert'),
     setIsSessionValid: set('isSessionValid'),
     setIsDark: set('isDark'),
     toggleIsDark: toggle('isDark'),
+    setIsFullscreen: set('isFullscreen'),
+    setConfigDrawer: set('configDrawer'),
+    toggleConfigDrawer: toggle('configDrawer'),
     setDashboardLoading: toggle('dashboardLoading'),
   },
   getters: {

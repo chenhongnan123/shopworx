@@ -66,12 +66,12 @@
         :items="materialList"
         item-key="id"
         >
-        <template v-slot:item.category="props" v-if="categoryList.length">
+        <template #item.category="props" v-if="categoryList.length">
         {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
         && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
         [0].name}}
         </template>
-        <template v-slot:top>
+        <template #top>
         <v-dialog
           persistent
           scrollable
@@ -122,7 +122,7 @@
                   v-model="materialObj.materialcategory"
                   :rules="rules.materialcategory"
                 >
-                  <template v-slot:item="{ item }">
+                  <template #item="{ item }">
                     <v-list-item-content>
                       <v-list-item-title v-text="item.name"></v-list-item-title>
                       <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -197,7 +197,7 @@
           </v-card>
         </v-dialog>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-row>
             <v-btn
               icon

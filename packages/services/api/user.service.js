@@ -70,7 +70,7 @@ class UserService {
   }
 
   createAccess(payload) {
-    return this.request.post('server/moduleaccess', payload);
+    return this.request.post('/server/moduleaccess', payload);
   }
 }
 

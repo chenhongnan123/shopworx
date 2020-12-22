@@ -33,13 +33,16 @@
             hide-default-footer
             :headers="pendingHeaders"
           >
-            <template v-slot:item.email="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.email="{ item }">
               <div>{{ item.email || item.phone }}</div>
             </template>
-            <template v-slot:item.role="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.role="{ item }">
               <div>{{ roles.find((role) => role.roleId === item.role).roleDescription }}</div>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.actions="{ item }">
               <v-btn
                 small
                 outlined
@@ -65,7 +68,7 @@
           id="searchUsers"
           v-model="search"
           prepend-inner-icon="$search"
-          label="Search users by name"
+          label="Filter users by name"
         ></v-text-field>
         <v-data-table
           item-key="id"
@@ -75,14 +78,15 @@
           :headers="headers"
           disable-pagination
           hide-default-footer
-          :custom-filter="filterUsers"
         >
-          <template v-slot:item.fullName="{ item }">
+          <!-- eslint-disable-next-line -->
+          <template #item.fullName="{ item }">
             <div>{{ item.fullName }}</div>
             <div>{{ item.email }}</div>
             <div>{{ item.phone }}</div>
           </template>
-          <template v-slot:item.role="{ item }">
+          <!-- eslint-disable-next-line -->
+          <template #item.role="{ item }">
             <v-select
               dense
               flat
@@ -96,7 +100,8 @@
               item-text="roleDescription"
             ></v-select>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <!-- eslint-disable-next-line -->
+          <template #item.actions="{ item }">
             <delete-user :user="item" />
           </template>
         </v-data-table>

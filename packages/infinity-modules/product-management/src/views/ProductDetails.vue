@@ -59,7 +59,7 @@
       :items="stationRecipeList"
       item-key="stationname"
       >
-        <template v-slot:item="{ item }">
+        <template #item="{ item }">
           <tr>
             <td>{{ item.sublinename }}</td>
             <td>{{ item.stationname }}</td>
@@ -77,7 +77,7 @@
                 item-text="recipename"
                 @change="onRecipeChange(item)"
                 >
-                <template v-slot:selection="{ item }">
+                <template #selection="{ item }">
                   <span>{{ item.recipename }}</span>
                 </template>
               </v-select>

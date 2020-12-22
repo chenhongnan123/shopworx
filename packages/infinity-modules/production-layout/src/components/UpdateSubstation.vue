@@ -1,6 +1,6 @@
  <template>
 <v-dialog v-model="dialog"  max-width="700px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$edit'" color="primary"
     class="float-right"></v-icon>
     </template>

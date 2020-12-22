@@ -1,75 +1,41 @@
 <template>
-  <div>
+  <v-container fluid>
     <portal to="app-header">
       Home
     </portal>
-    <v-card flat class="transparent px-4">
-      <v-row>
-        <!-- <v-col cols="12" sm="6" md="3">
-          <stats-widget
-            :icon="{ color: 'success', name: '$production' }"
-            :title="'Running'"
-            :stat="7"
-            :action="{ text: 'Running machines', route: '/machine-dashboard?filter=running==true' }"
-          ></stats-widget>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <stats-widget
-            :icon="{ color: 'error', name: '$downtime' }"
-            :title="'Down'"
-            :stat="3"
-            :action="{ text: 'Down machines', route: '/machine-dashboard?filter=down==true' }"
-          ></stats-widget>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <stats-widget
-            :icon="{ color: 'info', name: 'mdi-calendar-remove-outline' }"
-            :title="'No Plan'"
-            :stat="7"
-            :action="{ text: 'No plan machines', route: '/machine-dashboard?filter=noplan==true' }"
-          ></stats-widget>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <stats-widget
-            :icon="{ color: 'warning', name: '$rejection' }"
-            :title="'Purge'"
-            :stat="7"
-            :action="{ text: 'Purge machines', route: '/machine-dashboard?filter=purge==true' }"
-          ></stats-widget>
-        </v-col>
-        <v-col cols="12" md="7">
-          <tabbed-chart-widget
-            showDateFilter
-            :title="'How is my site performing?'"
-            :action="{ text: 'Performance Overview', route: '/report/productionbyshift' }"
-          ></tabbed-chart-widget>
-        </v-col>
-        <v-col cols="12" md="5">
-          <list-widget></list-widget>
-        </v-col> -->
-        <v-col cols="12" md="12" class="text-center mt-6">
-          <span class="headline my-auto">
-            Watch out for the dashboard in upcoming releases
-          </span>
-        </v-col>
-      </v-row>
-    </v-card>
-  </div>
+    <component :is="component" />
+  </v-container>
 </template>
 
 <script>
-/* import TabbedChartWidget from '../components/TabbedChartWidget.vue';
-// import ChartWidget from '../components/ChartWidget.vue';
-import StatsWidget from '../components/StatsWidget.vue';
-import ListWidget from '../components/ListWidget.vue'; */
+import { mapGetters } from 'vuex';
+import AdminDashboard from '../components/AdminDashboard.vue';
+import PlanHeadDashboard from '../components/PlanHeadDashboard.vue';
+import ProductionPlannerDashboard from '../components/ProductionPlannerDashboard.vue';
+import ProductionSupervisorDashboard from '../components/ProductionSupervisorDashboard.vue';
 
 export default {
   name: 'UserDashboard',
-  /* components: {
-    TabbedChartWidget,
-    // ChartWidget,
-    StatsWidget,
-    ListWidget,
-  }, */
+  components: {
+    AdminDashboard,
+    PlanHeadDashboard,
+    ProductionPlannerDashboard,
+    ProductionSupervisorDashboard,
+  },
+  computed: {
+    ...mapGetters('user', ['roleName']),
+    component() {
+      switch (this.roleName) {
+        case 'planthead':
+          return 'plant-head-dashboard';
+        case 'planner':
+          return 'production-planner-dashboard';
+        case 'supervisor':
+          return 'production-supervisor-dashboard';
+        default:
+          return 'admin-dashboard';
+      }
+    },
+  },
 };
 </script>

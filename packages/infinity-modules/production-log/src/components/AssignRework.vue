@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -12,7 +12,7 @@
         small
         v-on="on"
         color="primary"
-        class="text-none ml-4 mb-1"
+        class="text-none mb-1"
       >
         <v-icon>mdi-update</v-icon>
       </v-btn>
@@ -42,9 +42,11 @@
             :headers="headers"
             hide-default-footer
             :items="reworks"
+            disable-pagination
             v-if="reworks.length"
           >
-            <template v-slot:item.reworkquantity="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.reworkquantity="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -55,11 +57,12 @@
                 :return-value.sync="item.reworkquantity"
               >
                 {{ item.reworkquantity }}
-                <template v-slot:input>
+                <template #input>
                   <v-text-field
                     v-model="item.reworkquantity"
                     type="number"
                     label="Qty"
+                    suffix="pcs"
                     :rules="[(v) => (
                       Number.isInteger(Number(v)) > 0
                       && v <= parseInt(production.accepted, 10)
@@ -70,7 +73,8 @@
                 </template>
               </v-edit-dialog>
             </template>
-            <template v-slot:item.reasonname="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.reasonname="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -81,7 +85,7 @@
                 :return-value.sync="item.reasonname"
               >
                 {{ item.reasonname }}
-                <template v-slot:input>
+                <template #input>
                   <v-autocomplete
                     single-line
                     label="Reason"
@@ -93,7 +97,8 @@
                 </template>
               </v-edit-dialog>
             </template>
-            <template v-slot:item.remark="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.remark="{ item }">
               <v-edit-dialog
                 large
                 persistent
@@ -104,7 +109,7 @@
                 :return-value.sync="item.remark"
               >
                 {{ item.remark }}
-                <template v-slot:input>
+                <template #input>
                   <v-textarea
                     v-model="item.remark"
                     label="Remark"
@@ -131,6 +136,7 @@
                       dense
                       outlined
                       type="number"
+                      suffix="pcs"
                       label="Quantity"
                       :disabled="saving"
                       hide-details="auto"
@@ -238,6 +244,7 @@ export default {
         { text: 'Qty', value: 'reworkquantity' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
       ],
     };
   },
@@ -288,6 +295,7 @@ export default {
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addRework(payload);
       if (id) {
@@ -297,7 +305,7 @@ export default {
           remark: '',
         };
         this.reworks = [
-          { ...payload, _id: id },
+          { ...payload, _id: id, modifiedtimestamp: 'now' },
           ...this.reworks,
         ];
         this.updateShiftStats(qty);
@@ -313,6 +321,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const rework = parseInt(this.productionList[index].rework, 10) + parseInt(reworkQty, 10);
       shiftProduction.splice(index, 1, {
@@ -335,6 +344,12 @@ export default {
         payload,
       });
       if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.reworks.findIndex((s) => s._id === id);
+        this.$set(this.reworks, updatedIndex, {
+          ...this.reworks[updatedIndex],
+          modifiedtimestamp: 'now',
+        });
         this.setAlert({
           show: true,
           type: 'success',

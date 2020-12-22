@@ -15,6 +15,7 @@ import {
 import ApiService from '@shopworx/services/api/api.service';
 import SessionService from '@shopworx/services/util/session.service';
 import DashboardLoading from './components/DashboardLoading.vue';
+import { getDeviceId } from './dashboardLoader';
 
 export default {
   components: {
@@ -28,7 +29,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark', 'dashboardLoading', 'userAgent']),
     ...mapState('auth', ['sessionId']),
-    ...mapState('dashboard', ['readyState']),
+    ...mapState('dashboard', ['readyState', 'deviceId']),
     ...mapGetters('helper', ['isTV']),
   },
   async created() {
@@ -40,6 +41,8 @@ export default {
   },
   beforeMount() {
     if (this.isTV) {
+      const deviceId = getDeviceId();
+      this.setDeviceId(deviceId);
       this.sseInit();
     }
   },
@@ -72,16 +75,20 @@ export default {
     $route: {
       immediate: true,
       handler(val) {
+        const isCastUrl = val.name === 'cast';
         const isDashboardUrl = val.fullPath.includes('/d');
         if (this.isTV && !isDashboardUrl) {
           this.$router.replace({ name: 'cast' });
+        }
+        if (!this.isTV && isCastUrl) {
+          this.$router.replace({ name: 'home' });
         }
       },
     },
   },
   methods: {
     ...mapActions('auth', ['initAuth', 'logoutUser']),
-    ...mapMutations('dashboard', ['setReadyState']),
+    ...mapMutations('dashboard', ['setReadyState', 'setDeviceId']),
     ...mapMutations('helper', [
       'setIsDark',
       'setIsSessionValid',
@@ -94,7 +101,7 @@ export default {
           clearTimeout(this.timeout);
         }
       };
-      this.sseClient.addEventListener('123ABC', (e) => {
+      this.sseClient.addEventListener(this.deviceId, (e) => {
         this.setReadyState(e.target.readyState);
         const eventData = JSON.parse(JSON.parse(e.data));
         if (eventData.status === 'CAST') {

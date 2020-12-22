@@ -9,7 +9,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import {
+  mapGetters,
+  mapMutations,
+  mapActions,
+} from 'vuex';
+
+const FIELD_NAME = 'date';
 
 export default {
   name: 'DateSelection',
@@ -20,23 +26,43 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionLog', ['selectedDate']),
+    ...mapGetters('webApp', ['filters']),
+    isDateFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     date: {
       get() {
-        return this.selectedDate;
+        const dateFilter = this.filters && this.filters[FIELD_NAME];
+        if (dateFilter) {
+          return dateFilter.value;
+        }
+        return this.today;
       },
-      set(val) {
-        this.setSelectedDate(val);
+      async set(dateVal) {
+        this.setDateFilter(dateVal);
+        await this.fetchProductionList();
       },
     },
   },
   created() {
-    if (!this.selectedDate) {
-      this.setSelectedDate(this.today);
+    if (this.isDateFilterInactive) {
+      this.setDateFilter(this.today);
     }
   },
   methods: {
-    ...mapMutations('productionLog', ['setSelectedDate']),
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('productionLog', ['fetchProductionList']),
+    setDateFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
   },
 };
 </script>

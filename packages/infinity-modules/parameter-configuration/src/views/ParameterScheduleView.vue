@@ -146,7 +146,7 @@
         :items-per-page="100"
         show-select
         >
-          <template v-slot:item.name="props">
+          <template #item.name="props">
             <v-edit-dialog
               :return-value.sync="props.item.name"
               @save="saveTableParameter(props.item, 'name')"
@@ -159,7 +159,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.name"
@@ -169,15 +169,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.showparameter="{ item }">
-            <v-checkbox
-              primary
-              hide-details
-              v-model="item.showparameter"
-              @change="showParameters($event, item)"
-            ></v-checkbox>
-          </template>
-          <template v-slot:item.description="props">
+          <template #item.description="props">
             <v-edit-dialog
               :return-value.sync="props.item.description"
               large
@@ -194,7 +186,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-textarea
                   :disabled="substationValue ? false : true"
                   v-model="props.item.description"
@@ -204,7 +196,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.parametercategory="props">
+          <template #item.parametercategory="props">
             <v-select
               :disabled="(substationValue ? false : true) || saving"
               :items="categoryList"
@@ -218,7 +210,7 @@
               depressed
             ></v-select>
           </template>
-          <template v-slot:item.datatype="props">
+          <template #item.datatype="props">
             <v-select
               :disabled="(substationValue ? false : true) || saving"
               :items="datatypeList"
@@ -232,7 +224,7 @@
               depressed
             ></v-select>
           </template>
-          <template v-slot:item.bitnumber="props">
+          <template #item.bitnumber="props">
             <v-edit-dialog
               :return-value.sync="props.item.bitnumber"
               @save="saveTableParameter(props.item, 'bitnumber')"
@@ -245,7 +237,7 @@
               >
               mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="!substationValue
                   || props.item.datatype !== 12"
@@ -257,7 +249,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.size="props">
+          <template #item.size="props">
             <v-edit-dialog
               :return-value.sync="props.item.size"
               @save="saveTableParameter(props.item, 'size')"
@@ -270,7 +262,7 @@
               >
               mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="!substationValue
                   || props.item.datatype !== 11"
@@ -282,7 +274,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.startaddress="props">
+          <template #item.startaddress="props">
             <v-edit-dialog
               :return-value.sync="props.item.startaddress"
               @save="saveTableParameter(props.item, 'startaddress')"
@@ -294,7 +286,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.startaddress"
@@ -305,7 +297,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.dbaddress="props">
+          <template #item.dbaddress="props">
             <v-edit-dialog
               :return-value.sync="props.item.dbaddress"
               @save="saveTableParameter(props.item, 'dbaddress')"
@@ -317,7 +309,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.dbaddress"

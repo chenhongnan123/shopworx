@@ -5,19 +5,19 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <div class="mt-5 mr-4">
-        <select-all />
-      </div>
       <div v-if="selectedDowntimes.length > 0 && toggleSelection">
          <assign-reason-dialog />
       </div>
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
-          <span v-if="downtimeList.length">
-            Showing {{ downtimeList.length }} of {{ downtimeCount }} |
+          <span v-if="filterCount">
+            {{ filterCount }} of {{ downtimeCount }} records
+            <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
-          {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
+          <span v-if="$vuetify.breakpoint.smAndUp">
+            {{ machine }} | {{ shift }} - {{ date }}
+          </span>
         </span>
       </div>
       <v-btn
@@ -35,15 +35,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import SelectAll from './toolbar/SelectAll.vue';
 import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
   components: {
-    SelectAll,
     AssignReasonDialog,
   },
   data() {
@@ -55,25 +53,24 @@ export default {
     ...mapState('downtimeLog', [
       'drawer',
       'downtimeList',
-      'downtimeCount',
       'selectedDuration',
-      'selectedMachine',
-      'selectedShift',
-      'selectedDate',
       'selectedDowntimes',
       'toggleSelection',
+      'downtimeCount',
     ]),
-    duration() {
-      return this.selectedDuration ? this.selectedDuration.name : '';
-    },
+    ...mapGetters('webApp', ['filters', 'filteredRecords']),
     machine() {
-      return this.selectedMachine ? this.selectedMachine : '';
+      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
     shift() {
-      return this.selectedShift ? this.selectedShift : '';
+      return this.filters && this.filters.shiftName ? this.filters.shiftName.value : '';
     },
     date() {
-      return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
+      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
+    },
+    filterCount() {
+      const downtime = this.filteredRecords(this.downtimeList);
+      return downtime.length;
     },
   },
   methods: {

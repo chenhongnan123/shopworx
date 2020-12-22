@@ -33,7 +33,7 @@
             item-text="name"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -51,7 +51,7 @@
             item-text="materialnumber"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialnumber"></v-list-item-title>
             </v-list-item-content>
@@ -70,7 +70,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
               <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -89,7 +89,7 @@
             item-text="materialtype"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialtype"></v-list-item-title>
             </v-list-item-content>
@@ -107,7 +107,7 @@
             item-text="manufacturer"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.manufacturer"></v-list-item-title>
             </v-list-item-content>

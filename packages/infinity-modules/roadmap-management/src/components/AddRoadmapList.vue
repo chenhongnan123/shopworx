@@ -7,7 +7,7 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
    >
-   <template v-slot:activator="{ on }">
+   <template #activator="{ on }">
     <v-btn
     v-on="on"
     small color="primary" class="text-none" @click="addNewRoadmap">

@@ -66,12 +66,12 @@
         :items="bomList"
         item-key="bomnumber"
         >
-        <template v-slot:item.name="props" >
+        <template #item.name="props" >
           <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
             <span style="cursor:pointer;">{{props.item.name}}</span>
           </router-link>
         </template>
-        <template v-slot:top>
+        <template #top>
         <v-dialog
           persistent
           scrollable
@@ -162,7 +162,7 @@
           </v-card>
         </v-dialog>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-row>
             <v-btn
               icon

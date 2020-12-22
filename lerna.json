@@ -1,6 +1,8 @@
 {
   "packages": [
     "packages/assets",
+    "packages/dashboard-viewer",
+    "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
     "packages/origin",
@@ -8,5 +10,5 @@
     "packages/services",
     "packages/ui-components"
   ],
-  "version": "4.1.3"
+  "version": "4.2.0-alpha.3"
 }

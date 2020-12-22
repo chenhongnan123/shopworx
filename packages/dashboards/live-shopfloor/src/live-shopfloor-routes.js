@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: '/live-shopfloor',
+    path: 'live-shopfloor',
     component: () => import(/* webpackChunkName: "live-shopfloor" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
@@ -9,12 +9,12 @@ const routes = [
       {
         path: '',
         name: 'liveShopfloor',
-        component: () => import(/* webpackChunkName: "live-shopfloor" */ './views/ShopfloorDashboard.vue'),
+        component: () => import(/* webpackChunkName: "live-shopfloor" */ './views/ShopfloorView.vue'),
       },
       {
         path: ':id',
         name: 'assetDetail',
-        component: () => import(/* webpackChunkName: "live-shopfloor-asset" */ './views/AssetDashboard.vue'),
+        component: () => import(/* webpackChunkName: "live-shopfloor-asset" */ './views/AssetView.vue'),
         props: true,
       },
     ],

@@ -12,6 +12,8 @@ export default {
       info: '#607D8B',
       success: '#4CAF50',
       warning: '#FFC107',
+      dBackground: '#EBECF4',
+      wBackground: '#FFFFFF',
     },
     dark: {
       primary: '#21C77C',
@@ -21,6 +23,8 @@ export default {
       info: '#607D8B',
       success: '#4CAF50',
       warning: '#FFC107',
+      dBackground: '#16113A',
+      wBackground: '#272953',
     },
   },
 };

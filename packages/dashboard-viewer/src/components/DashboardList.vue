@@ -19,6 +19,7 @@
       :headers="headers"
       :loading="fetchingDashboards"
       hide-default-footer
+      disable-pagination
       :custom-filter="filterDashboards"
     >
       <template #loading>

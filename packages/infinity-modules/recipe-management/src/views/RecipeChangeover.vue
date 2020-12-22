@@ -50,7 +50,7 @@
         item-key="recipenumber"
         show-select
         >
-        <template v-slot:item="{ item, index }">
+        <template #item="{ item, index }">
           <tr>
           <td>
             <v-checkbox
