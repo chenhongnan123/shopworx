@@ -455,6 +455,7 @@ export default {
           type: 'success',
           message: 'UPDATE_SUBSTATION',
         });
+        this.handleGetDetails();
       } else {
         this.setAlert({
           show: true,
@@ -531,6 +532,7 @@ export default {
           type: 'success',
           message: 'UPDATE_MATERIAL',
         });
+        this.handleGetDetails();
       } else {
         this.setAlert({
           show: true,
