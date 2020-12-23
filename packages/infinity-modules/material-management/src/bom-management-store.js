@@ -411,6 +411,30 @@ export default ({
       );
       return putParameter;
     },
+    updateMaterialRecordById: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'bomdetails',
+          id: payload.id,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
+    updateBoundSublineRecordById: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'bomdetails',
+          id: payload.id,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
     deleteBomDetail: async ({ dispatch }, id) => {
       const deleteBomdetail = await dispatch(
         'element/deleteRecordById',

@@ -2,10 +2,11 @@
   <div style="height:100%">
     <v-container fluid class="py-0">
       <v-row>
+        <v-col cols="2">
             <v-autocomplete
               class="ml-2"
               clearable
-              label="Select Line name"
+              label="Line name"
               :items="lineList"
               return-object
               item-text="name"
@@ -18,10 +19,12 @@
                 </v-list-item-content>
               </template>
             </v-autocomplete>
+        </v-col>
+        <v-col cols="2">
             <v-autocomplete
               class="ml-2"
               clearable
-              label="Select Subline name"
+              label="Subline name"
               :items="sublineList"
               return-object
               item-text="name"
@@ -34,10 +37,12 @@
                 </v-list-item-content>
               </template>
             </v-autocomplete>
+        </v-col>
+        <v-col cols="2">
             <v-autocomplete
               class="ml-2"
               clearable
-              label="Select Station name"
+              label="Station name"
               :items="stationList"
               return-object
               item-text="name"
@@ -50,10 +55,12 @@
                 </v-list-item-content>
               </template>
             </v-autocomplete>
+        </v-col>
+        <v-col cols="2">
             <v-autocomplete
               class="ml-2"
               clearable
-              label="Select Sub-Station name"
+              label="Sub-Station name"
               :items="subStations"
               return-object
               item-text="name"
@@ -65,9 +72,33 @@
                 </v-list-item-content>
               </template>
             </v-autocomplete>
+        </v-col>
+        <v-col cols="2">
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Component Type"
+              :items="compTypeList"
+              return-object
+              item-text="name"
+              v-model="selectedComType"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+        </v-col>
+        <v-col class="d-flex flex-row-reverse">
             <v-btn small color="primary" class="text-none ml-2 mt-2" @click="searchData">
             Search
           </v-btn>
+          <v-btn small
+            color="primary" class="text-none ml-2 mt-2" @click="btnExport">
+            Export
+          </v-btn>
+        </v-col>
       </v-row>
       <v-data-table
         :headers="headers"
@@ -90,12 +121,12 @@
               {{ item.name }}
             </td>
             <td>
-              <div v-for="(status, i) in item.configstatus" :key="i">
+              <div v-for="(status, i) in item.configstatus" :key="i" inset>
                 {{ status.text }}
               </div>
             </td>
-            <td v-for="(componentValues, i) in getComponents(item, headers)" :key="i">
-              <div v-for="(value, key) in componentValues" :key="key">
+            <td v-for="(componentValues, i) in getComponents(item, headers)" :key="i" inset>
+              <div v-for="(value, key) in componentValues" :key="key" ripple>
                 <v-checkbox
                   v-if="typeof value === 'boolean'"
                   :input-value="value"
@@ -132,6 +163,8 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
+import CSVParser from '@shopworx/services/util/csv.service';
+import ZipService from '@shopworx/services/util/zip.service';
 
 export default {
   name: 'BomDetails',
@@ -142,7 +175,9 @@ export default {
       selectedSubline: null,
       selectedStation: null,
       selectedSubStation: null,
+      selectedComType: null,
       saving: false,
+      hideQcolumn: false,
       bomDetailList: [],
       headers: [
         {
@@ -166,7 +201,27 @@ export default {
           value: 'configstatus',
         },
       ],
+      compTypeList: [
+        {
+          name: 'S',
+          value: 's',
+          componenttypeid: 'sValue',
+        },
+        {
+          name: 'Q',
+          value: 'q',
+          componenttypeid: 'qValue',
+        },
+      ],
     };
+  },
+  watch: {
+    selectedComType: {
+      handler(val) {
+        this.compareValues(val);
+      },
+      deep: true,
+    },
   },
   computed: {
     ...mapState('bomManagement', [
@@ -180,6 +235,7 @@ export default {
   },
   props: ['query'],
   async created() {
+    this.zipService = ZipService;
     await this.getStations('');
     await this.getBomDetailsConfigList(`?query=bomid==${this.query.id}`);
     if (this.bomDetailsConfigList.length === 0) {
@@ -241,6 +297,14 @@ export default {
           }, {});
         return values;
       });
+    },
+    async compareValues(val) {
+      debugger;
+      if (val.componenttypeid === 'sValue') {
+        this.hideQcolumn = true;
+      } else {
+        this.hideQcolumn = false;
+      }
     },
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
@@ -419,6 +483,82 @@ export default {
           message: 'ERROR_UPDATING_SUBSTATION',
         });
       }
+    },
+    async btnExport() {
+      // const selectedLine = this.query.line;
+      const selectedBomName = this.query.name;
+      const fileName = `${selectedBomName}-BomConfiguration`;
+      const currentContext = this.bomDetailsConfigList;
+      console.log(currentContext);
+      // const selectedBomNum = this.query.number;
+      const csvContent = [];
+      const column = [
+        'lineid',
+        'sublineid',
+        'stationid',
+        'substationid',
+        'configstatus',
+      ];
+      const header = [
+        'Line',
+        'Subline',
+        'Station',
+        'SubStation',
+        'Config Status',
+        'pcbaid',
+        'pipestringid',
+        'coverid',
+        'screwbatchid',
+      ];
+      currentContext.forEach((bom) => {
+        const arr = [];
+        column.forEach((key) => {
+          debugger;
+          if (key === 'configstatus') {
+            arr.push(bom.configstatus[0].name);
+            arr.push(bom.qualitystatus_component_pcbaid);
+            arr.push(bom.qualitystatus_component_pipestringid);
+            arr.push(bom.qualitystatus_component_coverid);
+            arr.push(bom.qualitystatus_component_screwbatchid);
+          } if (key === 'configstatus') {
+            arr.push(bom.configstatus[1].name);
+            arr.push(bom.savedata_component_pcbaid);
+            arr.push(bom.savedata_component_pipestringid);
+            arr.push(bom.savedata_component_coverid);
+            arr.push(bom.savedata_component_screwbatchid);
+          } if (key === 'configstatus') {
+            arr.push(bom.configstatus[2].name);
+            arr.push(bom.componentstatus_component_pcbaid);
+            arr.push(bom.componentstatus_component_pipestringid);
+            arr.push(bom.componentstatus_component_coverid);
+            arr.push(bom.componentstatus_component_screwbatchid);
+          } else {
+            arr.push(bom[key]);
+          }
+        });
+        csvContent.push(arr);
+        console.log(csvContent);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: header,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'Downloaded_Bom_Details',
+      });
+      return content;
+    },
+    addToZip(file) {
+      this.zipService.addFile(file);
     },
   },
 };
