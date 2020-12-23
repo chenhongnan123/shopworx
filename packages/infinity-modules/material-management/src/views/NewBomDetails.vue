@@ -37,7 +37,7 @@
           <structure-bom-details v-if="recipeView === 0" :query="query"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <configuration-bom-details v-if="recipeView === 1" :query="query"/>
+          <configuration-bom-details-old v-if="recipeView === 1" :query="query"/>
       </v-fade-transition>
     </template>
     </v-container>
@@ -47,13 +47,13 @@
 <script>
 import { mapMutations, mapState } from 'vuex';
 import StructureBomDetails from './StructureBomDetails.vue';
-import ConfigurationBomDetails from './ConfigurationBomDetails.vue';
+import ConfigurationBomDetailsOld from './ConfigurationBomDetailsOld.vue';
 
 export default {
   name: 'BomDetails',
   components: {
     StructureBomDetails,
-    ConfigurationBomDetails,
+    ConfigurationBomDetailsOld,
   },
   data() {
     return {

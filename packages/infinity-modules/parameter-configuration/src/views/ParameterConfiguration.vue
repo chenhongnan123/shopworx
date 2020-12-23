@@ -93,6 +93,7 @@ export default {
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapMutations('parameterConfiguration', ['setProtocol']),
     onSelectProtocol(value) {
+      console.log('hi');
       this.setProtocol(value);
     },
   },

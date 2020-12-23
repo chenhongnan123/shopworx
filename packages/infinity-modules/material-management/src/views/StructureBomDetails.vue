@@ -22,44 +22,58 @@
       <!-- </v-toolbar> -->
       <v-row>
         <v-col cols="2">
-          <v-text-field
-            v-if="!!lineList.filter((item) => item.id === query.lineid)[0]"
-            :value="lineList.filter((item) => item.id === query.lineid)[0].name"
-            label="Line"
-            disabled
-          ></v-text-field>
-          <v-text-field
-            v-else
-            label="Line"
-            disabled
-          ></v-text-field>
-        </v-col>
-        <!-- <v-col cols="2">
-          <v-text-field
-            v-if="!!sublineList.filter((item) => item.id === query.sublineid)[0]"
-            :value="sublineList.filter((item) => item.id === query.sublineid)[0].name"
-            label="Subline"
-            disabled
-          ></v-text-field>
-          <v-text-field
-            v-else
-            label="Subline"
-            disabled
-          ></v-text-field>
-        </v-col> -->
-        <v-col cols="2">
-          <v-text-field
-            :value="query.name"
-            label="BOM"
-            disabled
-          ></v-text-field>
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Line name"
+              :items="lineList"
+              return-object
+              item-text="name"
+              v-model="selectedLine"
+              @change="handleLineClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
         </v-col>
         <v-col cols="2">
-          <v-text-field
-            :value="query.bomnumber"
-            label="Number"
-            disabled
-          ></v-text-field>
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Subline name"
+              :items="sublineList"
+              return-object
+              item-text="name"
+              v-model="selectedSubLine"
+              @change="handleSubLineClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+        </v-col>
+        <v-col cols="2">
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Station name"
+              :items="stationList"
+              return-object
+              item-text="name"
+              v-model="selectedStation"
+              @change="handleStationClick"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
         </v-col>
          <v-col cols="2">
           <v-autocomplete
@@ -330,10 +344,25 @@ export default {
       'getSubStationListForConfigScreen',
       'updateMaterialRecordById',
       'updateBoundSublineRecordById',
+      'getSubLines',
+      'getStations',
+      'getSubStations',
     ]),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getMaterialListChoice']),
     async getFilteredsubstation() {
       await this.getSubStationList('');
+    },
+    async handleLineClick(item) {
+      const query = `?query=lineid==${item.id}`;
+      await this.getSubLines(query);
+    },
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getStations(query);
+    },
+    async handleStationClick(item) {
+      const query = `?query=stationid=="${item.id}"`;
+      await this.getSubStations(query);
     },
     // async getFilteredSubstation() {
     //   const sub = await this.getBomDetailsListRecords();
@@ -416,6 +445,13 @@ export default {
         }));
         await this.createBomdetailList(bomDetailList);
         this.bomDetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
+        const list = await this.getSubStationListForConfigScreen(
+          {
+            bomid: this.query.id,
+            lineid: this.query.lineid,
+          },
+        );
+        await this.createBomDetailConfigList(list);
       }
     },
     // configurationLogic() {
@@ -669,7 +705,19 @@ export default {
     },
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'parameterList', 'substationList', 'subStationListForConfig']),
+    ...mapState('bomManagement', [
+      'bomList',
+      'categoryList',
+      'lineList',
+      'sublineList',
+      'lineValue',
+      'sublineValue',
+      'parameterList',
+      'substationList',
+      'subStationListForConfig',
+      'stationList',
+      'subStations',
+    ]),
     ...mapState('materialManagement', ['materialList', 'materialListChoice']),
   },
   props: ['query'],

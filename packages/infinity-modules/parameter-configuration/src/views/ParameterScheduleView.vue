@@ -426,6 +426,14 @@ export default {
     this.socket.on('connect', () => {
     });
   },
+  destroyed() {
+    this.setLineValue('');
+    this.setSublineValue('');
+    this.setStationValue('');
+    this.setSubstationValue('');
+    this.setParameterList([]);
+    this.setProtocol('');
+  },
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
@@ -485,7 +493,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
+    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setParameterList', 'setProtocol']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
     async saveTableParameter(item, type) {

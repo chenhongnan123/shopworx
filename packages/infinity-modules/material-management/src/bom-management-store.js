@@ -161,6 +161,9 @@ export default ({
         bomDetailsList = bomdetails.map((l) => ({
           ...l,
           componentStatusList: [],
+          qualitystatus: false,
+          savedata: false,
+          componentstatus: '',
           configstatus: [{
             text: 'Update quality',
             name: 'qualitystatus',
@@ -393,6 +396,30 @@ export default ({
         {
           elementName: 'bomdetails',
           queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
+    updateDetailsConfigByQuery: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: 'bomdetailsconfig',
+          queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
+    updateDeatilsById: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'bomdetails',
+          id: payload.id,
           payload: payload.payload,
         },
         { root: true },

@@ -303,13 +303,11 @@ export default {
         fileContent: content,
       });
       // process table
-      await this.btnProcessParametersLogic();
+      // await this.btnProcessParametersLogic();
       fileName = 'process_parameter_data';
-      console.log(this.processParametersList);
-      console.log(this.processParametersheader);
-      console.log(Array.from(this.processParametersList));
-      parameterSelected = this.processParametersList.map((item) => ({ ...item }));
-      column = this.processParametersheader;
+      parameterSelected = this.$refs.process
+        .processParametersList.map((item) => ({ ...item }));
+      column = this.$refs.process.headerForCSV;
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
