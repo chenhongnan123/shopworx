@@ -61,11 +61,34 @@
             disabled
           ></v-text-field>
         </v-col>
+         <v-col cols="2">
+          <v-autocomplete
+              class="ml-2"
+              clearable
+              label="SubStation"
+              :items="substationList"
+              return-object
+              item-text="name"
+              v-model="selectedSubStation"
+              @change="refreshBomList"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+        </v-col>
         <v-col class="d-flex flex-row-reverse">
           <v-btn small
             :loading="saving"
             color="primary" class="text-none ml-2" @click="btnExport">
             Export
+          </v-btn>
+          <v-btn small color="primary" class="text-none ml-2"
+           :loading="getResult"
+           @click="searchData">
+            Search
           </v-btn>
         </v-col>
       </v-row>
@@ -239,6 +262,7 @@ export default {
       bomDetailList: [],
       bomDetailSelected: [],
       parameterListForComponentStatus: [],
+      getResult: false,
       headers: [
         {
           text: 'Line',
@@ -288,7 +312,7 @@ export default {
     this.zipService = ZipService;
     // code
     // await this.configurationLogic();
-    // await this.getSubStationList('');
+    await this.getSubStationList('');
     // this.getFilteredSubstation();
   },
   methods: {
@@ -617,6 +641,29 @@ export default {
     },
     addToZip(file) {
       this.zipService.addFile(file);
+    },
+    async searchData() {
+      debugger;
+      let param = `?query=bomid==${this.query.id}`;
+      if (this.selectedSubStation) {
+        param += `%26%26substationid=="${this.selectedSubStation.id}"`;
+      }
+      this.getResult = true;
+      const searchBomdetailList = await this.getBomDetailsListRecords(param);
+      this.getResult = false;
+      if (searchBomdetailList) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS_BY_SUBSTATION',
+        });
+      }
+      this.bomDetailList = searchBomdetailList;
+    },
+    async refreshBomList() {
+      this.getResult = true;
+      this.handleGetDetails();
+      this.getResult = false;
     },
   },
   computed: {
