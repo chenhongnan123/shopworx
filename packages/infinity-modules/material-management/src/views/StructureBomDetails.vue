@@ -61,6 +61,13 @@
             disabled
           ></v-text-field>
         </v-col>
+        <v-col class="d-flex flex-row-reverse">
+          <v-btn small
+            :loading="saving"
+            color="primary" class="text-none ml-2" @click="btnExport">
+            Export
+          </v-btn>
+        </v-col>
       </v-row>
       <v-data-table
         v-model="bomDetailSelected"
@@ -80,7 +87,6 @@
         </template>
         <template v-slot:item.boundsublinename="{ item }">
          <v-select
-          v-if="item.parametercategory === '21'"
           label="-"
           :items="sublineList"
           :disabled="saving"
@@ -223,6 +229,8 @@
 
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
+import CSVParser from '@shopworx/services/util/csv.service';
+import ZipService from '@shopworx/services/util/zip.service';
 
 export default {
   name: 'BomDetails',
@@ -239,6 +247,10 @@ export default {
         {
           text: 'Subline',
           value: 'subline',
+        },
+        {
+          text: 'Station',
+          value: 'station',
         },
         {
           text: 'Substation',
@@ -273,6 +285,7 @@ export default {
     await this.getMaterialListChoice('');
     await this.handleGetDetails();
     await this.getSublineList('');
+    this.zipService = ZipService;
     // code
     // await this.configurationLogic();
     // await this.getSubStationList('');
@@ -291,6 +304,8 @@ export default {
       'getSublineList',
       'getSubStationList',
       'getSubStationListForConfigScreen',
+      'updateMaterialRecordById',
+      'updateBoundSublineRecordById',
     ]),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getMaterialListChoice']),
     async getFilteredsubstation() {
@@ -408,7 +423,7 @@ export default {
       }
       console.log(payload, 'payload');
       this.saving = true;
-      const updateResult = await this.updateRecordById(payload);
+      const updateResult = await this.updateBoundSublineRecordById(payload);
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -484,7 +499,7 @@ export default {
       }
       console.log(payload, 'payload');
       this.saving = true;
-      const updateResult = await this.updateRecordById(payload);
+      const updateResult = await this.updateMaterialRecordById(payload);
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -549,6 +564,59 @@ export default {
       }
       this.saving = false;
       this.confirmListDialog = false;
+    },
+    async btnExport() {
+      const selectedLine = this.query.line;
+      const selectedBomName = this.query.name;
+      const fileName = `${selectedLine}-${selectedBomName}-BomDetails`;
+      const currentContext = this.bomDetailList;
+      // const selectedBomNum = this.query.number;
+      const csvContent = [];
+      const column = [
+        'line',
+        'subline',
+        'station',
+        'substation',
+        'parametername',
+        'materialname',
+        'boundsublinename',
+      ];
+      const header = [
+        'Line',
+        'Subline',
+        'Station',
+        'SubStation',
+        'Component Name',
+        'Material Name',
+        'Bound Subline Name',
+      ];
+      currentContext.forEach((bom) => {
+        const arr = [];
+        column.forEach((key) => {
+          arr.push(bom[key]);
+        });
+        csvContent.push(arr);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: header,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: `${fileName}.csv`,
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'Downloaded_Bom_Details',
+      });
+      return content;
+    },
+    addToZip(file) {
+      this.zipService.addFile(file);
     },
   },
   computed: {
