@@ -74,7 +74,7 @@ export default ({
     fetchDevices: async ({ dispatch, commit }, deploymentServiceId = null) => {
       let query = '';
       if (deploymentServiceId) {
-        query = `deploymentserviceid==${deploymentServiceId}`;
+        query = `deploymentserviceid==${deploymentServiceId}%26%26ispasswordless==true`;
       }
       const records = await dispatch(
         'element/getRecords',
