@@ -1,11 +1,14 @@
 <template>
-  <v-card height="450">
-    <v-card-title>
+  <v-card>
+    <v-card-title class="pb-0">
       Monitored instances
     </v-card-title>
-    <v-card-text>
-      {{ selectedDevice }}
-    </v-card-text>
+    <v-divider></v-divider>
+    <perfect-scrollbar>
+      <v-card-text class="pb-0" style="height:408px">
+        {{ selectedDevice }}
+      </v-card-text>
+    </perfect-scrollbar>
   </v-card>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-  <v-card height="450">
-    <v-card-title>
+  <v-card>
+    <v-card-title class="pb-0">
       Device details
       <v-btn
         text
@@ -19,7 +19,7 @@
           small
           color="primary"
           :disabled="saving"
-          @click="edit = false"
+          @click="cancel"
           class="text-none ml-2 mb-1"
         >
           Cancel
@@ -35,8 +35,9 @@
         </v-btn>
       </template>
     </v-card-title>
-    <perfect-scrollbar style="height: 390px">
-      <v-card-text class="py-0">
+    <v-divider></v-divider>
+    <perfect-scrollbar>
+      <v-card-text class="pb-0" style="height:408px">
         <v-row>
           <v-col cols="4" class="py-0">
             <div>
@@ -160,7 +161,6 @@ export default {
       'devices',
     ]),
     rootDevice() {
-      console.log(this.selectedDevice.ipaddr === this.selectedService.ipaddr);
       return this.selectedDevice.ipaddr === this.selectedService.ipaddr;
     },
     deviceNames() {
@@ -183,24 +183,28 @@ export default {
       console.log(this.selectedDevice);
       this.saving = false;
     },
-  },
-  watch: {
-    selectedDevice: {
-      immediate: true,
-      async handler({
+    cancel() {
+      const {
         id,
         name,
         description,
         hostname,
         ipaddr,
-      }) {
-        this.edit = false;
+      } = this.selectedDevice;
+      this.edit = false;
+      this.device.id = id;
+      this.device.name = name;
+      this.device.description = description;
+      this.device.hostname = hostname;
+      this.device.ipaddr = ipaddr;
+    },
+  },
+  watch: {
+    selectedDevice: {
+      immediate: true,
+      async handler() {
         await this.fetchDevices();
-        this.device.id = id;
-        this.device.name = name;
-        this.device.description = description;
-        this.device.hostname = hostname;
-        this.device.ipaddr = ipaddr;
+        this.cancel();
       },
     },
   },
