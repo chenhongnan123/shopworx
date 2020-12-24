@@ -1,8 +1,22 @@
 const routes = [
   {
     path: 'deployment',
-    name: 'customerDeployment',
-    component: () => import(/* webpackChunkName: "customer-deployment" */ './views/CustomerDeployment.vue'),
+    component: () => import(/* webpackChunkName: "customer-deployment" */ './views/Index.vue'),
+    meta: {
+      permissionRequired: true,
+    },
+    children: [
+      {
+        path: '',
+        name: 'customerDeployment',
+        component: () => import(/* webpackChunkName: "customer-deployment" */ './views/CustomerDeployment.vue'),
+      },
+      {
+        path: 'settings/:id?',
+        name: 'deploymentSettings',
+        component: () => import(/* webpackChunkName: "customer-deployment" */ './views/DeploymentSettings.vue'),
+      },
+    ],
   },
 ];
 

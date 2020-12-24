@@ -1,63 +1,45 @@
 <template>
   <div style="height:100%">
-      <portal to="app-header">
-        Deployment
-      </portal>
-      <v-fade-transition mode="out-in">
-        <v-container fill-height v-if="loading">
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
+    <portal to="app-header">
+      <span>Deployment</span>
+      <v-btn icon small class="ml-4 mb-1">
+        <v-icon
+          v-text="'$info'"
+        ></v-icon>
+      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="gotToSettings"
           >
-            <v-col cols="12" align="center">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                size="72"
-              ></v-progress-circular>
-            </v-col>
-            <v-col cols="12" align="center">
-              <div class="headline">
-                To the customer, you are the company.
-              </div>
-              <div class="title">
-                Setting up deployment environment
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-        <div v-else>
-          Welcome
-        </div>
-      </v-fade-transition>
+            <v-icon
+              v-text="'$settings'"
+            ></v-icon>
+          </v-btn>
+        </template>
+        Settings
+      </v-tooltip>
+    </portal>
+    <deployment-service />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import DeploymentService from '../components/DeploymentService.vue';
 
 export default {
   name: 'CustomerDeployment',
-  data() {
-    return {
-      loading: false,
-    };
-  },
-  computed: {
-    ...mapState('user', ['me']),
-  },
-  async created() {
-    this.loading = true;
-    await this.initElements();
-    this.loading = false;
+  components: {
+    DeploymentService,
   },
   methods: {
-    ...mapActions('customerDeployment', ['initElements']),
-  },
-  watch: {
-    me(val) {
-      console.log(val);
+    gotToSettings() {
+      this.$router.push({ name: 'deploymentSettings' });
     },
   },
 };
