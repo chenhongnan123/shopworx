@@ -11,7 +11,7 @@
         v-on="on"
         v-bind="attrs"
         color="primary"
-        outlined
+        rounded
         class="text-none"
       >
         <v-icon left small>mdi-face</v-icon>

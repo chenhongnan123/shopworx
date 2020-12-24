@@ -53,9 +53,11 @@ export default {
     ...mapActions('customerDeployment', ['initElements']),
   },
   watch: {
-    me() {
-      this.$router.replace({ name: 'customerDeployment' });
-      window.location.reload();
+    me(val) {
+      if (val) {
+        this.$router.replace({ name: 'customerDeployment' });
+        window.location.reload();
+      }
     },
   },
 };

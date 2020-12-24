@@ -1,4 +1,4 @@
-export default [
+export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
@@ -7,7 +7,7 @@ export default [
       elementDescription: 'Deployment Services',
       status: 'ACTIVE',
       elementType: 'DEFAULT',
-      uniqueTag: false,
+      uniqueTag: true,
       uniqueTagName: 'id',
       uniqueTagValue: 0,
       uniqueTagStartValue: 1,
@@ -114,7 +114,7 @@ export default [
       elementDescription: 'Nodebot Master',
       status: 'ACTIVE',
       elementType: 'DEFAULT',
-      uniqueTag: false,
+      uniqueTag: true,
       uniqueTagName: 'id',
       uniqueTagValue: 0,
       uniqueTagStartValue: 1,
@@ -311,7 +311,7 @@ export default [
       elementDescription: 'Devices',
       status: 'ACTIVE',
       elementType: 'DEFAULT',
-      uniqueTag: false,
+      uniqueTag: true,
       uniqueTagName: 'id',
       uniqueTagValue: 0,
       uniqueTagStartValue: 1,
@@ -559,7 +559,7 @@ export default [
       elementDescription: 'Instances',
       status: 'ACTIVE',
       elementType: 'DEFAULT',
-      uniqueTag: false,
+      uniqueTag: true,
       uniqueTagName: 'id',
       uniqueTagValue: 0,
       uniqueTagStartValue: 1,
@@ -941,3 +941,8 @@ export default [
     ],
   },
 ];
+
+export const elementMap = {
+  DEPLOYMENT_SERVICE: 'deploymentservices',
+  DEVICE: 'line',
+};
