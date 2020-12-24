@@ -77,7 +77,7 @@
         :items="mappedDevices"
         :search="search"
         :headers="headers"
-        class="mt-4 mx-4"
+        class="pt-4 mx-4"
         :loading="fetchingDevices"
         disable-pagination
         hide-default-footer
@@ -87,8 +87,21 @@
         <template #no-results>
           No matching device found for '{{ search }}'
         </template>
+        <!-- eslint-disable-next-line -->
+        <template #item.name="{ item }">
+          <v-btn
+            small
+            :outlined="isDeviceSelected(item.id)"
+            :text="!isDeviceSelected(item.id)"
+            color="primary"
+            @click="setSelectedDevice(item)"
+            class="text-none"
+          >
+            {{ item.name }}
+          </v-btn>
+        </template>
       </v-data-table>
-      <v-row class="mx-4">
+      <v-row class="mx-4" v-if="selectedDevice">
         <v-col cols="12" md="4">
           <device-details />
         </v-col>
@@ -192,6 +205,7 @@ export default {
     ...mapState('customerDeployment', [
       'deploymentServices',
       'selectedService',
+      'selectedDevice',
       'mappedDevices',
     ]),
     notFoundIllustration() {
@@ -216,6 +230,7 @@ export default {
     ]),
     ...mapMutations('customerDeployment', [
       'setSelectedService',
+      'setSelectedDevice',
     ]),
     async getServices() {
       this.setExtendedHeader(true);
@@ -231,6 +246,9 @@ export default {
       await this.fetchDevices(this.selectedService.id);
       this.fetchingDevices = false;
     },
+    isDeviceSelected(id) {
+      return this.selectedDevice.id === id;
+    },
   },
   watch: {
     selectedService: {
@@ -239,6 +257,11 @@ export default {
         if (val) {
           this.fetchingDevices = true;
           await this.fetchDevices(val.id);
+          if (this.mappedDevices.length) {
+            this.setSelectedDevice(this.mappedDevices[0]);
+          } else {
+            this.setSelectedDevice(null);
+          }
           this.fetchingDevices = false;
         }
       },
