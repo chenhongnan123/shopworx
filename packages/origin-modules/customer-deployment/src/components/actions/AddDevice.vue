@@ -98,10 +98,6 @@ export default {
       saving: false,
       dialog: false,
       loading: false,
-      nameRules: [
-        (v) => !!v || 'Service name is required',
-        (v) => !this.serviceNames.includes(v) || 'Service name is not available',
-      ],
       deviceRules: [
         (v) => !!v || 'Device name is required',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',

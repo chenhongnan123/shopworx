@@ -17,6 +17,7 @@
               item-text="name"
               return-object
               hide-details
+              class="mb-2"
               :items="deploymentServices"
             >
               <template #item="{ item }">
@@ -77,7 +78,7 @@
         :items="mappedDevices"
         :search="search"
         :headers="headers"
-        class="pt-4 mx-4"
+        class="mt-2 mx-4"
         :loading="fetchingDevices"
         disable-pagination
         hide-default-footer
@@ -101,14 +102,14 @@
           </v-btn>
         </template>
       </v-data-table>
-      <v-row class="mx-4" v-if="selectedDevice">
-        <v-col cols="12" md="4">
+      <v-row class="mx-4 mt-4" v-if="selectedDevice">
+        <v-col cols="12" md="6" xl="4">
           <device-details />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6" xl="4">
           <monitored-instances />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" xl="4">
           <deployment-logs />
         </v-col>
       </v-row>
@@ -247,7 +248,10 @@ export default {
       this.fetchingDevices = false;
     },
     isDeviceSelected(id) {
-      return this.selectedDevice.id === id;
+      if (this.selectedDevice) {
+        return this.selectedDevice.id === id;
+      }
+      return false;
     },
   },
   watch: {

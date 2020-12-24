@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined>
+  <v-card height="450">
     <v-card-title>
       Logs
     </v-card-title>
