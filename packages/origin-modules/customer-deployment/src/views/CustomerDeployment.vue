@@ -2,11 +2,6 @@
   <div style="height:100%">
     <portal to="app-header">
       <span>Deployment</span>
-      <v-btn icon small class="ml-4 mb-1">
-        <v-icon
-          v-text="'$info'"
-        ></v-icon>
-      </v-btn>
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn
@@ -14,7 +9,7 @@
             small
             v-on="on"
             v-bind="attrs"
-            class="ml-2 mb-1"
+            class="ml-4 mb-1"
             @click="gotToSettings"
           >
             <v-icon
@@ -82,11 +77,9 @@ export default {
     await this.fetchDeploymentServices();
     if (this.deploymentServices.length) {
       this.setExtendedHeader(true);
+      this.setSelectedService(this.deploymentServices[0]);
     } else {
       this.setExtendedHeader(false);
-    }
-    if (this.deploymentServices.length === 1) {
-      this.setSelectedService(this.deploymentServices[0]);
     }
     this.loading = false;
   },

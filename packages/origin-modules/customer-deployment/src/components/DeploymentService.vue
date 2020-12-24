@@ -27,7 +27,6 @@
               </template>
             </v-autocomplete>
           </v-responsive>
-          <v-divider vertical class="ml-8"></v-divider>
           <add-service
             @on-create="getServices"
             #default="{ on, attrs }"
@@ -35,22 +34,30 @@
             <v-btn
               color="primary"
               class="text-none ml-4"
-              v-on="on"
               small
+              v-on="on"
               v-bind="attrs"
             >
               <v-icon left>mdi-plus</v-icon>
-              Add new service
+              Create service
             </v-btn>
           </add-service>
-          <v-btn
-            outlined
-            small
-            color="primary"
-            class="text-none ml-2"
+          <v-divider vertical class="mx-4"></v-divider>
+          <add-device
+            @on-create="getDevices"
+            #default="{ on, attrs }"
           >
-            Register device
-          </v-btn>
+            <v-btn
+              text
+              small
+              v-on="on"
+              v-bind="attrs"
+              color="primary"
+              class="text-none px-0"
+            >
+              Register device
+            </v-btn>
+          </add-device>
           <v-spacer></v-spacer>
           <v-responsive :max-width="300">
             <v-text-field
@@ -81,6 +88,17 @@
           No matching device found for '{{ search }}'
         </template>
       </v-data-table>
+      <v-row class="mx-4">
+        <v-col cols="12" md="4">
+          <device-details />
+        </v-col>
+        <v-col cols="12" md="4">
+          <monitored-instances />
+        </v-col>
+        <v-col cols="12" md="4">
+          <deployment-logs />
+        </v-col>
+      </v-row>
     </template>
     <v-container fluid fill-height v-else>
       <v-row
@@ -125,11 +143,19 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import AddService from './actions/AddService.vue';
+import AddDevice from './actions/AddDevice.vue';
+import DeviceDetails from './DeviceDetails.vue';
+import MonitoredInstances from './MonitoredInstances.vue';
+import DeploymentLogs from './DeploymentLogs.vue';
 
 export default {
   name: 'DeploymentService',
   components: {
     AddService,
+    AddDevice,
+    DeviceDetails,
+    MonitoredInstances,
+    DeploymentLogs,
   },
   data() {
     return {
@@ -137,27 +163,24 @@ export default {
       loading: false,
       fetchingDevices: false,
       headers: [
-        { text: 'Details', value: 'name' },
-        { text: 'Last modified', value: 'lastModified' },
+        { text: 'Device name', value: 'name' },
+        {
+          text: 'Hostname',
+          value: 'hostname',
+          sortable: false,
+        },
+        {
+          text: 'IP address',
+          value: 'ipaddr',
+          sortable: false,
+        },
         {
           text: 'Last update status',
           value: 'status',
           sortable: false,
         },
         {
-          text: 'Logs',
-          value: 'logs',
-          sortable: false,
-          filterable: false,
-        },
-        {
-          text: 'Configuration',
-          value: 'config',
-          sortable: false,
-          filterable: false,
-        },
-        {
-          text: 'Actions',
+          text: 'Monitored instances',
           value: 'actions',
           sortable: false,
           filterable: false,
@@ -200,6 +223,11 @@ export default {
       this.fetchingDevices = true;
       await this.fetchDeploymentServices();
       this.loading = false;
+      await this.fetchDevices(this.selectedService.id);
+      this.fetchingDevices = false;
+    },
+    async getDevices() {
+      this.fetchingDevices = true;
       await this.fetchDevices(this.selectedService.id);
       this.fetchingDevices = false;
     },

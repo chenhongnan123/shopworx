@@ -8,12 +8,14 @@ export default ({
     devices: [],
     mappedDevices: [],
     selectedService: null,
+    selectedDevice: null,
   },
   mutations: {
     setDeploymentServices: set('deploymentServices'),
     setDevices: set('devices'),
     setMappedDevices: set('mappedDevices'),
     setSelectedService: set('selectedService'),
+    setSelectedDevice: set('selectedDevice'),
   },
   actions: {
     initElements: async ({ dispatch }) => {
@@ -71,6 +73,18 @@ export default ({
       return record;
     },
 
+    fetchDeviceById: async ({ dispatch }, id) => {
+      const record = await dispatch(
+        'element/getRecordById',
+        {
+          elementName: elementMap.DEVICE,
+          id,
+        },
+        { root: true },
+      );
+      return record;
+    },
+
     fetchDevices: async ({ dispatch, commit }, deploymentServiceId = null) => {
       let query = '';
       if (deploymentServiceId) {
@@ -112,7 +126,7 @@ export default ({
       return false;
     },
 
-    createDevice: async ({ dispatch }, payload) => {
+    createDevice: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
         'element/postRecord',
         {
@@ -121,7 +135,12 @@ export default ({
         },
         { root: true },
       );
-      return created;
+      if (created && created.id) {
+        const createdDevice = await dispatch('fetchDeviceById', created.id);
+        commit('setSelectedDevice', createdDevice);
+        return createdDevice;
+      }
+      return false;
     },
   },
 });

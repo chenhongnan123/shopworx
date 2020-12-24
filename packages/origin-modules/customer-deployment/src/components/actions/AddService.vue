@@ -12,7 +12,7 @@
     <v-form ref="form" v-model="isValid">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Add new service
+          Create new service
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -32,8 +32,8 @@
           <template v-else>
             <div class="mb-2 font-weight-medium">Register device</div>
             <template v-if="emptyDevices.length">
-              <!-- list -->
-              <!-- or text -->
+              <!-- TODO: list -->
+              <!-- TODO: or text -->
             </template>
             <v-text-field
               dense
@@ -80,7 +80,7 @@
             :disabled="!isValid"
             @click="addNewService"
           >
-            Add
+            Create
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -179,6 +179,7 @@ export default {
           const devicePayload = {
             deploymentserviceid: service.id,
             name: this.devicename,
+            description: '',
             hostname: this.hostname,
             ipaddr: this.ipaddr,
             ispasswordless: true,
@@ -187,12 +188,12 @@ export default {
           if (device) {
             this.cancel();
             this.$emit('on-create');
-            // success msg
+            // TODO: success msg
           } else {
-            // error of device msg
+            // TODO: error of device msg
           }
         } else {
-          // error of service msg
+          // TODO: error of service msg
         }
         this.saving = false;
       }
