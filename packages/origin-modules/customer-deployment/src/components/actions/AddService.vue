@@ -32,8 +32,30 @@
           <template v-else>
             <div class="mb-2 font-weight-medium">Register device</div>
             <template v-if="emptyDevices.length">
-              <!-- TODO: list -->
-              <!-- TODO: or text -->
+              <v-autocomplete
+                filled
+                dense
+                label="Map existing device"
+                :loading="loading"
+                v-model="unmappedDevice"
+                item-text="name"
+                return-object
+                hide-details
+                clearable
+                :items="emptyDevices"
+              >
+                <template #item="{ item }">
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
+                    <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+              <v-row align="center" class="my-4">
+                <v-divider class="mx-4"></v-divider>
+                <span class="title">or register new</span>
+                <v-divider class="mx-4"></v-divider>
+              </v-row>
             </template>
             <v-text-field
               dense
@@ -41,8 +63,8 @@
               v-model="devicename"
               prepend-icon="mdi-devices"
               label="Device name"
-              :disabled="saving"
-              :rules="deviceRules"
+              :disabled="saving || !!unmappedDevice"
+              :rules="!!unmappedDevice ? [] : deviceRules"
             ></v-text-field>
             <v-text-field
               dense
@@ -50,8 +72,8 @@
               v-model="hostname"
               prepend-icon="mdi-dns-outline"
               label="Hostname"
-              :disabled="saving"
-              :rules="hostRules"
+              :disabled="saving || !!unmappedDevice"
+              :rules="!!unmappedDevice ? [] : hostRules"
             ></v-text-field>
             <v-text-field
               dense
@@ -59,8 +81,8 @@
               v-model="ipaddr"
               prepend-icon="mdi-web"
               label="IP address*"
-              :disabled="saving"
-              :rules="ipRules"
+              :disabled="saving || !!unmappedDevice"
+              :rules="!!unmappedDevice ? [] : ipRules"
               hideDetails="auto"
             ></v-text-field>
             <div class="caption">*This is the IP of the device where the service is deployed</div>
@@ -95,6 +117,7 @@ export default {
   name: 'AddService',
   data() {
     return {
+      unmappedDevice: null,
       name: '',
       ipaddr: '',
       devicename: '',
@@ -130,7 +153,9 @@ export default {
     ]),
     emptyDevices() {
       return this.devices.filter((d) => (
-        d.deploymentserviceid !== undefined && d.ispasswordless
+        (d.deploymentserviceid === undefined
+        || d.deploymentserviceid === 0)
+        && d.ispasswordless
       ));
     },
     serviceNames() {
@@ -152,12 +177,14 @@ export default {
       'fetchDevices',
       'createService',
       'createDevice',
+      'updateDevice',
     ]),
     clear() {
       this.name = '';
       this.ipaddr = '';
       this.devicename = '';
       this.hostname = '';
+      this.unmappedDevice = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
       });
@@ -169,31 +196,51 @@ export default {
     async addNewService() {
       if (this.isValid) {
         this.saving = true;
-        const servicePayload = {
-          name: this.name,
-          ipaddr: this.ipaddr,
-          isactive: true,
-        };
-        const service = await this.createService(servicePayload);
-        if (service) {
-          const devicePayload = {
-            deploymentserviceid: service.id,
-            name: this.devicename,
-            description: '',
-            hostname: this.hostname,
+        let service = null;
+        let device = null;
+        if (!this.unmappedDevice) {
+          const servicePayload = {
+            name: this.name,
             ipaddr: this.ipaddr,
-            ispasswordless: true,
+            isactive: true,
           };
-          const device = await this.createDevice(devicePayload);
-          if (device) {
-            this.cancel();
-            this.$emit('on-create');
-            // TODO: success msg
-          } else {
-            // TODO: error of device msg
+          service = await this.createService(servicePayload);
+          if (service) {
+            const devicePayload = {
+              deploymentserviceid: service.id,
+              name: this.devicename,
+              description: '',
+              hostname: this.hostname,
+              ipaddr: this.ipaddr,
+              ispasswordless: true,
+              assetid: 0,
+            };
+            device = await this.createDevice(devicePayload);
           }
         } else {
-          // TODO: error of service msg
+          const servicePayload = {
+            name: this.name,
+            ipaddr: this.unmappedDevice.ipaddr,
+            isactive: true,
+          };
+          service = await this.createService(servicePayload);
+          if (service) {
+            device = await this.updateDevice({
+              // eslint-disable-next-line
+              id: this.unmappedDevice._id,
+              payload: {
+                deploymentserviceid: service.id,
+                assetid: 0,
+              },
+            });
+          }
+        }
+        if (device) {
+          this.cancel();
+          this.$emit('on-create');
+          // TODO: success msg
+        } else {
+          // TODO: error of device msg
         }
         this.saving = false;
       }

@@ -142,5 +142,23 @@ export default ({
       }
       return false;
     },
+
+    updateDevice: async ({ dispatch, commit }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.DEVICE,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      if (updated && updated.id) {
+        const updatedDevice = await dispatch('fetchDeviceById', updated.id);
+        commit('setSelectedDevice', updatedDevice);
+        return updatedDevice;
+      }
+      return false;
+    },
   },
 });

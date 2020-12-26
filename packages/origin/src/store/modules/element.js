@@ -357,7 +357,7 @@ export default ({
       try {
         const { data } = await ElementService.updateRecordById(elementName, id, payload);
         if (data && data.id) {
-          return true;
+          return data;
         }
       } catch (e) {
         return false;

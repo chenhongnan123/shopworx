@@ -16,8 +16,30 @@
         </v-card-title>
         <v-card-text>
           <template v-if="emptyDevices.length">
-            <!-- TODO: list -->
-            <!-- TODO: or text -->
+            <v-autocomplete
+              filled
+              dense
+              label="Map existing device"
+              :loading="loading"
+              v-model="unmappedDevice"
+              item-text="name"
+              return-object
+              hide-details
+              clearable
+              :items="emptyDevices"
+            >
+              <template #item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                  <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-row align="center" class="my-4">
+              <v-divider class="mx-4"></v-divider>
+              <span class="title">or register new</span>
+              <v-divider class="mx-4"></v-divider>
+            </v-row>
           </template>
           <v-text-field
             dense
@@ -26,9 +48,9 @@
             v-model="name"
             prepend-icon="mdi-devices"
             label="Name"
-            :disabled="saving"
+            :disabled="saving || !!unmappedDevice"
             :loading="loading"
-            :rules="deviceRules"
+            :rules="!!unmappedDevice ? [] : deviceRules"
           ></v-text-field>
           <v-textarea
             dense
@@ -39,7 +61,7 @@
             auto-grow
             label="Description"
             placeholder="Optional"
-            :disabled="saving || loading"
+            :disabled="saving || loading || !!unmappedDevice"
           ></v-textarea>
           <v-text-field
             dense
@@ -47,8 +69,8 @@
             v-model="hostname"
             prepend-icon="mdi-dns-outline"
             label="Hostname"
-            :disabled="saving || loading"
-            :rules="hostRules"
+            :disabled="saving || loading || !!unmappedDevice"
+            :rules="!!unmappedDevice ? [] : hostRules"
           ></v-text-field>
           <v-text-field
             dense
@@ -56,8 +78,8 @@
             v-model="ipaddr"
             prepend-icon="mdi-web"
             label="IP address"
-            :disabled="saving || loading"
-            :rules="ipRules"
+            :disabled="saving || loading || !!unmappedDevice"
+            :rules="!!unmappedDevice ? [] : ipRules"
             hideDetails="auto"
           ></v-text-field>
         </v-card-text>
@@ -90,6 +112,7 @@ export default {
   name: 'AddDevice',
   data() {
     return {
+      unmappedDevice: null,
       name: '',
       description: '',
       hostname: '',
@@ -121,7 +144,9 @@ export default {
     ]),
     emptyDevices() {
       return this.devices.filter((d) => (
-        d.deploymentserviceid !== undefined && d.ispasswordless
+        (d.deploymentserviceid === undefined
+        || d.deploymentserviceid === 0)
+        && d.ispasswordless
       ));
     },
     deviceNames() {
@@ -140,12 +165,14 @@ export default {
       'fetchDevices',
       'createService',
       'createDevice',
+      'updateDevice',
     ]),
     clear() {
       this.name = '';
       this.description = '';
       this.hostname = '';
       this.ipaddr = '';
+      this.unmappedDevice = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
       });
@@ -157,15 +184,28 @@ export default {
     async addNewDevice() {
       if (this.isValid) {
         this.saving = true;
-        const payload = {
-          deploymentserviceid: this.selectedService.id,
-          name: this.name,
-          description: this.description,
-          hostname: this.hostname,
-          ipaddr: this.ipaddr,
-          ispasswordless: true,
-        };
-        const device = await this.createDevice(payload);
+        let device = null;
+        if (!this.unmappedDevice) {
+          const payload = {
+            deploymentserviceid: this.selectedService.id,
+            name: this.name,
+            description: this.description,
+            hostname: this.hostname,
+            ipaddr: this.ipaddr,
+            ispasswordless: true,
+            assetid: 0,
+          };
+          device = await this.createDevice(payload);
+        } else {
+          device = await this.updateDevice({
+            // eslint-disable-next-line
+            id: this.unmappedDevice._id,
+            payload: {
+              deploymentserviceid: this.selectedService.id,
+              assetid: 0,
+            },
+          });
+        }
         if (device) {
           this.cancel();
           this.$emit('on-create');
