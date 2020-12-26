@@ -145,6 +145,10 @@ export default {
       await this.getMe();
       this.dialog = false;
       this.saving = false;
+      const { path } = this.$route;
+      const splitPath = path.split('/');
+      this.$router.replace(`/customer/${splitPath[2]}`);
+      window.location.reload();
     },
   },
   watch: {

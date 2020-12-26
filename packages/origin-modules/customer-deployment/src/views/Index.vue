@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'DeploymentIndex',
@@ -41,9 +41,6 @@ export default {
       loading: false,
     };
   },
-  computed: {
-    ...mapState('user', ['me']),
-  },
   async created() {
     this.loading = true;
     await this.initElements();
@@ -51,14 +48,6 @@ export default {
   },
   methods: {
     ...mapActions('customerDeployment', ['initElements']),
-  },
-  watch: {
-    me(val) {
-      if (val) {
-        this.$router.replace({ name: 'customerDeployment' });
-        window.location.reload();
-      }
-    },
   },
 };
 </script>
