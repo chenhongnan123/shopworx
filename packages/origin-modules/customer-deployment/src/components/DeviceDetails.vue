@@ -113,7 +113,7 @@
             </v-tooltip>
           </div>
           <div class="title" v-if="!edit">
-            <span :class="rootDevice ? 'success--text' : ''">
+            <span :class="rootDevice ? 'error--text' : ''">
               {{ selectedDevice.ipaddr }}
             </span>
           </div>

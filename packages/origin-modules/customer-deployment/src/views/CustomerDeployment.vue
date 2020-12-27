@@ -79,7 +79,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('customerDeployment', ['deploymentServices']),
+    ...mapState('customerDeployment', ['deploymentServices', 'selectedService']),
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
@@ -97,7 +97,13 @@ export default {
     await this.fetchDeploymentServices();
     if (this.deploymentServices.length) {
       this.setExtendedHeader(true);
-      this.setSelectedService(this.deploymentServices[0]);
+      const service = this.selectedService
+        ? this.deploymentServices
+          .find((d) => d.id === this.selectedService.id)
+        : null;
+      if (!service) {
+        this.setSelectedService(this.deploymentServices[0]);
+      }
     } else {
       this.setExtendedHeader(false);
     }
