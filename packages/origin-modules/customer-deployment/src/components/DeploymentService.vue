@@ -101,6 +101,37 @@
             {{ item.name }}
           </v-btn>
         </template>
+        <!-- eslint-disable-next-line -->
+        <template #item.ipaddr="{ item }">
+          <span
+            :class="isRootDevice(item.ipaddr)
+              ? 'error--text'
+              : ''"
+            v-text="item.ipaddr"
+          ></span>
+          <v-tooltip bottom v-if="isRootDevice(item.ipaddr)">
+            <template #activator="{ on, attrs }">
+              <v-icon
+                small
+                class="ml-1 mb-1"
+                v-on="on"
+                v-bind="attrs"
+                v-text="'$info'"
+              ></v-icon>
+            </template>
+            <span>
+              Deployment service is deployed on this device.
+            </span>
+          </v-tooltip>
+        </template>
+        <!-- eslint-disable-next-line -->
+        <template #item.status>
+          N/A
+        </template>
+        <!-- eslint-disable-next-line -->
+        <template #item.instances>
+          <v-icon>mdi-plus</v-icon>
+        </template>
       </v-data-table>
       <v-row class="mx-4 mt-4" v-if="selectedDevice">
         <v-col cols="12" md="6" xl="4">
@@ -195,9 +226,10 @@ export default {
         },
         {
           text: 'Monitored instances',
-          value: 'actions',
+          value: 'instances',
           sortable: false,
           filterable: false,
+          align: 'center',
         },
       ],
     };
@@ -252,6 +284,9 @@ export default {
         return this.selectedDevice.id === id;
       }
       return false;
+    },
+    isRootDevice(ip) {
+      return ip === this.selectedService.ipaddr;
     },
   },
   watch: {

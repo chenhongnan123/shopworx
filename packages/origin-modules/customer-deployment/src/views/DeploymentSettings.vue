@@ -138,6 +138,10 @@ export default {
           title: 'Devices',
           to: 'devices',
         },
+        { divider: true },
+        {
+          header: 'Deployables',
+        },
         {
           title: 'Nodebots',
           to: 'nodebots',

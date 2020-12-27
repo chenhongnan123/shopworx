@@ -1,22 +1,22 @@
 <template>
   <div>
-    <!-- <part-master v-if="id === 'parts'" />
-    <asset-config v-else-if="id === 'assets'" />
-    <import-plans v-else-if="id === 'import'" /> -->
+    <services v-if="id === 'services'" />
+    <devices v-else-if="id === 'devices'" />
+    <nodebots v-else-if="id === 'nodebots'" />
   </div>
 </template>
 
 <script>
-/* import PartMaster from './PartMaster.vue';
-import AssetConfig from './AssetConfig.vue';
-import ImportPlans from './ImportPlans.vue'; */
+import Services from './Services.vue';
+import Devices from './Devices.vue';
+import Nodebots from './Nodebots.vue';
 
 export default {
   name: 'AdminWindow',
   components: {
-    /* PartMaster,
-    AssetConfig,
-    ImportPlans, */
+    Services,
+    Devices,
+    Nodebots,
   },
   computed: {
     id() {
