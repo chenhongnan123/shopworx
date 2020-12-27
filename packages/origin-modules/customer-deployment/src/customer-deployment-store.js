@@ -1,4 +1,4 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, reactiveSetArray } from '@shopworx/services/util/store.helper';
 import { elementsAndTags, elementMap } from './data/elements';
 
 export default ({
@@ -16,6 +16,8 @@ export default ({
     setMappedDevices: set('mappedDevices'),
     setSelectedService: set('selectedService'),
     setSelectedDevice: set('selectedDevice'),
+    setReactiveService: reactiveSetArray('deploymentServices'),
+    setReactiveMappedDevice: reactiveSetArray('mappedDevices'),
   },
   actions: {
     initElements: async ({ dispatch }) => {
@@ -157,6 +159,24 @@ export default ({
         const updatedDevice = await dispatch('fetchDeviceById', updated.id);
         commit('setSelectedDevice', updatedDevice);
         return updatedDevice;
+      }
+      return false;
+    },
+
+    updateService: async ({ dispatch, commit }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.DEPLOYMENT_SERVICE,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      if (updated && updated.id) {
+        const updatedService = await dispatch('fetchDeploymentServiceById', updated.id);
+        commit('setSelectedService', updatedService);
+        return updatedService;
       }
       return false;
     },
