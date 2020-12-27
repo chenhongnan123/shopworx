@@ -89,7 +89,7 @@ export default {
       this.$router.push({ name: 'deploymentSettings' });
     },
     goToUpdates() {
-      this.$router.push({ name: 'deploymentSettings' });
+      this.$router.push({ name: 'deploymentUpdates' });
     },
   },
   async created() {

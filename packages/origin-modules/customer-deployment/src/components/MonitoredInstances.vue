@@ -20,12 +20,12 @@
                 contain
               />
             </v-col>
-            <v-col cols="12" align="center">
+            <v-col cols="12" align="center" class="pt-0">
               <div class="title">
                 Your monitored instances appear here
               </div>
               <div>
-                <v-btn color="primary" class="text-none">
+                <v-btn color="primary" class="text-none mt-1">
                   <v-icon left>mdi-plus</v-icon>
                   Create instance
                 </v-btn>

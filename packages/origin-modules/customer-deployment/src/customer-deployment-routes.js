@@ -16,6 +16,11 @@ const routes = [
         name: 'deploymentSettings',
         component: () => import(/* webpackChunkName: "customer-deployment" */ './views/DeploymentSettings.vue'),
       },
+      {
+        path: 'updates',
+        name: 'deploymentUpdates',
+        component: () => import(/* webpackChunkName: "customer-deployment" */ './views/DeploymentUpdates.vue'),
+      },
     ],
   },
 ];
