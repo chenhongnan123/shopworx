@@ -262,7 +262,13 @@ export default {
           this.fetchingDevices = true;
           await this.fetchDevices(val.id);
           if (this.mappedDevices.length) {
-            this.setSelectedDevice(this.mappedDevices[0]);
+            const device = this.selectedDevice
+              ? this.mappedDevices
+                .find((d) => d.id === this.selectedDevice.id)
+              : null;
+            if (!device) {
+              this.setSelectedDevice(this.mappedDevices[0]);
+            }
           } else {
             this.setSelectedDevice(null);
           }
