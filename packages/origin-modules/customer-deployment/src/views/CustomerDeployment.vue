@@ -19,6 +19,23 @@
         </template>
         Settings
       </v-tooltip>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="goToUpdates"
+          >
+            <v-icon
+              v-text="'mdi-update'"
+            ></v-icon>
+          </v-btn>
+        </template>
+        Deployement updates
+      </v-tooltip>
     </portal>
     <v-container fill-height v-if="loading">
       <v-row
@@ -69,6 +86,9 @@ export default {
     ...mapMutations('customerDeployment', ['setSelectedService']),
     ...mapActions('customerDeployment', ['fetchDeploymentServices']),
     gotToSettings() {
+      this.$router.push({ name: 'deploymentSettings' });
+    },
+    goToUpdates() {
       this.$router.push({ name: 'deploymentSettings' });
     },
   },

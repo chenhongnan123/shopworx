@@ -109,12 +109,11 @@
               </template>
               <span>
                 Deployment service is deployed on this device.
-                Updating the device IP will also update the service IP.
               </span>
             </v-tooltip>
           </div>
           <div class="title" v-if="!edit">
-            <span :class="rootDevice ? 'error--text' : ''">
+            <span :class="rootDevice ? 'success--text' : ''">
               {{ selectedDevice.ipaddr }}
             </span>
           </div>
