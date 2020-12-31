@@ -681,7 +681,6 @@ export default {
       this.zipService.addFile(file);
     },
     async searchData() {
-      debugger;
       let param = `?query=bomid==${this.query.id}`;
       if (this.selectedSubStation) {
         param += `%26%26substationid=="${this.selectedSubStation.id}"`;

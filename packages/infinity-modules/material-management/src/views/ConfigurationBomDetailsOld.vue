@@ -73,6 +73,23 @@
               </template>
             </v-autocomplete>
         </v-col>
+        <v-col cols="2">
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Component Type"
+              :items="compTypeList"
+              return-object
+              item-text="name"
+              v-model="selectedComType"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+        </v-col>
         <v-col class="d-flex flex-row-reverse">
             <v-btn small color="primary" class="text-none ml-2 mt-2" @click="searchData">
             Search
@@ -87,7 +104,7 @@
           </v-btn> -->
       </v-row>
       <v-data-table
-        :headers="headers"
+        :headers="selectedHeaders"
         :items="bomDetailList"
         item-key="id"
         class="tableContainer"
@@ -99,7 +116,7 @@
             {{ sublineList.find((f) => f.id === item.sublineid).name }}
         </template>
         <template v-slot:item.stationid="{ item }">
-            {{ item.stationid }}
+            {{ item.station }}
         </template>
         <template v-slot:item.substation="{ item }">
             {{ item.substation }}
@@ -175,7 +192,37 @@ export default {
   name: 'BomDetails',
   data() {
     return {
+      saving: false,
       bomDetailList: [],
+      selectedLine: null,
+      selectedSubLine: null,
+      selectedStation: null,
+      selectedSubStation: null,
+      selectedComType: null,
+      selectedHeaders: [],
+      qHeader: [
+        {
+          text: 'Line',
+          value: 'lineid',
+        },
+        {
+          text: 'Subline',
+          value: 'sublineid',
+        },
+        {
+          text: 'Station',
+          value: 'stationid',
+        },
+        {
+          text: 'Substation',
+          value: 'substation',
+        },
+        {
+          text: 'Component',
+          value: 'parametername',
+        },
+        { text: 'Component Status', value: 'componentstatus', width: 180 },
+      ],
       headers: [
         {
           text: 'Line',
@@ -217,11 +264,24 @@ export default {
           value: 'configtstaus',
         },
       ],
+      compTypeList: [
+        {
+          name: 'S',
+          value: 's',
+          componenttypeid: 'sValue',
+        },
+        {
+          name: 'Q',
+          value: 'q',
+          componenttypeid: 'qValue',
+        },
+      ],
     };
   },
   async created() {
     await this.handleGetDetails();
     this.zipService = ZipService;
+    this.selectedHeaders = this.headers;
     // await this.getSubStationListForConfigScreen('');
     // console.log(this.substationList);
   },
@@ -253,10 +313,8 @@ export default {
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       await this.getBomDetailsConfigList(`?query=bomid==${this.query.id}`);
-      console.log(bomdetailList);
       bomdetailList.forEach(async (element) => {
         const data = this.bomDetailsConfigList.find((f) => f.id === element.substationid);
-        console.log(data);
         element.componentStatusList = data.componentStatusList;
         const qualityStatusName = `qualitystatus_component_${element.parametername}`;
         const saveDataName = `savedata_component_${element.parametername}`;
@@ -265,7 +323,6 @@ export default {
         element.savedata = data[saveDataName];
         element.componentstatus = data[componentStatusName];
       });
-      console.log(bomdetailList);
       this.bomDetailList = bomdetailList;
     },
     async checkSaveData(event, item) {
@@ -367,8 +424,8 @@ export default {
       if (this.selectedLine) {
         param += `%26%26lineid==${this.selectedLine.id}`;
       }
-      if (this.selectedSubline) {
-        param += `%26%26sublineid=="${this.selectedSubline.id}"`;
+      if (this.selectedSubLine) {
+        param += `%26%26sublineid=="${this.selectedSubLine.id}"`;
       }
       if (this.selectedStation) {
         param += `%26%26stationid=="${this.selectedStation.id}"`;
@@ -447,6 +504,18 @@ export default {
     },
     addToZip(file) {
       this.zipService.addFile(file);
+    },
+  },
+  watch: {
+    selectedComType: {
+      handler(val) {
+        if (val.componenttypeid === 'qValue') {
+          this.selectedHeaders = this.qHeader;
+        } else {
+          this.selectedHeaders = this.headers;
+        }
+      },
+      deep: true,
     },
   },
   computed: {
