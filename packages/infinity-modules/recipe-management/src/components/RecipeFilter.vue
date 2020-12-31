@@ -91,9 +91,11 @@ export default {
     ...mapMutations('recipeManagement', ['setFilter', 'toggleFilter', 'setFilterSubLine', 'setFilterStation', 'setRecipeList']),
     onChangeLine() {
     },
-    onChangeSubLine() {
+    onChangeSubLine(val) {
+      this.$root.$emit('filteredSubline', val);
     },
-    onChangeStation() {
+    onChangeStation(val) {
+      this.$root.$emit('filteredStation', val);
     },
     btnApply() {
       if (this.sublines != null) {
@@ -102,7 +104,7 @@ export default {
         this.setRecipeList(newarray);
         if (this.stations != null) {
           this.setFilterStation(this.stations);
-          this.setRecipeList(this.newarray.filter((o) => o.stationid === this.stations.id));
+          this.setRecipeList(newarray.filter((o) => o.stationid === this.stations.id));
         }
       } else if (this.stations != null) {
         this.setFilterStation(this.stations);

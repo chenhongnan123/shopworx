@@ -65,7 +65,8 @@
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+          <v-btn small color="primary" outlined class="text-none ml-2"
+            @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
             {{ $t('displayTags.buttons.refreshRecipe') }}
           </v-btn>
@@ -199,6 +200,8 @@ export default {
   },
   data() {
     return {
+      sublines: null,
+      stations: null,
       headers: [
         {
           text: 'No.',
@@ -271,6 +274,14 @@ export default {
   async created() {
     await this.getRecipeListRecords('');
   },
+  mounted() {
+    this.$root.$on('filteredSubline', (data) => {
+      this.sublines = data;
+    });
+    this.$root.$on('filteredStation', (data) => {
+      this.stations = data;
+    });
+  },
   async beforeDestroy() {
     // console.log('beforeDestroy');
     await this.btnReset();
@@ -324,8 +335,14 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
-      // await this.getRecipeListRecords('');
-      await this.btnApply();
+      let param = '';
+      if (this.sublines) {
+        param += `?query=sublineid=="${this.sublines.id}"`;
+      }
+      if (this.stations) {
+        param += `%26%26stationid=="${this.stations.id}"`;
+      }
+      await this.getRecipeListRecords(param);
     },
     handleClick(value) {
       this.$router.push({ name: 'recipe-details', params: { id: value } });
