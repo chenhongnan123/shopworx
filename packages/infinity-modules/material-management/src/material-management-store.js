@@ -17,6 +17,10 @@ export default ({
     lineValue: '',
     sublineValue: '',
     materialListChoice: [],
+    filteredMaterialNum: [],
+    filterdMateriallCat: [],
+    filterdMaterialType: [],
+    filteredManufacture: [],
   },
   mutations: {
     setSublines: set('sublines'),
@@ -33,6 +37,10 @@ export default ({
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
     setMaterialListChoice: set('materialListChoice'),
+    setFilterMaterialNum: set('filteredMaterialNum'),
+    setFilterMaterialCat: set('filterdMateriallCat'),
+    setFilterMaterialType: set('filterdMaterialType'),
+    setFilterMaterialMft: set('filteredManufacture'),
   },
   actions: {
     getSublines: async ({ dispatch, commit }, query) => {
