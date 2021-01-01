@@ -66,6 +66,11 @@
         :items="bomList"
         item-key="bomnumber"
         >
+        <template v-slot:item.editedtime="{ item }">
+          <span v-if="item.editedtime">
+            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
+          <span v-else></span>
+        </template>
         <template v-slot:item.name="props" >
           <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
             <span style="cursor:pointer;">{{props.item.name}}</span>
@@ -248,7 +253,7 @@ export default {
           value: 'bomnumber',
         },
         { text: 'Last Edited By', value: 'editedby' },
-        { text: 'Last Edited On', value: 'modifiedtimestamp' },
+        { text: 'Last Edited On', value: 'editedtime' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       bomObj: {
@@ -336,6 +341,7 @@ export default {
         }
         const query = `?query=name=="${bomObjDefault.name}"`;
         fetchObj.editedby = this.userName;
+        fetchObj.editedtime = new Date().getTime();
         const payload = fetchObj;
         this.saving = true;
         const updateResult = await this.updateBom({ query, payload });
