@@ -12,7 +12,7 @@
     <v-form ref="form" v-model="isValid">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Register device
+          {{ addDevice ? 'Add' : 'Register' }} device
         </v-card-title>
         <v-card-text>
           <template v-if="emptyDevices.length">
@@ -97,7 +97,7 @@
             :disabled="!isValid"
             @click="addNewDevice"
           >
-            Register
+            {{ addDevice ? 'Add' : 'Register' }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -110,6 +110,12 @@ import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'AddDevice',
+  props: {
+    addDevice: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       unmappedDevice: null,
@@ -186,8 +192,7 @@ export default {
         this.saving = true;
         let device = null;
         if (!this.unmappedDevice) {
-          const payload = {
-            deploymentserviceid: this.selectedService.id,
+          let payload = {
             name: this.name,
             description: this.description,
             hostname: this.hostname,
@@ -195,6 +200,17 @@ export default {
             ispasswordless: true,
             assetid: 0,
           };
+          if (!this.addDevice) {
+            payload = {
+              deploymentserviceid: this.selectedService.id,
+              name: this.name,
+              description: this.description,
+              hostname: this.hostname,
+              ipaddr: this.ipaddr,
+              ispasswordless: true,
+              assetid: 0,
+            };
+          }
           device = await this.createDevice(payload);
         } else {
           device = await this.updateDevice({

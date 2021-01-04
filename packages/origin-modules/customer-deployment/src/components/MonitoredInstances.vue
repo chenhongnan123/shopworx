@@ -25,10 +25,20 @@
                 Your monitored instances appear here
               </div>
               <div>
-                <v-btn color="primary" class="text-none mt-1">
-                  <v-icon left>mdi-plus</v-icon>
-                  Create instance
-                </v-btn>
+                <add-instance
+                  @on-create="getInstances"
+                  #default="{ on, attrs }"
+                >
+                  <v-btn
+                    v-on="on"
+                    v-bind="attrs"
+                    color="primary"
+                    class="text-none mt-1"
+                  >
+                    <v-icon left>mdi-plus</v-icon>
+                    Create instance
+                  </v-btn>
+                </add-instance>
               </div>
             </v-col>
           </v-row>
@@ -40,9 +50,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import AddInstance from './actions/AddInstance.vue';
 
 export default {
   name: 'MonitoredInstances',
+  components: {
+    AddInstance,
+  },
   computed: {
     ...mapState('customerDeployment', ['selectedDevice']),
     illustration() {
@@ -50,6 +64,9 @@ export default {
         ? 'server-dark'
         : 'server-light';
     },
+  },
+  methods: {
+    getInstances() {},
   },
 };
 </script>

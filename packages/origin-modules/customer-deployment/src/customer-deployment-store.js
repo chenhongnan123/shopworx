@@ -9,6 +9,8 @@ export default ({
     mappedDevices: [],
     selectedService: null,
     selectedDevice: null,
+    nodebots: [],
+    mappedInstances: [],
   },
   mutations: {
     setDeploymentServices: set('deploymentServices'),
@@ -18,6 +20,8 @@ export default ({
     setSelectedDevice: set('selectedDevice'),
     setReactiveService: reactiveSetArray('deploymentServices'),
     setReactiveMappedDevice: reactiveSetArray('mappedDevices'),
+    setNodebots: set('nodebots'),
+    setMappedInstances: set('mappedInstances'),
   },
   actions: {
     initElements: async ({ dispatch }) => {
@@ -56,8 +60,8 @@ export default ({
         },
         { root: true },
       );
+      commit('setDeploymentServices', records);
       if (records && records.length) {
-        commit('setDeploymentServices', records);
         return true;
       }
       return false;
@@ -87,6 +91,18 @@ export default ({
       return record;
     },
 
+    fetchNodebotById: async ({ dispatch }, id) => {
+      const record = await dispatch(
+        'element/getRecordById',
+        {
+          elementName: elementMap.NODEBOT,
+          id,
+        },
+        { root: true },
+      );
+      return record;
+    },
+
     fetchDevices: async ({ dispatch, commit }, deploymentServiceId = null) => {
       let query = '';
       if (deploymentServiceId) {
@@ -100,12 +116,53 @@ export default ({
         },
         { root: true },
       );
+      if (deploymentServiceId) {
+        commit('setMappedDevices', records);
+      } else {
+        commit('setDevices', records);
+      }
       if (records && records.length) {
-        if (deploymentServiceId) {
-          commit('setMappedDevices', records);
-        } else {
-          commit('setDevices', records);
-        }
+        return true;
+      }
+      return false;
+    },
+
+    fetchNodebots: async ({ dispatch, commit }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: elementMap.NODEBOT,
+        },
+        { root: true },
+      );
+      commit('setNodebots', []);
+      if (records && records.length) {
+        const result = await Promise.all(
+          records.map(async (rec) => {
+            const file = await dispatch(
+              'element/getRecords',
+              {
+                elementName: elementMap.NODEBOT_FILE,
+                query: `?query=nodebotmasterid==${rec.id}`,
+              },
+              { root: true },
+            );
+            const instances = await dispatch(
+              'element/getRecords',
+              {
+                elementName: elementMap.INSTANCE,
+                query: `?query=nodebotmasterid==${rec.id}`,
+              },
+              { root: true },
+            );
+            return {
+              ...rec,
+              file,
+              instances,
+            };
+          }),
+        );
+        commit('setNodebots', result);
         return true;
       }
       return false;
@@ -145,6 +202,22 @@ export default ({
       return false;
     },
 
+    createNodebot: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: elementMap.NODEBOT,
+          payload,
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        const createdNodebot = await dispatch('fetchNodebotById', created.id);
+        return createdNodebot;
+      }
+      return false;
+    },
+
     updateDevice: async ({ dispatch, commit }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',
@@ -161,6 +234,19 @@ export default ({
         return updatedDevice;
       }
       return false;
+    },
+
+    updateNodebotFile: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.NODEBOT_FILE,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
     },
 
     updateService: async ({ dispatch, commit }, { id, payload }) => {

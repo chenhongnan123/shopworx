@@ -87,11 +87,13 @@ export default {
   },
   async created() {
     this.loading = true;
-    await this.fetchDeploymentServices();
+    this.setDeploymentServices([]);
+    await this.fetchDeploymentServices(true);
     this.loading = false;
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('customerDeployment', ['setDeploymentServices']),
     ...mapActions('customerDeployment', ['fetchDeploymentServices', 'updateService']),
     async updateServiceConfig({ id, payload }) {
       const updated = await this.updateService({ id, payload });

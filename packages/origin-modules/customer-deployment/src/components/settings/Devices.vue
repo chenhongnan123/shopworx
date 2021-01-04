@@ -1,5 +1,23 @@
 <template>
   <div>
+    <portal to="settings-header">
+      <add-device
+        :addDevice="true"
+        @on-create="getDevices"
+        #default="{ on, attrs }"
+      >
+        <v-btn
+          small
+          v-on="on"
+          v-bind="attrs"
+          color="primary"
+          class="text-none"
+        >
+          <v-icon left>mdi-plus</v-icon>
+          Add device
+        </v-btn>
+      </add-device>
+    </portal>
     <v-text-field
       dense
       rounded
@@ -49,9 +67,13 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import AddDevice from '../actions/AddDevice.vue';
 
 export default {
   name: 'Devices',
+  components: {
+    AddDevice,
+  },
   data() {
     return {
       search: '',
@@ -94,14 +116,19 @@ export default {
       return sortArray(this.devices, 'name');
     },
   },
-  async created() {
-    this.loading = true;
-    await this.fetchDevices();
-    this.loading = false;
+  created() {
+    this.setDevices([]);
+    this.getDevices();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('customerDeployment', ['setDevices']),
     ...mapActions('customerDeployment', ['fetchDevices', 'updateDevice']),
+    async getDevices() {
+      this.loading = true;
+      await this.fetchDevices();
+      this.loading = false;
+    },
     async updateDeviceConfig({ id, payload }) {
       const updated = await this.updateDevice({ id, payload });
       if (updated) {

@@ -3,6 +3,15 @@ import { saveFile } from '@shopworx/services/util/file.service';
 
 export default ({
   actions: {
+    uploadFile: async (_, { fileParam, formData }) => {
+      try {
+        const { data } = await FileService.uploadFile(fileParam, formData);
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
     downloadFile: async (_, downloadLink) => {
       try {
         const { data } = await FileService.downloadFile(downloadLink);
