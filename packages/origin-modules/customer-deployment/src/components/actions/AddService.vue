@@ -203,6 +203,7 @@ export default {
             name: this.name,
             ipaddr: this.ipaddr,
             isactive: true,
+            assetid: 0,
           };
           service = await this.createService(servicePayload);
           if (service) {
@@ -222,6 +223,7 @@ export default {
             name: this.name,
             ipaddr: this.unmappedDevice.ipaddr,
             isactive: true,
+            assetid: 0,
           };
           service = await this.createService(servicePayload);
           if (service) {
