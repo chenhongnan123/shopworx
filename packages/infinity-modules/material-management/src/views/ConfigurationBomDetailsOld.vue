@@ -200,6 +200,7 @@ export default {
       selectedSubStation: null,
       selectedComType: null,
       selectedHeaders: [],
+      paramSelection: null,
       qHeader: [
         {
           text: 'Line',
@@ -223,7 +224,7 @@ export default {
         },
         { text: 'Component Status', value: 'componentstatus', width: 180 },
       ],
-      headers: [
+      sHeaders: [
         {
           text: 'Line',
           value: 'lineid',
@@ -244,6 +245,37 @@ export default {
         //   text: 'Config Data',
         //   value: 'configstatus',
         // },
+        {
+          text: 'Component',
+          value: 'parametername',
+        },
+        {
+          text: 'Quality',
+          value: 'qualitystatus',
+        },
+        {
+          text: 'Saving',
+          value: 'savedata',
+        },
+        // { text: 'Component Status', value: 'componentstatus', width: 180 },
+      ],
+      headers: [
+        {
+          text: 'Line',
+          value: 'lineid',
+        },
+        {
+          text: 'Subline',
+          value: 'sublineid',
+        },
+        {
+          text: 'Station',
+          value: 'stationid',
+        },
+        {
+          text: 'Substation',
+          value: 'substation',
+        },
         {
           text: 'Component',
           value: 'parametername',
@@ -419,6 +451,15 @@ export default {
         });
       }
     },
+    async filtered() {
+      if (this.selectedComType.value === 's') {
+        const filtered = this.bomDetailList.filter((str) => str.parametername.includes('s_'));
+        this.paramSelection = filtered;
+      } else {
+        const qFiltered = this.bomDetailList.filter((str) => str.parametername.includes('q_'));
+        this.paramSelection = qFiltered;
+      }
+    },
     async searchData() {
       let param = `?query=bomid==${this.query.id}`;
       if (this.selectedLine) {
@@ -433,9 +474,11 @@ export default {
       if (this.selectedSubStation) {
         param += `%26%26substationid=="${this.selectedSubStation.id}"`;
       }
+      if (this.selectedComType) {
+        this.filtered();
+      }
       const bomdetailList = await this.getBomDetailsListRecords(param);
       await this.getBomDetailsConfigList(param);
-      console.log(bomdetailList);
       bomdetailList.forEach(async (element) => {
         const data = this.bomDetailsConfigList.find((f) => f.id === element.substationid);
         console.log(data);
@@ -447,8 +490,12 @@ export default {
         element.savedata = data[saveDataName];
         element.componentstatus = data[componentStatusName];
       });
-      console.log(bomdetailList);
-      this.bomDetailList = bomdetailList;
+      if (this.paramSelection.length > 0) {
+        this.bomDetailList = this.paramSelection;
+        this.paramSelection = [];
+      } else {
+        await this.handleGetDetails();
+      }
     },
     async btnExport() {
       const selectedLine = this.query.line;
@@ -511,8 +558,10 @@ export default {
       handler(val) {
         if (val.componenttypeid === 'qValue') {
           this.selectedHeaders = this.qHeader;
-        } else {
+        } else if (val.componenttypeid === undefined || val.componenttypeid === '') {
           this.selectedHeaders = this.headers;
+        } else {
+          this.selectedHeaders = this.sHeaders;
         }
       },
       deep: true,
