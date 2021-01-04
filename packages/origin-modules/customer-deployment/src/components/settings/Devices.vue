@@ -135,13 +135,13 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'DEVICE_UPDATE',
+          message: 'UPDATE',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'DEVICE_UPDATE',
+          message: 'UPDATE',
         });
       }
     },

@@ -78,23 +78,7 @@
   "success": {
     "OTP_SENT": "One time password sent on registered email/phone.",
     "PASSWORD_RESET": "New password sent on registered email/phone.",
-    "UPDATED": "Updated!",
-    "PLAN_CREATED": "Plan created!",
-    "PLAN_IMPORTED": "Plans imported!",
-    "PLAN_UPDATED": "Plan updated!",
-    "PLAN_DELETED": "Plan deleted!",
-    "ASSET_UPDATE": "Asset updated!",
-    "CREATED_RECORD": "Record added successfully.",
-    "DELETE_RECORD": "Record deleted successfully.",
-    "ROLE_UPDATED": "Role updated successfully.",
-    "USER_DELETED": "User removed successfully.",
-    "DOWNTIME_UPDATE": "Downtime reason updated!",
-    "OPERATOR_UPDATE": "Operator updated!",
-    "REJECTION_UPDATE": "Rejection updated!",
-    "REWORK_UPDATE": "Rework updated!",
-    "SCRAP_UPDATE": "Scrap updated!",
-    "PERMISSION_UPDATE": "Role permission updated!",
-    "MATRIX_UPDATE": "Part matrix updated!"
+    "UPDATE": "Updated!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -109,21 +93,7 @@
     "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
     "INVALID_USER": "Login failed: User not found.",
     "INVALID_OTP": "Login failed: Incorrect OTP.",
-    "MISSING_BUSINESS_HOUR": "Hours should be provisioned in sequence. Please verify your data.",
-    "INVALID_HOURS_SUM": "Total sum of your provisioned hours should be 24. Please verify your data.",
-    "ERROR_CREATING_PLAN": "Error while creating plan, please retry.",
-    "PLAN_UPDATED": "Error while updating the plan, please refresh and retry.",
-    "PLAN_DELETED": "Error while deleting the plan, please refresh and retry.",
-    "ASSET_UPDATE": "Error while updating the asset config. Please retry.",
-    "ERROR_UPDATING_PLAN": "Error while updating plan, please retry.",
-    "INVALID_DOWNTIME_SPLIT": "Invalid downtime start or end time. Please verify your data.",
-    "DOWNTIME_UPDATE": "Error while updating downtime reason. Plese retry.",
-    "OPERATOR_UPDATE": "Error while updating operator. Plese retry.",
-    "REJECTION_UPDATE": "Error while updating rejection. Plese retry.",
-    "REWORK_UPDATE": "Error while updating rework. Plese retry.",
-    "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
-    "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
-    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry."
+    "UPDATE": "Error while updating! Please retry."
   },
   "fields": {
     "email": "Email",

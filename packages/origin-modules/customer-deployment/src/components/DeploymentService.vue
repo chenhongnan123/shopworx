@@ -125,10 +125,6 @@
           </v-tooltip>
         </template>
         <!-- eslint-disable-next-line -->
-        <template #item.status>
-          N/A
-        </template>
-        <!-- eslint-disable-next-line -->
         <template #item.instances="{ item }">
           <div v-if="item.instances.length">
             <div v-for="instance in item.instances" :key="instance.id">
@@ -237,11 +233,6 @@ export default {
         {
           text: 'IP address',
           value: 'ipaddr',
-          sortable: false,
-        },
-        {
-          text: 'Last update status',
-          value: 'status',
           sortable: false,
         },
         {

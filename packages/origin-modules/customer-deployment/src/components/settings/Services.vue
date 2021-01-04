@@ -101,13 +101,13 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'SERVICE_UPDATE',
+          message: 'UPDATE',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'SERVICE_UPDATE',
+          message: 'UPDATE',
         });
       }
     },
