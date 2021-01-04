@@ -30,6 +30,18 @@
       <template #no-results>
         No matching service found for '{{ search }}'
       </template>
+    <!-- eslint-disable-next-line -->
+      <template #item.isactive="{ item }">
+        <v-checkbox
+          :input-value="item.isactive"
+          hide-details
+          class="ma-0 pa-0"
+          @change="updateServiceConfig({
+            id: item._id,
+            payload: { isactive: !item.isactive }
+          })"
+        ></v-checkbox>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -55,6 +67,11 @@ export default {
           sortable: false,
         },
         {
+          text: 'Is active',
+          value: 'isactive',
+          sortable: false,
+        },
+        {
           text: 'Actions',
           value: 'actions',
           sortable: false,
@@ -75,20 +92,20 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('customerDeployment', ['fetchDeploymentServices']),
-    async updateAssetConfig({ id, payload }) {
-      const updated = await this.updateMachine({ id, payload });
+    ...mapActions('customerDeployment', ['fetchDeploymentServices', 'updateService']),
+    async updateServiceConfig({ id, payload }) {
+      const updated = await this.updateService({ id, payload });
       if (updated) {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'ASSET_UPDATE',
+          message: 'SERVICE_UPDATE',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ASSET_UPDATE',
+          message: 'SERVICE_UPDATE',
         });
       }
     },
