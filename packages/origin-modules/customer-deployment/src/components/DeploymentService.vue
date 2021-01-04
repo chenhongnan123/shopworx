@@ -78,7 +78,7 @@
         :items="mappedDevices"
         :search="search"
         :headers="headers"
-        class="mt-2 mx-4"
+        class="transparent mx-4"
         :loading="fetchingDevices"
         disable-pagination
         hide-default-footer
