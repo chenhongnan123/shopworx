@@ -10,7 +10,8 @@ export default ({
     selectedService: null,
     selectedDevice: null,
     nodebots: [],
-    mappedInstances: [],
+    deploymentOrders: [],
+    mappedOrders: [],
   },
   mutations: {
     setDeploymentServices: set('deploymentServices'),
@@ -21,7 +22,8 @@ export default ({
     setReactiveService: reactiveSetArray('deploymentServices'),
     setReactiveMappedDevice: reactiveSetArray('mappedDevices'),
     setNodebots: set('nodebots'),
-    setMappedInstances: set('mappedInstances'),
+    setDeploymentOrders: set('deploymentOrders'),
+    setMappedOrders: set('mappedOrders'),
   },
   actions: {
     initElements: async ({ dispatch }) => {
@@ -117,7 +119,19 @@ export default ({
         { root: true },
       );
       if (deploymentServiceId) {
-        commit('setMappedDevices', records);
+        const result = await Promise.all(
+          records.map(async (rec) => {
+            const instances = await dispatch(
+              'fetchInstances',
+              rec.id,
+            );
+            return {
+              ...rec,
+              instances,
+            };
+          }),
+        );
+        commit('setMappedDevices', result);
       } else {
         commit('setDevices', records);
       }
@@ -125,6 +139,41 @@ export default ({
         return true;
       }
       return false;
+    },
+
+    fetchInstances: async ({ dispatch }, deviceId) => {
+      const query = `lineid==${deviceId}`;
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: elementMap.INSTANCE,
+          query: `?query=${query}`,
+        },
+        { root: true },
+      );
+      const result = await Promise.all(
+        records.map(async (rec) => {
+          const nodebot = await dispatch(
+            'element/getRecords',
+            {
+              elementName: elementMap.NODEBOT,
+              query: `?query=id==${rec.nodebotmasterid}`,
+            },
+            { root: true },
+          );
+          if (nodebot && nodebot.length === 1) {
+            return {
+              ...rec,
+              nodebot: nodebot[0],
+            };
+          }
+          return {
+            ...rec,
+            nodebot: null,
+          };
+        }),
+      );
+      return result || [];
     },
 
     fetchNodebots: async ({ dispatch, commit }) => {
@@ -155,9 +204,16 @@ export default ({
               },
               { root: true },
             );
+            if (file && file.length === 1) {
+              return {
+                ...rec,
+                file: file[0],
+                instances,
+              };
+            }
             return {
               ...rec,
-              file,
+              file: null,
               instances,
             };
           }),
@@ -216,6 +272,18 @@ export default ({
         return createdNodebot;
       }
       return false;
+    },
+
+    createInstance: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: elementMap.INSTANCE,
+          payload,
+        },
+        { root: true },
+      );
+      return created;
     },
 
     updateDevice: async ({ dispatch, commit }, { id, payload }) => {

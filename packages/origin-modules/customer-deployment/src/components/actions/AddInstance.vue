@@ -21,11 +21,12 @@
             label="Select nodebot"
             :loading="loading"
             v-model="nodebot"
-            item-text="name"
+            item-text="id"
             return-object
             clearable
             prepend-icon="mdi-package-variant-closed"
             :items="nodebots"
+            :rules="nodebotRules"
           >
             <template v-slot:selection="{ item }">
               {{ item.name }} - v{{ item.releaseversion }}
@@ -85,6 +86,12 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'AddInstance',
+  props: {
+    deviceId: {
+      type: Number,
+      required: false,
+    },
+  },
   data() {
     return {
       dialog: false,
@@ -94,6 +101,9 @@ export default {
       nodebot: null,
       configuration: '',
       name: '',
+      nodebotRules: [
+        (v) => !!v || 'Nodebot is required.',
+      ],
       nameRules: [
         (v) => !!v || 'Package name is required.',
       ],
@@ -104,10 +114,14 @@ export default {
     };
   },
   computed: {
-    ...mapState('customerDeployment', ['nodebots']),
+    ...mapState('customerDeployment', [
+      'nodebots',
+      'selectedService',
+      'selectedDevice',
+    ]),
   },
   methods: {
-    ...mapActions('customerDeployment', ['fetchNodebots']),
+    ...mapActions('customerDeployment', ['fetchNodebots', 'createInstance']),
     isValidJsonString(jsonString) {
       if (!(jsonString && typeof jsonString === 'string')) {
         return false;
@@ -131,7 +145,22 @@ export default {
       this.clear();
       this.dialog = false;
     },
-    addNewInstance() {},
+    async addNewInstance() {
+      this.saving = true;
+      const payload = {
+        deploymentserviceid: this.selectedService.id,
+        lineid: this.deviceId || this.selectedDevice.id,
+        nodebotmasterid: this.nodebot.id,
+        name: this.name,
+        configuration: this.configuration,
+      };
+      const createdInstance = await this.createInstance(payload);
+      if (createdInstance) {
+        this.cancel();
+        this.$emit('on-create');
+      }
+      this.saving = false;
+    },
   },
   watch: {
     async dialog(val) {
@@ -139,6 +168,13 @@ export default {
         this.loading = true;
         await this.fetchNodebots();
         this.loading = false;
+      }
+    },
+    nodebot(val) {
+      if (val) {
+        this.configuration = val.configuration;
+      } else {
+        this.configuration = '';
       }
     },
   },

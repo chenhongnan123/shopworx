@@ -129,8 +129,26 @@
           N/A
         </template>
         <!-- eslint-disable-next-line -->
-        <template #item.instances>
-          <v-icon>mdi-plus</v-icon>
+        <template #item.instances="{ item }">
+          <div v-if="item.instances.length">
+            <div v-for="instance in item.instances" :key="instance.id">
+              {{ instance.name }}
+            </div>
+          </div>
+          <add-instance
+            @on-create="getDeviceInstances(item.id)"
+            :deviceId="item.id"
+            v-else
+            #default="{ on, attrs }"
+          >
+            <v-btn
+              v-on="on"
+              icon
+              v-bind="attrs"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </add-instance>
         </template>
       </v-data-table>
       <v-row class="mx-4 mt-4" v-if="selectedDevice">
@@ -189,6 +207,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import AddService from './actions/AddService.vue';
 import AddDevice from './actions/AddDevice.vue';
+import AddInstance from './actions/AddInstance.vue';
 import DeviceDetails from './DeviceDetails.vue';
 import MonitoredInstances from './MonitoredInstances.vue';
 import DeploymentLogs from './DeploymentLogs.vue';
@@ -198,6 +217,7 @@ export default {
   components: {
     AddService,
     AddDevice,
+    AddInstance,
     DeviceDetails,
     MonitoredInstances,
     DeploymentLogs,
@@ -260,10 +280,12 @@ export default {
     ...mapActions('customerDeployment', [
       'fetchDeploymentServices',
       'fetchDevices',
+      'fetchInstances',
     ]),
     ...mapMutations('customerDeployment', [
       'setSelectedService',
       'setSelectedDevice',
+      'setReactiveMappedDevice',
     ]),
     async getServices() {
       this.setExtendedHeader(true);
@@ -278,6 +300,26 @@ export default {
       this.fetchingDevices = true;
       await this.fetchDevices(this.selectedService.id);
       this.fetchingDevices = false;
+    },
+    async getDeviceInstances(deviceId) {
+      const instances = await this.fetchInstances(deviceId);
+      if (this.selectedDevice.id === deviceId) {
+        this.setSelectedDevice({
+          ...this.selectedDevice,
+          instances,
+        });
+      }
+      for (let i = 0; i < this.mappedDevices.length; i += 1) {
+        if (this.mappedDevices[i].id === deviceId) {
+          this.setReactiveMappedDevice({
+            index: i,
+            payload: {
+              ...this.mappedDevices[i],
+              instances,
+            },
+          });
+        }
+      }
     },
     isDeviceSelected(id) {
       if (this.selectedDevice) {

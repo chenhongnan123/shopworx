@@ -2,11 +2,27 @@
   <v-card>
     <v-card-title class="pb-0">
       Monitored instances
+      <add-instance
+        @on-create="getDeviceInstances"
+        #default="{ on, attrs }"
+      >
+        <v-btn
+          v-on="on"
+          v-bind="attrs"
+          text
+          small
+          color="primary"
+          class="text-none ml-2 mb-1"
+        >
+          <v-icon left>mdi-plus</v-icon>
+          New instance
+        </v-btn>
+      </add-instance>
     </v-card-title>
     <v-divider></v-divider>
     <perfect-scrollbar>
       <v-card-text class="pb-0" style="height:408px">
-        <v-container fill-height>
+        <v-container fill-height v-if="!selectedDevice.instances.length">
           <v-row
             align="center"
             justify="center"
@@ -26,7 +42,7 @@
               </div>
               <div>
                 <add-instance
-                  @on-create="getInstances"
+                  @on-create="getDeviceInstances"
                   #default="{ on, attrs }"
                 >
                   <v-btn
@@ -43,13 +59,32 @@
             </v-col>
           </v-row>
         </v-container>
+        <template v-else>
+          <v-data-table
+            dense
+            item-key="_id"
+            class="transparent"
+            :items="selectedDevice.instances"
+            :headers="headers"
+            disable-pagination
+            hide-default-footer
+          >
+          <!-- eslint-disable-next-line -->
+          <template #item.nodebot="{ item }">
+            <span v-if="item.nodebot">
+              {{ item.nodebot.name }} - v{{ item.nodebot.releaseversion }}
+            </span>
+            <span v-else>-</span>
+          </template>
+          </v-data-table>
+        </template>
       </v-card-text>
     </perfect-scrollbar>
   </v-card>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import AddInstance from './actions/AddInstance.vue';
 
 export default {
@@ -57,8 +92,34 @@ export default {
   components: {
     AddInstance,
   },
+  data() {
+    return {
+      headers: [
+        {
+          text: 'ID',
+          value: 'id',
+        },
+        {
+          text: 'Name',
+          value: 'name',
+        },
+        {
+          text: 'Nodebot',
+          value: 'nodebot',
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+        },
+      ],
+    };
+  },
   computed: {
-    ...mapState('customerDeployment', ['selectedDevice']),
+    ...mapState('customerDeployment', [
+      'selectedDevice',
+      'mappedDevices',
+    ]),
     illustration() {
       return this.$vuetify.theme.dark
         ? 'server-dark'
@@ -66,7 +127,29 @@ export default {
     },
   },
   methods: {
-    getInstances() {},
+    ...mapMutations('customerDeployment', [
+      'setReactiveMappedDevice',
+      'setSelectedDevice',
+    ]),
+    ...mapActions('customerDeployment', ['fetchInstances']),
+    async getDeviceInstances() {
+      const instances = await this.fetchInstances(this.selectedDevice.id);
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        instances,
+      });
+      for (let i = 0; i < this.mappedDevices.length; i += 1) {
+        if (this.mappedDevices[i].id === this.selectedDevice.id) {
+          this.setReactiveMappedDevice({
+            index: i,
+            payload: {
+              ...this.mappedDevices[i],
+              instances,
+            },
+          });
+        }
+      }
+    },
   },
 };
 </script>
