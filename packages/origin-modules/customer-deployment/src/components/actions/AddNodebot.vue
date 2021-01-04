@@ -189,6 +189,7 @@ export default {
         description: this.description,
         releaseversion: this.releaseversion,
         configuration: this.configuration,
+        assetid: 0,
       };
       const createdNodebot = await this.createNodebot(payload);
       const uploadedFile = await this.uploadFile({ fileParam, formData });

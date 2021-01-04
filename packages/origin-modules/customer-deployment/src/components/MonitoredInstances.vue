@@ -76,6 +76,10 @@
             </span>
             <span v-else>-</span>
           </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.actions="{ item }">
+            <deploy-instance :instance="item" />
+          </template>
           </v-data-table>
         </template>
       </v-card-text>
@@ -86,11 +90,13 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import AddInstance from './actions/AddInstance.vue';
+import DeployInstance from './actions/DeployInstance.vue';
 
 export default {
   name: 'MonitoredInstances',
   components: {
     AddInstance,
+    DeployInstance,
   },
   data() {
     return {

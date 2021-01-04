@@ -6,7 +6,27 @@
     <v-divider></v-divider>
     <perfect-scrollbar>
       <v-card-text class="pb-0" style="height:408px">
-        <v-container fill-height>
+        <v-container fill-height v-if="loading">
+          <v-row
+            align="center"
+            justify="center"
+            :no-gutters="$vuetify.breakpoint.smAndDown"
+          >
+            <v-col cols="12" align="center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                size="72"
+              ></v-progress-circular>
+            </v-col>
+            <v-col cols="12" align="center">
+              <div class="title">
+                Fetching deployment orders...
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-container fill-height v-else-if="!loading && !mappedOrders.length">
           <v-row
             align="center"
             justify="center"
@@ -22,27 +42,84 @@
             </v-col>
             <v-col cols="12" align="center">
               <div class="title">
-                Coming soon!
+                No deployment order!
               </div>
             </v-col>
           </v-row>
         </v-container>
+        <template v-else>
+          <v-data-table
+            dense
+            item-key="_id"
+            class="transparent"
+            :items="mappedOrders"
+            :headers="headers"
+            disable-pagination
+            hide-default-footer
+          >
+          <!-- eslint-disable-next-line -->
+          <template #item.actions="{ item }">
+            view logs
+          </template>
+          </v-data-table>
+        </template>
       </v-card-text>
     </perfect-scrollbar>
   </v-card>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'DeploymentLogs',
+  data() {
+    return {
+      loading: false,
+      headers: [
+        {
+          text: 'ID',
+          value: 'id',
+        },
+        {
+          text: 'Instance ID',
+          value: 'instanceid',
+        },
+        {
+          text: 'Modified at',
+          value: 'modifiedtimestamp',
+        },
+        {
+          text: 'Last status update',
+          value: 'laststatusupdate',
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+        },
+      ],
+    };
+  },
   computed: {
-    ...mapState('customerDeployment', ['selectedDevice']),
+    ...mapState('customerDeployment', [
+      'selectedDevice',
+      'mappedOrders',
+    ]),
     illustration() {
       return this.$vuetify.theme.dark
         ? 'coming-soon-dark'
         : 'coming-soon-light';
+    },
+  },
+  methods: {
+    ...mapActions('customerDeployment', ['fetchDeploymentOrders']),
+  },
+  watch: {
+    async selectedDevice() {
+      this.loading = true;
+      await this.fetchDeploymentOrders(this.selectedDevice.id);
+      this.loading = false;
     },
   },
 };

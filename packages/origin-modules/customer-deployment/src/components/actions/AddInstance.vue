@@ -153,6 +153,7 @@ export default {
         nodebotmasterid: this.nodebot.id,
         name: this.name,
         configuration: this.configuration,
+        assetid: 0,
       };
       const createdInstance = await this.createInstance(payload);
       if (createdInstance) {

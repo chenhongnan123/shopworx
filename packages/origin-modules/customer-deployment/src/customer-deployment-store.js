@@ -105,6 +105,18 @@ export default ({
       return record;
     },
 
+    fetchDeploymentOrderById: async ({ dispatch }, id) => {
+      const record = await dispatch(
+        'element/getRecordById',
+        {
+          elementName: elementMap.DEPLOYMENT,
+          id,
+        },
+        { root: true },
+      );
+      return record;
+    },
+
     fetchDevices: async ({ dispatch, commit }, deploymentServiceId = null) => {
       let query = '';
       if (deploymentServiceId) {
@@ -224,6 +236,46 @@ export default ({
       return false;
     },
 
+    fetchDeploymentOrders: async ({ dispatch, commit }, deviceId = null) => {
+      let query = '';
+      if (deviceId) {
+        query = `lineid==${deviceId}`;
+      }
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: elementMap.DEPLOYMENT,
+          query: `?query=${query}`,
+        },
+        { root: true },
+      );
+      const result = await Promise.all(
+        records.map(async (rec) => {
+          const logs = await dispatch(
+            'element/getRecords',
+            {
+              elementName: elementMap.LOGS,
+              query: `?query=deploymentorderid==${rec.id}`,
+            },
+            { root: true },
+          );
+          return {
+            ...rec,
+            logs,
+          };
+        }),
+      );
+      if (deviceId) {
+        commit('setMappedOrders', result);
+      } else {
+        commit('setDeploymentOrders', result);
+      }
+      if (records && records.length) {
+        return true;
+      }
+      return false;
+    },
+
     createService: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
         'element/postRecord',
@@ -284,6 +336,24 @@ export default ({
         { root: true },
       );
       return created;
+    },
+
+    createDeploymentOrder: async ({ dispatch, commit, state }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: elementMap.DEPLOYMENT,
+          payload,
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        const createdOrder = await dispatch('fetchDeploymentOrderById', created.id);
+        const { mappedOrders } = state;
+        commit('setMappedOrders', [createdOrder, ...mappedOrders]);
+        return createdOrder;
+      }
+      return false;
     },
 
     updateDevice: async ({ dispatch, commit }, { id, payload }) => {
