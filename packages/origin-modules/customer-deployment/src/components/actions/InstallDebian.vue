@@ -5,10 +5,10 @@
     :class="spaceClass"
     small
     outlined
-    :loading="deploying"
-    @click="enablePasswordless"
+    :loading="installing"
+    @click="installDebian"
   >
-    Enable passwordless
+    Install debian
   </v-btn>
 </template>
 
@@ -16,9 +16,9 @@
 import { mapActions, mapMutations } from 'vuex';
 
 export default {
-  name: 'TogglePasswordless',
+  name: 'InstallDebian',
   props: {
-    device: {
+    nodebot: {
       type: Object,
       required: true,
     },
@@ -29,34 +29,34 @@ export default {
   },
   data() {
     return {
-      deploying: false,
+      installing: false,
     };
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('customerDeployment', ['createDeploymentOrder']),
-    async enablePasswordless() {
-      this.deploying = true;
+    async installDebian() {
+      this.installing = true;
       const orderPayload = {
-        deploymentserviceid: this.device.deploymentserviceid,
-        lineid: this.device.id,
-        operationname: 'enable-passwordless',
+        deploymentserviceid: this.nodebot.deploymentserviceid,
+        masternodebotid: this.nodebot.id,
+        operationname: 'upgrade-nodebot',
         status: 'Pending',
         assetid: 0,
       };
       const order = await this.createDeploymentOrder(orderPayload);
-      this.deploying = false;
+      this.installing = false;
       if (order) {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'PASSWORDLESS',
+          message: 'INSTALL_DEBIAN',
         });
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'PASSWORDLESS',
+          message: 'INSTALL_DEBIAN',
         });
       }
     },

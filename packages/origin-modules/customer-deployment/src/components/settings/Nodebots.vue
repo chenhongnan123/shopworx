@@ -68,6 +68,10 @@
           </div>
         </div>
       </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.actions="{ item }">
+        <install-debian :nodebot="item" v-if="!item.isinstalled" />
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -76,11 +80,13 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import AddNodebot from '../actions/AddNodebot.vue';
+import InstallDebian from '../actions/InstallDebian.vue';
 
 export default {
   name: 'Nodebots',
   components: {
     AddNodebot,
+    InstallDebian,
   },
   data() {
     return {

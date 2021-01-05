@@ -241,11 +241,19 @@ export default {
           };
           const order = await this.createDeploymentOrder(orderPayload);
           if (order) {
-            // alert
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'INSTALL_DEBIAN',
+            });
             this.cancel();
             this.$emit('on-create');
           } else {
-            // alert
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'INSTALL_DEBIAN',
+            });
           }
         }
       }

@@ -79,7 +79,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'success',
-          message: 'NODEBOT_INSTALLED',
+          message: 'DEBIAN_INSTALLED',
         });
       }
       // update device list
