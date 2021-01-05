@@ -15,15 +15,38 @@
           Add new nodebot
         </v-card-title>
         <v-card-text>
+          <v-file-input
+            dense
+            outlined
+            class="mt-1"
+            show-size
+            accept=".deb"
+            v-model="nodebotfile"
+            label="Debian file"
+            :rules="fileRules"
+            prepend-icon="mdi-attachment"
+            :disabled="saving"
+            :loading="loading"
+            @change="onFileChange"
+          ></v-file-input>
           <v-text-field
             dense
             outlined
             v-model="name"
-            class="mt-1"
             :rules="nameRules"
             label="Package name"
             prepend-icon="mdi-rocket-outline"
-            :disabled="saving"
+            disabled
+            :loading="loading"
+          ></v-text-field>
+          <v-text-field
+            dense
+            outlined
+            v-model="releaseversion"
+            label="Version"
+            :rules="versionRules"
+            prepend-icon="mdi-history"
+            disabled
             :loading="loading"
           ></v-text-field>
           <v-textarea
@@ -36,16 +59,6 @@
             auto-grow
             :disabled="saving"
           ></v-textarea>
-          <v-text-field
-            dense
-            outlined
-            v-model="releaseversion"
-            label="Version"
-            :rules="versionRules"
-            prepend-icon="mdi-history"
-            :disabled="saving"
-            :loading="loading"
-          ></v-text-field>
           <v-textarea
             dense
             outlined
@@ -57,24 +70,13 @@
             auto-grow
             :disabled="saving"
           ></v-textarea>
-          <v-file-input
-            dense
-            outlined
-            show-size
-            accept=".deb"
-            v-model="nodebotfile"
-            label="Debian file"
-            :rules="fileRules"
-            prepend-icon="mdi-attachment"
-            :disabled="saving"
-            :loading="loading"
-          ></v-file-input>
           <v-autocomplete
             filled
             dense
             clearable
             label="Map to deployment service"
             :loading="fetching"
+            :disabled="saving"
             v-model="service"
             item-text="name"
             return-object
@@ -113,7 +115,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'AddNodebot',
@@ -153,6 +155,7 @@ export default {
     ...mapState('customerDeployment', ['nodebots', 'deploymentServices']),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('customerDeployment', [
       'createNodebot',
       'updateNodebotFile',
@@ -188,6 +191,25 @@ export default {
         return extension === 'deb';
       } catch (error) {
         return false;
+      }
+    },
+    onFileChange() {
+      if (this.nodebotfile) {
+        const { nameWithoutExt } = this.getFileDetails(this.nodebotfile);
+        try {
+          const pkg = nameWithoutExt.replace('swx-bot-', '');
+          const [file, build] = pkg.split('_');
+          const [version] = build.split('-');
+          this.packagename = file;
+          this.name = file;
+          this.releaseversion = version;
+        } catch (e) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'DEBIAN_PARSE_ERROR',
+          });
+        }
       }
     },
     setUrl(file) {

@@ -99,7 +99,8 @@
     "INVALID_OTP": "Login failed: Incorrect OTP.",
     "UPDATE": "Error while updating! Please retry.",
     "PASSWORDLESS": "Error while enabling passwordless. Please retry.",
-    "INSTALL_DEBIAN": "Error while installing debian. Please retry."
+    "INSTALL_DEBIAN": "Error while installing debian. Please retry.",
+    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb"
   },
   "fields": {
     "email": "Email",
