@@ -1,12 +1,32 @@
 <template>
   <div style="height:100%">
-    <v-container fluid>
-      <portal to="app-header">
-        <v-btn class="mb-1" icon @click="goBack">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <span>Deployment updates</span>
-      </portal>
+    <portal to="app-header">
+      <v-btn class="mb-1" icon @click="goBack">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <span>Deployment updates</span>
+    </portal>
+    <v-container fluid v-if="loading">
+      <v-row
+        align="center"
+        justify="center"
+        :no-gutters="$vuetify.breakpoint.smAndDown"
+      >
+        <v-col cols="12" align="center">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            size="72"
+          ></v-progress-circular>
+        </v-col>
+        <v-col cols="12" align="center">
+          <div class="title">
+            Fetching deployment orders...
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container fluid v-else-if="!loading && !deploymentOrders.length">
       <v-row
         align="center"
         justify="center"
@@ -16,29 +36,90 @@
           <v-img
             :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
             id="construction_illustration"
-            height="400"
+            height="260"
             contain
           />
         </v-col>
         <v-col cols="12" align="center">
           <div class="title">
-            Coming soon!
+            No deployment order!
           </div>
         </v-col>
       </v-row>
     </v-container>
+    <template v-else>
+      <v-text-field
+        dense
+        outlined
+        single-line
+        hide-details
+        class="mx-4 mb-2"
+        v-model="search"
+        autocomplete="off"
+        label="Filter deployment orders"
+        append-icon="mdi-magnify"
+      ></v-text-field>
+      <v-data-table
+        dense
+        :search="search"
+        item-key="_id"
+        class="transparent mx-4"
+        :items="deploymentOrders"
+        :headers="headers"
+        disable-pagination
+        hide-default-footer
+      >
+      <!-- eslint-disable-next-line -->
+      <template #item.actions="{ item }">
+        <view-logs :deploymentOrder="item" />
+      </template>
+      </v-data-table>
+    </template>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
+import ViewLogs from '../components/actions/ViewLogs.vue';
 
 export default {
   name: 'DeploymentUpdates',
-  created() {
+  components: {
+    ViewLogs,
+  },
+  data() {
+    return {
+      loading: false,
+      search: '',
+      headers: [
+        {
+          text: 'Deployment service ID',
+          value: 'deploymentserviceid',
+        },
+        {
+          text: 'Modified at',
+          value: 'modifiedtimestamp',
+        },
+        {
+          text: 'Last status update',
+          value: 'status',
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+        },
+      ],
+    };
+  },
+  async created() {
     this.setExtendedHeader(false);
+    this.loading = true;
+    await this.fetchDeploymentOrders();
+    this.loading = false;
   },
   computed: {
+    ...mapState('customerDeployment', ['deploymentOrders']),
     illustration() {
       return this.$vuetify.theme.dark
         ? 'coming-soon-dark'
@@ -47,6 +128,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
+    ...mapActions('customerDeployment', ['fetchDeploymentOrders']),
     goBack() {
       this.$router.push({ name: 'customerDeployment' });
     },

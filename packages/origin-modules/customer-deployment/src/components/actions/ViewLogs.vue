@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="700px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }">
@@ -85,14 +85,17 @@ export default {
         {
           text: 'Status',
           value: 'status',
+          sortable: false,
         },
         {
           text: 'Modified at',
           value: 'modifiedtimestamp',
+          sortable: false,
         },
         {
           text: 'Log',
           value: 'logs',
+          sortable: false,
         },
       ],
     };
