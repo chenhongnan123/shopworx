@@ -82,6 +82,8 @@
               return-object
               item-text="name"
               v-model="selectedComType"
+              @change="filterByCompType"
+              :disabled="dataload"
             >
               <template v-slot:item="{ item }">
                 <v-list-item-content>
@@ -104,10 +106,13 @@
           </v-btn> -->
       </v-row>
       <v-data-table
+        :disabled="!myloadingvariable"
         :headers="selectedHeaders"
         :items="bomDetailList"
         item-key="id"
         class="tableContainer"
+        :loading="myloadingvariable"
+        loading-text="Loading...please wait"
         >
         <template v-slot:item.lineid="{ item }">
             {{ lineList.find((f) => Number(f.id) === item.lineid).name }}
@@ -201,6 +206,9 @@ export default {
       selectedComType: null,
       selectedHeaders: [],
       paramSelection: null,
+      myloadingvariable: false,
+      orignalBomList: false,
+      dataload: false,
       qHeader: [
         {
           text: 'Line',
@@ -311,7 +319,9 @@ export default {
     };
   },
   async created() {
+    this.dataload = true;
     await this.handleGetDetails();
+    this.dataload = false;
     this.zipService = ZipService;
     this.selectedHeaders = this.headers;
     // await this.getSubStationListForConfigScreen('');
@@ -404,7 +414,6 @@ export default {
         },
       };
       updateResult = await this.updateDetailsConfigByQuery(payload);
-      console.log(updateResult);
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -451,16 +460,29 @@ export default {
         });
       }
     },
-    async filtered() {
-      if (this.selectedComType.value === 's') {
+    async filterByCompType(item) {
+      await this.searchData();
+      if (item.value === 's') {
+        this.bomDetailList = this.orignalBomList;
         const filtered = this.bomDetailList.filter((str) => str.parametername.includes('s_'));
         this.paramSelection = filtered;
+        this.bomDetailList = [];
+        this.bomDetailList = this.paramSelection;
+        this.paramSelection = [];
+      } else if (item.value === '' || item.value === undefined) {
+        this.bomDetailList = this.orignalBomList;
       } else {
+        this.bomDetailList = this.orignalBomList;
         const qFiltered = this.bomDetailList.filter((str) => str.parametername.includes('q_'));
         this.paramSelection = qFiltered;
+        this.bomDetailList = [];
+        this.bomDetailList = this.paramSelection;
+        this.paramSelection = [];
       }
     },
     async searchData() {
+      this.dataload = false;
+      this.myloadingvariable = true;
       let param = `?query=bomid==${this.query.id}`;
       if (this.selectedLine) {
         param += `%26%26lineid==${this.selectedLine.id}`;
@@ -474,14 +496,13 @@ export default {
       if (this.selectedSubStation) {
         param += `%26%26substationid=="${this.selectedSubStation.id}"`;
       }
-      if (this.selectedComType) {
-        this.filtered();
-      }
+      // if (this.selectedComType) {
+      //   this.filtered();
+      // }
       const bomdetailList = await this.getBomDetailsListRecords(param);
       await this.getBomDetailsConfigList(param);
       bomdetailList.forEach(async (element) => {
         const data = this.bomDetailsConfigList.find((f) => f.id === element.substationid);
-        console.log(data);
         element.componentStatusList = data.componentStatusList;
         const qualityStatusName = `qualitystatus_component_${element.parametername}`;
         const saveDataName = `savedata_component_${element.parametername}`;
@@ -490,12 +511,9 @@ export default {
         element.savedata = data[saveDataName];
         element.componentstatus = data[componentStatusName];
       });
-      if (this.paramSelection.length > 0) {
-        this.bomDetailList = this.paramSelection;
-        this.paramSelection = [];
-      } else {
-        await this.handleGetDetails();
-      }
+      this.orignalBomList = bomdetailList;
+      this.bomDetailList = bomdetailList;
+      this.myloadingvariable = false;
     },
     async btnExport() {
       const selectedLine = this.query.line;
@@ -565,6 +583,15 @@ export default {
         }
       },
       deep: true,
+    },
+    selectedLine: {
+      handler(val) {
+        if (val) {
+          this.dataload = true;
+        } else {
+          this.dataload = false;
+        }
+      },
     },
   },
   computed: {
