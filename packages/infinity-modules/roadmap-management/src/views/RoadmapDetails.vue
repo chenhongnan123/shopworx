@@ -18,7 +18,7 @@
     <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
     <span>Roadmap name: </span>
-    <span>{{$route.params.name}}</span>
+    <span>{{this.roadmapList[0].name}}</span>
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -349,16 +349,19 @@ export default {
     };
   },
   async created() {
-    await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
-    this.roadmaptype = this.$route.params.id.roadmaptype;
-    this.roadmapname = this.$route.params.id.name;
-    this.line = this.$route.params.id.line;
-    this.roadmapnumber = this.$route.params.id.id;
+    await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
+    this.line = this.roadmapList.line;
     this.toggleDisable = false;
     await this.getLineList('');
     // await this.getSubStationList('');
     // await this.getStationList('');
     // await this.getSubLineList('');
+  },
+  async mounted() {
+    await this.getRecords(`?query=id=="${this.$route.params.id}"`);
+    this.roadmaptype = this.roadmapList[0].roadmaptype;
+    this.roadmapname = this.roadmapList[0].name;
+    this.roadmapnumber = this.roadmapList[0].id;
   },
   computed: {
     ...mapState('roadmapManagement', ['roadmapDetails',
@@ -370,6 +373,7 @@ export default {
       'preStationList',
       'lineList',
       'stationNamebySubline',
+      'roadmapList',
       'subStationNamebyStation']),
     ...mapState('user', ['me']),
     userName: {
@@ -393,6 +397,7 @@ export default {
       'getProductListFromRoadmapName',
       'getStationNamesbysubline',
       'getSubStationNamesbyStation',
+      'getRecords',
       'getPreStationList']),
     ...mapMutations('helper', ['setAlert', 'setCurrentPath']),
     async checkProcessCode() {
@@ -478,7 +483,7 @@ export default {
           payload: this.roadmapDetail,
           query: `?query=id==${this.itemToUpdate.id}`,
         });
-        await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
+        await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
         this.dialog = false;
         this.roadmapDetail = {};
       } else {
@@ -537,7 +542,7 @@ export default {
           let created = false;
           const payload = this.roadmapDetail;
           created = await this.createRoadmapDetails(payload);
-          await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id.id}"`);
+          await this.getDetailsRecords(`?query=roadmapid=="${this.$route.params.id}"`);
           if (created) {
             this.setAlert({
               show: true,
@@ -584,7 +589,7 @@ export default {
       };
       const object = {
         payload: roadmap,
-        query: `?query=id=="${this.$route.params.id.id}"`,
+        query: `?query=id=="${this.$route.params.id}"`,
       };
       await this.updateRoadmap(object);
     },
@@ -618,7 +623,7 @@ export default {
       };
       const object = {
         payload: roadmap,
-        query: `?query=id=="${this.$route.params.id.id}"`,
+        query: `?query=id=="${this.$route.params.id}"`,
       };
       await this.updateRoadmap(object);
       this.dialogConfirm = false;

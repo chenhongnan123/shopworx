@@ -404,7 +404,13 @@ export default {
       await this.getRecords('');
     },
     handleClick(value) {
-      this.$router.push({ name: 'roadmap-details', params: { id: value } });
+      this.$router.push({
+        name: 'roadmap-details',
+        params: {
+          id: value.id,
+          line: value.line,
+        },
+      });
     },
     fnLineModel() {
       this.showLineFilter = false;
