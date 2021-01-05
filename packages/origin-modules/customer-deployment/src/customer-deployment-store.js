@@ -258,7 +258,8 @@ export default ({
             'element/getRecords',
             {
               elementName: elementMap.LOGS,
-              query: `?query=deploymentorderid==${rec.id}`,
+              // eslint-disable-next-line
+              query: `?query=instancedeploymentorderid=="${rec._id}"`,
             },
             { root: true },
           );

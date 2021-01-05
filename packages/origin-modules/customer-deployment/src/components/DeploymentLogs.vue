@@ -59,6 +59,7 @@
           >
           <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
+            <!-- TODO: view logs -->
             view logs
           </template>
           </v-data-table>
@@ -79,7 +80,7 @@ export default {
       headers: [
         {
           text: 'ID',
-          value: 'id',
+          value: '_id',
         },
         {
           text: 'Instance ID',
@@ -95,7 +96,7 @@ export default {
         },
         {
           text: 'Last status update',
-          value: 'laststatusupdate',
+          value: 'status',
         },
         {
           text: 'Actions',
@@ -120,10 +121,13 @@ export default {
     ...mapActions('customerDeployment', ['fetchDeploymentOrders']),
   },
   watch: {
-    async selectedDevice() {
-      this.loading = true;
-      await this.fetchDeploymentOrders(this.selectedDevice.id);
-      this.loading = false;
+    selectedDevice: {
+      immediate: true,
+      async handler() {
+        this.loading = true;
+        await this.fetchDeploymentOrders(this.selectedDevice.id);
+        this.loading = false;
+      },
     },
   },
 };
