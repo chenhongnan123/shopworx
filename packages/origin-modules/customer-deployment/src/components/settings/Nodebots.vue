@@ -47,11 +47,20 @@
       <template #no-results>
         No matching nodebot found for '{{ search }}'
       </template>
-    <!-- eslint-disable-next-line -->
+      <!-- eslint-disable-next-line -->
       <template #item.releaseversion="{ item }">
         v{{ item.releaseversion }}
       </template>
-    <!-- eslint-disable-next-line -->
+      <!-- eslint-disable-next-line -->
+      <template #item.isinstalled="{ item }">
+        <v-checkbox
+          disabled
+          :input-value="item.isinstalled"
+          hide-details
+          class="ma-0 pa-0"
+        ></v-checkbox>
+      </template>
+      <!-- eslint-disable-next-line -->
       <template #item.instances="{ item }">
         <div v-if="item.instances && item.instances.length">
           <div v-for="instance in item.instances" :key="instance.id">
@@ -89,6 +98,11 @@ export default {
         {
           text: 'Version',
           value: 'releaseversion',
+          sortable: false,
+        },
+        {
+          text: 'Is installed?',
+          value: 'isinstalled',
           sortable: false,
         },
         {

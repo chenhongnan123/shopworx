@@ -167,7 +167,7 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.fetchNodebots();
+        await this.fetchNodebots(this.selectedService.id);
         this.loading = false;
       }
     },

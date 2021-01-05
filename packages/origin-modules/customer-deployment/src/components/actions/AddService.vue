@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'AddService',
@@ -122,6 +122,7 @@ export default {
       ipaddr: '',
       devicename: '',
       hostname: '',
+      ispasswordless: true,
       isValid: false,
       saving: false,
       dialog: false,
@@ -172,18 +173,21 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('customerDeployment', [
       'fetchDeploymentServices',
       'fetchDevices',
       'createService',
       'createDevice',
       'updateDevice',
+      'createDeploymentOrder',
     ]),
     clear() {
       this.name = '';
       this.ipaddr = '';
       this.devicename = '';
       this.hostname = '';
+      this.ispasswordless = true;
       this.unmappedDevice = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
@@ -192,6 +196,29 @@ export default {
     cancel() {
       this.clear();
       this.dialog = false;
+    },
+    async enablePasswordless(service, device) {
+      const orderPayload = {
+        deploymentserviceid: service.id,
+        lineid: device.id,
+        operationname: 'enable-passwordless',
+        status: 'Pending',
+        assetid: 0,
+      };
+      const order = await this.createDeploymentOrder(orderPayload);
+      if (order) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PASSWORDLESS',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PASSWORDLESS',
+        });
+      }
     },
     async addNewService() {
       if (this.isValid) {
@@ -213,10 +240,13 @@ export default {
               description: '',
               hostname: this.hostname,
               ipaddr: this.ipaddr,
-              ispasswordless: true,
+              ispasswordless: false,
               assetid: 0,
             };
             device = await this.createDevice(devicePayload);
+            if (this.ispasswordless) {
+              this.enablePasswordless(service, device);
+            }
           }
         } else {
           const servicePayload = {

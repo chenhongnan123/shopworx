@@ -24,6 +24,7 @@ export default ({
     setReactiveDevice: reactiveSetArray('devices'),
     setReactiveMappedOrder: reactiveSetArray('mappedOrders'),
     setReactiveDeploymentOrder: reactiveSetArray('deploymentOrders'),
+    setReactiveNodebot: reactiveSetArray('nodebots'),
     setNodebots: set('nodebots'),
     setDeploymentOrders: set('deploymentOrders'),
     setMappedOrders: set('mappedOrders'),
@@ -191,11 +192,16 @@ export default ({
       return result || [];
     },
 
-    fetchNodebots: async ({ dispatch, commit }) => {
+    fetchNodebots: async ({ dispatch, commit }, deploymentServiceId = null) => {
+      let query = '';
+      if (deploymentServiceId) {
+        query = `deploymentserviceid==${deploymentServiceId}`;
+      }
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: elementMap.NODEBOT,
+          query: `?query=${query}`,
         },
         { root: true },
       );

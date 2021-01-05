@@ -69,6 +69,26 @@
             :disabled="saving"
             :loading="loading"
           ></v-file-input>
+          <v-autocomplete
+            filled
+            dense
+            clearable
+            label="Map to deployment service"
+            :loading="fetching"
+            v-model="service"
+            item-text="name"
+            return-object
+            class="ml-8"
+            :rules="serviceRules"
+            :items="deploymentServices"
+          >
+            <template #item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -84,7 +104,7 @@
             :disabled="!isValid"
             @click="addNewNodebot"
           >
-            Add
+            Add & install
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -102,12 +122,14 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
+      fetching: false,
       saving: false,
       name: '',
       description: '',
       releaseversion: '',
       configuration: '',
       nodebotfile: null,
+      service: null,
       nameRules: [
         (v) => !!v || 'Package name is required.',
       ],
@@ -122,13 +144,21 @@ export default {
         (v) => !!v || 'Configuration is required',
         (v) => this.isValidJsonString(v) || 'Input valid JSON configuration',
       ],
+      serviceRules: [
+        (v) => !!v || 'Deployment service is required',
+      ],
     };
   },
   computed: {
-    ...mapState('customerDeployment', ['nodebots']),
+    ...mapState('customerDeployment', ['nodebots', 'deploymentServices']),
   },
   methods: {
-    ...mapActions('customerDeployment', ['createNodebot', 'updateNodebotFile']),
+    ...mapActions('customerDeployment', [
+      'createNodebot',
+      'updateNodebotFile',
+      'createDeploymentOrder',
+      'fetchDeploymentServices',
+    ]),
     ...mapActions('file', ['uploadFile']),
     getFileDetails(file) {
       const { name } = file;
@@ -170,6 +200,7 @@ export default {
       this.releaseversion = '';
       this.configuration = '';
       this.nodebotfile = null;
+      this.service = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
       });
@@ -185,10 +216,12 @@ export default {
       formData.append('file', this.nodebotfile);
       const payload = {
         name: this.name,
+        deploymentserviceid: this.service.id,
         packagename: this.name,
         description: this.description,
         releaseversion: this.releaseversion,
         configuration: this.configuration,
+        isinstalled: false,
         assetid: 0,
       };
       const createdNodebot = await this.createNodebot(payload);
@@ -199,11 +232,33 @@ export default {
           payload: { nodebotmasterid: createdNodebot.id },
         });
         if (updated) {
-          this.cancel();
-          this.$emit('on-create');
+          const orderPayload = {
+            deploymentserviceid: this.service.id,
+            nodebotmasterid: createdNodebot.id,
+            operationname: 'upgrade-nodebot',
+            status: 'Pending',
+            assetid: 0,
+          };
+          const order = await this.createDeploymentOrder(orderPayload);
+          if (order) {
+            // alert
+            this.cancel();
+            this.$emit('on-create');
+          } else {
+            // alert
+          }
         }
       }
       this.saving = false;
+    },
+  },
+  watch: {
+    async dialog(val) {
+      if (val) {
+        this.fetching = true;
+        await this.fetchDeploymentServices();
+        this.fetching = false;
+      }
     },
   },
 };

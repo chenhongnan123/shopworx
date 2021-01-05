@@ -79,7 +79,8 @@
     "OTP_SENT": "One time password sent on registered email/phone.",
     "PASSWORD_RESET": "New password sent on registered email/phone.",
     "UPDATE": "Updated!",
-    "PASSWORDLESS": "Request created to enable passwordless."
+    "PASSWORDLESS": "Request created to enable passwordless.",
+    "PASSWORDLESS_ENABLED": "Passwordless enabled for device {name}"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
