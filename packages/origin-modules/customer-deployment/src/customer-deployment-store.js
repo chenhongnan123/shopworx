@@ -12,6 +12,7 @@ export default ({
     nodebots: [],
     deploymentOrders: [],
     mappedOrders: [],
+    logs: [],
   },
   mutations: {
     setDeploymentServices: set('deploymentServices'),
@@ -28,6 +29,7 @@ export default ({
     setNodebots: set('nodebots'),
     setDeploymentOrders: set('deploymentOrders'),
     setMappedOrders: set('mappedOrders'),
+    setLogs: set('logs'),
   },
   actions: {
     initElements: async ({ dispatch }) => {
@@ -258,28 +260,29 @@ export default ({
         },
         { root: true },
       );
-      const result = await Promise.all(
-        records.map(async (rec) => {
-          const logs = await dispatch(
-            'element/getRecords',
-            {
-              elementName: elementMap.LOGS,
-              // eslint-disable-next-line
-              query: `?query=instancedeploymentorderid=="${rec._id}"`,
-            },
-            { root: true },
-          );
-          return {
-            ...rec,
-            logs,
-          };
-        }),
-      );
       if (deviceId) {
-        commit('setMappedOrders', result);
+        commit('setMappedOrders', records);
       } else {
-        commit('setDeploymentOrders', result);
+        commit('setDeploymentOrders', records);
       }
+      if (records && records.length) {
+        return true;
+      }
+      return false;
+    },
+
+    fetchLogs: async ({ dispatch, commit }, deploymentOrderId) => {
+      commit('setLogs', []);
+      const query = `instancedeploymentorderid=="${deploymentOrderId}"`;
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: elementMap.LOGS,
+          query: `?query=${query}&sortquery=modifiedtimestamp==-1`,
+        },
+        { root: true },
+      );
+      commit('setLogs', records);
       if (records && records.length) {
         return true;
       }

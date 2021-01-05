@@ -59,8 +59,7 @@
           >
           <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
-            <!-- TODO: view logs -->
-            view logs
+            <view-logs :deploymentOrder="item" />
           </template>
           </v-data-table>
         </template>
@@ -71,24 +70,20 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import ViewLogs from './actions/ViewLogs.vue';
 
 export default {
   name: 'DeploymentLogs',
+  components: {
+    ViewLogs,
+  },
   data() {
     return {
       loading: false,
       headers: [
         {
-          text: 'ID',
-          value: '_id',
-        },
-        {
-          text: 'Instance ID',
-          value: 'instanceid',
-        },
-        {
-          text: 'Device ID',
-          value: 'lineid',
+          text: 'Operation',
+          value: 'operationname',
         },
         {
           text: 'Modified at',

@@ -3,7 +3,6 @@
     <v-card-title class="pb-0">
       Monitored instances
       <add-instance
-        v-if="selectedDevice.ispasswordless"
         @on-create="getDeviceInstances"
         #default="{ on, attrs }"
       >
@@ -46,7 +45,6 @@
               </div>
               <div>
                 <add-instance
-                  v-if="selectedDevice.ispasswordless"
                   @on-create="getDeviceInstances"
                   #default="{ on, attrs }"
                 >
