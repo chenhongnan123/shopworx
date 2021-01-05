@@ -38,6 +38,7 @@ export default {
       'setReactiveMappedDevice',
       'setReactiveDeploymentOrder',
       'setReactiveMappedOrder',
+      'setReactiveNodebot',
     ]),
     mapDevices(eventData) {
       if (eventData.ispasswordless) {
