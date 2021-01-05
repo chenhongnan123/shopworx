@@ -471,6 +471,8 @@ export default {
           sublineid: this.roadmapDetail.sublinename.id,
           machinename: this.roadmapDetail.machinename.name,
           stationid: this.roadmapDetail.machinename.id,
+          presublineid: this.roadmapDetail.presubline.id,
+          presublinename: this.roadmapDetail.presubline.name,
           substationname: this.roadmapDetail.substationname.name,
           substationid: this.roadmapDetail.substationname.id,
           prestationname: this.roadmapDetail.prestationname.name,
@@ -516,7 +518,7 @@ export default {
               presubstationname: this.roadmapDetail.presubstationname.name,
               presubstationid: this.roadmapDetail.presubstationname.id,
               assetid: 4,
-              roadmapid: this.$route.params.id.id,
+              roadmapid: this.$route.params.id,
             };
           } else {
             this.roadmapDetail = {
@@ -536,7 +538,7 @@ export default {
               presubstationname: '',
               presubstationid: '',
               assetid: 4,
-              roadmapid: this.$route.params.id.id,
+              roadmapid: this.$route.params.id,
             };
           }
           let created = false;
@@ -551,7 +553,7 @@ export default {
             });
             this.dialog = false;
             // this.roadmapDetail = {};
-            await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.$route.params.id.name}"`);
+            await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.roadmapList[0].name}"`);
             if (this.productList.length) {
               this.productList.forEach(async (products) => {
                 const object = {
@@ -585,7 +587,7 @@ export default {
       const roadmap = {
         editedby: this.userName,
         editedtime: new Date().getTime(),
-        versionnumber: this.$route.params.id.versionnumber + 1,
+        versionnumber: this.roadmapList[0].versionnumber + 1,
       };
       const object = {
         payload: roadmap,
@@ -614,12 +616,12 @@ export default {
     async fnDeleteOnYes() {
       await this.deleteRoadmapDetails({
         id: this.itemForDelete.id,
-        roadmapid: this.$route.params.id.id,
+        roadmapid: this.$route.params.id,
       });
       const roadmap = {
         editedby: this.userName,
         editedtime: new Date().getTime(),
-        versionnumber: this.$route.params.id.versionnumber + 1,
+        versionnumber: this.roadmapList[0].versionnumber + 1,
       };
       const object = {
         payload: roadmap,
