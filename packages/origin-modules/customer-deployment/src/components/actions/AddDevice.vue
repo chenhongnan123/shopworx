@@ -81,12 +81,33 @@
             :disabled="saving || loading || !!unmappedDevice"
             :rules="!!unmappedDevice ? [] : ipRules"
           ></v-text-field>
-          <v-checkbox
-            v-if="addDevice"
-            label="Enable passwordless"
-            v-model="ispasswordless"
-            hide-details="auto"
-          ></v-checkbox>
+          <template v-if="addDevice">
+            <v-autocomplete
+              filled
+              dense
+              clearable
+              label="Map to deployment service (optional)"
+              :loading="loading"
+              v-model="service"
+              item-text="name"
+              return-object
+              class="ml-8"
+              :items="deploymentServices"
+            >
+              <template #item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                  <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+            <v-checkbox
+              v-if="service"
+              label="Enable passwordless"
+              v-model="ispasswordless"
+              hide-details="auto"
+            ></v-checkbox>
+          </template>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -111,7 +132,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'AddDevice',
@@ -128,11 +149,12 @@ export default {
       description: '',
       hostname: '',
       ipaddr: '',
-      ispasswordless: true,
+      ispasswordless: false,
       isValid: false,
       saving: false,
       dialog: false,
       loading: false,
+      service: null,
       deviceRules: [
         (v) => !!v || 'Device name is required',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
@@ -152,6 +174,7 @@ export default {
   computed: {
     ...mapState('customerDeployment', [
       'selectedService',
+      'deploymentServices',
       'devices',
     ]),
     emptyDevices() {
@@ -172,6 +195,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('customerDeployment', [
       'fetchDeploymentServices',
       'fetchDevices',
@@ -185,8 +209,9 @@ export default {
       this.description = '';
       this.hostname = '';
       this.ipaddr = '';
-      this.ispasswordless = true;
+      this.ispasswordless = false;
       this.unmappedDevice = null;
+      this.service = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
       });
@@ -197,7 +222,9 @@ export default {
     },
     async enablePasswordless(device) {
       const orderPayload = {
-        deploymentserviceid: this.selectedService.id,
+        deploymentserviceid: this.addDevice
+          ? this.service.id
+          : this.selectedService.id,
         lineid: device.id,
         operationname: 'enable-passwordless',
         status: 'Pending',
@@ -232,6 +259,7 @@ export default {
             assetid: 0,
           };
           if (!this.addDevice) {
+            this.ispasswordless = true;
             payload = {
               deploymentserviceid: this.selectedService.id,
               name: this.name,
@@ -243,7 +271,9 @@ export default {
             };
           }
           device = await this.createDevice(payload);
-          this.enablePasswordless(device);
+          if (this.ispasswordless) {
+            this.enablePasswordless(device);
+          }
         } else {
           device = await this.updateDevice({
             // eslint-disable-next-line
@@ -270,6 +300,7 @@ export default {
       if (val) {
         this.loading = true;
         await this.fetchDevices();
+        await this.fetchDeploymentServices();
         this.loading = false;
       }
     },
