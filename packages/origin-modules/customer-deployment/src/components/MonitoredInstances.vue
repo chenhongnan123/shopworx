@@ -22,7 +22,10 @@
     <v-divider></v-divider>
     <perfect-scrollbar>
       <v-card-text class="pb-0" style="height:408px">
-        <v-container fill-height v-if="!selectedDevice.instances.length">
+        <v-container
+          fill-height
+          v-if="!selectedDevice.instances || !selectedDevice.instances.length"
+        >
           <v-row
             align="center"
             justify="center"

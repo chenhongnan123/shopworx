@@ -24,6 +24,7 @@
       </v-row>
     </v-container>
     <template v-else>
+      <sse-state />
       <v-fade-transition mode="out-in">
         <router-view />
       </v-fade-transition>
@@ -33,9 +34,13 @@
 
 <script>
 import { mapActions } from 'vuex';
+import SseState from '../components/SseState.vue';
 
 export default {
   name: 'DeploymentIndex',
+  components: {
+    SseState,
+  },
   data() {
     return {
       loading: false,

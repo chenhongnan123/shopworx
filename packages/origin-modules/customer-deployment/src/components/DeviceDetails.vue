@@ -14,6 +14,14 @@
           <v-icon left small>mdi-pencil-outline</v-icon>
           Edit
         </v-btn>
+        <template v-if="!edit">
+          <v-spacer></v-spacer>
+          <toggle-passwordless
+            spaceClass="mb-1"
+            :device="selectedDevice"
+            v-if="!selectedDevice.ispasswordless"
+          />
+        </template>
         <template v-if="edit">
           <v-btn
             text
@@ -133,9 +141,13 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
+import TogglePasswordless from './actions/TogglePasswordless.vue';
 
 export default {
   name: 'DeviceDetails',
+  components: {
+    TogglePasswordless,
+  },
   data() {
     return {
       edit: false,

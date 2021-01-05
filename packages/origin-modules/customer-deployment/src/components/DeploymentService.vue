@@ -125,6 +125,15 @@
           </v-tooltip>
         </template>
         <!-- eslint-disable-next-line -->
+        <template #item.ispasswordless="{ item }">
+          <v-checkbox
+            disabled
+            :input-value="item.ispasswordless"
+            hide-details
+            class="ma-0 pa-0"
+          ></v-checkbox>
+        </template>
+        <!-- eslint-disable-next-line -->
         <template #item.instances="{ item }">
           <div v-if="item.instances.length">
             <div v-for="instance in item.instances" :key="instance.id">
@@ -233,6 +242,11 @@ export default {
         {
           text: 'IP address',
           value: 'ipaddr',
+          sortable: false,
+        },
+        {
+          text: 'Is passwordless',
+          value: 'ispasswordless',
           sortable: false,
         },
         {

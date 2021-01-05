@@ -80,8 +80,13 @@
             label="IP address"
             :disabled="saving || loading || !!unmappedDevice"
             :rules="!!unmappedDevice ? [] : ipRules"
-            hideDetails="auto"
           ></v-text-field>
+          <v-checkbox
+            v-if="addDevice"
+            label="Enable passwordless"
+            v-model="ispasswordless"
+            hide-details="auto"
+          ></v-checkbox>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -123,6 +128,7 @@ export default {
       description: '',
       hostname: '',
       ipaddr: '',
+      ispasswordless: true,
       isValid: false,
       saving: false,
       dialog: false,
@@ -172,12 +178,14 @@ export default {
       'createService',
       'createDevice',
       'updateDevice',
+      'createDeploymentOrder',
     ]),
     clear() {
       this.name = '';
       this.description = '';
       this.hostname = '';
       this.ipaddr = '';
+      this.ispasswordless = true;
       this.unmappedDevice = null;
       this.$nextTick(() => {
         this.$refs.form.reset();
@@ -186,6 +194,29 @@ export default {
     cancel() {
       this.clear();
       this.dialog = false;
+    },
+    async enablePasswordless(device) {
+      const orderPayload = {
+        deploymentserviceid: this.selectedService.id,
+        lineid: device.id,
+        operationname: 'enable-passwordless',
+        status: 'Pending',
+        assetid: 0,
+      };
+      const order = await this.createDeploymentOrder(orderPayload);
+      if (order) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PASSWORDLESS',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PASSWORDLESS',
+        });
+      }
     },
     async addNewDevice() {
       if (this.isValid) {
@@ -197,7 +228,7 @@ export default {
             description: this.description,
             hostname: this.hostname,
             ipaddr: this.ipaddr,
-            ispasswordless: true,
+            ispasswordless: false,
             assetid: 0,
           };
           if (!this.addDevice) {
@@ -207,11 +238,12 @@ export default {
               description: this.description,
               hostname: this.hostname,
               ipaddr: this.ipaddr,
-              ispasswordless: true,
+              ispasswordless: false,
               assetid: 0,
             };
           }
           device = await this.createDevice(payload);
+          this.enablePasswordless(device);
         } else {
           device = await this.updateDevice({
             // eslint-disable-next-line

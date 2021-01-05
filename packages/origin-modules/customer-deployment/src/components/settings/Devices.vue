@@ -48,17 +48,18 @@
       <template #no-results>
         No matching device found for '{{ search }}'
       </template>
-    <!-- eslint-disable-next-line -->
+      <!-- eslint-disable-next-line -->
       <template #item.ispasswordless="{ item }">
         <v-checkbox
+          disabled
           :input-value="item.ispasswordless"
           hide-details
           class="ma-0 pa-0"
-          @change="updateDeviceConfig({
-            id: item._id,
-            payload: { ispasswordless: !item.ispasswordless }
-          })"
         ></v-checkbox>
+      </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.actions="{ item }">
+        <toggle-passwordless :device="item" v-if="!item.ispasswordless" />
       </template>
     </v-data-table>
   </div>
@@ -68,11 +69,13 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import AddDevice from '../actions/AddDevice.vue';
+import TogglePasswordless from '../actions/TogglePasswordless.vue';
 
 export default {
   name: 'Devices',
   components: {
     AddDevice,
+    TogglePasswordless,
   },
   data() {
     return {
@@ -121,29 +124,12 @@ export default {
     this.getDevices();
   },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('customerDeployment', ['setDevices']),
-    ...mapActions('customerDeployment', ['fetchDevices', 'updateDevice']),
+    ...mapActions('customerDeployment', ['fetchDevices']),
     async getDevices() {
       this.loading = true;
       await this.fetchDevices();
       this.loading = false;
-    },
-    async updateDeviceConfig({ id, payload }) {
-      const updated = await this.updateDevice({ id, payload });
-      if (updated) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'UPDATE',
-        });
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'UPDATE',
-        });
-      }
     },
   },
 };

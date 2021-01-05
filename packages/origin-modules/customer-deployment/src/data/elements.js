@@ -2,7 +2,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'deploymentservices',
+      collectionName: 'provisioning',
       elementName: 'deploymentservices',
       elementDescription: 'Deployment Services',
       status: 'ACTIVE',
@@ -109,7 +109,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'nodebotmaster',
+      collectionName: 'provisioning',
       elementName: 'nodebotmaster',
       elementDescription: 'Nodebot Master',
       status: 'ACTIVE',
@@ -250,7 +250,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'nodebotfile',
+      collectionName: 'provisioning',
       elementName: 'nodebotfile',
       elementDescription: 'Nodebot File',
       status: 'ACTIVE',
@@ -306,7 +306,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'line',
+      collectionName: 'provisioning',
       elementName: 'line',
       elementDescription: 'Devices',
       status: 'ACTIVE',
@@ -464,7 +464,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'instances',
+      collectionName: 'provisioning',
       elementName: 'instances',
       elementDescription: 'Instances',
       status: 'ACTIVE',
@@ -605,7 +605,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'instancedeploymentorders',
+      collectionName: 'provisioning',
       elementName: 'instancedeploymentorders',
       elementDescription: 'Instances',
       status: 'ACTIVE',
@@ -780,7 +780,7 @@ export const elementsAndTags = [
   {
     element: {
       categoryType: 'OTHER',
-      collectionName: 'instancedeploymentorderlogs',
+      collectionName: 'provisioning',
       elementName: 'instancedeploymentorderlogs',
       elementDescription: 'Instances',
       status: 'ACTIVE',

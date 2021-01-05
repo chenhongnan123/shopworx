@@ -78,7 +78,8 @@
   "success": {
     "OTP_SENT": "One time password sent on registered email/phone.",
     "PASSWORD_RESET": "New password sent on registered email/phone.",
-    "UPDATE": "Updated!"
+    "UPDATE": "Updated!",
+    "PASSWORDLESS": "Request created to enable passwordless."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -93,7 +94,8 @@
     "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
     "INVALID_USER": "Login failed: User not found.",
     "INVALID_OTP": "Login failed: Incorrect OTP.",
-    "UPDATE": "Error while updating! Please retry."
+    "UPDATE": "Error while updating! Please retry.",
+    "PASSWORDLESS": "Error while enabling passwordless. Please retry."
   },
   "fields": {
     "email": "Email",

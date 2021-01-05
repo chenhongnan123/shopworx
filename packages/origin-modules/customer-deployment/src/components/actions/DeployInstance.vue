@@ -4,6 +4,7 @@
       <v-btn
         icon
         v-on="on"
+        :disabled="!selectedDevice.ispasswordless"
         v-bind="attrs"
         color="success"
         :loading="deploying"
@@ -52,7 +53,7 @@ export default {
           lineid: this.selectedDevice.id,
           nodebotmasterid: this.instance.nodebot.id,
           instanceid: this.instance.id,
-          operationname: 'Deploy Instance',
+          operationname: 'deploy-instance',
           status: 'Pending',
           assetid: 0,
         };

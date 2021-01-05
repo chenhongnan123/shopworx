@@ -21,6 +21,9 @@ export default ({
     setSelectedDevice: set('selectedDevice'),
     setReactiveService: reactiveSetArray('deploymentServices'),
     setReactiveMappedDevice: reactiveSetArray('mappedDevices'),
+    setReactiveDevice: reactiveSetArray('devices'),
+    setReactiveMappedOrder: reactiveSetArray('mappedOrders'),
+    setReactiveDeploymentOrder: reactiveSetArray('deploymentOrders'),
     setNodebots: set('nodebots'),
     setDeploymentOrders: set('deploymentOrders'),
     setMappedOrders: set('mappedOrders'),
@@ -120,7 +123,7 @@ export default ({
     fetchDevices: async ({ dispatch, commit }, deploymentServiceId = null) => {
       let query = '';
       if (deploymentServiceId) {
-        query = `deploymentserviceid==${deploymentServiceId}%26%26ispasswordless==true`;
+        query = `deploymentserviceid==${deploymentServiceId}`;
       }
       const records = await dispatch(
         'element/getRecords',

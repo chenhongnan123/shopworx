@@ -86,6 +86,10 @@ export default {
           value: 'instanceid',
         },
         {
+          text: 'Device ID',
+          value: 'lineid',
+        },
+        {
           text: 'Modified at',
           value: 'modifiedtimestamp',
         },
