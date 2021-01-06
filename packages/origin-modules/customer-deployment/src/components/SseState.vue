@@ -174,6 +174,7 @@ export default {
         if (eventData.instanceid === instance.id) {
           ({ isdeployed, isdeploying } = eventData);
         }
+        console.log(isdeploying);
         return {
           ...instance,
           isdeployed,
@@ -246,13 +247,15 @@ export default {
           .call(eventData, 'isinstalled');
         const hasDeployedKey = Object.prototype.hasOwnProperty
           .call(eventData, 'isdeployed');
+        const hasDeployingKey = Object.prototype.hasOwnProperty
+          .call(eventData, 'isdeploying');
         if (hasPasswordlessKey) {
           this.mapDevices(eventData);
         }
         if (hasInstalledKey) {
           this.mapNodebots(eventData);
         }
-        if (hasDeployedKey) {
+        if (hasDeployedKey || hasDeployingKey) {
           this.mapInstances(eventData);
         }
         // update deployment order list
