@@ -39,7 +39,7 @@ export default {
       this.installing = true;
       const orderPayload = {
         deploymentserviceid: this.nodebot.deploymentserviceid,
-        masternodebotid: this.nodebot.id,
+        nodebotmasterid: this.nodebot.id,
         operationname: 'upgrade-nodebot',
         status: 'Pending',
         assetid: 0,
