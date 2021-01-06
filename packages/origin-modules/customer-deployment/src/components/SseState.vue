@@ -1,3 +1,7 @@
+<template>
+  <div style="display: none;"></div>
+</template>
+
 <script>
 import { mapMutations, mapState } from 'vuex';
 
