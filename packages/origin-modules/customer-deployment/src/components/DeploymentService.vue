@@ -136,8 +136,22 @@
         <!-- eslint-disable-next-line -->
         <template #item.instances="{ item }">
           <div v-if="item.instances.length">
-            <div v-for="instance in item.instances" :key="instance.id">
-              {{ instance.name }}
+            <div
+              v-for="instance in item.instances"
+              :key="instance.id"
+            >
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <span
+                    v-on="on"
+                    v-bind="attrs"
+                    :class="instance.isdeployed ? 'success--text' : 'error--text'"
+                  >
+                    {{ instance.name }}
+                  </span>
+                </template>
+                <span>{{ instance.isdeployed ? 'Deployed' : 'Not deployed' }}</span>
+              </v-tooltip>
             </div>
           </div>
           <add-instance

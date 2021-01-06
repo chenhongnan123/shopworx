@@ -101,6 +101,7 @@ export default {
       nodebot: null,
       configuration: '',
       name: '',
+      isdeployed: false,
       nodebotRules: [
         (v) => !!v || 'Nodebot is required.',
       ],
@@ -153,6 +154,7 @@ export default {
         nodebotmasterid: this.nodebot.id,
         name: this.name,
         configuration: this.configuration,
+        isdeployed: this.isdeployed,
         assetid: 0,
       };
       const createdInstance = await this.createInstance(payload);

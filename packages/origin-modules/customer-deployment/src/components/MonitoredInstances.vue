@@ -73,6 +73,21 @@
             hide-default-footer
           >
           <!-- eslint-disable-next-line -->
+          <template #item.name="{ item }">
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <span
+                  v-on="on"
+                  v-bind="attrs"
+                  :class="item.isdeployed ? 'success--text' : 'error--text'"
+                >
+                  {{ item.name }}
+                </span>
+              </template>
+              <span>{{ item.isdeployed ? 'Deployed' : 'Not deployed' }}</span>
+            </v-tooltip>
+          </template>
+          <!-- eslint-disable-next-line -->
           <template #item.nodebot="{ item }">
             <span v-if="item.nodebot">
               {{ item.nodebot.name }} - v{{ item.nodebot.releaseversion }}
