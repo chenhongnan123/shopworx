@@ -7,6 +7,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -122,12 +126,14 @@
           color="primary"
           class="text-none"
           :loading="saving"
+          :disabled="!valid"
           @click="saveOrder"
         >
           {{ $t('Save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -165,6 +171,7 @@ export default {
       myResult: [],
       dateValue: '',
       selectedLine: null,
+      valid: true,
       btnDisable: false,
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
         (v) => !!v || 'Name required',
