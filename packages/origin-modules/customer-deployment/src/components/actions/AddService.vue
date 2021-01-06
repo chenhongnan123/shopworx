@@ -12,7 +12,7 @@
     <v-form ref="form" v-model="isValid">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Create new service
+          Create new manager
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -20,11 +20,20 @@
             outlined
             class="mt-1"
             v-model="name"
-            label="Service name"
+            label="Manager name"
             prepend-icon="mdi-rocket-outline"
             :disabled="saving"
             :loading="loading"
             :rules="nameRules"
+          ></v-text-field>
+          <v-text-field
+            dense
+            outlined
+            v-model="mmonitlink"
+            label="M/Monit URL"
+            prepend-icon="mdi-link"
+            :disabled="saving || loading"
+            :rules="urlRules"
           ></v-text-field>
           <template v-if="loading">
             Fetching devices...
@@ -85,7 +94,7 @@
               :rules="!!unmappedDevice ? [] : ipRules"
               hideDetails="auto"
             ></v-text-field>
-            <div class="caption">*This is the IP of the device where the service is deployed</div>
+            <div class="caption">*This is the IP of the device where the manager is deployed</div>
           </template>
         </v-card-text>
         <v-divider></v-divider>
@@ -119,6 +128,7 @@ export default {
     return {
       unmappedDevice: null,
       name: '',
+      mmonitlink: '',
       ipaddr: '',
       devicename: '',
       hostname: '',
@@ -128,8 +138,11 @@ export default {
       dialog: false,
       loading: false,
       nameRules: [
-        (v) => !!v || 'Service name is required',
-        (v) => !this.serviceNames.includes(v) || 'Service name is not available',
+        (v) => !!v || 'Manager name is required',
+        (v) => !this.serviceNames.includes(v) || 'Manager name is not available',
+      ],
+      urlRules: [
+        (v) => !!v || 'URL is required',
       ],
       deviceRules: [
         (v) => !!v || 'Device name is required',
@@ -184,6 +197,7 @@ export default {
     ]),
     clear() {
       this.name = '';
+      this.mmonitlink = '';
       this.ipaddr = '';
       this.devicename = '';
       this.hostname = '';
@@ -228,6 +242,7 @@ export default {
         if (!this.unmappedDevice) {
           const servicePayload = {
             name: this.name,
+            mmonitlink: this.mmonitlink,
             ipaddr: this.ipaddr,
             isactive: true,
             assetid: 0,
@@ -251,6 +266,7 @@ export default {
         } else {
           const servicePayload = {
             name: this.name,
+            mmonitlink: this.mmonitlink,
             ipaddr: this.unmappedDevice.ipaddr,
             isactive: true,
             assetid: 0,

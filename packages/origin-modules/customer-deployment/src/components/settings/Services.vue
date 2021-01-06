@@ -31,6 +31,18 @@
         No matching service found for '{{ search }}'
       </template>
     <!-- eslint-disable-next-line -->
+      <template #item.mmonitlink="{ item }">
+        <a
+          :href="item.mmonitlink && item.mmonitlink.includes('http')
+            ? item.mmonitlink
+            : `http://${item.mmonitlink}`"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ item.mmonitlink }}
+        </a>
+      </template>
+    <!-- eslint-disable-next-line -->
       <template #item.isactive="{ item }">
         <v-checkbox
           :input-value="item.isactive"
@@ -64,6 +76,11 @@ export default {
         {
           text: 'Manager IP',
           value: 'ipaddr',
+          sortable: false,
+        },
+        {
+          text: 'M/Monit URL',
+          value: 'mmonitlink',
           sortable: false,
         },
         {
