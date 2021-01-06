@@ -82,6 +82,13 @@
                   :class="item.isdeployed ? 'success--text' : 'error--text'"
                 >
                   {{ item.name }}
+                  <v-progress-circular
+                    indeterminate
+                    size="12"
+                    width="2"
+                    color="primary"
+                    v-if="item.isdeploying"
+                  ></v-progress-circular>
                 </span>
               </template>
               <span>{{ item.isdeployed ? 'Deployed' : 'Not deployed' }}</span>

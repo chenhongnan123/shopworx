@@ -148,6 +148,13 @@
                     :class="instance.isdeployed ? 'success--text' : 'error--text'"
                   >
                     {{ instance.name }}
+                    <v-progress-circular
+                      indeterminate
+                      size="12"
+                      width="2"
+                      color="primary"
+                      v-if="instance.isdeploying"
+                    ></v-progress-circular>
                   </span>
                 </template>
                 <span>{{ instance.isdeployed ? 'Deployed' : 'Not deployed' }}</span>

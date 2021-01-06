@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'DeployInstance',
@@ -37,10 +37,49 @@ export default {
     ...mapState('customerDeployment', [
       'selectedService',
       'selectedDevice',
+      'mappedDevices',
     ]),
   },
   methods: {
+    ...mapMutations('customerDeployment', ['setReactiveMappedDevice', 'setSelectedDevice']),
     ...mapActions('customerDeployment', ['createDeploymentOrder']),
+    mapInstances() {
+      // update instance in selected device
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        instances: this.selectedDevice.instances.map((instance) => {
+          let isdeploying = false;
+          if (this.instance.id === instance.id) {
+            isdeploying = true;
+          }
+          return {
+            ...instance,
+            isdeploying,
+          };
+        }),
+      });
+      // update instance list in mapped device
+      for (let i = 0; i < this.mappedDevices.length; i += 1) {
+        if (this.selectedDevice.id === this.mappedDevices[i].id) {
+          this.setReactiveMappedDevice({
+            index: i,
+            payload: {
+              ...this.mappedDevices[i],
+              instances: this.mappedDevices[i].instances.map((instance) => {
+                let isdeploying = false;
+                if (this.instance.id === instance.id) {
+                  isdeploying = true;
+                }
+                return {
+                  ...instance,
+                  isdeploying,
+                };
+              }),
+            },
+          });
+        }
+      }
+    },
     async deployInstance() {
       if (await this.$root.$confirm.open(
         'Deploy instance',
@@ -58,6 +97,7 @@ export default {
           assetid: 0,
         };
         await this.createDeploymentOrder(payload);
+        this.mapInstances();
         this.deploying = false;
       }
     },

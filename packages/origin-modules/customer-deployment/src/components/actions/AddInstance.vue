@@ -155,6 +155,7 @@ export default {
         name: this.name,
         configuration: this.configuration,
         isdeployed: this.isdeployed,
+        isdeploying: false,
         assetid: 0,
       };
       const createdInstance = await this.createInstance(payload);

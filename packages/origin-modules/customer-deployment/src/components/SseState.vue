@@ -170,13 +170,14 @@ export default {
         });
       }
       const updatedInstances = this.selectedDevice.instances.map((instance) => {
-        let { isdeployed } = instance;
+        let { isdeployed, isdeploying } = instance;
         if (eventData.instanceid === instance.id) {
-          ({ isdeployed } = eventData);
+          ({ isdeployed, isdeploying } = eventData);
         }
         return {
           ...instance,
           isdeployed,
+          isdeploying,
         };
       });
       this.setSelectedDevice({
@@ -191,13 +192,14 @@ export default {
             payload: {
               ...this.mappedDevices[i],
               instances: this.mappedDevices[i].instances.map((instance) => {
-                let { isdeployed } = instance;
+                let { isdeployed, isdeploying } = instance;
                 if (eventData.instanceid === instance.id) {
-                  ({ isdeployed } = eventData);
+                  ({ isdeployed, isdeploying } = eventData);
                 }
                 return {
                   ...instance,
                   isdeployed,
+                  isdeploying,
                 };
               }),
             },
@@ -212,13 +214,14 @@ export default {
             payload: {
               ...this.nodebots[i],
               instances: this.nodebots[i].instances.map((instance) => {
-                let { isdeployed } = instance;
+                let { isdeployed, isdeploying } = instance;
                 if (eventData.instanceid === instance.id) {
-                  ({ isdeployed } = eventData);
+                  ({ isdeployed, isdeploying } = eventData);
                 }
                 return {
                   ...instance,
                   isdeployed,
+                  isdeploying,
                 };
               }),
             },
