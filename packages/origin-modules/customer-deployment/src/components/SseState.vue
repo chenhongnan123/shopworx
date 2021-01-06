@@ -174,7 +174,6 @@ export default {
         if (eventData.instanceid === instance.id) {
           ({ isdeployed, isdeploying } = eventData);
         }
-        console.log(isdeploying);
         return {
           ...instance,
           isdeployed,
