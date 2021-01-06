@@ -33,6 +33,7 @@ export default {
       'mappedDevices',
       'deploymentOrders',
       'mappedOrders',
+      'selectedDevice',
     ]),
   },
   methods: {
@@ -43,6 +44,7 @@ export default {
       'setReactiveDeploymentOrder',
       'setReactiveMappedOrder',
       'setReactiveNodebot',
+      'setSelectedDevice',
     ]),
     mapDevices(eventData) {
       if (eventData.ispasswordless) {
@@ -55,6 +57,10 @@ export default {
           },
         });
       }
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        ispasswordless: eventData.ispasswordless,
+      });
       // update device list
       for (let i = 0; i < this.devices.length; i += 1) {
         if (eventData.lineid === this.devices[i].id) {
@@ -94,6 +100,24 @@ export default {
           },
         });
       }
+      const updatedInstances = this.selectedDevice.instances.map((instance) => {
+        const { nodebot } = instance;
+        let { isinstalled } = nodebot;
+        if (eventData.nodebotmasterid === instance.nodebot.id) {
+          ({ isinstalled } = eventData);
+        }
+        return {
+          ...instance,
+          nodebot: {
+            ...nodebot,
+            isinstalled,
+          },
+        };
+      });
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        instances: updatedInstances,
+      });
       // update nodebot list
       for (let i = 0; i < this.nodebots.length; i += 1) {
         if (eventData.nodebotmasterid === this.nodebots[i].id) {
@@ -145,6 +169,20 @@ export default {
           },
         });
       }
+      const updatedInstances = this.selectedDevice.instances.map((instance) => {
+        let { isdeployed } = instance;
+        if (eventData.instanceid === instance.id) {
+          ({ isdeployed } = eventData);
+        }
+        return {
+          ...instance,
+          isdeployed,
+        };
+      });
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        instances: updatedInstances,
+      });
       // update instance list in mapped device
       for (let i = 0; i < this.mappedDevices.length; i += 1) {
         if (eventData.lineid === this.mappedDevices[i].id) {
