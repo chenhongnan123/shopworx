@@ -53,11 +53,11 @@ export default {
     message() {
       let msg = null;
       if (this.type) {
-        const { message } = this.alert;
+        const { message, options = {} } = this.alert;
         if (this.type && this.type.toUpperCase().trim() === 'SUCCESS') {
-          msg = this.$t(`success.${message}`);
+          msg = this.$t(`success.${message}`, options);
         } else if (this.type && this.type.toUpperCase().trim() === 'ERROR') {
-          msg = this.$t(`error.${message}`);
+          msg = this.$t(`error.${message}`, options);
         }
       }
       return msg;

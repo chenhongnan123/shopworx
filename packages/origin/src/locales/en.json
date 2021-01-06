@@ -81,8 +81,9 @@
     "UPDATE": "Updated!",
     "PASSWORDLESS": "Request created to enable passwordless.",
     "INSTALL_DEBIAN": "Request created to install debian.",
-    "PASSWORDLESS_ENABLED": "Passwordless enabled for device.",
-    "DEBIAN_INSTALLED": "Debian installed on the device."
+    "PASSWORDLESS_ENABLED": "Passwordless enabled for device ID {device}.",
+    "DEBIAN_INSTALLED": "Nodebot ID {nodebot} installed on deployment manager ID {service}.",
+    "INSTANCE_DEPLOYED": "Instance ID {instance} deployed on device ID {device}."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",

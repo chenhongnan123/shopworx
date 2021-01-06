@@ -7,6 +7,7 @@ export default ({
       show: false,
       type: null,
       message: null,
+      options: {},
     },
     isSessionValid: true,
     locales: [

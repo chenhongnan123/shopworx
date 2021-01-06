@@ -50,6 +50,9 @@ export default {
           show: true,
           type: 'success',
           message: 'PASSWORDLESS_ENABLED',
+          options: {
+            device: eventData.lineid,
+          },
         });
       }
       // update device list
@@ -85,9 +88,13 @@ export default {
           show: true,
           type: 'success',
           message: 'DEBIAN_INSTALLED',
+          options: {
+            nodebot: eventData.nodebotmasterid,
+            service: eventData.deploymentserviceid,
+          },
         });
       }
-      // update device list
+      // update nodebot list
       for (let i = 0; i < this.nodebots.length; i += 1) {
         if (eventData.nodebotmasterid === this.nodebots[i].id) {
           this.setReactiveNodebot({
@@ -100,19 +107,86 @@ export default {
           break;
         }
       }
-      /* // update mapped instance list
+      // update nodebot in mapped device
       for (let i = 0; i < this.mappedDevices.length; i += 1) {
         if (eventData.lineid === this.mappedDevices[i].id) {
           this.setReactiveMappedDevice({
             index: i,
             payload: {
               ...this.mappedDevices[i],
-              ispasswordless: eventData.ispasswordless,
+              instances: this.mappedDevices[i].instances.map((instance) => {
+                const { nodebot } = instance;
+                let { isinstalled } = nodebot;
+                if (eventData.nodebotmasterid === instance.nodebot.id) {
+                  ({ isinstalled } = eventData);
+                }
+                return {
+                  ...instance,
+                  nodebot: {
+                    ...nodebot,
+                    isinstalled,
+                  },
+                };
+              }),
             },
           });
-          break;
         }
-      } */
+      }
+    },
+    mapInstances(eventData) {
+      if (eventData.isdeployed) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'INSTANCE_DEPLOYED',
+          options: {
+            instance: eventData.instanceid,
+            device: eventData.lineid,
+          },
+        });
+      }
+      // update instance list in mapped device
+      for (let i = 0; i < this.mappedDevices.length; i += 1) {
+        if (eventData.lineid === this.mappedDevices[i].id) {
+          this.setReactiveMappedDevice({
+            index: i,
+            payload: {
+              ...this.mappedDevices[i],
+              instances: this.mappedDevices[i].instances.map((instance) => {
+                let { isdeployed } = instance;
+                if (eventData.instanceid === instance.id) {
+                  ({ isdeployed } = eventData);
+                }
+                return {
+                  ...instance,
+                  isdeployed,
+                };
+              }),
+            },
+          });
+        }
+      }
+      // update instance list in mapped nodebot
+      for (let i = 0; i < this.nodebots.length; i += 1) {
+        if (eventData.nodebotmasterid === this.nodebots[i].id) {
+          this.setReactiveNodebot({
+            index: i,
+            payload: {
+              ...this.nodebots[i],
+              instances: this.nodebots[i].instances.map((instance) => {
+                let { isdeployed } = instance;
+                if (eventData.instanceid === instance.id) {
+                  ({ isdeployed } = eventData);
+                }
+                return {
+                  ...instance,
+                  isdeployed,
+                };
+              }),
+            },
+          });
+        }
+      }
     },
     sseInit() {
       this.sseClient = new EventSource('/sse/alert');
@@ -127,13 +201,18 @@ export default {
         const eventData = JSON.parse(JSON.parse(e.data));
         const hasPasswordlessKey = Object.prototype.hasOwnProperty
           .call(eventData, 'ispasswordless');
-        const hasUpgradedKey = Object.prototype.hasOwnProperty
+        const hasInstalledKey = Object.prototype.hasOwnProperty
           .call(eventData, 'isinstalled');
+        const hasDeployedKey = Object.prototype.hasOwnProperty
+          .call(eventData, 'isdeployed');
         if (hasPasswordlessKey) {
           this.mapDevices(eventData);
         }
-        if (hasUpgradedKey) {
+        if (hasInstalledKey) {
           this.mapNodebots(eventData);
+        }
+        if (hasDeployedKey) {
+          this.mapInstances(eventData);
         }
         // update deployment order list
         for (let i = 0; i < this.deploymentOrders.length; i += 1) {
