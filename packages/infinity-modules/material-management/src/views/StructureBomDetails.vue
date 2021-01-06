@@ -323,6 +323,7 @@ export default {
     await this.getMaterialListChoice('');
     await this.handleGetDetails();
     await this.getSublineList('');
+    await this.getLines('');
     this.zipService = ZipService;
     // code
     // await this.configurationLogic();
@@ -347,6 +348,7 @@ export default {
       'getSubLines',
       'getStations',
       'getSubStations',
+      'getLines',
     ]),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getMaterialListChoice']),
     async getFilteredsubstation() {
@@ -628,7 +630,7 @@ export default {
       this.confirmListDialog = false;
     },
     async btnExport() {
-      const selectedLine = this.query.line;
+      const selectedLine = this.selectedLine.name;
       const selectedBomName = this.query.name;
       const fileName = `${selectedLine}-${selectedBomName}-BomDetails`;
       const currentContext = this.bomDetailList;
@@ -682,6 +684,15 @@ export default {
     },
     async searchData() {
       let param = `?query=bomid==${this.query.id}`;
+      if (this.selectedLine) {
+        param += `%26%26lineid==${this.selectedLine.id}`;
+      }
+      if (this.selectedSubline) {
+        param += `%26%26sublineid=="${this.selectedSubline.id}"`;
+      }
+      if (this.selectedStation) {
+        param += `%26%26stationid=="${this.selectedStation.id}"`;
+      }
       if (this.selectedSubStation) {
         param += `%26%26substationid=="${this.selectedSubStation.id}"`;
       }

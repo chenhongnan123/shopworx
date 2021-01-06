@@ -13,7 +13,7 @@ export default ({
     stationList: [],
     substationList: [],
     categoryList: [],
-    recipeViewState: 0,
+    bomViewState: 0,
     filter: false,
     lineValue: '',
     sublineValue: '',
@@ -21,6 +21,8 @@ export default ({
     parameterList: '',
     subStationListForConfig: [],
     bomDetailsConfigList: [],
+    filteredBomNames: [],
+    filteredBomNum: [],
   },
   mutations: {
     setSubStations: set('subStations'),
@@ -33,7 +35,7 @@ export default ({
     setCategoryList: set('categoryList'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
-    setRecipeViewState: set('recipeViewState'),
+    setbomViewState: set('bomViewState'),
     setLineValue: set('lineValue'),
     setSublineValue: set('sublineValue'),
     setBomDetailsList: set('bomDetailsList'),
@@ -41,6 +43,8 @@ export default ({
     setSubstationList: set('substationList'),
     setSubStationListForConfig: set('subStationListForConfig'),
     setBomDetailsConfigList: set('bomDetailsConfigList'),
+    setFilterBomNames: set('filteredBomNames'),
+    setFilterBomNumber: set('filteredBomNum'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {

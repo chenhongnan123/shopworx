@@ -22,7 +22,7 @@
       <v-tabs
         dense
         center-active
-        v-model="recipeView"
+        v-model="bomView"
       >
         <v-tab class="text-none">
           Structure
@@ -34,10 +34,10 @@
     <!-- <recipe-filter></recipe-filter> -->
     <template>
       <v-fade-transition mode="out-in">
-          <structure-bom-details v-if="recipeView === 0" :query="query"/>
+          <structure-bom-details v-if="bomView === 0" :query="query"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <configuration-bom-details-old v-if="recipeView === 1" :query="query"/>
+          <configuration-bom-details v-if="bomView === 1" :query="query"/>
       </v-fade-transition>
     </template>
     </v-container>
@@ -47,40 +47,45 @@
 <script>
 import { mapMutations, mapState } from 'vuex';
 import StructureBomDetails from './StructureBomDetails.vue';
-import ConfigurationBomDetailsOld from './ConfigurationBomDetailsOld.vue';
+import ConfigurationBomDetails from './ConfigurationBomDetails.vue';
 
 export default {
   name: 'BomDetails',
   components: {
     StructureBomDetails,
-    ConfigurationBomDetailsOld,
+    ConfigurationBomDetails,
   },
   data() {
     return {
+      query: {},
     };
   },
   created() {
-    this.recipeView = 0;
-    // this.setExtendedHeader(true);
+    this.bomView = 0;
+    this.query = {
+      id: this.id,
+      name: this.name,
+      lineid: this.lineid,
+    };
   },
   methods: {
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapMutations('bomManagement', ['setRecipeViewState']),
+    ...mapMutations('bomManagement', ['setbomViewState']),
   },
   computed: {
     ...mapState('bomManagement', [
-      'recipeViewState',
+      'bomViewState',
     ]),
-    recipeView: {
+    bomView: {
       get() {
-        return this.recipeViewState;
+        return this.bomViewState;
       },
       set(val) {
-        this.setRecipeViewState(val);
+        this.setbomViewState(val);
       },
     },
   },
-  props: ['query'],
+  props: ['id', 'name', 'lineid'],
 };
 </script>
 <style>

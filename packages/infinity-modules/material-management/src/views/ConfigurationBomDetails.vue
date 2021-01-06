@@ -73,7 +73,7 @@
               </template>
             </v-autocomplete>
         </v-col>
-        <v-col cols="2">
+        <!-- <v-col cols="2">
             <v-autocomplete
               class="ml-2"
               clearable
@@ -89,7 +89,7 @@
                 </v-list-item-content>
               </template>
             </v-autocomplete>
-        </v-col>
+        </v-col> -->
         <v-col class="d-flex flex-row-reverse">
             <v-btn small color="primary" class="text-none ml-2 mt-2" @click="searchData">
             Search
@@ -299,7 +299,6 @@ export default {
       });
     },
     async compareValues(val) {
-      debugger;
       if (val.componenttypeid === 'sValue') {
         this.hideQcolumn = true;
       } else {
@@ -513,7 +512,6 @@ export default {
       currentContext.forEach((bom) => {
         const arr = [];
         column.forEach((key) => {
-          debugger;
           if (key === 'configstatus') {
             arr.push(bom.configstatus[0].name);
             arr.push(bom.qualitystatus_component_pcbaid);
