@@ -50,47 +50,61 @@ export default {
         children: [{
           icon: 'mdi-license',
           title: 'customerAssets',
+          comingSoon: true,
         }, {
           icon: 'mdi-message-text-outline',
           title: 'customerSms',
+          comingSoon: true,
         }, {
           icon: 'mdi-webhook',
           title: 'customerWebhooks',
+          comingSoon: true,
         }, {
           icon: 'mdi-shield-key-outline',
           title: 'customerSolutions',
+          comingSoon: true,
         }, {
           icon: 'mdi-account-multiple-outline',
           title: 'customerUsers',
+          comingSoon: true,
         }, {
           icon: 'mdi-rocket-launch-outline',
           title: 'customerDeployment',
+          comingSoon: false,
         }, {
           icon: 'mdi-database-export-outline',
           title: 'customerData',
+          comingSoon: true,
         }],
       }, {
         title: 'industries',
+        comingSoon: true,
         icon: 'mdi-domain',
       }, {
         title: 'solutions',
+        comingSoon: true,
         icon: 'mdi-apps',
       }, {
         title: 'users',
+        comingSoon: true,
         icon: 'mdi-account-group-outline',
       }, {
         header: 'devTools',
       }, {
         title: 'reports',
+        comingSoon: true,
         icon: 'mdi-chart-line',
       }, {
         title: 'insights',
+        comingSoon: true,
         icon: 'mdi-atom-variant',
       }, {
         title: 'dashboards',
+        comingSoon: true,
         icon: 'mdi-view-dashboard-outline',
       }, {
         title: 'models',
+        comingSoon: true,
         icon: 'mdi-memory',
       }],
       adminItems: [],

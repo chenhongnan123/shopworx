@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="pb-0">
-      Monitored instances
+      Instances
       <add-instance
         @on-create="getDeviceInstances"
         #default="{ on, attrs }"

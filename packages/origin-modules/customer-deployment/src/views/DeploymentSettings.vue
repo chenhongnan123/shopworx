@@ -131,8 +131,8 @@ export default {
           header: 'Seed data',
         },
         {
-          title: 'Deployment services',
-          to: 'services',
+          title: 'Deployment manager',
+          to: 'manager',
         },
         {
           title: 'Devices',

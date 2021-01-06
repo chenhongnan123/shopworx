@@ -97,8 +97,8 @@ export default {
           value: 'deploymentserviceid',
         },
         {
-          text: 'Modified at',
-          value: 'modifiedtimestamp',
+          text: 'Started at',
+          value: 'createdTimestamp',
         },
         {
           text: 'Last status update',

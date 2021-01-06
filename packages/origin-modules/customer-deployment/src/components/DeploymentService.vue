@@ -11,7 +11,7 @@
             <v-autocomplete
               filled
               dense
-              label="Selected service"
+              label="Selected manager"
               :loading="loading"
               v-model="service"
               item-text="name"
@@ -40,7 +40,7 @@
               v-bind="attrs"
             >
               <v-icon left>mdi-plus</v-icon>
-              Create service
+              Create
             </v-btn>
           </add-service>
           <v-divider vertical class="mx-4"></v-divider>
@@ -250,7 +250,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Monitored instances',
+          text: 'Instances',
           value: 'instances',
           sortable: false,
           filterable: false,

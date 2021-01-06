@@ -58,11 +58,11 @@ export default {
       loading: false,
       headers: [
         {
-          text: 'Service name',
+          text: 'Manager name',
           value: 'name',
         },
         {
-          text: 'Service IP',
+          text: 'Manager IP',
           value: 'ipaddr',
           sortable: false,
         },

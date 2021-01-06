@@ -1,6 +1,6 @@
 <template>
   <div>
-    <services v-if="id === 'services'" />
+    <services v-if="id === 'manager'" />
     <devices v-else-if="id === 'devices'" />
     <nodebots v-else-if="id === 'nodebots'" />
   </div>

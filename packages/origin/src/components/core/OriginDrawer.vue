@@ -94,7 +94,25 @@
               <!-- <v-list-item-icon>
                 <v-icon v-text="child.icon"></v-icon>
               </v-list-item-icon> -->
-              <v-list-item-title v-text="$t(`modules.${child.title}`)"></v-list-item-title>
+              <v-list-item-title>
+                {{ $t(`modules.${child.title}`) }}
+              </v-list-item-title>
+              <v-list-item-action v-if="child.comingSoon">
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-icon
+                      small
+                      v-on="on"
+                      v-bind="attrs"
+                      class="mb-1"
+                      color="accent"
+                    >
+                      mdi-timer-sand
+                    </v-icon>
+                  </template>
+                  <span>Coming soon!</span>
+                </v-tooltip>
+              </v-list-item-action>
             </v-list-item>
             <v-divider
               :key="index"
@@ -111,7 +129,25 @@
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-title>
+              {{ $t(`modules.${item.title}`) }}
+            </v-list-item-title>
+            <v-list-item-action v-if="item.comingSoon">
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-icon
+                    small
+                    v-on="on"
+                    v-bind="attrs"
+                    class="mb-1"
+                    color="accent"
+                  >
+                    mdi-timer-sand
+                  </v-icon>
+                </template>
+                <span>Coming soon!</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
@@ -135,10 +171,28 @@
           <v-list-item-icon>
             <v-icon v-text="item.icon"></v-icon>
           </v-list-item-icon>
-          <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-            <v-list-item-action v-if="item.external">
-              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
-            </v-list-item-action>
+          <v-list-item-title>
+            {{ $t(`modules.${item.title}`) }}
+          </v-list-item-title>
+          <v-list-item-action v-if="item.comingSoon">
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  class="mb-1"
+                  color="accent"
+                >
+                  mdi-timer-sand
+                </v-icon>
+              </template>
+              <span>Coming soon!</span>
+            </v-tooltip>
+          </v-list-item-action>
+          <v-list-item-action v-if="item.external">
+            <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
     </template>

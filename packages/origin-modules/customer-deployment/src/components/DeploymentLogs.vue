@@ -86,8 +86,8 @@ export default {
           value: 'operationname',
         },
         {
-          text: 'Modified at',
-          value: 'modifiedtimestamp',
+          text: 'Started at',
+          value: 'createdTimestamp',
         },
         {
           text: 'Last status update',

@@ -230,7 +230,7 @@
     "customerWebhooks": "Webhooks",
     "customerSolutions": "Roles & Access",
     "customerUsers": "Users",
-    "customerDeployment": "Deployment",
+    "customerDeployment": "Deployment Manager",
     "customerData": "Data export"
   },
   "account": {

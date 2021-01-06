@@ -1,7 +1,25 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Deployment</span>
+      <span>Deployment Manager</span>
+      <app-info #default="{ on: dialog, attrs }">
+        <v-tooltip bottom>
+          <template #activator="{ on: tooltip }">
+            <v-btn
+              icon
+              small
+              v-on="{ ...tooltip, ...dialog }"
+              v-bind="attrs"
+              class="ml-4 mb-1"
+            >
+              <v-icon
+                v-text="'$info'"
+              ></v-icon>
+            </v-btn>
+          </template>
+          Info
+        </v-tooltip>
+      </app-info>
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn
@@ -9,7 +27,7 @@
             small
             v-on="on"
             v-bind="attrs"
-            class="ml-4 mb-1"
+            class="ml-2 mb-1"
             @click="gotToSettings"
           >
             <v-icon
@@ -67,11 +85,13 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import DeploymentService from '../components/DeploymentService.vue';
+import AppInfo from '../components/AppInfo.vue';
 
 export default {
   name: 'CustomerDeployment',
   components: {
     DeploymentService,
+    AppInfo,
   },
   data() {
     return {
