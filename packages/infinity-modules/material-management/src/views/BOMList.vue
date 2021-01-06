@@ -71,10 +71,13 @@
             {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
-        <template v-slot:item.name="props" >
-          <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
-            <span style="cursor:pointer;">{{props.item.name}}</span>
-          </router-link>
+        <template v-slot:item.name="{ item }" >
+          <!-- <router-link :to="{ name: 'bom-details', params: { query: props.item } }"> -->
+            <span @click="handleClick(item)"
+              style="cursor:pointer; color:blue">
+              {{item.name}}
+            </span>
+          <!-- </router-link> -->
         </template>
         <template v-slot:top>
         <v-dialog
@@ -420,7 +423,17 @@ export default {
       this.confirmListDialog = false;
     },
     handleClick(value) {
-      this.$router.push({ name: 'order-details', params: { id: value } });
+      console.log(value);
+      this.$router.push(
+        {
+          name: 'bom-details',
+          params: {
+            id: value.id,
+            name: value.name,
+            lineid: value.lineid,
+          },
+        },
+      );
     },
     async RefreshUI() {
       await this.getBomListRecords('');
