@@ -6,77 +6,48 @@
       </v-btn>
       <span>Deployment updates</span>
     </portal>
-    <v-container fluid v-if="loading">
-      <v-row
-        align="center"
-        justify="center"
-        :no-gutters="$vuetify.breakpoint.smAndDown"
-      >
-        <v-col cols="12" align="center">
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            size="72"
-          ></v-progress-circular>
-        </v-col>
-        <v-col cols="12" align="center">
-          <div class="title">
-            Fetching deployment orders...
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-container fluid v-else-if="!loading && !deploymentOrders.length">
-      <v-row
-        align="center"
-        justify="center"
-        :no-gutters="$vuetify.breakpoint.smAndDown"
-      >
-        <v-col cols="12" align="center">
-          <v-img
-            :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
-            id="construction_illustration"
-            height="260"
-            contain
-          />
-        </v-col>
-        <v-col cols="12" align="center">
-          <div class="title">
-            No deployment order!
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-    <template v-else>
-      <v-text-field
-        dense
-        outlined
-        single-line
-        hide-details
-        class="mx-4 mb-2"
-        v-model="search"
-        autocomplete="off"
-        label="Filter deployment orders"
-        append-icon="mdi-magnify"
-      ></v-text-field>
-      <v-data-table
-        dense
-        :search="search"
-        item-key="_id"
-        class="transparent mx-4"
-        :items="deploymentOrders"
-        :headers="headers"
-        :itemsPerPage="10"
-        :footer-props="{
-          disableItemsPerPage: true,
-        }"
-      >
+    <v-data-table
+      dense
+      :loading="loading"
+      item-key="_id"
+      :options.sync="options"
+      class="transparent mx-4"
+      :items="deploymentOrders"
+      :headers="headers"
+      :itemsPerPage="15"
+      :footer-props="{
+        disableItemsPerPage: true,
+      }"
+      :server-items-length="total"
+    >
+      <template #no-data>
+        <v-container fill-height>
+          <v-row
+            align="center"
+            justify="center"
+            :no-gutters="$vuetify.breakpoint.smAndDown"
+          >
+            <v-col cols="12" align="center">
+              <v-img
+                :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+                id="construction_illustration"
+                height="260"
+                contain
+              />
+            </v-col>
+            <v-col cols="12" align="center">
+              <div class="title">
+                No deployment order!
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </template>
       <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
         <view-logs :deploymentOrder="item" />
       </template>
-      </v-data-table>
-    </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -92,7 +63,8 @@ export default {
   data() {
     return {
       loading: false,
-      search: '',
+      total: 0,
+      options: {},
       headers: [
         {
           text: 'Deployment service ID',
@@ -128,9 +100,6 @@ export default {
   },
   async created() {
     this.setExtendedHeader(false);
-    this.loading = true;
-    await this.fetchDeploymentOrders();
-    this.loading = false;
   },
   computed: {
     ...mapState('customerDeployment', ['deploymentOrders']),
@@ -145,6 +114,26 @@ export default {
     ...mapActions('customerDeployment', ['fetchDeploymentOrders']),
     goBack() {
       this.$router.push({ name: 'customerDeployment' });
+    },
+    async getData() {
+      const { page, itemsPerPage } = this.options;
+      this.loading = true;
+      const records = await this.fetchDeploymentOrders({
+        pagesize: itemsPerPage,
+        pagenumber: page,
+      });
+      if (records && records.totalCount) {
+        this.total = records.totalCount;
+      }
+      this.loading = false;
+    },
+  },
+  watch: {
+    options: {
+      deep: true,
+      handler() {
+        this.getData();
+      },
     },
   },
 };

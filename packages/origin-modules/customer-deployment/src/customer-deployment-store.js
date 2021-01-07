@@ -247,26 +247,30 @@ export default ({
       return false;
     },
 
-    fetchDeploymentOrders: async ({ dispatch, commit }, deviceId = null) => {
+    fetchDeploymentOrders: async ({ dispatch, commit }, {
+      pagenumber = 1,
+      pagesize = 10,
+      deviceId = null,
+    }) => {
       let query = '';
       if (deviceId) {
-        query = `lineid==${deviceId}`;
+        query = `query=lineid==${deviceId}&`;
       }
       const records = await dispatch(
-        'element/getRecords',
+        'element/getRecordsWithCount',
         {
           elementName: elementMap.DEPLOYMENT,
-          query: `?query=${query}`,
+          query: `?${query}pagenumber=${pagenumber}&pagesize=${pagesize}`,
         },
         { root: true },
       );
       if (deviceId) {
-        commit('setMappedOrders', records);
+        commit('setMappedOrders', records.results);
       } else {
-        commit('setDeploymentOrders', records);
+        commit('setDeploymentOrders', records.results);
       }
-      if (records && records.length) {
-        return true;
+      if (records && records.results && records.results.length) {
+        return records;
       }
       return false;
     },

@@ -101,7 +101,7 @@
                 <span
                   v-on="on"
                   v-bind="attrs"
-                  :class="item.isdeployed ? 'success--text' : 'error--text'"
+                  :class="item.isdeployed ? 'success--text' : 'info--text'"
                 >
                   {{ item.name }}
                   <v-progress-circular

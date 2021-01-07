@@ -6,27 +6,7 @@
     <v-divider></v-divider>
     <perfect-scrollbar>
       <v-card-text class="pb-0" style="height:408px">
-        <v-container fill-height v-if="loading">
-          <v-row
-            align="center"
-            justify="center"
-            :no-gutters="$vuetify.breakpoint.smAndDown"
-          >
-            <v-col cols="12" align="center">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                size="72"
-              ></v-progress-circular>
-            </v-col>
-            <v-col cols="12" align="center">
-              <div class="title">
-                Fetching deployment orders...
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-container fill-height v-else-if="!loading && !mappedOrders.length">
+        <!-- <v-container fill-height>
           <v-row
             align="center"
             justify="center"
@@ -46,25 +26,49 @@
               </div>
             </v-col>
           </v-row>
-        </v-container>
-        <template v-else>
-          <v-data-table
-            dense
-            :itemsPerPage="5"
-            :footer-props="{
-              disableItemsPerPage: true,
-            }"
-            item-key="_id"
-            class="transparent"
-            :items="mappedOrders"
-            :headers="headers"
-          >
-          <!-- eslint-disable-next-line -->
-          <template #item.actions="{ item }">
-            <view-logs :deploymentOrder="item" />
-          </template>
-          </v-data-table>
+        </v-container> -->
+        <v-data-table
+          dense
+          :loading="loading"
+          :options.sync="options"
+          :itemsPerPage="5"
+          :footer-props="{
+            disableItemsPerPage: true,
+          }"
+          :server-items-length="total"
+          item-key="_id"
+          class="transparent"
+          :items="mappedOrders"
+          :headers="headers"
+        >
+        <template #no-data>
+          <v-container fill-height>
+            <v-row
+              align="center"
+              justify="center"
+              :no-gutters="$vuetify.breakpoint.smAndDown"
+            >
+              <v-col cols="12" align="center">
+                <v-img
+                  :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+                  id="construction_illustration"
+                  height="260"
+                  contain
+                />
+              </v-col>
+              <v-col cols="12" align="center">
+                <div class="title">
+                  No deployment order!
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
         </template>
+        <!-- eslint-disable-next-line -->
+        <template #item.actions="{ item }">
+          <view-logs :deploymentOrder="item" />
+        </template>
+        </v-data-table>
       </v-card-text>
     </perfect-scrollbar>
   </v-card>
@@ -82,6 +86,8 @@ export default {
   data() {
     return {
       loading: false,
+      total: 0,
+      options: {},
       headers: [
         {
           text: 'Instance ID',
@@ -120,14 +126,31 @@ export default {
   },
   methods: {
     ...mapActions('customerDeployment', ['fetchDeploymentOrders']),
+    async getData() {
+      const { page, itemsPerPage } = this.options;
+      this.loading = true;
+      const records = await this.fetchDeploymentOrders({
+        pagesize: itemsPerPage,
+        pagenumber: page,
+        deviceId: this.selectedDevice.id,
+      });
+      if (records && records.totalCount) {
+        this.total = records.totalCount;
+      }
+      this.loading = false;
+    },
   },
   watch: {
     selectedDevice: {
       immediate: true,
-      async handler() {
-        this.loading = true;
-        await this.fetchDeploymentOrders(this.selectedDevice.id);
-        this.loading = false;
+      handler() {
+        this.getData();
+      },
+    },
+    options: {
+      deep: true,
+      handler() {
+        this.getData();
       },
     },
   },
