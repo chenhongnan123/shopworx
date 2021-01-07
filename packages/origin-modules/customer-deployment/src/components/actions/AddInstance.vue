@@ -106,7 +106,9 @@ export default {
         (v) => !!v || 'Nodebot is required.',
       ],
       nameRules: [
-        (v) => !!v || 'Package name is required.',
+        (v) => !!v || 'Instance name is required.',
+        (v) => /^[A-Za-z0-9]+$/.test(v)
+          || 'Instance name should not contain empty space or special characters',
       ],
       configRules: [
         (v) => !!v || 'Configuration is required',
