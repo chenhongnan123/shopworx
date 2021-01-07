@@ -177,17 +177,35 @@
           </add-instance>
         </template>
       </v-data-table>
-      <v-row class="mx-4 mt-4" v-if="selectedDevice">
-        <v-col cols="12" md="6" xl="4">
-          <device-details />
-        </v-col>
-        <v-col cols="12" md="6" xl="4">
+      <v-tabs
+        v-model="tab"
+        class="mx-4"
+        background-color="transparent"
+      >
+        <v-tab class="text-none">
+          Instances
+        </v-tab>
+        <v-tab class="text-none">
+          Logs
+        </v-tab>
+        <v-tab class="text-none">
+          Device details
+        </v-tab>
+      </v-tabs>
+      <v-tabs-items
+        class="mx-4"
+        v-model="tab"
+      >
+        <v-tab-item>
           <monitored-instances />
-        </v-col>
-        <v-col cols="12" xl="4">
+        </v-tab-item>
+        <v-tab-item>
           <deployment-logs />
-        </v-col>
-      </v-row>
+        </v-tab-item>
+        <v-tab-item>
+          <device-details />
+        </v-tab-item>
+      </v-tabs-items>
     </template>
     <v-container fluid fill-height v-else>
       <v-row
@@ -251,6 +269,7 @@ export default {
   data() {
     return {
       search: '',
+      tab: 0,
       loading: false,
       fetchingDevices: false,
       headers: [

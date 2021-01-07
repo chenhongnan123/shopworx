@@ -70,6 +70,10 @@ export default {
       loading: false,
       headers: [
         {
+          text: 'Manager ID',
+          value: 'id',
+        },
+        {
           text: 'Manager name',
           value: 'name',
         },
@@ -88,11 +92,11 @@ export default {
           value: 'isactive',
           sortable: false,
         },
-        {
+        /* {
           text: 'Actions',
           value: 'actions',
           sortable: false,
-        },
+        }, */
       ],
     };
   },
