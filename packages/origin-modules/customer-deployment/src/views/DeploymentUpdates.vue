@@ -99,6 +99,10 @@ export default {
           value: 'deploymentserviceid',
         },
         {
+          text: 'Operation',
+          value: 'operationname',
+        },
+        {
           text: 'Started at',
           value: 'createdTimestamp',
         },

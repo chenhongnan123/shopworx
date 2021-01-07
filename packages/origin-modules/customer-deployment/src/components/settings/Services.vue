@@ -8,7 +8,7 @@
       hide-details
       v-model="search"
       prepend-inner-icon="$search"
-      label="Filter services"
+      label="Filter managers"
     ></v-text-field>
     <v-data-table
       dense
@@ -22,13 +22,13 @@
       :loading="loading"
     >
       <template #loading>
-        Fetching services...
+        Fetching managers...
       </template>
       <template #no-data>
-        No service available
+        No manager available
       </template>
       <template #no-results>
-        No matching service found for '{{ search }}'
+        No matching manager found for '{{ search }}'
       </template>
     <!-- eslint-disable-next-line -->
       <template #item.mmonitlink="{ item }">
