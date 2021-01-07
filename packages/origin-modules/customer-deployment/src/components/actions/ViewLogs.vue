@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="700px"
+    max-width="800px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }">
