@@ -4,7 +4,9 @@
       <v-btn
         icon
         v-on="on"
-        :disabled="!selectedDevice.ispasswordless || !instance.nodebot.isinstalled"
+        :disabled="!selectedDevice.ispasswordless
+          || !instance.nodebot.isinstalled
+          || instance.isdeploying"
         v-bind="attrs"
         color="success"
         :loading="deploying"
