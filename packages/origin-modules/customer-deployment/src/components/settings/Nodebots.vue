@@ -88,7 +88,7 @@
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
-        <install-debian :nodebot="item" v-if="!item.isinstalled" />
+        <install-debian :nodebot="item" />
       </template>
     </v-data-table>
   </div>

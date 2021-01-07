@@ -59,7 +59,7 @@
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
-        <toggle-passwordless :device="item" v-if="!item.ispasswordless" />
+        <toggle-passwordless :device="item" />
       </template>
     </v-data-table>
   </div>
@@ -82,6 +82,10 @@ export default {
       search: '',
       loading: false,
       headers: [
+        {
+          text: 'Device ID',
+          value: 'id',
+        },
         {
           text: 'Device name',
           value: 'name',

@@ -99,6 +99,14 @@ export default {
           value: 'deploymentserviceid',
         },
         {
+          text: 'Instance ID',
+          value: 'instanceid',
+        },
+        {
+          text: 'Device ID',
+          value: 'lineid',
+        },
+        {
           text: 'Operation',
           value: 'operationname',
         },

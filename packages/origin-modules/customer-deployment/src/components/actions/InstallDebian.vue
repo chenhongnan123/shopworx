@@ -5,6 +5,7 @@
     :class="spaceClass"
     small
     outlined
+    :disabled="nodebot.isinstalled"
     :loading="installing"
     @click="installDebian"
   >

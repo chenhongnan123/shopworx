@@ -18,7 +18,6 @@
           <toggle-passwordless
             spaceClass="ml-2 mb-1"
             :device="selectedDevice"
-            v-if="!selectedDevice.ispasswordless"
           />
         </template>
         <template v-if="edit">

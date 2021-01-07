@@ -107,7 +107,7 @@ export default {
       ],
       nameRules: [
         (v) => !!v || 'Instance name is required.',
-        (v) => /^[A-Za-z0-9]+$/.test(v)
+        (v) => /^[A-Za-z0-9-]+$/.test(v)
           || 'Instance name should not contain empty space or special characters',
       ],
       configRules: [
