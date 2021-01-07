@@ -263,13 +263,15 @@ export default {
           .call(eventData, 'isdeployed');
         const hasDeployingKey = Object.prototype.hasOwnProperty
           .call(eventData, 'isdeploying');
+        const hasReconfiguredKey = Object.prototype.hasOwnProperty
+          .call(eventData, 'isreconfigured');
         if (hasPasswordlessKey) {
           this.mapDevices(eventData);
         }
         if (hasInstalledKey) {
           this.mapNodebots(eventData);
         }
-        if (hasDeployedKey || hasDeployingKey) {
+        if (hasDeployedKey || hasDeployingKey || hasReconfiguredKey) {
           this.mapInstances(eventData);
         }
         // update deployment order list

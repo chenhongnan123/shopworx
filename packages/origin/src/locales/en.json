@@ -83,7 +83,8 @@
     "INSTALL_DEBIAN": "Request created to install debian.",
     "PASSWORDLESS_ENABLED": "Passwordless enabled for device ID {device}.",
     "DEBIAN_INSTALLED": "Nodebot ID {nodebot} installed on deployment manager ID {service}.",
-    "INSTANCE_DEPLOYED": "Instance ID {instance} deployed on device ID {device}."
+    "INSTANCE_DEPLOYED": "Instance ID {instance} deployed on device ID {device}.",
+    "INSTANCE_RECONFIGURED": "Instance ID {instance} reconfigured."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
