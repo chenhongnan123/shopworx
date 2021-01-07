@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'InstanceConfig',
@@ -85,12 +85,18 @@ export default {
     };
   },
   computed: {
+    ...mapState('customerDeployment', [
+      'selectedService',
+      'selectedDevice',
+      'mappedDevices',
+    ]),
     isConfigUnchanged() {
       return JSON.stringify(this.configuration) === JSON.stringify(this.instance.configuration);
     },
   },
   methods: {
-    ...mapActions('customerDeployment', ['fetchLogs']),
+    ...mapMutations('customerDeployment', ['setReactiveMappedDevice', 'setSelectedDevice']),
+    ...mapActions('customerDeployment', ['createDeploymentOrder']),
     isValidJsonString(jsonString) {
       if (!(jsonString && typeof jsonString === 'string')) {
         return false;
@@ -149,7 +155,7 @@ export default {
         `Please confirm the re-configuration for "${this.instance.name}".
         You cannot stop the re-configuration once it is started.`,
       )) {
-        this.deploying = true;
+        this.saving = true;
         const payload = {
           deploymentserviceid: this.selectedService.id,
           lineid: this.selectedDevice.id,
@@ -161,7 +167,8 @@ export default {
         };
         await this.createDeploymentOrder(payload);
         this.mapInstances();
-        this.deploying = false;
+        this.saving = false;
+        this.cancel();
       }
     },
   },
