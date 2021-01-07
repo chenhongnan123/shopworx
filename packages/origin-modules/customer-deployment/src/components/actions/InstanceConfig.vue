@@ -11,6 +11,7 @@
         <template #activator="{ on: tooltip }">
           <v-btn
             icon
+            :disabled="!instance.isreconfigured"
             v-on="{ ...tooltip, ...dialog }"
             v-bind="attrs"
           >
@@ -49,6 +50,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
+            @click="reconfigureInstance"
             :disabled="!isValid || isConfigUnchanged"
           >
             Re-configure
@@ -103,6 +105,64 @@ export default {
     cancel() {
       this.configuration = '';
       this.dialog = false;
+    },
+    mapInstances() {
+      // update instance in selected device
+      this.setSelectedDevice({
+        ...this.selectedDevice,
+        instances: this.selectedDevice.instances.map((instance) => {
+          let isreconfigured = true;
+          if (this.instance.id === instance.id) {
+            isreconfigured = false;
+          }
+          return {
+            ...instance,
+            isreconfigured,
+          };
+        }),
+      });
+      // update instance list in mapped device
+      for (let i = 0; i < this.mappedDevices.length; i += 1) {
+        if (this.selectedDevice.id === this.mappedDevices[i].id) {
+          this.setReactiveMappedDevice({
+            index: i,
+            payload: {
+              ...this.mappedDevices[i],
+              instances: this.mappedDevices[i].instances.map((instance) => {
+                let isreconfigured = true;
+                if (this.instance.id === instance.id) {
+                  isreconfigured = false;
+                }
+                return {
+                  ...instance,
+                  isreconfigured,
+                };
+              }),
+            },
+          });
+        }
+      }
+    },
+    async reconfigureInstance() {
+      if (await this.$root.$confirm.open(
+        'Re-configure instance',
+        `Please confirm the re-configuration for "${this.instance.name}".
+        You cannot stop the re-configuration once it is started.`,
+      )) {
+        this.deploying = true;
+        const payload = {
+          deploymentserviceid: this.selectedService.id,
+          lineid: this.selectedDevice.id,
+          nodebotmasterid: this.instance.nodebot.id,
+          instanceid: this.instance.id,
+          operationname: 'reconfigure-instance',
+          status: 'Pending',
+          assetid: 0,
+        };
+        await this.createDeploymentOrder(payload);
+        this.mapInstances();
+        this.deploying = false;
+      }
     },
   },
   watch: {

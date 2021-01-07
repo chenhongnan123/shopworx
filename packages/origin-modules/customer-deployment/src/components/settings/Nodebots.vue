@@ -77,7 +77,7 @@
                     size="12"
                     width="2"
                     color="primary"
-                    v-if="instance.isdeploying"
+                    v-if="instance.isdeploying || !instance.isreconfigured"
                   ></v-progress-circular>
                 </span>
               </template>

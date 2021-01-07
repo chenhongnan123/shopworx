@@ -158,6 +158,7 @@ export default {
         configuration: this.configuration,
         isdeployed: this.isdeployed,
         isdeploying: false,
+        isreconfigured: true,
         assetid: 0,
       };
       const createdInstance = await this.createInstance(payload);

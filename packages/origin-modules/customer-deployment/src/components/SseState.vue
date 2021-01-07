@@ -171,15 +171,26 @@ export default {
           },
         });
       }
+      if (eventData.isreconfigured) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'INSTANCE_RECONFIGURED',
+          options: {
+            instance: eventData.instanceid,
+          },
+        });
+      }
       const updatedInstances = this.selectedDevice.instances.map((instance) => {
-        let { isdeployed, isdeploying } = instance;
+        let { isdeployed, isdeploying, isreconfigured } = instance;
         if (eventData.instanceid === instance.id) {
-          ({ isdeployed, isdeploying } = eventData);
+          ({ isdeployed, isdeploying, isreconfigured } = eventData);
         }
         return {
           ...instance,
           isdeployed,
           isdeploying,
+          isreconfigured,
         };
       });
       this.setSelectedDevice({
@@ -194,14 +205,15 @@ export default {
             payload: {
               ...this.mappedDevices[i],
               instances: this.mappedDevices[i].instances.map((instance) => {
-                let { isdeployed, isdeploying } = instance;
+                let { isdeployed, isdeploying, isreconfigured } = instance;
                 if (eventData.instanceid === instance.id) {
-                  ({ isdeployed, isdeploying } = eventData);
+                  ({ isdeployed, isdeploying, isreconfigured } = eventData);
                 }
                 return {
                   ...instance,
                   isdeployed,
                   isdeploying,
+                  isreconfigured,
                 };
               }),
             },
@@ -216,14 +228,15 @@ export default {
             payload: {
               ...this.nodebots[i],
               instances: this.nodebots[i].instances.map((instance) => {
-                let { isdeployed, isdeploying } = instance;
+                let { isdeployed, isdeploying, isreconfigured } = instance;
                 if (eventData.instanceid === instance.id) {
-                  ({ isdeployed, isdeploying } = eventData);
+                  ({ isdeployed, isdeploying, isreconfigured } = eventData);
                 }
                 return {
                   ...instance,
                   isdeployed,
                   isdeploying,
+                  isreconfigured,
                 };
               }),
             },

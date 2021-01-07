@@ -109,7 +109,7 @@
                     size="12"
                     width="2"
                     color="primary"
-                    v-if="item.isdeploying"
+                    v-if="item.isdeploying || !item.isreconfigured"
                   ></v-progress-circular>
                 </span>
               </template>
