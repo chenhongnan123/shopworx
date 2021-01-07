@@ -54,8 +54,6 @@
             class="transparent"
             :items="mappedOrders"
             :headers="headers"
-            disable-pagination
-            hide-default-footer
           >
           <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
@@ -81,6 +79,10 @@ export default {
     return {
       loading: false,
       headers: [
+        {
+          text: 'Instance ID',
+          value: 'instanceid',
+        },
         {
           text: 'Operation',
           value: 'operationname',

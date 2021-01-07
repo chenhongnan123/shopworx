@@ -15,9 +15,8 @@
           Edit
         </v-btn>
         <template v-if="!edit">
-          <v-spacer></v-spacer>
           <toggle-passwordless
-            spaceClass="mb-1"
+            spaceClass="ml-2 mb-1"
             :device="selectedDevice"
             v-if="!selectedDevice.ispasswordless"
           />
