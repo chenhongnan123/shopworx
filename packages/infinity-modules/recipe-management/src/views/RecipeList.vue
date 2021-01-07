@@ -202,6 +202,7 @@ export default {
     return {
       sublines: null,
       stations: null,
+      deleting: false,
       headers: [
         {
           text: 'No.',
@@ -274,7 +275,7 @@ export default {
   async created() {
     await this.getRecipeListRecords('');
   },
-  mounted() {
+  async mounted() {
     this.$root.$on('filteredSubline', (data) => {
       this.sublines = data;
     });
@@ -309,7 +310,7 @@ export default {
         'getStations',
         'getSubStations']),
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
     showFilter: {
       get() {
         return this.filter;
@@ -345,7 +346,17 @@ export default {
       await this.getRecipeListRecords(param);
     },
     handleClick(value) {
-      this.$router.push({ name: 'recipe-details', params: { id: value } });
+      console.log(value);
+      this.$router.push({
+        name: 'recipe-details',
+        params: {
+          id: value.recipenumber,
+          linename: value.linename,
+          sublinename: value.sublinename,
+          substationname: value.substationname,
+          recipename: value.recipename,
+        },
+      });
     },
     fnLineModel() {
       this.showLineFilter = false;

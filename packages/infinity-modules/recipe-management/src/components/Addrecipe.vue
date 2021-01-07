@@ -145,6 +145,7 @@ export default {
   data() {
     return {
       dialog: false,
+      loadingParts: false,
       dialogDup: false,
       dialogConfirm: false,
       dupRecipeName: null,
