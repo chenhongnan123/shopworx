@@ -201,7 +201,7 @@ export default {
   },
   async created() {
     await this.getRecipeDetailListRecords(
-      `?query=recipeid=='${this.$route.params.id.recipenumber}'`,
+      `?query=recipeid=="${this.$route.params.id.recipenumber}"`,
     );
     await this.getDataTypes('');
     this.substationname = this.$route.params.id.substationname;
