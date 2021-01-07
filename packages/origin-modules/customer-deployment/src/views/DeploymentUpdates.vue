@@ -66,8 +66,10 @@
         class="transparent mx-4"
         :items="deploymentOrders"
         :headers="headers"
-        disable-pagination
-        hide-default-footer
+        :itemsPerPage="10"
+        :footer-props="{
+          disableItemsPerPage: true,
+        }"
       >
       <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">

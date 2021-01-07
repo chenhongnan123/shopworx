@@ -10,7 +10,7 @@
       <v-btn
         v-on="on"
         v-bind="attrs"
-        color="primary"
+        color="secondary"
         rounded
         class="text-none"
       >

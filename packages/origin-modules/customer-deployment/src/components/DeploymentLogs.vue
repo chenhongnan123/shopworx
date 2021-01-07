@@ -50,6 +50,10 @@
         <template v-else>
           <v-data-table
             dense
+            :itemsPerPage="5"
+            :footer-props="{
+              disableItemsPerPage: true,
+            }"
             item-key="_id"
             class="transparent"
             :items="mappedOrders"
