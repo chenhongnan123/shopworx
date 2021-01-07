@@ -88,7 +88,7 @@
           :disabled="!productName || !productDescription"
           @click="updateProduct"
         >
-          {{ $t('displayTags.buttons.update') }}
+          {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
