@@ -100,24 +100,26 @@ export default {
           },
         });
       }
-      const updatedInstances = this.selectedDevice.instances.map((instance) => {
-        const { nodebot } = instance;
-        let { isinstalled } = nodebot;
-        if (eventData.nodebotmasterid === instance.nodebot.id) {
-          ({ isinstalled } = eventData);
-        }
-        return {
-          ...instance,
-          nodebot: {
-            ...nodebot,
-            isinstalled,
-          },
-        };
-      });
-      this.setSelectedDevice({
-        ...this.selectedDevice,
-        instances: updatedInstances,
-      });
+      if (this.selectedDevice) {
+        const updatedInstances = this.selectedDevice.instances.map((instance) => {
+          const { nodebot } = instance;
+          let { isinstalled } = nodebot;
+          if (eventData.nodebotmasterid === instance.nodebot.id) {
+            ({ isinstalled } = eventData);
+          }
+          return {
+            ...instance,
+            nodebot: {
+              ...nodebot,
+              isinstalled,
+            },
+          };
+        });
+        this.setSelectedDevice({
+          ...this.selectedDevice,
+          instances: updatedInstances,
+        });
+      }
       // update nodebot list
       for (let i = 0; i < this.nodebots.length; i += 1) {
         if (eventData.nodebotmasterid === this.nodebots[i].id) {

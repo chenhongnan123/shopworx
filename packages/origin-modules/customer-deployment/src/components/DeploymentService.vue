@@ -92,7 +92,6 @@
         <template #item.name="{ item }">
           <v-btn
             small
-            :outlined="isDeviceSelected(item.id)"
             :text="!isDeviceSelected(item.id)"
             color="primary"
             @click="setSelectedDevice(item)"

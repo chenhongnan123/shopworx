@@ -126,6 +126,7 @@
           <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
             <deploy-instance :instance="item" />
+            <instance-config :instance="item" />
           </template>
           </v-data-table>
         </template>
@@ -138,12 +139,14 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import AddInstance from './actions/AddInstance.vue';
 import DeployInstance from './actions/DeployInstance.vue';
+import InstanceConfig from './actions/InstanceConfig.vue';
 
 export default {
   name: 'MonitoredInstances',
   components: {
     AddInstance,
     DeployInstance,
+    InstanceConfig,
   },
   data() {
     return {

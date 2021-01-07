@@ -391,6 +391,32 @@ export default ({
       return false;
     },
 
+    updateNodebot: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.NODEBOT,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
+    updateNodebotInstances: async ({ dispatch }, { nodebotmasterid, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: elementMap.INSTANCE,
+          queryParam: `?query=nodebotmasterid==${nodebotmasterid}`,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
     updateNodebotFile: async ({ dispatch }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',
@@ -402,6 +428,18 @@ export default ({
         { root: true },
       );
       return updated;
+    },
+
+    deleteNodebotFile: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'file/deleteFile',
+        {
+          elementName: elementMap.NODEBOT_FILE,
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
     },
 
     updateService: async ({ dispatch, commit }, { id, payload }) => {

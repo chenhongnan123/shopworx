@@ -87,8 +87,19 @@
         </div>
       </template>
       <!-- eslint-disable-next-line -->
+      <template #item.config="{ item }">
+        <nodebot-config :nodebot="item" />
+      </template>
+      <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
-        <install-debian :nodebot="item" />
+        <install-debian
+          :nodebot="item"
+          v-if="!item.isinstalled"
+        />
+        <update-debian
+          @on-update="getNodebots"
+          :nodebot="item"
+        />
       </template>
     </v-data-table>
   </div>
@@ -99,12 +110,16 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import AddNodebot from '../actions/AddNodebot.vue';
 import InstallDebian from '../actions/InstallDebian.vue';
+import UpdateDebian from '../actions/UpdateDebian.vue';
+import NodebotConfig from '../actions/NodebotConfig.vue';
 
 export default {
   name: 'Nodebots',
   components: {
     AddNodebot,
     InstallDebian,
+    UpdateDebian,
+    NodebotConfig,
   },
   data() {
     return {
@@ -122,6 +137,11 @@ export default {
         {
           text: 'Version',
           value: 'releaseversion',
+          sortable: false,
+        },
+        {
+          text: 'Configuration',
+          value: 'config',
           sortable: false,
         },
         {

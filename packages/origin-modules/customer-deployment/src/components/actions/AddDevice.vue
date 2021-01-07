@@ -86,7 +86,7 @@
               filled
               dense
               clearable
-              label="Map to deployment service (optional)"
+              label="Map to deployment manager (optional)"
               :loading="loading"
               v-model="service"
               item-text="name"
