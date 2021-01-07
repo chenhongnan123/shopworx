@@ -15,40 +15,53 @@
           Add new nodebot
         </v-card-title>
         <v-card-text>
+          <v-autocomplete
+            filled
+            dense
+            clearable
+            label="Select deployment manager"
+            :loading="fetching"
+            :disabled="saving"
+            v-model="service"
+            item-text="name"
+            return-object
+            class="mt-1"
+            :rules="serviceRules"
+            :items="deploymentServices"
+          >
+            <template #item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
           <v-file-input
             dense
             outlined
-            class="mt-1"
             show-size
             accept=".deb"
             v-model="nodebotfile"
-            label="Debian file"
+            label="Debian file*"
             :rules="fileRules"
             prepend-icon="mdi-attachment"
-            :disabled="saving"
+            :disabled="saving || !service"
             :loading="loading"
             @change="onFileChange"
           ></v-file-input>
-          <v-text-field
-            dense
-            outlined
-            v-model="name"
-            :rules="nameRules"
-            label="Package name"
-            prepend-icon="mdi-rocket-outline"
-            disabled
-            :loading="loading"
-          ></v-text-field>
-          <v-text-field
-            dense
-            outlined
-            v-model="releaseversion"
-            label="Version"
-            :rules="versionRules"
-            prepend-icon="mdi-history"
-            disabled
-            :loading="loading"
-          ></v-text-field>
+          <div
+            class="caption ml-8"
+            v-if="!nodebotfile"
+            v-html="nameHelpText"
+          ></div>
+          <div v-else class="ml-8">
+            <div>
+              Package name: <strong>{{ name }}</strong>
+            </div>
+            <div>
+              Release version: <strong>v{{ releaseversion }}</strong>
+            </div>
+          </div>
           <v-textarea
             dense
             outlined
@@ -56,6 +69,7 @@
             v-model="description"
             prepend-icon="mdi-file-document-multiple-outline"
             rows="3"
+            class="mt-4"
             auto-grow
             :disabled="saving"
           ></v-textarea>
@@ -70,27 +84,6 @@
             auto-grow
             :disabled="saving"
           ></v-textarea>
-          <v-autocomplete
-            filled
-            dense
-            clearable
-            label="Map to deployment service"
-            :loading="fetching"
-            :disabled="saving"
-            v-model="service"
-            item-text="name"
-            return-object
-            class="ml-8"
-            :rules="serviceRules"
-            :items="deploymentServices"
-          >
-            <template #item="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.ipaddr"></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -132,6 +125,7 @@ export default {
       configuration: '',
       nodebotfile: null,
       service: null,
+      nameHelpText: '*File name should follow: <strong>swx-bot-{packagename}_{version}-{buildnumber}*.deb</strong>',
       nameRules: [
         (v) => !!v || 'Package name is required.',
       ],
@@ -141,6 +135,8 @@ export default {
       fileRules: [
         (v) => !!v || 'Debian is required.',
         (v) => this.isValidDebFile(v) || 'Attach valid debian file',
+        () => this.isValidFileName()
+          || 'Package already exists. Try updating the exiting package',
       ],
       configRules: [
         (v) => !!v || 'Configuration is required',
@@ -163,6 +159,20 @@ export default {
       'fetchDeploymentServices',
     ]),
     ...mapActions('file', ['uploadFile']),
+    isValidFileName() {
+      try {
+        const nodebot = this.nodebots.find((n) => (
+          this.service.id === n.deploymentserviceid
+          && n.name === this.name
+        ));
+        if (nodebot) {
+          return false;
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
     getFileDetails(file) {
       const { name } = file;
       const lastIndex = name.lastIndexOf('.');
@@ -200,7 +210,6 @@ export default {
           const pkg = nameWithoutExt.replace('swx-bot-', '');
           const [file, build] = pkg.split('_');
           const [version] = build.split('-');
-          this.packagename = file;
           this.name = file;
           this.releaseversion = version;
         } catch (e) {
