@@ -1,5 +1,15 @@
 <template>
-  <div style="display: none;"></div>
+  <div class="ml-8 mt-2">
+    <span class="caption">
+      Manager connection status:
+      <v-avatar
+        size="12"
+        class="mb-1"
+        :color="states[readyState].color"
+      ></v-avatar>
+      {{ states[readyState].text }}
+    </span>
+  </div>
 </template>
 
 <script>
