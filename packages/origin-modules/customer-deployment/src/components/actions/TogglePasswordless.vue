@@ -5,7 +5,6 @@
     :class="spaceClass"
     small
     outlined
-    :disabled="device.ispasswordless"
     :loading="deploying"
     @click="enablePasswordless"
   >

@@ -69,26 +69,32 @@ export default {
         {
           text: 'Deployment service ID',
           value: 'deploymentserviceid',
+          sortable: false,
         },
         {
           text: 'Instance ID',
           value: 'instanceid',
+          sortable: false,
         },
         {
           text: 'Device ID',
           value: 'lineid',
+          sortable: false,
         },
         {
           text: 'Operation',
           value: 'operationname',
+          sortable: false,
         },
         {
           text: 'Started at',
           value: 'createdTimestamp',
+          sortable: false,
         },
         {
           text: 'Last status update',
           value: 'status',
+          sortable: false,
         },
         {
           text: 'Actions',
