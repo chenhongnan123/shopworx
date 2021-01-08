@@ -6,7 +6,7 @@
     <v-divider></v-divider>
     <perfect-scrollbar>
       <v-card-text class="pb-0" style="height:408px">
-        <!-- <v-container fill-height>
+        <v-container fill-height v-if="!selectedDevice">
           <v-row
             align="center"
             justify="center"
@@ -26,9 +26,10 @@
               </div>
             </v-col>
           </v-row>
-        </v-container> -->
+        </v-container>
         <v-data-table
           dense
+          v-else
           :loading="loading"
           :options.sync="options"
           :itemsPerPage="5"
@@ -41,33 +42,33 @@
           :items="mappedOrders"
           :headers="headers"
         >
-        <template #no-data>
-          <v-container fill-height>
-            <v-row
-              align="center"
-              justify="center"
-              :no-gutters="$vuetify.breakpoint.smAndDown"
-            >
-              <v-col cols="12" align="center">
-                <v-img
-                  :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
-                  id="construction_illustration"
-                  height="260"
-                  contain
-                />
-              </v-col>
-              <v-col cols="12" align="center">
-                <div class="title">
-                  No deployment order!
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-        </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.actions="{ item }">
-          <view-logs :deploymentOrder="item" />
-        </template>
+          <template #no-data>
+            <v-container fill-height>
+              <v-row
+                align="center"
+                justify="center"
+                :no-gutters="$vuetify.breakpoint.smAndDown"
+              >
+                <v-col cols="12" align="center">
+                  <v-img
+                    :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+                    id="construction_illustration"
+                    height="260"
+                    contain
+                  />
+                </v-col>
+                <v-col cols="12" align="center">
+                  <div class="title">
+                    No deployment order!
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.actions="{ item }">
+            <view-logs :deploymentOrder="item" />
+          </template>
         </v-data-table>
       </v-card-text>
     </perfect-scrollbar>

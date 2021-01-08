@@ -159,6 +159,8 @@ export default {
       service: null,
       deviceRules: [
         (v) => !!v || 'Device name is required',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       descRules: [
