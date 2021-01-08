@@ -160,9 +160,13 @@ export default {
         this.saving = true;
         const payload = {
           deploymentserviceid: this.selectedService.id,
+          deploymentservicename: this.selectedService.name,
           lineid: this.selectedDevice.id,
+          linename: this.selectedDevice.name,
           nodebotmasterid: this.instance.nodebot.id,
+          nodebotmastername: this.instance.nodebot.name,
           instanceid: this.instance.id,
+          instancename: this.instance.name,
           operationname: 'reconfigure-instance',
           status: 'Pending',
           assetid: 0,

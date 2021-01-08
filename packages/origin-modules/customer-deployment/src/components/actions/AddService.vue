@@ -214,7 +214,9 @@ export default {
     async enablePasswordless(service, device) {
       const orderPayload = {
         deploymentserviceid: service.id,
+        deploymentservicename: service.name,
         lineid: device.id,
+        linename: device.name,
         operationname: 'enable-passwordless',
         status: 'Pending',
         assetid: 0,

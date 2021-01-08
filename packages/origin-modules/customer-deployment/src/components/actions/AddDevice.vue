@@ -225,7 +225,11 @@ export default {
         deploymentserviceid: this.addDevice
           ? this.service.id
           : this.selectedService.id,
+        deploymentservicename: this.addDevice
+          ? this.service.name
+          : this.selectedService.name,
         lineid: device.id,
+        linename: device.name,
         operationname: 'enable-passwordless',
         status: 'Pending',
         assetid: 0,

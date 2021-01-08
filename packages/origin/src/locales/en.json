@@ -85,7 +85,7 @@
     "DEBIAN_INSTALLED": "Nodebot ID {nodebot} installed on deployment manager ID {service}.",
     "INSTANCE_DEPLOYED": "Instance ID {instance} deployed on device ID {device}.",
     "INSTANCE_REMOVED": "Instance ID {instance} removed from device ID {device}.",
-    "INSTANCE_DELETED": "Instance ID {instance} termiated.",
+    "INSTANCE_DELETED": "Instance ID {instance} terminated.",
     "INSTANCE_RECONFIGURED": "Instance ID {instance} reconfigured."
   },
   "error": {

@@ -14,7 +14,7 @@
       class="transparent mx-4"
       :items="deploymentOrders"
       :headers="headers"
-      :itemsPerPage="15"
+      :itemsPerPage="10"
       :footer-props="{
         disableItemsPerPage: true,
       }"
@@ -44,6 +44,22 @@
         </v-container>
       </template>
       <!-- eslint-disable-next-line -->
+      <template #item.deploymentservicename="{ item }">
+        {{ item.deploymentservicename || item.deploymentserviceid }}
+      </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.linename="{ item }">
+        {{ item.linename || item.lineid }}
+      </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.nodebotmastername="{ item }">
+        {{ item.nodebotmastername || item.nodebotmasterid }}
+      </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.instancename="{ item }">
+        {{ item.instancename || item.instanceid }}
+      </template>
+      <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
         <view-logs :deploymentOrder="item" />
       </template>
@@ -67,23 +83,23 @@ export default {
       options: {},
       headers: [
         {
-          text: 'Deployment service ID',
-          value: 'deploymentserviceid',
+          text: 'Deployment service',
+          value: 'deploymentservicename',
           sortable: false,
         },
         {
-          text: 'Instance ID',
-          value: 'instanceid',
+          text: 'Device',
+          value: 'linename',
           sortable: false,
         },
         {
-          text: 'Device ID',
-          value: 'lineid',
+          text: 'Nodebot',
+          value: 'nodebotmastername',
           sortable: false,
         },
         {
-          text: 'Nodebot ID',
-          value: 'nodebotmasterid',
+          text: 'Instance',
+          value: 'instancename',
           sortable: false,
         },
         {

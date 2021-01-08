@@ -265,7 +265,9 @@ export default {
         if (updated) {
           const orderPayload = {
             deploymentserviceid: this.service.id,
+            deploymentservicename: this.service.name,
             nodebotmasterid: createdNodebot.id,
+            nodebotmastername: createdNodebot.name,
             operationname: 'upgrade-nodebot',
             status: 'Pending',
             assetid: 0,

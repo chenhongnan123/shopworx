@@ -40,6 +40,7 @@ export default {
       const orderPayload = {
         deploymentserviceid: this.device.deploymentserviceid,
         lineid: this.device.id,
+        linename: this.device.name,
         operationname: 'enable-passwordless',
         status: 'Pending',
         assetid: 0,
