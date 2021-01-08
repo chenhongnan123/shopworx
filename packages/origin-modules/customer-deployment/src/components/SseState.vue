@@ -173,7 +173,8 @@ export default {
       }
     },
     mapInstances(eventData) {
-      if (eventData.isdeployed) {
+      if (eventData.isdeployed
+        && eventData.operationname === 'deploy-instance') {
         this.setAlert({
           show: true,
           type: 'success',
@@ -184,7 +185,20 @@ export default {
           },
         });
       }
-      if (eventData.isreconfigured) {
+      if (!eventData.isdeployed
+        && eventData.operationname === 'delete-instance') {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'INSTANCE_REMOVED',
+          options: {
+            instance: eventData.instanceid,
+            device: eventData.lineid,
+          },
+        });
+      }
+      if (eventData.isreconfigured
+        && eventData.operationname === 'reconfigure-instance') {
         this.setAlert({
           show: true,
           type: 'success',

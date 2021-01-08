@@ -1,16 +1,22 @@
 <template>
-  <v-btn
-    color="primary"
-    class="text-none"
-    :class="spaceClass"
-    small
-    outlined
-    :disabled="nodebot.isinstalled"
-    :loading="installing"
-    @click="installDebian"
-  >
-    Install debian
-  </v-btn>
+  <v-tooltip bottom>
+    <template #activator="{ on, attrs }">
+      <v-btn
+        icon
+        v-on="on"
+        v-bind="attrs"
+        color="primary"
+        class="text-none"
+        :class="spaceClass"
+        :disabled="nodebot.isinstalled"
+        :loading="installing"
+        @click="installDebian"
+      >
+        <v-icon>mdi-download-outline</v-icon>
+      </v-btn>
+    </template>
+    <span>Install debian</span>
+  </v-tooltip>
 </template>
 
 <script>

@@ -417,6 +417,18 @@ export default ({
       return updated;
     },
 
+    deleteInstance: async ({ dispatch }, id) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: elementMap.INSTANCE,
+          id,
+        },
+        { root: true },
+      );
+      return deleted;
+    },
+
     updateNodebotFile: async ({ dispatch }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',

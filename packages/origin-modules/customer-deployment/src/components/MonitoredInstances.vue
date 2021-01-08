@@ -95,28 +95,6 @@
             hide-default-footer
           >
           <!-- eslint-disable-next-line -->
-          <template #item.name="{ item }">
-            <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <span
-                  v-on="on"
-                  v-bind="attrs"
-                  :class="item.isdeployed ? 'success--text' : 'info--text'"
-                >
-                  {{ item.name }}
-                  <v-progress-circular
-                    indeterminate
-                    size="12"
-                    width="2"
-                    color="primary"
-                    v-if="item.isdeploying || !item.isreconfigured"
-                  ></v-progress-circular>
-                </span>
-              </template>
-              <span>{{ item.isdeployed ? 'Deployed' : 'Not deployed' }}</span>
-            </v-tooltip>
-          </template>
-          <!-- eslint-disable-next-line -->
           <template #item.nodebot="{ item }">
             <span v-if="item.nodebot">
               {{ item.nodebot.name }} - v{{ item.nodebot.releaseversion }}
@@ -124,9 +102,45 @@
             <span v-else>-</span>
           </template>
           <!-- eslint-disable-next-line -->
+          <template #item.isdeployed="{ item }">
+            <v-checkbox
+              disabled
+              v-if="!item.isdeploying"
+              :input-value="item.isdeployed"
+              hide-details
+              class="ma-0 pa-0"
+            ></v-checkbox>
+            <v-progress-circular
+              indeterminate
+              size="15"
+              width="2"
+              color="primary"
+              v-else
+            ></v-progress-circular>
+          </template>
+          <!-- eslint-disable-next-line -->
+          <template #item.isreconfigured="{ item }">
+            <v-checkbox
+              disabled
+              v-if="item.isreconfigured"
+              :input-value="item.isreconfigured"
+              hide-details
+              class="ma-0 pa-0"
+            ></v-checkbox>
+            <v-progress-circular
+              indeterminate
+              size="15"
+              width="2"
+              color="primary"
+              v-else
+            ></v-progress-circular>
+          </template>
+          <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
             <deploy-instance :instance="item" />
             <instance-config :instance="item" />
+            <remove-instance :instance="item" v-if="item.isdeployed" />
+            <terminate-instance :instance="item" v-else />
           </template>
           </v-data-table>
         </template>
@@ -140,6 +154,8 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 import AddInstance from './actions/AddInstance.vue';
 import DeployInstance from './actions/DeployInstance.vue';
 import InstanceConfig from './actions/InstanceConfig.vue';
+import RemoveInstance from './actions/RemoveInstance.vue';
+import TerminateInstance from './actions/TerminateInstance.vue';
 
 export default {
   name: 'MonitoredInstances',
@@ -147,6 +163,8 @@ export default {
     AddInstance,
     DeployInstance,
     InstanceConfig,
+    RemoveInstance,
+    TerminateInstance,
   },
   data() {
     return {
@@ -158,6 +176,14 @@ export default {
         {
           text: 'Name',
           value: 'name',
+        },
+        {
+          text: 'Is deployed?',
+          value: 'isdeployed',
+        },
+        {
+          text: 'Is configured?',
+          value: 'isreconfigured',
         },
         {
           text: 'Nodebot',

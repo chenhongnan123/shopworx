@@ -6,17 +6,19 @@
     max-width="500px"
     transition="dialog-transition"
   >
-    <template #activator="{ on, attrs }">
-      <v-btn
-        small
-        v-on="on"
-        v-bind="attrs"
-        color="primary"
-        outlined
-        class="text-none ml-2"
-      >
-        Update debian
-      </v-btn>
+    <template #activator="{ on: dialog, attrs }">
+      <v-tooltip bottom>
+        <template #activator="{ on: tooltip }">
+          <v-btn
+            icon
+            v-on="{ ...tooltip, ...dialog }"
+            v-bind="attrs"
+          >
+            <v-icon>mdi-autorenew</v-icon>
+          </v-btn>
+        </template>
+        <span>Update debian</span>
+      </v-tooltip>
     </template>
     <v-form ref="form" v-model="isValid">
       <v-card>
