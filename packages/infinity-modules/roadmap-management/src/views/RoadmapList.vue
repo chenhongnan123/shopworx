@@ -366,6 +366,7 @@ export default {
     deleteRoadmapItem(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
+      this.roadmaps = [];
     },
     fnDeleteOnYes() {
       let deleted = false;
@@ -395,6 +396,7 @@ export default {
       this.editedVersionNumber = item.versionnumber;
       this.roadmap.roadmaptype = item.roadmaptype;
       this.roadmap.reworkdescription = item.reworkdescription;
+      this.roadmaps = [];
     },
     // addNewRoadmap() {
     //   this.dialog = true;
