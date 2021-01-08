@@ -53,12 +53,19 @@
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.isinstalled="{ item }">
-        <v-checkbox
-          disabled
-          :input-value="item.isinstalled"
-          hide-details
-          class="ma-0 pa-0"
-        ></v-checkbox>
+        <v-tooltip bottom>
+          <template #activator="{on, attrs}">
+            <v-avatar
+              size="16"
+              v-on="on"
+              v-bind="attrs"
+              :color="item.isinstalled ? 'success' : 'error'"
+            ></v-avatar>
+          </template>
+          <span>
+            {{ item.isinstalled ? 'Yes' : 'No' }}
+          </span>
+        </v-tooltip>
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.instances="{ item }">
@@ -148,6 +155,7 @@ export default {
           text: 'Is installed?',
           value: 'isinstalled',
           sortable: false,
+          align: 'center',
         },
         {
           text: 'Instances',

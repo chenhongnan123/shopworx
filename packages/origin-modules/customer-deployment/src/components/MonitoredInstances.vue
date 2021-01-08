@@ -121,13 +121,19 @@
           </template>
           <!-- eslint-disable-next-line -->
           <template #item.isdeployed="{ item }">
-            <v-checkbox
-              disabled
-              v-if="!item.isdeploying"
-              :input-value="item.isdeployed"
-              hide-details
-              class="ma-0 pa-0"
-            ></v-checkbox>
+            <v-tooltip bottom v-if="item.isdeployed">
+              <template #activator="{on, attrs}">
+                <v-avatar
+                  size="16"
+                  v-on="on"
+                  v-bind="attrs"
+                  :color="item.isdeployed ? 'success' : 'error'"
+                ></v-avatar>
+              </template>
+              <span>
+                {{ item.isdeployed ? 'Yes' : 'No' }}
+              </span>
+            </v-tooltip>
             <v-progress-circular
               indeterminate
               size="15"
@@ -138,13 +144,19 @@
           </template>
           <!-- eslint-disable-next-line -->
           <template #item.isreconfigured="{ item }">
-            <v-checkbox
-              disabled
-              v-if="item.isreconfigured"
-              :input-value="item.isreconfigured"
-              hide-details
-              class="ma-0 pa-0"
-            ></v-checkbox>
+            <v-tooltip bottom v-if="item.isreconfigured">
+              <template #activator="{on, attrs}">
+                <v-avatar
+                  size="16"
+                  v-on="on"
+                  v-bind="attrs"
+                  :color="item.isreconfigured ? 'success' : 'error'"
+                ></v-avatar>
+              </template>
+              <span>
+                {{ item.isreconfigured ? 'Yes' : 'No' }}
+              </span>
+            </v-tooltip>
             <v-progress-circular
               indeterminate
               size="15"
@@ -201,10 +213,12 @@ export default {
         {
           text: 'Is deployed?',
           value: 'isdeployed',
+          align: 'center',
         },
         {
           text: 'Is configured?',
           value: 'isreconfigured',
+          align: 'center',
         },
         {
           text: 'Nodebot',

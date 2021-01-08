@@ -68,7 +68,7 @@
               hide-details
               v-model="search"
               autocomplete="off"
-              label="Filter devices"
+              :label="`Filter devices(${mappedDevices.length})`"
               append-icon="mdi-magnify"
             ></v-text-field>
           </v-responsive>
@@ -77,11 +77,14 @@
       <v-data-table
         :items="mappedDevices"
         :search="search"
+        dense
         :headers="headers"
         class="transparent mx-4"
         :loading="fetchingDevices"
         disable-pagination
         hide-default-footer
+        fixed-header
+        height="180px"
       >
         <template #loading> Fetching devices... </template>
         <template #no-data> No device available </template>
@@ -125,12 +128,19 @@
         </template>
         <!-- eslint-disable-next-line -->
         <template #item.ispasswordless="{ item }">
-          <v-checkbox
-            disabled
-            :input-value="item.ispasswordless"
-            hide-details
-            class="ma-0 pa-0"
-          ></v-checkbox>
+          <v-tooltip bottom>
+            <template #activator="{on, attrs}">
+              <v-avatar
+                size="16"
+                v-on="on"
+                v-bind="attrs"
+                :color="item.ispasswordless ? 'success' : 'error'"
+              ></v-avatar>
+            </template>
+            <span>
+              {{ item.ispasswordless ? 'Yes' : 'No' }}
+            </span>
+          </v-tooltip>
         </template>
         <!-- eslint-disable-next-line -->
         <template #item.instances="{ item }">
@@ -284,9 +294,10 @@ export default {
           sortable: false,
         },
         {
-          text: 'Is passwordless',
+          text: 'Is passwordless?',
           value: 'ispasswordless',
           sortable: false,
+          align: 'center',
         },
         {
           text: 'Instances',
