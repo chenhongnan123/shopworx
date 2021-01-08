@@ -49,9 +49,10 @@
             </v-list-item-content>
           </template>
         </v-autocomplete>
-        <v-select
+        <v-autocomplete
+          clearable
           v-model="input.sublinename"
-          :items="subLineList"
+          :items="sublineInState"
           :disabled="saving"
           item-text="name"
           return-object
@@ -59,7 +60,13 @@
           required
           prepend-icon="$production"
           label="Select Sub-Line name"
-          @change="handleSubLineClick"/>
+          @change="handleSubLineClick">
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
         <!-- <v-autocomplete
           clearable
           label="Select Sub-Line name"
@@ -78,8 +85,9 @@
           </template>
         </v-autocomplete> -->
         <v-select
+          clearable
           v-model="input.stationname"
-          :items="stationList"
+          :items="stationInState"
           :disabled="saving"
           return-object
           item-text="name"
@@ -89,8 +97,9 @@
           label="Select Station name"
           @change="handleStationClick"/>
         <v-select
+          clearable
           v-model="input.substationname"
-          :items="subStationList"
+          :items="substationInState"
           :disabled="saving"
           return-object
           item-text="name"
@@ -177,6 +186,9 @@ export default {
       },
     };
   },
+  async created() {
+    await this.getSubStations('');
+  },
   computed: {
     ...mapState('recipeManagement', ['recipeList', 'stationList',
       'lineList',
@@ -186,6 +198,9 @@ export default {
       'filterLine',
       'filterSubLine',
       'filterStation',
+      'sublineInState',
+      'stationInState',
+      'substationInState',
       'stationNamebySubline']),
     ...mapState('user', ['me']),
     userName: {
@@ -195,22 +210,28 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('recipeManagement',
+      [
+        'setInStateSubline',
+        'setInStateStation',
+        'setInStateSubStation',
+      ]),
     ...mapActions('recipeManagement', ['createRecipe', 'updateRecipe', 'getStationNamesbysubline',
       'getSubLines',
       'getStations',
       'getSubStations']),
     ...mapMutations('helper', ['setAlert']),
     async handleLineClick(item) {
-      const query = `?query=lineid==${item.id}`;
-      await this.getSubLines(query);
+      const sublines = this.subLineList.filter((o) => o.lineid === Number(item.id));
+      this.setInStateSubline(sublines);
     },
     async handleSubLineClick(item) {
-      const query = `?query=sublineid=="${item.id}"`;
-      await this.getStations(query);
+      const stations = this.stationList.filter((o) => o.sublineid === item.id);
+      this.setInStateStation(stations);
     },
     async handleStationClick(item) {
-      const query = `?query=stationid=="${item.id}"`;
-      await this.getSubStations(query);
+      const substations = this.subStationList.filter((o) => o.stationid === item.id);
+      this.setInStateSubStation(substations);
     },
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
