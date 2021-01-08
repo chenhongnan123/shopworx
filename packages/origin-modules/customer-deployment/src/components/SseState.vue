@@ -30,13 +30,16 @@ export default {
     };
   },
   beforeMount() {
-    this.sseInit();
+    if (this.me) {
+      this.sseInit();
+    }
   },
   beforeDestroy() {
     this.sseClient.close();
     clearTimeout(this.timeout);
   },
   computed: {
+    ...mapState('user', ['me']),
     ...mapState('customerDeployment', [
       'nodebots',
       'devices',
