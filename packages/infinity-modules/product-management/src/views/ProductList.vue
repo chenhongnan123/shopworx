@@ -24,6 +24,7 @@
             {{ $t('displayTags.buttons.addProductType') }}
           </v-btn>
           <v-btn small color="primary" outlined
+          v-if="!recordSelection"
           class="text-none ml-2" @click="addDuplicateProduct()">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateProductType') }}
@@ -120,6 +121,7 @@ export default {
         { text: this.$i18n.t('displayTags.lastEditedBy'), value: 'editedby' },
         { text: this.$i18n.t('displayTags.actions'), sortable: false, value: 'actions' },
       ],
+      recordSelection: false,
       loadingLine: false,
       product: {},
       products: [],
@@ -178,10 +180,23 @@ export default {
     updateProductType(item) {
       this.editProductData = item;
       this.setEditDialog(true);
+      this.products = [];
     },
     deleteProductDialog(item) {
       this.productToDelete = item;
       this.setDeleteDialog(true);
+      this.products = [];
+    },
+  },
+  watch: {
+    products: {
+      handler(val) {
+        if (val.length === 0 || val.length > 1) {
+          this.recordSelection = true;
+        } else {
+          this.recordSelection = false;
+        }
+      },
     },
   },
 };
