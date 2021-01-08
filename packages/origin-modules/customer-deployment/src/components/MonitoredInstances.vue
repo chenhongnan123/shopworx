@@ -2,6 +2,7 @@
   <v-card>
     <v-card-title class="pb-0">
       Instances
+      <refresh-instances @on-refresh="getDeviceInstances" />
       <add-instance
         @on-create="getDeviceInstances"
         #default="{ on, attrs }"
@@ -9,7 +10,7 @@
         <v-btn
           v-on="on"
           v-bind="attrs"
-          text
+          outlined
           small
           color="primary"
           class="text-none ml-2 mb-1"
@@ -53,40 +54,57 @@
             justify="center"
             :no-gutters="$vuetify.breakpoint.smAndDown"
           >
-            <v-col cols="12" align="center">
-              <v-img
-                :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
-                id="server_illustration"
-                height="260"
-                contain
-              />
-            </v-col>
-            <v-col cols="12" align="center" class="pt-0">
-              <div class="title">
-                Your monitored instances appear here
-              </div>
-              <div>
-                <add-instance
-                  @on-create="getDeviceInstances"
-                  #default="{ on, attrs }"
-                >
-                  <v-btn
-                    v-on="on"
-                    v-bind="attrs"
-                    color="primary"
-                    class="text-none mt-1"
+            <template v-if="loading">
+              <v-col cols="12" align="center">
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                  size="72"
+                ></v-progress-circular>
+              </v-col>
+              <v-col cols="12" align="center">
+                <div class="title">
+                  Fetching instances...
+                </div>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-col cols="12" align="center">
+                <v-img
+                  :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+                  id="server_illustration"
+                  height="260"
+                  contain
+                />
+              </v-col>
+              <v-col cols="12" align="center" class="pt-0">
+                <div class="title">
+                  Your monitored instances appear here
+                </div>
+                <div>
+                  <add-instance
+                    @on-create="getDeviceInstances"
+                    #default="{ on, attrs }"
                   >
-                    <v-icon left>mdi-plus</v-icon>
-                    Create instance
-                  </v-btn>
-                </add-instance>
-              </div>
-            </v-col>
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      color="primary"
+                      class="text-none mt-1"
+                    >
+                      <v-icon left>mdi-plus</v-icon>
+                      Create instance
+                    </v-btn>
+                  </add-instance>
+                </div>
+              </v-col>
+            </template>
           </v-row>
         </v-container>
         <template v-else>
           <v-data-table
             dense
+            :loading="loading"
             item-key="_id"
             class="transparent"
             :items="selectedDevice.instances"
@@ -151,6 +169,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
+import RefreshInstances from './actions/RefreshInstances.vue';
 import AddInstance from './actions/AddInstance.vue';
 import DeployInstance from './actions/DeployInstance.vue';
 import InstanceConfig from './actions/InstanceConfig.vue';
@@ -160,6 +179,7 @@ import TerminateInstance from './actions/TerminateInstance.vue';
 export default {
   name: 'MonitoredInstances',
   components: {
+    RefreshInstances,
     AddInstance,
     DeployInstance,
     InstanceConfig,
@@ -168,6 +188,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       headers: [
         {
           text: 'ID',
@@ -215,6 +236,7 @@ export default {
     ]),
     ...mapActions('customerDeployment', ['fetchInstances']),
     async getDeviceInstances() {
+      this.loading = true;
       const instances = await this.fetchInstances(this.selectedDevice.id);
       this.setSelectedDevice({
         ...this.selectedDevice,
@@ -231,6 +253,7 @@ export default {
           });
         }
       }
+      this.loading = false;
     },
   },
 };

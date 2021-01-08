@@ -107,7 +107,7 @@
                       class="mb-1"
                       color="accent"
                     >
-                      mdi-timer-sand
+                      mdi-timer-outline
                     </v-icon>
                   </template>
                   <span>Coming soon!</span>
@@ -142,7 +142,7 @@
                     class="mb-1"
                     color="accent"
                   >
-                    mdi-timer-sand
+                    mdi-timer-outline
                   </v-icon>
                 </template>
                 <span>Coming soon!</span>
@@ -184,7 +184,7 @@
                   class="mb-1"
                   color="accent"
                 >
-                  mdi-timer-sand
+                  mdi-timer-outline
                 </v-icon>
               </template>
               <span>Coming soon!</span>
