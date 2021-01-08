@@ -438,10 +438,12 @@ export default {
       this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
       this.$refs.addUpdateRecipe.input.stationname = item.stationname;
       this.$refs.addUpdateRecipe.input.substationname = item.substationname;
+      this.recipes = [];
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
+      this.recipes = [];
     },
     fnDeleteOnYes() {
       let deleted = false;
