@@ -283,6 +283,7 @@ export default {
       fetchingDevices: false,
       headers: [
         { text: 'Device name', value: 'name' },
+        { text: 'Device ID', value: 'id' },
         {
           text: 'Hostname',
           value: 'hostname',
