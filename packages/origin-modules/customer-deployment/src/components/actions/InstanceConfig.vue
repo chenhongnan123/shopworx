@@ -51,7 +51,7 @@
             class="text-none"
             :loading="saving"
             @click="reconfigureInstance"
-            :disabled="!isValid || isConfigUnchanged"
+            :disabled="!isValid"
           >
             Re-configure
           </v-btn>
