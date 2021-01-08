@@ -45,19 +45,19 @@
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.deploymentservicename="{ item }">
-        {{ item.deploymentservicename || item.deploymentserviceid }}
+        {{ item.deploymentservicename || item.deploymentserviceid || 'N/A' }}
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.linename="{ item }">
-        {{ item.linename || item.lineid }}
+        {{ item.linename || item.lineid || 'N/A' }}
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.nodebotmastername="{ item }">
-        {{ item.nodebotmastername || item.nodebotmasterid }}
+        {{ item.nodebotmastername || item.nodebotmasterid || 'N/A' }}
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.instancename="{ item }">
-        {{ item.instancename || item.instanceid }}
+        {{ item.instancename || item.instanceid || 'N/A' }}
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.actions="{ item }">
