@@ -6,6 +6,7 @@
         v-on="on"
         v-bind="attrs"
         color="error"
+        :disabled="instance.isdeploying"
         :loading="deleting"
         @click="terminateInstance"
       >
