@@ -82,6 +82,11 @@ export default {
           sortable: false,
         },
         {
+          text: 'Nodebot ID',
+          value: 'nodebotmasterid',
+          sortable: false,
+        },
+        {
           text: 'Operation',
           value: 'operationname',
           sortable: false,
