@@ -107,6 +107,7 @@ export default {
       ],
       nameRules: [
         (v) => !!v || 'Instance name is required.',
+        (v) => this.isNameValid(v) || 'Instance name must be unique to a device.',
         (v) => /^[A-Za-z0-9-]+$/.test(v)
           || 'Instance name should not contain empty space or special characters',
       ],
@@ -135,6 +136,10 @@ export default {
       } catch (error) {
         return false;
       }
+    },
+    isNameValid(name) {
+      const names = this.selectedDevice.instances.map((i) => i.name);
+      return !names.includes(name);
     },
     clear() {
       this.name = '';

@@ -71,6 +71,8 @@
             rows="3"
             class="mt-4"
             auto-grow
+            counter="200"
+            :rules="descRules"
             :disabled="saving"
           ></v-textarea>
           <v-textarea
@@ -131,6 +133,9 @@ export default {
       ],
       versionRules: [
         (v) => !!v || 'Version is required.',
+      ],
+      descRules: [
+        (v) => v.length <= 200 || 'Max length 200 characters.',
       ],
       fileRules: [
         (v) => !!v || 'Debian is required.',

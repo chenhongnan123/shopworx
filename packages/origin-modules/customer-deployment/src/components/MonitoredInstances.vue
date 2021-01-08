@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="pb-0">
       Instances
-      <refresh-instances @on-refresh="getDeviceInstances" />
+      <refresh-instances v-if="selectedDevice" @on-refresh="getDeviceInstances" />
       <add-instance
         @on-create="getDeviceInstances"
         #default="{ on, attrs }"
@@ -12,6 +12,7 @@
           v-bind="attrs"
           outlined
           small
+          :disabled="!selectedDevice"
           color="primary"
           class="text-none ml-2 mb-1"
         >
@@ -30,15 +31,16 @@
             :no-gutters="$vuetify.breakpoint.smAndDown"
           >
             <v-col cols="12" align="center">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                size="72"
-              ></v-progress-circular>
+                <v-img
+                  :src="require(`@shopworx/assets/illustrations/${illustration}.svg`)"
+                  id="server_illustration"
+                  height="260"
+                  contain
+                />
             </v-col>
             <v-col cols="12" align="center">
               <div class="title">
-                Fetching instances...
+                No device selected!
               </div>
             </v-col>
           </v-row>

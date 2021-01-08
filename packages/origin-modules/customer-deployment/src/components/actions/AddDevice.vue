@@ -58,8 +58,10 @@
             v-model="description"
             class="ml-8"
             rows="3"
+            counter="200"
             auto-grow
             label="Description"
+            :rules="descRules"
             placeholder="Optional"
             :disabled="saving || loading || !!unmappedDevice"
           ></v-textarea>
@@ -159,8 +161,13 @@ export default {
         (v) => !!v || 'Device name is required',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
+      descRules: [
+        (v) => v.length <= 200 || 'Max length 200 characters.',
+      ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
       ],
       ipRules: [
