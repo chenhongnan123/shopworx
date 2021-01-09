@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* **model-management:** IP1-I271  model name validation ([fd8139b](https://bitbucket.org/entrib/shopworx/commits/fd8139bdcec797305535e0f2ae0dc014d25a511f))
+* **model-management:** IP1-I278 Uploaded file name is not displaying in Files ([8ba9ce9](https://bitbucket.org/entrib/shopworx/commits/8ba9ce9c3195b370c4d039bd3b999104daaaa1e0))
+* **model-managment:** IP1-I287, IP1-I288 bug fixes ([6f09441](https://bitbucket.org/entrib/shopworx/commits/6f094414d906d5d0e341759d188605c52b259398))
+
+
+### Features
+
+* **model-management:** added customizable dashboard ([ad2ffe6](https://bitbucket.org/entrib/shopworx/commits/ad2ffe6cfec3a6dc56d228bced4fba63410d1b95))
+* **model-management:** added model dashboard ([07a76d7](https://bitbucket.org/entrib/shopworx/commits/07a76d7335a4d1fa3dcf94206996c9b278dece74))
+
+
+
+
+
 # [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
 
 **Note:** Version bump only for package @shopworx/model-management
