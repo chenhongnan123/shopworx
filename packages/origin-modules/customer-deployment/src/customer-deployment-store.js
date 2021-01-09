@@ -136,7 +136,7 @@ export default ({
         },
         { root: true },
       );
-      if (deploymentServiceId) {
+      if (deploymentServiceId && records && records.length) {
         const result = await Promise.all(
           records.map(async (rec) => {
             const instances = await dispatch(
