@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Features
+
+* **model-management:** added model dashboard ([07a76d7](https://bitbucket.org/entrib/shopworx/commits/07a76d7335a4d1fa3dcf94206996c9b278dece74))
+
+
+
+
+
 # [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

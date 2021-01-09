@@ -1,13 +1,13 @@
 {
   "name": "@shopworx/live-shopfloor",
-  "version": "4.2.0-alpha.3",
+  "version": "4.2.1",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.2.0-alpha.3",
-    "@shopworx/ui-components": "^4.2.0-alpha.3",
+    "@shopworx/services": "^4.2.1",
+    "@shopworx/ui-components": "^4.2.1",
     "vue-grid-layout": "^2.3.11",
     "vuex": "^3.5.1"
   },

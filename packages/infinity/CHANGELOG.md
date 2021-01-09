@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* **model-managment:** IP1-I287, IP1-I288 bug fixes ([6f09441](https://bitbucket.org/entrib/shopworx/commits/6f094414d906d5d0e341759d188605c52b259398))
+
+
+### Features
+
+* **customer-deployment:** added deployment settings for seed data ([f06c7bc](https://bitbucket.org/entrib/shopworx/commits/f06c7bcf2ced4b9743d98344bdf21ee82b978724))
+* **data-visualizer:** added server side pagination to ag grid ([148769d](https://bitbucket.org/entrib/shopworx/commits/148769d19cc4a99f2532e1f676d274d7cb49b1ce))
+
+
+
+
+
 # [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
 
 
