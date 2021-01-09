@@ -17,7 +17,7 @@
         <v-list-item-icon>
           <v-icon
             :color="$vuetify.theme.dark ? 'primary': 'secondary'"
-            v-text="'$infinity'"
+            v-text="'$origin'"
           ></v-icon>
         </v-list-item-icon>
         <v-list-item-title>
@@ -68,49 +68,86 @@
             class="my-1"
             v-else-if="item.header && expandOnHover"
           ></v-divider>
-          <v-list-item
-            exact
+          <v-list-group
+            v-else-if="item.children"
             :key="index"
-            v-else-if="item.to === 'reports'"
-            :title="$t(`modules.${item.title}`)"
-            :to="{ name: item.to, query: { id: item.title } }"
+            :value="true"
+            no-action
+            :prepend-icon="item.icon"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            link
-            :key="index"
-            v-else-if="item.external"
-            target="_blank"
-            :href="item.to"
-            :title="$t(`modules.${item.title}`)"
-            :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
-            <v-list-item-action v-if="item.external">
-              <v-icon small class="mb-1">mdi-open-in-new</v-icon>
-            </v-list-item-action>
-          </v-list-item>
+            <template #activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="$t(`modules.${item.group}`)">
+                </v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              link
+              :class="j === item.children.length - 1 ? 'mb-1' : ''"
+              v-for="(child, j) in item.children"
+              :key="`child-${j}`"
+              :to="{ name: child.title }"
+              :title="$t(`modules.${child.title}`)"
+              :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
+            >
+              <!-- <v-list-item-icon>
+                <v-icon v-text="child.icon"></v-icon>
+              </v-list-item-icon> -->
+              <v-list-item-title>
+                {{ $t(`modules.${child.title}`) }}
+              </v-list-item-title>
+              <v-list-item-action v-if="child.comingSoon">
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-icon
+                      small
+                      v-on="on"
+                      v-bind="attrs"
+                      class="mb-1"
+                      color="accent"
+                    >
+                      mdi-timer-outline
+                    </v-icon>
+                  </template>
+                  <span>Coming soon!</span>
+                </v-tooltip>
+              </v-list-item-action>
+            </v-list-item>
+            <v-divider
+              :key="index"
+              class="my-2"
+            ></v-divider>
+          </v-list-group>
           <v-list-item
             link
             v-else
             :key="index"
-            :to="{ name: item.title }"
-            @click="setActiveApp(item)"
             :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
-            <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+            <v-list-item-title>
+              {{ $t(`modules.${item.title}`) }}
+            </v-list-item-title>
+            <v-list-item-action v-if="item.comingSoon">
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-icon
+                    small
+                    v-on="on"
+                    v-bind="attrs"
+                    class="mb-1"
+                    color="accent"
+                  >
+                    mdi-timer-outline
+                  </v-icon>
+                </template>
+                <span>Coming soon!</span>
+              </v-tooltip>
+            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
@@ -134,7 +171,28 @@
           <v-list-item-icon>
             <v-icon v-text="item.icon"></v-icon>
           </v-list-item-icon>
-          <v-list-item-title v-text="$t(`modules.${item.title}`)"></v-list-item-title>
+          <v-list-item-title>
+            {{ $t(`modules.${item.title}`) }}
+          </v-list-item-title>
+          <v-list-item-action v-if="item.comingSoon">
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  small
+                  v-on="on"
+                  v-bind="attrs"
+                  class="mb-1"
+                  color="accent"
+                >
+                  mdi-timer-outline
+                </v-icon>
+              </template>
+              <span>Coming soon!</span>
+            </v-tooltip>
+          </v-list-item-action>
+          <v-list-item-action v-if="item.external">
+            <v-icon small class="mb-1">mdi-open-in-new</v-icon>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
     </template>
@@ -142,10 +200,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
 export default {
-  name: 'InfinityDrawer',
+  name: 'OriginDrawer',
   props: {
     showDrawer: {
       default: null,
@@ -191,17 +247,12 @@ export default {
       if (this.adminItems && this.adminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 16 + 16);
+        totalHeight += (40 * this.adminItems.length + 16 + 16 + 2);
       }
       return totalHeight;
     },
   },
-  created() {
-    const appId = localStorage.getItem('appId');
-    this.setActiveAppId(appId ? JSON.parse(appId) : null);
-  },
   methods: {
-    ...mapMutations('webApp', ['setActiveAppId']),
     toggleExpand() {
       this.expandOnHover = !this.expandOnHover;
       if (!this.expandOnHover) {
@@ -212,10 +263,6 @@ export default {
       if (this.expandOnHover) {
         this.miniVariant = this.expandOnHover;
       }
-    },
-    setActiveApp(item) {
-      this.setActiveAppId(item.id);
-      localStorage.setItem('appId', item.id);
     },
   },
 };
