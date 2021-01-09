@@ -123,7 +123,7 @@
           </template>
           <!-- eslint-disable-next-line -->
           <template #item.isdeployed="{ item }">
-            <v-tooltip bottom v-if="item.isdeployed">
+            <v-tooltip bottom v-if="!item.isdeploying">
               <template #activator="{on, attrs}">
                 <v-avatar
                   size="16"
