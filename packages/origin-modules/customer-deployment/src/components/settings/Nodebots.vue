@@ -48,6 +48,24 @@
         No matching nodebot found for '{{ search }}'
       </template>
       <!-- eslint-disable-next-line -->
+      <template #item.name="{ item }">
+        {{ item.name }}
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-icon
+              small
+              class="ml-1 mb-1"
+              v-on="on"
+              v-bind="attrs"
+              v-text="'$info'"
+            ></v-icon>
+          </template>
+          <span>
+            {{ item.description }}
+          </span>
+        </v-tooltip>
+      </template>
+      <!-- eslint-disable-next-line -->
       <template #item.releaseversion="{ item }">
         v{{ item.releaseversion }}
       </template>
@@ -136,10 +154,6 @@ export default {
         {
           text: 'Name',
           value: 'name',
-        },
-        {
-          text: 'Description',
-          value: 'description',
         },
         {
           text: 'Version',

@@ -11,8 +11,7 @@
         <template #activator="{ on: tooltip }">
           <v-btn
             icon
-            :disabled="!instance.isreconfigured
-              || !instance.isdeployed
+            :disabled="!instance.isdeployed
               || instance.isdeploying"
             v-on="{ ...tooltip, ...dialog }"
             v-bind="attrs"
