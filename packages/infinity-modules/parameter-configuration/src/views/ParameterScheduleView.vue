@@ -75,6 +75,15 @@
             <v-btn
             small
             color="primary"
+            class="text-none ml-1"
+            :disabled="isAddButtonOK"
+            @click="getMonitorValues"
+            >
+              Monitor
+            </v-btn>
+            <v-btn
+            small
+            color="primary"
             outlined class="text-none ml-2" :disabled="!substationValue" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
               Refresh
@@ -683,8 +692,32 @@ export default {
         });
       }
     },
-    RefreshUI() {
+    async RefreshUI() {
       // await this.getParameterListRecords(this.getQuery());
+      // this.downloadFromPLC();
+      let query = '?query=';
+      if (this.selectedParameterName) {
+        query += `name=="${this.selectedParameterName}"%26%26`;
+      }
+      if (this.selectedParameterDirection) {
+        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
+      }
+      if (this.selectedParameterCategory) {
+        query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
+      }
+      if (this.selectedParameterDatatype) {
+        query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
+      }
+      if (this.substationValue) {
+        query += `substationid=="${this.substationValue}"`;
+      } else {
+        query += `stationid=="${this.stationValue || null}"`;
+      }
+      this.saving = true;
+      await this.getParameterListRecords(query);
+      this.saving = false;
+    },
+    getMonitorValues() {
       this.downloadFromPLC();
     },
     async downloadFromPLC() {
