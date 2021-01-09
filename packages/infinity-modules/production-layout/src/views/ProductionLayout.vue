@@ -39,7 +39,7 @@
                 v-model="selectedLine.expectedcycletime"></v-text-field>
             </v-col> -->
             <v-col cols="1" md="1" lg="1">
-              <SelectedLineUpdate />
+              <SelectedLineUpdate :saveEnabled="saveEnabled" />
             </v-col>
           </template>
         </v-row>
@@ -211,6 +211,8 @@ export default {
       dialog: false,
       isActive: 2,
       hasError: 4,
+      oldVal: null,
+      saveEnabled: false,
       headersProductionLayout: [
         {
           text: 'Subline',
@@ -241,6 +243,7 @@ export default {
     const success = await this.getLines();
     if (success) {
       [this.selectedLine] = this.lines;
+      this.oldVal = { ...this.selectedLine };
       await this.onLineChange();
     }
     this.interval = setInterval(() => {
@@ -249,6 +252,16 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.interval);
+  },
+  watch: {
+    selectedLine: {
+      handler(newVal) {
+        if (newVal) {
+          this.saveEnabled = JSON.stringify(newVal) !== JSON.stringify(this.oldVal);
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapActions('productionLayout', ['getLines',
@@ -264,6 +277,9 @@ export default {
       'setProcesses',
       'setSelectedLine',
     ]),
+    // async changeInLine(value) {
+    //   this.$root.$emit('changedescription', value);
+    // },
     async downloadFromToPLC() {
       this.socket = socketioclient.connect('http://:10190');
       this.socket.on('connect', () => {
@@ -277,7 +293,6 @@ export default {
         };
         this.socket.on(`update_parameter_${ObJ.lineid}_${ObJ.sublineid}_${ObJ.substationid}`,
           (data) => {
-            console.log(data);
             if (data.communicationerror) {
               item.stationcolor = 0;
             } else {
@@ -291,6 +306,7 @@ export default {
       this.selectedStation = station;
     },
     async onLineChange() {
+      this.oldVal = { ...this.selectedLine };
       this.setSublines([]);
       this.setStations([]);
       this.setProcesses([]);

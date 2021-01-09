@@ -2,7 +2,7 @@
   <v-btn
   color="primary"
   @click="saveline"
-  :disabled="btndisable"
+  :disabled="!saveEnabled"
   >Save
   </v-btn>
 </template>
@@ -14,14 +14,17 @@ export default {
   name: 'SelectedLineUpdate',
   data() {
     return {
-      btndisable: false,
     };
   },
   props: {
-    // selectedLine: {
-    //   type: Object,
-    //   required: true,
-    // },
+    selectedLine: {
+      type: Object,
+      required: true,
+    },
+    saveEnabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   created() {
     this.selectedLineNew = { ...this.selectedLine };
@@ -67,22 +70,6 @@ export default {
     },
     async resetDialog() {
       this.$refs.form.resetValidation();
-    },
-    compareValues(val) {
-      if (val.description === this.selectedLineNew.description) {
-        this.btndisable = true;
-        // alert('sdsd');
-      } else {
-        this.btndisable = false;
-      }
-    },
-  },
-  watch: {
-    selectedLine: {
-      handler(val) {
-        this.compareValues(val);
-      },
-      deep: true,
     },
   },
 };
