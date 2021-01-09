@@ -146,7 +146,7 @@
           </template>
           <!-- eslint-disable-next-line -->
           <template #item.isreconfigured="{ item }">
-            <v-tooltip bottom v-if="item.isreconfigured">
+            <v-tooltip bottom>
               <template #activator="{on, attrs}">
                 <v-avatar
                   size="16"
@@ -159,13 +159,6 @@
                 {{ item.isreconfigured ? 'Yes' : 'No' }}
               </span>
             </v-tooltip>
-            <v-progress-circular
-              indeterminate
-              size="15"
-              width="2"
-              color="primary"
-              v-else
-            ></v-progress-circular>
           </template>
           <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
