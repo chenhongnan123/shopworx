@@ -82,9 +82,12 @@
               :rules ="plcRules" required class="mb-3"
               hint="Hint: 127.168.1.1"
               v-model="newStation.plcipaddress"  dense></v-text-field>
-                <v-text-field label="Usg Start Date" type="date"
-                v-model="newStation.usagestartdate"
-                hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
+              <v-text-field label="Usg Start Date" type="date"
+               v-model="newStation.usagestartdate"
+               :disabled="usgDateDisabled"
+               return-object
+               @input="comapareDates"
+               hint="select Date which is Greater than Manfacturing Date"   dense></v-text-field>
             </v-col>
       </v-row>
     </v-card-text>
@@ -106,6 +109,7 @@ import { mapActions, mapState, mapMutations } from 'vuex';
 export default {
   data() {
     return {
+      usgDateDisabled: true,
       newStation: {},
       assetId: null,
       selectedSubLine: null,
@@ -135,9 +139,35 @@ export default {
   computed: {
     ...mapState('productionLayout', ['stations', 'sublines', 'allSublines', 'assets']),
   },
+  watch: {
+    newStation: {
+      handler(val) {
+        if (val.manufacturingdate === undefined || !val.manufacturingdate) {
+          this.usgDateDisabled = true;
+        } else {
+          this.usgDateDisabled = false;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayout', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
+    async comapareDates(item) {
+      const fromdate = this.newStation.manufacturingdate;
+      const todate = item;
+      const from = new Date(fromdate);
+      const to = new Date(todate);
+      if (to < from) {
+        this.newStation.usagestartdate = '';
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'GREATER_DATE',
+        });
+      }
+    },
     async saveStation() {
       if (this.newStation.numbers === undefined) {
         this.setAlert({

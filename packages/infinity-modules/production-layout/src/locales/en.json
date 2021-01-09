@@ -6,7 +6,8 @@
     "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub station Already Assigned",
     "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Station Already Assigned",    
     "Number Required": "Number Field Should Not be Empty",
-    "ERROR_CREATING_SUBLINE": "Error in Creating SUBLINE"
+    "ERROR_CREATING_SUBLINE": "Error in Creating SUBLINE",
+    "GREATER_DATE": "Select Greater Date from Manufacturing Date"
   },
   "success": {
     "No_CHANGE_EXSIST_NO": "Again Saved with Existing Number",
