@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import SseState from '../components/SseState.vue';
 
 export default {
@@ -47,9 +47,14 @@ export default {
     };
   },
   async created() {
-    this.loading = true;
-    await this.initElements();
-    this.loading = false;
+    if (this.user) {
+      this.loading = true;
+      await this.initElements();
+      this.loading = false;
+    }
+  },
+  computed: {
+    ...mapState('user', ['me']),
   },
   methods: {
     ...mapActions('customerDeployment', ['initElements']),

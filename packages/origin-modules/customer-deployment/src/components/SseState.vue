@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-8 mt-2">
+  <div class="ml-8 mt-2" v-if="user">
     <span class="caption">
       Manager connection status:
       <v-avatar

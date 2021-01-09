@@ -21,6 +21,7 @@
             class="mt-1"
             v-model="name"
             label="Manager name"
+            counter="20"
             prepend-icon="mdi-rocket-outline"
             :disabled="saving"
             :loading="loading"
@@ -31,6 +32,7 @@
             outlined
             v-model="mmonitlink"
             label="M/Monit URL"
+            counter="30"
             prepend-icon="mdi-link"
             :disabled="saving || loading"
             :rules="urlRules"
@@ -72,6 +74,7 @@
               v-model="devicename"
               prepend-icon="mdi-devices"
               label="Device name"
+              counter="20"
               :disabled="saving || !!unmappedDevice"
               :rules="!!unmappedDevice ? [] : deviceRules"
             ></v-text-field>
@@ -81,6 +84,7 @@
               v-model="hostname"
               prepend-icon="mdi-dns-outline"
               label="Hostname"
+              counter="20"
               :disabled="saving || !!unmappedDevice"
               :rules="!!unmappedDevice ? [] : hostRules"
             ></v-text-field>
@@ -139,17 +143,29 @@ export default {
       loading: false,
       nameRules: [
         (v) => !!v || 'Manager name is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Manager name should not contain empty space or special characters',
         (v) => !this.serviceNames.includes(v) || 'Manager name is not available',
       ],
       urlRules: [
         (v) => !!v || 'URL is required',
+        (v) => v.length <= 30 || 'Max length 30 characters.',
+        (v) => /^[A-Za-z0-9-_:./]+$/.test(v)
+          || 'URL should not contain empty space or special characters',
       ],
       deviceRules: [
         (v) => !!v || 'Device name is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
       ],
       ipRules: [

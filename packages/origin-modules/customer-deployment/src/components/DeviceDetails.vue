@@ -70,6 +70,7 @@
                 v-model="device.name"
                 :disabled="saving"
                 :rules="deviceRules"
+                counter="20"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -86,7 +87,9 @@
             v-model="device.description"
             rows="3"
             auto-grow
+            :rules="descRules"
             :disabled="saving"
+            counter="200"
           ></v-textarea>
           <div :class="!edit ? 'mt-2' : ''">
             Hostname
@@ -101,6 +104,7 @@
             v-model="device.hostname"
             :disabled="saving"
             :rules="hostRules"
+            counter="20"
           ></v-text-field>
           <div :class="!edit ? 'mt-2' : ''">
             IP address
@@ -154,10 +158,19 @@ export default {
       saving: false,
       deviceRules: [
         (v) => !!v || 'Device name is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
+      ],
+      descRules: [
+        (v) => v.length <= 200 || 'Max length 200 characters.',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
       ],
       ipRules: [

@@ -48,6 +48,7 @@
             v-model="name"
             prepend-icon="mdi-devices"
             label="Name"
+            counter="20"
             :disabled="saving || !!unmappedDevice"
             :loading="loading"
             :rules="!!unmappedDevice ? [] : deviceRules"
@@ -71,6 +72,7 @@
             v-model="hostname"
             prepend-icon="mdi-dns-outline"
             label="Hostname"
+            counter="20"
             :disabled="saving || loading || !!unmappedDevice"
             :rules="!!unmappedDevice ? [] : hostRules"
           ></v-text-field>
@@ -159,6 +161,7 @@ export default {
       service: null,
       deviceRules: [
         (v) => !!v || 'Device name is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
@@ -168,6 +171,7 @@ export default {
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
+        (v) => v.length <= 20 || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',

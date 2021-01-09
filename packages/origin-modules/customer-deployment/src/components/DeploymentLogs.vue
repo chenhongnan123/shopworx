@@ -66,6 +66,10 @@
             </v-container>
           </template>
           <!-- eslint-disable-next-line -->
+          <template #item.instanceid="{ item }">
+            {{ item.instanceid || 'N/A' }}
+          </template>
+          <!-- eslint-disable-next-line -->
           <template #item.actions="{ item }">
             <view-logs :deploymentOrder="item" />
           </template>
