@@ -1,5 +1,6 @@
 <template>
   <v-container fluid class="py-0">
+    <portal to="app-extension">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -75,6 +76,9 @@
             {{ $t('displayTags.buttons.filtersRecipe') }}
           </v-btn>
         </v-toolbar>
+      </v-col>
+    </v-row>
+    </portal>
         <v-data-table
         v-model="recipes"
         :headers="headers"
@@ -82,6 +86,8 @@
         item-key="recipenumber"
         :single-select="true"
         show-select
+        fixed-header
+        :height="tableHeight - 168"
         >
         <template v-slot:item.recipename="{ item }">
           <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
@@ -112,8 +118,6 @@
             </v-btn></v-row>
         </template>
       </v-data-table>
-      </v-col>
-    </v-row>
     <!-- <AddRecipe /> -->
   <v-dialog
     scrollable
@@ -260,6 +264,7 @@ export default {
       updateRecipeNumber: '',
       editedVersionNumber: 0,
       itemForDelete: null,
+      tableHeight: window.innerHeight,
       valid: true,
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
@@ -273,6 +278,7 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
   },
   async mounted() {
@@ -309,7 +315,7 @@ export default {
         'getSubLines',
         'getStations',
         'getSubStations']),
-    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
     showFilter: {
       get() {
