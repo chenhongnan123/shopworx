@@ -13,38 +13,6 @@
         ></v-icon>
       </v-btn>
     </portal>
-    <portal
-      to="app-extension"
-    >
-    <v-responsive :max-width="200">
-    <v-select
-      filled
-      dense
-      hide-details
-      :items="protocolList"
-      item-value="name"
-      v-model="selectedProtocol"
-      item-text="name"
-      @change="onSelectProtocol"
-      label="Select Protocol"
-    ></v-select>
-    </v-responsive>
-      <!-- <v-tabs
-        dense
-        center-active
-        v-model="parameterView"
-      >
-        <v-tab class="text-none">
-          Add parameters
-        </v-tab> -->
-        <!-- <v-tab class="text-none">
-          PLC datatypes
-        </v-tab>
-        <v-tab class="text-none">
-          PLC category
-        </v-tab> -->
-      <!-- </v-tabs> -->
-    </portal>
     <template>
       <parameter-schedule-view/>
       <!-- <v-fade-transition mode="out-in">
@@ -57,7 +25,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 import ParameterScheduleView from './ParameterScheduleView.vue';
 // import PlcDatatypes from './PlcDatatypes.vue';
 // import PlcCategory from './PlcCategory.vue';
@@ -73,29 +40,16 @@ export default {
     return {
       parameterView: 0,
       loading: false,
-      protocolList: [
-        {
-          name: 'SNAP7',
-        },
-        {
-          name: 'MELSEC',
-        },
-      ],
     };
   },
   created() {
     this.loading = true;
     this.parameterView = 0;
-    this.setExtendedHeader(true);
+    // this.setExtendedHeader(true);
     this.loading = false;
   },
   methods: {
-    ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapMutations('parameterConfiguration', ['setProtocol']),
-    onSelectProtocol(value) {
-      console.log('hi');
-      this.setProtocol(value);
-    },
+    // ...mapMutations('helper', ['setExtendedHeader']),
   },
 };
 </script>

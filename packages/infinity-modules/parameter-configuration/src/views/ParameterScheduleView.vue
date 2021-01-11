@@ -1,126 +1,93 @@
 <template>
   <v-container fluid class="py-0">
-    <div justify="center" class="planScheduleView">
-      <div class="py-0">
-        <div class="stick">
-          <div style="float:left;margin-bottom:10px;">
-            <span v-if="lineList.length && !!lineValue" class="ml-2">
-              line:
-              <v-btn
-              small
-              color="normal"
-              outlined
-              class="text-none ml-2 text-truncate"
-              @click="setLineValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px;">
-                {{lineList.filter((item) => item.id === lineValue)[0].name}}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="sublineList.length && !!sublineValue" class="ml-2">
-              subline:
-              <v-btn
-              small
-              color="normal"
-              outlined
-              class="text-none ml-2"
-              @click="setSublineValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px;">
-                {{sublineList.filter((item) => item.id === sublineValue)[0].name}}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="stationList.length && !!stationValue" class="ml-2">
-              station:
-              <v-btn
-              small
-              color="normal"
-              outlined
-              class="text-none ml-2"
-              @click="setStationValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px;">
-                {{stationList.filter((item) => item.id === stationValue)[0].name}}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="substationList.length && !!substationValue" class="ml-2">
-              substation:
-              <v-btn
-              small
-              color="normal"
-              outlined
-              class="text-none ml-2"
-              @click="setSubstationValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px;">
-                {{substationList.filter((item) => item.id === substationValue)[0].name}}
-                </div>
-              </v-btn>
-            </span>
-          </div>
-          <div style="float:right;">
+    <portal to="app-extension">
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-responsive :max-width="200">
+            <v-select
+              filled
+              dense
+              hide-details
+              :items="protocolList"
+              item-value="name"
+              v-model="selectedProtocol"
+              item-text="name"
+              @change="onSelectProtocol"
+              label="Select Protocol"
+            ></v-select>
+          </v-responsive>
+        </v-col>
+        <v-col cols="12" md="9">
+          <div style="float: right" class="mt-4">
             <v-btn
-            small
-            color="primary"
-            class="text-none"
-            :disabled="isAddButtonOK"
-            @click="setAddParameterDialog(true)"
+              small
+              color="primary"
+              class="text-none"
+              :disabled="isAddButtonOK"
+              @click="setAddParameterDialog(true)"
             >
               <v-icon small left>mdi-plus</v-icon>
               Add parameter
             </v-btn>
             <v-btn
-            small
-            color="primary"
-            class="text-none ml-1"
-            :disabled="isAddButtonOK"
-            @click="getMonitorValues"
+              small
+              color="primary"
+              class="text-none ml-1"
+              :disabled="isAddButtonOK"
+              @click="getMonitorValues"
             >
               Monitor
             </v-btn>
             <v-btn
-            small
-            color="primary"
-            outlined class="text-none ml-2" :disabled="!substationValue" @click="RefreshUI">
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              :disabled="!substationValue"
+              @click="RefreshUI"
+            >
               <v-icon small left>mdi-refresh</v-icon>
               Refresh
             </v-btn>
-            <v-btn small color="error"
+            <v-btn
+              small
+              color="error"
               outlined
               class="text-none ml-2"
               @click="confirmDialog = true"
-              v-if="parameterList.length && parameterSelected.length">
+              v-if="parameterList.length && parameterSelected.length"
+            >
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
             <v-btn
-            small
-            color="primary"
-            v-if="substationValue && parameterSelected.length > 0"
-            outlined
-            class="text-none ml-2"
-            @click="exportData">
+              small
+              color="primary"
+              v-if="substationValue && parameterSelected.length > 0"
+              outlined
+              class="text-none ml-2"
+              @click="exportData"
+            >
               Export
             </v-btn>
             <v-btn
-            small
-            color="primary"
-            v-if="!(substationValue && parameterSelected.length > 0)"
-            outlined
-            class="text-none ml-2"
-            @click="exportSampleData">
+              small
+              color="primary"
+              v-if="!(substationValue && parameterSelected.length > 0)"
+              outlined
+              class="text-none ml-2"
+              @click="exportSampleData"
+            >
               Export Sample File
             </v-btn>
             <v-btn
-            small
-            color="primary"
-            outlined
-            class="text-none ml-2"
-            :disabled="isAddButtonOK"
-            @click="importData">
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              :disabled="isAddButtonOK"
+              @click="importData"
+            >
               Import
             </v-btn>
             <input
@@ -131,223 +98,298 @@
               class="d-none"
               id="uploadFiles"
               @change="onFilesChanged"
-            >
+            />
             <v-btn
-            small
-            color="primary"
-            outlined
-            class="text-none ml-2"
-            @click="toggleFilter"
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              @click="toggleFilter"
             >
               <v-icon small left>mdi-filter-variant</v-icon>
               Filters
             </v-btn>
           </div>
-        </div>
-        <v-data-table
-        v-model="parameterSelected"
-        :headers="headers"
-        item-key="_id"
-        :items="parameterList"
-        :options="{itemsPerPage:5}"
-        show-select
+        </v-col>
+      </v-row>
+    </portal>
+    <v-row>
+      <v-col cols="12" md="12">
+        <span v-if="lineList.length && !!lineValue" class="ml-2">
+          line:
+          <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2 text-truncate"
+            @click="setLineValue('')"
+          >
+            <v-icon small left>mdi-close</v-icon>
+            <div class="text-truncate" style="max-width: 100px">
+              {{ lineList.filter((item) => item.id === lineValue)[0].name }}
+            </div>
+          </v-btn>
+        </span>
+        <span v-if="sublineList.length && !!sublineValue" class="ml-2">
+          subline:
+          <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setSublineValue('')"
+          >
+            <v-icon small left>mdi-close</v-icon>
+            <div class="text-truncate" style="max-width: 100px">
+              {{
+                sublineList.filter((item) => item.id === sublineValue)[0].name
+              }}
+            </div>
+          </v-btn>
+        </span>
+        <span v-if="stationList.length && !!stationValue" class="ml-2">
+          station:
+          <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setStationValue('')"
+          >
+            <v-icon small left>mdi-close</v-icon>
+            <div class="text-truncate" style="max-width: 100px">
+              {{
+                stationList.filter((item) => item.id === stationValue)[0].name
+              }}
+            </div>
+          </v-btn>
+        </span>
+        <span v-if="substationList.length && !!substationValue" class="ml-2">
+          substation:
+          <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setSubstationValue('')"
+          >
+            <v-icon small left>mdi-close</v-icon>
+            <div class="text-truncate" style="max-width: 100px">
+              {{
+                substationList.filter((item) => item.id === substationValue)[0]
+                  .name
+              }}
+            </div>
+          </v-btn>
+        </span>
+      </v-col>
+      <v-col cols="12" md="12"> </v-col>
+    </v-row>
+    <v-data-table
+      v-model="parameterSelected"
+      :headers="headers"
+      item-key="_id"
+      :items="parameterList"
+      :options="{ itemsPerPage: 5 }"
+      show-select
+      fixed-header
+      :height="tableHeight - 168"
+    >
+      <template v-slot:item.name="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.name"
+          @save="saveTableParameter(props.item, 'name')"
         >
-          <template v-slot:item.name="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.name"
-              @save="saveTableParameter(props.item, 'name')"
-            >
-              {{ props.item.name }}
-              <v-icon
-                small
-                color="primary"
-                :disabled="substationValue ? false : true"
-              >
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field
-                  :disabled="substationValue ? false : true"
-                  v-model="props.item.name"
-                  label="Edit"
-                  single-line
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
+          {{ props.item.name }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="substationValue ? false : true"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="substationValue ? false : true"
+              v-model="props.item.name"
+              label="Edit"
+              single-line
+            ></v-text-field>
           </template>
-          <template v-slot:item.description="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.description"
-              large
-              @save="saveTableParameter(props.item, 'description')"
-            >
-              <span>
-                {{ props.item.description.length > 10
-                  ? props.item.description.substr(0,9) + '...' :  props.item.description}}
-              </span>
-              <v-icon
-                small
-                color="primary"
-                :disabled="substationValue ? false : true"
-              >
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-textarea
-                  :disabled="substationValue ? false : true"
-                  v-model="props.item.description"
-                  label="Edit"
-                  single-line
-                ></v-textarea>
-              </template>
-            </v-edit-dialog>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.description="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.description"
+          large
+          @save="saveTableParameter(props.item, 'description')"
+        >
+          <span>
+            {{
+              props.item.description.length > 10
+                ? props.item.description.substr(0, 9) + "..."
+                : props.item.description
+            }}
+          </span>
+          <v-icon
+            small
+            color="primary"
+            :disabled="substationValue ? false : true"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-textarea
+              :disabled="substationValue ? false : true"
+              v-model="props.item.description"
+              label="Edit"
+              single-line
+            ></v-textarea>
           </template>
-          <template v-slot:item.parametercategory="props">
-            <v-select
-              :disabled="(substationValue ? false : true) || saving"
-              :items="categoryList"
-              v-model="props.item.parametercategory"
-              label="-"
-              @change="saveTableParameter(props.item, 'parametercategory')"
-              item-text="name"
-              item-value="id"
-              solo
-              dense
-              depressed
-            ></v-select>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.parametercategory="props">
+        <v-select
+          :disabled="(substationValue ? false : true) || saving"
+          :items="categoryList"
+          v-model="props.item.parametercategory"
+          label="-"
+          @change="saveTableParameter(props.item, 'parametercategory')"
+          item-text="name"
+          item-value="id"
+          solo
+          dense
+          depressed
+        ></v-select>
+      </template>
+      <template v-slot:item.datatype="props">
+        <v-select
+          :disabled="(substationValue ? false : true) || saving"
+          :items="datatypeList"
+          v-model="props.item.datatype"
+          label="-"
+          @change="saveTableParameter(props.item, 'datatype')"
+          item-text="name"
+          item-value="id"
+          solo
+          dense
+          depressed
+        ></v-select>
+      </template>
+      <template v-slot:item.bitnumber="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.bitnumber"
+          @save="saveTableParameter(props.item, 'bitnumber')"
+        >
+          {{ props.item.bitnumber }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="!substationValue || props.item.datatype !== 12"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="!substationValue || props.item.datatype !== 12"
+              v-model="props.item.bitnumber"
+              label="Edit"
+              single-line
+              type="number"
+            ></v-text-field>
           </template>
-          <template v-slot:item.datatype="props">
-            <v-select
-              :disabled="(substationValue ? false : true) || saving"
-              :items="datatypeList"
-              v-model="props.item.datatype"
-              label="-"
-              @change="saveTableParameter(props.item, 'datatype')"
-              item-text="name"
-              item-value="id"
-              solo
-              dense
-              depressed
-            ></v-select>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.size="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.size"
+          @save="saveTableParameter(props.item, 'size')"
+        >
+          {{ props.item.size }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="!substationValue || props.item.datatype !== 11"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="!substationValue || props.item.datatype !== 11"
+              v-model="props.item.size"
+              label="Edit"
+              single-line
+              type="number"
+            ></v-text-field>
           </template>
-          <template v-slot:item.bitnumber="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.bitnumber"
-              @save="saveTableParameter(props.item, 'bitnumber')"
-            > {{ props.item.bitnumber }}
-              <v-icon
-                small
-                color="primary"
-                :disabled="!substationValue
-                || props.item.datatype !== 12"
-              >
-              mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field
-                  :disabled="!substationValue
-                  || props.item.datatype !== 12"
-                  v-model="props.item.bitnumber"
-                  label="Edit"
-                  single-line
-                  type='number'
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.startaddress="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.startaddress"
+          @save="saveTableParameter(props.item, 'startaddress')"
+        >
+          {{ props.item.startaddress }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="substationValue ? false : true"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="substationValue ? false : true"
+              v-model="props.item.startaddress"
+              label="Edit"
+              single-line
+              type="number"
+            ></v-text-field>
           </template>
-          <template v-slot:item.size="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.size"
-              @save="saveTableParameter(props.item, 'size')"
-            > {{ props.item.size }}
-              <v-icon
-                small
-                color="primary"
-                :disabled="!substationValue
-                || props.item.datatype !== 11"
-              >
-              mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field
-                  :disabled="!substationValue
-                  || props.item.datatype !== 11"
-                  v-model="props.item.size"
-                  label="Edit"
-                  single-line
-                  type='number'
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.dbaddress="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.dbaddress"
+          @save="saveTableParameter(props.item, 'dbaddress')"
+        >
+          {{ props.item.dbaddress }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="substationValue ? false : true"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="substationValue ? false : true"
+              v-model="props.item.dbaddress"
+              label="Edit"
+              single-line
+              type="number"
+            ></v-text-field>
           </template>
-          <template v-slot:item.startaddress="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.startaddress"
-              @save="saveTableParameter(props.item, 'startaddress')"
-            > {{ props.item.startaddress }}
-              <v-icon
-                small
-                color="primary"
-                :disabled="substationValue ? false : true"
-              >
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field
-                  :disabled="substationValue ? false : true"
-                  v-model="props.item.startaddress"
-                  label="Edit"
-                  single-line
-                  type='number'
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
-          </template>
-          <template v-slot:item.dbaddress="props">
-            <v-edit-dialog
-              :return-value.sync="props.item.dbaddress"
-              @save="saveTableParameter(props.item, 'dbaddress')"
-            > {{ props.item.dbaddress }}
-              <v-icon
-                small
-                color="primary"
-                :disabled="substationValue ? false : true"
-              >
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field
-                  :disabled="substationValue ? false : true"
-                  v-model="props.item.dbaddress"
-                  label="Edit"
-                  single-line
-                  type='number'
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
-          </template>
-        </v-data-table>
-      </div>
-    </div>
+        </v-edit-dialog>
+      </template>
+    </v-data-table>
     <v-dialog
       persistent
       scrollable
       v-model="confirmDialog"
       max-width="500px"
+      fixed-header
+      :height="tableHeight - 168"
     >
       <v-card>
         <v-card-title primary-title>
-          <span>
-            Please confirm
-          </span>
+          <span> Please confirm </span>
           <v-spacer></v-spacer>
           <v-btn icon small @click="confirmDialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text>
-          Are you sure to delete the items selected ?
-        </v-card-text>
+        <v-card-text> Are you sure to delete the items selected ? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
@@ -362,21 +404,18 @@
       </v-card>
     </v-dialog>
     <AddParameter
-    :station="stationValue"
-    :substation="substationValue"
-    :line="lineValue"
-    :subline="sublineValue"
-    v-if="addParameterDialog"/>
-    <ParameterFilter :station="stationValue"  :substation="substationValue"/>
+      :station="stationValue"
+      :substation="substationValue"
+      :line="lineValue"
+      :subline="sublineValue"
+      v-if="addParameterDialog"
+    />
+    <ParameterFilter :station="stationValue" :substation="substationValue" />
   </v-container>
 </template>
 
 <script>
-import {
-  mapActions,
-  mapMutations,
-  mapState,
-} from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import socketioclient from 'socket.io-client';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
@@ -387,7 +426,17 @@ export default {
   name: 'PlanScheduleView',
   data() {
     return {
+      protocolList: [
+        {
+          name: 'SNAP7',
+        },
+        {
+          name: 'MELSEC',
+        },
+      ],
+      selectedProtocol: null,
       parameterSelected: [],
+      tableHeight: window.innerHeight,
       headers: [],
       headersSnap7: [
         { text: 'Number', value: 'number', width: 120 },
@@ -429,11 +478,11 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     this.zipService = ZipService;
     await this.getPageDataList();
     this.socket = socketioclient.connect('http://:10190');
-    this.socket.on('connect', () => {
-    });
+    this.socket.on('connect', () => {});
   },
   destroyed() {
     this.setLineValue('');
@@ -445,14 +494,36 @@ export default {
   },
   computed: {
     ...mapState('parameterConfiguration', [
-      'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-      'subStationElementDeatils', 'createElementResponse', 'protocol']),
+      'addParameterDialog',
+      'parameterList',
+      'isApply',
+      'lineList',
+      'sublineList',
+      'stationList',
+      'substationList',
+      'directionList',
+      'categoryList',
+      'datatypeList',
+      'lineValue',
+      'sublineValue',
+      'stationValue',
+      'substationValue',
+      'selectedParameterName',
+      'selectedParameterDirection',
+      'selectedParameterCategory',
+      'selectedParameterDatatype',
+      'subStationElementDeatils',
+      'createElementResponse',
+      'protocol',
+    ]),
     isAddButtonOK() {
-      if (this.lineValue
+      if (
+        this.lineValue
         && this.sublineValue
         && this.stationValue
         && this.substationValue
-        && this.isApply) {
+        && this.isApply
+      ) {
         return false;
       }
       return true;
@@ -501,10 +572,41 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setParameterList', 'setProtocol']),
-    ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
-      'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
+    ...mapMutations('parameterConfiguration', [
+      'setAddParameterDialog',
+      'toggleFilter',
+      'setLineValue',
+      'setSublineValue',
+      'setStationValue',
+      'setSubstationValue',
+      'setSelectedParameterName',
+      'setSelectedParameterDirection',
+      'setSelectedParameterCategory',
+      'setSelectedParameterDatatype',
+      'setParameterList',
+      'setProtocol',
+    ]),
+    ...mapActions('parameterConfiguration', [
+      'getPageDataList',
+      'getSublineList',
+      'getStationList',
+      'getSubstationList',
+      'getParameterListRecords',
+      'updateParameter',
+      'deleteParameter',
+      'createParameter',
+      'createParameterList',
+      'downloadToPLC',
+      'getSubStationIdElement',
+      'getSubStationIdElement',
+      'createTagElement',
+      'updateTagStatus',
+    ]),
+    onSelectProtocol(value) {
+      console.log('hi');
+      this.setProtocol(value);
+    },
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -541,10 +643,11 @@ export default {
       }
       if (item.datatype !== 12) {
         if (type === 'dbaddress') {
-          const isRepeat = parameterListSave
-            .some((parameter) => parameter.datatype !== 12
-            && Number(item.dbaddress) === parameter.dbaddress
-            && Number(item.startaddress) === parameter.startaddress);
+          const isRepeat = parameterListSave.some(
+            (parameter) => parameter.datatype !== 12
+             && Number(item.dbaddress) === parameter.dbaddress
+             && Number(item.startaddress) === parameter.startaddress,
+          );
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -556,10 +659,11 @@ export default {
           }
         }
         if (type === 'startaddress') {
-          const isRepeat = parameterListSave
-            .some((parameter) => parameter.datatype !== 12
-            && Number(item.dbaddress) === parameter.dbaddress
-            && Number(item.startaddress) === parameter.startaddress);
+          const isRepeat = parameterListSave.some(
+            (parameter) => parameter.datatype !== 12
+              && Number(item.dbaddress) === parameter.dbaddress
+              && Number(item.startaddress) === parameter.startaddress,
+          );
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -572,11 +676,12 @@ export default {
         }
       } else {
         if (type === 'dbaddress') {
-          const isRepeat = parameterListSave
-            .some((parameter) => parameter.datatype === 12
-            && Number(item.dbaddress) === parameter.dbaddress
-            && Number(item.startaddress) === parameter.startaddress
-            && item.bitnumber === parameter.bitnumber);
+          const isRepeat = parameterListSave.some(
+            (parameter) => parameter.datatype === 12
+              && Number(item.dbaddress) === parameter.dbaddress
+              && Number(item.startaddress) === parameter.startaddress
+              && item.bitnumber === parameter.bitnumber,
+          );
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -588,11 +693,12 @@ export default {
           }
         }
         if (type === 'startaddress') {
-          const isRepeat = parameterListSave
-            .some((parameter) => parameter.datatype === 12
-            && Number(item.dbaddress) === parameter.dbaddress
-            && Number(item.startaddress) === parameter.startaddress
-            && item.bitnumber === parameter.bitnumber);
+          const isRepeat = parameterListSave.some(
+            (parameter) => parameter.datatype === 12
+              && Number(item.dbaddress) === parameter.dbaddress
+              && Number(item.startaddress) === parameter.startaddress
+              && item.bitnumber === parameter.bitnumber,
+          );
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -604,11 +710,12 @@ export default {
           }
         }
         if (type === 'bitnumber') {
-          const isRepeat = parameterListSave
-            .some((parameter) => parameter.datatype === 12
-            && Number(item.dbaddress) === parameter.dbaddress
-            && Number(item.startaddress) === parameter.startaddress
-            && item.bitnumber === parameter.bitnumber);
+          const isRepeat = parameterListSave.some(
+            (parameter) => parameter.datatype === 12
+              && Number(item.dbaddress) === parameter.dbaddress
+              && Number(item.startaddress) === parameter.startaddress
+              && item.bitnumber === parameter.bitnumber,
+          );
           if (isRepeat) {
             this.setAlert({
               show: true,
@@ -621,23 +728,31 @@ export default {
         }
       }
       let selectedDatatypeItem = {};
-      const parameterItem = parameterListSave.filter((parameter) => item._id === parameter._id)[0];
-      // let query = `?query=id=="${parameterItem.id}"`;
+      const parameterItem = parameterListSave
+        .filter((parameter) => item._id === parameter._id)[0];
+      // let query = `?query=id=='${parameterItem.id}'`;
       const payload = {};
       if (type === 'datatype') {
-        [selectedDatatypeItem] = this.datatypeList.filter((datatype) => value === datatype.id);
-        // query = `?query=id=="${parameterItem.id}"&isbigendian==
+        [selectedDatatypeItem] = this.datatypeList
+          .filter((datatype) => value === datatype.id);
+        // query = `?query=id=='${parameterItem.id}'&isbigendian==
         // ${selectedDatatypeItem.isbigendian === 1}
         // &isswapped==${selectedDatatypeItem.isswapped === 1}`;
         payload.isbigendian = selectedDatatypeItem.isbigendian === 1;
         payload.isswapped = selectedDatatypeItem.isswapped === 1;
-        if (selectedDatatypeItem.name !== 'Boolean' && selectedDatatypeItem.name !== 'String') {
+        if (
+          selectedDatatypeItem.name !== 'Boolean'
+          && selectedDatatypeItem.name !== 'String'
+        ) {
           payload.size = selectedDatatypeItem.size;
         }
       }
       payload[type] = value;
       this.saving = true;
-      const updateResult = await this.updateParameter({ id: parameterItem._id, payload });
+      const updateResult = await this.updateParameter({
+        id: parameterItem._id,
+        payload,
+      });
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -649,14 +764,17 @@ export default {
       await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
-      const results = await Promise.all(this.parameterSelected.map(
-        (parameter) => this.deleteParameter(parameter.id),
-      ));
+      const results = await Promise.all(
+        this.parameterSelected.map((parameter) => this.deleteParameter(parameter.id)),
+      );
       const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
       await this.getSubStationIdElement(selectedSubStaionlist[0]);
       const listT = this.subStationElementDeatils;
       // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
-      const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+      const FilteredTags = listT.tags.map((obj) => ({
+        id: obj.id,
+        elementId: obj.elementId,
+      }));
       const payloadData = [];
       FilteredTags.forEach(async (tag) => {
         payloadData.push({
@@ -726,15 +844,18 @@ export default {
         sublineid: this.sublineValue,
         substationid: this.substationValue,
       };
-      this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        if (data) {
-          this.parameterList.forEach((element) => {
-            if (data[element.name] || data[element.name] === 0) {
-              this.$set(element, 'monitorvalue', data[element.name]);
-            }
-          });
-        }
-      });
+      this.socket.on(
+        `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
+        (data) => {
+          if (data) {
+            this.parameterList.forEach((element) => {
+              if (data[element.name] || data[element.name] === 0) {
+                this.$set(element, 'monitorvalue', data[element.name]);
+              }
+            });
+          }
+        },
+      );
       await this.downloadToPLC(object);
     },
     getQuery() {
@@ -757,18 +878,23 @@ export default {
       return query;
     },
     async exportData() {
-      const lineName = this.lineList.filter((item) => this.lineValue === item.id).length
+      const lineName = this.lineList
+        .filter((item) => this.lineValue === item.id).length
         ? this.lineList.filter((item) => this.lineValue === item.id)[0].name : 'None';
-      const sublineName = this.sublineList.filter((item) => this.sublineValue === item.id).length
+      const sublineName = this.sublineList
+        .filter((item) => this.sublineValue === item.id).length
         ? this.sublineList.filter((item) => this.sublineValue === item.id)[0].name : 'None';
-      const stationName = this.stationList.filter((item) => this.stationValue === item.id).length
+      const stationName = this.stationList
+        .filter((item) => this.stationValue === item.id).length
         ? this.stationList.filter((item) => this.stationValue === item.id)[0].name : 'None';
-      const substationName = this.substationList.filter(
-        (item) => this.substationValue === item.id,
-      ).length
-        ? this.substationList.filter((item) => this.substationValue === item.id)[0].name : 'None';
+      const substationName = this.substationList
+        .filter((item) => this.substationValue === item.id).length
+        ? this.substationList
+          .filter((item) => this.substationValue === item.id)[0].name : 'None';
       const fileName = `${lineName}-${sublineName}-${stationName}-${substationName}`;
-      const parameterSelected = this.parameterSelected.map((item) => ({ ...item }));
+      const parameterSelected = this.parameterSelected.map((item) => ({
+        ...item,
+      }));
       const csvContent = [];
       let column = [];
       if (this.protocol === 'SNAP7') {
@@ -934,11 +1060,11 @@ export default {
         }
         if (this.datatypeList.length > 0) {
           item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
-            .isbigendian === 1;
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
+             === 1;
           item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
-            .isswapped === 1;
+            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
+             === 1;
           // if (Number(item.datatypeList) === 11) {
           //   item.size = this.datatypeList
           //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
@@ -958,16 +1084,21 @@ export default {
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
         if (this.protocol === 'SNAP7') {
-          const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
-          const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
+          const isBooleanList = dataList
+            .filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
+          const noBooleanList = dataList.filter(
+            (dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'),
+          );
           if (isBooleanList.length) {
             for (let i = 0; i < isBooleanList.length; i += 1) {
               for (let k = i + 1; k < isBooleanList.length; k += 1) {
                 if (
-                  Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
-                  && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
-                  && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
-                ) {
+                  Number(isBooleanList[i].dbaddress)
+                   === Number(isBooleanList[k].dbaddress)
+                   && Number(isBooleanList[i].startaddress)
+                   === Number(isBooleanList[k].startaddress)
+                   && Number(isBooleanList[i].bitnumber)
+                   === Number(isBooleanList[k].bitnumber)) {
                   this.setAlert({
                     show: true,
                     type: 'error',
@@ -983,9 +1114,10 @@ export default {
             for (let i = 0; i < noBooleanList.length; i += 1) {
               for (let k = i + 1; k < noBooleanList.length; k += 1) {
                 if (
-                  Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
-                  && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
-                ) {
+                  Number(noBooleanList[i].dbaddress)
+                   === Number(noBooleanList[k].dbaddress)
+                   && Number(noBooleanList[i].startaddress)
+                   === Number(noBooleanList[k].startaddress)) {
                   this.setAlert({
                     show: true,
                     type: 'error',
@@ -1036,11 +1168,15 @@ export default {
             filterQuery: '',
           });
           data.forEach((item) => {
-            if (Number(item.parametercategory) === 15
-            || Number(item.parametercategory) === 17
-            || Number(item.parametercategory) === 18) {
+            if (
+              Number(item.parametercategory) === 15
+               || Number(item.parametercategory) === 17
+               || Number(item.parametercategory) === 18) {
               let dataTypeName = '';
-              if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
+              if (
+                this.datatypeList
+                  .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String'
+              ) {
                 dataTypeName = 'String';
               } else {
                 dataTypeName = 'Double';
@@ -1082,7 +1218,8 @@ export default {
           await this.createTagElement(tagList);
           const payloadData = [];
           tagList.forEach((l) => {
-            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            const tag = this.createElementResponse
+              .filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
               // console.log(tag[0].tagId);
               payloadData.push({
@@ -1139,13 +1276,15 @@ export default {
 .planScheduleView .green {
   background-color: green;
 }
-.planScheduleView .v-select{
+.planScheduleView .v-select {
   height: 30px;
 }
-.planScheduleView .v-input__slot{
+.planScheduleView .v-input__slot {
   width: 150px;
 }
-.planScheduleView .v-text-field.v-text-field--solo.v-input--dense > .v-input__control{
+.planScheduleView
+  .v-text-field.v-text-field--solo.v-input--dense
+  > .v-input__control {
   min-height: 30px;
 }
 </style>
