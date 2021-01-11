@@ -343,11 +343,14 @@ export default {
     },
     async RefreshUI() {
       let param = '';
-      if (this.sublines) {
-        param += `?query=sublineid=="${this.sublines.id}"`;
+      if (this.sublines && !this.stations) {
+        param += `?query=sublineid=="${this.sublines.id || null}"`;
       }
-      if (this.stations) {
-        param += `%26%26stationid=="${this.stations.id}"`;
+      if (this.stations && this.sublines) {
+        param += `?query=stationid=="${this.stations.id || null}"`;
+      }
+      if (this.sublines && this.stations) {
+        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
       }
       await this.getRecipeListRecords(param);
     },
