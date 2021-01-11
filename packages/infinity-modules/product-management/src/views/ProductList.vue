@@ -14,32 +14,34 @@
       </v-btn>
     </portal>
     <v-container fluid class="py-0">
-      <v-row justify="center">
-        <v-col cols="12" md="7"></v-col>
-        <v-col cols="12" md="5" justify="end">
-         <div style="float:right;">
-          <v-btn small color="primary"
-          class="text-none" @click="setAddProductDialog(true)">
-            <v-icon small left>mdi-plus</v-icon>
-            {{ $t('displayTags.buttons.addProductType') }}
-          </v-btn>
-          <v-btn small color="primary" outlined
-          v-if="!recordSelection"
-          class="text-none ml-2" @click="addDuplicateProduct()">
-            <v-icon small left>mdi-content-duplicate</v-icon>
-            {{ $t('displayTags.buttons.duplicateProductType') }}
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-            <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refresh') }}
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
-            <v-icon small left>mdi-filter-variant</v-icon>
-            {{ $t('displayTags.buttons.filters') }}
-          </v-btn>
-         </div>
-        </v-col>
-      </v-row>
+      <portal to="app-extension">
+        <v-row justify="center">
+          <v-col cols="12" md="7"></v-col>
+          <v-col cols="12" md="5" justify="end">
+          <div style="float:right;">
+            <v-btn small color="primary"
+            class="text-none" @click="setAddProductDialog(true)">
+              <v-icon small left>mdi-plus</v-icon>
+              {{ $t('displayTags.buttons.addProductType') }}
+            </v-btn>
+            <v-btn small color="primary" outlined
+            v-if="!recordSelection"
+            class="text-none ml-2" @click="addDuplicateProduct()">
+              <v-icon small left>mdi-content-duplicate</v-icon>
+              {{ $t('displayTags.buttons.duplicateProductType') }}
+            </v-btn>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+              <v-icon small left>mdi-refresh</v-icon>
+              {{ $t('displayTags.buttons.refresh') }}
+            </v-btn>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+              <v-icon small left>mdi-filter-variant</v-icon>
+              {{ $t('displayTags.buttons.filters') }}
+            </v-btn>
+          </div>
+          </v-col>
+        </v-row>
+      </portal>
       <v-data-table
         v-model="products"
         :headers="headers"
@@ -47,6 +49,8 @@
         item-key="productnumber"
         :single-select="true"
         show-select
+        fixed-header
+        :height="tableHeight - 168"
         >
         <template v-slot:item.productname="{ item }">
           <span @click="handleClick(item)"><a>{{ item.productname }}</a></span>
@@ -127,6 +131,7 @@ export default {
       products: [],
       saving: false,
       hover: true,
+      tableHeight: window.innerHeight,
       lineSelected: null,
       subLineSelected: null,
       stationSelected: null,
@@ -136,6 +141,7 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getProductListRecords('');
     this.products = [];
   },
@@ -144,7 +150,7 @@ export default {
   },
   methods: {
     ...mapActions('productManagement', ['getProductListRecords', 'createProduct']),
-    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('productManagement', ['toggleFilter', 'setFilterLine', 'setAddProductDialog',
       'setDuplicateDialog', 'setEditDialog', 'setDeleteDialog']),
     showFilter: {
