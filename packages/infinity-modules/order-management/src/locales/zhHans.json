@@ -32,10 +32,10 @@
   "Completed":	"已完成",
   "Apply":	"应用",
   "Refresh":	"刷新",
-  "Archive": "封存订单",
+  "Archive": "归档",
   "Calendar": "日历",
   "Dashboard":  "仪表板",
-  "Unarchive": "取消存档",
+  "Unarchive": "取消归档",
   "Order Details":	"订单信息",
   "Order Summary":	"订单摘要",
   "Order name":	"订单名称",
@@ -49,7 +49,7 @@
   "Recipe Name":	"配方名",
   "Recipe Version":	"配方版本",
   "Roadmap Summary":	"工艺路径摘要",
-  "Roadmap name":	"工艺路径名称",
+  "Roadmap name":	"工艺路径名",
   "Roadmap type":	"工艺路径类型",
   "Roadmap Details":	"工艺路径详细信息",
   "Substation Name":	"子站名称",
@@ -71,5 +71,8 @@
   "Month":	"月",
   "Week":	"周",
   "Day":	"日",
-  "Filters":	"筛选"
+  "Filters":	"筛选",
+  "MoveUp": "置顶",
+  "Target quantity": "目标数量",
+  "Scheduled start": "预定开始时间"
 }

@@ -99,21 +99,21 @@
             <template v-if="displayPlanningFields">
               <v-text-field
                 :disabled="true"
-                label="Roadmap name"
+                :label="$t('Roadmap name')"
                 prepend-icon="mdi-tray-plus"
                 v-model="plan.roadmapname"
               ></v-text-field>
               <v-text-field
                 type="number"
                 :disabled="saving"
-                label="Target quantity"
+                :label="$t('Target quantity')"
                 prepend-icon="mdi-tray-plus"
                 v-model="plan.targetcount"
               ></v-text-field>
               <v-text-field
                 type="datetime-local"
                 v-model="plan.scheduledstart"
-                label="Scheduled start"
+                :label="$t('Scheduled start')"
                 prepend-icon="mdi-clock-start"
               ></v-text-field>
             </template>

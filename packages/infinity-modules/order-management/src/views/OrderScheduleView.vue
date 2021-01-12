@@ -26,7 +26,7 @@
           <v-btn
           v-if="orders.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="MoveUp">
-            Move Up
+           {{ $t('MoveUp') }}
           </v-btn>
           <v-btn
           v-if="visible"

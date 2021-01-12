@@ -135,5 +135,8 @@
   "Month":	"Month",
   "Week":	"Week",
   "Day":	"Day",
-  "Filters":	"Filters"
+  "Filters":	"Filters",
+  "MoveUp": "Move Up",
+  "Target quantity": "Target Quantity",
+  "Scheduled start": "Scheduled Start"
 }
