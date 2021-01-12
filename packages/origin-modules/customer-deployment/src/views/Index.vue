@@ -47,7 +47,7 @@ export default {
     };
   },
   async created() {
-    if (this.user) {
+    if (this.me) {
       this.loading = true;
       await this.initElements();
       this.loading = false;
