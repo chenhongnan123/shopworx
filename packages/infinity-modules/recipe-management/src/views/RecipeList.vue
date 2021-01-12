@@ -346,7 +346,7 @@ export default {
       if (this.sublines && !this.stations) {
         param += `?query=sublineid=="${this.sublines.id || null}"`;
       }
-      if (this.stations && this.sublines) {
+      if (this.stations && !this.sublines) {
         param += `?query=stationid=="${this.stations.id || null}"`;
       }
       if (this.sublines && this.stations) {
