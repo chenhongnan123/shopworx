@@ -26,6 +26,7 @@ export default ({
     selectedParameterDatatype: '',
     subStationElementDeatils: [],
     createElementResponse: [],
+    createResult: false,
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -52,6 +53,7 @@ export default ({
     setSelectedParameterDatatype: set('selectedParameterDatatype'),
     setSubStationIdDeatils: set('subStationElementDeatils'),
     setCreateElementResponse: set('createElementResponse'),
+    setCreateParam: set('createResult'),
   },
   actions: {
     createTagElement: async ({ commit, dispatch }, payload) => {

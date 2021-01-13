@@ -61,6 +61,9 @@
               </v-btn>
             </span>
           </div>
+          <proceed-dialog ref="ProceedDialog"
+            :openDialog="openDialog"
+            :responce="responce" />
           <div style="float:right;">
             <v-btn
             small
@@ -376,12 +379,84 @@ import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
 import AddParameter from '../components/AddParameter.vue';
 import ParameterFilter from '../components/ParameterFilter.vue';
+import ProceedDialog from '../components/ProceedDialog.vue';
 
 export default {
   name: 'PlanScheduleView',
   data() {
     return {
+      ProceedDialog: '',
       parameterSelected: [],
+      dialog: false,
+      openDialog: false,
+      responce: [],
+      dataForCreation: null,
+      masterTags: [{
+        tagName: 'name',
+        tagDescription: 'Parameter Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'description',
+        tagDescription: 'Parameter Description',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'protocol',
+        tagDescription: 'Protcol Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'datatype',
+        tagDescription: 'Datatype',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'bitnumber',
+        tagDescription: 'BitnNumber',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'dbaddress',
+        tagDescription: 'DB Address',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'size',
+        tagDescription: 'Size',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'multiplicationfactor',
+        tagDescription: 'Mutiplication Factor',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parameterunit',
+        tagDescription: 'Parameter Unit',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parametercategory',
+        tagDescription: 'Parameter Category',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'plcaddress',
+        tagDescription: 'PLC Address',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'paid',
+        tagDescription: 'Paid',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'startaddress',
+        tagDescription: 'Start Address',
+        required: true,
+        emgTagType: 'int',
+      }],
       headers: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
@@ -407,6 +482,18 @@ export default {
       savingImport: false,
     };
   },
+  async mounted() {
+    this.ProceedDialog = this.$refs.ProceedDialog;
+    this.$root.$on('confirmationSignal', (data) => {
+      this.dialog = data;
+    });
+    this.$root.$on('getListofParams', (data) => {
+      const getList = data;
+      if (getList) {
+        this.getParameterListRecords(this.getQuery());
+      }
+    });
+  },
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
@@ -424,7 +511,7 @@ export default {
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-      'subStationElementDeatils', 'createElementResponse']),
+      'subStationElementDeatils', 'createElementResponse', 'createResult']),
     isAddButtonOK() {
       if (this.lineValue
         && this.sublineValue
@@ -470,7 +557,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
+    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setCreateParam']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
     async showParameters(event, item) {
@@ -838,6 +925,18 @@ export default {
     async onFilesChanged(e) {
       this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
+      const ext = /^.+\.([^.]+)$/.exec(files[0].name);
+      const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
+      if (getFileExtension !== 'CSV') {
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_ONLY_CSV',
+        });
+        document.getElementById('uploadFiles').value = null;
+        return;
+      }
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       data.forEach((item) => {
@@ -866,33 +965,97 @@ export default {
           }
         }
         item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().trim();
+        item.name = item.name.toLowerCase().replace(/\W/g, '');
         item.assetid = 4;
         delete item.monitorvalue;
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
+      const duplicateNames = nameList.map((item) => item)
+        .filter((value, index, self) => self.indexOf(value) !== index);
+      const res = [];
+      dataList.forEach((d, r) => {
+        this.masterTags.forEach((t) => {
+          if (t.required) {
+            const val = d[t.tagName];
+            if (val === null || val === '' || val === undefined) {
+              res.push({ row: r + 1, tag: t.tagDescription });
+              this.responce = res;
+            }
+          }
+        });
+      });
       if (new Set(nameList).size === nameList.length) {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
-          for (let i = 0; i < isBooleanList.length; i += 1) {
-            for (let k = i + 1; k < isBooleanList.length; k += 1) {
-              if (
-                Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
-                && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
-                && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_Boolean_Bit',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
-              }
-            }
+          const listDbaddress = dataList.map((item) => item.dbaddress);
+          const duplicatedbAddress = listDbaddress.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicatedbAddress);
+          if (duplicatedbAddress.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_DBADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          const listStartAdd = dataList.map((item) => item.startaddress);
+          const duplicatestartAddress = listStartAdd.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicatestartAddress);
+          if (duplicatestartAddress.length > 0) {
+            this.savingImport = false;
+            // this.$refs.ProceedDialog = true;
+            // this.$root.$emit('parameterCreation', true);
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_START_ADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          const listBitNum = dataList.map((item) => item.bitnumber);
+          const duplicateBitnumber = listBitNum.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicateBitnumber);
+          if (duplicateBitnumber.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_BIT_NUMBER',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          if (duplicateNames.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          if (this.responce.length > 0) {
+            this.savingImport = false;
+            this.$root.$emit('parameterCreation', true);
+            this.$root.$emit('payload', data);
+            this.dialog = true;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'EMPTY_FIELDS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
           }
         }
         if (noBooleanList.length) {
@@ -913,8 +1076,12 @@ export default {
             }
           }
         }
-        const createResult = await this.createParameterList(data);
-        if (createResult) {
+        this.$root.$emit('payload', data);
+        this.$root.$emit('successPayload', true);
+        this.dataForCreation = data;
+        // const createResult = await this.createParameterList(data);
+        if (this.createResult) {
+          this.savingImport = false;
           await this.getParameterListRecords(this.getQuery());
           let tagList = [];
           await this.getSubStationIdElement(`process_${this.substationValue}`);
@@ -1103,18 +1270,21 @@ export default {
           });
           await this.updateTagStatus(payloadData);
           this.savingImport = false;
+          this.setCreateParam(false);
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'import_parameter_list',
+            message: 'IMPORT_PARAMETER_LIST',
           });
         }
         document.getElementById('uploadFiles').value = null;
       } else {
+        this.savingImport = false;
+        this.dialog = true;
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'duplicate_parameter_name',
+          message: 'DUPLICATE_PARAMETER_NAME',
         });
         document.getElementById('uploadFiles').value = null;
       }
@@ -1126,6 +1296,7 @@ export default {
   components: {
     AddParameter,
     ParameterFilter,
+    ProceedDialog,
   },
 };
 </script>
