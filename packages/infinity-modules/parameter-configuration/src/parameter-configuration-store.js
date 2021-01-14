@@ -26,7 +26,7 @@ export default ({
     selectedParameterDatatype: '',
     subStationElementDeatils: [],
     createElementResponse: [],
-    createResult: false,
+    createResult: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),

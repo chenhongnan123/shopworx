@@ -94,7 +94,6 @@ export default {
     ...mapMutations('parameterConfiguration', ['setCreateParam']),
     ...mapActions('parameterConfiguration', ['createParameterList']),
     async createParamsBtn() {
-      // this.$root.$emit('confirmationSignal', true);
       const createResult = await this.createParameterList(this.payloadData);
       this.setCreateParam(createResult);
       this.dialog = false;
@@ -105,7 +104,6 @@ export default {
           message: 'IMPORT_PARAMETER_LIST',
         });
         this.payloadData = [];
-        // await this.getParameterListRecords(this.getQuery());
         this.$root.$emit('getListofParams', true);
       } else {
         this.setAlert({

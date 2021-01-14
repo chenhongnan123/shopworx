@@ -980,7 +980,7 @@ export default {
           if (t.required) {
             const val = d[t.tagName];
             if (val === null || val === '' || val === undefined) {
-              res.push({ row: r + 1, tag: t.tagDescription });
+              res.push({ row: r + 2, tag: t.tagDescription });
               this.responce = res;
             }
           }
@@ -1010,8 +1010,6 @@ export default {
           console.log(duplicatestartAddress);
           if (duplicatestartAddress.length > 0) {
             this.savingImport = false;
-            // this.$refs.ProceedDialog = true;
-            // this.$root.$emit('parameterCreation', true);
             this.setAlert({
               show: true,
               type: 'error',
@@ -1054,26 +1052,91 @@ export default {
               type: 'error',
               message: 'EMPTY_FIELDS',
             });
-            document.getElementById('uploadFiles').value = null;
+            // document.getElementById('uploadFiles').value = null;
             return;
           }
         }
         if (noBooleanList.length) {
-          for (let i = 0; i < noBooleanList.length; i += 1) {
-            for (let k = i + 1; k < noBooleanList.length; k += 1) {
-              if (
-                Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
-                && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_startaddress',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
-              }
-            }
+          // for (let i = 0; i < noBooleanList.length; i += 1) {
+          //   for (let k = i + 1; k < noBooleanList.length; k += 1) {
+          //     if (
+          //       Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
+          // && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k]
+          //   .startaddress)
+          //     ) {
+          //       this.setAlert({
+          //         show: true,
+          //         type: 'error',
+          //         message: 'duplicate_parameter_startaddress',
+          //       });
+          //       document.getElementById('uploadFiles').value = null;
+          //       return;
+          //     }
+          //   }
+          // }
+          const listDbaddress = dataList.map((item) => item.dbaddress);
+          const duplicatedbAddress = listDbaddress.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicatedbAddress);
+          if (duplicatedbAddress.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_DBADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          const listStartAdd = dataList.map((item) => item.startaddress);
+          const duplicatestartAddress = listStartAdd.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicatestartAddress);
+          if (duplicatestartAddress.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_START_ADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          const listBitNum = dataList.map((item) => item.bitnumber);
+          const duplicateBitnumber = listBitNum.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          console.log(duplicateBitnumber);
+          if (duplicateBitnumber.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_BIT_NUMBER',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          if (duplicateNames.length > 0) {
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            document.getElementById('uploadFiles').value = null;
+            return;
+          }
+          if (this.responce.length > 0) {
+            this.savingImport = false;
+            this.$root.$emit('parameterCreation', true);
+            this.$root.$emit('payload', data);
+            this.dialog = true;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'EMPTY_FIELDS',
+            });
+            return;
           }
         }
         this.$root.$emit('payload', data);
@@ -1276,6 +1339,7 @@ export default {
             type: 'success',
             message: 'IMPORT_PARAMETER_LIST',
           });
+          this.savingImport = false;
         }
         document.getElementById('uploadFiles').value = null;
       } else {
