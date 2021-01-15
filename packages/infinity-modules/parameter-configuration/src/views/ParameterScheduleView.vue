@@ -63,7 +63,7 @@
           </div>
           <proceed-dialog ref="ProceedDialog"
             :openDialog="openDialog"
-            :responce="responce" />
+            :responce="responce"/>
           <div style="float:right;">
             <v-btn
             small
@@ -927,7 +927,7 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const ext = /^.+\.([^.]+)$/.exec(files[0].name);
       const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
-      if (getFileExtension !== 'CSV') {
+      if (getFileExtension !== 'csv' && getFileExtension !== 'CSV') {
         this.savingImport = false;
         this.setAlert({
           show: true,
@@ -1032,12 +1032,21 @@ export default {
             document.getElementById('uploadFiles').value = null;
             return;
           }
-          if (duplicateNames.length > 0) {
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_PARAMETER_NAME',
+          if (nameList) {
+            const resLen = [];
+            nameList.forEach((p, index) => {
+              if (p.length > 15) {
+                resLen.push(` row: ${index + 2} `);
+                this.paramLength = resLen;
+                console.log(this.paramLength);
+                this.savingImport = false;
+                this.$root.$emit('parameterCreation', true);
+                this.setAlert({
+                  show: true,
+                  type: 'error',
+                  message: 'PARAMETER_NAME_LENGTH',
+                });
+              }
             });
             document.getElementById('uploadFiles').value = null;
             return;
