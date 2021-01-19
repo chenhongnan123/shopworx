@@ -1,0 +1,254 @@
+{
+  "$vuetify": {
+    "badge": "徽章",
+    "close": "关闭",
+    "dataIterator": 
+    {
+      "noResultsText": "没有符合条件的结果",
+      "loadingText": "加载中……"
+    },
+    "dataTable": 
+    {
+      "itemsPerPageText": "每页数目：",
+      "ariaLabel": 
+      {
+        "sortDescending": "：降序排列。",
+        "sortAscending": "：升序排列。",
+        "sortNone": "：未排序。",
+        "activateNone": "点击以移除排序。",
+        "activateDescending": "点击以降序排列。",
+        "activateAscending": "点击以升序排列。"
+      },
+      "sortBy": "排序方式"
+    },
+    "dataFooter": 
+    {
+      "itemsPerPageText": "每页数目：",
+      "itemsPerPageAll": "全部",
+      "nextPage": "下一页",
+      "prevPage": "上一页",
+      "firstPage": "首页",
+      "lastPage": "尾页",
+      "pageText": "{0}-{1} 共 {2}"
+    },
+    "datePicker": 
+    {
+      "itemsSelected": "已选择 {0}",
+      "nextMonthAriaLabel": "下个月",
+      "nextYearAriaLabel": "明年",
+      "prevMonthAriaLabel": "前一个月",
+      "prevYearAriaLabel": "前一年"
+    },
+    "noDataText": "没有数据",
+    "carousel": 
+    {
+      "prev": "上一张",
+      "next": "下一张",
+      "ariaLabel": 
+      {
+        "delimiter": "Carousel slide {0} of {1}"
+      }
+    },
+    "calendar": 
+    {
+      "moreEvents": "还有 {0} 项"
+    },
+    "fileInput": 
+    {
+      "counter": "{0} 个文件",
+      "counterSize": "{0} 个文件（共 {1}）"
+    },
+    "timePicker": 
+    {
+      "am": "AM",
+      "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "分页导航",
+        "next": "下一页",
+        "previous": "上一页",
+        "page": "转到页面 {0}",
+        "currentPage": "当前页 {0}"
+      }
+    }
+  },
+  "success": {
+    "OTP_SENT": "通过注册的电子邮件/电话发送一次密码。",
+    "PASSWORD_RESET": "通过注册电子邮件/电话发送的新密码。",
+    "UPDATED": "更新！",
+    "PLAN_CREATED": "计划已创建！",
+    "PLAN_UPDATED": "计划已更新！"
+  },
+  "error": {
+    "NOT_VALID": "{_field_}无效。",
+    "NO_LICENSE": "您没有有效的许可证。请联系ShopWorx支持。",
+    "CANNOT_FETCH_LICENSE": "我们无法获取您的有效许可证。请再试一遍。",
+    "INVALID_SESSION": "会话已过期：请重新登录。",
+    "USER_ALREADY_EXIST": "用户已存在。",
+    "USER_NOT_FOUND": "找不到用户帐户。",
+    "EMAIL_NOT_FOUND": "找不到用户帐户。",
+    "INCORRECT_PASSWORD": "登录失败：密码错误。",
+    "INVALID_OTP": "登录失败：OTP错误。",
+    "MISSING_BUSINESS_HOUR": "时间应按顺序设置。请验证您的数据。",
+    "INVALID_HOURS_SUM": "您提供的小时总数应为24。请验证您的数据。",
+    "ERROR_CREATING_PLAN": "创建计划时出错，请重试。",
+    "ERROR_UPDATING_PLAN": "更新计划时出错，请重试。"
+  },
+  "fields": {
+    "email": "电子邮件",
+    "phone": "电话",
+    "password": "密码",
+    "otp": "一次性密码",
+    "firstName":"名字",
+    "lastName":"姓",
+    "name": "名称",
+    "type": "类型",
+    "startTime": "开始时间",
+    "endTime": "时间结束",
+    "date": "日期",
+    "shift": "转移",
+    "role": "角色"
+  },
+  "snackbar": {
+    "close": "关",
+    "redirectToLogin": "重定向到{time}"
+  },
+  "helper": {
+    "or": "要么",
+    "help": "救命",
+    "next": "下一个",
+    "skip": "现在跳过",
+    "loading": "载入中..."
+  },
+  "notFound": {
+    "title": "那是一个错误！",
+    "subTitle1": "要求的网址",
+    "subTitle2": "{url}",
+    "subTitle3": "本服务器上没有找到。",
+    "goHome": "回去"
+  },
+  "forbidden": {
+    "title": "禁止访问！",
+    "subTitle1": "您试图访问以前没有的页面",
+    "subTitle2": "授权",
+    "subTitle3": "对于。",
+    "goHome": "回去"
+  },
+  "login": {
+    "title": "登录到Origin",
+    "subTitle": "使用您的ShopWorx帐户",
+    "identifier": "邮件或者电话",
+    "password": "密码",
+    "otp": "OTP",
+    "resendOtp": "重新发送otp？",
+    "resendOtpIn": "重新发送otp{time}",
+    "sendOtp": "发送OTP",
+    "forgotPassword": "忘记密码？",
+    "login": "安全登录",
+    "loginWithOtp": "用otp登录",
+    "loginWithPassword": "用密码登录"
+  },
+  "forgotPassword": {
+    "title": "重设密码？",
+    "subTitle": "输入您的电子邮件或电话号码",
+    "reset": "重设密码"
+  },
+  "welcome": {
+    "title": "欢迎！我们一直在期待您。",
+    "subTitle1": "首先，让我们开始",
+    "subTitle2": "创建您的帐户。",
+    "subTitle3": "不到一分钟。",
+    "start": "让我们开始吧"
+  },
+  "register": {
+    "account": {
+      "title": "更新您的ShopWorx帐户",
+      "update": "更新账户",
+      "firstName": "名字",
+      "lastName": "姓",
+      "email": "电子邮件（可选）",
+      "phone": "电话（可选）"
+    },
+    "password": {
+      "title": "更新您的ShopWorx密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "update": "更新密码"
+    },
+    "updated": "您的ShopWorx帐户已更新！"
+  },
+  "modules": {
+    "apps": "应用",
+    "home": "家",
+    "shopfloorDashboard": "车间仪表板",
+    "orderManagement": "订单管理",
+    "productionLog": "生产日志",
+    "downtimeLog": "停机日志",
+    "maintenanceSummary": "维护摘要",
+    "parameterConfiguration": "参数配置",
+    "productionPlanning": "计划生产",
+    "roadmapManagement": "路线图管理",
+    "recipeManagement": "配方管理",
+    "productManagement": "产品类型管理",
+    "productionLayout": "生产布局",
+    "materialManagement": "物资管理",
+    "reports": "报告书",
+    "production": "生产",
+    "maintenance": "保养",
+    "downtime": "停机时间",
+    "rejection": "拒绝",
+    "oee": "大江",
+    "masters": "主数据（仅查看）",
+    "admin": "管理控制台",
+    "search": "搜索报告和见解",
+    "insights": "见解"
+  },
+  "account": {
+    "account": "帐户",
+    "sites": "网站",
+    "profile": "个人资料",
+    "logout": "登出",
+    "lightMode": "灯光模式",
+    "darkMode": "暗模式"
+  },
+  "help": {
+    "help": "救命",
+    "legal": "法律",
+    "version": "版",
+    "keyboardShortcuts": "键盘快捷键",
+    "support": "支持",
+    "terms": "服务条款",
+    "privacy": "隐私政策"
+  },
+  "user": {
+    "general": "一般",
+    "security": "安全",
+    "profile": {
+      "title": "个人资料",
+      "firstName": "名字",
+      "lastName":"姓",
+      "email": "电子邮件",
+      "phone": "电话",
+      "reset": "重启",
+      "update": "更新个人信息"
+    },
+    "preferences": {
+      "title": "优先",
+      "display": "显示设置",
+      "language": "语言",
+      "darkMode": "暗模式"
+    },
+    "password": {
+      "title": "密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "update": "更新密码"
+    },
+    "auditLog": {
+      "title": "审核日志"
+    }
+  }
+}

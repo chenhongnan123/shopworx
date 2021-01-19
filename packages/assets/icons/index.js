@@ -2,6 +2,7 @@ export default {
   iconfont: 'mdi',
   values: {
     infinity: 'mdi-infinity',
+    origin: 'mdi-origin',
     radioBlank: 'mdi-radiobox-blank',
     radioMarked: 'mdi-radiobox-marked',
     insights: 'mdi-atom-variant',

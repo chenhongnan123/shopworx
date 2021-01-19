@@ -39,14 +39,26 @@
           ></v-progress-linear>
         </v-window-item>
       </v-window>
-      <div class="d-inline-block">
+      <div class="d-inline-block" style="width:60%">
         <div v-if="machine.machinestatus === 'UP'" class="px-4 mt-2">
-          <div :class="`${color}--text text--lighten-4`">
-            Availability
-          </div>
-          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-            {{ availabilityText }}
-          </div>
+          <v-row no-gutters>
+            <v-col cols="6" class="py-0">
+              <div :class="`${color}--text text--lighten-4`">
+                Availability
+              </div>
+              <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
+                {{ availabilityText }}
+              </div>
+            </v-col>
+            <v-col cols="6" class="py-0">
+              <div :class="`${color}--text text--lighten-4`">
+                Performance
+              </div>
+              <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
+                {{ performanceText }}
+              </div>
+            </v-col>
+          </v-row>
           <div :class="`${color}--text text--lighten-4 mt-1`">
             Quality
           </div>
@@ -160,6 +172,11 @@ export default {
         ? (this.production[0].produced / this.production[0].performanceTarget)
         : 0;
     },
+    performanceTarget() {
+      return this.production.length
+        ? this.production[0].performanceTarget
+        : 0;
+    },
     quailty() {
       return this.production.length
         ? ((this.production[0].produced - this.production[0].rejected)
@@ -174,6 +191,9 @@ export default {
     },
     availabilityText() {
       return `${(this.availability * 100).toFixed(2)}%`;
+    },
+    performanceText() {
+      return `${(this.performance * 100).toFixed(2)}%`;
     },
     oeeText() {
       return `${(this.oee).toFixed(2)}%`;

@@ -31,7 +31,7 @@
             class="text-none"
             color="primary"
           >
-            Edit
+            Update
           </v-btn>
         </v-card-actions>
       </v-card>

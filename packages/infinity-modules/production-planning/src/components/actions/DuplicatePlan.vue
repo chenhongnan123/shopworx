@@ -95,11 +95,11 @@
                   >
                     <template v-if="!editParams">
                       <v-icon left small>mdi-pencil-outline</v-icon>
-                      Update
+                      Edit
                     </template>
                     <template v-else>
                       <v-icon left small>mdi-check</v-icon>
-                      Save
+                      Done
                     </template>
                   </v-btn>
                 </div>
@@ -662,6 +662,10 @@ export default {
         scheduledstart: new Date(this.plan.scheduledstart).getTime(),
         familyName: 'family',
       }];
+      // eslint-disable-next-line
+      const ids = [...new Set(this.selectedFamilyParts.map((p) => p._id))];
+      // eslint-disable-next-line
+      this.selectedFamilyParts = this.familyParts.filter((p) => ids.includes(p._id));
       if (this.selectedFamilyParts && this.selectedFamilyParts.length) {
         const familyPayload = this.selectedFamilyParts.map((p) => ({
           ...payload[0],

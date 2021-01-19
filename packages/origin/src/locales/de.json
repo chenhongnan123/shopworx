@@ -1,0 +1,160 @@
+{
+  "$vuetify": {
+    "badge": "Abzeichen",
+    "close": "Schließen",
+    "dataIterator": 
+    {
+      "noResultsText": "Keine Elemente gefunden",
+      "loadingText": "Lade Elemente..."
+    },
+    "dataTable": 
+    {
+      "itemsPerPageText": "Zeilen pro Seite:",
+      "ariaLabel": 
+      {
+        "sortDescending": "Absteigend sortiert.",
+        "sortAscending": "Aufsteigend sortiert.",
+        "sortNone": "Nicht sortiert.",
+        "activateNone": "Aktivieren um Sortierung zu entfernen.",
+        "activateDescending": "Aktivieren um absteigend zu sortieren.",
+        "activateAscending": "Aktivieren um aufsteigend zu sortieren."
+      },
+      "sortBy": "Sortiere nach"
+    },
+    "dataFooter": 
+    {
+      "itemsPerPageText": "Elemente pro Seite:",
+      "itemsPerPageAll": "Alle",
+      "nextPage": "Nächste Seite",
+      "prevPage": "Vorherige Seite",
+      "firstPage": "Erste Seite",
+      "lastPage": "Letzte Seite",
+      "pageText": "{0}-{1} von {2}"
+    },
+    "datePicker": 
+    {
+      "itemsSelected": "{0} ausgewählt",
+      "nextMonthAriaLabel": "Nächsten Monat",
+      "nextYearAriaLabel": "Nächstes Jahr",
+      "prevMonthAriaLabel": "Vorheriger Monat",
+      "prevYearAriaLabel": "Vorheriges Jahr"
+    },
+    "noDataText": "Keine Daten vorhanden",
+    "carousel": 
+    {
+      "prev": "Vorheriges Bild",
+      "next": "Nächstes Bild",
+      "ariaLabel": 
+      {
+        "delimiter": "Element {0} von {1}"
+      }
+    },
+    "calendar": 
+    {
+      "moreEvents": "{0} mehr"
+    },
+    "fileInput": 
+    {
+      "counter": "{0} Dateien",
+      "counterSize": "{0} Dateien ({1} gesamt)"
+    },
+    "timePicker": 
+    {
+      "am": "AM",
+      "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "Seitennavigation",
+        "next": "Nächste Seite",
+        "previous": "Vorherige Seite",
+        "page": "Gehe zu Seite {0}",
+        "currentPage": "Aktuelle Seite, Seite {0}"
+      }
+    }
+  },
+  "success": {
+    "OTP_SENT": "One time password sent on registered email/phone.",
+    "PASSWORD_RESET": "New password sent on registered email/phone."
+  },
+  "error": {
+    "USER_NOT_FOUND": "User account not found.",
+    "EMAIL_NOT_FOUND": "User account not found.",
+    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
+    "INVALID_OTP": "Login failed: Incorrect OTP."
+  },
+  "snackbar": {
+    "close": "Close",
+    "redirectToLogin": "Redirecting in {time}"
+  },
+  "helper": {
+    "or": "or",
+    "next": "Next",
+    "skip": "Skip"
+  },
+  "login": {
+    "title": "Log in to Origin",
+    "subTitle": "Use your ShopWorx Account",
+    "identifier": "Email or phone",
+    "password": "Password",
+    "otp": "OTP",
+    "resendOtp": "Resend otp?",
+    "resendOtpIn": "Resend otp in {time}",
+    "sendOtp": "Send OTP",
+    "forgotPassword": "Forgot password?",
+    "login": "Login securely",
+    "loginWithOtp": "Login with otp",
+    "loginWithPassword": "Login with password"
+  },
+  "forgotPassword": {
+    "title": "Reset password?",
+    "subTitle": "Enter your email or phone number",
+    "reset": "Reset password"
+  },
+  "welcome": {
+    "title": "Welcome! We have been expecting you.",
+    "subTitle1": "First things first, let's start by",
+    "subTitle2": "creating your account.",
+    "subTitle3": "It will take less than a minute.",
+    "start": "Let's get started"
+  },
+  "register": {
+    "account": {
+      "title": "Update your ShopWorx Account",
+      "update": "Update account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "password": {
+      "title": "Update your ShopWorx Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "updated": "Your ShopWorx account is updated!"
+  },
+  "modules": {
+    "home": "Home",
+    "machineDashboard": "Machine Dashboard",
+    "planning": "Planning",
+    "reports": "Report",
+    "production": "Production",
+    "downtime": "Downtime",
+    "rejection": "Rejection",
+    "oee": "Oee",
+    "masters": "Masters",
+    "admin": "Admin"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  }
+}

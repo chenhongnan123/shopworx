@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/dashboard-viewer",
-  "version": "4.2.0-alpha.3",
+  "version": "4.2.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@mdi/font": "^5.8.55",
-    "@shopworx/assets": "^4.2.0-alpha.3",
-    "@shopworx/live-shopfloor": "^4.2.0-alpha.3",
-    "@shopworx/machine-dashboard": "^4.2.0-alpha.3",
-    "@shopworx/services": "^4.2.0-alpha.3",
+    "@shopworx/assets": "^4.2.1",
+    "@shopworx/live-shopfloor": "^4.2.1",
+    "@shopworx/machine-dashboard": "^4.2.1",
+    "@shopworx/services": "^4.2.1",
     "lodash.camelcase": "^4.3.0",
     "nprogress": "^0.2.0",
     "portal-vue": "^2.1.7",
