@@ -656,32 +656,42 @@ export default ({
           { root: true },
         );
       }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'roadmaplist',
+      //       queryParam: `?query=id=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'roadmapdetails',
+      //       queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'order',
+      //       queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
       if (deleted) {
         await dispatch(
           'element/deleteRecordByQuery',
           {
-            elementName: 'roadmaplist',
-            queryParam: `?query=id=="${object.roadmapid}"`,
-          },
-          { root: true },
-        );
-      }
-      if (deleted) {
-        await dispatch(
-          'element/deleteRecordByQuery',
-          {
-            elementName: 'roadmapdetails',
-            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
-          },
-          { root: true },
-        );
-      }
-      if (deleted) {
-        await dispatch(
-          'element/deleteRecordByQuery',
-          {
-            elementName: 'order',
-            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+            elementName: 'parameters',
+            queryParam: `?query=sublineid=="${object.id}"`,
           },
           { root: true },
         );
@@ -736,32 +746,42 @@ export default ({
         await dispatch(
           'element/deleteRecordByQuery',
           {
-            elementName: 'roadmaplist',
-            queryParam: `?query=id=="${object.roadmapid}"`,
+            elementName: 'parameters',
+            queryParam: `?query=sublineid=="${object.sublineid}"`,
           },
           { root: true },
         );
       }
-      if (deleted) {
-        await dispatch(
-          'element/deleteRecordByQuery',
-          {
-            elementName: 'roadmapdetails',
-            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
-          },
-          { root: true },
-        );
-      }
-      if (deleted) {
-        await dispatch(
-          'element/deleteRecordByQuery',
-          {
-            elementName: 'order',
-            queryParam: `?query=roadmapid=="${object.roadmapid}"`,
-          },
-          { root: true },
-        );
-      }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'roadmaplist',
+      //       queryParam: `?query=id=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'roadmapdetails',
+      //       queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/deleteRecordByQuery',
+      //     {
+      //       elementName: 'order',
+      //       queryParam: `?query=roadmapid=="${object.roadmapid}"`,
+      //     },
+      //     { root: true },
+      //   );
+      // }
       if (deleted) {
         const query = '';
         const stations = await dispatch(
@@ -798,16 +818,16 @@ export default ({
           { root: true },
         );
       }
-      // if (deleted) {
-      //   await dispatch(
-      //     'element/changeElementStatusById',
-      //     {
-      //       payload: object,
-      //       elementId: object.elementId,
-      //     },
-      //     { root: true },
-      //   );
-      // }
+      if (deleted) {
+        await dispatch(
+          'element/changeElementStatusById',
+          {
+            payload: object,
+            elementId: object.elementId,
+          },
+          { root: true },
+        );
+      }
       if (deleted) {
         await dispatch(
           'element/deleteRecordByQuery',
@@ -836,7 +856,6 @@ export default ({
       return deleted;
     },
     inactiveRealElement: async ({ dispatch }, payload) => {
-      debugger;
       const updated = await dispatch(
         'element/updateElementStatusById',
         {
@@ -848,7 +867,6 @@ export default ({
       return updated;
     },
     inactiveProcessElement: async ({ dispatch }, payload) => {
-      debugger;
       const updated = await dispatch(
         'element/updateElementStatusById',
         {

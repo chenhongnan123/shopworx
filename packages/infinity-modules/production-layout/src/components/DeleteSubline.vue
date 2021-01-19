@@ -69,88 +69,75 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['deleteSubline', 'getRunningOrder', 'getRoadMapDetailsRecord', 'getSubStationIdElement', 'getSubStations', 'inactiveElement']),
+    ...mapActions('productionLayout', ['deleteSubline', 'getRunningOrder', 'getRoadMapDetailsRecord', 'getSubStationIdElement', 'getSubStations', 'inactiveElement', 'inactiveRealElement', 'inactiveProcessElement']),
     async btnDeleteSubline() {
-      await this.getRunningOrder();
-      const getroadMapId = this.runningOrderList.map((rmi) => rmi.roadmapid);
-      const roadmapList = this.roadMapDetailsRecord
-        .filter((rm) => rm.roadmapid === getroadMapId[0]);
-      const compareStation = roadmapList
+      const getSubStation = this.subStations
         .filter((s) => s.sublineid === this.subline.id);
-      if (compareStation.length > 0) {
+      const matchSubStation = getSubStation.forEach(async (item) => {
+        const element = await this.getSubStationIdElement(item.id);
+        const getRealElement = await this.getSubStationIdElement(`real_${item.id}`);
+        const getProcessElement = await this.getSubStationIdElement(`process_${item.id}`);
+        console.log(getRealElement);
+        console.log(getProcessElement);
+        const process = {
+          status: 'INACTIVE',
+          // elementName: `process_${this.substation.id}`,
+          elementId: getProcessElement.id,
+        };
+        const real = {
+          status: 'INACTIVE',
+          // elementName: `real_${this.substation.id}`,
+          elementId: getRealElement.id,
+        };
+        const realPInactive = await this.inactiveRealElement(real);
+        if (realPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REAL_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        const processPInactive = await this.inactiveProcessElement(process);
+        if (processPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PROCESS_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        await this.inactiveElement(
+          {
+            elementId: element.id,
+            status: 'INACTIVE',
+          },
+        );
+      });
+      await Promise.all([matchSubStation]);
+      const sublineObject = {
+        id: this.subline.id,
+        lineid: this.subline.lineid,
+      };
+      this.deleting = true;
+      let deleted = false;
+      deleted = await this.deleteSubline(sublineObject);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'SUBLINE_DEPENDANT_DELETED',
+        });
+        this.deleting = false;
+        this.dialog = false;
+      } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ONE_STATION_BIND_RUNNING_ORDER',
+          message: 'ERROR_DELETING_SUBLINE',
         });
-        this.dialog = false;
-      } else {
-        const getSubStation = this.subStations
-          .filter((s) => s.sublineid === this.subline.id);
-        const matchSubStation = getSubStation.forEach(async (item) => {
-          const element = await this.getSubStationIdElement(item.id);
-          await this.inactiveElement(
-            {
-              elementId: element.id,
-              status: 'INACTIVE',
-            },
-          );
-        });
-        await Promise.all([matchSubStation]);
-        const gotRoadmap = this.roadMapDetailsRecord
-          .filter((s) => s.sublineid === this.subline.id);
-        if (gotRoadmap.length > 0) {
-          const deleteRoadmapId = gotRoadmap[0].roadmapid;
-          const sublineObject = {
-            id: this.subline.id,
-            lineid: this.subline.lineid,
-            roadmapid: deleteRoadmapId,
-          };
-          this.deleting = true;
-          let deleted = false;
-          deleted = await this.deleteSubline(sublineObject);
-          if (deleted) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'SUBLINE_DEPENDANT_DELETED',
-            });
-            this.deleting = false;
-            this.dialog = false;
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ERROR_DELETING_SUBLINE',
-            });
-          }
-        } else {
-          const defaultRoadmId = 'roadmap-00';
-          const sublineObject = {
-            id: this.subline.id,
-            lineid: this.subline.lineid,
-            roadmapid: defaultRoadmId,
-          };
-          this.deleting = true;
-          let deleted = false;
-          deleted = await this.deleteSubline(sublineObject);
-          if (deleted) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'SUBLINE_DELETED',
-            });
-            this.deleting = false;
-            this.dialog = false;
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ERROR_DELETING_SUBLINE',
-            });
-          }
-          this.dialog = false;
-        }
       }
     },
   },
