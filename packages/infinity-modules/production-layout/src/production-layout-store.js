@@ -798,16 +798,16 @@ export default ({
           { root: true },
         );
       }
-      if (deleted) {
-        await dispatch(
-          'element/changeElementStatusById',
-          {
-            payload: object,
-            elementId: object.elementId,
-          },
-          { root: true },
-        );
-      }
+      // if (deleted) {
+      //   await dispatch(
+      //     'element/changeElementStatusById',
+      //     {
+      //       payload: object,
+      //       elementId: object.elementId,
+      //     },
+      //     { root: true },
+      //   );
+      // }
       if (deleted) {
         await dispatch(
           'element/deleteRecordByQuery',
@@ -834,6 +834,30 @@ export default ({
         }
       }
       return deleted;
+    },
+    inactiveRealElement: async ({ dispatch }, payload) => {
+      debugger;
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
+    },
+    inactiveProcessElement: async ({ dispatch }, payload) => {
+      debugger;
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
     },
   },
 });

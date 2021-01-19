@@ -200,7 +200,15 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     setDatefunction() {
-      this.setDateRange([this.fromdate, this.todate]);
+      if (this.fromdate && this.todate) {
+        this.setDateRange([this.fromdate, this.todate]);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();

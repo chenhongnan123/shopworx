@@ -52,6 +52,7 @@ export default {
       default: false,
       dialog: false,
       deleting: false,
+      realPInactive: false,
       parameter: [],
     };
   },
@@ -72,7 +73,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['deleteSubstation', 'getParameterList', 'getSubStationIdElement']),
+    ...mapActions('productionLayout', ['deleteSubstation', 'getParameterList', 'getSubStationIdElement', 'inactiveRealElement', 'inactiveProcessElement']),
     async invoke() {
       const parameterInfo = this.parametersList
         .filter((p) => p.substationid === this.substation.id);
@@ -80,8 +81,20 @@ export default {
     },
     async btnDeleteSubstation() {
       const deletedElement = await this.getSubStationIdElement(this.substation.id);
+      const getRealElement = await this.getSubStationIdElement(`real_${this.substation.id}`);
+      const getProcessElement = await this.getSubStationIdElement(`process_${this.substation.id}`);
       if (!deletedElement) {
-        const defaultElementId = 0;
+        const defaultElementId = `${this.substation.id}`;
+        const process = {
+          status: 'INACTIVE',
+          // elementName: `process_${this.substation.id}`,
+          elementId: getProcessElement.id,
+        };
+        const real = {
+          status: 'INACTIVE',
+          // elementName: `real_${this.substation.id}`,
+          elementId: getRealElement.id,
+        };
         const subStationObject2 = {
           id: this.substation.id,
           sublineid: this.substation.sublineid,
@@ -90,7 +103,28 @@ export default {
           status: 'INACTIVE',
         };
         let deleted = false;
+        let realPInactive = false;
         this.deleting = true;
+        realPInactive = await this.inactiveRealElement(real);
+        if (realPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REAL_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        const processPInactive = await this.inactiveProcessElement(process);
+        if (processPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PROCESS_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
         deleted = await this.deleteSubstation(subStationObject2);
         if (deleted) {
           this.setAlert({
@@ -109,6 +143,16 @@ export default {
         }
         this.dialog = false;
       } else {
+        const process = {
+          // elementName: `process_${this.substation.id}`,
+          elementId: getProcessElement.id,
+          status: 'INACTIVE',
+        };
+        const real = {
+          // elementName: `real_${this.substation.id}`,
+          elementId: getRealElement.id,
+          status: 'INACTIVE',
+        };
         const subStationObject = {
           id: this.substation.id,
           sublineid: this.substation.sublineid,
@@ -116,6 +160,26 @@ export default {
           elementId: deletedElement.id,
           status: 'INACTIVE',
         };
+        const realPInactive = await this.inactiveRealElement(real);
+        if (realPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REAL_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        const processPInactive = await this.inactiveProcessElement(process);
+        if (processPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PROCESS_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
         let deleted = false;
         this.deleting = true;
         deleted = await this.deleteSubstation(subStationObject);
