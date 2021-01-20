@@ -7,7 +7,8 @@
     "MODEL_CREATE": "ML model created!",
     "MODEL_ORDER_CREATE": "Model deployment started!",
     "FILE_DELETE": "Model file removed!",
-    "MODEL_DELETE": "Model deleted!"
+    "MODEL_DELETE": "Model deleted!",
+    "STATUS_UPDATED": "Model Status is updated!"
   },
   "error": {
     "FILES_DEPLICATE": "Duplicate files, please check again",
@@ -20,6 +21,7 @@
     "MODEL_ORDER_CREATE": "Cannot start model deployment. Please retry!",
     "MODEL_CONFIGURE": "Please configure your ML model with atleast one model file and try again.",
     "FILE_DELETE": "Cannot remove model file. Please retry!",
-    "MODEL_DELETE": "Cannot delete the model. Please retry!"
+    "MODEL_DELETE": "Cannot delete the model. Please retry!",
+    "STATUS_NOT_UPDATED": "Model Status is not updated!"
   }
 }
