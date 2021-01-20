@@ -29,7 +29,7 @@
           </template>
         </v-autocomplete>
       </v-responsive>
-      <v-responsive :max-width="340">
+      <v-responsive :max-width="240">
         <v-autocomplete
           :items="tags"
           class="ml-2"
@@ -55,16 +55,6 @@
         </v-autocomplete>
       </v-responsive>
       <v-spacer></v-spacer>
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2 mr-2"
-        @click="btnRefresh"
-      >
-        Load Data
-      </v-btn>
       <v-text-field
           class="mt-8"
           type="datetime-local"
@@ -80,8 +70,27 @@
           @change="setDatefunction"
       ></v-text-field>
       <!-- <report-date-picker /> -->
-      <report-chart-type />
+      <!-- <report-chart-type /> -->
       <!-- <export-report @on-export="onExport" /> -->
+    </v-toolbar>
+    <v-toolbar
+      flat
+      dense
+      class="stick"
+      :color="$vuetify.theme.dark ? '#121212' : ''"
+    >
+    <v-spacer></v-spacer>
+    <v-btn
+        small
+        outlined
+        v-on="on"
+        color="primary"
+        class="text-none ml-2 mr-2"
+        @click="btnRefresh"
+      >
+        Load Data
+      </v-btn>
+      <report-chart-type />
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
