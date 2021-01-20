@@ -210,7 +210,8 @@
     "searchMobile": "Search",
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
-    "reworkOperation": "Rework"    
+    "reworkOperation": "Rework",
+    "packagingManagement": "Packaging"    
   },
   "account": {
     "account": "Account",
