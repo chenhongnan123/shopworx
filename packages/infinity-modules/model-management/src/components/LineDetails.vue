@@ -127,9 +127,15 @@ export default {
       'setSelectedSubstationName',
       'setSelectedProcess',
       'setSelectedProcessName',
+      'setFetchingMaster',
     ]),
-    ...mapActions('modelManagement', ['fetchLineDetails', 'getModels']),
-    setSelected({
+    ...mapActions('modelManagement', [
+      'fetchLineDetails',
+      'getModels',
+      'getInputParameters',
+      'getOutputTransformations',
+    ]),
+    async setSelected({
       subline,
       station,
       substation,
@@ -142,7 +148,13 @@ export default {
       this.setSelectedSubstationName(substation.name);
       this.setSelectedProcess(process.id);
       this.setSelectedProcessName(process.name);
-      this.getModels();
+      this.setFetchingMaster(true);
+      await this.getModels();
+      await Promise.all([
+        this.getInputParameters(),
+        this.getOutputTransformations(),
+      ]);
+      this.setFetchingMaster(false);
     },
   },
   watch: {
