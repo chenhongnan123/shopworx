@@ -90,8 +90,7 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <div>
-                <span class="mb-8 pb-8">
+                <div class="d-inline ma-0 pa-0">
                 <v-btn
                   icon
                 >
@@ -102,7 +101,6 @@
                   @change="changeModelStatus(item)"
                 ></v-checkbox>
                 </v-btn>
-                </span>
                 <div class="d-inline ma-0 pa-0">
                   <v-btn
                   icon
@@ -284,4 +282,5 @@ export default {
   width: fit-content;
   height: fit-content;
 }
+.v-input--selection-controls{ padding-bottom: 18px; }
 </style>
