@@ -73,91 +73,74 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['deleteStation', 'getRunningOrder', 'getRoadMapDetailsRecord', 'getSubStationIdElement', 'getSubStations', 'inactiveElement']),
+    ...mapActions('productionLayout', ['deleteStation', 'getRunningOrder', 'getRoadMapDetailsRecord', 'getSubStationIdElement', 'getSubStations', 'inactiveElement', 'inactiveRealElement', 'inactiveProcessElement']),
     async btnDeleteStation() {
-      await this.getRunningOrder();
-      const getroadMapId = this.runningOrderList.map((rmi) => rmi.roadmapid);
-      const roadmapList = this.roadMapDetailsRecord
-        .filter((rm) => rm.roadmapid === getroadMapId[0]);
-      const compareStation = roadmapList
+      const getSubStation = this.subStations
         .filter((s) => s.stationid === this.station.id);
-      if (compareStation.length > 0) {
+      const matchSubStation = getSubStation.forEach(async (item) => {
+        const element = await this.getSubStationIdElement(item.id);
+        const getRealElement = await this.getSubStationIdElement(`real_${item.id}`);
+        const getProcessElement = await this.getSubStationIdElement(`process_${item.id}`);
+        const process = {
+          status: 'INACTIVE',
+          // elementName: `process_${this.substation.id}`,
+          elementId: getProcessElement.id,
+        };
+        const real = {
+          status: 'INACTIVE',
+          // elementName: `real_${this.substation.id}`,
+          elementId: getRealElement.id,
+        };
+        const realPInactive = await this.inactiveRealElement(real);
+        if (realPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REAL_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        const processPInactive = await this.inactiveProcessElement(process);
+        if (processPInactive) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PROCESS_ELEMENT_INACTIVE',
+          });
+          this.deleting = false;
+          this.dialog = false;
+        }
+        await this.inactiveElement(
+          {
+            elementId: element.id,
+            status: 'INACTIVE',
+          },
+        );
+      });
+      await Promise.all([matchSubStation]);
+      const sutationObject = {
+        id: this.station.id,
+        lineid: this.station.lineid,
+        sublineid: this.station.sublineid,
+      };
+      let deleted = false;
+      this.deleting = true;
+      deleted = await this.deleteStation(sutationObject);
+      if (deleted) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'STATION_DELETED',
+        });
+      } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'STATION_ASSIGN_RUNNING_ORDER',
+          message: 'ERROR_DELETING_STATION',
         });
-        this.dialog = false;
-      } else {
-        const getSubStation = this.subStations
-          .filter((s) => s.stationid === this.station.id);
-        const matchSubStation = getSubStation.forEach(async (item) => {
-          const element = await this.getSubStationIdElement(item.id);
-          await this.inactiveElement(
-            {
-              elementId: element.id,
-              status: 'INACTIVE',
-            },
-          );
-        });
-        await Promise.all([matchSubStation]);
-        const gotRoadmap = this.roadMapDetailsRecord
-          .filter((s) => s.stationid === this.station.id);
-        if (gotRoadmap.length > 0) {
-          const deleteRoadmapId = gotRoadmap[0].roadmapid;
-          const sutationObject = {
-            id: this.station.id,
-            lineid: this.station.lineid,
-            sublineid: this.station.sublineid,
-            roadmapid: deleteRoadmapId,
-          };
-          let deleted = false;
-          this.deleting = true;
-          deleted = await this.deleteStation(sutationObject);
-          this.deleting = false;
-          if (deleted) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'STATION_DEPENDANT_DELETED',
-            });
-            this.dialog = false;
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ERROR_DELETING_STATION',
-            });
-          }
-        } else {
-          const defaultRoadmId = 'roadmap-00';
-          const sutationObject = {
-            id: this.station.id,
-            lineid: this.station.lineid,
-            sublineid: this.station.sublineid,
-            roadmapid: defaultRoadmId,
-          };
-          let deleted = false;
-          this.deleting = true;
-          deleted = await this.deleteStation(sutationObject);
-          if (deleted) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'STATION_DELETED',
-            });
-            this.deleting = false;
-            this.dialog = false;
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ERROR_DELETING_STATION',
-            });
-          }
-          this.dialog = false;
-        }
       }
+      this.dialog = false;
     },
   },
 };

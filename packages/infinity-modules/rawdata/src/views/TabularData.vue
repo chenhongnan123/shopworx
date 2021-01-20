@@ -57,7 +57,21 @@
       >
         Load Data
       </v-btn>
-      <report-date-picker />
+      <v-text-field
+          class="mt-8"
+          type="datetime-local"
+          v-model="fromdate"
+          :label="$t('From date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <v-text-field
+          class="mt-8 ml-4"
+          type="datetime-local"
+          v-model="todate"
+          :label="$t('To date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <!-- <report-date-picker /> -->
       <export-report @on-export="onExport" />
     </v-toolbar>
     <template>
@@ -105,7 +119,7 @@ import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 // import ReportChart from '../components/ReportChart.vue';
-import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
+// import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
 // import ReportChartType from '../components/toolbar/ReportChartType.vue';
 import ExportReport from '../components/toolbar/ExportReport.vue';
 
@@ -114,7 +128,7 @@ export default {
   components: {
     AgGridVue,
     // ReportChart,
-    ReportDatePicker,
+    // ReportDatePicker,
     // ReportChartType,
     ExportReport,
   },
@@ -131,6 +145,8 @@ export default {
       pagenumber: 0,
       pagesize: 100,
       selectedParameters: [],
+      fromdate: null,
+      todate: null,
     };
   },
   beforeMount() {
@@ -168,7 +184,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('rawdata', ['setReport', 'setGridState']),
+    ...mapMutations('rawdata', ['setReport', 'setGridState', 'setDateRange']),
     ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getParameterCatgory', 'getRecordsByTagData']),
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
@@ -182,6 +198,17 @@ export default {
         filterState,
       };
       this.setGridState(JSON.stringify(state));
+    },
+    setDatefunction() {
+      if (this.fromdate && this.todate) {
+        this.setDateRange([this.fromdate, this.todate]);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();

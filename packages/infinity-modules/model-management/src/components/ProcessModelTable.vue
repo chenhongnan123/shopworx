@@ -158,12 +158,12 @@ export default {
     };
   },
   async created() {
-    this.setFetchingMaster(true);
-    await Promise.all([
-      this.getInputParameters(),
-      this.getOutputTransformations(),
-    ]);
-    this.setFetchingMaster(false);
+    // this.setFetchingMaster(true);
+    // await Promise.all([
+    //   await this.getInputParameters(),
+    //   await this.getOutputTransformations(),
+    // ]);
+    // this.setFetchingMaster(false);
   },
   watch: {
     models: {

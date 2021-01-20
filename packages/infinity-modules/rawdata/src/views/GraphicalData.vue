@@ -33,11 +33,7 @@
         <v-autocomplete
           :items="tags"
           class="ml-2"
-          filled
-          dense
           multiple
-          chips
-          deletable-chips
           hide-details
           label="Select Parameters"
           item-text="tagName"
@@ -45,6 +41,17 @@
           return-object
           v-model="selectedParameters"
         >
+        <template v-slot:selection="{ item, index }">
+        <v-chip v-if="index === 0">
+          <span>{{ item.tagName }}</span>
+        </v-chip>
+        <span
+          v-if="index === 1"
+          class="grey--text caption"
+        >
+          (+{{ selectedParameters.length - 1 }} others)
+        </span>
+      </template>
         </v-autocomplete>
       </v-responsive>
       <v-spacer></v-spacer>
@@ -58,7 +65,21 @@
       >
         Load Data
       </v-btn>
-      <report-date-picker />
+      <v-text-field
+          class="mt-8"
+          type="datetime-local"
+          v-model="fromdate"
+          :label="$t('From date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <v-text-field
+          class="mt-8 ml-4"
+          type="datetime-local"
+          v-model="todate"
+          :label="$t('To date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <!-- <report-date-picker /> -->
       <report-chart-type />
       <!-- <export-report @on-export="onExport" /> -->
     </v-toolbar>
@@ -79,7 +100,7 @@ import {
   mapActions, mapGetters, mapState, mapMutations,
 } from 'vuex';
 
-import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
+// import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
 import ReportChartType from '../components/toolbar/ReportChartType.vue';
 import ReportChart from '../components/ReportChart.vue';
 // import ExportReport from '../components/toolbar/ExportReport.vue';
@@ -87,7 +108,7 @@ import ReportChart from '../components/ReportChart.vue';
 export default {
   name: 'ProductionLog',
   components: {
-    ReportDatePicker,
+    // ReportDatePicker,
     ReportChartType,
     ReportChart,
     // ExportReport,
@@ -98,6 +119,7 @@ export default {
       pagenumber: 0,
       pagesize: 100,
       selectedParameters: [],
+      customChips: [],
     };
   },
   computed: {
@@ -130,6 +152,17 @@ export default {
         filterState,
       };
       this.setGridState(JSON.stringify(state));
+    },
+    setDatefunction() {
+      if (this.fromdate && this.todate) {
+        this.setDateRange([this.fromdate, this.todate]);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();
