@@ -77,8 +77,6 @@ export default {
         const element = await this.getSubStationIdElement(item.id);
         const getRealElement = await this.getSubStationIdElement(`real_${item.id}`);
         const getProcessElement = await this.getSubStationIdElement(`process_${item.id}`);
-        console.log(getRealElement);
-        console.log(getProcessElement);
         const process = {
           status: 'INACTIVE',
           // elementName: `process_${this.substation.id}`,
