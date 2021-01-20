@@ -90,15 +90,35 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <v-switch
-                  v-model="modelStatus"
+                <div>
+                <span class="mb-8 pb-8">
+                <v-btn
+                  icon
+                >
+                 <v-checkbox
+                  color="blue"
+                  hide-details
+                  v-model="item.statusModel"
                   @change="changeModelStatus(item)"
-                  return-object
-                ></v-switch>
+                ></v-checkbox>
+                </v-btn>
+                </span>
+                <div class="d-inline ma-0 pa-0">
+                  <v-btn
+                  icon
+                >
                 <deploy-model
-                :model="item"
-                :disabled="stop" />
+                :model="item" />
+                  </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                  icon
+                >
                 <delete-model :model="item" />
+                </v-btn>
+                </div>
+                </div>
               </td>
             </tr>
           </template>
@@ -175,13 +195,8 @@ export default {
   },
   watch: {
     models: {
-      handler(val) {
+      handler() {
         this.search = '';
-        if (val[0].modelStatus === true) {
-          this.stop = true;
-        } else {
-          this.stop = false;
-        }
       },
     },
   },

@@ -9,6 +9,7 @@
         :small="small"
         :class="spaceClass"
         :loading="deploying"
+        :disabled="!model.statusModel"
         @click="deployModel"
       >
         <v-icon>mdi-rocket-launch-outline</v-icon>
