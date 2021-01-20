@@ -90,7 +90,14 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <deploy-model :model="item" />
+                <v-switch
+                  v-model="modelStatus"
+                  @change="changeModelStatus(item)"
+                  return-object
+                ></v-switch>
+                <deploy-model
+                :model="item"
+                :disabled="stop" />
                 <delete-model :model="item" />
               </td>
             </tr>
@@ -127,6 +134,7 @@ export default {
         descending: true,
         page: 1,
         rowsPerPage: 5,
+        stop: false,
       },
       headers: [
         { text: 'Details', value: 'name' },
@@ -167,8 +175,13 @@ export default {
   },
   watch: {
     models: {
-      handler() {
+      handler(val) {
         this.search = '';
+        if (val[0].modelStatus === true) {
+          this.stop = true;
+        } else {
+          this.stop = false;
+        }
       },
     },
   },
@@ -181,10 +194,12 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'getModels',
       'getInputParameters',
       'getOutputTransformations',
+      'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
     filterModels(value, search, item) {
@@ -195,6 +210,49 @@ export default {
         );
       }
       return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+    },
+    async changeModelStatus(item) {
+      if (item.statusModel === undefined || !item.statusModel) {
+        const makeTrue = {
+          elementName: 'models',
+          id: item.id,
+          status: true,
+        };
+        const update = await this.updateStatusOfModel(makeTrue);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      } else {
+        const makeFalse = {
+          elementName: 'models',
+          id: item.id,
+          status: false,
+        };
+        const update = await this.updateStatusOfModel(makeFalse);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      }
     },
   },
 };
