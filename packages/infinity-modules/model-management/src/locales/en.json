@@ -8,7 +8,8 @@
     "MODEL_ORDER_CREATE": "Model deployment started!",
     "FILE_DELETE": "Model file removed!",
     "MODEL_DELETE": "Model deleted!",
-    "STATUS_UPDATED": "Model Status is updated!"
+    "STATUS_UPDATED_AS_ACTIVATE": "Model Status is Activate now!",
+    "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Not Activate!"
   },
   "error": {
     "FILES_DEPLICATE": "Duplicate files, please check again",

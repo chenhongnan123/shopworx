@@ -291,14 +291,15 @@ export default ({
           modelname,
           modeldescription,
           modifiedtimestamp,
-          status,
+          modelupdatestatus,
         }) => {
           let model = {
             id: _id,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
-            statusModel: status,
+            status: 'N.A',
+            modelUpdateStatus: modelupdatestatus,
           };
           const deployment = await dispatch('getLastDeploymentStatus', _id);
           if (deployment) {
@@ -957,12 +958,13 @@ export default ({
       }
     },
     updateStatusOfModel: async ({ dispatch }, payload) => {
+      debugger;
       const updateStatus = await dispatch(
         'element/updateRecordById',
         {
           elementName: 'models',
           id: payload.id,
-          payload: { status: payload.status },
+          payload: { modelupdatestatus: payload.modelupdatestatus },
         },
         { root: true },
       );

@@ -97,8 +97,9 @@
                  <v-checkbox
                   color="blue"
                   hide-details
-                  v-model="item.statusModel"
-                  @change="changeModelStatus(item)"
+                  :value = item.modelUpdateStatus
+                  v-model="item.modelUpdateStatus"
+                  @change="changeModelStatus($event, item)"
                 ></v-checkbox>
                 </v-btn>
                 <div class="d-inline ma-0 pa-0">
@@ -224,19 +225,20 @@ export default {
       }
       return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
     },
-    async changeModelStatus(item) {
-      if (item.statusModel === undefined || !item.statusModel) {
+    async changeModelStatus(event, item) {
+      console.log(event);
+      console.log(item);
+      if (event) {
         const makeTrue = {
-          elementName: 'models',
           id: item.id,
-          status: true,
+          modelupdatestatus: true,
         };
         const update = await this.updateStatusOfModel(makeTrue);
         if (update) {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'STATUS_UPDATED',
+            message: 'STATUS_UPDATED_AS_ACTIVATE',
           });
         } else {
           this.setAlert({
@@ -247,16 +249,15 @@ export default {
         }
       } else {
         const makeFalse = {
-          elementName: 'models',
           id: item.id,
-          status: false,
+          modelupdatestatus: false,
         };
         const update = await this.updateStatusOfModel(makeFalse);
         if (update) {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'STATUS_UPDATED',
+            message: 'STATUS_UPDATED_AS_NOT_ACTIVE',
           });
         } else {
           this.setAlert({
