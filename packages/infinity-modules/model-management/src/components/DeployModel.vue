@@ -52,7 +52,7 @@ export default {
         You cannot stop the deployment once it is started.`,
       )) {
         this.deploying = true;
-        await this.createNewDeploymentOrder(this.model.id);
+        await this.createNewDeploymentOrder(this.model.model_id);
         this.deploying = false;
       }
     },

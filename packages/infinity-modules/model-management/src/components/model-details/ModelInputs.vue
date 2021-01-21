@@ -94,14 +94,14 @@ export default {
     async saveInputParam(param) {
       const object = param[param.length - 1];
       await this.createInputParameter({
-        modelId: this.model.id,
+        modelId: this.model.model_id,
         parameterId: object,
       });
     },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createInputParameter({
-          modelId: this.model.id,
+          modelId: this.model.model_id,
           parameterId: param.id,
         });
       } else {

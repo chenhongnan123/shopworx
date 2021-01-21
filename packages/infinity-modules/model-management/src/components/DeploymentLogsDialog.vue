@@ -126,7 +126,7 @@ export default {
       if (val) {
         this.loading = true;
         this.setDeployedModels([]);
-        await this.fetchDeployedModels(this.model.id);
+        await this.fetchDeployedModels(this.model.model_id);
         this.loading = false;
       }
     },

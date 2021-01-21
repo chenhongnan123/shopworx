@@ -18,7 +18,7 @@ export default {
   computed: {
     ...mapState('modelManagement', ['lastStatusUpdate']),
     status() {
-      const modelInfo = this.lastStatusUpdate[this.model.id];
+      const modelInfo = this.lastStatusUpdate[this.model.mode_id];
       if (modelInfo) {
         return modelInfo.status;
       }
