@@ -964,7 +964,6 @@ export default ({
       }
     },
     updateStatusOfModel: async ({ dispatch }, payload) => {
-      debugger;
       const updateStatus = await dispatch(
         'element/updateRecordById',
         {

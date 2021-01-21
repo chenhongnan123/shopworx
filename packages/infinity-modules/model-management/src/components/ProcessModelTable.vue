@@ -100,6 +100,7 @@
                   :value = item.modelUpdateStatus
                   v-model="item.modelUpdateStatus"
                   @change="changeModelStatus($event, item)"
+                  :disabled="!allowedCheckBox"
                 ></v-checkbox>
                 </v-btn>
                 <div class="d-inline ma-0 pa-0">
@@ -149,6 +150,7 @@ export default {
   data() {
     return {
       search: '',
+      allowedCheckBox: false,
       options: {
         descending: true,
         page: 1,
@@ -185,6 +187,9 @@ export default {
     };
   },
   async created() {
+    this.getUserRoles();
+    this.getMe();
+    this.checkedloggedUser();
     // this.setFetchingMaster(true);
     // await Promise.all([
     //   await this.getInputParameters(),
@@ -200,6 +205,7 @@ export default {
     },
   },
   computed: {
+    ...mapState('user', ['roles', 'me']),
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
@@ -209,6 +215,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    ...mapActions('user', ['getUserRoles', 'getMe']),
     ...mapActions('modelManagement', [
       'getModels',
       'getInputParameters',
@@ -226,8 +233,6 @@ export default {
       return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
     },
     async changeModelStatus(event, item) {
-      console.log(event);
-      console.log(item);
       if (event) {
         const makeTrue = {
           id: item.id,
@@ -266,6 +271,14 @@ export default {
             message: 'STATUS_NOT_UPDATED',
           });
         }
+      }
+    },
+    async checkedloggedUser() {
+      const loggedRoleType = this.me.role.roleType;
+      if (loggedRoleType === 'ADMINISTRATOR') {
+        this.allowedCheckBox = true;
+      } else {
+        this.allowedCheckBox = false;
       }
     },
   },
