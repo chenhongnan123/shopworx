@@ -10,6 +10,7 @@
         v-on="on"
         color="primary"
         class="text-none ml-2"
+        :disabled="!selectedElement"
       >
         <v-icon small left>mdi-cloud-download-outline</v-icon>
         Export
@@ -34,6 +35,12 @@
 <script>
 export default {
   name: 'ExportReport',
+  props: {
+    selectedElement: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       exportTypes: [

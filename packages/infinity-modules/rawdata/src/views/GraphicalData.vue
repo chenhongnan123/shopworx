@@ -21,6 +21,7 @@
           single-line
           return-object
           @change="onElementSelect"
+          v-model="selectedElement"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -40,6 +41,7 @@
           single-line
           return-object
           v-model="selectedParameters"
+          :disabled="buttonDisable"
         >
         <template v-slot:selection="{ item, index }">
         <v-chip v-if="index === 0">
@@ -87,6 +89,7 @@
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"
+        :disabled="dropdoenDisable"
       >
         Load Data
       </v-btn>
@@ -129,6 +132,9 @@ export default {
       pagesize: 100,
       selectedParameters: [],
       customChips: [],
+      selectedElement: null,
+      buttonDisable: true,
+      dropdoenDisable: true,
     };
   },
   computed: {
@@ -144,6 +150,26 @@ export default {
   watch: {
     dateRange() {
       this.fetchDateRecords();
+    },
+    selectedElement: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.buttonDisable = false;
+        } else {
+          this.buttonDisable = true;
+        }
+      },
+    },
+    selectedParameters: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.dropdoenDisable = false;
+        } else {
+          this.dropdoenDisable = true;
+        }
+      },
     },
   },
   methods: {

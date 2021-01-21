@@ -21,6 +21,7 @@
           single-line
           return-object
           @change="onElementSelect"
+          v-model="selectedElement"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -54,6 +55,7 @@
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"
+        :disabled="buttonDisable"
       >
         Load Data
       </v-btn>
@@ -72,7 +74,8 @@
           @change="setDatefunction"
       ></v-text-field>
       <!-- <report-date-picker /> -->
-      <export-report @on-export="onExport" />
+      <export-report @on-export="onExport"
+       :selectedElement="selectedElement" />
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
@@ -147,6 +150,8 @@ export default {
       selectedParameters: [],
       fromdate: null,
       todate: null,
+      selectedElement: null,
+      buttonDisable: true,
     };
   },
   beforeMount() {
@@ -180,6 +185,16 @@ export default {
   watch: {
     dateRange() {
       this.fetchDateRecords();
+    },
+    selectedElement: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.buttonDisable = false;
+        } else {
+          this.buttonDisable = true;
+        }
+      },
     },
   },
   methods: {
