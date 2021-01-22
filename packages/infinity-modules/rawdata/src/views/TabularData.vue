@@ -137,6 +137,7 @@ export default {
   },
   data() {
     return {
+      flagForPageNumber: true,
       parametersChanged: false,
       rowData: null,
       columnDefs: [],
@@ -256,6 +257,7 @@ export default {
       });
     },
     async btnRefresh() {
+      this.flagForPageNumber = false;
       await this.setRowData();
     },
     onExport(e) {
@@ -285,7 +287,10 @@ export default {
       await this.setRowData();
     },
     async fetchRecords() {
-      this.pagenumber += 1;
+      if (this.flagForPageNumber) {
+        this.pagenumber += 1;
+      }
+      this.flagForPageNumber = false;
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
