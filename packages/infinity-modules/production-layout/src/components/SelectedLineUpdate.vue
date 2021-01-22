@@ -40,7 +40,7 @@ export default {
       };
       let created = false;
       const payload = {
-        query: `?query=id=="${this.selectedLine.id}"`,
+        query: `?query=id==${this.selectedLine.id}`,
         payload: this.newSaveLine,
         id: this.selectedLine.id,
       };

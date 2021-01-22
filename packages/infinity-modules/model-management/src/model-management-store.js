@@ -288,18 +288,24 @@ export default ({
       const mappedModels = await Promise.all(models
         .map(async ({
           _id,
+          // eslint-disable-next-line
+          model_id,
           modelname,
           modeldescription,
           modifiedtimestamp,
+          modelupdatestatus,
         }) => {
           let model = {
             id: _id,
+            // eslint-disable-next-line
+            model_id,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
             status: 'N.A',
+            modelUpdateStatus: modelupdatestatus,
           };
-          const deployment = await dispatch('getLastDeploymentStatus', _id);
+          const deployment = await dispatch('getLastDeploymentStatus', model_id);
           if (deployment) {
             model = {
               ...model,
@@ -781,6 +787,7 @@ export default ({
         return {
           // eslint-disable-next-line
           id: model._id,
+          model_id: model.model_id,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -805,6 +812,7 @@ export default ({
         const payload = {
           // eslint-disable-next-line
           id: model._id,
+          model_id: model.model_id,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -889,7 +897,7 @@ export default ({
       return false;
     },
 
-    deleteModel: async ({ state, commit, dispatch }, modelId) => {
+    deleteModel: async ({ state, commit, dispatch }, { modelId, id }) => {
       const { modelDetails } = state;
       const deleteInputs = dispatch(
         'element/deleteRecordByQuery',
@@ -922,7 +930,7 @@ export default ({
         'element/deleteRecordById',
         {
           elementName: ELEMENTS.MODELS,
-          id: modelId,
+          id,
         },
         { root: true },
       );
@@ -954,6 +962,18 @@ export default ({
           { root: true },
         );
       }
+    },
+    updateStatusOfModel: async ({ dispatch }, payload) => {
+      const updateStatus = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'models',
+          id: payload.id,
+          payload: { modelupdatestatus: payload.modelupdatestatus },
+        },
+        { root: true },
+      );
+      return updateStatus;
     },
   },
   getters: {

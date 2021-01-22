@@ -90,8 +90,35 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <deploy-model :model="item" />
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                  icon
+                >
+                 <v-checkbox
+                  color="blue"
+                  hide-details
+                  :value = item.modelUpdateStatus
+                  v-model="item.modelUpdateStatus"
+                  @change="changeModelStatus($event, item)"
+                  :disabled="!allowedCheckBox"
+                ></v-checkbox>
+                </v-btn>
+                <div class="d-inline ma-0 pa-0">
+                  <v-btn
+                  icon
+                >
+                <deploy-model
+                :model="item" />
+                  </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                  icon
+                >
                 <delete-model :model="item" />
+                </v-btn>
+                </div>
+                </div>
               </td>
             </tr>
           </template>
@@ -123,10 +150,12 @@ export default {
   data() {
     return {
       search: '',
+      allowedCheckBox: false,
       options: {
         descending: true,
         page: 1,
         rowsPerPage: 5,
+        stop: false,
       },
       headers: [
         { text: 'Details', value: 'name' },
@@ -158,6 +187,9 @@ export default {
     };
   },
   async created() {
+    this.getUserRoles();
+    this.getMe();
+    this.checkedloggedUser();
     // this.setFetchingMaster(true);
     // await Promise.all([
     //   await this.getInputParameters(),
@@ -173,6 +205,7 @@ export default {
     },
   },
   computed: {
+    ...mapState('user', ['roles', 'me']),
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
@@ -181,10 +214,13 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('user', ['getUserRoles', 'getMe']),
     ...mapActions('modelManagement', [
       'getModels',
       'getInputParameters',
       'getOutputTransformations',
+      'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
     filterModels(value, search, item) {
@@ -195,6 +231,55 @@ export default {
         );
       }
       return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+    },
+    async changeModelStatus(event, item) {
+      if (event) {
+        const makeTrue = {
+          id: item.id,
+          modelupdatestatus: true,
+        };
+        const update = await this.updateStatusOfModel(makeTrue);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_ACTIVATE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      } else {
+        const makeFalse = {
+          id: item.id,
+          modelupdatestatus: false,
+        };
+        const update = await this.updateStatusOfModel(makeFalse);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_NOT_ACTIVE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      }
+    },
+    async checkedloggedUser() {
+      const loggedRoleType = this.me.role.roleType;
+      if (loggedRoleType === 'ADMINISTRATOR') {
+        this.allowedCheckBox = true;
+      } else {
+        this.allowedCheckBox = false;
+      }
     },
   },
 };
@@ -211,4 +296,5 @@ export default {
   width: fit-content;
   height: fit-content;
 }
+.v-input--selection-controls{ padding-bottom: 18px; }
 </style>
