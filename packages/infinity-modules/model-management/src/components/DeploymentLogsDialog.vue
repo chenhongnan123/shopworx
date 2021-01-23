@@ -108,7 +108,7 @@ export default {
           text: 'Status',
           value: 'status',
         },
-        { text: 'Logs', value: 'logs' },
+        // { text: 'Logs', value: 'logs' },
       ],
     };
   },

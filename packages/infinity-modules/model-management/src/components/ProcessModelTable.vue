@@ -54,14 +54,10 @@
           <template #no-results>
             No matching model found for '{{ search }}'
           </template>
-          <template #item="{ item }">
+          <template #item="{ item }" v-slot:activator="{ on, attrs }">
             <tr>
               <td>
-                <v-tooltip
-                 top
-                 max-width="300"
-                 >
-                  <template v-slot:activator="{ on, attrs }">
+                <div>
                     <a
                       v-on="on"
                       v-bind="attrs"
@@ -73,9 +69,10 @@
                     >
                       {{ item.name }}
                     </a>
-                  </template>
-                  <span class="toolTipProperty">{{ item.description || "N.A" }}</span>
-                </v-tooltip>
+                </div>
+              </td>
+              <td>
+                {{ item.model_id }}
               </td>
               <td>
                 {{ new Date(item.lastModified).toLocaleString() }}
@@ -91,33 +88,44 @@
               </td>
               <td>
                 <div class="d-inline ma-0 pa-0">
-                <v-btn
-                  icon
-                >
-                 <v-checkbox
-                  color="blue"
-                  hide-details
-                  :value = item.modelUpdateStatus
-                  v-model="item.modelUpdateStatus"
-                  @change="changeModelStatus($event, item)"
-                  :disabled="!allowedCheckBox"
-                ></v-checkbox>
-                </v-btn>
-                <div class="d-inline ma-0 pa-0">
-                  <v-btn
-                  icon
-                >
-                <deploy-model
-                :model="item" />
-                  </v-btn>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      @click="onClickCheckBox"
+                      icon
+                    >
+                    <v-checkbox
+                      color="blue"
+                      hide-details
+                      :value = item.modelUpdateStatus
+                      v-model="item.modelUpdateStatus"
+                      @change="changeModelStatus($event, item)"
+                      :disabled="!isAdmin"
+                    ></v-checkbox>
+                    </v-btn>
+                  </template>
+                  <span v-if="item.modelUpdateStatus">Deactivate model</span>
+                  <span v-else>Activate model</span>
+                </v-tooltip>
                 </div>
                 <div class="d-inline ma-0 pa-0">
                 <v-btn
+                    @click="onClickDisabledModel(item)"
+                    icon
+                  >
+                  <deploy-model
+                  :model="item" />
+                    </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="onClickCheckBox"
                   icon
                 >
                 <delete-model :model="item" />
                 </v-btn>
-                </div>
                 </div>
               </td>
             </tr>
@@ -129,7 +137,13 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import
+{
+  mapState,
+  mapActions,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import CreateModelDialog from './CreateModelDialog.vue';
 import DeploymentLogsDialog from './DeploymentLogsDialog.vue';
 import ModelDetailsDialog from './ModelDetailsDialog.vue';
@@ -158,7 +172,8 @@ export default {
         stop: false,
       },
       headers: [
-        { text: 'Details', value: 'name' },
+        { text: 'Model name', value: 'name' },
+        { text: 'Model Id', value: 'model_id' },
         { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
@@ -186,10 +201,10 @@ export default {
       ],
     };
   },
-  async created() {
-    this.getUserRoles();
-    this.getMe();
-    this.checkedloggedUser();
+  created() {
+    // this.getUserRoles();
+    // this.getMe();
+    // this.checkedloggedUser();
     // this.setFetchingMaster(true);
     // await Promise.all([
     //   await this.getInputParameters(),
@@ -206,6 +221,7 @@ export default {
   },
   computed: {
     ...mapState('user', ['roles', 'me']),
+    ...mapGetters('user', ['isAdmin']),
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
@@ -223,6 +239,24 @@ export default {
       'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    onClickCheckBox() {
+      if (!this.isAdmin) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ONLY_ADMIN_OPERATION',
+        });
+      }
+    },
+    onClickDisabledModel(item) {
+      if (!item.modelUpdateStatus) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_NOT_ACTIVE',
+        });
+      }
+    },
     filterModels(value, search, item) {
       if (item.description) {
         return (
