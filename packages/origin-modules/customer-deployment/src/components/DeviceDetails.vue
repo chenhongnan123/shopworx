@@ -250,7 +250,7 @@ export default {
             this.setReactiveMappedDevice({
               index: i,
               payload: {
-                ...this.selectedDevice,
+                ...this.mappedDevices[i],
                 ...this.device,
               },
             });
