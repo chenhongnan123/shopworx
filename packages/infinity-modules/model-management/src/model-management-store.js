@@ -743,6 +743,7 @@ export default ({
             substationid: selectedSubstation,
             subprocessid: selectedProcess,
             assetid: ASSETID,
+            modelupdatestatus: true,
           },
         },
         { root: true },
@@ -915,6 +916,32 @@ export default ({
         },
         { root: true },
       );
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          query: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
+      const deleteOrdersLogs = await Promise.all([
+        models.forEach((m) => dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: ELEMENTS.MODEL_LOGS,
+            queryParam: `?query=modeldeploymentorderid=="${m._id}"`,
+          },
+          { root: true },
+        )),
+      ]);
+      const deleteOrders = dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          queryParam: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
       const { modelFiles } = modelDetails;
       const deleteFiles = await Promise.all([
         modelFiles.forEach((file) => dispatch(
@@ -939,6 +966,8 @@ export default ({
         deleteFiles,
         deleteOutputs,
         deleteModel,
+        deleteOrders,
+        deleteOrdersLogs,
       ]);
       if (deleted) {
         await dispatch('getModels');
