@@ -135,7 +135,7 @@ export default {
         (v) => !!v || 'Version is required.',
       ],
       descRules: [
-        (v) => (v && v.length <= 200) || 'Max length 200 characters.',
+        (v) => !v || (v && v.length <= 200) || 'Max length 200 characters.',
       ],
       fileRules: [
         (v) => !!v || 'Debian is required.',

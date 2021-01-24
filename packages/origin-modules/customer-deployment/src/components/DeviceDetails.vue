@@ -164,7 +164,7 @@ export default {
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       descRules: [
-        (v) => (v && v.length <= 200) || 'Max length 200 characters.',
+        (v) => !v || (v && v.length <= 200) || 'Max length 200 characters.',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
