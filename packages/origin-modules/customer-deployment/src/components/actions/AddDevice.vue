@@ -191,11 +191,12 @@ export default {
       'devices',
     ]),
     emptyDevices() {
-      return this.devices.filter((d) => (
-        (d.deploymentserviceid === undefined
-        || d.deploymentserviceid === 0)
-        && d.ispasswordless
-      ));
+      return this.devices.filter((d) => {
+        const hasServiceKey = Object.prototype.hasOwnProperty.call(d, 'deploymentserviceid');
+        return (!hasServiceKey
+          || d.deploymentserviceid === undefined
+          || d.deploymentserviceid === 0);
+      });
     },
     deviceNames() {
       return this.devices.map((d) => d.name);
@@ -268,6 +269,7 @@ export default {
         let device = null;
         if (!this.unmappedDevice) {
           let payload = {
+            deploymentserviceid: 0,
             name: this.name,
             description: this.description,
             hostname: this.hostname,

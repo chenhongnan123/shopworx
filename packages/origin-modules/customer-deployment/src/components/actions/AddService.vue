@@ -182,11 +182,12 @@ export default {
       'devices',
     ]),
     emptyDevices() {
-      return this.devices.filter((d) => (
-        (d.deploymentserviceid === undefined
-        || d.deploymentserviceid === 0)
-        && d.ispasswordless
-      ));
+      return this.devices.filter((d) => {
+        const hasServiceKey = Object.prototype.hasOwnProperty.call(d, 'deploymentserviceid');
+        return (!hasServiceKey
+          || d.deploymentserviceid === undefined
+          || d.deploymentserviceid === 0);
+      });
     },
     serviceNames() {
       return this.deploymentServices.map((s) => s.name);
