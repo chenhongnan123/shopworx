@@ -10,6 +10,7 @@
         :class="spaceClass"
         :loading="deleting"
         @click="removeModel"
+        :disabled="!isAdmin"
       >
         <v-icon v-text="'$delete'"></v-icon>
       </v-btn>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'DeleteModel',
@@ -42,24 +43,36 @@ export default {
       deleting: false,
     };
   },
+  computed: {
+    ...mapGetters('user', ['isAdmin']),
+  },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', ['deleteModel', 'fetchModelDetails']),
     async removeModel() {
-      if (await this.$root.$confirm.open(
-        'Delete model',
-        `Are you sure want to delete "${this.model.name}"?
-        This will also delete the associated model configurations.`,
-      )) {
-        this.deleting = true;
-        await this.fetchModelDetails(this.model.model_id);
-        await this.deleteModel({
-          modelId: this.model.model_id,
-          id: this.model.id,
-        });
-        if (this.$route.name === 'modelDetails') {
-          this.$router.push({ name: 'modelManagement' });
+      if (this.isAdmin) {
+        if (await this.$root.$confirm.open(
+          'Delete model',
+          `Are you sure want to delete "${this.model.name}"?
+          This will also delete the associated model configurations.`,
+        )) {
+          this.deleting = true;
+          await this.fetchModelDetails(this.model.model_id);
+          await this.deleteModel({
+            modelId: this.model.model_id,
+            id: this.model.id,
+          });
+          if (this.$route.name === 'modelDetails') {
+            this.$router.push({ name: 'modelManagement' });
+          }
+          this.deleting = false;
         }
-        this.deleting = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ONLY_ADMIN_OPERATION',
+        });
       }
     },
   },

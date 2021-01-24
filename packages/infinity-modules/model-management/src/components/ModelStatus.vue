@@ -22,7 +22,7 @@ export default {
       if (modelInfo) {
         return modelInfo.status;
       }
-      return 'N.A';
+      return this.model.status;
     },
   },
 };

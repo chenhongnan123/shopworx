@@ -35,10 +35,9 @@
       <v-btn
         color="primary"
         class="text-none"
-        :loading="deploying"
-        @click="deployModel"
+        @click="cancel"
       >
-        Deploy
+        Finish
       </v-btn>
     </v-card-actions>
   </div>

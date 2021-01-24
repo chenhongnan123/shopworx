@@ -9,9 +9,11 @@
     "FILE_DELETE": "Model file removed!",
     "MODEL_DELETE": "Model deleted!",
     "STATUS_UPDATED_AS_ACTIVATE": "Model Status is Activate now!",
-    "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Not Activate!"
+    "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Inactivate now!"
   },
   "error": {
+    "ONLY_ADMIN_OPERATION": "Only Admin user can perform this Operation.",
+    "MODEL_NOT_ACTIVE": "Model is not Active",
     "FILES_DEPLICATE": "Duplicate files, please check again",
     "PARAMETER_CREATE": "Cannot add input parameter. Please retry!",
     "PARAMETER_DELETE": "Cannot remove input parameter. Please retry!",

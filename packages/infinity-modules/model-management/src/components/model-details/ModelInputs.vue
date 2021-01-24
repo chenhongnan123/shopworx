@@ -13,6 +13,9 @@
           item-value="parameterId"
           hide-details
           multiple
+          @change="onChange()"
+          @input="searchInput=null"
+          :search-input.sync="searchInput"
         >
         <template v-slot:selection="data">
           <v-chip
@@ -60,6 +63,7 @@ export default {
   data() {
     return {
       search: '',
+      searchInput: null,
     };
   },
   computed: {
@@ -80,23 +84,41 @@ export default {
     ...mapActions('modelManagement', [
       'createInputParameter',
       'deleteInputParameter',
+      'fetchModelDetails',
     ]),
+    onChange() {
+      // this.parameterList = this.modelInputs;
+    },
     async remove(param) {
       const modelInputId = this.modelInputs
         .find((input) => input.parameterId === param.parameterId)
         .id;
       const deleted = await this.deleteInputParameter(modelInputId);
       if (deleted) {
+        await this.fetchModelDetails(this.model.model_id);
         const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
         if (index >= 0) this.parameterList.splice(index, 1);
       }
     },
     async saveInputParam(param) {
-      const object = param[param.length - 1];
-      await this.createInputParameter({
-        modelId: this.model.model_id,
-        parameterId: object,
-      });
+      await Promise.all(this.modelInputs.map(async (element) => {
+        const checkData = param.filter((f) => f === element.parameterId);
+        if (checkData.length === 0) {
+          await this.deleteInputParameter(element.id);
+        }
+      }));
+      if (this.modelInputs.find((input) => input.parameterId === param[param.length - 1])) {
+        // duplicate entry
+      } else {
+        const object = param[param.length - 1];
+        if (object) {
+          await this.createInputParameter({
+            modelId: this.model.model_id,
+            parameterId: object,
+          });
+        }
+      }
+      await this.fetchModelDetails(this.model.model_id);
     },
     async updateInputParameter(param) {
       if (param.selected) {
