@@ -49,7 +49,7 @@
       </v-data-table>
       <model-files-input
         ref="dropzone"
-        :modelId="model.id"
+        :modelId="model.model_id"
       />
     </v-card-text>
     <v-card-actions>
@@ -173,7 +173,7 @@ export default {
           id: file.id,
         });
         if (deleted) {
-          await this.fetchModelDetails(this.model.id);
+          await this.fetchModelDetails(this.model.model_id);
           this.fileList = this.modelFiles;
           this.setAlert({
             show: true,

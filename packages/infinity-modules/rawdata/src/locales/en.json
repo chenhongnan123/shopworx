@@ -3,9 +3,10 @@
   "success": {
     "DOWNLOADED": "Downloaded the Data in CSV format",
     "DATA_SAVED": "Data Saved Successfully!",
-    "LOAD_DATA": "After the changes, please click on Load Data to see the changes"
+    "LOAD_DATA": "Fetched the data from Selection"
   },
   "error": {
-    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)"
+    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)",
+    "SELECT_BOTH_DATES": "Select {from} and {to} dates!"
   }
 }

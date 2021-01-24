@@ -20,7 +20,7 @@
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        Set Origin Context
+        Set customer
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -41,7 +41,7 @@
           label="Site"
           filled
           :loading="fetchingSites"
-          :disabled="loading || saving"
+          :disabled="loading || saving || !customer"
           item-text="siteDescription"
         ></v-combobox>
       </v-card-text>
@@ -51,7 +51,7 @@
           class="text-none"
           color="primary"
           @click="save"
-          :disabled="loading || fetchingSites"
+          :disabled="loading || fetchingSites || !customer || !customerSite"
           :loading="saving"
         >
           Save
@@ -102,7 +102,8 @@ export default {
       },
       async set(val) {
         this.fetchingSites = true;
-        await this.setActiveCustomer(val);
+        this.setSelectedCustomer(val);
+        this.setSelectedCustomerSite(null);
         await this.getCustomerSites(val.id);
         this.fetchingSites = false;
       },
@@ -111,8 +112,8 @@ export default {
       get() {
         return this.selectedCustomerSite;
       },
-      async set(val) {
-        await this.setActiveSite(val);
+      set(val) {
+        this.setSelectedCustomerSite(val);
       },
     },
     isContextSet() {
@@ -122,7 +123,7 @@ export default {
       if (this.isContextSet) {
         return `${this.currentCustomer}, ${this.currentSite}`;
       }
-      return 'Set origin context';
+      return 'Set customer';
     },
   },
   methods: {

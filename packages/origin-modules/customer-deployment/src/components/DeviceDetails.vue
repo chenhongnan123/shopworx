@@ -7,6 +7,7 @@
           text
           small
           v-if="!edit"
+          :disabled="!selectedDevice"
           color="primary"
           @click="edit = true"
           class="text-none ml-2 mb-1"
@@ -35,7 +36,7 @@
             small
             type="submit"
             color="primary"
-            :disabled="!isValid"
+            :disabled="!isValid || !selectedDevice"
             :loading="saving"
             @click="update"
             class="text-none ml-2 mb-1"
@@ -46,7 +47,7 @@
       </v-card-title>
       <v-divider></v-divider>
       <perfect-scrollbar>
-        <v-card-text class="pb-0" style="height:408px">
+        <v-card-text class="pb-0" style="height:408px" v-if="!!selectedDevice">
           <v-row>
             <v-col cols="4" class="py-0">
               <div>
@@ -158,17 +159,17 @@ export default {
       saving: false,
       deviceRules: [
         (v) => !!v || 'Device name is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       descRules: [
-        (v) => v.length <= 200 || 'Max length 200 characters.',
+        (v) => !v || (v && v.length <= 200) || 'Max length 200 characters.',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
@@ -250,7 +251,7 @@ export default {
             this.setReactiveMappedDevice({
               index: i,
               payload: {
-                ...this.selectedDevice,
+                ...this.mappedDevices[i],
                 ...this.device,
               },
             });
@@ -285,18 +286,26 @@ export default {
       return !!service;
     },
     cancel() {
-      const {
-        name,
-        description,
-        hostname,
-        ipaddr,
-      } = this.selectedDevice;
       this.edit = false;
-      this.device.name = name;
-      this.device.description = description;
-      this.device.hostname = hostname;
-      this.device.ipaddr = ipaddr;
-      this.device.assetid = 0;
+      if (this.selectedDevice) {
+        const {
+          name,
+          description,
+          hostname,
+          ipaddr,
+        } = this.selectedDevice;
+        this.device.name = name;
+        this.device.description = description;
+        this.device.hostname = hostname;
+        this.device.ipaddr = ipaddr;
+        this.device.assetid = 0;
+      } else {
+        this.device.name = '';
+        this.device.description = '';
+        this.device.hostname = '';
+        this.device.ipaddr = '';
+        this.device.assetid = 0;
+      }
       this.$nextTick(() => {
         this.$refs.form.reset();
       });

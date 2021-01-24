@@ -53,7 +53,7 @@ export default {
     async updateOutputTransformation(trans) {
       if (trans.selected) {
         await this.createOutputTransformation({
-          modelId: this.model.id,
+          modelId: this.model.model_id,
           transformationId: trans.id,
         });
       } else {

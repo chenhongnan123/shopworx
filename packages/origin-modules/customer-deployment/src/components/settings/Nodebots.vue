@@ -58,6 +58,7 @@
               v-on="on"
               v-bind="attrs"
               v-text="'$info'"
+              v-if="item.description"
             ></v-icon>
           </template>
           <span>
@@ -197,27 +198,11 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('customerDeployment', ['setNodebots']),
-    ...mapActions('customerDeployment', ['fetchNodebots', 'updateNodebot']),
+    ...mapActions('customerDeployment', ['fetchNodebots']),
     async getNodebots() {
       this.loading = true;
       await this.fetchNodebots();
       this.loading = false;
-    },
-    async updateNodebotConfig({ id, payload }) {
-      const updated = await this.updateNodebot({ id, payload });
-      if (updated) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'UPDATE',
-        });
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'UPDATE',
-        });
-      }
     },
   },
 };

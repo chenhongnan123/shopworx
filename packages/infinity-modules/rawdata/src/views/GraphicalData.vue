@@ -21,6 +21,7 @@
           single-line
           return-object
           @change="onElementSelect"
+          v-model="selectedElement"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -29,38 +30,70 @@
           </template>
         </v-autocomplete>
       </v-responsive>
-      <v-responsive :max-width="340">
+      <v-responsive :max-width="240">
         <v-autocomplete
           :items="tags"
           class="ml-2"
-          filled
-          dense
           multiple
-          chips
-          deletable-chips
           hide-details
           label="Select Parameters"
           item-text="tagName"
           single-line
           return-object
           v-model="selectedParameters"
+          :disabled="buttonDisable"
         >
+        <template v-slot:selection="{ item, index }">
+        <v-chip v-if="index === 0">
+          <span>{{ item.tagName }}</span>
+        </v-chip>
+        <span
+          v-if="index === 1"
+          class="grey--text caption"
+        >
+          (+{{ selectedParameters.length - 1 }} others)
+        </span>
+      </template>
         </v-autocomplete>
       </v-responsive>
       <v-spacer></v-spacer>
-      <v-btn
+      <v-text-field
+          class="mt-8"
+          type="datetime-local"
+          v-model="fromdate"
+          :label="$t('From date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <v-text-field
+          class="mt-8 ml-4"
+          type="datetime-local"
+          v-model="todate"
+          :label="$t('To date')"
+          @change="setDatefunction"
+      ></v-text-field>
+      <!-- <report-date-picker /> -->
+      <!-- <report-chart-type /> -->
+      <!-- <export-report @on-export="onExport" /> -->
+    </v-toolbar>
+    <v-toolbar
+      flat
+      dense
+      class="stick"
+      :color="$vuetify.theme.dark ? '#121212' : ''"
+    >
+    <v-spacer></v-spacer>
+    <v-btn
         small
         outlined
         v-on="on"
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"
+        :disabled="dropdoenDisable"
       >
         Load Data
       </v-btn>
-      <report-date-picker />
       <report-chart-type />
-      <!-- <export-report @on-export="onExport" /> -->
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
@@ -79,7 +112,7 @@ import {
   mapActions, mapGetters, mapState, mapMutations,
 } from 'vuex';
 
-import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
+// import ReportDatePicker from '../components/toolbar/ReportDatePicker.vue';
 import ReportChartType from '../components/toolbar/ReportChartType.vue';
 import ReportChart from '../components/ReportChart.vue';
 // import ExportReport from '../components/toolbar/ExportReport.vue';
@@ -87,7 +120,7 @@ import ReportChart from '../components/ReportChart.vue';
 export default {
   name: 'ProductionLog',
   components: {
-    ReportDatePicker,
+    // ReportDatePicker,
     ReportChartType,
     ReportChart,
     // ExportReport,
@@ -98,6 +131,10 @@ export default {
       pagenumber: 0,
       pagesize: 100,
       selectedParameters: [],
+      customChips: [],
+      selectedElement: null,
+      buttonDisable: true,
+      dropdoenDisable: true,
     };
   },
   computed: {
@@ -113,6 +150,26 @@ export default {
   watch: {
     dateRange() {
       this.fetchDateRecords();
+    },
+    selectedElement: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.buttonDisable = false;
+        } else {
+          this.buttonDisable = true;
+        }
+      },
+    },
+    selectedParameters: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.dropdoenDisable = false;
+        } else {
+          this.dropdoenDisable = true;
+        }
+      },
     },
   },
   methods: {
@@ -130,6 +187,17 @@ export default {
         filterState,
       };
       this.setGridState(JSON.stringify(state));
+    },
+    setDatefunction() {
+      if (this.fromdate && this.todate) {
+        this.setDateRange([this.fromdate, this.todate]);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();

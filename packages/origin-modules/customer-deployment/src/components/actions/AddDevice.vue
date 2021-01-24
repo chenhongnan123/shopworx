@@ -161,17 +161,17 @@ export default {
       service: null,
       deviceRules: [
         (v) => !!v || 'Device name is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       descRules: [
-        (v) => v.length <= 200 || 'Max length 200 characters.',
+        (v) => !v || (v && v.length <= 200) || 'Max length 200 characters.',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
@@ -191,11 +191,12 @@ export default {
       'devices',
     ]),
     emptyDevices() {
-      return this.devices.filter((d) => (
-        (d.deploymentserviceid === undefined
-        || d.deploymentserviceid === 0)
-        && d.ispasswordless
-      ));
+      return this.devices.filter((d) => {
+        const hasServiceKey = Object.prototype.hasOwnProperty.call(d, 'deploymentserviceid');
+        return (!hasServiceKey
+          || d.deploymentserviceid === undefined
+          || d.deploymentserviceid === 0);
+      });
     },
     deviceNames() {
       return this.devices.map((d) => d.name);
@@ -268,6 +269,7 @@ export default {
         let device = null;
         if (!this.unmappedDevice) {
           let payload = {
+            deploymentserviceid: 0,
             name: this.name,
             description: this.description,
             hostname: this.hostname,

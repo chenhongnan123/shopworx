@@ -54,14 +54,10 @@
           <template #no-results>
             No matching model found for '{{ search }}'
           </template>
-          <template #item="{ item }">
+          <template #item="{ item }" v-slot:activator="{ on, attrs }">
             <tr>
               <td>
-                <v-tooltip
-                 top
-                 max-width="300"
-                 >
-                  <template v-slot:activator="{ on, attrs }">
+                <div>
                     <a
                       v-on="on"
                       v-bind="attrs"
@@ -73,9 +69,10 @@
                     >
                       {{ item.name }}
                     </a>
-                  </template>
-                  <span class="toolTipProperty">{{ item.description || "N.A" }}</span>
-                </v-tooltip>
+                </div>
+              </td>
+              <td>
+                {{ item.model_id }}
               </td>
               <td>
                 {{ new Date(item.lastModified).toLocaleString() }}
@@ -90,8 +87,46 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <deploy-model :model="item" />
+                <div class="d-inline ma-0 pa-0">
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      @click="onClickCheckBox"
+                      icon
+                    >
+                    <v-checkbox
+                      color="blue"
+                      hide-details
+                      :value = item.modelUpdateStatus
+                      v-model="item.modelUpdateStatus"
+                      @change="changeModelStatus($event, item)"
+                      :disabled="!isAdmin"
+                    ></v-checkbox>
+                    </v-btn>
+                  </template>
+                  <span v-if="item.modelUpdateStatus">Deactivate model</span>
+                  <span v-else>Activate model</span>
+                </v-tooltip>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                    @click="onClickDisabledModel(item)"
+                    icon
+                  >
+                  <deploy-model
+                  :model="item" />
+                    </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="onClickCheckBox"
+                  icon
+                >
                 <delete-model :model="item" />
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
@@ -102,7 +137,13 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import
+{
+  mapState,
+  mapActions,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import CreateModelDialog from './CreateModelDialog.vue';
 import DeploymentLogsDialog from './DeploymentLogsDialog.vue';
 import ModelDetailsDialog from './ModelDetailsDialog.vue';
@@ -123,13 +164,16 @@ export default {
   data() {
     return {
       search: '',
+      allowedCheckBox: false,
       options: {
         descending: true,
         page: 1,
         rowsPerPage: 5,
+        stop: false,
       },
       headers: [
-        { text: 'Details', value: 'name' },
+        { text: 'Model name', value: 'name' },
+        { text: 'Model Id', value: 'model_id' },
         { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
@@ -157,13 +201,16 @@ export default {
       ],
     };
   },
-  async created() {
-    this.setFetchingMaster(true);
-    await Promise.all([
-      this.getInputParameters(),
-      this.getOutputTransformations(),
-    ]);
-    this.setFetchingMaster(false);
+  created() {
+    // this.getUserRoles();
+    // this.getMe();
+    // this.checkedloggedUser();
+    // this.setFetchingMaster(true);
+    // await Promise.all([
+    //   await this.getInputParameters(),
+    //   await this.getOutputTransformations(),
+    // ]);
+    // this.setFetchingMaster(false);
   },
   watch: {
     models: {
@@ -173,6 +220,8 @@ export default {
     },
   },
   computed: {
+    ...mapState('user', ['roles', 'me']),
+    ...mapGetters('user', ['isAdmin']),
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
@@ -181,12 +230,33 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('user', ['getUserRoles', 'getMe']),
     ...mapActions('modelManagement', [
       'getModels',
       'getInputParameters',
       'getOutputTransformations',
+      'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    onClickCheckBox() {
+      if (!this.isAdmin) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ONLY_ADMIN_OPERATION',
+        });
+      }
+    },
+    onClickDisabledModel(item) {
+      if (!item.modelUpdateStatus) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_NOT_ACTIVE',
+        });
+      }
+    },
     filterModels(value, search, item) {
       if (item.description) {
         return (
@@ -195,6 +265,55 @@ export default {
         );
       }
       return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+    },
+    async changeModelStatus(event, item) {
+      if (event) {
+        const makeTrue = {
+          id: item.id,
+          modelupdatestatus: true,
+        };
+        const update = await this.updateStatusOfModel(makeTrue);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_ACTIVATE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      } else {
+        const makeFalse = {
+          id: item.id,
+          modelupdatestatus: false,
+        };
+        const update = await this.updateStatusOfModel(makeFalse);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_NOT_ACTIVE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      }
+    },
+    async checkedloggedUser() {
+      const loggedRoleType = this.me.role.roleType;
+      if (loggedRoleType === 'ADMINISTRATOR') {
+        this.allowedCheckBox = true;
+      } else {
+        this.allowedCheckBox = false;
+      }
     },
   },
 };
@@ -211,4 +330,5 @@ export default {
   width: fit-content;
   height: fit-content;
 }
+.v-input--selection-controls{ padding-bottom: 18px; }
 </style>

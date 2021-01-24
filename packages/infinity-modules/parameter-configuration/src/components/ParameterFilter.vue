@@ -325,6 +325,7 @@ export default {
       this.subline = '';
       this.station = '';
       this.substation = '';
+      this.parameterName = '';
     },
     closeFilter() {
       this.getParameterListRecords('?pagenumber=1&pagesize=10');
@@ -337,6 +338,7 @@ export default {
       this.subline = '';
       this.station = '';
       this.substation = '';
+      this.parameterName = '';
     },
   },
 };

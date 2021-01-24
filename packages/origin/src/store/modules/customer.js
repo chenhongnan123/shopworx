@@ -48,6 +48,7 @@ export default ({
     },
 
     getCustomerSites: async ({ commit }, customerId) => {
+      commit('setCustomerSites', []);
       try {
         const { data } = await CustomerService.getCustomerSites(customerId);
         if (data && data.results) {
@@ -60,9 +61,8 @@ export default ({
       }
     },
 
-    setActiveCustomer: async ({ commit }, selectedCustomer) => {
+    setActiveCustomer: async (_, selectedCustomer) => {
       try {
-        commit('setSelectedCustomer', selectedCustomer);
         const { data } = await CustomerService.setActiveCustomer(selectedCustomer.id);
         return data.results;
       } catch (e) {
@@ -70,9 +70,8 @@ export default ({
       }
     },
 
-    setActiveSite: async ({ commit }, selectedCustomerSite) => {
+    setActiveSite: async (_, selectedCustomerSite) => {
       try {
-        commit('setSelectedCustomerSite', selectedCustomerSite);
         const { data } = await CustomerService.setActiveSite(selectedCustomerSite.id);
         return data.results;
       } catch (e) {

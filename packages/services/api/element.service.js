@@ -61,6 +61,10 @@ class ElementService {
     return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
   }
 
+  updateElementStatusById(id, payload) {
+    return this.request.put(`/server/elements/schema/${id}`, payload);
+  }
+
   updateTagById(payload) {
     return this.request.put(`/server/tag/updatemultiple`, payload);
   }

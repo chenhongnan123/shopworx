@@ -23,6 +23,8 @@
     "STATION_DELETED": "Station deleted",
     "SUBSTATION_DELETED": "Sub-Station deleted",
     "PROCESS_DELETED": "Process deleted",
-    "SUBSTATION_UPDATED": "Sub-Station updated"
+    "SUBSTATION_UPDATED": "Sub-Station updated",
+    "REAL_ELEMENT_INACTIVE": "Real Element associated with this Substation is Inactive!",
+    "PROCESS_ELEMENT_INACTIVE": "Process Element associated with this Substation is Inactive!"
   }
 }

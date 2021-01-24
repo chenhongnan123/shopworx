@@ -21,6 +21,7 @@
           single-line
           return-object
           @change="onElementSelect"
+          v-model="selectedElement"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -54,6 +55,7 @@
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"
+        :disabled="buttonDisable"
       >
         Load Data
       </v-btn>
@@ -72,7 +74,8 @@
           @change="setDatefunction"
       ></v-text-field>
       <!-- <report-date-picker /> -->
-      <export-report @on-export="onExport" />
+      <export-report @on-export="onExport"
+       :selectedElement="selectedElement" />
     </v-toolbar>
     <template>
       <v-container fluid class="py-0">
@@ -134,6 +137,7 @@ export default {
   },
   data() {
     return {
+      flagForPageNumber: true,
       parametersChanged: false,
       rowData: null,
       columnDefs: [],
@@ -147,6 +151,8 @@ export default {
       selectedParameters: [],
       fromdate: null,
       todate: null,
+      selectedElement: null,
+      buttonDisable: true,
     };
   },
   beforeMount() {
@@ -181,6 +187,16 @@ export default {
     dateRange() {
       this.fetchDateRecords();
     },
+    selectedElement: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.buttonDisable = false;
+        } else {
+          this.buttonDisable = true;
+        }
+      },
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -200,7 +216,15 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     setDatefunction() {
-      this.setDateRange([this.fromdate, this.todate]);
+      if (this.fromdate && this.todate) {
+        this.setDateRange([this.fromdate, this.todate]);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();
@@ -233,6 +257,7 @@ export default {
       });
     },
     async btnRefresh() {
+      this.flagForPageNumber = false;
       await this.setRowData();
     },
     onExport(e) {
@@ -262,7 +287,10 @@ export default {
       await this.setRowData();
     },
     async fetchRecords() {
-      this.pagenumber += 1;
+      if (this.flagForPageNumber) {
+        this.pagenumber += 1;
+      }
+      this.flagForPageNumber = false;
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();

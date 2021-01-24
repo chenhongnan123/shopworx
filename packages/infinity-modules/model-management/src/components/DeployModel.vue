@@ -1,4 +1,4 @@
-<template>
+<template #activator="{ on, attrs }">
   <v-tooltip bottom>
     <template #activator="{ on, attrs }">
       <v-btn
@@ -10,6 +10,7 @@
         :class="spaceClass"
         :loading="deploying"
         @click="deployModel"
+        :disabled="!model.modelUpdateStatus"
       >
         <v-icon>mdi-rocket-launch-outline</v-icon>
       </v-btn>
@@ -19,9 +20,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
+  // :disabled="!model.modelUpdateStatus"
   name: 'DeployModel',
   props: {
     model: {
@@ -43,16 +45,25 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', ['createNewDeploymentOrder']),
     async deployModel() {
-      if (await this.$root.$confirm.open(
-        'Deploy model',
-        `Please confirm the deployment for "${this.model.name}".
-        You cannot stop the deployment once it is started.`,
-      )) {
-        this.deploying = true;
-        await this.createNewDeploymentOrder(this.model.id);
-        this.deploying = false;
+      if (this.model.modelUpdateStatus) {
+        if (await this.$root.$confirm.open(
+          'Deploy model',
+          `Please confirm the deployment for "${this.model.name}".
+          You cannot stop the deployment once it is started.`,
+        )) {
+          this.deploying = true;
+          await this.createNewDeploymentOrder(this.model.model_id);
+          this.deploying = false;
+        }
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_NOT_ACTIVE',
+        });
       }
     },
   },

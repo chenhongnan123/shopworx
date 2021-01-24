@@ -435,5 +435,16 @@ export default ({
       }
       return false;
     },
+    updateElementStatusById: async (_, { payload, id }) => {
+      try {
+        const { data } = await ElementService.updateElementStatusById(id, payload);
+        if (data && data.updated) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
   },
 });
