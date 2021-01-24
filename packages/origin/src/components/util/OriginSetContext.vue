@@ -20,7 +20,7 @@
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        Set Origin Context
+        Set customer
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -122,7 +122,7 @@ export default {
       if (this.isContextSet) {
         return `${this.currentCustomer}, ${this.currentSite}`;
       }
-      return 'Set origin context';
+      return 'Set customer';
     },
   },
   methods: {
