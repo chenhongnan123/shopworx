@@ -41,7 +41,7 @@
           label="Site"
           filled
           :loading="fetchingSites"
-          :disabled="loading || saving"
+          :disabled="loading || saving || !customer"
           item-text="siteDescription"
         ></v-combobox>
       </v-card-text>
