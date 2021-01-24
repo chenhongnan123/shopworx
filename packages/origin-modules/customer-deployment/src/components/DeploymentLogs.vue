@@ -2,6 +2,21 @@
   <v-card>
     <v-card-title class="pb-0">
       Logs
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-on="on"
+            v-bind="attrs"
+            color="primary"
+            class="ml-2 mb-1"
+            @click="getData"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        <span>Refresh logs</span>
+      </v-tooltip>
     </v-card-title>
     <v-divider></v-divider>
     <perfect-scrollbar>
@@ -138,13 +153,15 @@ export default {
     async getData() {
       const { page, itemsPerPage } = this.options;
       this.loading = true;
-      const records = await this.fetchDeploymentOrders({
-        pagesize: itemsPerPage,
-        pagenumber: page,
-        deviceId: this.selectedDevice.id,
-      });
-      if (records && records.totalCount) {
-        this.total = records.totalCount;
+      if (this.selectedDevice) {
+        const records = await this.fetchDeploymentOrders({
+          pagesize: itemsPerPage,
+          pagenumber: page,
+          deviceId: this.selectedDevice.id,
+        });
+        if (records && records.totalCount) {
+          this.total = records.totalCount;
+        }
       }
       this.loading = false;
     },

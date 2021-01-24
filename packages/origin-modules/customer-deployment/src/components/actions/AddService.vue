@@ -32,7 +32,6 @@
             outlined
             v-model="mmonitlink"
             label="M/Monit URL"
-            counter="30"
             prepend-icon="mdi-link"
             :disabled="saving || loading"
             :rules="urlRules"
@@ -143,27 +142,26 @@ export default {
       loading: false,
       nameRules: [
         (v) => !!v || 'Manager name is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Manager name should not contain empty space or special characters',
         (v) => !this.serviceNames.includes(v) || 'Manager name is not available',
       ],
       urlRules: [
         (v) => !!v || 'URL is required',
-        (v) => v.length <= 30 || 'Max length 30 characters.',
-        (v) => /^[A-Za-z0-9-_:./]+$/.test(v)
-          || 'URL should not contain empty space or special characters',
+        (v) => /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?|^((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(:{1}([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$/.test(v)
+          || 'Input valid URL',
       ],
       deviceRules: [
         (v) => !!v || 'Device name is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Device name should not contain empty space or special characters',
         (v) => !this.deviceNames.includes(v) || 'Device name is not available',
       ],
       hostRules: [
         (v) => !!v || 'Hostname is required',
-        (v) => v.length <= 20 || 'Max length 20 characters.',
+        (v) => (v && v.length <= 20) || 'Max length 20 characters.',
         (v) => /^[A-Za-z0-9-_]+$/.test(v)
           || 'Host name should not contain empty space or special characters',
         (v) => !this.hostNames.includes(v) || 'Hostname is not available',
@@ -182,11 +180,12 @@ export default {
       'devices',
     ]),
     emptyDevices() {
-      return this.devices.filter((d) => (
-        (d.deploymentserviceid === undefined
-        || d.deploymentserviceid === 0)
-        && d.ispasswordless
-      ));
+      return this.devices.filter((d) => {
+        const hasServiceKey = Object.prototype.hasOwnProperty.call(d, 'deploymentserviceid');
+        return (!hasServiceKey
+          || d.deploymentserviceid === undefined
+          || d.deploymentserviceid === 0);
+      });
     },
     serviceNames() {
       return this.deploymentServices.map((s) => s.name);

@@ -5,6 +5,7 @@
     :class="spaceClass"
     small
     outlined
+    :disabled="!device"
     :loading="deploying"
     @click="enablePasswordless"
   >
@@ -20,7 +21,6 @@ export default {
   props: {
     device: {
       type: Object,
-      required: true,
     },
     spaceClass: {
       type: String,

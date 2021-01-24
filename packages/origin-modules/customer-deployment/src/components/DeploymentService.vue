@@ -342,6 +342,7 @@ export default {
       'setSelectedService',
       'setSelectedDevice',
       'setReactiveMappedDevice',
+      'setMappedDevices',
     ]),
     async getServices() {
       this.setExtendedHeader(true);
@@ -393,6 +394,8 @@ export default {
       async handler(val) {
         if (val) {
           this.fetchingDevices = true;
+          this.setMappedDevices([]);
+          this.setSelectedDevice(null);
           await this.fetchDevices(val.id);
           if (this.mappedDevices.length) {
             const device = this.selectedDevice

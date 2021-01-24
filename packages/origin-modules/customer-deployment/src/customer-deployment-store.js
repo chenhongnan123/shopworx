@@ -373,7 +373,7 @@ export default ({
       return false;
     },
 
-    updateDevice: async ({ dispatch, commit }, { id, payload }) => {
+    updateDevice: async ({ state, dispatch, commit }, { id, payload }) => {
       const updated = await dispatch(
         'element/updateRecordById',
         {
@@ -385,7 +385,15 @@ export default ({
       );
       if (updated && updated.id) {
         const updatedDevice = await dispatch('fetchDeviceById', updated.id);
-        commit('setSelectedDevice', updatedDevice);
+        const { mappedDevices } = state;
+        for (let i = 0; i < mappedDevices.length; i += 1) {
+          if (updatedDevice.id === mappedDevices[i].id) {
+            commit('setSelectedDevice', {
+              ...mappedDevices[i],
+              ...updatedDevice,
+            });
+          }
+        }
         return updatedDevice;
       }
       return false;
