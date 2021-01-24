@@ -101,17 +101,14 @@ export default {
       }
     },
     async saveInputParam(param) {
-      console.log(param);
-      console.log(this.modelInputs);
       await Promise.all(this.modelInputs.map(async (element) => {
         const checkData = param.filter((f) => f === element.parameterId);
         if (checkData.length === 0) {
-          console.log(element);
           await this.deleteInputParameter(element.id);
         }
       }));
       if (this.modelInputs.find((input) => input.parameterId === param[param.length - 1])) {
-        console.log('duplicate');
+        // duplicate entry
       } else {
         const object = param[param.length - 1];
         if (object) {
