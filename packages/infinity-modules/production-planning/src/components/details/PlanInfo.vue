@@ -83,7 +83,7 @@
         </v-col>
         <v-col cols="4" class="py-0">
           <div>
-            Avergae CT
+            Average CT
           </div>
           <div class="title white--text">
             {{ averageCt }} secs

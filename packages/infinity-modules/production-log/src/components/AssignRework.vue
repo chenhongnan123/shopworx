@@ -56,7 +56,9 @@
                 })"
                 :return-value.sync="item.reworkquantity"
               >
-                {{ item.reworkquantity }}
+                <span :class="item.reworkquantity > production.accepted ? 'error--text': ''">
+                  {{ item.reworkquantity }}
+                </span>
                 <template #input>
                   <v-text-field
                     v-model="item.reworkquantity"
@@ -291,7 +293,7 @@ export default {
         planid: this.production.planid,
         partname: this.production.partname,
         machinename: this.production.machinename,
-        reworkquantity: qty,
+        reworkquantity: parseInt(qty, 10),
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),
@@ -331,38 +333,46 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateRework(item) {
-      const { id } = item;
-      let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'reworkquantity');
-      if (hasReasonNameProperty) {
-        payload = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
-      }
-      const updated = await this.updateRecordById({
-        elementName: 'rework',
-        id,
-        payload,
-      });
-      if (updated) {
-        // eslint-disable-next-line
-        const updatedIndex = this.reworks.findIndex((s) => s._id === id);
-        this.$set(this.reworks, updatedIndex, {
-          ...this.reworks[updatedIndex],
-          modifiedtimestamp: 'now',
+      if (!item.payload.reworkquantity || item.payload.reworkquantity <= this.production.accepted) {
+        const { id } = item;
+        let { payload } = item;
+        const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
+        const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'reworkquantity');
+        if (hasReasonNameProperty) {
+          payload = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
+        }
+        const updated = await this.updateRecordById({
+          elementName: 'rework',
+          id,
+          payload,
         });
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'REWORK_UPDATE',
-        });
-        if (hasQtyProperty) {
-          await this.reFetchProductionList();
+        if (updated) {
+          // eslint-disable-next-line
+          const updatedIndex = this.reworks.findIndex((s) => s._id === id);
+          this.$set(this.reworks, updatedIndex, {
+            ...this.reworks[updatedIndex],
+            modifiedtimestamp: 'now',
+          });
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REWORK_UPDATE',
+          });
+          if (hasQtyProperty) {
+            await this.reFetchProductionList();
+          }
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'REWORK_UPDATE',
+          });
         }
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REWORK_UPDATE',
+          message: 'REWORK_NOT_ALLOWED',
         });
       }
     },
