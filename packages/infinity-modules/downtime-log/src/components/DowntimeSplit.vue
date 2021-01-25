@@ -3,6 +3,7 @@
     persistent
     v-model="dialog"
     max-width="500px"
+    scrollable
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -18,177 +19,160 @@
         Split
       </v-btn>
     </template>
-    <v-card>
-      <v-card-title primary-title>
-        Split downtime
-        <v-spacer></v-spacer>
-        <v-btn
-          icon
-          @click="close"
-          :disabled="loading"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <validation-observer ref="form" #default="{ handleSubmit }">
-        <v-form @submit.prevent="handleSubmit(splitDowntime)">
-          <v-card-text>
-            <v-row>
-              <v-col cols="4">
-                <div class="body-2">
-                  Machine
-                </div>
-                <div class="text-uppercase title font-weight-regular mb-2">
-                  {{ downtime.machinename }}
-                </div>
-              </v-col>
-              <v-col cols="4">
-                <div class="body-2">
-                  Shift
-                </div>
-                <div class="text-uppercase title font-weight-regular mb-2">
-                  {{ downtime.shiftName }}
-                </div>
-              </v-col>
-              <v-col cols="4">
-                <div class="body-2">
-                  Duration
-                </div>
-                <div class="text-uppercase title font-weight-regular mb-2">
-                  {{ duration }}
-                </div>
-              </v-col>
-            </v-row>
-            <v-row v-for="(dt, index) in downtimes" :key="index">
-              <v-col cols="9">
-                <validation-provider
-                  name="downtimereason"
-                  rules="required"
-                  #default="{ errors }"
-                >
-                  <v-autocomplete
-                    dense
+    <v-form ref="form" v-model="isValid" @submit.prevent="splitDowntime">
+      <v-card>
+        <v-card-title primary-title>
+          Split downtime
+          <v-spacer></v-spacer>
+          <v-btn
+            icon
+            @click="close"
+            :disabled="loading"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="4">
+              <div class="body-2">
+                Machine
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2">
+                {{ downtime.machinename }}
+              </div>
+            </v-col>
+            <v-col cols="4">
+              <div class="body-2">
+                Shift
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2">
+                {{ downtime.shiftName }}
+              </div>
+            </v-col>
+            <v-col cols="4">
+              <div class="body-2">
+                Duration
+              </div>
+              <div class="text-uppercase title font-weight-regular mb-2">
+                {{ duration }}
+              </div>
+            </v-col>
+          </v-row>
+          <v-row v-for="(dt, index) in downtimes" :key="index">
+            <v-col cols="9">
+              <v-autocomplete
+                dense
+                outlined
+                return-object
+                label="Reason"
+                hide-details="auto"
+                :rules="[v => !!v || 'Reason is required']"
+                :items="downtimeReasons"
+                item-text="reasonname"
+                item-value="reasonname"
+                :id="`downtimereason-${index}`"
+                v-model="dt.selectedReason"
+              >
+                <template #selection="data">
+                  {{ data.item.reasoncode }} | {{ data.item.reasonname }}
+                </template>
+                <template #item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ data.item.reasonname }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle
+                      v-text="data.item.reasoncode"
+                    ></v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-text="data.item.category"
+                    ></v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-text="data.item.department"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    type="time"
                     outlined
-                    return-object
-                    label="Reason"
+                    dense
+                    step="1"
+                    :rules="[v => !!v || 'Start time is required']"
+                    :disabled="index === 0"
                     hide-details="auto"
-                    :error-messages="errors"
-                    :items="downtimeReasons"
-                    item-text="reasonname"
-                    item-value="reasonname"
-                    :id="`downtimereason-${index}`"
-                    v-model="dt.selectedReason"
-                  >
-                    <template #selection="data">
-                      {{ data.item.reasoncode }} | {{ data.item.reasonname }}
-                    </template>
-                    <template #item="data">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          {{ data.item.reasonname }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle
-                          v-text="data.item.reasoncode"
-                        ></v-list-item-subtitle>
-                        <v-list-item-subtitle
-                          v-text="data.item.category"
-                        ></v-list-item-subtitle>
-                        <v-list-item-subtitle
-                          v-text="data.item.department"
-                        ></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </template>
-                  </v-autocomplete>
-                </validation-provider>
-                <v-row>
-                  <v-col cols="6">
-                    <validation-provider
-                      name="downtimestart"
-                      rules="required"
-                      #default="{ errors }"
-                    >
-                      <v-text-field
-                        type="time"
-                        outlined
-                        dense
-                        step="1"
-                        :error-messages="errors"
-                        :disabled="index === 0"
-                        hide-details="auto"
-                        v-model="dt.downtimestart"
-                        :id="`downtimestart-${index}`"
-                        label="Start time"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                  <v-col cols="6">
-                    <validation-provider
-                      name="downtimeend"
-                      rules="required"
-                      #default="{ errors }"
-                    >
-                      <v-text-field
-                        type="time"
-                        outlined
-                        dense
-                        step="1"
-                        :error-messages="errors"
-                        :disabled="index === downtimes.length - 1"
-                        hide-details="auto"
-                        v-model="dt.downtimeend"
-                        :id="`downtimeend-${index}`"
-                        label="End time"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col cols="3">
-                <v-btn
-                  icon
-                  small
-                  class="mx-2"
-                  @click="addDowntime"
-                  :id="`add-${index}`"
-                >
-                  <v-icon v-text="'$add'"></v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  small
-                  class="pa-0"
-                  :id="`remove-${index}`"
-                  @click="removeDowntime(index)"
-                  :disabled="downtimes.length === 2"
-                >
-                  <v-icon v-text="'$remove'"></v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              text
-              color="primary"
-              class="text-none"
-              :disabled="loading"
-              @click="setDowntimes"
-            >
-              Reset
-            </v-btn>
-            <v-btn
-              color="primary"
-              class="text-none"
-              :loading="loading"
-              type="submit"
-            >
-              Split
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </validation-observer>
-    </v-card>
+                    v-model="dt.downtimestart"
+                    :id="`downtimestart-${index}`"
+                    label="Start time"
+                    @input="onStartChange(index)"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    type="time"
+                    outlined
+                    dense
+                    step="1"
+                    :rules="[v => !!v || 'End time is required']"
+                    :disabled="index === downtimes.length - 1"
+                    hide-details="auto"
+                    v-model="dt.downtimeend"
+                    :id="`downtimeend-${index}`"
+                    label="End time"
+                    @input="onEndChange(index)"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="3">
+              <v-btn
+                icon
+                small
+                class="mx-2"
+                @click="addDowntime"
+                :id="`add-${index}`"
+              >
+                <v-icon v-text="'$add'"></v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                small
+                class="pa-0"
+                :id="`remove-${index}`"
+                @click="removeDowntime(index)"
+                :disabled="downtimes.length === 2"
+              >
+                <v-icon v-text="'$remove'"></v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            class="text-none"
+            :disabled="loading"
+            @click="setDowntimes"
+          >
+            Reset
+          </v-btn>
+          <v-btn
+            color="primary"
+            class="text-none"
+            :loading="loading"
+            type="submit"
+            :disabled="!isValid"
+          >
+            Split
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
@@ -213,6 +197,7 @@ export default {
   },
   data() {
     return {
+      isValid: false,
       loading: false,
       dialog: false,
       downtimes: [],
@@ -255,6 +240,29 @@ export default {
         downtimeend: new Date(downtimeend).toLocaleTimeString('en-GB'),
         selectedReason: null,
       }];
+      this.$nextTick(() => {
+        this.$refs.form.resetValidation();
+      });
+    },
+    onStartChange(index) {
+      this.$set(
+        this.downtimes,
+        index - 1,
+        {
+          ...this.downtimes[index - 1],
+          downtimeend: this.downtimes[index].downtimestart,
+        },
+      );
+    },
+    onEndChange(index) {
+      this.$set(
+        this.downtimes,
+        index + 1,
+        {
+          ...this.downtimes[index + 1],
+          downtimestart: this.downtimes[index].downtimeend,
+        },
+      );
     },
     addDowntime() {
       this.downtimes.push({
