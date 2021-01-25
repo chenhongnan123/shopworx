@@ -9,7 +9,7 @@
     <template #activator="{ on, attrs }">
       <slot :on="on" :attrs="attrs"></slot>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="addNewDevice">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           {{ addDevice ? 'Add' : 'Register' }} device
@@ -125,7 +125,6 @@
             class="text-none"
             :loading="saving"
             :disabled="!isValid"
-            @click="addNewDevice"
           >
             {{ addDevice ? 'Add' : 'Register' }}
           </v-btn>

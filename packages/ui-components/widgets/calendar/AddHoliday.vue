@@ -22,7 +22,7 @@
       <v-card-title class="title font-weight-regular justify-space-between">
         Add new holiday
       </v-card-title>
-      <v-form ref="form" v-model="isValid">
+      <v-form ref="form" v-model="isValid" @submit.prevent="registerTV">
         <v-card-text>
           <v-text-field
             dense
@@ -56,7 +56,6 @@
             class="text-none"
             :loading="saving"
             :disabled="!isValid"
-            @click="registerTV"
           >
             Register
           </v-btn>

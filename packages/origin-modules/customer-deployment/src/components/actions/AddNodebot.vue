@@ -9,7 +9,7 @@
     <template #activator="{ on, attrs }">
       <slot :on="on" :attrs="attrs"></slot>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="addNewNodebot">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           Add new nodebot
@@ -99,7 +99,6 @@
             class="text-none"
             :loading="saving"
             :disabled="!isValid"
-            @click="addNewNodebot"
           >
             Add & install
           </v-btn>

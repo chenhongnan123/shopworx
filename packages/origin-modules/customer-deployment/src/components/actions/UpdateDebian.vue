@@ -20,7 +20,7 @@
         <span>Update debian</span>
       </v-tooltip>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="updateDebian">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           Update {{ nodebot.name }} debian
@@ -78,7 +78,6 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            @click="updateDebian"
             :disabled="!isValid"
           >
             Update
