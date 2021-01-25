@@ -34,11 +34,10 @@
           </v-btn>
           <v-btn
             small
-            type="submit"
+            @click="update"
             color="primary"
             :disabled="!isValid || !selectedDevice"
             :loading="saving"
-            @click="update"
             class="text-none ml-2 mb-1"
           >
             Update

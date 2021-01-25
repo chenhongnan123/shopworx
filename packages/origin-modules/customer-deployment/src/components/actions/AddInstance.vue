@@ -9,7 +9,7 @@
     <template #activator="{ on, attrs }">
       <slot :on="on" :attrs="attrs"></slot>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="addNewInstance">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           Create new instance
@@ -71,7 +71,6 @@
             class="text-none"
             :loading="saving"
             :disabled="!isValid"
-            @click="addNewInstance"
           >
             Create
           </v-btn>

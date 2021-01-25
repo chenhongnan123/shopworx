@@ -22,7 +22,7 @@
         <span>Re-configure instance</span>
       </v-tooltip>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="reconfigureInstance">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           {{ instance.name }} configuration
@@ -51,7 +51,6 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            @click="reconfigureInstance"
             :disabled="!isValid"
           >
             Re-configure

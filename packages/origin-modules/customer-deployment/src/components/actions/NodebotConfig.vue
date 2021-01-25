@@ -18,7 +18,7 @@
         View config
       </v-btn>
     </template>
-    <v-form ref="form" v-model="isValid">
+    <v-form ref="form" v-model="isValid" @submit.prevent="updateNodebotConfig">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
           {{ nodebot.name }} configuration
@@ -46,7 +46,6 @@
             color="primary"
             class="text-none"
             :loading="saving"
-            @click="updateNodebotConfig"
             :disabled="!isValid"
           >
             Update config

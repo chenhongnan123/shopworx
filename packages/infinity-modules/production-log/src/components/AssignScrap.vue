@@ -286,7 +286,7 @@ export default {
         planid: this.production.planid,
         partname: this.production.partname,
         machinename: this.production.machinename,
-        scrapweight: weight,
+        scrapweight: parseFloat(weight, 10),
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),

@@ -102,11 +102,14 @@
                     @save="updateRejection({
                       id: item._id,
                       hour: data.hour,
+                      accepted: data.accepted,
                       payload: { quantity: parseInt(item.quantity, 10) },
                     })"
                     :return-value.sync="item.quantity"
                   >
-                    {{ item.quantity }}
+                    <span :class="item.quantity > data.accepted ? 'error--text': ''">
+                      {{ item.quantity }}
+                    </span>
                     <template #input>
                       <v-text-field
                         v-model="item.quantity"
@@ -131,6 +134,7 @@
                     @save="updateRejection({
                       id: item._id,
                       hour: data.hour,
+                      accepted: data.accepted,
                       payload: { reasonname: item.reasonname },
                     })"
                     :return-value.sync="item.reasonname"
@@ -156,6 +160,7 @@
                     @save="updateRejection({
                       id: item._id,
                       hour: data.hour,
+                      accepted: data.accepted,
                       payload: { remark: item.remark },
                     })"
                     :return-value.sync="item.remark"
@@ -346,7 +351,7 @@ export default {
         planid: this.production.planid,
         partname: this.production.partname,
         machinename: this.production.machinename,
-        quantity: qty,
+        quantity: parseInt(qty, 10),
         remark,
         ...reason,
         timestamp: this.getHourStart(data.displayhour),
@@ -404,49 +409,57 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateRejection(item) {
-      const { id, hour } = item;
-      let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'quantity');
-      if (hasReasonNameProperty) {
-        payload = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
-      }
-      const updated = await this.updateRecordById({
-        elementName: 'rejection',
-        id,
-        payload,
-      });
-      if (updated) {
-        const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-        const { rejections } = this.hourlyData[hourIndex];
-        // eslint-disable-next-line
-        const updatedIndex = rejections.findIndex((s) => s._id === id);
-        this.$set(rejections, updatedIndex, {
-          ...rejections[updatedIndex],
-          modifiedtimestamp: 'now',
+      const { id, hour, accepted } = item;
+      if (!item.payload.quantity || item.payload.quantity <= accepted) {
+        let { payload } = item;
+        const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
+        const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'quantity');
+        if (hasReasonNameProperty) {
+          payload = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
+        }
+        const updated = await this.updateRecordById({
+          elementName: 'rejection',
+          id,
+          payload,
         });
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'REJECTION_UPDATE',
-        });
-        if (hasQtyProperty) {
-          const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-          const { rejections: rej, produced } = this.hourlyData[hIndex];
-          const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
-          const newData = {
-            ...this.hourlyData[hIndex],
-            rejected,
-            accepted: +produced - rejected,
-          };
-          this.hourlyData.splice(hIndex, 1, newData);
-          await this.reFetchProductionList();
+        if (updated) {
+          const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+          const { rejections } = this.hourlyData[hourIndex];
+          // eslint-disable-next-line
+          const updatedIndex = rejections.findIndex((s) => s._id === id);
+          this.$set(rejections, updatedIndex, {
+            ...rejections[updatedIndex],
+            modifiedtimestamp: 'now',
+          });
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'REJECTION_UPDATE',
+          });
+          if (hasQtyProperty) {
+            const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+            const { rejections: rej, produced } = this.hourlyData[hIndex];
+            const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
+            const newData = {
+              ...this.hourlyData[hIndex],
+              rejected,
+              accepted: +produced - rejected,
+            };
+            this.hourlyData.splice(hIndex, 1, newData);
+            await this.reFetchProductionList();
+          }
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'REJECTION_UPDATE',
+          });
         }
       } else {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REJECTION_UPDATE',
+          message: 'REJECTION_NOT_ALLOWED',
         });
       }
     },

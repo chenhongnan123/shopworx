@@ -119,7 +119,9 @@
     "DOWNTIME_UPDATE": "Error while updating downtime reason. Plese retry.",
     "OPERATOR_UPDATE": "Error while updating operator. Plese retry.",
     "REJECTION_UPDATE": "Error while updating rejection. Plese retry.",
+    "REJECTION_NOT_ALLOWED": "Cannot update rejection. Quantity should be less than accepted quantity.",
     "REWORK_UPDATE": "Error while updating rework. Plese retry.",
+    "REWORK_NOT_ALLOWED": "Cannot update rework. Quantity should be less than accepted quantity.",
     "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
     "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
     "MATRIX_UPDATE": "Error while updating the part matrix. Please retry."
