@@ -5,7 +5,6 @@
     </div>
     <v-radio-group
       dense
-      disabled
       hide-details
       class="ma-0 pa-0"
       v-model="view"
@@ -29,8 +28,8 @@ export default {
     return {
       views: [{
         label: 'Hour',
-        value: 'hour',
-        reportName: 'hourliveshopfloor',
+        value: 'hourly',
+        reportName: 'hourlyliveshopfloor',
       }, {
         label: 'Shift',
         value: 'shift',

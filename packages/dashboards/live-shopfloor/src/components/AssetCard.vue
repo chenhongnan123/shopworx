@@ -163,37 +163,25 @@ export default {
       return this.machine.production;
     },
     availability() {
-      return this.production.length
-        ? this.production[0].runtime / this.machine.shiftWorkingTime
-        : 0;
+      return this.machine.runtime / this.machine.workingTime;
     },
     performance() {
-      return this.production.length
-        ? (this.production[0].produced / this.production[0].performanceTarget)
-        : 0;
-    },
-    performanceTarget() {
-      return this.production.length
-        ? this.production[0].performanceTarget
-        : 0;
+      return this.machine.performance;
     },
     quailty() {
-      return this.production.length
-        ? ((this.production[0].produced - this.production[0].rejected)
-          / this.production[0].produced)
-        : 1;
+      return this.machine.quality;
     },
     oee() {
-      return ((this.availability * this.performance * this.quailty) * 100) || 0;
+      return ((this.availability * this.performance * this.quailty) / 100) || 0;
     },
     qualityText() {
-      return `${(this.quailty * 100).toFixed(2)}%`;
+      return `${this.quailty.toFixed(2)}%`;
     },
     availabilityText() {
       return `${(this.availability * 100).toFixed(2)}%`;
     },
     performanceText() {
-      return `${(this.performance * 100).toFixed(2)}%`;
+      return `${this.performance.toFixed(2)}%`;
     },
     oeeText() {
       return `${(this.oee).toFixed(2)}%`;

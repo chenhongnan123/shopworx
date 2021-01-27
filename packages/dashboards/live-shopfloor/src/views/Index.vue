@@ -57,6 +57,12 @@ export default {
         this.setLoading(false);
       }
     },
+    selectedView() {
+      if (this.sseClient) {
+        this.sseClient.close();
+      }
+      this.sseInit();
+    },
   },
   computed: {
     ...mapState('shopfloor', [
@@ -65,6 +71,8 @@ export default {
       'selectedDisplay',
       'selectedTheme',
       'machines',
+      'currentDate',
+      'currentShift',
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
@@ -79,36 +87,33 @@ export default {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
-      'setCurrentShift',
-      'setCurrentHour',
-      'setDisplayHour',
-      'setCurrentDate',
     ]),
     ...mapActions('shopfloor', [
       'getBusinessTime',
       'getMachines',
       'getShifts',
-      'getShiftAvailableTime',
-      'fetchRejections',
+      'getAvailableTime',
     ]),
     sseInit() {
-      this.sseClient = new EventSource('/sse/asm');
-      this.readyState = this.sseClient.readyState;
-      this.sseClient.onopen = () => {
-        if (this.timeout != null) {
-          clearTimeout(this.timeout);
-        }
-      };
-      this.sseClient.addEventListener('shift', (e) => {
-        this.readyState = e.target.readyState;
-        const eventData = JSON.parse(JSON.parse(e.data));
-        this.setEventData(eventData);
-      });
-      this.sseClient.onerror = (event) => {
-        this.readyState = event.target.readyState;
-        this.sseClient.close();
-        this.reconnectSse();
-      };
+      if (this.selectedView) {
+        this.sseClient = new EventSource('/sse/asm');
+        this.readyState = this.sseClient.readyState;
+        this.sseClient.onopen = () => {
+          if (this.timeout != null) {
+            clearTimeout(this.timeout);
+          }
+        };
+        this.sseClient.addEventListener(this.selectedView.value, (e) => {
+          this.readyState = e.target.readyState;
+          const eventData = JSON.parse(JSON.parse(e.data));
+          this.setEventData(eventData);
+        });
+        this.sseClient.onerror = (event) => {
+          this.readyState = event.target.readyState;
+          this.sseClient.close();
+          this.reconnectSse();
+        };
+      }
     },
     reconnectSse() {
       let sseOK = false;
@@ -123,22 +128,27 @@ export default {
       }
     },
     async setEventData(data) {
-      const { elementName } = data;
-      this.setTime(data);
-      const shiftWorkingTime = await this.getShiftAvailableTime();
-      const payload = {
-        ...data,
-        shiftWorkingTime,
-      };
-      if (elementName === 'cycletime') {
-        this.setProduction(payload);
-      } else if (elementName === 'rejection') {
-        await this.setRejection(payload);
-      } else if (elementName === 'downtime') {
-        this.setDowntime(payload);
+      const {
+        elementName,
+        shift,
+        shiftName,
+        date,
+      } = data;
+      if ((this.currentShift === shift || this.currentShift === shiftName)
+        && this.currentDate === date) {
+        const workingTime = await this.getAvailableTime();
+        const payload = {
+          ...data,
+          workingTime,
+        };
+        if (elementName === 'cycletime') {
+          this.setProduction(payload);
+        } else if (elementName === 'downtime') {
+          this.setDowntime(payload);
+        } else if (elementName === 'rejection') {
+          this.setRejection(payload);
+        }
       }
-      // if element name rejection - fetch from rejection element
-      // if element name downtime - update machine record
     },
     setProduction(data) {
       const {
@@ -146,41 +156,44 @@ export default {
         planid,
         partname,
         qty,
-        cavity,
         activecavity,
-        updatedAt,
+        updatedAtTimestamp: updatedAt,
         actm_sum: runtime,
         shiftAvailableTime,
+        hourlyAvailableTime,
+        workingTime,
         sctm,
+        performance,
+        quality,
       } = data;
       this.machines.forEach((m, index) => {
         if (m.machinename === machinename) {
           const payload = {
             ...m,
             machinestatus: 'UP',
-            updatedAt: new Date(updatedAt).getTime(),
+            updatedAt,
+            runtime,
+            performance,
+            quality,
+            workingTime,
           };
-          const performanceTarget = Math.floor((runtime / sctm) * cavity);
-          const timeTarget = Math.floor((shiftAvailableTime / sctm) * activecavity);
+          let timeTarget = 0;
+          if (this.selectedView.value === 'shift') {
+            timeTarget = Math.floor((shiftAvailableTime / sctm) * activecavity);
+          } else if (this.selectedView.value === 'hourly') {
+            timeTarget = Math.floor((hourlyAvailableTime / sctm) * activecavity);
+          }
           if (planid === m.planid) {
             let productions = [...m.production];
             const partIndex = m.production.findIndex((prod) => prod.partname === partname);
             if (partIndex > -1) {
               productions[partIndex].produced = qty;
-              productions[partIndex].performanceTarget = performanceTarget;
-              productions[partIndex].stdcycletime = sctm;
               productions[partIndex].timeTarget = timeTarget;
-              productions[partIndex].runtime = runtime;
             } else {
               productions = [...productions, {
-                cavity,
                 partname,
-                performanceTarget,
                 planid,
                 produced: qty,
-                rejected: 0,
-                runtime,
-                stdcycletime: sctm,
                 timeTarget,
               }];
             }
@@ -188,14 +201,9 @@ export default {
           } else {
             payload.planid = planid;
             payload.production = [{
-              cavity,
               partname,
-              performanceTarget,
               planid,
               produced: qty,
-              rejected: 0,
-              runtime,
-              stdcycletime: sctm,
               timeTarget,
             }];
           }
@@ -203,58 +211,50 @@ export default {
         }
       });
     },
-    async setRejection(data) {
-      const {
-        machinename, planid, partname,
-      } = data;
-      this.machines.forEach(async (m, index) => {
-        if (m.machinename === machinename) {
-          const payload = {
-            ...m,
-            updatedAt: new Date().getTime(),
-          };
-          if (planid === m.planid) {
-            const productions = [...m.production];
-            const partIndex = m.production.findIndex((prod) => prod.partname === partname);
-            if (partIndex > -1) {
-              productions[partIndex].rejected = await this.fetchRejections({
-                planId: planid,
-                part: partname,
-              });
-            }
-            payload.production = productions;
-          }
-          this.setMachine({ index, payload });
-        }
-      });
-    },
     setDowntime(data) {
       const {
-        machinename, actualdowntimestart,
+        machinename,
+        actualdowntimestart,
+        reasonname,
+        status,
+      } = data;
+      for (let i = 0; i < this.machines.length; i += 1) {
+        if (this.machines[i].machinename === machinename) {
+          let payload = {};
+          if (status === 'inProgress') {
+            payload = {
+              ...this.machines[i],
+              machinestatus: 'DOWN',
+              updatedAt: new Date().getTime(),
+              downsince: actualdowntimestart,
+              downreason: reasonname || '',
+            };
+          } else if (status === 'complete') {
+            payload = {
+              ...this.machines[i],
+              machinestatus: 'UP',
+              updatedAt: new Date().getTime(),
+            };
+          }
+          this.setMachine({ index: i, payload });
+        }
+      }
+    },
+    setRejection(data) {
+      const {
+        machinename,
+        quality,
       } = data;
       for (let i = 0; i < this.machines.length; i += 1) {
         if (this.machines[i].machinename === machinename) {
           const payload = {
             ...this.machines[i],
-            machinestatus: 'DOWN',
             updatedAt: new Date().getTime(),
-            downsince: actualdowntimestart,
-            downreason: '',
+            quality,
           };
           this.setMachine({ index: i, payload });
         }
       }
-    },
-    setTime(data) {
-      const {
-        shift, hour, displayHour, elementName, date,
-      } = data;
-      if (elementName === 'cycletime') {
-        this.setCurrentDate(date.toString());
-      }
-      this.setCurrentShift(shift);
-      this.setCurrentHour(hour);
-      this.setDisplayHour(displayHour);
     },
   },
 };
