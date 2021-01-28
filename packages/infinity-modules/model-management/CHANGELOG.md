@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **ml-management:** change the status of activation befor deployment of model ([f300efc](https://bitbucket.org/entrib/shopworx/commits/f300efccec021f869247d922934b7e4d826d952d))
+* **model-management:** added model_id ([b21d663](https://bitbucket.org/entrib/shopworx/commits/b21d66337b2acb5ecb3006c5ccb09ff989bec611))
+
+
+### Features
+
+* **ml-management:** RA-I438 ([0246ee8](https://bitbucket.org/entrib/shopworx/commits/0246ee8237f29f64742fb212784e04e7f6eea8c2))
+* **ml-management:** RA-I438 ([8213674](https://bitbucket.org/entrib/shopworx/commits/8213674713f3e520e10b56f574c9d82ec6b62d5a))
+* **ml-management:** RA-I438 only admin user can change the status of model update ([52c81ca](https://bitbucket.org/entrib/shopworx/commits/52c81cae9f81ad4ec2b40f7d5e8c02715ae5a69b))
+* **ml-management:** RA-I438" ([0cf172a](https://bitbucket.org/entrib/shopworx/commits/0cf172a66f15ff8307684cdfa0edcef228c0923a))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

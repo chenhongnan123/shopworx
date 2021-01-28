@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **production-layout, Raw-data:** RA-I412,RA-I426, RA-I435" ([025002d](https://bitbucket.org/entrib/shopworx/commits/025002dc73907de58c84baf6be1485e277f6fd7d))
+* **production-log:** fixed update rejection and rework function ([434203b](https://bitbucket.org/entrib/shopworx/commits/434203bb9501136f86054c1fa2a59a60a96f92c3))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

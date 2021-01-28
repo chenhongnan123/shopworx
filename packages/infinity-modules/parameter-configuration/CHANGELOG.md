@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Features
+
+* **parameter-configuration:** RA-I408 and RA-I410(1) ([bd861ad](https://bitbucket.org/entrib/shopworx/commits/bd861adcbdaa51cfc156c25ead6284c3809bbaa6))
+* **parameter-configuration:** RA-I408 missing points" ([e11f04e](https://bitbucket.org/entrib/shopworx/commits/e11f04e9252cd4549aa1fa0f64abbff38543c5a6))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

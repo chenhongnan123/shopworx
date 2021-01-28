@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **core:** fix form submit event ([cfa9b55](https://bitbucket.org/entrib/shopworx/commits/cfa9b558277b804a40a4175ee1139f99f1610584))
+* **customer-deployment:** dispalay unmapped devices ([f3ceb71](https://bitbucket.org/entrib/shopworx/commits/f3ceb71039ccd49de44683831dba11819b625ab6))
+* **customer-deployment:** fixed char length validations ([95879b1](https://bitbucket.org/entrib/shopworx/commits/95879b12ff7f6c378476417ed4ab8679996e64b0))
+* **customer-deployment:** fixed description validation ([97dec0d](https://bitbucket.org/entrib/shopworx/commits/97dec0dd09dd05681f3b6748ddca9b622bda555a))
+* **customer-deployment:** fixed device update ([1c6cbb0](https://bitbucket.org/entrib/shopworx/commits/1c6cbb04cdac1bc7557b6e5f8ee0bb4c92fd2ec0))
+* **customer-deployment:** fixed elements provisioning ([18a364a](https://bitbucket.org/entrib/shopworx/commits/18a364a1a6a4dd61ee9d30c371e3c50987eaaaa5))
+* **customer-deployment:** fixed no selected device state ([2299910](https://bitbucket.org/entrib/shopworx/commits/229991018cc1cd93a4d6ae0828e3220aa321215e))
+* **dashboard-viewer:** added portal for dashboard title ([34bda51](https://bitbucket.org/entrib/shopworx/commits/34bda51b40507b8089315c1a39f8e029278b029c))
+* **downtime-log:** fixed downtime split validation ([606e7c7](https://bitbucket.org/entrib/shopworx/commits/606e7c71ea2e0c9e59bfb36bed11b40241c93135))
+* **ml-management:** change the status of activation befor deployment of model ([f300efc](https://bitbucket.org/entrib/shopworx/commits/f300efccec021f869247d922934b7e4d826d952d))
+* **model-management:** added model_id ([b21d663](https://bitbucket.org/entrib/shopworx/commits/b21d66337b2acb5ecb3006c5ccb09ff989bec611))
+* **origin:** added option to set customer on init ([5436641](https://bitbucket.org/entrib/shopworx/commits/543664107c24fca923c0516deb4e4248994db807))
+* **origin:** disable site selection until customer is selected ([8046ae3](https://bitbucket.org/entrib/shopworx/commits/8046ae335e0369458fe6dbf9ea1d0166cdfe2b80))
+* **origin:** fixed customer context setting ([47c93f7](https://bitbucket.org/entrib/shopworx/commits/47c93f73a0bff00f0872136fdab8a53a6855b505))
+* **production-layout:** RA-I412" ([d90a8f2](https://bitbucket.org/entrib/shopworx/commits/d90a8f2ff9fec88e235a619a1e091e97ad2d7c09))
+* **production-layout, Raw-data:** RA-I412,RA-I426, RA-I435" ([025002d](https://bitbucket.org/entrib/shopworx/commits/025002dc73907de58c84baf6be1485e277f6fd7d))
+* **production-log:** fixed update rejection and rework function ([434203b](https://bitbucket.org/entrib/shopworx/commits/434203bb9501136f86054c1fa2a59a60a96f92c3))
+* **production-planning:** fixed average CT calculation ([71d065c](https://bitbucket.org/entrib/shopworx/commits/71d065c8edce6cbf7ca250a0a8ecfadc67f15d41))
+* **production-planning:** fixed family molds planned qty ([75dcdd6](https://bitbucket.org/entrib/shopworx/commits/75dcdd697373e9ed6e40e3b7ec4274cd01839f73))
+* **raw-data:** RA-I435 for single date selection data is not poupulated" ([48fd429](https://bitbucket.org/entrib/shopworx/commits/48fd42902deccde5b175724241f334084f749dee))
+* **raw-data:** RA-I435 single date selection for Graphical view ([529a1e8](https://bitbucket.org/entrib/shopworx/commits/529a1e8d10ff8d2f0057d8428e640ea8118d001a))
+* **shopfloor-view:** fixed availability ([1642698](https://bitbucket.org/entrib/shopworx/commits/16426984c0e15ab02964baabd34281e2f2c19579))
+* **shopfloor-view:** fixed dashboard to work for a shift/hour ([dba5e3b](https://bitbucket.org/entrib/shopworx/commits/dba5e3b95d4600915a9ee499e8d467ce976a1bd5))
+
+
+### Features
+
+* **customer-deployment:** added option to update default deb config ([e8b5e2a](https://bitbucket.org/entrib/shopworx/commits/e8b5e2af0bb5587435fb249f066b353a478be2e4))
+* **customer-deployment:** added url validator ([bc51e71](https://bitbucket.org/entrib/shopworx/commits/bc51e715b2c074b019ced8c31d3039368b8d932e))
+* **ml-management:** RA-I438 ([0246ee8](https://bitbucket.org/entrib/shopworx/commits/0246ee8237f29f64742fb212784e04e7f6eea8c2))
+* **ml-management:** RA-I438 ([8213674](https://bitbucket.org/entrib/shopworx/commits/8213674713f3e520e10b56f574c9d82ec6b62d5a))
+* **ml-management:** RA-I438 only admin user can change the status of model update ([52c81ca](https://bitbucket.org/entrib/shopworx/commits/52c81cae9f81ad4ec2b40f7d5e8c02715ae5a69b))
+* **ml-management:** RA-I438" ([0cf172a](https://bitbucket.org/entrib/shopworx/commits/0cf172a66f15ff8307684cdfa0edcef228c0923a))
+* **parameter-configuration:** RA-I408 and RA-I410(1) ([bd861ad](https://bitbucket.org/entrib/shopworx/commits/bd861adcbdaa51cfc156c25ead6284c3809bbaa6))
+* **parameter-configuration:** RA-I408 missing points" ([e11f04e](https://bitbucket.org/entrib/shopworx/commits/e11f04e9252cd4549aa1fa0f64abbff38543c5a6))
+* **raw-data:** RA-I423 after selection of value button enable ([d5b807f](https://bitbucket.org/entrib/shopworx/commits/d5b807f81b7ae078f54f1a10f4c57c847d13c425))
+* **shopfloor-dashboard:** added performance value ([8adb678](https://bitbucket.org/entrib/shopworx/commits/8adb678cf9cbc344bd9679cb260fba68ba99f202))
+* **shopfloor-view:** added help text if screen size too small ([cf2b197](https://bitbucket.org/entrib/shopworx/commits/cf2b197fbcba52661647045806ef4fdb80a34ca4))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 
