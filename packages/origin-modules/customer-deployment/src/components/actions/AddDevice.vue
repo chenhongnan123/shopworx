@@ -15,7 +15,7 @@
           {{ addDevice ? 'Add' : 'Register' }} device
         </v-card-title>
         <v-card-text>
-          <template v-if="emptyDevices.length">
+          <template v-if="emptyDevices.length && !addDevice">
             <v-autocomplete
               filled
               dense
