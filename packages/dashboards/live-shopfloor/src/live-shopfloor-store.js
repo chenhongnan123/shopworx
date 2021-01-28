@@ -2,7 +2,7 @@ import { reactiveSetArray, set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
-const parseDate = (datetime) => {
+/* const parseDate = (datetime) => {
   const [date, hr, min, sec] = datetime.split(':');
   const [day, month, year] = date.split('-');
   return new Date(
@@ -13,7 +13,7 @@ const parseDate = (datetime) => {
     min,
     sec,
   ).getTime();
-};
+}; */
 
 export default ({
   namespaced: true,
@@ -74,82 +74,79 @@ export default ({
         commit('setCurrentShift', data.shiftName);
         commit('setCurrentHour', data.hour);
         commit('setDisplayHour', data.displayHour);
-        commit('setCurrentDate', data.date);
+        commit('setCurrentDate', +data.date);
         return true;
       }
       return false;
     },
 
-    getShiftAvailableTime: async ({ getters }) => {
-      const { shiftStartTime } = getters;
+    getAvailableTime: async ({ state, getters }) => {
+      const { selectedView } = state;
       const now = new Date().getTime();
-      const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
+      if (selectedView.value === 'shift') {
+        const { shiftStartTime } = getters;
+        const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
+        if (data) {
+          return now - shiftStartTime - data.results;
+        }
+        return now - shiftStartTime;
+      }
+      const { hourStartTime } = getters;
+      const { data } = await HourService.getNonWorkingTime(hourStartTime, now);
       if (data) {
-        return now - shiftStartTime - data.results;
+        return now - hourStartTime - data.results;
       }
-      return now - shiftStartTime;
-    },
-
-    fetchRejections: async ({ state, dispatch }, {
-      planId,
-      part,
-    }) => {
-      const { currentDate: date, currentShift: shift } = state;
-      const records = await dispatch(
-        'element/getRecords',
-        {
-          elementName: 'rejection',
-          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
-        },
-        { root: true },
-      );
-      if (records && records.length) {
-        return records.reduce((acc, cur) => {
-          // eslint-disable-next-line
-          acc += cur.quantity;
-          return acc;
-        }, 0);
-      }
-      return 0;
+      return now - hourStartTime;
     },
 
     getMachines: async ({
       state, commit, dispatch, rootState,
     }) => {
-      const { selectedView, currentDate, currentShift } = state;
+      const {
+        selectedView,
+        currentDate,
+        currentShift,
+        currentHour,
+      } = state;
       const { activeSite } = rootState.user;
+      let payload = {};
+      if (selectedView.value === 'shift') {
+        payload = {
+          siteid: activeSite,
+          dateVal: currentDate,
+          shiftVal: currentShift,
+        };
+      } else if (selectedView.value === 'hourly') {
+        payload = {
+          siteid: activeSite,
+          dateVal: currentDate,
+          hourVal: currentHour,
+        };
+      }
       const data = await dispatch(
         'report/executeReport',
         {
           reportName: selectedView.reportName,
-          payload: {
-            siteid: activeSite,
-            dateVal: +currentDate,
-            shiftVal: currentShift,
-          },
+          payload,
         },
         { root: true },
       );
       if (data) {
         const { machines } = JSON.parse(data);
-        const shiftWorkingTime = await dispatch('getShiftAvailableTime');
+        const workingTime = await dispatch('getAvailableTime');
         const mappedMachines = machines.map((m) => {
-          const payload = {
+          const machinePayload = {
             planid: '',
-            updatedAt: new Date().getTime(),
+            updatedAt: m.updatedAt || new Date().getTime(),
           };
           if (m.production.length) {
-            const {
-              planid,
-              updatedAt,
-            } = m.production[0];
-            payload.planid = planid;
-            payload.updatedAt = parseDate(updatedAt);
+            const { planid } = m.production[0];
+            machinePayload.planid = planid;
           }
           return {
             ...m,
-            ...payload,
-            shiftWorkingTime,
+            ...machinePayload,
+            workingTime,
           };
         });
         commit('setMachines', sortArray(mappedMachines, 'machinename'));
@@ -173,9 +170,20 @@ export default ({
     shiftStartTime: ({ shifts, currentShift, currentDate }) => {
       const shift = shifts.find((s) => s.shift === currentShift);
       const [hr, min] = shift.starttime.split(':');
-      const year = currentDate.substring(0, 4);
-      const month = currentDate.substring(6, 4);
-      const day = currentDate.substring(8, 6);
+      const date = currentDate.toString();
+      const year = date.substring(0, 4);
+      const month = date.substring(6, 4);
+      const day = date.substring(8, 6);
+      return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
+    },
+
+    hourStartTime: ({ displayHour, currentDate }) => {
+      const [start] = displayHour.split('-');
+      const [hr, min] = start.split(':');
+      const date = currentDate.toString();
+      const year = date.substring(0, 4);
+      const month = date.substring(6, 4);
+      const day = date.substring(8, 6);
       return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },
 

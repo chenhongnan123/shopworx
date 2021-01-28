@@ -13,9 +13,9 @@
         rotate="-90"
       >
         <span class="display-1">
-          88.4%
-          <v-icon small color="error" class="mt-1">mdi-arrow-down</v-icon>
-          <span class="caption">8%</span>
+          85%
+          <v-icon small color="success" class="mt-1">mdi-arrow-up</v-icon>
+          <span class="caption">21.4%</span>
         </span>
       </v-progress-circular>
       <div class="headline mt-2">
@@ -31,25 +31,25 @@
         <v-tab class="text-none">
           Availability
           <span class="headline font-weight-medium">
-            88%
-            <v-icon small color="error" class="mt-1">mdi-arrow-down</v-icon>
-            <span class="caption">2.5%</span>
+            90%
+            <v-icon small color="success" class="mt-1">mdi-arrow-up</v-icon>
+            <span class="caption">11.1%</span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Performance
           <span class="headline font-weight-medium">
-            93%
+            95%
             <v-icon small color="success" class="mt-1">mdi-arrow-up</v-icon>
-            <span class="caption">5%</span>
+            <span class="caption">5.5%</span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Quality
           <span class="headline font-weight-medium">
-            91%
+            99%
             <v-icon small color="success" class="mt-1">mdi-arrow-up</v-icon>
-            <span class="caption">6%</span>
+            <span class="caption">3.1%</span>
           </span>
         </v-tab>
       </v-tabs>

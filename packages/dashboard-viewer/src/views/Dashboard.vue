@@ -17,7 +17,7 @@
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
       >
-        Shift-wise shopfloor dashboard
+        <portal-target name="dashboard-title"></portal-target>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <send-to-tv />
