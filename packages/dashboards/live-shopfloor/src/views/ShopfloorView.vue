@@ -37,6 +37,18 @@
             </v-row>
           </v-window-item>
         </v-window>
+        <v-row
+          v-else
+          align="center"
+          justify="center"
+          class="mt-16"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="12" align="center" class="headline">
+            Screen too small to fit the machine card.<br>
+            Please view this dashboard on a bigger screen.
+          </v-col>
+        </v-row>
       </v-responsive>
       <summary-layout v-if="isTV || isFullscreen" />
       <v-footer padless fixed v-if="!isTV && !isFullscreen">
