@@ -23,7 +23,6 @@
     "@shopworx/planning": "^4.1.0-rc.4",
     "@shopworx/product-management": "^4.1.0-rc.4",
     "@shopworx/production-image": "^4.1.0-rc.4",
-    "@shopworx/production-layout-mes": "^4.1.0-rc.4",
     "@shopworx/production-log": "^4.1.0-rc.4",
     "@shopworx/recipe-management": "^4.1.0-rc.4",
     "@shopworx/report-viewer": "^4.1.0-rc.4",

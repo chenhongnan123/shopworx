@@ -10,7 +10,6 @@ import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import PackagingManagement from '@shopworx/packaging-management';
-import ProductionLayout from '@shopworx/production-layout-mes';
 import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
@@ -64,11 +63,6 @@ Vue.use(PackagingManagement, {
   i18n,
 });
 
-Vue.use(ProductionLayout, {
-  router,
-  store,
-  i18n,
-});
 Vue.use(ProductManagement, {
   router,
   store,
