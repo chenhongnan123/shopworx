@@ -52,7 +52,7 @@
         fixed-header
         :height="tableHeight - 168"
         >
-        <template #item.productname="{ item }">
+        <template v-slot:item.productname="{ item }">
           <span @click="handleClick(item)"><a>{{ item.productname }}</a></span>
         </template>
         <template v-slot:item.editedtime="{ item }">
@@ -60,7 +60,7 @@
             {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
-        <template #item.actions="{ item }">
+        <template v-slot:item.actions="{ item }">
           <v-row>
                 <v-btn
                   icon
@@ -146,7 +146,7 @@ export default {
     this.products = [];
   },
   computed: {
-    ...mapState('productManagement', ['productList', 'lineList']),
+    ...mapState('productManagement', ['productList', 'lineList'/** ,  'filterLine', 'filterSubLine', 'filterStation' */]),
   },
   methods: {
     ...mapActions('productManagement', ['getProductListRecords', 'createProduct']),

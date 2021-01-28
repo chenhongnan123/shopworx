@@ -66,6 +66,7 @@ export default {
     const success = await this.getLines();
     if (success) {
       [this.selectedLine] = this.lines;
+      // await this.onLineChange();
     }
     this.setSublines([]);
     await this.getSublines(`?query=lineid==${this.selectedLine.id}`);

@@ -51,6 +51,16 @@
               ></v-text-field>
             </v-col>
             <v-spacer></v-spacer>
+            <!-- <v-col cols="12" md="1">
+              <v-btn
+                x-large
+                :disabled="disableSave"
+                icon color="primary"
+                @click="saveProductDetails()"
+                >
+                <v-icon left>mdi-content-save</v-icon>
+              </v-btn>
+            </v-col> -->
           </v-row>
         </v-col>
       </v-row>
@@ -59,7 +69,7 @@
       :items="stationRecipeList"
       item-key="stationname"
       >
-        <template #item="{ item }">
+        <template v-slot:item="{ item }">
           <tr>
             <td>{{ item.sublinename }}</td>
             <td>{{ item.stationname }}</td>
@@ -77,7 +87,7 @@
                 item-text="recipename"
                 @change="onRecipeChange(item)"
                 >
-                <template #selection="{ item }">
+                <template v-slot:selection="{ item }">
                   <span>{{ item.recipename }}</span>
                 </template>
               </v-select>

@@ -50,6 +50,9 @@
               <div class="title">
                 {{ id.orderstatus }}
               </div>
+              <!-- <div>
+                Target Count
+              </div> -->
               <div class="title">
                 <v-text-field
                  :label="$t('Target Count')"
@@ -160,6 +163,24 @@
             </v-row>
           </v-col>
           <v-divider></v-divider>
+          <!-- <v-row no-gutters>
+            <span class="headline font-weight-regular info--text mt-2">Recipe Summary</span>
+            <v-col cols="12" class="py-2">
+              <div>
+                Recipe name
+              </div>
+              <div class="title">
+                Recipe1
+              </div>
+              <div>
+                Recipe version
+              </div>
+              <div class="title">
+                2
+              </div>
+            </v-col>
+          </v-row>
+          <v-divider></v-divider> -->
           <v-row no-gutters>
             <v-col cols="12" class="py-2">
               <div class="title">
@@ -177,6 +198,24 @@
             </v-col>
           </v-row>
            <v-divider></v-divider>
+          <!-- <v-divider></v-divider>
+          <v-row no-gutters>
+            <span class="headline font-weight-regular info--text mt-2">Running Order Summary</span>
+            <v-col cols="12" class="py-2">
+              <div>
+                Target Count
+              </div>
+              <div class="title">
+                {{ id.targetcount }}
+              </div>
+              <div>
+                Actual Count
+              </div>
+              <div class="title">
+                {{ id.actualcount }}
+              </div>
+            </v-col>
+          </v-row> -->
         </v-card-text>
     </v-card>
         </v-col>

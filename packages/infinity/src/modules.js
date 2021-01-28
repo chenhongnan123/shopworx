@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import ParameterConfiguration from '@shopworx/parameter-configuration-mes';
+import ParameterConfiguration from '@shopworx/parameter-configuration';
+import ParameterConfigurationMes from '@shopworx/parameter-configuration-mes';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
 import Masters from '@shopworx/masters';
@@ -10,6 +11,7 @@ import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import PackagingManagement from '@shopworx/packaging-management';
 import ProductionLayout from '@shopworx/production-layout';
+import ProductionLayoutMes from '@shopworx/production-layout-mes';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
 import RawData from '@shopworx/rawdata';
@@ -27,6 +29,11 @@ import router from './router';
 import i18n from './i18n';
 
 Vue.use(ParameterConfiguration, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(ParameterConfigurationMes, {
   router,
   store,
   i18n,
@@ -146,6 +153,11 @@ Vue.use(ModelManagement, {
 });
 
 Vue.use(ProductionLayout, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(ProductionLayoutMes, {
   router,
   store,
   i18n,

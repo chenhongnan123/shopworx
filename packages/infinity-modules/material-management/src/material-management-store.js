@@ -1,3 +1,4 @@
+// import HourService from '@shopworx/services/api/hour.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({

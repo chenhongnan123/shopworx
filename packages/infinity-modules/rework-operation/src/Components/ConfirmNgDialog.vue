@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template #activator="{ on }">
+    <template v-slot:activator="{ on }">
     <v-btn v-on="on"
     small color="warning" class="text-none ml-2" @click="checkMainId()">
             {{ $t('displayTags.buttons.confirmng') }}
@@ -80,12 +80,14 @@ export default {
       this.dialog = false;
     },
     async btnUpdateOverAllResult() {
+      // console.log(this.rework);
       const payloadRework = {
         query: this.rework.reworkinfo[0]._id,
         payload: {
           overallresult: 1,
         },
       };
+      // console.log(payloadRework);
       await this.updateOverAllResult(payloadRework);
       const payload = {
         query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
@@ -93,6 +95,7 @@ export default {
           overallresult: 2,
         },
       };
+      // console.log(payload);
       await this.updateOverAllResultPartStatus(payload);
       this.componantList.forEach(async (element) => {
         const payloadComponent = {

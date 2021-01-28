@@ -56,65 +56,51 @@
         item-key="ordernumber"
         show-select
         >
-        <!-- eslint-disable-next-line -->
-        <template #item.linename="{ item }">
+        <template v-slot:item.linename="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.linename }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.ordernumber="{ item }">
+        <template v-slot:item.ordernumber="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.ordernumber }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.ordertype="{ item }">
+        <template v-slot:item.ordertype="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.ordertype }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.productname="{ item }">
+        <template v-slot:item.productname="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.productname }}</span>
         </template>
-
         <template v-slot:item.ordername="{ item }">
           <span @mouseover="hover = true"
             @mouseleave="hover = false" :class="orderC(item.orderstatus)"
             @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.ordercreatedtime="{ item }">
+        <template v-slot:item.ordercreatedtime="{ item }">
           <span :class="orderC(item.orderstatus)">
             {{new Date(item.ordercreatedtime).toLocaleString()}}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.scheduledstart="{ item }">
+        <template v-slot:item.scheduledstart="{ item }">
           <span :class="orderC(item.orderstatus)">
             {{new Date(item.scheduledstart).toLocaleString()}}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.orderexpendtime="{ item }">
+        <template v-slot:item.orderexpendtime="{ item }">
           <span :class="orderC(item.orderstatus)">
             {{new Date(item.orderexpendtime).toLocaleString()}}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.targetcount="{ item }">
+        <template v-slot:item.targetcount="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.targetcount }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.actualcount="{ item }">
+        <template v-slot:item.actualcount="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.actualcount }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.okcount="{ item }">
+        <template v-slot:item.okcount="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.okcount }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.ngcount="{ item }">
+        <template v-slot:item.ngcount="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.ngcount }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.customername="{ item }">
+        <template v-slot:item.customername="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.customername }}</span>
         </template>
-        <!-- eslint-disable-next-line -->
-        <template #item.orderstatus="{ item }">
+        <template v-slot:item.orderstatus="{ item }">
           <v-select
             v-if='item.orderstatus == "New"'
             dense
@@ -125,7 +111,7 @@
             v-model="item.orderstatus"
             @change="onChangeStatus(item)"
           >
-          <template #selection="{ item }">
+          <template v-slot:selection="{ item }">
             <span :class="orderC(item)">{{ item }}</span>
               </template></v-select>
               <v-select
@@ -137,7 +123,7 @@
                 :items="orderStatusToChangeFromReleased"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
-            ><template #selection="{ item }">
+            ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
               </template></v-select>
             <v-select
@@ -149,7 +135,7 @@
                 :items="orderStatusToChangeFromRunning"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
-            ><template #selection="{ item }">
+            ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
               </template></v-select>
             <v-select
@@ -161,7 +147,7 @@
                 :items="orderStatusToChangeFromInterrupted"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
-            ><template #selection="{ item }">
+            ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
               </template></v-select>
             <span :class="orderC(item.orderstatus)"
