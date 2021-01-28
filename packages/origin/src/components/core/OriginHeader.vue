@@ -28,7 +28,7 @@
       <portal-target name="app-extension" slim />
     </template>
     <v-spacer></v-spacer>
-    <origin-set-context v-if="$route.path.includes('customer')" />
+    <origin-set-context v-if="$route.path.includes('customer') && isContextSet" />
     <template v-if="$vuetify.breakpoint.mdAndUp">
       <origin-help />
       <origin-account />
@@ -50,7 +50,11 @@ export default {
     OriginHelp,
   },
   computed: {
+    ...mapState('user', ['me']),
     ...mapState('helper', ['extendedHeader']),
+    isContextSet() {
+      return this.me;
+    },
   },
 };
 </script>

@@ -104,7 +104,8 @@
     "UPDATE": "Error while updating! Please retry.",
     "PASSWORDLESS": "Error while enabling passwordless. Please retry.",
     "INSTALL_DEBIAN": "Error while installing debian. Please retry.",
-    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb"
+    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb",
+    "UPLOAD_DEBIAN": "Unable to upload the debian file. Please retry."
   },
   "fields": {
     "email": "Email",

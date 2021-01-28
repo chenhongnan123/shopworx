@@ -321,8 +321,9 @@ export default ({
       );
       if (created && created.id) {
         const createdDevice = await dispatch('fetchDeviceById', created.id);
-        commit('setSelectedDevice', createdDevice);
-        return createdDevice;
+        const device = { ...createdDevice, instances: [] };
+        commit('setSelectedDevice', device);
+        return device;
       }
       return false;
     },
