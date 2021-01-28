@@ -350,7 +350,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionLayout', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps']),
+    ...mapActions('productionLayoutMes', ['getLines', 'getSublines', 'getSubStations', 'getroadMaps']),
 
     addNewNGCode() {
       this.dialog = true;

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import ParameterConfiguration from '@shopworx/parameter-configuration';
+import ParameterConfiguration from '@shopworx/parameter-configuration-mes';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
 import MachineDashboard from '@shopworx/machine-dashboard';
@@ -10,7 +10,7 @@ import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import PackagingManagement from '@shopworx/packaging-management';
-import ProductionLayout from '@shopworx/production-layout';
+import ProductionLayout from '@shopworx/production-layout-mes';
 import MaintenanceSummary from '@shopworx/maintenance-summary';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
