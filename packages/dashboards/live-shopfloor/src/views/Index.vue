@@ -25,6 +25,7 @@ export default {
     return {
       sseClient: null,
       timeout: null,
+      timeInterval: null,
       readyState: 0,
       states: [
         { text: 'Connecting', color: 'warning' },
@@ -34,9 +35,13 @@ export default {
     };
   },
   async created() {
+    const self = this;
     this.setLoading(true);
     await this.getShifts();
     await this.getBusinessTime();
+    this.timeInterval = setInterval(async () => {
+      await self.getBusinessTime();
+    }, 60000);
     if (this.isLoaded) {
       await this.getMachines();
     }
@@ -48,6 +53,7 @@ export default {
   beforeDestroy() {
     this.sseClient.close();
     clearTimeout(this.timeout);
+    clearInterval(this.timeInterval);
   },
   watch: {
     async isLoaded(loaded) {
@@ -76,11 +82,8 @@ export default {
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
-      const isDisplaySelected = this.selectedDisplay !== null;
       const isThemeSelected = this.selectedTheme !== null;
-      return isViewSelected
-        && isDisplaySelected
-        && isThemeSelected;
+      return isViewSelected && isThemeSelected;
     },
   },
   methods: {
@@ -158,7 +161,7 @@ export default {
         qty,
         activecavity,
         updatedAtTimestamp: updatedAt,
-        actm_sum: runtime,
+        runtime,
         shiftAvailableTime,
         hourlyAvailableTime,
         workingTime,
