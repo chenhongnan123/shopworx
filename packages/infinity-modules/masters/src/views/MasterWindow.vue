@@ -26,6 +26,17 @@
         >
           Save
         </v-btn>
+        <!-- <v-btn
+          small
+          outlined
+          color="success"
+          class="text-none"
+          @click="updateValueFun"
+          :class="'ml-2'"
+          v-if="showUpdateBtn"
+        >
+          Update
+        </v-btn> -->
         <v-btn
           small
           outlined
@@ -57,17 +68,6 @@
           Export
           <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
         </v-btn>
-        <v-btn
-          v-if="base.showUpdateBtn"
-          small
-          outlined
-          color="success"
-          class="text-none"
-          @click="updateValue"
-          :class="'ml-2'"
-        >
-          Update
-        </v-btn>
       </span>
     </portal>
     <v-tabs
@@ -97,17 +97,13 @@
       v-else
       :id="id"
       ref="base"
+      @showupdatebtnemt="visibleUpdateBtn"
     />
   </div>
 </template>
 
 <script>
-import {
-  mapGetters,
-  mapActions,
-  mapMutations,
-  mapState,
-} from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BaseMaster from '../components/BaseMaster.vue';
 
 export default {
@@ -119,19 +115,20 @@ export default {
     return {
       base: '',
       tab: 0,
+      showUpdateBtn: false,
     };
   },
   mounted() {
     this.base = this.$refs.base;
   },
   methods: {
-    ...mapActions('masters', ['postBulkRecords', 'deleteRecord', 'getRecords', 'updateRecord']),
+    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    visibleUpdateBtn(value) {
+      this.showUpdateBtn = value;
+    },
     addNewEntry() {
       this.base.addRow();
-    },
-    updateValue() {
-      this.$refs.base.updateValue();
     },
     async deleteEntry() {
       if (this.base.gridApi.getSelectedRows()) {
@@ -160,33 +157,39 @@ export default {
         }
       }
     },
-    async saveNewEntry(event) {
-      this.rowsSelected = event.api.getSelectedRows().length > 0;
-      const name = this.id;
-      const payload = [];
-      this.base.rowData.forEach((data) => {
-        if (!data.elementName) {
-          payload.push({
-            ...data,
-            assetid: 4,
+    async saveNewEntry() {
+      if (this.base.updateData.length > 0) {
+        this.base.updateValue();
+      } else {
+        const name = this.id;
+        const payload = [];
+        this.base.rowData.forEach((data) => {
+          if (!data.elementName) {
+            payload.push({
+              ...data,
+              assetid: 4,
+            });
+          }
+        });
+        const postData = await this.postBulkRecords({ payload, name });
+        if (postData) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'CREATED_RECORD',
+          });
+          this.base.fetchRecords();
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_CREATING_RECORD',
           });
         }
-      });
-      const postData = await this.postBulkRecords({ payload, name });
-      if (postData) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'CREATED_RECORD',
-        });
-        this.base.fetchRecords();
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ERROR_CREATING_RECORD',
-        });
       }
+    },
+    updateValueFun() {
+      this.base.updateValue();
     },
     onBtnExport() {
       this.base.exportData();
@@ -196,7 +199,6 @@ export default {
     },
   },
   computed: {
-    ...mapState('masters', ['records']),
     ...mapGetters('masters', ['showTabs', 'getAssets']),
     id() {
       return this.$route.params.id;

@@ -4,11 +4,7 @@
       <update-report />
       <save-report-as />
       <report-view-list />
-      <v-btn small disabled outlined color="primary" class="text-none ml-2">
-        <v-icon small left>mdi-cloud-download-outline</v-icon>
-        Export
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
+      <export-report @on-export="onExport" />
     </div>
   </portal>
 </template>
@@ -17,6 +13,7 @@
 import UpdateReport from './toolbar/UpdateReport.vue';
 import SaveReportAs from './toolbar/SaveReportAs.vue';
 import ReportViewList from './toolbar/ReportViewList.vue';
+import ExportReport from './toolbar/ExportReport.vue';
 
 export default {
   name: 'ReportToolbarExtension',
@@ -24,6 +21,12 @@ export default {
     UpdateReport,
     SaveReportAs,
     ReportViewList,
+    ExportReport,
+  },
+  methods: {
+    onExport(e) {
+      this.$emit('on-export', e);
+    },
   },
 };
 </script>

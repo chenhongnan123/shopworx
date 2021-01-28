@@ -82,14 +82,19 @@ export default ({
       return false;
     },
 
-    logoutUser: async ({ commit }) => {
+    logoutUser: async ({ commit, rootState }) => {
       try {
         const { data } = await AuthService.logout();
         if (data && data.results) {
+          const { storageLocation } = rootState.webApp;
           SessionService.removeSession();
           commit('setSessionId', null);
           commit('user/setMe', null, { root: true });
           commit('user/setMySolutions', [], { root: true });
+          commit('webApp/resetConfig', null, { root: true });
+          Object.keys(storageLocation).forEach((loc) => {
+            localStorage.removeItem(storageLocation[loc]);
+          });
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,

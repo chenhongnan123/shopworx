@@ -1,65 +1,73 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
-    <template #activator="{ on }">
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'mdi-crosshairs'"></v-icon>
-        {{ selectedMachine ? selectedMachine : '' }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item
-        :key="n"
-        v-for="(machine, n) in machineList"
-        @click="setSelectedMachine(machine)"
-      >
-        <v-list-item-title>{{ machine }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <v-combobox
+    dense
+    outlined
+    label="Machine"
+    v-model="machine"
+    :items="machineList"
+    prepend-inner-icon="mdi-crosshairs"
+  ></v-combobox>
 </template>
 
 <script>
 import {
   mapGetters,
   mapMutations,
-  mapState,
   mapActions,
 } from 'vuex';
+
+const FIELD_NAME = 'machinename';
 
 export default {
   name: 'MachineSelection',
   computed: {
+    ...mapGetters('webApp', ['filters']),
     ...mapGetters('downtimeLog', ['machineList']),
-    ...mapState('downtimeLog', ['selectedMachine']),
-  },
-  methods: {
-    ...mapMutations('downtimeLog', ['setSelectedMachine']),
-    ...mapActions('downtimeLog', ['fetchMachines']),
+    isMachineFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
+    machine: {
+      get() {
+        const machineFilter = this.filters && this.filters[FIELD_NAME];
+        if (machineFilter) {
+          return machineFilter.value;
+        }
+        return this.machineList[0];
+      },
+      set(machineVal) {
+        this.setMachineFilter(machineVal);
+      },
+    },
   },
   created() {
     if (this.machineList && this.machineList.length) {
-      if (!this.selectedMachine) {
-        this.setSelectedMachine(this.machineList[0]);
+      if (this.isMachineFilterInactive) {
+        this.setMachineFilter(this.machineList[0]);
       }
     } else {
       this.fetchMachines();
     }
   },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('downtimeLog', ['fetchMachines']),
+    setMachineFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
+  },
   watch: {
     machineList(val) {
       if (val && val.length) {
-        if (!this.selectedMachine) {
-          this.setSelectedMachine(val[0]);
+        if (this.isMachineFilterInactive) {
+          this.setMachineFilter(val[0]);
         }
       }
     },

@@ -42,6 +42,13 @@ export default {
       await this.executeReport();
       this.$refs.reportGrid.restoreState();
     },
+    exportReport(type) {
+      if (type === 'gridCSV') {
+        this.$refs.reportGrid.exportGridCSV();
+      } else if (type === 'gridExcel') {
+        this.$refs.reportGrid.exportGridExcel();
+      }
+    },
   },
 };
 </script>

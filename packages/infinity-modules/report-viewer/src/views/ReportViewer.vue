@@ -7,9 +7,9 @@
       </portal>
       <report-views-not-found v-if="!reportsFound" />
       <template v-else>
-        <report-toolbar-extension />
+        <report-toolbar-extension @on-export="onExport" />
         <report-toolbar />
-        <report-container />
+        <report-container ref="reportContainer" />
       </template>
     </template>
   </div>
@@ -78,6 +78,9 @@ export default {
         const invalidPath = this.$route.fullPath;
         this.$router.push({ name: '404', params: { 0: invalidPath } });
       }
+    },
+    onExport(e) {
+      this.$refs.reportContainer.exportReport(e);
     },
   },
 };

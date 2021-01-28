@@ -3,6 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **icon:** updated master data icon ([08fcd21](https://bitbucket.org/entrib/shopworx/commits/08fcd21265d7b42ca436c0620ce4adb7284119c1))
+
+
+### Features
+
+* **dashboard-viewer:** added tv dashboard viewer ([32a3f37](https://bitbucket.org/entrib/shopworx/commits/32a3f378c1078bb62e07670495a75250b0b1795b))
+* **report-viewer:** added quality as a report category ([a9a290f](https://bitbucket.org/entrib/shopworx/commits/a9a290fa4b0e5f442a08896d4159daee1c452fa2))
+* mL Model UI added ([303bab7](https://bitbucket.org/entrib/shopworx/commits/303bab7a0968488f0e849a7251e1bc98cacf2ca8))
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Features
+
+* **core:** added internal server error redirection ([56ad37c](https://bitbucket.org/entrib/shopworx/commits/56ad37c1c7be4b710903ccad092e445a58e215dc))
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **illustrations:** added illustration for downtime and production log ([e06ab8c](https://bitbucket.org/entrib/shopworx/commits/e06ab8cda26775a3aec7cfdd0a4524082756c240))
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Features
+
+* **icons:** added icons for insight categories ([33d93ae](https://bitbucket.org/entrib/shopworx/commits/33d93ae48ecd4223013315b8ae20c4c4fe8a2e74))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/assets

@@ -10,6 +10,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "401" */ '@/views/401.vue'),
   },
   {
+    path: '/server-error',
+    name: '500',
+    component: () => import(/* webpackChunkName: "500" */ '@/views/500.vue'),
+  },
+  {
     path: '/',
     component: () => import(/* webpackChunkName: "home" */ '@/views/InfinityHome.vue'),
     children: [

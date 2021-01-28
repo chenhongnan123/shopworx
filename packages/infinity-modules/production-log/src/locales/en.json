@@ -1,21 +1,20 @@
 {
-  "productionLog": "Production Log",
-  "rejectionReasons": {
+  "production": {
     "setup": {
       "counter": "Step {current} of {total}",
       "importMaster": {
-        "title": "Import rejection reasons",
-        "title1": "Upload rejection reasons to ShopWorx to get better",
-        "title2": "logs",
-        "title3": "of your rejections on the shopfloor.",
-        "import": "Import rejection reasons",
+        "title": "Import master data",
+        "title1": "Upload",
+        "title2": "operators, rejection reasons, scrap reasons and rework reasons",
+        "title3": "to use your production log app.",
+        "import": "Import master data",
         "downloading": "Generating templates...",
-        "downloadError": "Could not download the rejection reasons templates.",
+        "downloadError": "Could not download the master data templates.",
         "retryDownload": "Retry download.",
-        "download": "You can download the rejection reasons templates",
+        "download": "You can download the master data templates",
         "downloadLink": "here.",
-        "fetchMaster": "Fetching rejection reasons from ShopWorx servers...",
-        "fetchError": "We couldn't fetch rejection reasons from ShopWorx servers.",
+        "fetchMaster": "Fetching master config from ShopWorx servers...",
+        "fetchError": "We couldn't fetch master config from ShopWorx servers.",
         "retryFetch": "Please retry.",
         "importFile": "Import file",
         "recordsExist": "1 record already exist! | {count} records already exist!",
@@ -44,7 +43,7 @@
       "complete": {
         "title": "Complete setup",
         "title1": "Great! you are all set. Welcome to the",
-        "title2": "rejection",
+        "title2": "production log",
         "title3": "app. Other settings are available in the app for you to change.",
         "next": "Let's go"
       }

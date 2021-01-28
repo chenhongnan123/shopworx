@@ -5,26 +5,29 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <v-spacer></v-spacer>
-      <div class="mt-1" v-show="!edit">
-        <span class="title">
-          {{ duration }} | {{ machine }} | {{ shift }} - {{ date }}
-        </span>
+      <div v-if="selectedDowntimes.length > 0 && toggleSelection">
+         <assign-reason-dialog />
       </div>
-      <div v-show="edit">
-        <duration-selection />
-        <machine-selection />
-        <shift-selection />
-        <date-selection />
+      <v-spacer></v-spacer>
+      <div class="mt-1">
+        <span class="title">
+          <span v-if="filterCount">
+            {{ filterCount }} of {{ downtimeCount }} records
+            <span v-if="$vuetify.breakpoint.smAndUp">|</span>
+          </span>
+          <span v-if="$vuetify.breakpoint.smAndUp">
+            {{ machine }} | {{ shift }} - {{ date }}
+          </span>
+        </span>
       </div>
       <v-btn
         icon
         small
         outlined
         class="ml-2"
-        @click="edit = !edit"
+        @click="toggleDrawer(true)"
       >
-        <v-icon small v-if="!edit">mdi-pencil</v-icon>
+        <v-icon small v-if="!drawer">mdi-pencil</v-icon>
         <v-icon small v-else>mdi-check</v-icon>
       </v-btn>
     </v-toolbar>
@@ -32,20 +35,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
-import DurationSelection from './toolbar/DurationSelection.vue';
-import MachineSelection from './toolbar/MachineSelection.vue';
-import ShiftSelection from './toolbar/ShiftSelection.vue';
-import DateSelection from './toolbar/DateSelection.vue';
+import AssignReasonDialog from './AssignReasonDialog.vue';
 
 export default {
   name: 'DowntimeToolbar',
   components: {
-    DurationSelection,
-    MachineSelection,
-    ShiftSelection,
-    DateSelection,
+    AssignReasonDialog,
   },
   data() {
     return {
@@ -54,23 +51,30 @@ export default {
   },
   computed: {
     ...mapState('downtimeLog', [
+      'drawer',
+      'downtimeList',
       'selectedDuration',
-      'selectedMachine',
-      'selectedShift',
-      'selectedDate',
+      'selectedDowntimes',
+      'toggleSelection',
+      'downtimeCount',
     ]),
-    duration() {
-      return this.selectedDuration ? this.selectedDuration.name : '';
-    },
+    ...mapGetters('webApp', ['filters', 'filteredRecords']),
     machine() {
-      return this.selectedMachine ? this.selectedMachine : '';
+      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
     shift() {
-      return this.selectedShift ? this.selectedShift : '';
+      return this.filters && this.filters.shiftName ? this.filters.shiftName.value : '';
     },
     date() {
-      return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
+      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
     },
+    filterCount() {
+      const downtime = this.filteredRecords(this.downtimeList);
+      return downtime.length;
+    },
+  },
+  methods: {
+    ...mapMutations('downtimeLog', ['toggleDrawer']),
   },
 };
 </script>

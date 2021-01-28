@@ -1,85 +1,78 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
-    <template #activator="{ on }">
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'$downtimeLog'"></v-icon>
-        {{ durationList.find((duration) => duration.value === selectedDuration.value).name }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item
-        :key="n"
-        v-for="(duration, n) in durationList"
-        @click="setSelectedDuration(duration)"
-      >
-        <v-list-item-title>{{ duration.name }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <v-combobox
+    dense
+    outlined
+    return-object
+    item-text="name"
+    v-model="duration"
+    :items="durationList"
+    label="Downtime duration"
+    prepend-inner-icon="$downtimeLog"
+  ></v-combobox>
 </template>
 
 <script>
 import {
   mapMutations,
-  mapState,
-  mapActions,
+  mapGetters,
 } from 'vuex';
+
+const FIELD_NAME = 'downtimeduration';
 
 export default {
   name: 'DurationSelection',
   data() {
     return {
       durationList: [{
-        name: '> 1 min',
-        value: 60,
+        name: 'All durations',
+        value: 0,
       }, {
-        name: '> 5 mins',
-        value: 300,
+        name: '> 2 mins',
+        value: 120,
       }, {
         name: '> 30 mins',
         value: 1800,
-      }, {
-        name: '> 60 mins',
-        value: 3600,
-      }, {
-        name: 'All durations',
-        value: 0,
       }],
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['selectedDuration']),
-  },
-  methods: {
-    ...mapMutations('downtimeLog', ['setSelectedDuration']),
-    ...mapActions('downtimeLog', ['fetchMachines']),
+    ...mapGetters('webApp', ['filters']),
+    isDurationFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
+    duration: {
+      get() {
+        const durationFilter = this.filters && this.filters[FIELD_NAME];
+        if (durationFilter) {
+          const value = this.durationList.find((s) => s.value === durationFilter.value);
+          if (value) {
+            return value;
+          }
+        }
+        return this.durationList[1];
+      },
+      set(durationVal) {
+        this.setDurationFilter(durationVal);
+      },
+    },
   },
   created() {
-    if (this.durationList && this.durationList.length) {
-      if (!this.selectedDuration) {
-        this.setSelectedDuration(this.durationList[0]);
-      }
-    } else {
-      this.fetchMachines();
+    if (this.isDurationFilterInactive) {
+      this.setDurationFilter(this.durationList[1]);
     }
   },
-  watch: {
-    durationList(val) {
-      if (val && val.length) {
-        if (!this.selectedDuration) {
-          this.setSelectedDuration(val[0]);
-        }
-      }
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    setDurationFilter(duration) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: duration.value,
+          operation: 'gte',
+        },
+      });
     },
   },
 };

@@ -1,65 +1,73 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
-    <template #activator="{ on }">
-      <v-btn
-        small
-        outlined
-        v-on="on"
-        color="primary"
-        class="text-none ml-2"
-      >
-        <v-icon small left v-text="'$shiftHours'"></v-icon>
-        {{ selectedShift ? selectedShift : '' }}
-        <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item
-        :key="n"
-        v-for="(shift, n) in shiftList"
-        @click="setSelectedShift(shift)"
-      >
-        <v-list-item-title>{{ shift }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <v-combobox
+    dense
+    outlined
+    label="Shift"
+    v-model="shift"
+    :items="shiftList"
+    prepend-inner-icon="$shiftHours"
+  ></v-combobox>
 </template>
 
 <script>
 import {
   mapGetters,
   mapMutations,
-  mapState,
   mapActions,
 } from 'vuex';
+
+const FIELD_NAME = 'shiftName';
 
 export default {
   name: 'ShiftSelection',
   computed: {
+    ...mapGetters('webApp', ['filters']),
     ...mapGetters('downtimeLog', ['shiftList']),
-    ...mapState('downtimeLog', ['selectedShift']),
-  },
-  methods: {
-    ...mapMutations('downtimeLog', ['setSelectedShift']),
-    ...mapActions('downtimeLog', ['fetchShifts']),
+    isShiftFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
+    shift: {
+      get() {
+        const shiftFilter = this.filters && this.filters[FIELD_NAME];
+        if (shiftFilter) {
+          return shiftFilter.value;
+        }
+        return this.shiftList[0];
+      },
+      set(shiftVal) {
+        this.setShiftFilter(shiftVal);
+      },
+    },
   },
   created() {
     if (this.shiftList && this.shiftList.length) {
-      if (!this.selectedShift) {
-        this.setSelectedShift(this.shiftList[0]);
+      if (this.isShiftFilterInactive) {
+        this.setShiftFilter(this.shiftList[0]);
       }
     } else {
       this.fetchShifts();
     }
   },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('downtimeLog', ['fetchShifts']),
+    setShiftFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
+  },
   watch: {
     shiftList(val) {
       if (val && val.length) {
-        if (!this.selectedShift) {
-          this.setSelectedShift(val[0]);
+        if (this.isShiftFilterInactive) {
+          this.setShiftFilter(val[0]);
         }
       }
     },

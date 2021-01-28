@@ -58,38 +58,38 @@ export default {
       isFullScreen: false,
       headers: [
         {
-          headerName: 'Created Date',
+          headerName: this.$t('Created Date'),
           field: 'createdTimestamp',
           resizable: true,
         },
         {
-          headerName: 'Main ID',
+          headerName: this.$t('Main ID'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,
         },
         {
-          headerName: 'Sub station',
+          headerName: this.$t('Sub station'),
           field: 'substationname',
           resizable: true,
         },
         {
-          headerName: 'Completed Product ID',
+          headerName: this.$t('Completed Product ID'),
           field: 'completedproductid',
           resizable: true,
         },
         {
-          headerName: 'Recipe name',
+          headerName: this.$t('Recipe name'),
           field: 'recipename',
           resizable: true,
         },
         {
-          headerName: 'Substation result',
+          headerName: this.$t('Substation result'),
           field: 'substationresult',
           resizable: true,
         },
         {
-          headerName: 'Order name',
+          headerName: this.$t('Order name'),
           field: 'ordername',
           resizable: true,
         },

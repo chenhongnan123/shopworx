@@ -57,6 +57,7 @@ export default {
       isFullScreen: false,
       processParametersheader: [],
       headerForCSV: [],
+      language: null,
       headers: [
         {
           headerName: 'Created Date',
@@ -102,6 +103,7 @@ export default {
     dateRangeText() {
       return this.dates.join(' to ');
     },
+    ...mapState('helper', ['locales']),
     ...mapState('traceabilityApp', [
       'lineList',
       'subLineList',
@@ -112,8 +114,14 @@ export default {
       'subStationInfo',
       'parametersList',
       'trecibilityState']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   async created() {
+    this.language = this.currentLocale;
     await this.getSubStations();
     const {
       substationid,
@@ -245,24 +253,55 @@ export default {
       this.headerForCSV = [];
       this.headerForCSV.push('createdTimestamp', 'mainid', 'completedproductid');
       this.processParametersheader = [];
-      this.processParametersheader.push(
-        {
-          headerName: 'Created Date',
-          field: 'createdTimestamp',
-          resizable: true,
-        },
-        {
-          headerName: 'Main ID',
-          field: 'mainid',
-          rowGroup: true,
-          resizable: true,
-        },
-        {
-          headerName: 'Completed Product ID',
-          field: 'completedproductid',
-          resizable: true,
-        },
-      );
+      if (this.language === 'zhHans') {
+        this.processParametersheader.push(
+          {
+            headerName: this.$t('Created Date'),
+            field: 'createdTimestamp',
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Main ID'),
+            field: 'mainid',
+            rowGroup: true,
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Completed Product ID'),
+            field: 'completedproductid',
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Description'),
+            field: 'chinesedescription',
+            resizable: true,
+          },
+        );
+      } else {
+        this.processParametersheader.push(
+          {
+            headerName: this.$t('Created Date'),
+            field: 'createdTimestamp',
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Main ID'),
+            field: 'mainid',
+            rowGroup: true,
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Completed Product ID'),
+            field: 'completedproductid',
+            resizable: true,
+          },
+          {
+            headerName: this.$t('Description'),
+            field: 'description',
+            resizable: true,
+          },
+        );
+      }
       // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let cFlag = 0;
       let param = '';

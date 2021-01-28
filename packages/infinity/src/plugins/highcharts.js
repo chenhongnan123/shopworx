@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsVue from 'highcharts-vue';
 import HighchartsMore from 'highcharts/highcharts-more';
 import xRange from 'highcharts/modules/xrange';
+import pareto from 'highcharts/modules/pareto';
 
 Highcharts.theme = {
   chart: {
@@ -19,4 +20,5 @@ Highcharts.theme = {
 Highcharts.setOptions(Highcharts.theme);
 HighchartsMore(Highcharts);
 xRange(Highcharts);
+pareto(Highcharts);
 Vue.use(HighchartsVue);

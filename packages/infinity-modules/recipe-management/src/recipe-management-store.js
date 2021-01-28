@@ -1,4 +1,3 @@
-// import { set } from '@shopworx/services/util/store.helper';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -187,7 +186,6 @@ export default ({
       }
       return deleted;
     },
-    // getProductDetails
     getProductDetails: async ({ dispatch }, query) => {
       const orders = await dispatch(
         'element/getRecords',

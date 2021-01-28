@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* **Masters:** refresh UI button not working ([d6d49f8](https://bitbucket.org/entrib/shopworx/commits/d6d49f8354d366c89c4018a52db6c28fafe6e230))
+
+
+### Features
+
+* **Masters:** export ( download ) data table in CSV format ([3ace942](https://bitbucket.org/entrib/shopworx/commits/3ace9421e7f293fd66b05d39de0198f2129ca88b))
+* **Masters:** update value in table ([843123f](https://bitbucket.org/entrib/shopworx/commits/843123f02f5852debd62117d876e9add59dede5c))
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/masters

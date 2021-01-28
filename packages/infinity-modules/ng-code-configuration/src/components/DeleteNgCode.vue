@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$delete'"
     class="float-right" color="error"></v-icon>
     </template>
@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       ngcode: {},
-      // assetId: 4,
       default: false,
       dialog: false,
       deleting: false,

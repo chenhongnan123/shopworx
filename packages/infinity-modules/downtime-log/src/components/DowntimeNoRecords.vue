@@ -16,18 +16,38 @@
           No downtime record for selected filters
         </span>
       </v-col>
+      <v-col cols="12" align="center">
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="resetFilters"
+        >
+          Reset filters
+        </v-btn>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
   name: 'DowntimeNoRecords',
   computed: {
+    ...mapState('webApp', ['storageLocation']),
     notFoundIllustration() {
       return this.$vuetify.theme.dark
         ? 'not-found-dark'
         : 'not-found-light';
+    },
+  },
+  methods: {
+    ...mapMutations('webApp', ['resetConfig']),
+    resetFilters() {
+      localStorage.removeItem(this.storageLocation.downtime);
+      this.resetConfig();
+      this.$router.go();
     },
   },
 };

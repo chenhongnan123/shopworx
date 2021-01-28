@@ -63,48 +63,48 @@ export default {
       processParametersheader: [],
       headers: [
         {
-          headerName: 'Created Date',
+          headerName: this.$t('Created Date'),
           field: 'createdTimestamp',
           resizable: true,
         },
         {
-          headerName: 'Main ID',
+          headerName: this.$t('Main ID'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,
         },
         {
-          headerName: 'Sub station',
+          headerName: this.$t('Sub station'),
           field: 'substationid',
           resizable: true,
         },
         {
-          headerName: 'Completed Product ID',
+          headerName: this.$t('Completed Product ID'),
           field: 'completedproductid',
           resizable: true,
         },
         {
-          headerName: 'Component name',
+          headerName: this.$t('Component name'),
           field: 'componentname',
           resizable: true,
         },
         {
-          headerName: 'Component value',
+          headerName: this.$t('Component value'),
           field: 'componentvalue',
           resizable: true,
         },
         {
-          headerName: 'Bound status',
+          headerName: this.$t('Bound status'),
           field: 'boundstatus',
           resizable: true,
         },
         {
-          headerName: 'Rework status',
+          headerName: this.$t('Rework status'),
           field: 'reworkstatus',
           resizable: true,
         },
         {
-          headerName: 'Quality status',
+          headerName: this.$t('Quality status'),
           field: 'qualitystatus',
           resizable: true,
         },

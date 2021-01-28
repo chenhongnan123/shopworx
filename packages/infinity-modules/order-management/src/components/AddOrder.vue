@@ -33,7 +33,7 @@
           :loading="loadingParts"
           prepend-icon="$production"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
               <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -52,7 +52,7 @@
           prepend-icon="$production"
           @change="onPartSelection(selectedPart)"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.productname"></v-list-item-title>
               <v-list-item-subtitle v-text="item.productnumber"></v-list-item-subtitle>
@@ -77,7 +77,7 @@
           :loading="loadingParts"
           prepend-icon="$production"
         >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -275,7 +275,6 @@ export default {
         this.plan.roadmapid = this.partMatrixRecords[0].roadmapid;
         this.plan.roadmaptype = this.partMatrixRecords[0].roadmaptype;
         this.plan.customername = this.partMatrixRecords[0].customername;
-        // this.plan.producttype = this.partMatrixRecords[0].producttype;
         if (this.partMatrixRecords[0].bomid) {
           this.plan.bomid = this.partMatrixRecords[0].bomid;
         } else {
@@ -361,7 +360,6 @@ export default {
             this.showFamilyParts = false;
             this.displayPlanningFields = false;
             this.familyPlan = [];
-            // order details in new table
             await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
             const payloadDetails = [];
             this.productDetailsList.forEach((product) => {
@@ -379,7 +377,6 @@ export default {
               });
             });
             await this.createBulkOrderProduct(payloadDetails);
-            // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
             const payloadRoadDetails = [];
             this.roadmapDetailsList.forEach((roadmap) => {

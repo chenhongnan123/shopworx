@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Features
+
+* **parameter-configuration:** RA-I408 and RA-I410(1) ([bd861ad](https://bitbucket.org/entrib/shopworx/commits/bd861adcbdaa51cfc156c25ead6284c3809bbaa6))
+* **parameter-configuration:** RA-I408 missing points" ([e11f04e](https://bitbucket.org/entrib/shopworx/commits/e11f04e9252cd4549aa1fa0f64abbff38543c5a6))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Features
+
+* **model-management:** added model dashboard ([07a76d7](https://bitbucket.org/entrib/shopworx/commits/07a76d7335a4d1fa3dcf94206996c9b278dece74))
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+>>>>>>> dev:packages/infinity-modules/parameter-configuration/CHANGELOG.md
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

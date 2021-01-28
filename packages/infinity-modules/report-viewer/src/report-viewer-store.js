@@ -182,5 +182,12 @@ export default ({
     },
 
     isBaseReport: (_, { gridObject }) => !gridObject,
+
+    exportFileName: ({ reportMapping }) => {
+      if (reportMapping) {
+        return reportMapping.reportName;
+      }
+      return null;
+    },
   },
 });

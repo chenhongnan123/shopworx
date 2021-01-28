@@ -3,9 +3,6 @@
     <portal to="app-header">
       <span>{{ $t('orderManagement') }}</span>
       <v-btn icon small class="ml-4 mb-1">
-        <!-- <v-icon
-          v-text="'$info'"
-        ></v-icon> -->
       </v-btn>
       <template>
         <v-menu
@@ -73,19 +70,6 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <!-- <v-list dense>
-      <template>
-        <v-subheader
-          class="mb-0 pb-0 text-uppercase"
-        >Order Status</v-subheader>
-        <v-divider
-          class="pb-1"
-        ></v-divider>
-        <v-list-item>
-          <v-list-item-title>New</v-list-item-title>
-        </v-list-item>
-      </template>
-    </v-list> -->
     </portal>
     <portal
       to="app-extension"

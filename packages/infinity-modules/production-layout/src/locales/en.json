@@ -1,0 +1,30 @@
+{
+  "productionLayout": "Production Layout",
+  "error": {  
+    "ALREADY_EXSIST": "Name already exists",
+    "ALREADY_EXSIST_NO": "Number already exists",
+    "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub station already assigned",
+    "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Station already assigned",    
+    "NUMBER_REQUIRED": "Number Field Should Not be Empty",
+    "ERROR_CREATING_SUBLINE": "Error in creating Subline",
+    "SELECT_INPUT": "Select atleast one input"
+  },
+  "success": {
+    "No_CHANGE_EXSIST_NO": "Again Saved with existing number",
+    "INITIAL_SUBSTATION_ASSIGNED": "This Substation is Updated as initial substation",
+    "FINAL_SUBSTATION_ASSIGNED": "This Substation is Updated as Final Substation",
+    "INITIAL_SUBSTATION_REMOVED": "This is not initial Sub Station now",
+    "FINAL_SUBSTATION_REMOVED": "This is not final Sub Station now",
+    "STATION_CREATED": "Station created, now next you can Add Substation",
+    "SUBLINE_CREATED": "Subline created",
+    "SUB-STATION_CREATED": "Sub-Station created",
+    "PROCESS_CREATED": "Process created",
+    "SUBLINE_DELETED": "Subline deleted",
+    "STATION_DELETED": "Station deleted",
+    "SUBSTATION_DELETED": "Sub-Station deleted",
+    "PROCESS_DELETED": "Process deleted",
+    "SUBSTATION_UPDATED": "Sub-Station updated",
+    "REAL_ELEMENT_INACTIVE": "Real Element associated with this Substation is Inactive!",
+    "PROCESS_ELEMENT_INACTIVE": "Process Element associated with this Substation is Inactive!"
+  }
+}

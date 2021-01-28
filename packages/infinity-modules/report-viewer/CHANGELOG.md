@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Features
+
+* **report-viewer:** added quality as a report category ([a9a290f](https://bitbucket.org/entrib/shopworx/commits/a9a290fa4b0e5f442a08896d4159daee1c452fa2))
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed export report ([f303648](https://bitbucket.org/entrib/shopworx/commits/f3036484707e02cf1e2e029f58c30209c82481c4))
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed chart category text for reports ([2655b2d](https://bitbucket.org/entrib/shopworx/commits/2655b2ddb9df749d4dbe5aa477ed371e4abd0b60))
+
+
+### Features
+
+* **report-viewer:** added area spline chart ([a858982](https://bitbucket.org/entrib/shopworx/commits/a858982174d69d733cfb48f50f25f43bbf23b492))
+* **report-viewer:** enabled export grid as csv and excel ([451dd82](https://bitbucket.org/entrib/shopworx/commits/451dd826e9ce3f7f89fe880aae9ae791ea910385))
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+**Note:** Version bump only for package @shopworx/report-viewer
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/report-viewer

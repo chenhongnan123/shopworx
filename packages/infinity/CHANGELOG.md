@@ -3,6 +3,149 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **production-layout, Raw-data:** RA-I412,RA-I426, RA-I435" ([025002d](https://bitbucket.org/entrib/shopworx/commits/025002dc73907de58c84baf6be1485e277f6fd7d))
+* **production-log:** fixed update rejection and rework function ([434203b](https://bitbucket.org/entrib/shopworx/commits/434203bb9501136f86054c1fa2a59a60a96f92c3))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* **model-managment:** IP1-I287, IP1-I288 bug fixes ([6f09441](https://bitbucket.org/entrib/shopworx/commits/6f094414d906d5d0e341759d188605c52b259398))
+
+
+### Features
+
+* **customer-deployment:** added deployment settings for seed data ([f06c7bc](https://bitbucket.org/entrib/shopworx/commits/f06c7bcf2ced4b9743d98344bdf21ee82b978724))
+* **data-visualizer:** added server side pagination to ag grid ([148769d](https://bitbucket.org/entrib/shopworx/commits/148769d19cc4a99f2532e1f676d274d7cb49b1ce))
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+
+### Bug Fixes
+
+* **core:** remove app configuration on logout ([294e54e](https://bitbucket.org/entrib/shopworx/commits/294e54e0886c07f01f97ae9bdc4603877acca261))
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **core:** fixed exists and not exists filter ([30c28c7](https://bitbucket.org/entrib/shopworx/commits/30c28c7cb057c2772fbc10b97dca38dbb20bb506))
+* **filter:** fixed number filter ([67350ac](https://bitbucket.org/entrib/shopworx/commits/67350ac7a1f016d17ad8ad89ef803275a5c77b67))
+* **group:** updated group from object to array ([5d04ca8](https://bitbucket.org/entrib/shopworx/commits/5d04ca8957e3cf56add614d200138cfa386bc755))
+* **insight:** highlight insight query ([41c6deb](https://bitbucket.org/entrib/shopworx/commits/41c6deb4c359a69b990b2ef5f144805063508cd6))
+* **log:** fixed filter and sort for production/downtime log ([6f1e39c](https://bitbucket.org/entrib/shopworx/commits/6f1e39cdf61670d5a21d5d64db1c2597a5d71b49))
+* **log-app:** fixed refresh on error / no records ([73e7c51](https://bitbucket.org/entrib/shopworx/commits/73e7c519a31a81a98f85d642efc06ecc62a41826))
+* **production-planning:** fixed plan update ([0112460](https://bitbucket.org/entrib/shopworx/commits/0112460baf59b05fad5e9e50ec5ca85982b73d62))
+* **search:** display search menu in front ([3f27d38](https://bitbucket.org/entrib/shopworx/commits/3f27d388eb6101326cb7abb1dc9c01dc0133b81b))
+
+
+### Features
+
+* **dashboard-viewer:** added tv dashboard viewer ([32a3f37](https://bitbucket.org/entrib/shopworx/commits/32a3f378c1078bb62e07670495a75250b0b1795b))
+* **element-service:** fetch record by id ([b09ad04](https://bitbucket.org/entrib/shopworx/commits/b09ad04c7968ecd624d1d64850580d3dbb5a15b7))
+* **production-planning:** added asset configurations ([08b994c](https://bitbucket.org/entrib/shopworx/commits/08b994c8c311aad9a91d40b59e2d0ac8697a67f7))
+* **production-planning:** added delete and abort plan feature ([ff4d417](https://bitbucket.org/entrib/shopworx/commits/ff4d417e9dff2e35ee2c0688057f50b119c41592))
+* **production-planning:** added import plans feature ([e27f2aa](https://bitbucket.org/entrib/shopworx/commits/e27f2aa35aa1bff707f8b5f3b2e929a76110b05b))
+* **production-planning:** added trial and star filters ([57225da](https://bitbucket.org/entrib/shopworx/commits/57225dab9b8ca66716092892c287c519a0f97dd7))
+* **production-planning:** user can now update part matrix ([05658eb](https://bitbucket.org/entrib/shopworx/commits/05658ebd231ffce36771a3d090dff5e2d411eeec))
+* **production-planning:** user can now update the plan execution order ([e7bbfe1](https://bitbucket.org/entrib/shopworx/commits/e7bbfe106a4a29f9596a44ad976b98c451417e4b))
+* **report-viewer:** added quality as a report category ([a9a290f](https://bitbucket.org/entrib/shopworx/commits/a9a290fa4b0e5f442a08896d4159daee1c452fa2))
+* mL Model UI added ([303bab7](https://bitbucket.org/entrib/shopworx/commits/303bab7a0968488f0e849a7251e1bc98cacf2ca8))
+
+
+### Reverts
+
+* package.json added ([87c8dfa](https://bitbucket.org/entrib/shopworx/commits/87c8dfa4dc2450f3d47e30aef451b15ae7413796))
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **core:** fixed snackbar close button position ([fd54cc5](https://bitbucket.org/entrib/shopworx/commits/fd54cc5dfe0f15c50d747d6ed01e814130433aab))
+* **locale:** added missing vuetify locales ([6cbbdb8](https://bitbucket.org/entrib/shopworx/commits/6cbbdb80dad6e5e3fa6d68add2b2baf49d1abd8b))
+* **shopfloor-dashboard:** display real time shift and date ([b8f123f](https://bitbucket.org/entrib/shopworx/commits/b8f123f2529a9b716f93f9adcdcb4bc197f29a2f))
+
+
+### Features
+
+* **core:** added internal server error redirection ([56ad37c](https://bitbucket.org/entrib/shopworx/commits/56ad37c1c7be4b710903ccad092e445a58e215dc))
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **production-log:** assign operator to shift and machine ([a7ad598](https://bitbucket.org/entrib/shopworx/commits/a7ad5986cdd0e4972358b85fdaf10da98b213696))
+* **production-log:** assign rework and scrap to production ([73df2de](https://bitbucket.org/entrib/shopworx/commits/73df2de25e24bb7dd3652c96d79e143558729a9a))
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **insights:** fixed vertical scroll on overflow ([1336df7](https://bitbucket.org/entrib/shopworx/commits/1336df73ecc66d69dd05e1d84e74ab30a8da3d8f))
+
+
+### Features
+
+* **insight:** added html based insight support ([0dc676d](https://bitbucket.org/entrib/shopworx/commits/0dc676daf37d67b956ac2d0c61d15d9c25b2a888))
+* **search:** added search for insights ([63553e0](https://bitbucket.org/entrib/shopworx/commits/63553e07ee142abd60c15eecd596b4531cd7e81c))
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **insight:** display chart on insight click ([3e0581e](https://bitbucket.org/entrib/shopworx/commits/3e0581edaa9095f9a9261c650d8e60eeffe1788a))
+* **insights:** fixed API integration for insights on demand ([5a14cc3](https://bitbucket.org/entrib/shopworx/commits/5a14cc37cfd6565cc86097e5baf2cebb05ac80c0))
+* api integration for Insight on demand ([2ac8b8c](https://bitbucket.org/entrib/shopworx/commits/2ac8b8c57107ca04239ba0f5868316be03e301f3))
+
+
+### Features
+
+* **charts:** added pareto to highcharts ([7537ef5](https://bitbucket.org/entrib/shopworx/commits/7537ef59ce104fdf6da228ceaedae75399c06beb))
+* insight report view ([8491066](https://bitbucket.org/entrib/shopworx/commits/8491066b1bed093d9a5d4986b70f8ec98f7c2788))
+* report added for follow up query-downtime reasons ([e5d397a](https://bitbucket.org/entrib/shopworx/commits/e5d397a68498f468e5290e121fe89ca97914e7f4))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/infinity

@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **production-layout, Raw-data:** RA-I412,RA-I426, RA-I435" ([025002d](https://bitbucket.org/entrib/shopworx/commits/025002dc73907de58c84baf6be1485e277f6fd7d))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* **api:** fixed create access api ([94989a5](https://bitbucket.org/entrib/shopworx/commits/94989a51094a6277eb36ca67c505d92e432af451))
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **production-planning:** fixed plan update ([0112460](https://bitbucket.org/entrib/shopworx/commits/0112460baf59b05fad5e9e50ec5ca85982b73d62))
+
+
+### Features
+
+* **element-service:** fetch record by id ([b09ad04](https://bitbucket.org/entrib/shopworx/commits/b09ad04c7968ecd624d1d64850580d3dbb5a15b7))
+* **production-planning:** added delete and abort plan feature ([ff4d417](https://bitbucket.org/entrib/shopworx/commits/ff4d417e9dff2e35ee2c0688057f50b119c41592))
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **user-roles:** fixed access delete ([3ea32a3](https://bitbucket.org/entrib/shopworx/commits/3ea32a3ce5f8cf9737877b3d673e759d1e3c4fbb))
+
+
+### Features
+
+* **core:** handle session invalidation gracefully ([d72f979](https://bitbucket.org/entrib/shopworx/commits/d72f979cf41e7d2e2909677e331ddf3d83a3707d))
+* **user-roles:** admin can update multiple role permissions ([d5e77f6](https://bitbucket.org/entrib/shopworx/commits/d5e77f69635eb5469260cbd617da30b8ae01c186))
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Bug Fixes
+
+* **planning:** machine list is sorted now sorted ([01e7696](https://bitbucket.org/entrib/shopworx/commits/01e76967d69ae598863431531227d35e1334cdf7))
+
+
+### Features
+
+* **sort:** added alpha numeric sorting helper ([c1867cb](https://bitbucket.org/entrib/shopworx/commits/c1867cb78029793385c715ebeaa4e2b1308e1f80))
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* api integration for Insight on demand ([2ac8b8c](https://bitbucket.org/entrib/shopworx/commits/2ac8b8c57107ca04239ba0f5868316be03e301f3))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/services

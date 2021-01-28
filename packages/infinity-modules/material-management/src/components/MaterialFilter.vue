@@ -21,44 +21,6 @@
     <v-card flat>
       <perfect-scrollbar>
         <v-card-text style="height:calc(100vh - 220px)">
-          <!-- <v-autocomplete
-            class="mt-5"
-            :items="lineList"
-            outlined
-            dense
-            hide-details
-            v-model="line"
-            name="name"
-            label="Select Line"
-            item-text="name"
-            item-value="id"
-            clearable
-          >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-          </v-autocomplete> -->
-          <!-- <v-autocomplete
-            class="mt-5"
-            :items="sublineList"
-            outlined
-            dense
-            hide-details
-            v-model="subline"
-            name="name"
-            label="Select Subine"
-            item-text="name"
-            item-value="id"
-            clearable
-          >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-          </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
             :items="materialList"
@@ -73,7 +35,7 @@
             return-object
             @change="getFilteredNum"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -93,7 +55,7 @@
             return-object
             @change="filteredMaterialCategory"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialnumber"></v-list-item-title>
             </v-list-item-content>
@@ -114,7 +76,7 @@
             return-object
             @change="filteredMaterialType"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
               <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -135,7 +97,7 @@
             return-object
             @change="filteredMaterialManufacturer"
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialtype"></v-list-item-title>
             </v-list-item-content>
@@ -153,7 +115,7 @@
             item-text="manufacturer"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.manufacturer"></v-list-item-title>
             </v-list-item-content>

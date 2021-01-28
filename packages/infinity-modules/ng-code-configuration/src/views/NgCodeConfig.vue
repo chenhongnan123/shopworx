@@ -17,10 +17,6 @@
             <v-icon small left>mdi-refresh</v-icon>
             {{ $t('displayTags.buttons.btnRefresh') }}
           </v-btn>
-          <!-- <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
-            <v-icon small left>mdi-filter-variant</v-icon>
-            {{ $t('displayTags.buttons.filtersRecipe') }}
-          </v-btn> -->
         </v-toolbar>
         <v-data-table
         v-model="recipes"
@@ -28,37 +24,13 @@
         :items="ngCodeConfigRecord"
         item-key="id"
         >
-        <template v-slot:item="{ item, index }">
+        <template #item="{ item, index }">
           <tr>
-          <!-- <td>
-            <v-checkbox
-            v-model="recipes"
-            :value ="item"
-            primary
-            hide-details
-            @change="check($event)"
-            ></v-checkbox>
-          </td> -->
           <td>{{ index+1 }}</td>
           <td>{{ item.ngcode }}</td>
           <td>{{ item.processngcode }}</td>
           <td>{{ item.reworkable}}</td>
           <td>{{ item.ngdescription }}</td>
-          <!-- <td @click="handleClick(item)"><a>{{ item.recipename }}</a></td> -->
-          <!-- <td>{{ item.roadmap}}</td> -->
-          <!-- <td>{{ item.reworkroadmap }}</td> -->
-          <!-- <td>
-             <v-tooltip top>
-             <template v-slot:activator="{ on, attrs }">
-               <v-btn
-               text small
-               v-bind="attrs"
-                v-on="on"
-              >{{ item.reworkdescription.substring(0,8)+"..." }}</v-btn>
-             </template>
-            <span>{{ item.reworkdescription }}</span>
-            </v-tooltip>
-          </td> -->
           <td>{{ item.createdby }}</td>
           <td>{{ item.createdTimestamp }}</td>
           <td>{{ item.editedby }}</td>
@@ -73,15 +45,6 @@
             >
               <v-icon v-text="'$edit'"></v-icon>
             </v-btn>
-            <!-- <v-btn
-              icon
-              small
-              color="error"
-              @click="deleteRecipe(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn> -->
             <DeleteNgCode  :item="item" />
             </v-row></td>
           </tr>
@@ -140,14 +103,6 @@
             :rules="rules.ngcode"
             :counter="6"
         ></v-text-field>
-        <!-- <v-select
-          v-model="ngConfigInput.subStationname"
-          :items="subStationbySubline"
-          :disabled="saving"
-          return-object
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Sub-Station"/> -->
         <v-select
           v-model="ngConfigInput.processNgcode"
           :items="processNgcode"
@@ -165,60 +120,11 @@
           item-text="name"
           prepend-icon="$production"
           label="Reworkable"/>
-        <!-- <v-autocomplete
-          clearable
-          label="Select Sub-Line name"
-          :items="subLineList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="subLineSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-        <!-- <v-select
-          v-model="ngConfigInput.roadmap"
-          :items="roadMaps"
-          :disabled="saving"
-          return-object
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Rework roadmap"/> -->
         <v-text-field
             label="NG Description"
             prepend-icon="mdi-tray-plus"
             v-model="ngConfigInput.description"
         ></v-text-field>
-        <!-- <v-textarea
-            rows="2"
-            clearable
-            label="Rework Description"
-            prepend-icon="mdi-tray-plus"
-            v-model="ngConfigInput.reworkDescription"
-        ></v-textarea> -->
-        <!-- <v-autocomplete
-          clearable
-          label="Select Station name"
-          :items="stationList"
-          return-object
-          :disabled="saving"
-          item-text="name"
-          v-model="stationSelected"
-          :loading="loadingParts"
-          prepend-icon="$production"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
          </v-form>
       </v-card-text>
       <v-card-actions>
@@ -283,14 +189,6 @@
             type="number"
             v-model="newNgCode.ngcode"
         ></v-text-field>
-        <!-- <v-select
-          v-model="newNgCode.subStationname"
-          :items="subStationbySubline"
-          :disabled="saving"
-          return-object
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Sub-Station"/> -->
         <v-select
           v-model="newNgCode.processNgcode"
           :items="processNgcode"
@@ -304,24 +202,11 @@
           :disabled="saving"
           prepend-icon="$production"
           label="Reworkable"/>
-        <!-- <v-select
-          v-model="newNgCode.roadmap"
-          :items="roadMaps"
-          :disabled="saving"
-          return-object
-          item-text="name"
-          prepend-icon="$production"
-          label="Select Rework roadmap"/> -->
         <v-text-field
             label="NG Description"
             prepend-icon="mdi-tray-plus"
             v-model="newNgCode.description"
         ></v-text-field>
-        <!-- <v-text-field
-            label="Rework Description"
-            prepend-icon="mdi-tray-plus"
-            v-model="newNgCode.reworkDescription"
-        ></v-text-field> -->
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -472,7 +357,6 @@ export default {
       editedVersionNumber: 0,
       updateNgCodeId: 0,
       itemForDelete: null,
-      // ngConfigInput: {},
       ngConfigInput: {
         sublinename: '',
         roadmap: '',
@@ -555,23 +439,16 @@ export default {
         this.saving = true;
         const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
         this.assetId = getAssetId;
-        // console.log(this.createdby);
         this.newNgConfig = {
-          // ...this.ngConfigInput,
-          // ...this.input,
           ngcode: this.ngConfigInput.ngcode,
           processngcode: this.ngConfigInput.processNgcode,
           reworkable: this.ngConfigInput.reWorkable,
           lineid: this.selectedLinenew.id,
           linename: this.selectedLinenew.name,
           assetid: this.assetId,
-          // substationid: this.ngConfigInput.subStationname.id,
           sublinename: this.ngConfigInput.sublinename.name,
           sublineid: this.ngConfigInput.sublinename.id,
-          // reworkroadmap: this.ngConfigInput.roadmap.name,
-          // reworkroadmapid: this.ngConfigInput.roadmap.id,
           ngdescription: this.ngConfigInput.description,
-          // reworkdescription: this.ngConfigInput.reworkDescription,
           createdby: this.userName,
         };
         let created = false;
@@ -613,9 +490,6 @@ export default {
       this.newNgCode.reWorkable = item.reworkable;
       this.newNgCode.ngcode = item.ngcode;
       this.newNgCode.description = item.ngdescription;
-      // this.newNgCode.reworkDescription = item.reworkdescription;
-      // this.newNgCode.roadmap = item.reworkroadmap;
-      // console.log(this.newNgCode.reWorkable);
     },
     async updateSaveNgConfig() {
       if (!this.newNgCode.selectedLinenew) {
@@ -629,18 +503,13 @@ export default {
         const getAssetId = this.assets.reduce((acc, item) => acc + item.id, 0);
         this.assetId = getAssetId;
         this.newNgConfig = {
-          // ...this.ngConfigInput,
-          // ...this.input,
           ngcode: this.newNgCode.ngcode,
           processngcode: this.newNgCode.processNgcode,
           reworkable: this.newNgCode.reWorkable,
           linename: this.newNgCode.selectedLinenew,
           assetid: this.assetId,
           sublinename: this.newNgCode.sublinename,
-          // reworkroadmap: this.newNgCode.roadmap.name,
-          // reworkroadmapid: this.newNgCode.roadmap.id,
           ngdescription: this.newNgCode.description,
-          // reworkdescription: this.newNgCode.reworkDescription,
           editedby: this.userName,
           editedtime: new Date().getTime(),
         };
@@ -660,7 +529,6 @@ export default {
           this.updateDialog = false;
           this.assetId = this.getAssetId;
           this.newNgConfig = {};
-          // this.$refs.formUpdate.reset();
         } else {
           this.setAlert({
             show: true,

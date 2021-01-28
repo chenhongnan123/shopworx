@@ -12,20 +12,28 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshDowntimes"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshDowntimes"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+      </v-tooltip>
     </portal>
     <downtime-log-loading v-if="loading" />
     <template v-else>
       <downtime-log-setup v-if="!onboarded" />
       <template v-else>
         <downtime-toolbar />
+        <downtime-drawer />
         <downtime-list />
       </template>
     </template>
@@ -37,6 +45,7 @@ import { mapMutations, mapActions, mapState } from 'vuex';
 import DowntimeLogSetup from './DowntimeLogSetup.vue';
 import DowntimeLogLoading from './DowntimeLogLoading.vue';
 import DowntimeToolbar from '../components/DowntimeToolbar.vue';
+import DowntimeDrawer from '../components/DowntimeDrawer.vue';
 import DowntimeList from '../components/DowntimeList.vue';
 
 export default {
@@ -45,6 +54,7 @@ export default {
     DowntimeLogSetup,
     DowntimeLogLoading,
     DowntimeToolbar,
+    DowntimeDrawer,
     DowntimeList,
   },
   data() {
@@ -53,21 +63,31 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['onboarded']),
+    ...mapState('downtimeLog', ['onboarded', 'lastRefreshedAt']),
+    ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {
     this.loading = true;
+    const config = localStorage.getItem(this.storageLocation.downtime);
+    if (config) {
+      this.setConfig(JSON.parse(config));
+    } else {
+      this.resetConfig();
+    }
+    this.setGroup(['shiftName']);
     await this.getOnboardingState();
     if (this.onboarded) {
-      await this.getAppSchema();
+      await Promise.all([
+        this.getAppSchema(),
+        this.fetchDowntimeReasons(),
+      ]);
       this.setExtendedHeader(true);
     }
-    await this.fetchDowntimeReasons();
     this.loading = false;
   },
   methods: {
+    ...mapMutations('webApp', ['setConfig', 'resetConfig', 'setGroup']),
     ...mapMutations('helper', ['setExtendedHeader']),
-    ...mapMutations('downtimeLog', ['resetPageNumber']),
     ...mapActions('webApp', ['getAppSchema']),
     ...mapActions('downtimeLog', [
       'getOnboardingState',
@@ -75,15 +95,24 @@ export default {
       'fetchDowntimeList',
     ]),
     refreshDowntimes() {
-      this.resetPageNumber();
       this.fetchDowntimeList();
     },
   },
   watch: {
-    onboarded(val) {
+    async onboarded(val) {
       if (val) {
+        await Promise.all([
+          this.getAppSchema(),
+          this.fetchDowntimeReasons(),
+        ]);
         this.setExtendedHeader(true);
       }
+    },
+    config: {
+      deep: true,
+      handler(val) {
+        localStorage.setItem(this.storageLocation.downtime, JSON.stringify(val));
+      },
     },
   },
 };

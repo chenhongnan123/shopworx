@@ -78,20 +78,12 @@
         :items="bomList"
         item-key="bomnumber"
         >
-        <template v-slot:item.editedtime="{ item }">
-          <span v-if="item.editedtime">
-            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
-          <span v-else></span>
+        <template #item.name="props" >
+          <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
+            <span style="cursor:pointer;">{{props.item.name}}</span>
+          </router-link>
         </template>
-        <template v-slot:item.name="{ item }" >
-          <!-- <router-link :to="{ name: 'bom-details', params: { query: props.item } }"> -->
-            <span @click="handleClick(item)"
-              style="cursor:pointer; color:blue">
-              {{item.name}}
-            </span>
-          <!-- </router-link> -->
-        </template>
-        <template v-slot:top>
+        <template #top>
         <v-dialog
           persistent
           scrollable
@@ -182,7 +174,7 @@
           </v-card>
         </v-dialog>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-row>
             <v-btn
               icon
@@ -452,7 +444,6 @@ export default {
       this.setBomValue('');
       this.setBomNumValue('');
       await this.getBomListRecords('');
-      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     btnSaveData() {
       this.setAlert({

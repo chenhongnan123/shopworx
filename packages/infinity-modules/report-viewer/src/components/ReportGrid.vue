@@ -64,8 +64,8 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
   },
   computed: {
-    ...mapState('reports', ['report']),
-    ...mapGetters('reports', ['isBaseReport', 'gridObject']),
+    ...mapState('reports', ['report', 'reportMapping']),
+    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
   watch: {
     report(val) {
@@ -104,12 +104,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -137,6 +131,18 @@ export default {
       this.gridColumnApi.resetColumnGroupState();
       this.gridApi.setSortModel(null);
       this.gridApi.setFilterModel(null);
+    },
+    exportGridCSV() {
+      const params = {
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const params = {
+        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

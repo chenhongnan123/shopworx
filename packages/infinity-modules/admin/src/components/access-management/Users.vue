@@ -13,17 +13,6 @@
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-          @click="fetchUsers"
-        >
-          <v-icon small v-text="'$download'" left></v-icon>
-          Export users
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
@@ -44,13 +33,16 @@
             hide-default-footer
             :headers="pendingHeaders"
           >
-            <template v-slot:item.email="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.email="{ item }">
               <div>{{ item.email || item.phone }}</div>
             </template>
-            <template v-slot:item.role="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.role="{ item }">
               <div>{{ roles.find((role) => role.roleId === item.role).roleDescription }}</div>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <!-- eslint-disable-next-line -->
+            <template #item.actions="{ item }">
               <v-btn
                 small
                 outlined
@@ -61,15 +53,7 @@
               >
                 Resend
               </v-btn>
-              <v-btn
-                icon
-                small
-                color="error"
-                :loading="deleting"
-                @click="deleteUser(item)"
-              >
-                <v-icon v-text="'$delete'"></v-icon>
-              </v-btn>
+              <delete-user :user="item" />
             </template>
           </v-data-table>
         </v-card-text>
@@ -84,7 +68,7 @@
           id="searchUsers"
           v-model="search"
           prepend-inner-icon="$search"
-          label="Search users by name"
+          label="Filter users by name"
         ></v-text-field>
         <v-data-table
           item-key="id"
@@ -95,12 +79,14 @@
           disable-pagination
           hide-default-footer
         >
-          <template v-slot:item.fullName="{ item }">
+          <!-- eslint-disable-next-line -->
+          <template #item.fullName="{ item }">
             <div>{{ item.fullName }}</div>
             <div>{{ item.email }}</div>
             <div>{{ item.phone }}</div>
           </template>
-          <template v-slot:item.role="{ item }">
+          <!-- eslint-disable-next-line -->
+          <template #item.role="{ item }">
             <v-select
               dense
               flat
@@ -114,23 +100,9 @@
               item-text="roleDescription"
             ></v-select>
           </template>
-          <!-- <template v-slot:item.status="{ item }">
-            <v-switch
-              value
-              dense
-              :input-value="item.status === 'ACTIVE' || item.status === 'RESET'"
-            ></v-switch>
-          </template> -->
-          <template v-slot:item.actions="{ item }">
-            <v-btn
-              icon
-              small
-              color="error"
-              @click="deleteUser(item)"
-              :loading="deleting"
-            >
-              <v-icon v-text="'$delete'"></v-icon>
-            </v-btn>
+          <!-- eslint-disable-next-line -->
+          <template #item.actions="{ item }">
+            <delete-user :user="item" />
           </template>
         </v-data-table>
       </v-card-text>
@@ -141,37 +113,32 @@
 <script>
 import { mapMutations, mapActions, mapState } from 'vuex';
 import InviteUsers from './InviteUsers.vue';
+import DeleteUser from './DeleteUser.vue';
 
 export default {
   name: 'Users',
   components: {
     InviteUsers,
+    DeleteUser,
   },
   data() {
     return {
       search: null,
       loading: false,
-      deleting: false,
       inviteLoading: false,
       headers: [
         {
           text: 'Name',
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'fullName',
         },
         {
           text: 'Role',
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'role',
         },
-        /* {
-          text: 'Active',
-          align: 'start',
-          sortable: false,
-          value: 'status',
-        }, */
         {
           text: 'Actions',
           align: 'start',
@@ -254,7 +221,6 @@ export default {
     ...mapActions('admin', [
       'getAllUsers',
       'resendInvitation',
-      'updateUser',
       'updateUserRole',
     ]),
     ...mapMutations('helper', ['setAlert']),
@@ -297,13 +263,6 @@ export default {
         userId: user.id,
         roleId: user.role,
       });
-    },
-    deleteUser(user) {
-      const payload = {
-        userId: user.id,
-        userState: 'INACTIVE',
-      };
-      this.updateUser(payload);
     },
   },
 };

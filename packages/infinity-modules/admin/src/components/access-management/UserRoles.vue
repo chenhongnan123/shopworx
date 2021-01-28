@@ -20,22 +20,12 @@
           small
           outlined
           color="primary"
-          @click="fetchRoles"
+          @click="refresh"
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-        >
-          <v-icon small v-text="'$download'" left></v-icon>
-          Export roles
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
-        </v-btn> -->
       </span>
     </portal>
     <v-progress-circular
@@ -78,15 +68,16 @@
           disable-pagination
           hide-default-footer
         >
-          <template v-slot:item.roleType="{ item }">
+          <template #item.roleType="{ item }">
             <v-switch
               value
               dense
+              :disabled="item.roleName === 'admin'"
               :input-value="item.roleType === roleTypes.admin"
               @change="updateRoleType(item)"
             ></v-switch>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template #item.actions="{ item }">
             <v-btn
               icon
               small
@@ -98,7 +89,7 @@
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn>
           </template>
-          <template v-slot:expanded-item="{ headers, item }">
+          <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-card-text>
                 <v-treeview
@@ -111,23 +102,17 @@
                   open-on-click
                   return-object
                   v-model="item.permissions"
-                  :items="masterPermissions"
+                  :items="masterPermissions(item.roleName)"
                 ></v-treeview>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
-                  text
-                  disabled
+                  :loading="saving"
                   color="primary"
                   class="text-none"
-                >
-                  Reset
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  disabled
-                  class="text-none"
+                  @click="updatePermission(item)"
+                  :disabled="!item.permissions.length"
                 >
                   Update permissions
                 </v-btn>
@@ -141,7 +126,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default {
   name: 'UserRoles',
@@ -153,6 +139,7 @@ export default {
         user: 'USER',
       },
       search: null,
+      saving: false,
       loading: false,
       deleting: false,
       headers: [
@@ -182,9 +169,10 @@ export default {
     ...mapState('admin', ['masterSolutions']),
     userRoles() {
       if (this.roles && this.roles.length) {
-        return this.roles.map((role) => ({
+        return sortArray(this.roles, 'roleName').map((role) => ({
           ...role,
           permissions: this.getRolePermissions(role),
+          active: [],
         }));
       }
       return [];
@@ -209,52 +197,31 @@ export default {
       }
       return count;
     },
-    masterPermissions() {
-      const modules = [];
-      if (this.masterSolutions && this.masterSolutions.length) {
-        this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: module.details.map((detail) => ({
-                ...detail,
-                name: this.$i18n.t(`modules.${detail.webAppName}`),
-              })),
-            });
-          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: this.removeDuplicates(module.details, 'id').map((detail) => ({
-                ...detail,
-                name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
-              })),
-            });
-          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
-            modules.push({
-              ...module,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-            });
-          }
-          return modules;
-        }));
-      }
-      return modules;
-    },
   },
-  created() {
-    this.fetchRoles();
+  async created() {
+    this.loading = true;
+    await this.fetchRoles();
+    this.loading = false;
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('user', ['getUserRoles']),
-    ...mapActions('admin', ['getMasterSolutions', 'updateRole']),
-    deleteRole() {},
-    async fetchRoles() {
+    ...mapActions('admin', [
+      'getMasterSolutions',
+      'updateRole',
+      'deleteModuleAccess',
+      'deleteWebAppAccess',
+      'deleteReportsCategoryAccess',
+      'createAccess',
+    ]),
+    async refresh() {
       this.loading = true;
+      await this.fetchRoles();
+      this.loading = false;
+    },
+    async fetchRoles() {
       await this.getMasterSolutions();
       await this.getUserRoles();
-      this.loading = false;
     },
     removeDuplicates(myArr, prop) {
       return myArr
@@ -279,14 +246,60 @@ export default {
         await this.fetchRoles();
       }
     },
-    getRolePermissions(role) {
+    masterPermissions(roleName) {
       const modules = [];
+      if (this.masterSolutions && this.masterSolutions.length) {
+        this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
+          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            modules.push({
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              children: module.details.map((detail) => ({
+                moduleId: module.id,
+                moduleName: module.moduleName,
+                id: detail.id,
+                name: this.$i18n.t(`modules.${detail.webAppName}`),
+              })),
+            });
+          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            modules.push({
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              children: this.removeDuplicates(module.details, 'id').map((detail) => ({
+                moduleId: module.id,
+                moduleName: module.moduleName,
+                id: detail.id,
+                name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
+              })),
+            });
+          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+            modules.push({
+              moduleId: module.id,
+              moduleName: module.moduleName,
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              disabled: module.moduleName.toUpperCase().trim() === 'ADMIN'
+                && roleName === 'admin',
+            });
+          }
+          return modules;
+        }));
+      }
+      return modules;
+    },
+    getRolePermissions(role) {
+      let modules = [];
       const roleModules = role.modules;
       const roleModulesIds = roleModules.map((mod) => mod.id);
       const webAppModule = roleModules
-        .find((mod) => mod.moduleName.toUpperCase().trim() === 'APPS' || mod.moduleName.toUpperCase().trim() === 'DASHBOARDS');
+        .find((mod) => mod.moduleName.toUpperCase().trim() === 'APPS');
       const roleAppIds = webAppModule
         ? webAppModule.details.map((detail) => detail.id)
+        : [];
+      const dashboardModule = roleModules
+        .find((mod) => mod.moduleName.toUpperCase().trim() === 'DASHBOARDS');
+      const roleDashboardIds = dashboardModule
+        ? dashboardModule.details.map((detail) => detail.id)
         : [];
       const reportModule = roleModules.find((mod) => mod.moduleName.toUpperCase().trim() === 'REPORTS');
       const roleReportCategoryIds = reportModule
@@ -294,49 +307,112 @@ export default {
         : [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+          if (module.moduleName.toUpperCase().trim() === 'APPS') {
             if (module.details.filter((detail) => roleAppIds.includes(detail.id)).length) {
-              modules.push({
-                id: module.id,
-                name: this.$i18n.t(`modules.${module.moduleName}`),
-                children: module.details
-                  .filter((detail) => roleAppIds.includes(detail.id))
-                  .map((detail) => ({
-                    ...detail,
-                    name: this.$i18n.t(`modules.${detail.webAppName}`),
-                  })),
-              });
+              const appModules = module.details
+                .filter((detail) => roleAppIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.webAppName,
+                }));
+              modules = [...modules, ...appModules];
+            }
+          } else if (module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            if (module.details.filter((detail) => roleDashboardIds.includes(detail.id)).length) {
+              const dashboardModules = module.details
+                .filter((detail) => roleDashboardIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.webAppName,
+                }));
+              modules = [...modules, ...dashboardModules];
             }
           } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
             if (module.details
               .filter((detail) => roleReportCategoryIds.includes(detail.id)).length) {
-              modules.push({
-                id: module.id,
-                name: this.$i18n.t(`modules.${module.moduleName}`),
-                children: this.removeDuplicates(module.details, 'id')
-                  .filter((detail) => roleReportCategoryIds.includes(detail.id))
-                  .map((detail) => ({
-                    ...detail,
-                    name: this.$i18n.t(`modules.${detail.reportsCategoryName}`),
-                  })),
-              });
+              const reportModules = module.details
+                .filter((detail) => roleReportCategoryIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.reportsCategoryName,
+                }));
+              modules = [...modules, ...reportModules];
             }
           } else if (roleModulesIds.includes(module.id)) {
-            modules.push({
+            modules = [...modules, {
+              moduleId: module.id,
+              moduleName: module.moduleName,
               id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: module.details
-                .filter((detail) => roleAppIds.includes(detail.id))
-                .map((detail) => ({
-                  ...detail,
-                  name: this.$i18n.t(`modules.${detail.webAppName}`),
-                })),
-            });
+              name: module.moduleName,
+            }];
           }
           return modules;
         }));
       }
       return modules;
+    },
+    async updatePermission(item) {
+      this.saving = true;
+      const results = await Promise.all([
+        this.deleteModuleAccess(item.roleId),
+        this.deleteWebAppAccess(item.roleId),
+        this.deleteReportsCategoryAccess(item.roleId),
+      ]);
+      if (results.every((res) => res === true)) {
+        const permissionsByModule = item.permissions.reduce((result, currentValue) => {
+          const { moduleId } = currentValue;
+          if (!result[moduleId]) {
+            result[moduleId] = [];
+          }
+          result[moduleId].push(currentValue);
+          return result;
+        }, {});
+        const payload = {
+          roleId: item.roleId,
+          moduleAndReportsCategoryIds: Object.keys(permissionsByModule).map((moduleId) => {
+            const enterpriseMode = false;
+            const mod = {
+              moduleId: parseInt(moduleId, 10),
+              enterpriseMode,
+            };
+            const modules = permissionsByModule[moduleId];
+            if (modules[0].moduleName.toUpperCase().trim() === 'APPS'
+              || modules[0].moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+              mod.webAppIds = modules.map((m) => m.id);
+            } else if (modules[0].moduleName.toUpperCase().trim() === 'REPORTS') {
+              mod.reportsCategoryIds = modules.map((m) => m.id);
+            }
+            return mod;
+          }),
+        };
+        const created = await this.createAccess(payload);
+        if (created) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'PERMISSION_UPDATE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'PERMISSION_UPDATE',
+          });
+        }
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PERMISSION_UPDATE',
+        });
+      }
+      this.saving = false;
     },
   },
 };

@@ -3,10 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <!-- <template v-slot:activator="{ on }">
-    <v-icon v-on="on" v-text="'$delete'"
-    class="float-right" color="error"></v-icon> -->
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-btn v-on="on"
     small color="primary"
           class="text-none" @click="checkMainId(true)">
@@ -88,20 +85,11 @@ export default {
       }
     },
     async btnConfirmRework() {
-      // await this.getRunningOrder('?orderstatus="Running"');
       if (this.runningOrderList[0].productname === this.rework.reworkinfo[0].productname) {
-        // let substationidValue = '';
-        // let substationidName = '';
-        // if (this.rework.substationid) {
-        //   substationidValue = this.rework.substationid;
-        //   substationidName = this.rework.substationname;
-        // }
         const object = {
           checkoutngcode: this.rework.ngcodedata[0].ngcode,
           lineid: this.rework.ngcodedata[0].lineid,
           sublineid: this.rework.reworkinfo[0].sublineid,
-          // substationid: substationidValue,
-          // substationname: substationidName,
           linename: this.rework.ngcodedata[0].linename,
           mainid: this.rework.enterManinId,
           roadmapid: this.selectedReworkRoadmap.id,
@@ -122,7 +110,6 @@ export default {
             overallresult: 1,
           },
         };
-        // console.log(payload);
         await this.updateOverAllResult(payload);
         // this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
         //   let reworkS = 2;
@@ -169,7 +156,6 @@ export default {
         });
         await this.getReworkList('?query=overallresult!="1"');
         this.dialog = false;
-        this.rework = [];
         this.setDisableSave(false);
         this.setSingleNgCodeConfig([]);
         this.setComponentList([]);

@@ -3,6 +3,120 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed downtime split validation ([606e7c7](https://bitbucket.org/entrib/shopworx/commits/606e7c71ea2e0c9e59bfb36bed11b40241c93135))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/downtime-log
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **config:** reset config if no config found ([5b683f7](https://bitbucket.org/entrib/shopworx/commits/5b683f7f9417713589dd240c451a54fea91f2294))
+* **core:** updated time format from 12 to 24 hour clock ([fd593b5](https://bitbucket.org/entrib/shopworx/commits/fd593b56aa6faffe744ea48c88caff2e24638a76))
+* **downtime-log:** disable split if downtime is in progress ([2bf1fdd](https://bitbucket.org/entrib/shopworx/commits/2bf1fdd02ddc880ed6a02bead666d4acb34eca78))
+* **downtime-log:** fixed downtime selection ([8749c48](https://bitbucket.org/entrib/shopworx/commits/8749c485eca45b29837e7c8701f98d84fed887de))
+* **downtime-log:** fixed downtime sorting ([da28ff5](https://bitbucket.org/entrib/shopworx/commits/da28ff52823f331d14f525794598ef893a48b952))
+* **downtime-log:** fixed splitting of downtime ([2879225](https://bitbucket.org/entrib/shopworx/commits/28792259ad50e00de4aec2ac9d3f586f961452f2))
+* **group:** updated group from object to array ([5d04ca8](https://bitbucket.org/entrib/shopworx/commits/5d04ca8957e3cf56add614d200138cfa386bc755))
+* **log:** fixed filter and sort for production/downtime log ([6f1e39c](https://bitbucket.org/entrib/shopworx/commits/6f1e39cdf61670d5a21d5d64db1c2597a5d71b49))
+* **log-app:** fixed refresh on error / no records ([73e7c51](https://bitbucket.org/entrib/shopworx/commits/73e7c519a31a81a98f85d642efc06ecc62a41826))
+* **log-app:** updated filter drawer layout ([45dfd2a](https://bitbucket.org/entrib/shopworx/commits/45dfd2a7afc8ce82dc33a3a7acba7270f24bb0dc))
+* **log-app:** updated toolbar to show total records ([2707d1b](https://bitbucket.org/entrib/shopworx/commits/2707d1b74177404ae5dda26d8cf75b66dcccf200))
+* **onboarding:** updated error heading to error color ([c9c16ba](https://bitbucket.org/entrib/shopworx/commits/c9c16ba894ae00dcd3c5b31cd8a7638c6f63c12c))
+
+
+### Features
+
+* **apps:** added last refresh time of data list ([480b95d](https://bitbucket.org/entrib/shopworx/commits/480b95d0952167fc6b61880d4f7e3ac5ee328e2d))
+* **downtime-log:** added select all checkbox ([9411ef8](https://bitbucket.org/entrib/shopworx/commits/9411ef83f02e5838904b1eb8172ebb51d58c79fb))
+* **downtime-log:** unassign downtime reason ([47f816a](https://bitbucket.org/entrib/shopworx/commits/47f816aca9af1ceb1b7af9bbfddf093af3260013))
+* **downtime-log:** updated layout from card to table ([af4ceb9](https://bitbucket.org/entrib/shopworx/commits/af4ceb92eac56ce96856382362de650227cfc840))
+
+
+
+
+
+## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **downtime-log:** clear selected items on downtime refresh ([695ccea](https://bitbucket.org/entrib/shopworx/commits/695cceacb58fdbc8649d740b5d473eb67cbca246))
+* **downtime-log:** display in progress downtimes ([619672e](https://bitbucket.org/entrib/shopworx/commits/619672ea2f546209ea449edadb7ceb3bd4561dcd))
+* **downtime-log:** display reason code ([e9f4357](https://bitbucket.org/entrib/shopworx/commits/e9f4357d5eaf68b180b807abae071f4b789d2eb0))
+* **downtime-log:** fixed display for in progress downtimes ([ebb4032](https://bitbucket.org/entrib/shopworx/commits/ebb403279a0f22351d36201c9ec8fd61adfa6263))
+* **loading:** updated loading message ([9660224](https://bitbucket.org/entrib/shopworx/commits/9660224f0749bf111f32862aba8e8054cd587bab))
+
+
+### Features
+
+* **downtime-log:** added downtime on-boarding ([8542d4d](https://bitbucket.org/entrib/shopworx/commits/8542d4df2a919cd0745c6026bb8bfffd84c8c987))
+* **downtime-log:** added status filter ([55e2018](https://bitbucket.org/entrib/shopworx/commits/55e20186927991f9d877914ba959bcdb58ec0a54))
+
+
+
+
+
+## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
+
+
+### Features
+
+* **downtime-log:** added downtime filters and sorting options ([c4a8f42](https://bitbucket.org/entrib/shopworx/commits/c4a8f42f9a2e603976993e5f352641a625540859))
+
+
+
+
+
+## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+
+
+### Bug Fixes
+
+* **downtime-log:** fixed multiple downtime edit ([93b05ba](https://bitbucket.org/entrib/shopworx/commits/93b05ba37b4ed1cb7ecfea19e1559b9405deda25))
+* **downtime-log:** remove assign button on toggle false ([24cb9f3](https://bitbucket.org/entrib/shopworx/commits/24cb9f332064f11daa761343e814a74660381891))
+
+
+### Features
+
+* **downtime-log:** assign reason to multiple downtimes at Time ([0634634](https://bitbucket.org/entrib/shopworx/commits/0634634e76816c5509f13fc8ea4e65b4d78877c4))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/downtime-log

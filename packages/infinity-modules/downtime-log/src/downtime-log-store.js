@@ -1,54 +1,124 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, toggle } from '@shopworx/services/util/store.helper';
+import { sortAlphaNum } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
   state: {
+    masterData: [],
+    drawer: false,
     onboarded: true,
     machines: [],
     shifts: [],
-    selectedMachine: null,
-    selectedShift: null,
-    selectedDate: null,
-    selectedDuration: null,
     downtimeList: [],
     loading: false,
     error: false,
     downtimeReasons: [],
     downtimeCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
+    toggleSelection: false,
+    selectedDowntimes: [],
+    lastRefreshedAt: null,
   },
   mutations: {
+    setMasterData: set('masterData'),
+    setSelectedDowntimes: set('selectedDowntimes'),
+    setToggleSelection: set('toggleSelection'),
+    setDrawer: set('drawer'),
+    toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
-    setSelectedMachine: set('selectedMachine'),
-    setSelectedShift: set('selectedShift'),
-    setSelectedDate: set('selectedDate'),
-    setSelectedDuration: set('selectedDuration'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
-    resetPageNumber: (state) => {
-      state.pageNumber = 1;
-    },
-    incrementPageNumber: (state) => {
-      state.pageNumber += 1;
-    },
-    setDowntimeList: (state, payload) => {
-      if (payload && payload.length) {
-        state.downtimeList = [...state.downtimeList, ...payload];
-      } else {
-        state.downtimeList = [];
-      }
-    },
+    setDowntimeList: set('downtimeList'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
   },
   actions: {
+    getOnboardingState: async ({ commit, dispatch }) => {
+      const isDowntimeReasonElementAvailable = await dispatch('getDowntimeReasonsElement');
+      if (isDowntimeReasonElementAvailable) {
+        commit('setOnboarded', true);
+      } else {
+        commit('setOnboarded', false);
+      }
+    },
+
+    getMasterData: async ({
+      commit,
+      dispatch,
+      rootGetters,
+    }) => {
+      const licensedAssets = rootGetters['user/licensedAssets'];
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      const masterAssets = await dispatch(
+        'industry/getAssets',
+        null,
+        { root: true },
+      );
+      if (masterElements && masterElements.length) {
+        const filteredMasterElements = masterElements
+          .filter((elem) => elem.masterElement.elementName === 'downtimereasons')
+          .map((elem) => {
+            if (elem.masterElement.assetBased) {
+              if (masterAssets && masterAssets.length) {
+                const availableAssets = elem.masterTags.map((tag) => tag.assetId);
+                const provisionedAssets = [...new Set(availableAssets)];
+                return provisionedAssets
+                  .filter((asset) => licensedAssets.includes(asset))
+                  .map((provisionedAsset) => {
+                    const tags = elem.masterTags.filter((tag) => tag.assetId === provisionedAsset);
+                    const { assetName, assetDescription } = masterAssets
+                      .find((asset) => asset.id === provisionedAsset);
+                    return {
+                      tags: tags.filter((t) => !t.hide),
+                      hiddenTags: tags.filter((t) => t.hide),
+                      success: false,
+                      loading: false,
+                      assetId: provisionedAsset,
+                      element: elem.masterElement,
+                      title: `${elem.masterElement.elementDescription} - ${assetDescription}`,
+                      expectedFileName: `${elem.masterElement.elementName}-${assetName}.csv`,
+                    };
+                  });
+              }
+            }
+            return {
+              assetId: 0,
+              success: false,
+              loading: false,
+              hiddenTags: elem.masterTags.filter((t) => t.hide),
+              tags: elem.masterTags.filter((t) => !t.hide),
+              element: elem.masterElement,
+              title: elem.masterElement.elementDescription,
+              expectedFileName: `${elem.masterElement.elementName}.csv`,
+            };
+          });
+        commit('setMasterData', filteredMasterElements.flat());
+        return true;
+      }
+      return false;
+    },
+
+    getDowntimeReasonsElement: async ({ dispatch }) => {
+      const downtimeReasonsElement = await dispatch(
+        'element/getElement',
+        'downtimereasons',
+        { root: true },
+      );
+      return downtimeReasonsElement;
+    },
+
     fetchMachines: async ({ commit, dispatch }) => {
       const records = await dispatch(
         'element/getRecords',
-        { elementName: 'machine' },
+        {
+          elementName: 'machine',
+        },
         { root: true },
       );
       if (records && records.length) {
@@ -89,38 +159,17 @@ export default ({
       return false;
     },
 
-    fetchDowntimeList: async ({ commit, dispatch, state }) => {
-      const {
-        selectedMachine,
-        selectedDate,
-        selectedShift,
-        selectedDuration,
-        pageNumber,
-        pageSize,
-      } = state;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-      const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-      let query = `date==${date}%26%26status!="inProgress"`;
-      if (selectedMachine && selectedMachine !== 'All Machines') {
-        query += `%26%26machinename=="${selectedMachine}"`;
-      }
-      if (selectedShift && selectedShift !== 'All Shifts') {
-        query += `%26%26shiftName=="${selectedShift}"`;
-      }
-      if (duration) {
-        query += `%26%26downtimeduration%3E${duration}`;
-      }
-      const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
-      if (pageNumber === 1) {
-        commit('setDowntimeList', []);
-        commit('setLoading', true);
-        commit('setError', false);
-      }
+    fetchDowntimeList: async ({ commit, dispatch, rootGetters }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
+      commit('setLoading', true);
+      commit('setDowntimeList', []);
+      commit('setError', false);
       const data = await dispatch(
         'element/getRecordsWithCount',
         {
           elementName: 'downtime',
-          query: `?query=${query}&${paginatedQuery}`,
+          query: `?query=date==${date}`,
         },
         { root: true },
       );
@@ -128,6 +177,7 @@ export default ({
         commit('setDowntimeList', data.results);
         commit('setDowntimeCount', data.totalCount);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setDowntimeList', []);
         commit('setDowntimeCount', 0);
@@ -163,7 +213,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'success',
-          message: 'DOWNTIME_UPDATE_SUCCESS',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });
@@ -171,7 +221,7 @@ export default ({
         commit('helper/setAlert', {
           show: true,
           type: 'error',
-          message: 'DOWNTIME_UPDATE_ERROR',
+          message: 'DOWNTIME_UPDATE',
         }, {
           root: true,
         });
@@ -182,7 +232,9 @@ export default ({
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
-        machineList = machines.map((mac) => mac.machinename);
+        machineList = machines
+          .map((mac) => mac.machinename)
+          .sort(sortAlphaNum);
         machineList = ['All Machines', ...machineList];
       }
       return machineList;
@@ -194,6 +246,19 @@ export default ({
         shiftList = ['All Shifts', ...shifts];
       }
       return shiftList;
+    },
+
+    downtime: ({ downtimeList }, getters, rootState, rootGetters) => {
+      let downtime = null;
+      if (downtimeList && downtimeList.length) {
+        downtime = rootGetters['webApp/filteredRecords'](downtimeList);
+        downtime = rootGetters['webApp/sortedRecords'](downtime);
+        downtime = rootGetters['webApp/groupedRecords'](downtime);
+      }
+      if (!downtime || !Object.keys(downtime).length) {
+        downtime = null;
+      }
+      return downtime;
     },
   },
 });

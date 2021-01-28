@@ -26,6 +26,18 @@ export default ({
       return false;
     },
 
+    getRecordsByTags: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.getRecordsByTags(payload);
+        if (data && data.results) {
+          return data;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, element) => {
       try {
         const { data } = await ElementService.createElement(element);
@@ -211,6 +223,35 @@ export default ({
       return upsert;
     },
 
+    upsertRecordByQuery: async ({ dispatch }, {
+      elementName,
+      record,
+      query,
+      assetId = 0,
+    }) => {
+      let upsert = false;
+      try {
+        const payload = {
+          ...record,
+          assetid: assetId,
+        };
+        const rec = await dispatch('getRecords', { elementName, query });
+        if (rec && rec.length) {
+          await dispatch('deleteRecordByQuery', {
+            elementName,
+            queryParam: query,
+          });
+        }
+        upsert = await dispatch('postRecord', {
+          elementName,
+          payload,
+        });
+      } catch (e) {
+        return false;
+      }
+      return upsert;
+    },
+
     upsertBulkRecords: async ({ dispatch }, { elementName, records, assetId = 0 }) => {
       let upsert = false;
       try {
@@ -273,6 +314,18 @@ export default ({
       }
     },
 
+    getRecordById: async (_, { elementName, id }) => {
+      try {
+        const { data } = await ElementService.getRecordById(elementName, id);
+        if (data && data._id) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecordsWithCount: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
@@ -323,7 +376,17 @@ export default ({
       }
       return false;
     },
-
+    uploadFiles: async (_, { elementName, payload }) => {
+      try {
+        const { data } = await ElementService.uploadFiles(elementName, payload);
+        if (data && data.errors) {
+          return data;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
     updateRecordByQuery: async (_, { elementName, queryParam, payload }) => {
       try {
         const { data } = await ElementService.updateRecordByQuery(
@@ -365,6 +428,17 @@ export default ({
       try {
         const { data } = await ElementService.changeElementStatusById(payload, elementId);
         if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+    updateElementStatusById: async (_, { payload, id }) => {
+      try {
+        const { data } = await ElementService.updateElementStatusById(id, payload);
+        if (data && data.updated) {
           return true;
         }
       } catch (e) {

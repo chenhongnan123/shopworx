@@ -216,6 +216,36 @@ export default {
       this.gridApi.applyTransaction({ remove: selectedRows });
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
+    editMethod(event) {
+      if (event.data.assetid) {
+        const makevisible = true;
+        this.updateData.push(event.data);
+        this.$emit('showupdatebtnemt', makevisible);
+      }
+    },
+    async updateValue() {
+      const elementName = this.id;
+      const data = this.updateData;
+      const multipleRows = data.forEach(async (item) => {
+        await this.updateRecord(
+          {
+            query: item._id, payload: item, name: elementName,
+          },
+        );
+      });
+      let update = false;
+      update = await Promise.all([multipleRows]);
+      if (update) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'DATA_SAVED',
+        });
+      }
+      const makeunvisible = false;
+      this.$emit('showupdatebtnemt', makeunvisible);
+      this.updateData = [];
+    },
     async exportData() {
       const nameEement = this.id;
       const fileName = `${nameEement}_Master_Table`;

@@ -5,7 +5,7 @@
       accordion
     >
       <v-expansion-panel v-if="requiredData">
-        <v-expansion-panel-header class="pa-0 ma-0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $tc('setup.importMaster.requiredData', requiredData.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -13,7 +13,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="duplicateColumnData && duplicateColumnData.length">
-        <v-expansion-panel-header class="pa-0 ma-0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $tc('setup.importMaster.duplicateData', duplicateColumnData.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -21,7 +21,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="invalidDataTypes && invalidDataTypes.length">
-        <v-expansion-panel-header class="pa-0 ma-0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $tc('setup.importMaster.invalidDataType', invalidDataTypes.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
