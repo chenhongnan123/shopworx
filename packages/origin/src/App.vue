@@ -43,8 +43,9 @@ export default {
         this.setIsSessionValid(false);
       }
       return res;
-    }, () => {
-      this.$router.push({ name: '500' });
+    }, (error) => {
+      throw new Error(error);
+      // this.$router.push({ name: '500' });
     });
   },
   watch: {
