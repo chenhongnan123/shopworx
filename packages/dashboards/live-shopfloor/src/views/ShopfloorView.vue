@@ -1,5 +1,10 @@
 <template>
   <div>
+    <portal to="dashboard-title">
+      {{ selectedView && selectedView.value === 'shift'
+        ? 'Shift-wise shopfloor dashboard'
+        : 'Hourly shopfloor dashboard' }}
+    </portal>
     <v-container
       grid-list-lg
       fluid
@@ -95,7 +100,9 @@
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
       >
-        Shift-wise shopfloor dashboard
+        {{ selectedView && selectedView.value === 'shift'
+          ? 'Shift-wise shopfloor dashboard'
+          : 'Hourly shopfloor dashboard' }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="headline font-weight-medium">
@@ -135,7 +142,7 @@ export default {
     ...mapGetters('shopfloor', ['screens']),
     ...mapGetters('helper', ['isTV']),
     ...mapState('helper', ['isFullscreen']),
-    ...mapState('shopfloor', ['currentShift']),
+    ...mapState('shopfloor', ['currentShift', 'selectedView', '']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
