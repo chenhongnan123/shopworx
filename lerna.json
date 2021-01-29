@@ -5,6 +5,8 @@
     "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
+    "packages/origin",
+    "packages/origin-modules/*",
     "packages/services",
     "packages/ui-components"
   ],
