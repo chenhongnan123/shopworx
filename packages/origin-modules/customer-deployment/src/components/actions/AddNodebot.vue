@@ -259,40 +259,48 @@ export default {
         isinstalled: false,
         assetid: 0,
       };
-      const createdNodebot = await this.createNodebot(payload);
-      const uploadedFile = await this.uploadFile({ fileParam, formData });
-      if (uploadedFile && uploadedFile.id) {
-        const updated = await this.updateNodebotFile({
-          id: uploadedFile.id,
-          payload: { nodebotmasterid: createdNodebot.id },
-        });
-        if (updated) {
-          const orderPayload = {
-            deploymentserviceid: this.service.id,
-            deploymentservicename: this.service.name,
-            nodebotmasterid: createdNodebot.id,
-            nodebotmastername: createdNodebot.name,
-            operationname: 'upgrade-nodebot',
-            status: 'Pending',
-            assetid: 0,
-          };
-          const order = await this.createDeploymentOrder(orderPayload);
-          if (order) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'INSTALL_DEBIAN',
-            });
-            this.cancel();
-            this.$emit('on-create');
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'INSTALL_DEBIAN',
-            });
+      try {
+        const uploadedFile = await this.uploadFile({ fileParam, formData });
+        if (uploadedFile && uploadedFile.id) {
+          const createdNodebot = await this.createNodebot(payload);
+          const updated = await this.updateNodebotFile({
+            id: uploadedFile.id,
+            payload: { nodebotmasterid: createdNodebot.id },
+          });
+          if (updated) {
+            const orderPayload = {
+              deploymentserviceid: this.service.id,
+              deploymentservicename: this.service.name,
+              nodebotmasterid: createdNodebot.id,
+              nodebotmastername: createdNodebot.name,
+              operationname: 'upgrade-nodebot',
+              status: 'Pending',
+              assetid: 0,
+            };
+            const order = await this.createDeploymentOrder(orderPayload);
+            if (order) {
+              this.setAlert({
+                show: true,
+                type: 'success',
+                message: 'INSTALL_DEBIAN',
+              });
+              this.cancel();
+              this.$emit('on-create');
+            } else {
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'INSTALL_DEBIAN',
+              });
+            }
           }
         }
+      } catch (e) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_DEBIAN',
+        });
       }
       this.saving = false;
     },
