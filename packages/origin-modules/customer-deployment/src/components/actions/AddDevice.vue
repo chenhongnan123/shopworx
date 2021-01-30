@@ -268,7 +268,7 @@ export default {
         let device = null;
         if (!this.unmappedDevice) {
           let payload = {
-            deploymentserviceid: 0,
+            deploymentserviceid: this.service ? this.service.id : 0,
             name: this.name,
             description: this.description,
             hostname: this.hostname,
