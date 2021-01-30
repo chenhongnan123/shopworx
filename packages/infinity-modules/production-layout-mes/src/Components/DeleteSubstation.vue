@@ -81,7 +81,6 @@ export default {
     async btnDeleteSubstation() {
       const deletedElement = await this.getSubStationIdElement(this.substation.id);
       // const deleted = false;
-      console.log(deletedElement);
       if (!deletedElement) {
         const defaultElementId = 0;
         const subStationObject2 = {

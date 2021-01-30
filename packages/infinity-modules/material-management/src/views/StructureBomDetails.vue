@@ -318,7 +318,6 @@ export default {
     };
   },
   async created() {
-    console.log(this.query, 'query');
     await this.getMaterialListRecords('');
     await this.getMaterialListChoice('');
     await this.handleGetDetails();
@@ -384,7 +383,6 @@ export default {
         list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}"%26%26parametercategory=="46"`));
         bom.componentStatusList = list;
       });
-      console.log(this.bomDetailList);
       if (this.bomDetailList.length === 0) {
         await this.handleGetData();
       }
@@ -414,7 +412,6 @@ export default {
       }
     },
     async getComponentStatusList(item) {
-      console.log(item);
       item.componentStatusList = await this.getParameterList(`?query=substationid=="${item.substationid}"%26%26parametercategory=="46"`);
     },
     async handleGetData() {
@@ -422,8 +419,6 @@ export default {
         .filter((parameter) => Number(parameter.parametercategory) === 24
         || Number(parameter.parametercategory) === 26
         || Number(parameter.parametercategory) === 21);
-      console.log(parameterList, 'parameterList');
-
       if (this.bomDetailList.length) {
         await Promise.all(this.bomDetailList.map(
           (bomdetail) => this.deleteBomDetail(bomdetail._id),
@@ -483,7 +478,6 @@ export default {
           },
         };
       }
-      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateBoundSublineRecordById(payload);
       this.saving = false;
@@ -507,7 +501,6 @@ export default {
     async chanageComponentStatus(item) {
       const { componentStatusSelected } = item;
       // const substationItem = this.substationList
-      console.log(this.componentStatusSelected);
       const payload = {
         id: item._id,
         payload: {
@@ -515,7 +508,6 @@ export default {
           componentstatus: componentStatusSelected.name,
         },
       };
-      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateRecordById(payload);
       this.saving = false;
@@ -560,7 +552,6 @@ export default {
           },
         };
       }
-      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateMaterialRecordById(payload);
       this.saving = false;

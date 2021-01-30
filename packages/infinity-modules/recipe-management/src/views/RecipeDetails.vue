@@ -208,7 +208,6 @@ export default {
     this.recipename = this.recipeList[0].recipename;
   },
   async created() {
-    console.log(this.$route.params.id);
     await this.getRecipeDetailListRecords(
       `?query=recipeid=="${this.$route.params.id}"`,
     );

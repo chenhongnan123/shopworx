@@ -76,7 +76,6 @@ export default ({
           ngcount: 0,
         }));
       }
-      console.log(list);
       let listUpdated = [];
       if (list.length) {
         // OK = checkout which substationid + ordernumber +
@@ -92,7 +91,6 @@ export default ({
             },
             { root: true },
           );
-          console.log(checkout.length);
           const okcount = checkout.length;
           const partstatus = await dispatch(
             'element/getRecords',
@@ -102,7 +100,6 @@ export default ({
             },
             { root: true },
           );
-          console.log(partstatus.length);
           const ngcount = partstatus.length;
           return {
             ...item,
@@ -117,7 +114,6 @@ export default ({
       //     ...l,
       //   }));
       // }
-      console.log(await listUpdated);
       commit('setSubStationWiseOrderCounts', listUpdated);
       return true;
     },
@@ -156,7 +152,6 @@ export default ({
           if (checkOut.length) {
             const matchOrder = checkOut
               .filter((o) => o.ordernumber === item.ordernumber);
-            // console.log(matchOrder);
             const substationInfo = substations
               .filter((st) => st.id === matchOrder[0].substationid);
             // item.actualcount = actualUpdatecount[0].ordercount;

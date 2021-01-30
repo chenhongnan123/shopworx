@@ -229,7 +229,6 @@ export default {
     ]),
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
-      console.log(item);
       const query = `?query=sublineid=="${item.id}"`;
       await this.getSortedSubStations(query);
     },
@@ -282,7 +281,6 @@ export default {
       // component table
       await this.btnComponentLogic();
       fileName = 'component_data';
-      console.log(this.componentList);
       parameterSelected = this.componentList.map((item) => ({ ...item }));
       column = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
       csvContent = [];
@@ -316,7 +314,6 @@ export default {
         });
         csvContent.push(arr);
       });
-      console.log(csvContent);
       csvParser = new CSVParser();
       content = csvParser.unparse({
         fields: column,
@@ -342,11 +339,7 @@ export default {
       // 2. Get BOM ID
       // 3. Get assemblyid related Bom Details
       await this.getRunningOrder('?query=orderstatus=="Running"');
-      console.log(this.runningOrder);
       await this.getBOMDetails(`?query=bomid==${this.runningOrder[0].bomid}`);
-      console.log(this.bomDetailsList);
-      console.log(this.$refs.process.processParametersList);
-      console.log(this.$refs.process.headerForCSV);
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       let param = '?query=componentname=="subassemblyid"&';
@@ -356,7 +349,6 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}&`;
       }
-      console.log(this.subStationList);
       const componenetData = await this.getComponentList(param);
       const processSendDataArray = [];
       // const duplicateMainIdCheck = [];
@@ -382,7 +374,6 @@ export default {
         }
         // }
       });
-      console.log(processSendDataArray);
       await this.getK2RouterData(processSendDataArray);
       const parameterSelected = this.$refs.process
         .processParametersList.map((item) => ({ ...item }));
@@ -420,12 +411,9 @@ export default {
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       await this.getSubStationElementsData(`?datefrom=${fromDate}&dateto=${toDate}`);
-      console.log(this.subStationListData);
-      console.log(mainidList);
       await Promise.all(mainidList.map(async (request) => {
         const bomData = this.bomDetailsList.filter((bom) => bom.sublineid === request.sublineid
           && bom.parametername === 'subassemblyid' && bom.substationid === request.substationid);
-        console.log(bomData);
         const subStationDataList = this.subStationListData
           .filter((sub) => sub.sublineid === bomData[0].boundsublineid);
         await Promise.all(subStationDataList.map(async (s) => {
@@ -440,14 +428,10 @@ export default {
               }
             });
             const subAssemblyIdFieldName = `${request.substationname}_subassemblyid`;
-            console.log(subAssemblyIdFieldName);
-            console.log(request[subAssemblyIdFieldName]);
             let processData = s[`data_${s.id}`];
-            console.log(processData);
             if (processData.length > 0) {
               processData = processData.filter((a) => a.mainid === request[subAssemblyIdFieldName]);
             }
-            console.log(processData);
             // await this.getProcessParameters({
             //   elementname: s.id,
             //   payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
@@ -511,7 +495,6 @@ export default {
       if (this.trecibilityState.selectedSubStation) {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
       }
-      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
       }

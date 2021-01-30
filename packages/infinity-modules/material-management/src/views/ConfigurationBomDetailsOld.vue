@@ -325,7 +325,6 @@ export default {
     this.zipService = ZipService;
     this.selectedHeaders = this.headers;
     // await this.getSubStationListForConfigScreen('');
-    // console.log(this.substationList);
   },
   methods: {
     ...mapActions('bomManagement', [

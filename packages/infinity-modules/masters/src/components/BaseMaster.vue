@@ -4,41 +4,6 @@
     class="transparent"
     style="height: 100%"
   >
-  <!-- <v-row justify="center"
-  >
-        <v-col cols="12" xl="10" class="py-0"> -->
-             <!-- <v-toolbar
-              flat
-              dense
-              lass="stick"
-              :color="$vuetify.theme.dark ? '#121212': ''"
-              >
-              <v-spacer></v-spacer> -->
-            <!-- <v-text-field
-            class="mt-10 mr-2"
-            type="date"
-            v-model="fromdate"
-            label="From date"
-            dense
-            ></v-text-field>
-            <v-text-field
-            class="mt-10 mr-2"
-            type="date"
-            v-model="todate"
-            label="To date"
-            dense
-            ></v-text-field>
-            <v-btn small color="primary" outlined class="text-none ml-2" @click="fetchRecords">
-            Search
-          </v-btn> -->
-              <!-- <v-btn
-               v-if="this.showUpdateBtn"
-              small color="success" outlined class="text-none ml-2" @click="updateValue">
-            Update
-            </v-btn> -->
-            <!-- </v-toolbar> -->
-        <!-- </v-col>
-      </v-row> -->
     <ag-grid-vue
       v-model="rowData"
       rowSelection="multiple"
@@ -114,7 +79,6 @@ export default {
     },
     id() {
       this.fetchRecords();
-      this.showUpdateBtn = false;
     },
     records() {
       this.setRowData();
@@ -144,16 +108,10 @@ export default {
     ...mapActions('masters', ['getRecords', 'updateRecord']),
     ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
-      // const fromdate = new Date(this.fromdate).getTime();
-      // const todate = new Date(this.todate).getTime();
       this.loading = true;
       await this.getRecords({
         elementName: this.id,
         assetId: this.assetId,
-        // fromDate: fromdate,
-        // toDate: todate,
-        // pageSize: 10,
-        // pageNumber: 1,
       });
       this.loading = false;
     },
@@ -177,37 +135,9 @@ export default {
         return acc;
       }, {});
     },
-    // editMethod(event) {
-    //   this.showUpdateBtn = true;
-    //   this.updateData.push(event.data);
-    // },
-    async onSelectionChanged(event) {
+    onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
     },
-    // async updateValue() {
-    //   const elementName = this.id;
-    //   const data = this.updateData;
-    //   console.log(this.updateData);
-    //   const multipleRows = data.forEach(async (item) => {
-    //     const changedRow = await this.updateRecord(
-    //       {
-    //         query: item._id, payload: item, name: elementName,
-    //       },
-    //     );
-    //     console.log(changedRow);
-    //   });
-    //   let update = false;
-    //   update = await Promise.all([multipleRows]);
-    //   if (update) {
-    //     this.setAlert({
-    //       show: true,
-    //       type: 'success',
-    //       message: 'DATA_SAVED',
-    //     });
-    //   }
-    //   this.showUpdateBtn = false;
-    //   this.updateData = [];
-    // },
     addRow() {
       this.gridApi.applyTransaction({ add: [this.getNewRowItem()] });
     },

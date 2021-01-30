@@ -246,7 +246,6 @@ export default {
     async getFilteredNum(item) {
       const materialNum = this.materialList.filter((o) => o.id === item.id);
       this.setFilterMaterialNum(materialNum);
-      console.log(materialNum);
     },
     async filteredMaterialCategory(item) {
       const materialCategory = this.categoryList.filter((o) => o.id === item.materialcategory);

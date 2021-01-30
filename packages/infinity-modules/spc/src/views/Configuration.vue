@@ -241,7 +241,6 @@ export default {
     ...mapMutations('spc', ['setAddParameterDialog', 'toggleFilter', 'setApply', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
     ...mapActions('spc', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameteranalysis', 'deleteParameteranalysis', 'createParameter', 'createParameteranalysisList', 'downloadToPLC', 'getSubStationIdElement', 'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParameteranalysisListRecords']),
     async saveTableParameter(item, type) {
-      console.log(item, type);
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
       if (!value) {

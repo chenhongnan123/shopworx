@@ -435,7 +435,6 @@ export default {
       this.confirmListDialog = false;
     },
     handleClick(value) {
-      console.log(value);
       this.$router.push(
         {
           name: 'bom-details',

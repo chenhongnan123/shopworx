@@ -285,8 +285,6 @@ export default ({
         f.parameterlist = finalParameterList;
         f.substationid = f.id;
       }));
-      // id = substationid
-      console.log(list);
       commit('setSubStationListForConfig', list);
       return list;
     },
@@ -385,8 +383,6 @@ export default ({
       }
     },
     createBomDetailConfigList: async ({ dispatch }, payload) => {
-      console.log('creating-bom');
-      console.log(payload);
       const created = await dispatch(
         'element/postBulkRecords',
         {
@@ -395,7 +391,6 @@ export default ({
         },
         { root: true },
       );
-      console.log('created-bom');
       return created;
     },
     updateBomDetail: async ({ dispatch }, payload) => {

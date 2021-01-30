@@ -447,7 +447,6 @@ export default {
             return mod;
           }),
         };
-        console.log(payload);
         const created = await this.createAccess(payload);
         if (created) {
           this.setAlert({

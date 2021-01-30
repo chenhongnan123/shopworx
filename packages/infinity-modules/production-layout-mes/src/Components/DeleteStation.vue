@@ -93,26 +93,25 @@ export default {
         this.dialog = false;
       } else {
         // get plc parameter
-        const getSubStation = this.subStations
-          .filter((s) => s.stationid === this.station.id);
-        const matchSubStation = getSubStation.forEach(async (item) => {
-          const element = await this.getSubStationIdElement(item.id);
-          const eleList = await this.inactiveElement(
-            {
-              elementId: element.id,
-              status: 'INACTIVE',
-            },
-          );
-          console.log(eleList);
-          // if (eleList) {
-          //   this.setAlert({
-          //     show: true,
-          //     type: 'success',
-          //     message: 'INACTIVE_PROCESS_ELEMENT',
-          //   });
-          // }
-        });
-        await Promise.all([matchSubStation]);
+        // const getSubStation = this.subStations
+        //   .filter((s) => s.stationid === this.station.id);
+        // const matchSubStation = getSubStation.forEach(async (item) => {
+        //   const element = await this.getSubStationIdElement(item.id);
+        //   const eleList = await this.inactiveElement(
+        //     {
+        //       elementId: element.id,
+        //       status: 'INACTIVE',
+        //     },
+        //   );
+        //   // if (eleList) {
+        //   //   this.setAlert({
+        //   //     show: true,
+        //   //     type: 'success',
+        //   //     message: 'INACTIVE_PROCESS_ELEMENT',
+        //   //   });
+        //   // }
+        // });
+        // await Promise.all([matchSubStation]);
         const gotRoadmap = this.roadMapDetailsRecord
           .filter((s) => s.stationid === this.station.id);
         if (gotRoadmap.length > 0) {

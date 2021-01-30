@@ -561,7 +561,6 @@ export default {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
     protocol(val) {
-      console.log(val);
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
         this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
@@ -604,7 +603,6 @@ export default {
       'updateTagStatus',
     ]),
     onSelectProtocol(value) {
-      console.log('hi');
       this.setProtocol(value);
     },
     async saveTableParameter(item, type) {
@@ -1221,7 +1219,6 @@ export default {
             const tag = this.createElementResponse
               .filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
-              // console.log(tag[0].tagId);
               payloadData.push({
                 elementId: l.elementId,
                 tagId: tag[0].tagId,
