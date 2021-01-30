@@ -14,7 +14,7 @@
           <v-autocomplete clearable class="mt-6 mr-4" label="Select Subline" return-object item-text="name" :items="sublineList" v-model="selectedSubLine" @change="handleSubLineClick">
             <template v-slot:item="{ item }">
               <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
+               <v-list-item-title v-text="item.name"></v-list-item-title>
               </v-list-item-content>
             </template>
           </v-autocomplete>

@@ -1,5 +1,5 @@
 {
-	"name": "@shopworx/parameter-configuration",
+	"name": "@shopworx/packaging-management",
 	"version": "4.2.2",
 	"private": true,
 	"dependencies": {

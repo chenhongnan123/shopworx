@@ -11,6 +11,7 @@ export default {
     home: 'mdi-home-outline',
     productionPlanning: 'mdi-calendar-text-outline',
     productionLayoutMes: 'mdi-file-tree-outline',
+    productionLayout: 'mdi-file-tree-outline',
     traceabilityApp: 'mdi-graph-outline',
     materialManagement: 'mdi-cart-minus',
     parameterManagement: 'mdi-tune',
