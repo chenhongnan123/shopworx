@@ -413,6 +413,19 @@ export default ({
       return updated;
     },
 
+    updateInstance: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.INSTANCE,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
     updateNodebotInstances: async ({ dispatch }, { nodebotmasterid, payload }) => {
       const updated = await dispatch(
         'element/updateRecordByQuery',
