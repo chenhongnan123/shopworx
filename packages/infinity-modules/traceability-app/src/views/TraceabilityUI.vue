@@ -230,8 +230,8 @@ export default {
     ...mapActions('element', ['getRecords']),
     async handleSubLineClick(item) {
       console.log(item);
-      // const query = `?query=sublineid=="${item.id}"`;
-      // await this.getSortedSubStations(query);
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getSortedSubStations(query);
     },
     async backAndfourth() {
       if (this.pageNumber === 1) {

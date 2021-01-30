@@ -177,37 +177,37 @@ export default {
         return acc;
       }, {});
     },
-    editMethod(event) {
-      this.showUpdateBtn = true;
-      this.updateData.push(event.data);
-    },
+    // editMethod(event) {
+    //   this.showUpdateBtn = true;
+    //   this.updateData.push(event.data);
+    // },
     async onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
     },
-    async updateValue() {
-      const elementName = this.id;
-      const data = this.updateData;
-      console.log(this.updateData);
-      const multipleRows = data.forEach(async (item) => {
-        const changedRow = await this.updateRecord(
-          {
-            query: item._id, payload: item, name: elementName,
-          },
-        );
-        console.log(changedRow);
-      });
-      let update = false;
-      update = await Promise.all([multipleRows]);
-      if (update) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'DATA_SAVED',
-        });
-      }
-      this.showUpdateBtn = false;
-      this.updateData = [];
-    },
+    // async updateValue() {
+    //   const elementName = this.id;
+    //   const data = this.updateData;
+    //   console.log(this.updateData);
+    //   const multipleRows = data.forEach(async (item) => {
+    //     const changedRow = await this.updateRecord(
+    //       {
+    //         query: item._id, payload: item, name: elementName,
+    //       },
+    //     );
+    //     console.log(changedRow);
+    //   });
+    //   let update = false;
+    //   update = await Promise.all([multipleRows]);
+    //   if (update) {
+    //     this.setAlert({
+    //       show: true,
+    //       type: 'success',
+    //       message: 'DATA_SAVED',
+    //     });
+    //   }
+    //   this.showUpdateBtn = false;
+    //   this.updateData = [];
+    // },
     addRow() {
       this.gridApi.applyTransaction({ add: [this.getNewRowItem()] });
     },

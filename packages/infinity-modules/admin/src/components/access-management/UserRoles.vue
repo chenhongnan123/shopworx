@@ -250,7 +250,9 @@ export default {
       const modules = [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+          if (module.moduleName.toUpperCase().trim() === 'APPS' || module.moduleName.toUpperCase().trim() === 'DASHBOARDS'
+            || module.moduleName.toUpperCase().trim() === 'OPERATION' || module.moduleName.toUpperCase().trim() === 'MANAGEMENT'
+            || module.moduleName.toUpperCase().trim() === 'CONFIGURATION') {
             modules.push({
               id: module.id,
               name: this.$i18n.t(`modules.${module.moduleName}`),
@@ -305,6 +307,18 @@ export default {
       const roleReportCategoryIds = reportModule
         ? reportModule.details.map((detail) => detail.id)
         : [];
+      const operationModule = roleModules.find((mod) => mod.moduleName.toUpperCase().trim() === 'OPERATION');
+      const roleOperationIds = operationModule
+        ? operationModule.details.map((detail) => detail.id)
+        : [];
+      const managementModule = roleModules.find((mod) => mod.moduleName.toUpperCase().trim() === 'MANAGEMENT');
+      const roleManagementIds = managementModule
+        ? managementModule.details.map((detail) => detail.id)
+        : [];
+      const configurationModule = roleModules.find((mod) => mod.moduleName.toUpperCase().trim() === 'CONFIGURATION');
+      const roleConfigurationIds = configurationModule
+        ? configurationModule.details.map((detail) => detail.id)
+        : [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
           if (module.moduleName.toUpperCase().trim() === 'APPS') {
@@ -343,6 +357,45 @@ export default {
                   name: detail.reportsCategoryName,
                 }));
               modules = [...modules, ...reportModules];
+            }
+          } else if (module.moduleName.toUpperCase().trim() === 'OPERATION') {
+            if (module.details
+              .filter((detail) => roleOperationIds.includes(detail.id)).length) {
+              const operationModules = module.details
+                .filter((detail) => roleOperationIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.webAppName,
+                }));
+              modules = [...modules, ...operationModules];
+            }
+          } else if (module.moduleName.toUpperCase().trim() === 'MANAGEMENT') {
+            if (module.details
+              .filter((detail) => roleManagementIds.includes(detail.id)).length) {
+              const managementModules = module.details
+                .filter((detail) => roleManagementIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.webAppName,
+                }));
+              modules = [...modules, ...managementModules];
+            }
+          } else if (module.moduleName.toUpperCase().trim() === 'CONFIGURATION') {
+            if (module.details
+              .filter((detail) => roleConfigurationIds.includes(detail.id)).length) {
+              const configurationModules = module.details
+                .filter((detail) => roleConfigurationIds.includes(detail.id))
+                .map((detail) => ({
+                  moduleId: module.id,
+                  moduleName: module.moduleName,
+                  id: detail.id,
+                  name: detail.webAppName,
+                }));
+              modules = [...modules, ...configurationModules];
             }
           } else if (roleModulesIds.includes(module.id)) {
             modules = [...modules, {
@@ -383,7 +436,10 @@ export default {
             };
             const modules = permissionsByModule[moduleId];
             if (modules[0].moduleName.toUpperCase().trim() === 'APPS'
-              || modules[0].moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+              || modules[0].moduleName.toUpperCase().trim() === 'DASHBOARDS'
+              || modules[0].moduleName.toUpperCase().trim() === 'OPERATION'
+              || modules[0].moduleName.toUpperCase().trim() === 'MANAGEMENT'
+              || modules[0].moduleName.toUpperCase().trim() === 'CONFIGURATION') {
               mod.webAppIds = modules.map((m) => m.id);
             } else if (modules[0].moduleName.toUpperCase().trim() === 'REPORTS') {
               mod.reportsCategoryIds = modules.map((m) => m.id);
@@ -391,6 +447,7 @@ export default {
             return mod;
           }),
         };
+        console.log(payload);
         const created = await this.createAccess(payload);
         if (created) {
           this.setAlert({

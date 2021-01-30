@@ -271,11 +271,6 @@ export default {
             field: 'completedproductid',
             resizable: true,
           },
-          {
-            headerName: this.$t('Description'),
-            field: 'chinesedescription',
-            resizable: true,
-          },
         );
       } else {
         this.processParametersheader.push(
@@ -293,11 +288,6 @@ export default {
           {
             headerName: this.$t('Completed Product ID'),
             field: 'completedproductid',
-            resizable: true,
-          },
-          {
-            headerName: this.$t('Description'),
-            field: 'description',
             resizable: true,
           },
         );
@@ -379,6 +369,9 @@ export default {
       } else {
         await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
         await Promise.all(this.subStationList.map(async (s) => {
+          const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
+            C%7Cparametercategory=="18")`);
           const elementDetails = await this.getProcessElement(s.id);
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {
@@ -386,20 +379,30 @@ export default {
                 const data = this.processParametersheader
                   .filter((p) => p.field === element.tagName);
                 if (data.length === 0) {
+                  const matchParam = paramRecord
+                    .find((m) => m.parametername === element.tagName);
                   this.headerForCSV.push(`${s.name}_${element.tagName}`);
-                  this.processParametersheader.push(
-                    {
-                      headerName: `${s.name}_${element.tagDescription}`,
-                      field: `${s.name}_${element.tagName}`,
-                      resizable: true,
-                    },
-                  );
+                  if (this.language === 'zhHans') {
+                    this.processParametersheader.push(
+                      {
+                        headerName: `${s.name}_${matchParam.chinesedescription}`,
+                        field: `${s.name}_${element.tagName}`,
+                        resizable: true,
+                      },
+                    );
+                  } else {
+                    console.log(matchParam.description);
+                    this.processParametersheader.push(
+                      {
+                        headerName: `${s.name}_${matchParam.description}`,
+                        field: `${s.name}_${element.tagName}`,
+                        resizable: true,
+                      },
+                    );
+                  }
                 }
               }
             });
-            await this.getParametersList(`?query=substationid=="${s.id}"%26%26
-            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
             await Promise.all(this.partStatusList.map(async (f) => {
               // const componenetData = await this.getComponentList(`?query=mainid=="${f.mainid}"`);
               // const subAssemblyIdData = componenetData.filter(
