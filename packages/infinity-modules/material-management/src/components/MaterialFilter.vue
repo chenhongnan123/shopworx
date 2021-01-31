@@ -21,6 +21,44 @@
     <v-card flat>
       <perfect-scrollbar>
         <v-card-text style="height:calc(100vh - 220px)">
+          <!-- <v-autocomplete
+            class="mt-5"
+            :items="lineList"
+            outlined
+            dense
+            hide-details
+            v-model="line"
+            name="name"
+            label="Select Line"
+            item-text="name"
+            item-value="id"
+            clearable
+          >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          </v-autocomplete> -->
+          <!-- <v-autocomplete
+            class="mt-5"
+            :items="sublineList"
+            outlined
+            dense
+            hide-details
+            v-model="subline"
+            name="name"
+            label="Select Subine"
+            item-text="name"
+            item-value="id"
+            clearable
+          >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
             :items="materialList"
@@ -32,8 +70,10 @@
             label="Material Name"
             item-text="name"
             clearable
+            return-object
+            @change="getFilteredNum"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -41,17 +81,19 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialList"
+            :items="filteredMaterialNum"
             outlined
             dense
             hide-details
             v-model="materialnumber"
-            name="name"
+            name="materialnumber"
             label="Material Number"
             item-text="materialnumber"
             clearable
+            return-object
+            @change="filteredMaterialCategory"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialnumber"></v-list-item-title>
             </v-list-item-content>
@@ -59,7 +101,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="categoryList"
+            :items="filterdMateriallCat"
             outlined
             dense
             hide-details
@@ -69,8 +111,10 @@
             item-text="name"
             item-value="id"
             clearable
+            return-object
+            @change="filteredMaterialType"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
               <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -79,17 +123,19 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialList"
+            :items="filterdMaterialType"
             outlined
             dense
             hide-details
             v-model="materialtype"
-            name="name"
+            name="materialtype"
             label="Material TypeID"
             item-text="materialtype"
             clearable
+            return-object
+            @change="filteredMaterialManufacturer"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.materialtype"></v-list-item-title>
             </v-list-item-content>
@@ -97,7 +143,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="materialList"
+            :items="filteredManufacture"
             outlined
             dense
             hide-details
@@ -107,7 +153,7 @@
             item-text="manufacturer"
             clearable
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.manufacturer"></v-list-item-title>
             </v-list-item-content>
@@ -153,7 +199,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList']),
+    ...mapState('materialManagement', ['filter', 'materialList', 'lineList', 'sublineList', 'categoryList', 'filteredMaterialNum', 'filterdMateriallCat', 'filterdMaterialType', 'filteredManufacture']),
     showFilter: {
       get() {
         return this.filter;
@@ -164,26 +210,27 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('materialManagement', ['setFilter', 'toggleFilter']),
+    ...mapMutations('materialManagement', ['setFilter', 'toggleFilter', 'setFilterMaterialNum', 'setFilterMaterialCat', 'setFilterMaterialType', 'setFilterMaterialMft']),
     ...mapActions('materialManagement', ['getMaterialListRecords', 'getSublineList']),
     btnApply() {
       let query = '?query=';
       if (this.materialname) {
-        query += `name=="${this.materialname}"&`;
+        query += `name=="${this.materialname.name}"&`;
       }
       if (this.materialnumber) {
-        query += `materialnumber==${this.materialnumber}&`;
+        query += `materialnumber==${this.materialnumber.materialnumber}&`;
       }
       if (this.materialncategory) {
-        query += `materialcategory==${this.materialncategory}&`;
+        query += `materialcategory==${this.materialncategory.id}&`;
       }
       if (this.materialtype) {
-        query += `materialtype=="${this.materialtype}"&`;
+        query += `materialtype=="${this.materialtype.materialtype}"&`;
       }
       if (this.manufacturer) {
         query += `manufacturer=="${this.manufacturer}"&`;
       }
       this.getMaterialListRecords(query);
+      this.toggleFilter();
     },
     btnReset() {
       this.getMaterialListRecords('');
@@ -195,6 +242,22 @@ export default {
       this.manufacturer = '';
       this.line = '';
       this.subline = '';
+    },
+    async getFilteredNum(item) {
+      const materialNum = this.materialList.filter((o) => o.id === item.id);
+      this.setFilterMaterialNum(materialNum);
+    },
+    async filteredMaterialCategory(item) {
+      const materialCategory = this.categoryList.filter((o) => o.id === item.materialcategory);
+      this.setFilterMaterialCat(materialCategory);
+    },
+    async filteredMaterialType(item) {
+      const materialType = this.materialList.filter((o) => o.materialcategory === item.id);
+      this.setFilterMaterialType(materialType);
+    },
+    async filteredMaterialManufacturer(item) {
+      const materialMft = this.materialList.filter((o) => o.manufacturer === item.manufacturer);
+      this.setFilterMaterialMft(materialMft);
     },
   },
 };

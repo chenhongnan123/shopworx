@@ -1,4 +1,5 @@
 {
+  "roadmapManagement": "工艺路径管理",
   "productionLog": "生产日志",
   "error": {
     "ROADMAP_NAME_EMPTY": "流程路径名称为空.",

@@ -51,6 +51,8 @@ export default {
       fromdate: null,
       todate: null,
       rowData: [],
+      // gridOptions: null,
+      // gridOptionsPart: null,
       searchMainID: null,
       selectedSubLine: null,
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
@@ -61,43 +63,48 @@ export default {
       processParametersheader: [],
       headers: [
         {
-          headerName: 'Created Date',
+          headerName: this.$t('Created Date'),
           field: 'createdTimestamp',
           resizable: true,
         },
         {
-          headerName: 'Main ID',
+          headerName: this.$t('Main ID'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,
         },
         {
-          headerName: 'Sub station',
+          headerName: this.$t('Sub station'),
           field: 'substationid',
           resizable: true,
         },
         {
-          headerName: 'Component name',
+          headerName: this.$t('Completed Product ID'),
+          field: 'completedproductid',
+          resizable: true,
+        },
+        {
+          headerName: this.$t('Component name'),
           field: 'componentname',
           resizable: true,
         },
         {
-          headerName: 'Component value',
+          headerName: this.$t('Component value'),
           field: 'componentvalue',
           resizable: true,
         },
         {
-          headerName: 'Bound status',
+          headerName: this.$t('Bound status'),
           field: 'boundstatus',
           resizable: true,
         },
         {
-          headerName: 'Rework status',
+          headerName: this.$t('Rework status'),
           field: 'reworkstatus',
           resizable: true,
         },
         {
-          headerName: 'Quality status',
+          headerName: this.$t('Quality status'),
           field: 'qualitystatus',
           resizable: true,
         },
@@ -129,6 +136,7 @@ export default {
     if (this.trecibilityState.selectedSubLine) {
       await this.btnSearchCheckOut();
     }
+    // await this.fetchRecords();
   },
   beforeMount() {
     this.componentList = null;
@@ -175,11 +183,14 @@ export default {
     },
     restoreState() {
       if (!this.isBaseReport) {
+        // this.setGridState(this.gridObject);
         const state = JSON.parse(this.gridObject);
         this.gridColumnApi.setColumnState(state.colState);
         this.gridColumnApi.setColumnGroupState(state.groupState);
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
+      } else {
+        // this.resetState();
       }
     },
     async fetchRecords() {
@@ -202,6 +213,12 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
+      /* console.log('***********************');
+      console.log('colState: ', colState);
+      console.log('groupState: ', groupState);
+      console.log('sortState: ', sortState);
+      console.log('filterState: ', filterState);
+      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -219,6 +236,7 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
+        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
@@ -238,6 +256,7 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
+        param += `componentvalue=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
         cFlag = 1;
       }
@@ -245,6 +264,7 @@ export default {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
         cFlag = 4;
       }
+      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -255,13 +275,8 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
+      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
-      this.componentList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptions.api.refreshCells();
-        }
-      });
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -293,115 +308,6 @@ export default {
           show: true,
           type: 'success',
           message: 'GET_RECORDS',
-        });
-      }
-    },
-    async nextSearch() {
-      const pagenumber = this.pageNumber;
-      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
-      const toDate = new Date(this.trecibilityState.todate).getTime();
-      let param = '';
-      if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
-         && (fromDate || toDate)) {
-        param = '?';
-      } else {
-        param = '?query=';
-      }
-      if (this.trecibilityState.searchMainID) {
-        param += `mainid=="${this.trecibilityState.searchMainID}"||`;
-        param += `productid=="${this.trecibilityState.searchMainID}"||`;
-        param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
-        param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
-        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
-      }
-      if (this.trecibilityState.selectedSubLine) {
-        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
-      }
-      if (fromDate) {
-        param += `datefrom=${fromDate}&`;
-      }
-      if (toDate) {
-        param += `dateto=${toDate}&`;
-      }
-      param += `pagenumber=${pagenumber}&pagesize=20`;
-      await this.getComponentList(param);
-      param += '&sortquery=modifiedtimestamp==-1';
-      await this.getPartStatus(param);
-      this.componentList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptions.api.refreshCells();
-        }
-      });
-      this.partStatusList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptionsPart.api.refreshCells();
-        }
-      });
-      this.gridApi = this.gridOptions.api;
-      this.gridApi.expandAll();
-      this.gridApi = this.gridOptionsPart.api;
-      this.gridApi.expandAll();
-      this.setAlert({
-        show: true,
-        type: 'success',
-        message: 'Next',
-      });
-    },
-    async prevSearch() {
-      const pagenumber = this.pageNumber;
-      if (pagenumber <= 1) {
-        this.prevDisabled = true;
-        const fromDate = new Date(this.trecibilityState.fromdate).getTime();
-        const toDate = new Date(this.trecibilityState.todate).getTime();
-        let param = '';
-        if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
-           && (fromDate || toDate)) {
-          param = '?';
-        } else {
-          param = '?query=';
-        }
-        if (this.searchMainID) {
-          param += `mainid=="${this.trecibilityState.searchMainID}"||`;
-          param += `productid=="${this.trecibilityState.searchMainID}"||`;
-          param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
-          param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
-          param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
-        }
-        if (this.trecibilityState.selectedSubLine) {
-          param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
-        }
-        if (fromDate) {
-          param += `datefrom=${fromDate}&`;
-        }
-        if (toDate) {
-          param += `dateto=${toDate}&`;
-        }
-        param += `pagenumber=${pagenumber}&pagesize=20`;
-        await this.getComponentList(param);
-        param += '&sortquery=modifiedtimestamp==-1';
-        await this.getPartStatus(param);
-        this.componentList.forEach((e) => {
-          if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-            e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-            this.gridOptions.api.refreshCells();
-          }
-        });
-        this.partStatusList.forEach((e) => {
-          if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-            e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-            this.gridOptionsPart.api.refreshCells();
-          }
-        });
-        this.gridApi = this.gridOptions.api;
-        this.gridApi.expandAll();
-        this.gridApi = this.gridOptionsPart.api;
-        this.gridApi.expandAll();
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'Prev',
         });
       }
     },

@@ -1,11 +1,13 @@
 {
   "title": "Rework",
-  "appTitle": "Rework Details",
+  "appTitle": "Rework",
   "headers": {
     "list": "List",
     "changeover": "Changeover"
   },
   "displayTags": {
+    "reworkList": "Rework List",
+    "reworkDetails": "Rework Details",
       "mainid": "Main Id",
       "ngcode": "Ng Code",
       "ngcodedescription": "Ng Code Description",
@@ -14,6 +16,8 @@
       "stationName": "Station",
       "sublineName": "Subline",
     "buttons" : {
+      "btnRefresh": "Refresh",
+      "btnSearch" : "Search",
       "confirmrework" : "Confirm Rework",
       "confirmok": "Confirm Ok",
       "confirmng": "Confirm Ng",
@@ -30,12 +34,46 @@
     "MAINID_NOT_PRESENT": "MainId doesn't Exists.",
     "EITHER_DATE_EMPTY": "Either one of {from Date} OR {to Date} is empty!",
     "SELECT_DATE": "Please Select Date.",
-    "NO_SUMMARY": "No Summary Data Found!",
+    "NO_SUMMARY": "No NG-Code found for this Mainid!",
     "NO_PRODUCT_TYPE": "Product Type is not same for Running order",
     "ALREADY_REWORK": "Already rework selected.",
-    "BOUND_STATUS_NOT_PRESENT": "Not Bound station"
+    "BOUND_STATUS_NOT_PRESENT": "Not Bound station",
+    "VALUES_UPDATE_ERROR": "Error in updating Values"
   },
   "success": {
-    "RECIPE_CREATED": "Recipe created!"
-  }
+    "RECIPE_CREATED": "Recipe created!",
+    "VALUES_UPDATE": "Values updated"
+  },
+  "From date":	"From date",
+  "To date":	"To date",
+  "dd/mm/yyyy":	"dd/mm/yyyy",
+  "No.":	"No",
+  "Date":	"Date",
+  "Main ID":	"Main ID",
+  "NG Code":	"NG Code",
+  "NG Description":	"NG Description",
+  "Order Name":	"Order Name",
+  "Sub-Station":	"Sub-Station",
+  "Product History Info":	"Product History Info",
+  "Created Time":	"Created Time",
+  "NG Sub Station":	"NG Sub Station",
+  "Reworkable":	"Reworkable",
+  "Previous Order":	"Previous Order",
+  "Product Type":	"Product Type",
+  "Rework Description":	"Rework Description",
+  "Target Substation":	"Target Substation",
+  "Process Code":	"Process Code",
+  "Select Rework Roadmap":	"Select Rework Roadmap",
+  "Current Info":	"Current Info",
+  "Running Order":	"Running Order",
+  "Running Product Type":	"Running Product Type",
+  "Component":	"Component",
+  "Component Value":	"Component Value",
+  "Sub-Station name":	"Sub-Station name",
+  "Current Quality":	"Current Quality",
+  "Set Quality":	"Set Quality",
+  "Comfirm Rework":	"Comfirm Rework",
+  "Comfirm OK":	"Comfirm OK",
+  "Comfirm NG":	"Comfirm NG",
+  "Rework Roadmap": "Rework Roadmap"
 }

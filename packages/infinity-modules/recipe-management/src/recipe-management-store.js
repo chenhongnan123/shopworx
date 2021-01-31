@@ -1,3 +1,4 @@
+// import { set } from '@shopworx/services/util/store.helper';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -17,6 +18,9 @@ export default ({
     stationNamebySubline: [],
     datatypeList: [],
     parametersList: [],
+    sublineInState: [],
+    stationInState: [],
+    substationInState: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -34,6 +38,9 @@ export default ({
     setStationNamebySubline: set('stationNamebySubline'),
     setDataTypeList: set('datatypeList'),
     setParamtersList: set('parametersList'),
+    setInStateSubline: set('sublineInState'),
+    setInStateStation: set('stationInState'),
+    setInStateSubStation: set('substationInState'),
   },
   actions: {
     getMonitorValues: async ({ dispatch }, payload) => {
@@ -180,6 +187,7 @@ export default ({
       }
       return deleted;
     },
+    // getProductDetails
     getProductDetails: async ({ dispatch }, query) => {
       const orders = await dispatch(
         'element/getRecords',

@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template #activator="{ on }">
+    <template v-slot:activator="{ on }">
     <v-btn v-on="on"
     small color="primary" outlined class="text-none ml-2" @click="checkMainId">
             {{ $t('displayTags.buttons.cancel') }}
@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    // ...mapActions('reworkOperation', ['deleteSubline']),
     async checkMainId() {
       if (this.rework.enterManinId) {
         this.dialog = true;

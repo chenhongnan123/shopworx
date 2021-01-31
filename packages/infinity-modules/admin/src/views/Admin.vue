@@ -2,7 +2,7 @@
   <settings-layout
     :items="items"
     windowRouteName="adminWindow"
-    headerTitle="Admin Console"
+    :headerTitle="$t('adminTitle')"
   >
     <admin-window />
   </settings-layout>

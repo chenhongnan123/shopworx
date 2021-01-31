@@ -88,7 +88,14 @@ export default ({
       }
     },
 
-    getRecords: async ({ commit, dispatch }, { elementName, assetId }) => {
+    getRecords: async ({ commit, dispatch }, {
+      elementName,
+      assetId,
+      // fromDate,
+      // toDate,
+      // pageSize,
+      // pageNumber,
+    }) => {
       let payload = {
         elementName,
         query: `?query=assetid==${assetId}`,
@@ -96,6 +103,9 @@ export default ({
       if (!assetId) {
         payload = {
           elementName,
+          // fromDate,
+          // toDate,
+          // query: `?query=pagenumber==${pageNumber}&pagesize=${pageSize}`,
         };
       }
       const records = await dispatch(
