@@ -135,6 +135,8 @@ export default {
       selectedElement: null,
       buttonDisable: true,
       dropdoenDisable: true,
+      fromdate: null,
+      todate: null,
     };
   },
   computed: {
@@ -145,7 +147,7 @@ export default {
     },
   },
   async created() {
-    await this.getElements();
+    // await this.getElements();
   },
   watch: {
     dateRange() {
@@ -173,7 +175,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('rawdata', ['setReport', 'setGridState']),
+    ...mapMutations('rawdata', ['setReport', 'setGridState', 'setDateRange']),
     ...mapActions('rawdata', ['getRecords', 'getElements', 'getAssets', 'getParameters', 'getParameterCatgory', 'getRecordsByTagData']),
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
@@ -296,12 +298,14 @@ export default {
     async onElementSelect(item) {
       this.pagenumber = 0;
       this.id = item.to;
+      this.selectedParameters = '';
       await this.fetchRecords();
       const reportData = {
         cols: this.tags,
         reportData: this.rowData ? this.rowData.results : [],
       };
       this.setReport(reportData);
+      this.selectedParameters = this.tags;
     },
   },
 };
