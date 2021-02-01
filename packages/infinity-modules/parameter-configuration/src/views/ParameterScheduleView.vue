@@ -391,6 +391,7 @@ export default {
       openDialog: false,
       responce: [],
       resLen: [],
+      paramLength: [],
       dataForCreation: null,
       masterTags: [{
         tagName: 'name',
@@ -1075,7 +1076,7 @@ export default {
               message: 'EMPTY_FIELDS',
             });
             // document.getElementById('uploadFiles').value = null;
-            // return;
+            return;
           }
         }
         if (noBooleanList.length) {
@@ -1189,7 +1190,7 @@ export default {
               message: 'EMPTY_FIELDS',
             });
             // document.getElementById('uploadFiles').value = null;
-            // return;
+            return;
           }
         }
         this.$root.$emit('payload', data);
@@ -1197,6 +1198,7 @@ export default {
         this.dataForCreation = data;
         // const createResult = await this.createParameterList(data);
         if (this.createResult) {
+          this.responce = [];
           this.savingImport = false;
           await this.getParameterListRecords(this.getQuery());
           let tagList = [];

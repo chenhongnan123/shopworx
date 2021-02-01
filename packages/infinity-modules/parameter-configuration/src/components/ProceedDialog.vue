@@ -12,13 +12,19 @@
         </v-card-title>
 
         <v-card-text>
-        <v-data-table
-        v-model="recordSelected"
-        :headers="header"
-        :items="responce"
-        :items-per-page="4"
-        >
-        </v-data-table>
+          <v-expansion-panels
+      flat
+      accordion
+    >
+      <v-expansion-panel v-if="responce">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $tc('EMPTY_COLUMN_ERROR', responce.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
         <span class="red--text">
           Column or some fields are found Empty! do you want to Preceed
           with Parameter creation( upload )
