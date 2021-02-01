@@ -1,5 +1,10 @@
 <template>
   <div>
+    <portal to="dashboard-title">
+      {{ selectedView && selectedView.value === 'shift'
+        ? 'Shift-wise shopfloor dashboard'
+        : 'Hourly shopfloor dashboard' }}
+    </portal>
     <v-container
       grid-list-lg
       fluid
@@ -32,6 +37,18 @@
             </v-row>
           </v-window-item>
         </v-window>
+        <v-row
+          v-else
+          align="center"
+          justify="center"
+          class="mt-16"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="12" align="center" class="headline">
+            Screen too small to fit the machine card.<br>
+            Please view this dashboard on a bigger screen.
+          </v-col>
+        </v-row>
       </v-responsive>
       <summary-layout v-if="isTV || isFullscreen" />
       <v-footer padless fixed v-if="!isTV && !isFullscreen">
@@ -95,7 +112,9 @@
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
       >
-        Shift-wise shopfloor dashboard
+        {{ selectedView && selectedView.value === 'shift'
+          ? 'Shift-wise shopfloor dashboard'
+          : 'Hourly shopfloor dashboard' }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="headline font-weight-medium">
@@ -135,7 +154,7 @@ export default {
     ...mapGetters('shopfloor', ['screens']),
     ...mapGetters('helper', ['isTV']),
     ...mapState('helper', ['isFullscreen']),
-    ...mapState('shopfloor', ['currentShift']),
+    ...mapState('shopfloor', ['currentShift', 'selectedView', '']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'

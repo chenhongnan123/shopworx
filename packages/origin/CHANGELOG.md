@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **origin:** added option to set customer on init ([5436641](https://bitbucket.org/entrib/shopworx/commits/543664107c24fca923c0516deb4e4248994db807))
+* **origin:** disable site selection until customer is selected ([8046ae3](https://bitbucket.org/entrib/shopworx/commits/8046ae335e0369458fe6dbf9ea1d0166cdfe2b80))
+* **origin:** fixed customer context setting ([47c93f7](https://bitbucket.org/entrib/shopworx/commits/47c93f73a0bff00f0872136fdab8a53a6855b505))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

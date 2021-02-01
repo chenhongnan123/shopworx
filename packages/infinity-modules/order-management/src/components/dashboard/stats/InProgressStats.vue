@@ -1,6 +1,6 @@
 <template>
   <stats-widget
-    :title="'Running'"
+    :title="$t('Running')"
     color="success"
     icon="mdi-progress-clock"
     :stat="onTimePlanCount"

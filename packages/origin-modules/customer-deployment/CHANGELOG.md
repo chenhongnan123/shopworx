@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **core:** fix form submit event ([cfa9b55](https://bitbucket.org/entrib/shopworx/commits/cfa9b558277b804a40a4175ee1139f99f1610584))
+* **customer-deployment:** dispalay unmapped devices ([f3ceb71](https://bitbucket.org/entrib/shopworx/commits/f3ceb71039ccd49de44683831dba11819b625ab6))
+* **customer-deployment:** fixed char length validations ([95879b1](https://bitbucket.org/entrib/shopworx/commits/95879b12ff7f6c378476417ed4ab8679996e64b0))
+* **customer-deployment:** fixed description validation ([97dec0d](https://bitbucket.org/entrib/shopworx/commits/97dec0dd09dd05681f3b6748ddca9b622bda555a))
+* **customer-deployment:** fixed device update ([1c6cbb0](https://bitbucket.org/entrib/shopworx/commits/1c6cbb04cdac1bc7557b6e5f8ee0bb4c92fd2ec0))
+* **customer-deployment:** fixed elements provisioning ([18a364a](https://bitbucket.org/entrib/shopworx/commits/18a364a1a6a4dd61ee9d30c371e3c50987eaaaa5))
+* **customer-deployment:** fixed no selected device state ([2299910](https://bitbucket.org/entrib/shopworx/commits/229991018cc1cd93a4d6ae0828e3220aa321215e))
+
+
+### Features
+
+* **customer-deployment:** added option to update default deb config ([e8b5e2a](https://bitbucket.org/entrib/shopworx/commits/e8b5e2af0bb5587435fb249f066b353a478be2e4))
+* **customer-deployment:** added url validator ([bc51e71](https://bitbucket.org/entrib/shopworx/commits/bc51e715b2c074b019ced8c31d3039368b8d932e))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

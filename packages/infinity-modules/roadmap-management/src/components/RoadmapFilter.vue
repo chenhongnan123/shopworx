@@ -31,7 +31,7 @@
             label="Roadmap Type name"
             item-text="name"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>

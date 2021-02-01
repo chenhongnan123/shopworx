@@ -20,16 +20,28 @@
               {{lineList.filter((item) => item.id === lineValue)[0].name}}
             </v-btn>
           </span>
-          <span v-if="sublineList.length && !!sublineValue" class="ml-2">
-            subline:
+          <span v-if="bomList.length && !!bomValue" class="ml-2">
+            Bom Name:
             <v-btn
             small
             color="normal"
             outlined
             class="text-none ml-2"
-            @click="setSublineValue('')">
+            @click="setBomValue('')">
               <v-icon small left>mdi-close</v-icon>
-              {{sublineList.filter((item) => item.id === sublineValue)[0].name}}
+              {{bomList.filter((item) => item.id === bomValue)[0].name}}
+            </v-btn>
+          </span>
+          <span v-if="bomList.length && !!bomNumValue" class="ml-2">
+            Bom Number:
+            <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="setBomNumValue('')">
+              <v-icon small left>mdi-close</v-icon>
+              {{bomList.filter((item) => item.id === bomNumValue)[0].bomnumber}}
             </v-btn>
           </span>
           <v-spacer></v-spacer>
@@ -66,12 +78,20 @@
         :items="bomList"
         item-key="bomnumber"
         >
-        <template #item.name="props" >
-          <router-link :to="{ name: 'bom-details', params: { query: props.item } }">
-            <span style="cursor:pointer;">{{props.item.name}}</span>
-          </router-link>
+        <template v-slot:item.editedtime="{ item }">
+          <span v-if="item.editedtime">
+            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
+          <span v-else></span>
         </template>
-        <template #top>
+        <template v-slot:item.name="{ item }" >
+          <!-- <router-link :to="{ name: 'bom-details', params: { query: props.item } }"> -->
+            <span @click="handleClick(item)"
+              style="cursor:pointer; color:blue">
+              {{item.name}}
+            </span>
+          <!-- </router-link> -->
+        </template>
+        <template v-slot:top>
         <v-dialog
           persistent
           scrollable
@@ -162,7 +182,7 @@
           </v-card>
         </v-dialog>
         </template>
-        <template #item.actions="{ item }">
+        <template v-slot:item.actions="{ item }">
           <v-row>
             <v-btn
               icon
@@ -248,7 +268,7 @@ export default {
           value: 'bomnumber',
         },
         { text: 'Last Edited By', value: 'editedby' },
-        { text: 'Last Edited On', value: 'modifiedtimestamp' },
+        { text: 'Last Edited On', value: 'editedtime' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       bomObj: {
@@ -286,7 +306,7 @@ export default {
     this.getBomListRecords('');
   },
   computed: {
-    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'addBomDialog']),
+    ...mapState('bomManagement', ['bomList', 'categoryList', 'lineList', 'sublineList', 'lineValue', 'bomValue', 'bomNumValue', 'addBomDialog']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -296,7 +316,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setSublineValue']),
+    ...mapMutations('bomManagement', ['setaddBomDialog', 'toggleFilter', 'setLineValue', 'setBomValue', 'setBomNumValue']),
     ...mapActions('bomManagement', ['getBomListRecords', 'getDefaultList', 'updateBom', 'deleteBom', 'deleteAllBomDetails']),
     async handleUpdateBom() {
       this.$refs.form.validate();
@@ -336,6 +356,7 @@ export default {
         }
         const query = `?query=name=="${bomObjDefault.name}"`;
         fetchObj.editedby = this.userName;
+        fetchObj.editedtime = new Date().getTime();
         const payload = fetchObj;
         this.saving = true;
         const updateResult = await this.updateBom({ query, payload });
@@ -414,10 +435,23 @@ export default {
       this.confirmListDialog = false;
     },
     handleClick(value) {
-      this.$router.push({ name: 'order-details', params: { id: value } });
+      this.$router.push(
+        {
+          name: 'bom-details',
+          params: {
+            id: value.id,
+            name: value.name,
+            lineid: value.lineid,
+          },
+        },
+      );
     },
     async RefreshUI() {
+      this.setLineValue('');
+      this.setBomValue('');
+      this.setBomNumValue('');
       await this.getBomListRecords('');
+      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     btnSaveData() {
       this.setAlert({

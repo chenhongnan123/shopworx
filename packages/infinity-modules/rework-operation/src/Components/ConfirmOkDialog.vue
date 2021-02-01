@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template #activator="{ on }">
+    <template v-slot:activator="{ on }">
     <v-btn v-on="on"
           small color="primary"
           class="text-none ml-2" @click="checkMainId()">
@@ -11,7 +11,7 @@
     </v-btn>
     </template>
       <v-card>
-        <v-card-title class="headline">Confirm OK?
+        <v-card-title class="headline">{{ $t('Comfirm OK') }}
            <v-spacer></v-spacer>
            <v-btn icon small @click="dialog = false">
            <v-icon>mdi-close</v-icon>
@@ -78,12 +78,14 @@ export default {
       this.dialog = false;
     },
     async btnUpdateOverAllResult() {
+      // console.log(this.rework);
       const payload = {
         query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
         payload: {
           overallresult: 1,
         },
       };
+      // console.log(payload);
       await this.updateOverAllResultPartStatus(payload);
       const payloadRework = {
         query: this.rework.reworkinfo[0]._id,
@@ -91,6 +93,7 @@ export default {
           overallresult: 1,
         },
       };
+      // console.log(payloadRework);
       await this.updateOverAllResult(payloadRework);
       await this.getReworkList('?query=overallresult!="1"');
       this.dialog = false;

@@ -321,8 +321,9 @@ export default ({
       );
       if (created && created.id) {
         const createdDevice = await dispatch('fetchDeviceById', created.id);
-        commit('setSelectedDevice', createdDevice);
-        return createdDevice;
+        const device = { ...createdDevice, instances: [] };
+        commit('setSelectedDevice', device);
+        return device;
       }
       return false;
     },
@@ -404,6 +405,19 @@ export default ({
         'element/updateRecordById',
         {
           elementName: elementMap.NODEBOT,
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
+
+    updateInstance: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: elementMap.INSTANCE,
           id,
           payload,
         },

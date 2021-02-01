@@ -28,7 +28,7 @@
           <v-icon>mdi-close-octagon-outline</v-icon>
         </v-btn>
         <v-btn icon>
-          <v-icon v-text="'$delete'"></v-icon>
+          <v-icon>mdi-delete-outline</v-icon>
         </v-btn>
       </template>
     </v-toolbar>
@@ -93,10 +93,10 @@
                       </v-col>
                       <v-col cols="12" md="4" xl="2">
                         <v-list-item-title>
-                          Target: <span v-text="plan.targetcount"></span>
+                          {{ $t('Target') }}: <span v-text="plan.targetcount"></span>
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                          Actual: <span v-text="plan.actualcount"></span>
+                          {{ $t('Actual') }}: <span v-text="plan.actualcount"></span>
                         </v-list-item-subtitle>
                       </v-col>
                     </v-row>

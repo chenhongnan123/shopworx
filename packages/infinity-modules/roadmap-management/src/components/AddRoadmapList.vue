@@ -7,7 +7,7 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
    >
-   <template #activator="{ on }">
+   <template v-slot:activator="{ on }">
     <v-btn
     v-on="on"
     small color="primary" class="text-none" @click="addNewRoadmap">
@@ -80,6 +80,7 @@ export default {
   name: 'AddRoadmapList',
   data() {
     return {
+      // deleting: false,
       dialog: false,
       dialogConfirm: false,
       roadmap: {},

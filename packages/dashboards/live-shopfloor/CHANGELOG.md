@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **dashboard-viewer:** added portal for dashboard title ([34bda51](https://bitbucket.org/entrib/shopworx/commits/34bda51b40507b8089315c1a39f8e029278b029c))
+* **shopfloor-view:** fixed availability ([1642698](https://bitbucket.org/entrib/shopworx/commits/16426984c0e15ab02964baabd34281e2f2c19579))
+* **shopfloor-view:** fixed dashboard to work for a shift/hour ([dba5e3b](https://bitbucket.org/entrib/shopworx/commits/dba5e3b95d4600915a9ee499e8d467ce976a1bd5))
+
+
+### Features
+
+* **shopfloor-dashboard:** added performance value ([8adb678](https://bitbucket.org/entrib/shopworx/commits/8adb678cf9cbc344bd9679cb260fba68ba99f202))
+* **shopfloor-view:** added help text if screen size too small ([cf2b197](https://bitbucket.org/entrib/shopworx/commits/cf2b197fbcba52661647045806ef4fdb80a34ca4))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 

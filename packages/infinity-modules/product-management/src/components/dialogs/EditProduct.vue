@@ -55,7 +55,7 @@
             :loading="loadingProducts"
             prepend-icon="mdi-road-variant"
             >
-            <template #item="{ item }">
+            <template v-slot:item="{ item }">
                 <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 </v-list-item-content>
@@ -73,7 +73,7 @@
             prepend-icon="mdi-road-variant"
             required
             >
-            <template #item="{ item }">
+            <template v-slot:item="{ item }">
                 <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 </v-list-item-content>
@@ -88,7 +88,7 @@
           :disabled="!productName || !productDescription"
           @click="updateProduct"
         >
-          {{ $t('displayTags.buttons.update') }}
+          {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>

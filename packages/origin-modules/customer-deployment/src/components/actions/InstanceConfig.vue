@@ -95,8 +95,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('customerDeployment', ['setReactiveMappedDevice', 'setSelectedDevice']),
-    ...mapActions('customerDeployment', ['createDeploymentOrder']),
+    ...mapActions('customerDeployment', ['updateInstance', 'createDeploymentOrder']),
     isValidJsonString(jsonString) {
       if (!(jsonString && typeof jsonString === 'string')) {
         return false;
@@ -123,6 +124,7 @@ export default {
           }
           return {
             ...instance,
+            configuration: this.configuration,
             isreconfigured,
           };
         }),
@@ -141,6 +143,7 @@ export default {
                 }
                 return {
                   ...instance,
+                  configuration: this.configuration,
                   isreconfigured,
                 };
               }),
@@ -156,23 +159,49 @@ export default {
         You cannot stop the re-configuration once it is started.`,
       )) {
         this.saving = true;
-        const payload = {
-          deploymentserviceid: this.selectedService.id,
-          deploymentservicename: this.selectedService.name,
-          lineid: this.selectedDevice.id,
-          linename: this.selectedDevice.name,
-          nodebotmasterid: this.instance.nodebot.id,
-          nodebotmastername: this.instance.nodebot.name,
-          instanceid: this.instance.id,
-          instancename: this.instance.name,
-          operationname: 'reconfigure-instance',
-          status: 'Pending',
-          assetid: 0,
-        };
-        await this.createDeploymentOrder(payload);
-        this.mapInstances();
+        const updated = await this.updateInstance({
+          // eslint-disable-next-line
+          id: this.instance._id,
+          payload: { configuration: this.configuration },
+        });
+        if (updated) {
+          const payload = {
+            deploymentserviceid: this.selectedService.id,
+            deploymentservicename: this.selectedService.name,
+            lineid: this.selectedDevice.id,
+            linename: this.selectedDevice.name,
+            nodebotmasterid: this.instance.nodebot.id,
+            nodebotmastername: this.instance.nodebot.name,
+            instanceid: this.instance.id,
+            instancename: this.instance.name,
+            operationname: 'reconfigure-instance',
+            status: 'Pending',
+            assetid: 0,
+          };
+          const order = await this.createDeploymentOrder(payload);
+          if (order) {
+            this.mapInstances();
+            this.cancel();
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'INSTANCE_RECONFIG',
+            });
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'INSTANCE_RECONFIG',
+            });
+          }
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'UPDATE_INSTANCE_CONFIG',
+          });
+        }
         this.saving = false;
-        this.cancel();
       }
     },
   },

@@ -12,7 +12,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "recipe-management" */ './views/RecipeManagement.vue'),
       },
       {
-        path: ':id',
+        path: ':id/',
         name: 'recipe-details',
         component: () => import(/* webpackChunkName: "recipe-management" */ './views/RecipeDetails.vue'),
         props: true,

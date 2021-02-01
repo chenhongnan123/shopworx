@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **core:** fix form submit event ([cfa9b55](https://bitbucket.org/entrib/shopworx/commits/cfa9b558277b804a40a4175ee1139f99f1610584))
+* **dashboard-viewer:** added portal for dashboard title ([34bda51](https://bitbucket.org/entrib/shopworx/commits/34bda51b40507b8089315c1a39f8e029278b029c))
+
+
+
+
+
 ## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
 
 **Note:** Version bump only for package @shopworx/dashboard-viewer

@@ -162,6 +162,11 @@ export default {
           sortable: false,
         },
         {
+          text: 'Manager ID',
+          value: 'deploymentserviceid',
+          sortable: false,
+        },
+        {
           text: 'Configuration',
           value: 'config',
           sortable: false,

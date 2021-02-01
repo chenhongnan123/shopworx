@@ -1,4 +1,5 @@
 {
+  "adminTitle": "Admin Console",
   "admin": {
     "general": "General",
     "management": "Access management",
