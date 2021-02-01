@@ -216,15 +216,7 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     setDatefunction() {
-      if (this.fromdate && this.todate) {
-        this.setDateRange([this.fromdate, this.todate]);
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'SELECT_BOTH_DATES',
-        });
-      }
+      this.setDateRange([this.fromdate, this.todate]);
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();
@@ -257,8 +249,16 @@ export default {
       });
     },
     async btnRefresh() {
-      this.flagForPageNumber = false;
-      await this.setRowData();
+      if (this.fromdate && this.todate) {
+        this.flagForPageNumber = false;
+        this.setRowData();
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onExport(e) {
       this.exportReport(e);
