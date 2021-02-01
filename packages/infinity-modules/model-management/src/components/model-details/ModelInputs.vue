@@ -41,6 +41,7 @@
           </template>
         </template>
       </v-autocomplete>
+      <span>Please add timestamp and mainid as default parameters</span>
     </v-card-text>
   </v-card>
 </template>

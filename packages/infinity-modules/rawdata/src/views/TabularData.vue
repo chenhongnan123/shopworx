@@ -294,7 +294,7 @@ export default {
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
-      if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === false) {
+      if (this.parametersChanged === false) {
         const element = this.id.split('_');
         await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
         const changeTags = this.tags;
@@ -323,7 +323,7 @@ export default {
             tags: this.paramList,
           },
         });
-      } else if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === true) {
+      } else if (this.parametersChanged === true) {
         const colState = this.gridColumnApi.getColumnState();
         const tagList = [];
         colState.forEach((f) => {
