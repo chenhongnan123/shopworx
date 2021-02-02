@@ -95,86 +95,16 @@
                 v-if="data.rejections.length"
               >
                 <!-- eslint-disable-next-line -->
-                <template #item.quantity="{ item }">
-                  <v-edit-dialog
-                    large
-                    persistent
-                    @save="updateRejection({
-                      id: item._id,
-                      hour: data.hour,
-                      accepted: data.accepted,
-                      payload: { quantity: parseInt(item.quantity, 10) },
-                    })"
-                    :return-value.sync="item.quantity"
-                  >
-                    <span :class="item.quantity > data.accepted ? 'error--text': ''">
-                      {{ item.quantity }}
-                    </span>
-                    <template #input>
-                      <v-text-field
-                        v-model="item.quantity"
-                        type="number"
-                        label="Qty"
-                        suffix="pcs"
-                        :rules="[(v) => (
-                          Number.isInteger(Number(v)) > 0
-                          && v <= parseInt(data.accepted, 10)
-                        )
-                          || 'Should be less than accepted qty']"
-                        single-line
-                      ></v-text-field>
-                    </template>
-                  </v-edit-dialog>
-                </template>
-                <!-- eslint-disable-next-line -->
-                <template #item.reasonname="{ item }">
-                  <v-edit-dialog
-                    large
-                    persistent
-                    @save="updateRejection({
-                      id: item._id,
-                      hour: data.hour,
-                      accepted: data.accepted,
-                      payload: { reasonname: item.reasonname },
-                    })"
-                    :return-value.sync="item.reasonname"
-                  >
-                    {{ item.reasonname }}
-                    <template #input>
-                      <v-autocomplete
-                        single-line
-                        label="Reason"
-                        item-text="reasonname"
-                        item-value="reasonname"
-                        :items="rejectionReasons"
-                        v-model="item.reasonname"
-                      ></v-autocomplete>
-                    </template>
-                  </v-edit-dialog>
-                </template>
-                <!-- eslint-disable-next-line -->
-                <template #item.remark="{ item }">
-                  <v-edit-dialog
-                    large
-                    persistent
-                    @save="updateRejection({
-                      id: item._id,
-                      hour: data.hour,
-                      accepted: data.accepted,
-                      payload: { remark: item.remark },
-                    })"
-                    :return-value.sync="item.remark"
-                  >
-                    {{ item.remark }}
-                    <template #input>
-                      <v-textarea
-                        v-model="item.remark"
-                        label="Remark"
-                        rows="2"
-                        single-line
-                      ></v-textarea>
-                    </template>
-                  </v-edit-dialog>
+                <template #item.action="{ item, index }">
+                  <edit-rejection
+                    :hour="data.hour"
+                    :rejection="item"
+                    :updating="updating"
+                    :updated="updated"
+                    :rejectionReasons="rejectionReasons"
+                    :acceptedQty="parseInt(data.produced, 10) - getRejected(data.rejections, index)"
+                    @on-update="updateRejection"
+                  />
                 </template>
               </v-data-table>
               <validation-observer
@@ -285,6 +215,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import EditRejection from './EditRejection.vue';
 
 export default {
   name: 'AssignRejections',
@@ -294,6 +225,9 @@ export default {
       required: true,
     },
   },
+  components: {
+    EditRejection,
+  },
   data() {
     return {
       hourlyData: [],
@@ -302,10 +236,13 @@ export default {
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
         { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: '', value: 'action', sortable: false },
       ],
       saving: false,
       loading: false,
       dialog: false,
+      updating: false,
+      updated: false,
     };
   },
   watch: {
@@ -332,6 +269,14 @@ export default {
     ...mapActions('element', ['updateRecordById']),
     ...mapMutations('productionLog', ['setProductionList']),
     ...mapMutations('helper', ['setAlert']),
+    getRejected(rejections, index) {
+      return rejections
+        .filter((r, i) => i !== index)
+        .reduce((result, cur) => {
+          result += parseInt(cur.quantity, 10);
+          return result;
+        }, 0);
+    },
     async getHourlyData() {
       this.loading = true;
       this.hourlyData = await this.fetchHourlyProduction({
@@ -409,59 +354,56 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateRejection(item) {
-      const { id, hour, accepted } = item;
-      if (!item.payload.quantity || item.payload.quantity <= accepted) {
-        let { payload } = item;
-        const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-        const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'quantity');
-        if (hasReasonNameProperty) {
-          payload = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
-        }
-        const updated = await this.updateRecordById({
-          elementName: 'rejection',
-          id,
-          payload,
+      this.updating = true;
+      this.updated = false;
+      const { id, hour } = item;
+      let { payload } = item;
+      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
+      const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'quantity');
+      if (hasReasonNameProperty) {
+        payload = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
+      }
+      const updated = await this.updateRecordById({
+        elementName: 'rejection',
+        id,
+        payload,
+      });
+      if (updated) {
+        const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+        const { rejections } = this.hourlyData[hourIndex];
+        // eslint-disable-next-line
+        const updatedIndex = rejections.findIndex((s) => s._id === id);
+        this.$set(rejections, updatedIndex, {
+          ...rejections[updatedIndex],
+          modifiedtimestamp: 'now',
         });
-        if (updated) {
-          const hourIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-          const { rejections } = this.hourlyData[hourIndex];
-          // eslint-disable-next-line
-          const updatedIndex = rejections.findIndex((s) => s._id === id);
-          this.$set(rejections, updatedIndex, {
-            ...rejections[updatedIndex],
-            modifiedtimestamp: 'now',
-          });
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'REJECTION_UPDATE',
-          });
-          if (hasQtyProperty) {
-            const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-            const { rejections: rej, produced } = this.hourlyData[hIndex];
-            const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
-            const newData = {
-              ...this.hourlyData[hIndex],
-              rejected,
-              accepted: +produced - rejected,
-            };
-            this.hourlyData.splice(hIndex, 1, newData);
-            await this.reFetchProductionList();
-          }
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'REJECTION_UPDATE',
-          });
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'REJECTION_UPDATE',
+        });
+        if (hasQtyProperty) {
+          const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+          const { rejections: rej, produced } = this.hourlyData[hIndex];
+          const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
+          const newData = {
+            ...this.hourlyData[hIndex],
+            rejected,
+            accepted: +produced - rejected,
+          };
+          this.hourlyData.splice(hIndex, 1, newData);
+          await this.reFetchProductionList();
+          this.updated = true;
         }
       } else {
+        this.updated = false;
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REJECTION_NOT_ALLOWED',
+          message: 'REJECTION_UPDATE',
         });
       }
+      this.updating = false;
     },
     close() {
       this.dialog = false;
