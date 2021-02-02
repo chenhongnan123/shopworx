@@ -358,11 +358,8 @@ export default {
       this.updated = false;
       const { id, hour } = item;
       let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'quantity');
-      if (hasReasonNameProperty) {
-        payload = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
-      }
+      const reason = this.rejectionReasons.find((r) => r.reasonname === payload.reasonname);
+      payload = { ...payload, reason };
       const updated = await this.updateRecordById({
         elementName: 'rejection',
         id,
@@ -376,25 +373,24 @@ export default {
         this.$set(rejections, updatedIndex, {
           ...rejections[updatedIndex],
           modifiedtimestamp: 'now',
+          ...payload,
         });
+        const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
+        const { rejections: rej, produced } = this.hourlyData[hIndex];
+        const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
+        const newData = {
+          ...this.hourlyData[hIndex],
+          rejected,
+          accepted: +produced - rejected,
+        };
+        this.hourlyData.splice(hIndex, 1, newData);
+        await this.reFetchProductionList();
+        this.updated = true;
         this.setAlert({
           show: true,
           type: 'success',
           message: 'REJECTION_UPDATE',
         });
-        if (hasQtyProperty) {
-          const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);
-          const { rejections: rej, produced } = this.hourlyData[hIndex];
-          const rejected = rej.reduce((a, b) => a + (+b.quantity || 0), 0);
-          const newData = {
-            ...this.hourlyData[hIndex],
-            rejected,
-            accepted: +produced - rejected,
-          };
-          this.hourlyData.splice(hIndex, 1, newData);
-          await this.reFetchProductionList();
-          this.updated = true;
-        }
       } else {
         this.updated = false;
         this.setAlert({
