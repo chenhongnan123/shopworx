@@ -6,7 +6,7 @@
       <v-card>
         <v-card-title class="headline">Confirmation?
            <v-spacer></v-spacer>
-           <v-btn icon small @click="dialog = false">
+           <v-btn icon small @click="cancleCreation">
            <v-icon>mdi-close</v-icon>
            </v-btn>
         </v-card-title>
@@ -18,7 +18,7 @@
     >
       <v-expansion-panel v-if="responce">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $tc('EMPTY_COLUMN_ERROR', responce.length) }}
+          {{ $t('error.EMPTY_COLUMN_ERROR', responce.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
@@ -26,7 +26,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
         <span class="red--text">
-          Column or some fields are found Empty! do you want to Preceed
+          Column or some fields are found Empty! do you want to Proceed
           with Parameter creation( upload )
         </span>
         </v-card-text>
@@ -41,14 +41,14 @@
           >
             Yes
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             color="error"
             class="text-none"
             @click="cancleCreation"
             :loading="deleting"
           >
-            Cancle
-          </v-btn>
+            Cancel
+          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -65,10 +65,6 @@ export default {
       default: false,
       dialog: false,
       payloadData: null,
-      header: [
-        { text: 'Row', value: 'row', width: 120 },
-        { text: 'Tag', value: 'tag', width: 120 },
-      ],
     };
   },
   props: {
@@ -78,11 +74,12 @@ export default {
     },
     responce: {
       type: Array,
-      required: true,
+      default: () => [],
     },
   },
   mounted() {
     this.$root.$on('parameterCreation', (data) => {
+      this.responce = [];
       this.dialog = data;
     });
     this.$root.$on('payload', (data) => {
@@ -95,23 +92,31 @@ export default {
       }
     });
   },
+  beforeDestroy() {
+    this.$root.$off('successPayload', false);
+    this.responce = [];
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setCreateParam']),
     ...mapActions('parameterConfiguration', ['createParameterList']),
     async createParamsBtn() {
       const createResult = await this.createParameterList(this.payloadData);
-      this.setCreateParam(createResult);
       this.dialog = false;
+      this.payloadData = [];
       if (createResult) {
+        this.setCreateParam(true);
         this.setAlert({
           show: true,
           type: 'success',
           message: 'IMPORT_PARAMETER_LIST',
         });
         this.payloadData = [];
+        this.responce = [];
         this.$root.$emit('getListofParams', true);
       } else {
+        this.setCreateParam(false);
+        this.responce = [];
         this.setAlert({
           show: true,
           type: 'error',
@@ -121,7 +126,8 @@ export default {
     },
     async cancleCreation() {
       this.dialog = false;
-      document.getElementById('uploadFiles').value = null;
+      this.responce = [];
+      this.$root.$emit('clearResponce', true);
     },
   },
 };
