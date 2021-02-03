@@ -11,7 +11,7 @@
       :color="$vuetify.theme.dark ? '#1E1E1E' : 'white'"
     >
       <v-toolbar-title>
-        Product filters
+        {{ $t('Product filters') }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="toggleFilter">
@@ -28,11 +28,11 @@
             hide-details
             v-model="selectedBOM"
             name="name"
-            label="BOM name"
+            :label="$t('BOM name')"
             item-text="name"
             clearable="true"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -46,11 +46,11 @@
             hide-details
             v-model="selectedRoadmap"
             name="name"
-            label="Roadmap name"
+            :label="$t('Roadmap name')"
             item-text="name"
             clearable="true"
           >
-          <template #item="{ item }">
+          <template v-slot:item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -65,7 +65,7 @@
           @click="btnApply"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
         >
-          Apply
+          {{ $t('Apply') }}
         </v-btn>
         <v-btn
          class="text-none"

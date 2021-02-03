@@ -1,3 +1,39 @@
 {
-  "productionLog": "Production Log"
+  "appTitleNGCode": "异常管理",
+  "headers": {
+    "list": "List",
+    "changeover": "Changeover"
+  },
+  "displayTags": {
+      "duplicate_title": "Create Duplicate Recipe",
+      "lineName": "Line",
+      "stationName": "Station",
+      "sublineName": "Subline",
+    "buttons" : {
+      "addNewRecipe" : "新增",
+      "duplicateRecipe": "Duplicate",
+      "refreshRecipe": "Refresh",
+      "filtersRecipe": "Filters",
+      "save": "Save"
+    }
+  },
+  "error": {
+    "RECIPE_NAME_EMPTY": "Recipe name is Empty.",
+    "ALREADY_EXSIST_RECIPE": "Recipe Name already present",
+    "ERROR_CREATING_RECIPE": "Error while creating recipe, please retry.",
+    "SELECT_RECIPE_FIRST": "Please select the Recipe first.",
+    "SELECT_LINE": "Please Select Line First.",
+    "SELECT_SUBLINE": "Please Select Sub-Line First.",
+    "SELECT_SUBSTATION": "Please Select SubStation First",
+    "ERROR_DELETING_NG_CODE": "Error in Deleting NG Code Record!",
+    "ERROR_CREATING_NG_CONFIG": "Error in Creating NG Code Record!",
+    "ERROR_UPDATING_NG_CONFIG": "Error in Updating NG Code Record!",
+    "NG_CODE_PRESENT": "NG Code all ready Present! use another."
+  },
+  "success": {
+    "RECIPE_CREATED": "Recipe created!",
+    "NG_CODE_CONFIG_DELETED": "NG Code Record DELETED!",
+    "NG_CONFIGURATION_CREATED": "Ng Code Config Record Created!",
+    "NG_CONFIGURATION_UPDATED": "Ng Code Config Record Updated!"
+  }
 }

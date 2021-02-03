@@ -10,17 +10,17 @@
         >
           <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
             <v-icon small left>mdi-plus</v-icon>
-            Add order
+            {{ $t('Add order') }}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2"
             @click="updateRange({ start, end })"
           >
             <v-icon small left>mdi-refresh</v-icon>
-            Refresh
+            {{ $t('Refresh') }}
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn small outlined class="text-none" @click="setToday">
-            Today
+            {{ $t('Today') }}
           </v-btn>
           <v-btn small icon class="ml-2" @click="prev">
             <v-icon>mdi-chevron-left</v-icon>
@@ -41,20 +41,20 @@
             </template>
             <v-list dense>
               <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
+                <v-list-item-title v-text="$t('Day')"></v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
+                <v-list-item-title v-text="$t('Week')"></v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
+                <v-list-item-title v-text="$t('Month')"></v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
           <v-spacer></v-spacer>
           <v-btn small color="primary" outlined class="text-none" @click="drawer = true">
             <v-icon small left>mdi-filter-variant</v-icon>
-            Filters
+            {{ $t('Filters') }}
           </v-btn>
         </v-toolbar>
         <v-calendar

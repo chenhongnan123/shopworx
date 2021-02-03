@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Rework</span>
+      <span v-text="$t('appTitle')"></span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -22,10 +22,10 @@
         v-model="reworkView"
       >
         <v-tab class="text-none">
-          Rework List
+          {{ $t('displayTags.reworkList') }}
         </v-tab>
         <v-tab class="text-none">
-          Rework Details
+          {{ $t('displayTags.reworkDetails') }}
         </v-tab>
       </v-tabs>
     </portal>
@@ -66,6 +66,7 @@ export default {
     const success = await this.getLines();
     if (success) {
       [this.selectedLine] = this.lines;
+      // await this.onLineChange();
     }
     this.setSublines([]);
     await this.getSublines(`?query=lineid==${this.selectedLine.id}`);

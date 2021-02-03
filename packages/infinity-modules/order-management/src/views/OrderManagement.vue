@@ -1,8 +1,11 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Order</span>
+      <span>{{ $t('orderManagement') }}</span>
       <v-btn icon small class="ml-4 mb-1">
+        <!-- <v-icon
+          v-text="'$info'"
+        ></v-icon> -->
       </v-btn>
       <template>
         <v-menu
@@ -70,6 +73,19 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
+      <!-- <v-list dense>
+      <template>
+        <v-subheader
+          class="mb-0 pb-0 text-uppercase"
+        >Order Status</v-subheader>
+        <v-divider
+          class="pb-1"
+        ></v-divider>
+        <v-list-item>
+          <v-list-item-title>New</v-list-item-title>
+        </v-list-item>
+      </template>
+    </v-list> -->
     </portal>
     <portal
       to="app-extension"
@@ -81,13 +97,16 @@
         v-model="planView"
       >
         <v-tab class="text-none">
-          Dashboard
+          {{ $t('Dashboard') }}
         </v-tab>
         <v-tab class="text-none">
-          Calendar
+          {{ $t('Calendar') }}
         </v-tab>
         <v-tab class="text-none">
-          Order
+          {{ $t('Order') }}
+        </v-tab>
+        <v-tab class="text-none">
+          {{ $t('Archive') }}
         </v-tab>
       </v-tabs>
     </portal>
@@ -99,6 +118,7 @@
         <order-dashboard v-if="planView === 0" />
         <order-calendar-view v-else-if="planView === 1" />
         <order-schedule-view v-else-if="planView === 2" />
+        <hidden-orders v-else-if="planView === 3" />
       </v-fade-transition>
     </template>
   </div>
@@ -109,6 +129,7 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import OrderLoading from './OrderLoading.vue';
 import OrderDashboard from './OrderDashboard.vue';
 import OrderScheduleView from './OrderScheduleView.vue';
+import HiddenOrders from './HiddenOrders.vue';
 import OrderCalendarView from './OrderCalendarView.vue';
 import AddOrder from '../components/AddOrder.vue';
 import OrderFilter from '../components/OrderFilter.vue';
@@ -122,6 +143,7 @@ export default {
     OrderCalendarView,
     AddOrder,
     OrderFilter,
+    HiddenOrders,
   },
   data() {
     return {

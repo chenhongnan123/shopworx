@@ -1,6 +1,6 @@
 <template>
   <stats-widget
-    :title="'Completed'"
+    :title="$t('Completed')"
     color="accent"
     icon="mdi-progress-clock"
     :stat="completedOrdersCount"

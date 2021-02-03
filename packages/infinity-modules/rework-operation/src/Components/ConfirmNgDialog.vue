@@ -3,14 +3,14 @@
       v-model="dialog"
       max-width="290"
     >
-    <template #activator="{ on }">
+    <template v-slot:activator="{ on }">
     <v-btn v-on="on"
     small color="warning" class="text-none ml-2" @click="checkMainId()">
             {{ $t('displayTags.buttons.confirmng') }}
     </v-btn>
     </template>
       <v-card>
-        <v-card-title class="headline">Confirm NG?
+        <v-card-title class="headline">{{ $t('Comfirm NG') }}
            <v-spacer></v-spacer>
            <v-btn icon small @click="dialog = false">
            <v-icon>mdi-close</v-icon>
@@ -35,7 +35,7 @@
     </v-dialog>
 </template>
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapState } from 'vuex';
 
 export default {
   data() {
@@ -52,6 +52,9 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState('reworkOperation', ['componantList']),
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('reworkOperation',
@@ -63,7 +66,7 @@ export default {
         'setPartStatusList',
         'setSelectedReworkRoadmap',
       ]),
-    ...mapActions('reworkOperation', ['updateOverAllResultPartStatus', 'updateOverAllResult']),
+    ...mapActions('reworkOperation', ['updateOverAllResultPartStatus', 'updateOverAllResult', 'updateComponentById']),
     async checkMainId() {
       if (this.rework.enterManinId) {
         this.dialog = true;
@@ -77,12 +80,14 @@ export default {
       this.dialog = false;
     },
     async btnUpdateOverAllResult() {
+      // console.log(this.rework);
       const payloadRework = {
         query: this.rework.reworkinfo[0]._id,
         payload: {
           overallresult: 1,
         },
       };
+      // console.log(payloadRework);
       await this.updateOverAllResult(payloadRework);
       const payload = {
         query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
@@ -90,7 +95,17 @@ export default {
           overallresult: 2,
         },
       };
+      // console.log(payload);
       await this.updateOverAllResultPartStatus(payload);
+      this.componantList.forEach(async (element) => {
+        const payloadComponent = {
+          query: element._id,
+          payload: {
+            qualitystatus: element.qualitystatus,
+          },
+        };
+        await this.updateComponentById(payloadComponent);
+      });
       this.dialog = false;
       this.rework = [];
       this.setDisableSave(false);

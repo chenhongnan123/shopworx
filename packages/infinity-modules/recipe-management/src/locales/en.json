@@ -1,5 +1,5 @@
 {
-  "title": "Recipe Management",
+  "recipeManagement": "Recipe",
   "headers": {
     "list": "List",
     "changeover": "Changeover"

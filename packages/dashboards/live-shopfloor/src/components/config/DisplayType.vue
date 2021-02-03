@@ -40,7 +40,7 @@ export default {
     if (this.queries && this.queries.display) {
       this.setDisplayFromQuery(this.queries.display);
     } else if (!this.selectedDisplay) {
-      this.setDisplay(this.displays[1]);
+      this.setDisplay(this.displays[0]);
     }
   },
   computed: {
@@ -64,7 +64,7 @@ export default {
       if (display) {
         this.setSelectedDisplay(display);
       } else {
-        this.setDisplay(this.displays[1]);
+        this.setDisplay(this.displays[0]);
       }
     },
     setDisplay(display) {

@@ -66,12 +66,12 @@
         :items="materialList"
         item-key="id"
         >
-        <template #item.category="props" v-if="categoryList.length">
+        <template v-slot:item.category="props" v-if="categoryList.length">
         {{categoryList.filter((category) => Number(props.item.materialcategory) === category.id)[0]
         && categoryList.filter((category) => Number(props.item.materialcategory) === category.id)
         [0].name}}
         </template>
-        <template #top>
+        <template v-slot:top>
         <v-dialog
           persistent
           scrollable
@@ -122,7 +122,7 @@
                   v-model="materialObj.materialcategory"
                   :rules="rules.materialcategory"
                 >
-                  <template #item="{ item }">
+                  <template v-slot:item="{ item }">
                     <v-list-item-content>
                       <v-list-item-title v-text="item.name"></v-list-item-title>
                       <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -197,7 +197,7 @@
           </v-card>
         </v-dialog>
         </template>
-        <template #item.actions="{ item }">
+        <template v-slot:item.actions="{ item }">
           <v-row>
             <v-btn
               icon
@@ -321,6 +321,15 @@ export default {
         materialcategory: [
           (v) => !!v || 'Category is required',
         ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
@@ -464,6 +473,7 @@ export default {
     },
     async RefreshUI() {
       await this.getMaterialListRecords('');
+      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     btnSaveData() {
       this.setAlert({

@@ -117,8 +117,8 @@
     "redirectToLogin": "重定向到{time}"
   },
   "helper": {
-    "or": "要么",
-    "help": "救命",
+    "or": "或",
+    "help": "帮助",
     "next": "下一个",
     "skip": "现在跳过",
     "loading": "载入中..."
@@ -183,18 +183,24 @@
   "modules": {
     "apps": "应用",
     "home": "家",
+    "operation": "生产应用层",
+    "configuration": "基础配置层",
+    "management": "参数管理层",
     "shopfloorDashboard": "车间仪表板",
     "orderManagement": "订单管理",
     "productionLog": "生产日志",
     "downtimeLog": "停机日志",
     "maintenanceSummary": "维护摘要",
     "parameterConfiguration": "参数配置",
+    "parameterConfigurationMes": "参数配置",
     "productionPlanning": "计划生产",
-    "roadmapManagement": "路线图管理",
+    "roadmapManagement": "工艺路径管理",
     "recipeManagement": "配方管理",
     "productManagement": "产品类型管理",
+    "productionImage": "图像信息追溯",
     "productionLayout": "生产布局",
-    "materialManagement": "物资管理",
+    "productionLayoutMes": "生产布局",
+    "materialManagement": "物料管理",
     "reports": "报告书",
     "production": "生产",
     "maintenance": "保养",
@@ -203,8 +209,13 @@
     "oee": "大江",
     "masters": "主数据（仅查看）",
     "admin": "管理控制台",
-    "search": "搜索报告和见解",
-    "insights": "见解"
+    "search": "搜索和提示",
+    "insights": "见解",
+    "traceabilityApp": "追溯报表",
+    "traceability": "追溯报表",
+    "ngCodeConfiguration": "异常管理",
+    "reworkOperation": "返工管理",
+    "packagingManagement": "包装管理"
   },
   "account": {
     "account": "帐户",
@@ -215,7 +226,7 @@
     "darkMode": "暗模式"
   },
   "help": {
-    "help": "救命",
+    "help": "帮助",
     "legal": "法律",
     "version": "版",
     "keyboardShortcuts": "键盘快捷键",

@@ -121,7 +121,7 @@ export default {
       const isDefaultView = routeName === 'productionPlanning';
       const isReorderView = routeName === 'reorderPlans';
       const isPlanView = routeName === 'productionPlanDetails';
-      const averagecycletime = (data.actm_max / 1000 + data.actm_min / 1000) / data.actm_count;
+      const averagecycletime = (data.actm_sum / 1000) / data.actm_count;
       const payload = {
         runtime: data.actm_sum,
         status: 'inProgress',

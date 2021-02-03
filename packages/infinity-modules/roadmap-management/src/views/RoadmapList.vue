@@ -1,100 +1,137 @@
 <template>
   <v-container fluid class="py-0">
-    <v-row justify="center">
-      <v-col cols="12" xl="10" class="py-0">
-        <v-toolbar
-          flat
-          dense
-          class="stick"
-          :color="$vuetify.theme.dark ? '#121212' : ''"
-        >
-          <v-spacer></v-spacer>
-          <AddRoadmapList />
-          <v-btn
-            v-if="roadmaps.length > 0"
-            small
-            color="primary"
-            outlined
-            class="text-none ml-2"
-            @click="fnCreateDupRecipe"
+    <portal to="app-extension">
+      <v-row justify="center">
+        <v-col cols="12" xl="10" class="py-0">
+          <v-toolbar
+            flat
+            dense
+            class="stick"
+            :color="$vuetify.theme.dark ? '#121212' : ''"
           >
-            <v-icon small left>mdi-content-duplicate</v-icon>
-            Duplicate
-          </v-btn>
-          <v-btn
-            small
-            color="primary"
-            outlined
-            class="text-none ml-2"
-            @click="RefreshUI"
-          >
-            <v-icon small left>mdi-refresh</v-icon>
-            Refresh
-          </v-btn>
-          <v-btn
-            small
-            color="primary"
-            outlined
-            class="text-none ml-2"
-            @click="toggleFilter"
-          >
-            <v-icon small left>mdi-filter-variant</v-icon>
-            Filters
-          </v-btn>
-        </v-toolbar>
-        <v-data-table
-          v-model="roadmaps"
-          :headers="headers"
-          :items="roadmapList"
-          :single-select="true"
-          item-key="id"
-          show-select
-        >
-          <template #item.reworkdescription="{ item }">
-            <v-tooltip top>
-              <template #activator="{ on, attrs }">
-                <v-btn text small v-bind="attrs" v-on="on">{{
-                  item.reworkdescription.substring(0, 10) + "..."
-                }}</v-btn>
-              </template>
-              <span>{{ item.reworkdescription }}</span>
-            </v-tooltip>
-          </template>
-          <template #item.name="{ item }">
-            <span @click="handleClick(item)"
-              ><a>{{ item.name }}</a></span
+            <v-spacer></v-spacer>
+            <!-- <v-btn small color='primary' class='text-none' @click='addNewRoadmap'>
+            <v-icon small left>mdi-plus</v-icon>
+            Add roadmap
+          </v-btn> -->
+            <AddRoadmapList />
+            <v-btn
+              v-if="roadmaps.length > 0"
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              @click="fnCreateDupRecipe"
             >
+              <v-icon small left>mdi-content-duplicate</v-icon>
+              Duplicate
+            </v-btn>
+            <v-btn
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              @click="RefreshUI"
+            >
+              <v-icon small left>mdi-refresh</v-icon>
+              Refresh
+            </v-btn>
+            <v-btn
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              @click="toggleFilter"
+            >
+              <v-icon small left>mdi-filter-variant</v-icon>
+              Filters
+            </v-btn>
+          </v-toolbar>
+        </v-col>
+      </v-row>
+    </portal>
+    <v-data-table
+      v-model="roadmaps"
+      :headers="headers"
+      :items="roadmapList"
+      :single-select="true"
+      item-key="id"
+      show-select
+      fixed-header
+      :height="tableHeight - 168"
+    >
+      <template v-slot:item.reworkdescription="{ item }">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text small v-bind="attrs" v-on="on">{{
+              item.reworkdescription.substring(0, 10) + "..."
+            }}</v-btn>
           </template>
-          <template #item.editedtime="{ item }">
-            <span v-if="item.editedtime">{{
-              new Date(item.editedtime).toLocaleString("en-GB")
-            }}</span>
-            <span v-else></span>
-          </template>
-          <template #item.actions="{ item }">
-            <v-row justify="center"
-              ><v-btn
-                icon
-                small
-                color="primary"
-                @click="fnUpdateRoadmap(item)"
-                :loading="deleting"
-              >
-                <v-icon v-text="'$edit'"></v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                small
-                color="error"
-                @click="deleteRoadmapItem(item)"
-                :loading="deleting"
-              >
-                <v-icon v-text="'$delete'"></v-icon> </v-btn
-            ></v-row>
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
+          <span>{{ item.reworkdescription }}</span>
+        </v-tooltip>
+      </template>
+      <template v-slot:item.name="{ item }">
+        <span @click="handleClick(item)"
+          ><a>{{ item.name }}</a></span
+        >
+      </template>
+      <template v-slot:item.editedtime="{ item }">
+        <span v-if="item.editedtime">{{
+          new Date(item.editedtime).toLocaleString("en-GB")
+        }}</span>
+        <span v-else></span>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-row justify="center"
+          ><v-btn
+            icon
+            small
+            color="primary"
+            @click="fnUpdateRoadmap(item)"
+            :loading="deleting"
+          >
+            <v-icon v-text="'$edit'"></v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            small
+            color="error"
+            @click="deleteRoadmapItem(item)"
+            :loading="deleting"
+          >
+            <v-icon v-text="'$delete'"></v-icon> </v-btn
+        ></v-row>
+      </template>
+      <!-- <template v-slot:item="{ item, index }">
+          <tr>
+          <td>{{ index+1 }}</td>
+          <td>{{ item.id}}</td>
+          <td>{{ item.roadmaptype }}</td>
+          <td>{{ item.versionnumber }}</td>
+          <td>{{ item.createdTimestamp }}</td>
+          <td>{{ item.createdby }}</td>
+          <td>{{ item.editedby }}</td>
+          <td><v-row justify="center"><v-btn
+              icon
+              small
+              color="primary"
+              @click="fnUpdateRoadmap(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$edit'"></v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              color="error"
+              @click="deleteRoadmapItem(item)"
+              :loading="deleting"
+            >
+              <v-icon v-text="'$delete'"></v-icon>
+            </v-btn></v-row></td>
+          </tr>
+        </template> -->
+    </v-data-table>
     <v-dialog
       scrollable
       persistent
@@ -281,6 +318,7 @@ export default {
           value: 'actions',
         },
       ],
+      tableHeight: window.innerHeight,
       deleting: false,
       dialog: false,
       dialogUpdate: false,
@@ -309,25 +347,26 @@ export default {
         (v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v)
-          || 'Special Characters ( including space ) not allowed',
+         || 'Special Characters ( including space ) not allowed',
       ],
       updateRnamerule: [
         (v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v)
-          || 'Special Characters ( including space ) not allowed',
+         || 'Special Characters ( including space ) not allowed',
       ],
       roadmapTyperule: [(v) => !!v || 'Selection Required'],
       updateRoadmNamerule: [
         (v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v)
-          || 'Special Characters ( including space ) not allowed',
+         || 'Special Characters ( including space ) not allowed',
       ],
       rMapTyperule: [(v) => !!v || 'Selection Required'],
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getRecords('');
     await this.getRoadmapTypeList('');
   },
@@ -354,7 +393,7 @@ export default {
       'getDetailsRecords',
       'createBulkRoadmapDetails',
     ]),
-    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('roadmapManagement', ['toggleFilter']),
     showFilter: {
       get() {
@@ -367,6 +406,7 @@ export default {
     deleteRoadmapItem(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
+      this.roadmaps = [];
     },
     fnDeleteOnYes() {
       let deleted = false;
@@ -389,18 +429,30 @@ export default {
     },
     fnUpdateRoadmap(item) {
       this.dialogUpdate = true;
+      // this.saving = true;
       this.updateRoadmapId = item.id;
       this.flagNewUpdate = true;
       this.roadmap.name = item.name;
       this.editedVersionNumber = item.versionnumber;
       this.roadmap.roadmaptype = item.roadmaptype;
       this.roadmap.reworkdescription = item.reworkdescription;
+      this.roadmaps = [];
     },
+    // addNewRoadmap() {
+    //   this.dialog = true;
+    //   this.flagNewUpdate = false;
+    // },
     async RefreshUI() {
       await this.getRecords('');
     },
     handleClick(value) {
-      this.$router.push({ name: 'roadmap-details', params: { id: value } });
+      this.$router.push({
+        name: 'roadmap-details',
+        params: {
+          id: value.id,
+          line: value.line,
+        },
+      });
     },
     fnLineModel() {
       this.showLineFilter = false;
@@ -414,12 +466,9 @@ export default {
           message: 'ROADMAP_NAME_EMPTY',
         });
       } else {
-        const recipeFlag = this.roadmapList.filter(
-          (o) => o.name
-            .toLowerCase()
-            .split(' ')
-            .join('') === this.dupRoadmapName.toLowerCase().split(' ').join(''),
-        );
+        const recipeFlag = this.roadmapList
+          .filter((o) => o.name.toLowerCase().split(' ').join('')
+             === this.dupRoadmapName.toLowerCase().split(' ').join(''));
         if (recipeFlag.length > 0) {
           this.roadmap.name = '';
           this.setAlert({
@@ -448,6 +497,7 @@ export default {
             this.dialogDup = false;
             this.roadmap = {};
             this.$refs.formduplicate.reset();
+            // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(
               `?query=roadmapid=='${this.roadmaps[0].id}'`,
             );
@@ -525,7 +575,7 @@ export default {
           const request = this.roadmap;
           const object = {
             payload: request,
-            query: `?query=id=='${this.updateRoadmapId}'`,
+            query: `?query=id=="${this.updateRoadmapId}"`,
           };
           created = await this.updateRoadmap(object);
           if (created) {
@@ -556,13 +606,10 @@ export default {
     },
     async validName() {
       const roadmapFlag = this.roadmapList
-        .filter((o) => (
-          o.name
-            .toLowerCase()
-            .split(' ')
-            .join('') === this.roadmap.name.toLowerCase().split(' ').join('')
-        ));
+        .filter((o) => o.name.toLowerCase().split(' ').join('')
+         === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
+        // this.roadmap.name = '';
         this.validUpdate = false;
         this.setAlert({
           show: true,
@@ -570,6 +617,7 @@ export default {
           message: 'ALREADY_EXSIST',
         });
       } else {
+        // this.valid = true;
         this.validUpdate = true;
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <stats-widget
-    :title="'Released'"
+    :title="$t('Released')"
     icon="mdi-check-circle-outline"
     color="warning"
     :stat="pausedPlanCount"

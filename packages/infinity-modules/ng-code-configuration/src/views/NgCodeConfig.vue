@@ -15,7 +15,7 @@
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refreshRecipe') }}
+            {{ $t('displayTags.buttons.btnRefresh') }}
           </v-btn>
         </v-toolbar>
         <v-data-table
@@ -34,7 +34,7 @@
           <td>{{ item.createdby }}</td>
           <td>{{ item.createdTimestamp }}</td>
           <td>{{ item.editedby }}</td>
-          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("EN-US") }}</td>
+          <td v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString("en-GB") }}</td>
           <td v-else></td>
           <td><v-row><v-btn
               icon

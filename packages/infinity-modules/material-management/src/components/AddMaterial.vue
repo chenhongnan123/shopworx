@@ -22,6 +22,43 @@
         </v-btn>
       </v-card-title>
         <v-card-text>
+          <!-- <v-autocomplete
+            clearable
+            label="Line"
+            :items="lineList"
+            :disabled="saving"
+            item-text="name"
+            item-value="id"
+            prepend-icon="$production"
+            v-model="materialObj.lineid"
+            :rules="rules.line"
+            @change="handleChangeLine"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete> -->
+          <!-- <v-autocomplete
+            clearable
+            label="Subine"
+            :items="sublineList"
+            :disabled="saving"
+            item-text="name"
+            item-value="id"
+            prepend-icon="$production"
+            v-model="materialObj.sublineid"
+            :rules="rules.subline"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
@@ -53,7 +90,7 @@
             :rules="rules.materialcategory"
             required
           >
-            <template #item="{ item }">
+            <template v-slot:item="{ item }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
                 <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
@@ -103,6 +140,7 @@
 import {
   mapActions,
   mapState,
+  // mapGetters,
   mapMutations,
 } from 'vuex';
 
@@ -133,6 +171,15 @@ export default {
         materialcategory: [
           (v) => !!v || 'Category is required',
         ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
@@ -148,6 +195,7 @@ export default {
     },
   },
   created() {
+    // await this.getPageDataList();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

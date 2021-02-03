@@ -1,5 +1,6 @@
 <template>
   <v-container fluid class="py-0">
+    <portal to="app-extension">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -56,13 +57,17 @@
          </v-chip>
         </div>
         <v-spacer></v-spacer>
-          <AddRecipe ref="addUpdateRecipe"/>
+        <!-- <v-btn small color="primary" class="text-none ml-2"> -->
+                        <AddRecipe ref="addUpdateRecipe"/>
+            <!-- {{ $t('displayTags.buttons.addNewRecipe') }} -->
+          <!-- </v-btn> -->
           <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
             {{ $t('displayTags.buttons.duplicateRecipe') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+          <v-btn small color="primary" outlined class="text-none ml-2"
+            @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
             {{ $t('displayTags.buttons.refreshRecipe') }}
           </v-btn>
@@ -71,6 +76,9 @@
             {{ $t('displayTags.buttons.filtersRecipe') }}
           </v-btn>
         </v-toolbar>
+      </v-col>
+    </v-row>
+    </portal>
         <v-data-table
         v-model="recipes"
         :headers="headers"
@@ -78,15 +86,18 @@
         item-key="recipenumber"
         :single-select="true"
         show-select
+        fixed-header
+        :height="tableHeight - 168"
         >
-        <template #item.recipename="{ item }">
+        <template v-slot:item.recipename="{ item }">
           <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
         </template>
-        <template #item.editedtime="{ item }">
-          <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
+        <template v-slot:item.editedtime="{ item }">
+          <span v-if="item.editedtime">
+            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
-        <template #item.actions="{ item }">
+        <template v-slot:item.actions="{ item }">
           <v-row><v-btn
               icon
               small
@@ -107,8 +118,7 @@
             </v-btn></v-row>
         </template>
       </v-data-table>
-      </v-col>
-    </v-row>
+    <!-- <AddRecipe /> -->
   <v-dialog
     scrollable
     persistent
@@ -194,6 +204,9 @@ export default {
   },
   data() {
     return {
+      sublines: null,
+      stations: null,
+      deleting: false,
       headers: [
         {
           text: 'No.',
@@ -251,6 +264,7 @@ export default {
       updateRecipeNumber: '',
       editedVersionNumber: 0,
       itemForDelete: null,
+      tableHeight: window.innerHeight,
       valid: true,
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
@@ -264,9 +278,19 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
   },
+  async mounted() {
+    this.$root.$on('filteredSubline', (data) => {
+      this.sublines = data;
+    });
+    this.$root.$on('filteredStation', (data) => {
+      this.stations = data;
+    });
+  },
   async beforeDestroy() {
+    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
   },
@@ -291,8 +315,8 @@ export default {
         'getSubLines',
         'getStations',
         'getSubStations']),
-    ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
     showFilter: {
       get() {
         return this.filter;
@@ -318,10 +342,30 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
-      await this.btnApply();
+      let param = '';
+      if (this.sublines && !this.stations) {
+        param += `?query=sublineid=="${this.sublines.id || null}"`;
+      }
+      if (this.stations && !this.sublines) {
+        param += `?query=stationid=="${this.stations.id || null}"`;
+      }
+      if (this.sublines && this.stations) {
+        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
+      }
+      await this.getRecipeListRecords(param);
     },
     handleClick(value) {
-      this.$router.push({ name: 'recipe-details', params: { id: value } });
+      console.log(value);
+      this.$router.push({
+        name: 'recipe-details',
+        params: {
+          id: value.recipenumber,
+          linename: value.linename,
+          sublinename: value.sublinename,
+          substationname: value.substationname,
+          recipename: value.recipename,
+        },
+      });
     },
     fnLineModel() {
       this.showLineFilter = false;
@@ -403,10 +447,12 @@ export default {
       this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
       this.$refs.addUpdateRecipe.input.stationname = item.stationname;
       this.$refs.addUpdateRecipe.input.substationname = item.substationname;
+      this.recipes = [];
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
+      this.recipes = [];
     },
     fnDeleteOnYes() {
       let deleted = false;
@@ -428,8 +474,96 @@ export default {
       }
       this.dialogConfirm = false;
     },
+    // async saveRecipe() {
+    //   if (!this.recipe.recipename) {
+    //     this.setAlert({
+    //       show: true,
+    //       type: 'error',
+    //       message: 'RECIPE_NAME_EMPTY',
+    //     });
+    //   } else {
+    //     const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
+    //     && o.machinename === this.input.machinename);
+    //     //  && !this.flagNewUpdate
+    //     if (recipeFlag.length > 0) {
+    //       this.recipe.recipename = '';
+    //       this.setAlert({
+    //         show: true,
+    //         type: 'error',
+    //         message: 'ALREADY_EXSIST_RECIPE',
+    //       });
+    //     } else if (this.flagNewUpdate) {
+    //       // update recipe
+    //       this.saving = true;
+    //       this.recipe = {
+    //         ...this.recipe,
+    //         line: 'Line1',
+    //         subline: this.input.sublinename,
+    //         machinename: this.input.machinename,
+    //         editedby: 'admin',
+    //         editedtime: new Date().getTime(),
+    //         versionnumber: this.editedVersionNumber + 1,
+    //       };
+    //       let created = false;
+    //       const request = this.recipe;
+    //       const object = {
+    //         payload: request,
+    //         query: `?query=recipenumber=="${this.updateRecipeNumber}"`,
+    //       };
+    //       created = await this.updateRecipe(object);
+    //       if (created) {
+    //         this.setAlert({
+    //           show: true,
+    //           type: 'success',
+    //           message: 'RECIPE_UPDATED',
+    //         });
+    //         this.dialog = false;
+    //         this.recipe = {};
+    //       } else {
+    //         this.setAlert({
+    //           show: true,
+    //           type: 'error',
+    //           message: 'ERROR_UPDATING_RECIPE',
+    //         });
+    //       }
+    //       this.saving = false;
+    //     } else {
+    //       // add new recipe
+    //       this.saving = true;
+    //       this.recipe = {
+    //         ...this.recipe,
+    //         line: 'Line1',
+    //         subline: this.input.sublinename,
+    //         versionnumber: 1,
+    //         assetid: 4,
+    //         machinename: this.input.machinename,
+    //         createdby: 'admin',
+    //       };
+    //       let created = false;
+    //       const payload = this.recipe;
+    //       created = await this.createRecipe(payload);
+    //       if (created) {
+    //         this.setAlert({
+    //           show: true,
+    //           type: 'success',
+    //           message: 'RECIPE_CREATED',
+    //         });
+    //         this.dialog = false;
+    //         this.recipe = {};
+    //       } else {
+    //         this.setAlert({
+    //           show: true,
+    //           type: 'error',
+    //           message: 'ERROR_CREATING_RECIPE',
+    //         });
+    //       }
+    //       this.saving = false;
+    //     }
+    //   }
+    // },
     async btnReset() {
       await this.getRecipeListRecords('');
+      // this.setRecipeList(this.filterBList);
       this.sublines = [];
       this.stations = [];
       this.setFilterSubLine(this.sublines);

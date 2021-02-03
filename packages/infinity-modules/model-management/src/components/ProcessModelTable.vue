@@ -75,7 +75,7 @@
                 {{ item.model_id }}
               </td>
               <td>
-                {{ new Date(item.lastModified).toLocaleString() }}
+                <model-last-modified :model="item" />
               </td>
               <td>
                 <model-status :model="item" />
@@ -150,6 +150,7 @@ import ModelDetailsDialog from './ModelDetailsDialog.vue';
 import DeployModel from './DeployModel.vue';
 import DeleteModel from './DeleteModel.vue';
 import ModelStatus from './ModelStatus.vue';
+import ModelLastModified from './ModelLastModified.vue';
 
 export default {
   name: 'ProcessModelTable',
@@ -160,6 +161,7 @@ export default {
     DeployModel,
     DeleteModel,
     ModelStatus,
+    ModelLastModified,
   },
   data() {
     return {

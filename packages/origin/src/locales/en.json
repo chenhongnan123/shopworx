@@ -80,6 +80,7 @@
     "PASSWORD_RESET": "New password sent on registered email/phone.",
     "UPDATE": "Updated!",
     "PASSWORDLESS": "Request created to enable passwordless.",
+    "INSTANCE_RECONFIG": "Request created to reconfigure instance.",
     "INSTALL_DEBIAN": "Request created to install debian.",
     "PASSWORDLESS_ENABLED": "Passwordless enabled for device ID {device}.",
     "DEBIAN_INSTALLED": "Nodebot ID {nodebot} installed on deployment manager ID {service}.",
@@ -103,8 +104,11 @@
     "INVALID_OTP": "Login failed: Incorrect OTP.",
     "UPDATE": "Error while updating! Please retry.",
     "PASSWORDLESS": "Error while enabling passwordless. Please retry.",
+    "INSTANCE_RECONFIG": "Error while reconfiguring instance. Please retry.",
     "INSTALL_DEBIAN": "Error while installing debian. Please retry.",
-    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb"
+    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb",
+    "UPLOAD_DEBIAN": "Unable to upload the debian file. Please retry.",
+    "UPDATE_INSTANCE_CONFIG": "Unable to update instance config. Please retry."
   },
   "fields": {
     "email": "Email",

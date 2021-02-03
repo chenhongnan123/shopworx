@@ -1,6 +1,6 @@
 <template>
   <stats-widget
-    :title="'Interrupted'"
+    :title="$t('Interrupted')"
     color="error"
     icon="mdi-progress-clock"
     :stat="interruptedOrderCount"

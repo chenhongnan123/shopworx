@@ -12,9 +12,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "material-management" */ './views/Main.vue'),
       },
       {
-        path: ':query',
+        path: ':id/:name/:lineid',
         name: 'bom-details',
-        component: () => import(/* webpackChunkName: "material-management" */ './views/BomDetails.vue'),
+        component: () => import(/* webpackChunkName: "material-management" */ './views/NewBomDetails.vue'),
         props: true,
       },
     ],

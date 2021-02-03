@@ -1,6 +1,6 @@
 <template>
   <stats-widget
-    :title="'New'"
+    :title="$t('New')"
     icon="mdi-progress-wrench"
     color="info"
     :stat="notStartedPlanCount"

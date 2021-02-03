@@ -8,7 +8,7 @@ export default ({
         const { data } = await FileService.uploadFile(fileParam, formData);
         return data;
       } catch (e) {
-        return false;
+        throw new Error(e);
       }
     },
 

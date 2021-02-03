@@ -3,7 +3,7 @@
     <settings-layout
       v-if="!loading"
       :items="masterItems"
-      headerTitle="Master Data"
+      :headerTitle="$t('masters')"
       windowRouteName="masterWindow"
     >
       <master-window />
