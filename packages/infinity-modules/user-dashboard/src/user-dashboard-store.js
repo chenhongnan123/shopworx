@@ -209,6 +209,48 @@ export default ({
       commit('setDowntimeLoading', false);
     },
 
+    updateDowntimeReason: async ({ dispatch, commit, state }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'downtime',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      let { downtimeList } = state;
+      if (updated) {
+        downtimeList = downtimeList.map((dt) => {
+          // eslint-disable-next-line
+          if (dt._id === id) {
+            return {
+              ...dt,
+              ...payload,
+            };
+          }
+          return dt;
+        });
+        commit('setDowntimeList', downtimeList);
+        commit('helper/setAlert', {
+          show: true,
+          type: 'success',
+          message: 'DOWNTIME_UPDATE',
+        }, {
+          root: true,
+        });
+      } else {
+        commit('setDowntimeList', downtimeList);
+        commit('helper/setAlert', {
+          show: true,
+          type: 'error',
+          message: 'DOWNTIME_UPDATE',
+        }, {
+          root: true,
+        });
+      }
+    },
+
     fetchHourlyProduction: async ({ dispatch, state, rootState }, {
       part,
       shift,
@@ -396,6 +438,32 @@ export default ({
         production = null;
       }
       return production;
+    },
+
+    downtime: ({ downtimeList }) => {
+      let downtime = null;
+      if (downtimeList && downtimeList.length) {
+        downtime = downtimeList
+          .reduce((result, currentValue) => {
+            const key = currentValue.machinename;
+            if (!result[key]) {
+              // eslint-disable-next-line
+              result[key] = {};
+              // eslint-disable-next-line
+              result[key].values = [];
+            }
+            // eslint-disable-next-line
+            result[key].values = [
+              ...result[key].values,
+              currentValue,
+            ];
+            return result;
+          }, {});
+      }
+      if (!downtime || !Object.keys(downtime).length) {
+        downtime = null;
+      }
+      return downtime;
     },
   },
 });

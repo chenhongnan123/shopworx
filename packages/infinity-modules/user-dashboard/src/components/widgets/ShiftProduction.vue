@@ -11,11 +11,12 @@
     </v-card-text>
     <v-card-text v-else>
       <div
-        :key="j"
-        class="mt-2"
-        v-for="(machineData, machineKey, j) in production"
+        :key="i"
+        :class="i !== 0 ? 'mt-8 mb-2' : 'mb-2'"
+        class="headline font-weight-medium"
+        v-for="(machineData, machineKey, i) in production"
       >
-        <div class="title d-inline-block">
+        <div class="primary--text d-inline-block">
           {{ machineKey }}
           <assign-operator
             :shift="thisShift"
