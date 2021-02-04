@@ -23,6 +23,11 @@ export default ({
     previousShiftSummary: null,
     productionList: [],
     downtimeList: [],
+    downtimeByMachine: null,
+    downtimeByReason: null,
+    performanceByMachine: null,
+    rejectionByMachine: null,
+    rejectionByReason: null,
   },
   mutations: {
     setLoading: set('loading'),
@@ -44,6 +49,11 @@ export default ({
     setPreviousShiftSummary: set('previousShiftSummary'),
     setProductionList: set('productionList'),
     setDowntimeList: set('downtimeList'),
+    setDowntimeByMachine: set('downtimeByMachine'),
+    setDowntimeByReason: set('downtimeByReason'),
+    setPerformanceByMachine: set('performanceByMachine'),
+    setRejectionByMachine: set('rejectionByMachine'),
+    setRejectionByReason: set('rejectionByReason'),
   },
   actions: {
     getShifts: async ({ commit, dispatch }) => {
@@ -149,9 +159,159 @@ export default ({
         dispatch('getPreviousShfitSummary'),
         dispatch('getShiftProduction'),
         dispatch('getShiftDowntime'),
+        dispatch('getDowntimeByMachine'),
+        dispatch('getDowntimeByReason'),
+        dispatch('getPerformanceByMachine'),
+        dispatch('getRejectionByMachine'),
+        dispatch('getRejectionByReason'),
       ]);
       commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       commit('setLoading', false);
+    },
+
+    getDowntimeByMachine: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftdowntimebymachine',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setDowntimeByMachine', chartOptions);
+      } else {
+        commit('setDowntimeByMachine', null);
+      }
+    },
+
+    getDowntimeByReason: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftdowntimebyreason',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setDowntimeByReason', chartOptions);
+      } else {
+        commit('setDowntimeByReason', null);
+      }
+    },
+
+    getPerformanceByMachine: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftperformancebymachine',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setPerformanceByMachine', chartOptions);
+      } else {
+        commit('setPerformanceByMachine', null);
+      }
+    },
+
+    getRejectionByMachine: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftrejectionbymachine',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setRejectionByMachine', chartOptions);
+      } else {
+        commit('setRejectionByMachine', null);
+      }
+    },
+
+    getRejectionByReason: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftrejectionbyreason',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setRejectionByReason', chartOptions);
+      } else {
+        commit('setRejectionByReason', null);
+      }
     },
 
     getShiftProduction: async ({
