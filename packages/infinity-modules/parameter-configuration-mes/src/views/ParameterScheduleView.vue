@@ -76,6 +76,7 @@
               v-if="!(substationValue && parameterSelected.length > 0)"
               outlined
               class="text-none ml-2"
+              :disabled="sampleDataBtn"
               @click="exportSampleData"
             >
               Export Sample File
@@ -438,6 +439,7 @@ export default {
         },
       ],
       selectedProtocol: null,
+      sampleDataBtn: true,
       parameterSelected: [],
       tableHeight: window.innerHeight,
       headers: [],
@@ -624,6 +626,11 @@ export default {
     ]),
     onSelectProtocol(value) {
       this.setProtocol(value);
+      if (this.protocol) {
+        this.sampleDataBtn = false;
+      } else {
+        this.sampleDataBtn = true;
+      }
     },
     async saveTableParameter(item, type) {
       const value = item[type];
@@ -935,6 +942,19 @@ export default {
           'plcaddress',
           'paid',
         ];
+      } else if (this.protocol === 'ABPLC') {
+        column = [
+          'plc_parameter',
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'size',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'prefix',
+        ];
       } else {
         column = [
           'name',
@@ -1007,6 +1027,19 @@ export default {
           'plcaddress',
           'paid',
         ];
+      } else if (this.protocol === 'ABPLC') {
+        column = [
+          'plc_parameter',
+          'name',
+          'description',
+          'size',
+          'protocol',
+          'datatype',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'prefix',
+        ];
       } else {
         column = [
           'name',
@@ -1045,7 +1078,23 @@ export default {
         2,
         2,
       ];
-      csvContent.push(arr);
+      const arr2 = [
+        'Shopworx.Handshake.PLCOnline',
+        'PLCOnline',
+        'description(optional)',
+        '',
+        'ethernet',
+        12,
+        100,
+        '192.168.2.10',
+        1,
+        'station1',
+      ];
+      if (this.protocol === 'ABPLC') {
+        csvContent.push(arr2);
+      } else {
+        csvContent.push(arr);
+      }
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,
