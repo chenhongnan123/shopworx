@@ -169,7 +169,7 @@ export default ({
       const data = await dispatch(
         'report/executeReport',
         {
-          reportName: 'shiftwiseproductionlog',
+          reportName: 'shiftproduction',
           payload: {
             siteid: activeSite,
             dateVal: date,
