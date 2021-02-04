@@ -433,6 +433,9 @@ export default {
         {
           name: 'MELSEC',
         },
+        {
+          name: 'ABPLC',
+        },
       ],
       selectedProtocol: null,
       parameterSelected: [],
@@ -470,6 +473,20 @@ export default {
         { text: 'Boolean Bit', value: 'bitnumber', width: 120 },
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
+      ],
+      headerAbPlc: [
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Line', value: 'line', width: 120 },
+        { text: 'subline', value: 'subline', width: 120 },
+        { text: 'station', value: 'station', width: 120 },
+        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Category', value: 'parametercategory' },
+        { text: 'Data type', value: 'datatype' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'PLC Parameter', value: 'plc_parameter', width: 140 },
+        { text: 'Prefix', value: 'prefix', width: 120 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -564,8 +581,11 @@ export default {
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
         this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
-      } else {
+      } else if (val === 'MELSEC') {
         this.headers = this.headersMelsec;
+        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+      } else {
+        this.headers = this.headerAbPlc;
         this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
