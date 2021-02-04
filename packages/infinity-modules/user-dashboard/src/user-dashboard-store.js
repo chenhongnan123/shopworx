@@ -19,13 +19,15 @@ export default ({
     operators: [],
     rejectionReasons: [],
     downtimeReasons: [],
+    shiftAvailabletime: [],
     thisShiftSummary: null,
     previousShiftSummary: null,
     productionList: [],
     downtimeList: [],
     downtimeByMachine: null,
     downtimeByReason: null,
-    performanceByMachine: null,
+    productionByMachine: null,
+    targetByMachine: null,
     rejectionByMachine: null,
     rejectionByReason: null,
   },
@@ -45,13 +47,15 @@ export default ({
     setOperators: set('operators'),
     setRejectionReasons: set('rejectionReasons'),
     setDowntimeReasons: set('downtimeReasons'),
+    setShiftAvailabletime: set('shiftAvailabletime'),
     setThisShiftSummary: set('thisShiftSummary'),
     setPreviousShiftSummary: set('previousShiftSummary'),
     setProductionList: set('productionList'),
     setDowntimeList: set('downtimeList'),
     setDowntimeByMachine: set('downtimeByMachine'),
     setDowntimeByReason: set('downtimeByReason'),
-    setPerformanceByMachine: set('performanceByMachine'),
+    setProductionByMachine: set('productionByMachine'),
+    setTargetByMachine: set('targetByMachine'),
     setRejectionByMachine: set('rejectionByMachine'),
     setRejectionByReason: set('rejectionByReason'),
   },
@@ -154,6 +158,7 @@ export default ({
 
     getDashboardData: async ({ commit, dispatch }) => {
       commit('setLoading', true);
+      await dispatch('getShiftAvailableTime');
       await Promise.all([
         dispatch('getThisShfitSummary'),
         dispatch('getPreviousShfitSummary'),
@@ -161,12 +166,146 @@ export default ({
         dispatch('getShiftDowntime'),
         dispatch('getDowntimeByMachine'),
         dispatch('getDowntimeByReason'),
-        dispatch('getPerformanceByMachine'),
+        dispatch('getProductionByMachine'),
+        dispatch('getTargetByMachine'),
         dispatch('getRejectionByMachine'),
         dispatch('getRejectionByReason'),
       ]);
       commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       commit('setLoading', false);
+    },
+
+    getShiftAvailableTime: async ({ commit, dispatch }) => {
+      const records = await dispatch(
+        'element/getRecords',
+        { elementName: 'shiftwiseavailabletime' },
+        { root: true },
+      );
+      if (records) {
+        commit('setShiftAvailabletime', records);
+        return true;
+      }
+      return false;
+    },
+
+    getThisShfitSummary: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      commit('setThisShiftSummary', null);
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift, shiftAvailabletime } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftoee',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        let { machines } = JSON.parse(data);
+        const workingTime = shiftAvailabletime
+          .find((s) => s.displayshift === thisShift)
+          .availabletimeinms;
+        machines = machines.map((m) => ({
+          ...m,
+          workingTime,
+        }));
+        const result = machines.reduce((acc, cur) => {
+          acc.produced += cur.produced;
+          acc.rejected += cur.rejected;
+          acc.target += cur.target;
+          acc.runtime += cur.runtime;
+          acc.workingTime += cur.workingTime;
+          return acc;
+        }, {
+          produced: 0,
+          rejected: 0,
+          target: 0,
+          runtime: 0,
+          workingTime: 0,
+        });
+        const a = (result.runtime / result.workingTime) * 100;
+        const p = (result.produced / result.target) * 100;
+        const q = ((result.produced - result.rejected) / result.produced) * 100;
+        const oee = (a * p * q) / 10000;
+        commit('setThisShiftSummary', {
+          a,
+          p,
+          q,
+          oee,
+        });
+      } else {
+        commit('setThisShiftSummary', null);
+      }
+    },
+
+    getPreviousShfitSummary: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      commit('setPreviousShiftSummary', null);
+      const { activeSite } = rootState.user;
+      const { previousDate, previousShift, shiftAvailabletime } = state;
+      const date = parseInt(previousDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shiftoee',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: previousShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        let { machines } = JSON.parse(data);
+        const workingTime = shiftAvailabletime
+          .find((s) => s.displayshift === previousShift)
+          .availabletimeinms;
+        machines = machines.map((m) => ({
+          ...m,
+          workingTime,
+        }));
+        const result = machines.reduce((acc, cur) => {
+          acc.produced += cur.produced;
+          acc.rejected += cur.rejected;
+          acc.target += cur.target;
+          acc.runtime += cur.runtime;
+          acc.workingTime += cur.workingTime;
+          return acc;
+        }, {
+          produced: 0,
+          rejected: 0,
+          target: 0,
+          runtime: 0,
+          workingTime: 0,
+        });
+        const a = (result.runtime / result.workingTime) * 100;
+        const p = (result.produced / result.target) * 100;
+        const q = ((result.produced - result.rejected) / result.produced) * 100;
+        const oee = (a * p * q) / 10000;
+        commit('setPreviousShiftSummary', {
+          a,
+          p,
+          q,
+          oee,
+        });
+      } else {
+        commit('setPreviousShiftSummary', null);
+      }
     },
 
     getDowntimeByMachine: async ({
@@ -227,7 +366,7 @@ export default ({
       }
     },
 
-    getPerformanceByMachine: async ({
+    getProductionByMachine: async ({
       commit,
       dispatch,
       state,
@@ -239,7 +378,7 @@ export default ({
       const data = await dispatch(
         'report/executeReport',
         {
-          reportName: 'shiftperformancebymachine',
+          reportName: 'shiftproductionbymachine',
           payload: {
             siteid: activeSite,
             dateVal: date,
@@ -250,9 +389,38 @@ export default ({
       );
       if (data) {
         const { chartOptions } = JSON.parse(data);
-        commit('setPerformanceByMachine', chartOptions);
+        commit('setProductionByMachine', chartOptions);
       } else {
-        commit('setPerformanceByMachine', null);
+        commit('setProductionByMachine', null);
+      }
+    },
+
+    getTargetByMachine: async ({
+      commit,
+      dispatch,
+      state,
+      rootState,
+    }) => {
+      const { activeSite } = rootState.user;
+      const { thisDate, thisShift } = state;
+      const date = parseInt(thisDate.replace(/-/g, ''), 10);
+      const data = await dispatch(
+        'report/executeReport',
+        {
+          reportName: 'shifttargetbymachine',
+          payload: {
+            siteid: activeSite,
+            dateVal: date,
+            shiftVal: thisShift,
+          },
+        },
+        { root: true },
+      );
+      if (data) {
+        const { chartOptions } = JSON.parse(data);
+        commit('setTargetByMachine', chartOptions);
+      } else {
+        commit('setTargetByMachine', null);
       }
     },
 
