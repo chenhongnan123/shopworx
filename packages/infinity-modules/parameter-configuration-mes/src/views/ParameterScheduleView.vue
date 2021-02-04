@@ -899,6 +899,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -918,6 +919,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -969,6 +971,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -988,6 +991,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1006,8 +1010,8 @@ export default {
       const csvContent = [];
       const arr = [
         'parametername',
-        '2',
-        '2',
+        'description-text',
+        '描述文字',
         12,
         '6',
         '6',
