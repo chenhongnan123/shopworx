@@ -3,7 +3,7 @@
     <v-card-title primary-title>
       Shift OEE
     </v-card-title>
-    <v-card-text class="text-center" v-if="thisShiftSummary">
+    <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
         size="180"
         :value="88"
@@ -62,6 +62,12 @@
         </v-tab>
       </v-tabs>
       <v-row v-if="tab === 0">
+        <v-col cols="12">
+          <availability-comparision
+            :thisMachines="thisShiftSummary.machines"
+            :previousMachines="previousShiftSummary.machines"
+          />
+        </v-col>
         <v-col cols="12" xl="6" v-if="downtimeByMachine">
           <highcharts class="mt-4" :options="downtimeByMachine"></highcharts>
         </v-col>
@@ -70,6 +76,12 @@
         </v-col>
       </v-row>
       <v-row v-else-if="tab === 1">
+        <v-col cols="12">
+          <performance-comparision
+            :thisMachines="thisShiftSummary.machines"
+            :previousMachines="previousShiftSummary.machines"
+          />
+        </v-col>
         <v-col cols="12" xl="6" v-if="productionByMachine">
           <highcharts class="mt-4" :options="productionByMachine"></highcharts>
         </v-col>
@@ -78,6 +90,12 @@
         </v-col>
       </v-row>
       <v-row v-if="tab === 2">
+        <v-col cols="12">
+          <quality-comparision
+            :thisMachines="thisShiftSummary.machines"
+            :previousMachines="previousShiftSummary.machines"
+          />
+        </v-col>
         <v-col cols="12" xl="6" v-if="rejectionByMachine">
           <highcharts class="mt-4" :options="rejectionByMachine"></highcharts>
         </v-col>
@@ -113,9 +131,17 @@
 
 <script>
 import { mapState } from 'vuex';
+import AvailabilityComparision from './oee/AvailabilityComparision.vue';
+import PerformanceComparision from './oee/PerformanceComparision.vue';
+import QualityComparision from './oee/QualityComparision.vue';
 
 export default {
   name: 'OeeSummary',
+  components: {
+    AvailabilityComparision,
+    PerformanceComparision,
+    QualityComparision,
+  },
   data() {
     return {
       tab: 0,
@@ -136,25 +162,25 @@ export default {
       return (this.thisShiftSummary && this.thisShiftSummary.a) || 0;
     },
     thisShiftAText() {
-      return `${this.thisShiftA.toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftA).toFixed(1)}%`;
     },
     thisShiftP() {
       return (this.thisShiftSummary && this.thisShiftSummary.p) || 0;
     },
     thisShiftPText() {
-      return `${this.thisShiftP.toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftP).toFixed(1)}%`;
     },
     thisShiftQ() {
       return (this.thisShiftSummary && this.thisShiftSummary.q) || 0;
     },
     thisShiftQText() {
-      return `${this.thisShiftQ.toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftQ).toFixed(1)}%`;
     },
     thisShiftOee() {
       return (this.thisShiftSummary && this.thisShiftSummary.oee) || 0;
     },
     thisShiftOeeText() {
-      return `${this.thisShiftOee.toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftOee).toFixed(1)}%`;
     },
     previousShiftA() {
       return (this.previousShiftSummary && this.previousShiftSummary.a) || 0;
@@ -172,28 +198,34 @@ export default {
       return ((this.thisShiftA - this.previousShiftA) / this.previousShiftA) * 100;
     },
     aDiffText() {
-      return `${this.aDiff.toFixed(2)}%`;
+      return `${this.roundOff(this.aDiff).toFixed(2)}%`;
     },
     pDiff() {
       return ((this.thisShiftP - this.previousShiftP) / this.previousShiftP) * 100;
     },
     pDiffText() {
-      return `${this.pDiff.toFixed(2)}%`;
+      return `${this.roundOff(this.pDiff).toFixed(2)}%`;
     },
     qDiff() {
       return ((this.thisShiftQ - this.previousShiftQ) / this.previousShiftQ) * 100;
     },
     qDiffText() {
-      return `${this.qDiff.toFixed(2)}%`;
+      return `${this.roundOff(this.qDiff).toFixed(2)}%`;
     },
     oeeDiff() {
       return ((this.thisShiftOee - this.previousShiftOee) / this.previousShiftOee) * 100;
     },
     oeeDiffText() {
-      return `${this.oeeDiff.toFixed(2)}%`;
+      return `${this.roundOff(this.oeeDiff).toFixed(2)}%`;
     },
   },
   methods: {
+    roundOff(val) {
+      if (val) {
+        return Math.round((val + Number.EPSILON) * 100) / 100;
+      }
+      return 0;
+    },
     getColor(number) {
       let color = 'warning';
       if (number > 0) {
@@ -204,7 +236,7 @@ export default {
       return color;
     },
     getIcon(number) {
-      let icon = '-';
+      let icon = 'mdi-minus';
       if (number > 0) {
         icon = 'mdi-arrow-up';
       } else if (number < 0) {

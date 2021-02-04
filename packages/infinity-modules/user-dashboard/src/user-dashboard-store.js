@@ -1,5 +1,6 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import HourService from '@shopworx/services/api/hour.service';
 
 export default ({
   namespaced: true,
@@ -156,6 +157,17 @@ export default ({
       return false;
     },
 
+    getAvailableTime: async ({ state, getters }) => {
+      const now = new Date().getTime();
+      const { thisShift } = state;
+      const shiftStartTime = getters.getShiftStart(thisShift);
+      const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
+      if (data) {
+        return now - shiftStartTime - data.results;
+      }
+      return now - shiftStartTime;
+    },
+
     getDashboardData: async ({ commit, dispatch }) => {
       commit('setLoading', true);
       await dispatch('getShiftAvailableTime');
@@ -196,7 +208,12 @@ export default ({
     }) => {
       commit('setThisShiftSummary', null);
       const { activeSite } = rootState.user;
-      const { thisDate, thisShift, shiftAvailabletime } = state;
+      const {
+        thisDate,
+        thisShift,
+        shiftAvailabletime,
+        currentShift,
+      } = state;
       const date = parseInt(thisDate.replace(/-/g, ''), 10);
       const data = await dispatch(
         'report/executeReport',
@@ -212,13 +229,29 @@ export default ({
       );
       if (data) {
         let { machines } = JSON.parse(data);
-        const workingTime = shiftAvailabletime
-          .find((s) => s.displayshift === thisShift)
-          .availabletimeinms;
-        machines = machines.map((m) => ({
-          ...m,
-          workingTime,
-        }));
+        let workingTime = 0;
+        if (currentShift !== thisShift) {
+          workingTime = shiftAvailabletime
+            .find((s) => s.displayshift === thisShift)
+            .availabletimeinms;
+        } else {
+          workingTime = await dispatch('getAvailableTime');
+        }
+        machines = machines.map((m) => {
+          const a = (m.runtime / workingTime) * 100;
+          const p = (m.produced / m.target) * 100;
+          const q = ((m.produced - m.rejected) / m.produced) * 100;
+          const oee = (a * p * q) / 10000;
+          return {
+            ...m,
+            workingTime,
+            a,
+            p,
+            q,
+            oee,
+          };
+        });
+        machines = sortArray(machines, 'machinename');
         const result = machines.reduce((acc, cur) => {
           acc.produced += cur.produced;
           acc.rejected += cur.rejected;
@@ -242,6 +275,7 @@ export default ({
           p,
           q,
           oee,
+          machines,
         });
       } else {
         commit('setThisShiftSummary', null);
@@ -275,10 +309,21 @@ export default ({
         const workingTime = shiftAvailabletime
           .find((s) => s.displayshift === previousShift)
           .availabletimeinms;
-        machines = machines.map((m) => ({
-          ...m,
-          workingTime,
-        }));
+        machines = machines.map((m) => {
+          const a = (m.runtime / workingTime) * 100;
+          const p = (m.produced / m.target) * 100;
+          const q = ((m.produced - m.rejected) / m.produced) * 100;
+          const oee = (a * p * q) / 10000;
+          return {
+            ...m,
+            workingTime,
+            a,
+            p,
+            q,
+            oee,
+          };
+        });
+        machines = sortArray(machines, 'machinename');
         const result = machines.reduce((acc, cur) => {
           acc.produced += cur.produced;
           acc.rejected += cur.rejected;
@@ -302,6 +347,7 @@ export default ({
           p,
           q,
           oee,
+          machines,
         });
       } else {
         commit('setPreviousShiftSummary', null);
