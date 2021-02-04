@@ -27,7 +27,7 @@ export default {
     component() {
       switch (this.roleName) {
         case 'planthead':
-          return 'plant-head-dashboard';
+          return 'production-supervisor-dashboard';
         case 'planner':
           return 'production-planner-dashboard';
         case 'supervisor':
