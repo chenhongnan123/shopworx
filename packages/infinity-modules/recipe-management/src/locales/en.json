@@ -32,5 +32,8 @@
     "RECIPE_CREATED": "Recipe created!",
     "RECIPE_UPDATED": "Recipe updated!",
     "RECIPE_RECORD_DELETED": "Recipe Record DELETED."
-  }
+  },
+  "duplicateRecipe": "Duplicate",
+  "refreshRecipe": "Refresh",
+  "filtersRecipe": "Filters"
 }
