@@ -1303,7 +1303,7 @@ export default {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'import_parameter_list',
+            message: 'IMPORT_PARAMETER_LIST',
           });
         }
         document.getElementById('uploadFiles').value = null;

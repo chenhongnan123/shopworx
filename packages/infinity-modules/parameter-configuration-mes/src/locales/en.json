@@ -2,10 +2,24 @@
   "parameterConfiguration": "Parameter Configuration",
   "success": {
     "delete_parameter": "Parameters are deleted.",
-    "CREATE_PARAMETER": "Parameter created"
+    "CREATE_PARAMETER": "Parameter created",
+    "IMPORT_PARAMETER_LIST": "File upload and Parameters created!"
   },
   "error": {
     "delete_parameter": "Error in deleteing parameter.",
-    "CREATE_PARAMETER": "Error in creating parameter"
+    "CREATE_PARAMETER": "Error in creating parameter",
+    "DUPLICATE_PARAMETER_NAME": "Found the duplicate parameter name",
+    "UPLOAD_ONLY_CSV": "Please upload file with (.csv) extension",
+    "DUPLICATE_DBADDRESS": "Found duplicate DB Address in file!",
+    "DUPLICATE_START_ADDRESS": "Found duplicate Start Address in file!",
+    "DUPLICATE_BIT_NUMBER": "Found duplicate Bit Number in file!",
+    "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
+    "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
+    "PARAMETER_NAME_LENGTH": "Parameter name length should be less than 15 character",
+    "EMPTY_COLUMN_ERROR": "Below column dont have any data",
+    "DUPLICATE_BIT_NUM_ERROR": "Below Location have Duplicate Bit Number",
+    "DUPLICATE_START_NUM_ERROR": "Below Location have Duplicate Start Address",
+    "DUPLICATE_DB_ADDRESS_ERROR": "Below Location have Duplicate DB Address",
+    "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)"
   }
 }
