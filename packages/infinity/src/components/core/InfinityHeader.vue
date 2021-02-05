@@ -12,7 +12,7 @@
     ></v-app-bar-nav-icon>
     <v-btn
       icon
-      v-else-if="$vuetify.breakpoint.mdAndDown && $route.params.id"
+      v-else-if="$vuetify.breakpoint.smAndDown || $route.params.id"
       @click="$router.back()"
     >
       <v-icon v-text="'$left'"></v-icon>
