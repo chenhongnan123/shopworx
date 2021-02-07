@@ -51,12 +51,27 @@
             outlined
             dense
             label="Reason"
+            :disabled="updating"
             item-text="reasonname"
             item-value="reasonname"
             :items="rejectionReasons"
             v-model="item.reasonname"
             :rules="[(v) => !!v || 'Reason is required']"
-          ></v-autocomplete>
+          >
+            <template #selection="data">
+              {{ data.item.reasoncode }} | {{ data.item.reasonname }}
+            </template>
+            <template #item="data">
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ data.item.reasonname }}
+                </v-list-item-title>
+                <v-list-item-subtitle
+                  v-text="data.item.reasoncode"
+                ></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
           <v-textarea
             v-model="item.remark"
             label="Remark"

@@ -18,23 +18,22 @@
     </template>
     <v-form v-model="isValid" @submit.prevent="$emit('on-update', {
       id: item._id,
-      hour,
       payload: {
-        quantity: item.quantity,
+        reworkquantity: item.reworkquantity,
         reasonname: item.reasonname,
         remark: item.remark,
       },
     })">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Edit rejection
+          Edit rework
           <v-btn icon small @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text class="py-0" v-if="item">
           <v-text-field
-            v-model.number="item.quantity"
+            v-model.number="item.reworkquantity"
             type="number"
             label="Qty"
             outlined
@@ -54,7 +53,7 @@
             :disabled="updating"
             item-text="reasonname"
             item-value="reasonname"
-            :items="rejectionReasons"
+            :items="reworkReasons"
             v-model="item.reasonname"
             :rules="[(v) => !!v || 'Reason is required']"
           >
@@ -89,7 +88,7 @@
             :loading="updating"
             class="text-none"
           >
-            Update rejection
+            Update rework
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -99,9 +98,9 @@
 
 <script>
 export default {
-  name: 'EditRejection',
+  name: 'EditRework',
   props: {
-    rejection: {
+    rework: {
       type: Object,
       required: true,
     },
@@ -109,11 +108,7 @@ export default {
       type: Number,
       default: 0,
     },
-    hour: {
-      type: [Number, String],
-      default: 0,
-    },
-    rejectionReasons: {
+    reworkReasons: {
       type: Array,
       default: () => [],
     },
@@ -136,7 +131,7 @@ export default {
   watch: {
     dialog(val) {
       if (val) {
-        this.item = { ...this.rejection };
+        this.item = { ...this.rework };
       }
     },
     updated(val) {

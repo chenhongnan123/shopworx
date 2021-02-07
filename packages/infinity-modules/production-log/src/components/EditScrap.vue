@@ -18,34 +18,32 @@
     </template>
     <v-form v-model="isValid" @submit.prevent="$emit('on-update', {
       id: item._id,
-      hour,
       payload: {
-        quantity: item.quantity,
+        scrapweight: item.scrapweight,
         reasonname: item.reasonname,
         remark: item.remark,
       },
     })">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Edit rejection
+          Edit scrap
           <v-btn icon small @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text class="py-0" v-if="item">
           <v-text-field
-            v-model.number="item.quantity"
+            v-model.number="item.scrapweight"
             type="number"
-            label="Qty"
+            label="Weight"
             outlined
             dense
             class="mt-1"
-            suffix="pcs"
-            :rules="[(v) => (
-              Number.isInteger(Number(v)) > 0
-              && parseInt(v, 10) <= acceptedQty
-            )
-              || 'Should be less than accepted qty']"
+            suffix="kg"
+            :rules="[
+              (v) => Number(v) > 0
+              || 'Should be less than accepted qty'
+            ]"
           ></v-text-field>
           <v-autocomplete
             outlined
@@ -54,7 +52,7 @@
             :disabled="updating"
             item-text="reasonname"
             item-value="reasonname"
-            :items="rejectionReasons"
+            :items="scrapReasons"
             v-model="item.reasonname"
             :rules="[(v) => !!v || 'Reason is required']"
           >
@@ -89,7 +87,7 @@
             :loading="updating"
             class="text-none"
           >
-            Update rejection
+            Update scrap
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -99,21 +97,13 @@
 
 <script>
 export default {
-  name: 'EditRejection',
+  name: 'EditScrap',
   props: {
-    rejection: {
+    scrap: {
       type: Object,
       required: true,
     },
-    acceptedQty: {
-      type: Number,
-      default: 0,
-    },
-    hour: {
-      type: [Number, String],
-      default: 0,
-    },
-    rejectionReasons: {
+    scrapReasons: {
       type: Array,
       default: () => [],
     },
@@ -136,7 +126,7 @@ export default {
   watch: {
     dialog(val) {
       if (val) {
-        this.item = { ...this.rejection };
+        this.item = { ...this.scrap };
       }
     },
     updated(val) {

@@ -93,6 +93,7 @@
                 disable-pagination
                 :items="data.rejections"
                 v-if="data.rejections.length"
+                class="mb-2"
               >
                 <!-- eslint-disable-next-line -->
                 <template #item.action="{ item, index }">
