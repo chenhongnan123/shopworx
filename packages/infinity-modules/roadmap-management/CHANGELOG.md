@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **roadmap-management:** dup[licate button should visible on if record is selected ([590931f](https://bitbucket.org/entrib/shopworx/commits/590931f0f4f7c8a03886d45216576992b9b82b1e))
+* **roadmap-management:** in roadmap detail page after refresh data not fetched ( resolved ) ([2aa02c3](https://bitbucket.org/entrib/shopworx/commits/2aa02c3e69280b32bf927d646114630d7280c46e))
+* **roadmap-management:** on refresh roadmap details page not fetch data ([3f07933](https://bitbucket.org/entrib/shopworx/commits/3f0793388f4826035fd11daf4bb47dc6a6c873b2))
+* **roadmap-management:** option buttons shoiuld be floating ([665373c](https://bitbucket.org/entrib/shopworx/commits/665373c000b5302eb5d7a9f9bf029ab92601ad6b))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 **Note:** Version bump only for package @shopworx/roadmap-management
