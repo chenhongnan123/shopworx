@@ -30,7 +30,7 @@
             label="TV name"
             prepend-icon="mdi-television"
             :disabled="saving"
-            :rules="[(v) => !!v || 'TV name is required']"
+            :rules="nameRules"
           ></v-text-field>
           <v-text-field
             dense
@@ -39,9 +39,10 @@
             class="ml-8"
             label="Device ID*"
             :disabled="saving"
-            :rules="[(v) => !!v || 'Device ID is required']"
+            :rules="idRules"
           ></v-text-field>
-          <div class="caption">*Steps to find device ID</div>
+          <div class="caption">*Device ID can be found on the homescreen
+            of your ShopWorx TV app.</div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -65,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'RegisterTv',
@@ -76,7 +77,26 @@ export default {
       isValid: false,
       saving: false,
       dialog: false,
+      nameRules: [
+        (v) => !!(v && v.trim()) || 'Device name is required',
+        (v) => !this.deviceNames.includes(v) || 'Device name is already registered',
+      ],
+      idRules: [
+        (v) => !!v || 'Device ID is required',
+        (v) => /^[A-Za-z0-9-_]+$/.test(v)
+          || 'Device ID should not contain empty space or special characters',
+        (v) => !this.deviceIds.includes(v) || 'Device ID is already registered',
+      ],
     };
+  },
+  computed: {
+    ...mapGetters('user', ['myTvs']),
+    deviceNames() {
+      return this.myTvs.map((t) => t.devicename);
+    },
+    deviceIds() {
+      return this.myTvs.map((t) => t.deviceid);
+    },
   },
   methods: {
     ...mapActions('dashboard', ['createTV']),

@@ -66,7 +66,6 @@
                 outlined
                 return-object
                 label="Reason"
-                hide-details="auto"
                 :rules="[v => !!v || 'Reason is required']"
                 :items="downtimeReasons"
                 item-text="reasonname"
@@ -279,10 +278,36 @@ export default {
       this.dialog = false;
     },
     isTimeMissing() {
-      return this.downtimes.some((downtime, index) => (
-        index !== this.downtimes.length - 1
-        && downtime.downtimeend !== this.downtimes[index + 1].downtimestart
-      ));
+      const {
+        year,
+        month,
+        day,
+        downtimeinms,
+      } = this.downtime;
+      return this.downtimes.some((dt) => {
+        const [sHrs, sMins, sSecs] = dt.downtimestart.split(':');
+        const [eHrs, eMins, eSecs] = dt.downtimeend.split(':');
+        const start = new Date(
+          year,
+          (month - 1),
+          day,
+          parseInt(sHrs, 10),
+          parseInt(sMins, 10),
+          parseInt(sSecs, 10) || 0,
+        ).getTime();
+        const end = new Date(
+          year,
+          (month - 1),
+          day,
+          parseInt(sHrs, 10) === 23 && parseInt(eHrs, 10) === 0
+            ? 24
+            : parseInt(eHrs, 10),
+          parseInt(eMins, 10),
+          parseInt(eSecs, 10) || 0,
+        ).getTime();
+        const duration = end - start;
+        return duration <= 0 || duration > downtimeinms;
+      });
     },
     async splitDowntime() {
       this.loading = true;
@@ -300,14 +325,15 @@ export default {
         await Promise.all([this.downtimes.forEach((dt) => {
           const [sHrs, sMins, sSecs] = dt.downtimestart.split(':');
           const [eHrs, eMins, eSecs] = dt.downtimeend.split(':');
-          const start = new Date(year, (month - 1), day, sHrs, sMins, sSecs || 0).getTime();
-          const end = new Date(year, (month - 1), day, eHrs, eMins, eSecs || 0).getTime();
+          const start = new Date(year, (month - 1), day, sHrs || 24, sMins, sSecs || 0).getTime();
+          const end = new Date(year, (month - 1), day, eHrs || 24, eMins, eSecs || 0).getTime();
           const {
             reasonname,
             reasoncode,
             category,
             department,
           } = dt.selectedReason;
+          const durationinms = end - start < 0 ? 86400000 + (end - start) : end - start;
           const payload = {
             ...downtimeCopy,
             reasonname,
@@ -316,8 +342,8 @@ export default {
             department,
             downtimestart: start,
             downtimeend: end,
-            downtimeinms: end - start,
-            downtimeduration: (end - start) / 1000,
+            downtimeinms: durationinms,
+            downtimeduration: (durationinms) / 1000,
             timestamp: start,
             timeType: 'BUSINESS_TIME',
           };

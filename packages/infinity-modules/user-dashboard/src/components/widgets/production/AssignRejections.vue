@@ -254,26 +254,27 @@ export default {
     },
   },
   computed: {
-    ...mapState('productionLog', [
+    ...mapState('userDashboard', [
       'rejectionReasons',
       'machines',
       'productionList',
     ]),
-    ...mapGetters('productionLog', ['getHourStart']),
+    ...mapGetters('userDashboard', ['getHourStart']),
   },
   methods: {
-    ...mapActions('productionLog', [
+    ...mapActions('userDashboard', [
       'fetchHourlyProduction',
-      'reFetchProductionList',
+      'getShiftProduction',
       'addRejection',
     ]),
     ...mapActions('element', ['updateRecordById']),
-    ...mapMutations('productionLog', ['setProductionList']),
+    ...mapMutations('userDashboard', ['setProductionList']),
     ...mapMutations('helper', ['setAlert']),
     getRejected(rejections, index) {
       return rejections
         .filter((r, i) => i !== index)
         .reduce((result, cur) => {
+          // eslint-disable-next-line
           result += parseInt(cur.quantity, 10);
           return result;
         }, 0);
@@ -385,7 +386,7 @@ export default {
           accepted: +produced - rejected,
         };
         this.hourlyData.splice(hIndex, 1, newData);
-        await this.reFetchProductionList();
+        await this.getShiftProduction(false);
         this.updated = true;
         this.setAlert({
           show: true,

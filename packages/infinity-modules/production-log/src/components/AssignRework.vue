@@ -44,82 +44,18 @@
             :items="reworks"
             disable-pagination
             v-if="reworks.length"
+            class="mb-2"
           >
             <!-- eslint-disable-next-line -->
-            <template #item.reworkquantity="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { reworkquantity: parseInt(item.reworkquantity, 10) },
-                })"
-                :return-value.sync="item.reworkquantity"
-              >
-                <span :class="item.reworkquantity > production.accepted ? 'error--text': ''">
-                  {{ item.reworkquantity }}
-                </span>
-                <template #input>
-                  <v-text-field
-                    v-model="item.reworkquantity"
-                    type="number"
-                    label="Qty"
-                    suffix="pcs"
-                    :rules="[(v) => (
-                      Number.isInteger(Number(v)) > 0
-                      && v <= parseInt(production.accepted, 10)
-                    )
-                      || 'Should be less than accepted qty']"
-                    single-line
-                  ></v-text-field>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <!-- eslint-disable-next-line -->
-            <template #item.reasonname="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { reasonname: item.reasonname },
-                })"
-                :return-value.sync="item.reasonname"
-              >
-                {{ item.reasonname }}
-                <template #input>
-                  <v-autocomplete
-                    single-line
-                    label="Reason"
-                    item-text="reasonname"
-                    item-value="reasonname"
-                    :items="reworkReasons"
-                    v-model="item.reasonname"
-                  ></v-autocomplete>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <!-- eslint-disable-next-line -->
-            <template #item.remark="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { remark: item.remark },
-                })"
-                :return-value.sync="item.remark"
-              >
-                {{ item.remark }}
-                <template #input>
-                  <v-textarea
-                    v-model="item.remark"
-                    label="Remark"
-                    rows="2"
-                    single-line
-                  ></v-textarea>
-                </template>
-              </v-edit-dialog>
+            <template #item.action="{ item, index }">
+              <edit-rework
+                :rework="item"
+                :updating="updating"
+                :updated="updated"
+                :reworkReasons="reworkReasons"
+                :acceptedQty="parseInt(production.produced, 10) - getReworked(reworks, index)"
+                @on-update="updateRework"
+              />
             </template>
           </v-data-table>
           <validation-observer
@@ -136,6 +72,7 @@
                   >
                     <v-text-field
                       dense
+                      class="mt-1"
                       outlined
                       type="number"
                       suffix="pcs"
@@ -156,6 +93,7 @@
                     <v-autocomplete
                       outlined
                       dense
+                      class="mt-1"
                       return-object
                       label="Reason"
                       :disabled="saving"
@@ -222,6 +160,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import EditRework from './EditRework.vue';
 
 export default {
   name: 'AssignRework',
@@ -231,11 +170,16 @@ export default {
       required: true,
     },
   },
+  components: {
+    EditRework,
+  },
   data() {
     return {
       saving: false,
       loading: false,
       dialog: false,
+      updating: false,
+      updated: false,
       reworks: [],
       newRework: {
         qty: '',
@@ -247,6 +191,7 @@ export default {
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
         { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: '', value: 'action', sortable: false },
       ],
     };
   },
@@ -274,6 +219,14 @@ export default {
     ...mapActions('element', ['updateRecordById']),
     ...mapMutations('productionLog', ['setProductionList']),
     ...mapMutations('helper', ['setAlert']),
+    getReworked(reworks, index) {
+      return reworks
+        .filter((r, i) => i !== index)
+        .reduce((result, cur) => {
+          result += parseInt(cur.reworkquantity, 10);
+          return result;
+        }, 0);
+    },
     async getRework() {
       this.loading = true;
       this.reworks = await this.fetchRework({
@@ -333,48 +286,41 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateRework(item) {
-      if (!item.payload.reworkquantity || item.payload.reworkquantity <= this.production.accepted) {
-        const { id } = item;
-        let { payload } = item;
-        const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-        const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'reworkquantity');
-        if (hasReasonNameProperty) {
-          payload = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
-        }
-        const updated = await this.updateRecordById({
-          elementName: 'rework',
-          id,
-          payload,
+      this.updating = true;
+      this.updated = false;
+      const { id } = item;
+      let { payload } = item;
+      const reason = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
+      payload = { ...payload, reason };
+      const updated = await this.updateRecordById({
+        elementName: 'rework',
+        id,
+        payload,
+      });
+      if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.reworks.findIndex((s) => s._id === id);
+        this.$set(this.reworks, updatedIndex, {
+          ...this.reworks[updatedIndex],
+          modifiedtimestamp: 'now',
+          ...payload,
         });
-        if (updated) {
-          // eslint-disable-next-line
-          const updatedIndex = this.reworks.findIndex((s) => s._id === id);
-          this.$set(this.reworks, updatedIndex, {
-            ...this.reworks[updatedIndex],
-            modifiedtimestamp: 'now',
-          });
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'REWORK_UPDATE',
-          });
-          if (hasQtyProperty) {
-            await this.reFetchProductionList();
-          }
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'REWORK_UPDATE',
-          });
-        }
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'REWORK_UPDATE',
+        });
+        await this.reFetchProductionList();
+        this.updated = true;
       } else {
+        this.updated = false;
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'REWORK_NOT_ALLOWED',
+          message: 'REWORK_UPDATE',
         });
       }
+      this.updating = false;
     },
     close() {
       this.dialog = false;
