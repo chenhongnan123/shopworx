@@ -15,7 +15,11 @@
     "DUPLICATE_BIT_NUMBER": "Found duplicate Bit Number in file!",
     "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
     "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
-    "PARAMETER_NAME_LENGTH": "Parameter name length should be less than 15 character",
-    "EMPTY_COLUMN_ERROR": "Below column dont have any data"
+    "PARAMETER_NAME_LENGTH": "Parameter name length exceeded (15 char max)",
+    "EMPTY_COLUMN_ERROR": "Column that dont have any data",
+    "DUPLICATE_BIT_NUM_ERROR": "Duplicate value in Bit Number column",
+    "DUPLICATE_START_NUM_ERROR": "Duplicate value in Start Address column",
+    "DUPLICATE_DB_ADDRESS_ERROR": "Duplicate value in DB Address column",
+    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length"
   }
 }

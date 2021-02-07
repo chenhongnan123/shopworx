@@ -63,7 +63,12 @@
           </div>
           <proceed-dialog ref="ProceedDialog"
             :openDialog="openDialog"
-            :responce="responce"/>
+            :responce="responce"
+            :duplicateBnum="duplicateBnum"
+            :duplicateStartnum="duplicateStartnum"
+            :dupDbAddress="dupDbAddress"
+            :paramLength="paramLength"
+            :dummyNames="dummyNames"/>
           <div style="float:right;">
             <v-btn
             small
@@ -393,6 +398,10 @@ export default {
       resLen: [],
       paramLength: [],
       dataForCreation: [],
+      duplicateBnum: [],
+      duplicateStartnum: [],
+      dupDbAddress: [],
+      dummyNames: [],
       validateFlag: true,
       masterTags: [{
         tagName: 'name',
@@ -490,6 +499,11 @@ export default {
       if (clear) {
         document.getElementById('uploadFiles').value = null;
         this.responce = [];
+        this.duplicateBnum = [];
+        this.duplicateStartnum = [];
+        this.dupDbAddress = [];
+        this.paramLength = [];
+        this.dummyNames = [];
       }
     });
     this.$root.$on('getListofParams', (data) => {
@@ -1387,6 +1401,7 @@ export default {
       this.$refs.uploader.click();
     },
     async onFilesChanged(e) {
+      this.validateFlag = true;
       this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
       const ext = /^.+\.([^.]+)$/.exec(files[0].name);
@@ -1450,7 +1465,7 @@ export default {
           }
         });
       });
-      if (new Set(nameList).size === nameList.length) {
+      if (nameList) {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
@@ -1466,13 +1481,23 @@ export default {
               message: 'DUPLICATE_DBADDRESS',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicatedbAddress) {
+            const dbresponce = [];
+            duplicatedbAddress.forEach((p) => {
+              if (p.length > 0) {
+                dbresponce.push(` value( dbaddress ): ${p} `);
+                this.dupDbAddress = dbresponce;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           const listStartAdd = dataList.map((item) => item.startaddress);
           const duplicatestartAddress = listStartAdd.map((item) => item)
             .filter((value, index, self) => self.indexOf(value) !== index);
           if (duplicatestartAddress.length > 0) {
-            this.$root.$emit('parameterCreation', false);
+            this.$root.$emit('parameterCreation', true);
             this.validateFlag = false;
             this.savingImport = false;
             this.setAlert({
@@ -1481,7 +1506,17 @@ export default {
               message: 'DUPLICATE_START_ADDRESS',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicatestartAddress) {
+            const resStartNum = [];
+            duplicatestartAddress.forEach((p) => {
+              if (p.length > 0) {
+                resStartNum.push(` value( startaddress ): ${p} `);
+                this.duplicateStartnum = resStartNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           const listBitNum = dataList.map((item) => item.bitnumber);
           const duplicateBitnumber = listBitNum.map((item) => item)
@@ -1495,17 +1530,48 @@ export default {
               message: 'DUPLICATE_BIT_NUMBER',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicateBitnumber) {
+            const resBitNum = [];
+            duplicateBitnumber.forEach((p) => {
+              if (p.length > 0) {
+                resBitNum.push(` value( bitnumber ): ${p} `);
+                this.duplicateBnum = resBitNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (duplicateNames.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
               if (p.length > 15) {
-                resLen.push(` row: ${index + 2} `);
+                resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
                 this.validateFlag = false;
-                // this.$root.$emit('parameterCreation', true);
+                this.$root.$emit('parameterCreation', true);
                 document.getElementById('uploadFiles').value = null;
                 // return;
               }
@@ -1519,8 +1585,8 @@ export default {
               type: 'error',
               message: 'PARAMETER_NAME_LENGTH',
             });
-            this.paramLength = [];
-            return;
+            // this.paramLength = [];
+            // return;
           }
           if (this.validateFlag === true) {
             if (this.responce.length > 0) {
@@ -1534,32 +1600,17 @@ export default {
                 message: 'EMPTY_FIELDS',
               });
               // document.getElementById('uploadFiles').value = null;
-              return;
+              // return;
+            } else {
+              this.$root.$emit('payload', data);
+              this.$root.$emit('successPayload', true);
             }
           }
         }
         if (noBooleanList.length) {
-          // for (let i = 0; i < noBooleanList.length; i += 1) {
-          //   for (let k = i + 1; k < noBooleanList.length; k += 1) {
-          //     if (
-          //       Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
-          // && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k]
-          //   .startaddress)
-          //     ) {
-          //       this.setAlert({
-          //         show: true,
-          //         type: 'error',
-          //         message: 'duplicate_parameter_startaddress',
-          //       });
-          //       document.getElementById('uploadFiles').value = null;
-          //       return;
-          //     }
-          //   }
-          // }
           const listDbaddress = dataList.map((item) => item.dbaddress);
           const duplicatedbAddress = listDbaddress.map((item) => item)
             .filter((value, index, self) => self.indexOf(value) !== index);
-          console.log(duplicatedbAddress);
           if (duplicatedbAddress.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
@@ -1569,13 +1620,23 @@ export default {
               message: 'DUPLICATE_DBADDRESS',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicatedbAddress) {
+            const dbresponce = [];
+            duplicatedbAddress.forEach((p) => {
+              if (p.length > 0) {
+                dbresponce.push(` value( dbaddress ): ${p} `);
+                this.dupDbAddress = dbresponce;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           const listStartAdd = dataList.map((item) => item.startaddress);
           const duplicatestartAddress = listStartAdd.map((item) => item)
             .filter((value, index, self) => self.indexOf(value) !== index);
-          console.log(duplicatestartAddress);
           if (duplicatestartAddress.length > 0) {
+            this.$root.$emit('parameterCreation', true);
             this.validateFlag = false;
             this.savingImport = false;
             this.setAlert({
@@ -1584,12 +1645,21 @@ export default {
               message: 'DUPLICATE_START_ADDRESS',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicatestartAddress) {
+            const resStartNum = [];
+            duplicatestartAddress.forEach((p) => {
+              if (p.length > 0) {
+                resStartNum.push(` value( startaddress ): ${p} `);
+                this.duplicateStartnum = resStartNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           const listBitNum = dataList.map((item) => item.bitnumber);
           const duplicateBitnumber = listBitNum.map((item) => item)
             .filter((value, index, self) => self.indexOf(value) !== index);
-          console.log(duplicateBitnumber);
           if (duplicateBitnumber.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
@@ -1599,7 +1669,17 @@ export default {
               message: 'DUPLICATE_BIT_NUMBER',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicateBitnumber) {
+            const resBitNum = [];
+            duplicateBitnumber.forEach((p) => {
+              if (p.length > 0) {
+                resBitNum.push(` value( bitnumber ): ${p} `);
+                this.duplicateBnum = resBitNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           if (duplicateNames.length > 0) {
             this.validateFlag = false;
@@ -1610,36 +1690,46 @@ export default {
               message: 'DUPLICATE_PARAMETER_NAME',
             });
             document.getElementById('uploadFiles').value = null;
-            return;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
           }
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
               if (p.length > 15) {
-                resLen.push(` row: ${index + 2} `);
+                resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
-                // this.$root.$emit('parameterCreation', true);
+                this.validateFlag = false;
+                this.$root.$emit('parameterCreation', true);
                 document.getElementById('uploadFiles').value = null;
                 // return;
               }
             });
+            // return;
           }
           if (this.paramLength.length > 0) {
-            this.savingImport = false;
             this.validateFlag = false;
             this.setAlert({
               show: true,
               type: 'error',
               message: 'PARAMETER_NAME_LENGTH',
             });
-            this.paramLength = [];
-            return;
+            // this.paramLength = [];
+            // return;
           }
           if (this.validateFlag === true) {
             if (this.responce.length > 0) {
               this.savingImport = false;
-              this.validateFlag = false;
               this.$root.$emit('parameterCreation', true);
               this.$root.$emit('payload', data);
               this.dialog = true;
@@ -1649,18 +1739,10 @@ export default {
                 message: 'EMPTY_FIELDS',
               });
               // document.getElementById('uploadFiles').value = null;
-              return;
+              // return;
             }
           }
         }
-        this.dataForCreation = data;
-        if (this.validateFlag === true) {
-          this.$root.$emit('payload', data);
-          this.successPayload = true;
-          this.$root.$emit('successPayload', true);
-          this.savingImport = false;
-        }
-        // const createResult = await this.createParameterList(data);
       }
     },
     addToZip(file) {

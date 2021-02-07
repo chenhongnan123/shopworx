@@ -16,7 +16,7 @@
       flat
       accordion
     >
-      <v-expansion-panel v-if="responce">
+      <v-expansion-panel v-if="responce.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $t('error.EMPTY_COLUMN_ERROR', responce.length) }}
           </v-expansion-panel-header>
@@ -24,10 +24,51 @@
           <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel v-if="duplicateBnum.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_BIT_NUM_ERROR', duplicateBnum.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in duplicateBnum" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="duplicateStartnum.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_START_NUM_ERROR', duplicateStartnum.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in duplicateStartnum" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="dupDbAddress.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_DB_ADDRESS_ERROR', dupDbAddress.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in dupDbAddress" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="paramLength.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.PARAMETER_MAX_LENGTH', paramLength.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in paramLength" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="dummyNames.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_PARAMETER_NAME', dummyNames.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in dummyNames" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
     </v-expansion-panels>
-        <span class="red--text">
-          Column or some fields are found Empty! do you want to Proceed
-          with Parameter creation( upload )
+        <span
+         v-if="yesBtnDisable === false"
+         >
+          Still you want to proceed then click on YES button
         </span>
         </v-card-text>
 
@@ -38,6 +79,7 @@
             class="text-none"
             @click="createParamsBtn"
             :loading="deleting"
+            :disabled="yesBtnDisable"
           >
             Yes
           </v-btn>
@@ -65,6 +107,7 @@ export default {
       default: false,
       dialog: false,
       payloadData: null,
+      yesBtnDisable: true,
     };
   },
   props: {
@@ -74,12 +117,85 @@ export default {
     },
     responce: {
       type: Array,
+      required: true,
+    },
+    duplicateBnum: {
+      type: Array,
+      default: () => [],
+    },
+    duplicateStartnum: {
+      type: Array,
+      default: () => [],
+    },
+    dupDbAddress: {
+      type: Array,
+      default: () => [],
+    },
+    paramLength: {
+      type: Array,
+      default: () => [],
+    },
+    dummyNames: {
+      type: Array,
       default: () => [],
     },
   },
+  watch: {
+    dupDbAddress: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    duplicateStartnum: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    duplicateBnum: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    paramLength: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    dummyNames: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+  },
+  created() {
+    this.duplicateBnum = [];
+    this.duplicateStartnum = [];
+    this.dupDbAddress = [];
+    this.paramLength = [];
+    this.dummyNames = [];
+  },
   mounted() {
     this.$root.$on('parameterCreation', (data) => {
-      this.responce = [];
       this.dialog = data;
     });
     this.$root.$on('payload', (data) => {
@@ -94,7 +210,13 @@ export default {
   },
   beforeDestroy() {
     this.$root.$off('successPayload', false);
+    this.duplicateBnum = [];
     this.responce = [];
+    this.duplicateBnum = [];
+    this.duplicateStartnum = [];
+    this.dupDbAddress = [];
+    this.paramLength = [];
+    this.dummyNames = [];
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -112,11 +234,10 @@ export default {
           message: 'IMPORT_PARAMETER_LIST',
         });
         this.payloadData = [];
-        this.responce = [];
         this.$root.$emit('getListofParams', true);
+        this.$root.$emit('clearResponce', true);
       } else {
         this.setCreateParam(false);
-        this.responce = [];
         this.setAlert({
           show: true,
           type: 'error',
@@ -127,6 +248,11 @@ export default {
     async cancleCreation() {
       this.dialog = false;
       this.responce = [];
+      this.duplicateBnum = [];
+      this.duplicateStartnum = [];
+      this.dupDbAddress = [];
+      this.paramLength = [];
+      this.dummyNames = [];
       this.$root.$emit('clearResponce', true);
     },
   },
