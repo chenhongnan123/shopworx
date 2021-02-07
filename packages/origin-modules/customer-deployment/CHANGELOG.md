@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **customer-deployment:** add deployment manager ID along with the nodebot ([166321f](https://bitbucket.org/entrib/shopworx/commits/166321fcdb50e395dc3cd7385b3adff0d9927772))
+* **customer-deployment:** fix instance name validation ([22ebd78](https://bitbucket.org/entrib/shopworx/commits/22ebd784e3c1e5dbdf24e6be21333d48d275bc85))
+* **customer-deployment:** fixed device and manager mapping ([7b8ebce](https://bitbucket.org/entrib/shopworx/commits/7b8ebcebbcbcacd125191a91227c64db3fed2380))
+* **customer-deployment:** fixed instance reconfiguration ([3477aee](https://bitbucket.org/entrib/shopworx/commits/3477aeeb9c3e290b31e72a99c4525686e1fbaedd))
+* **customer-deployment:** hide map device dropdown in add device dialog ([07d8640](https://bitbucket.org/entrib/shopworx/commits/07d8640f414254d3e01e8b7514555c18753fe6d3))
+
+
+### Features
+
+* **customer-deployment:** handle unexpected error gracefully ([cc80ac7](https://bitbucket.org/entrib/shopworx/commits/cc80ac72e1698eac16d33e1b0b351e19697e773b))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 

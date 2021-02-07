@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **bom-management:** after apply button ckicked filter windown get closed ([ec998c0](https://bitbucket.org/entrib/shopworx/commits/ec998c0c28aa1cbccb6edc415659c361adf80d01))
+* **customer-deployment:** add deployment manager ID along with the nodebot ([166321f](https://bitbucket.org/entrib/shopworx/commits/166321fcdb50e395dc3cd7385b3adff0d9927772))
+* **customer-deployment:** fix instance name validation ([22ebd78](https://bitbucket.org/entrib/shopworx/commits/22ebd784e3c1e5dbdf24e6be21333d48d275bc85))
+* **customer-deployment:** fixed device and manager mapping ([7b8ebce](https://bitbucket.org/entrib/shopworx/commits/7b8ebcebbcbcacd125191a91227c64db3fed2380))
+* **customer-deployment:** fixed instance reconfiguration ([3477aee](https://bitbucket.org/entrib/shopworx/commits/3477aeeb9c3e290b31e72a99c4525686e1fbaedd))
+* **customer-deployment:** hide map device dropdown in add device dialog ([07d8640](https://bitbucket.org/entrib/shopworx/commits/07d8640f414254d3e01e8b7514555c18753fe6d3))
+* **customer-deployment:** show customer context only if customer selected ([78bf875](https://bitbucket.org/entrib/shopworx/commits/78bf875c5a6f4016867973010ef006dbecc5349e))
+* **dashbord-viewer:** added vaidations to TV registeration ([c2b5832](https://bitbucket.org/entrib/shopworx/commits/c2b583271025b072fc552485fe095141e822c632))
+* **downtime-log:** fixed downtime split validation ([d386fd4](https://bitbucket.org/entrib/shopworx/commits/d386fd45a321fc5df4732ee270c9ff37a98da30f))
+* **in bom detail page on page refresh data not fetched:** push the missing changes ([86f788b](https://bitbucket.org/entrib/shopworx/commits/86f788b1eec9343c6bbde80a553106e560ea71aa))
+* **line-mes:** use same date format to shown in all modules ([50927a2](https://bitbucket.org/entrib/shopworx/commits/50927a26f9766ea3c0a05612d687de5fe9782e22))
+* **line-mes(longrun):** chinese translation support ([ea44273](https://bitbucket.org/entrib/shopworx/commits/ea44273e81d38856e855b2f47e1440a0f14723ce))
+* **material-manageement:** show the columns in BOM Configuration table depend on what component type ([3af117c](https://bitbucket.org/entrib/shopworx/commits/3af117c6628ebd8176871825385aede55bf3e044))
+* **material-management:** date and time format should be same accross all moule ([628214b](https://bitbucket.org/entrib/shopworx/commits/628214b48561daf46bea1a788983b5bb4a26c55b))
+* **material-management:** dependent dropdown in Filter window ([2891ca3](https://bitbucket.org/entrib/shopworx/commits/2891ca3a83a996934814b465f5a54faee89b401a))
+* **material-management:** dependent dropdown in Material Filter ([e06fdfc](https://bitbucket.org/entrib/shopworx/commits/e06fdfcf109d09e8b7a30c3e3d1d25305eb51acc))
+* **material-management:** filter should close on apply button click ([63c4099](https://bitbucket.org/entrib/shopworx/commits/63c40998bdd253f11787d9e17216385474f7560c))
+* **material-management:** rA-I184 (BOM) ([1e641b9](https://bitbucket.org/entrib/shopworx/commits/1e641b9301c6c6d4bbfe931adaba74822db31b67))
+* **material-management:** shown the colum and parameter from selection of component type ([41137fd](https://bitbucket.org/entrib/shopworx/commits/41137fda9e7104d729d327367b1c07fbf0360681))
+* **material-management:** update data in table after change in material or bound subline value ([e7fe162](https://bitbucket.org/entrib/shopworx/commits/e7fe1629cf9b1ea899de09d5017c82d20a8f1438))
+* **material-management:** visibility of column in BOM Configuration on component Type Selection ([7eb18fa](https://bitbucket.org/entrib/shopworx/commits/7eb18fa9ce592a63aed976cee00cb004c2051e83))
+* **material-management(bom):** on page regresh data not fetched in bomDetails page ([3c96db8](https://bitbucket.org/entrib/shopworx/commits/3c96db8748a804fc4196d010baf05f2f0e0209c4))
+* **order-management:** character limitation for order name(validation) ([7630f88](https://bitbucket.org/entrib/shopworx/commits/7630f887d7b873fddf4df79a72526b37c72c5642))
+* **parameter-configuration:** option buttons should be floating ([986b2e8](https://bitbucket.org/entrib/shopworx/commits/986b2e8a04da0f810ba9efcb945675060470234f))
+* **parameter-configuration:** refressh functionality in not correct ([0d9f73c](https://bitbucket.org/entrib/shopworx/commits/0d9f73c9a7b258d24c4e16f1998634ed3f242c6a))
+* **product type management:** duplicate button should display only when record is selected ([3280bfc](https://bitbucket.org/entrib/shopworx/commits/3280bfc437a50287d250e8d38c72fe55cf1f78aa))
+* **product-management:** change text on button from Update To Save ([3213ce8](https://bitbucket.org/entrib/shopworx/commits/3213ce84b8ff54eab300f0f40eea0b7b4e5f5c59))
+* **product-management:** change the text Save insted of Update on Edit Dialog ([edd1656](https://bitbucket.org/entrib/shopworx/commits/edd1656b1fe18b046812b9b8c2d8312d95887b40))
+* **product-management:** option buttons should be floating ([0442a3b](https://bitbucket.org/entrib/shopworx/commits/0442a3ba106972897c37302c1b45e5c0e9720167))
+* **production-layout:** save button for the disabled for changes in Line ([951ca22](https://bitbucket.org/entrib/shopworx/commits/951ca22ad53513027eb1c0e404e787c641c4eb62))
+* **production-layout:** usage start date is less than Manufacturing date while adding station ([6d29945](https://bitbucket.org/entrib/shopworx/commits/6d299452de604cea5f7fe0b486bf7a16a0e250f1))
+* **production-log:** fixed rejection update ([2110c26](https://bitbucket.org/entrib/shopworx/commits/2110c2643bc7f4597f1458d17d55e5b21ad70930))
+* **production-log:** fixed rejection update ([c862315](https://bitbucket.org/entrib/shopworx/commits/c8623151ae64565a046e47352b0ea832effa72e1))
+* **production-log:** fixed rework and scrap update ([a69e812](https://bitbucket.org/entrib/shopworx/commits/a69e812c7092454727ae9eb72b9566082e5c1cff))
+* **production-planning:** fetch new plans within date range ([a364bb7](https://bitbucket.org/entrib/shopworx/commits/a364bb7b1485d3b6c730729a29b8cdbcf4337b02))
+* **recipe-management:** dependent dropdown ([6b5da6c](https://bitbucket.org/entrib/shopworx/commits/6b5da6c7211c4ebd03ab3c934cbf0ea3c78b8ad9))
+* **recipe-management:** duplicate button display on UI ([8471cda](https://bitbucket.org/entrib/shopworx/commits/8471cda3450502a030dac332b8dd78a1b5ff9124))
+* **recipe-management:** on page refresh data not fetched in recipe details page ([2370b9e](https://bitbucket.org/entrib/shopworx/commits/2370b9e86a581c9a334c53903f2b1de07b70bc88))
+* **recipe-management:** option buttons should be floating ([9a63a9e](https://bitbucket.org/entrib/shopworx/commits/9a63a9e4bda5d5e4f0704dc82b926ac8e74da8fc))
+* **recipe-management:** recipe details not fetched ([b560ab7](https://bitbucket.org/entrib/shopworx/commits/b560ab72dc612c87400cc466ef1cdc0d20f7b7c4))
+* **recipe-management:** refresh functionality ([de74387](https://bitbucket.org/entrib/shopworx/commits/de7438748470442d738697e12479fe0942839d6b))
+* **recipe-management:** refresh the list with filtered list as well as without filtered list ([5a079e9](https://bitbucket.org/entrib/shopworx/commits/5a079e958b596e24b06964693b0aebfe7fcce903))
+* **roadmap-management:** dup[licate button should visible on if record is selected ([590931f](https://bitbucket.org/entrib/shopworx/commits/590931f0f4f7c8a03886d45216576992b9b82b1e))
+* **roadmap-management:** in roadmap detail page after refresh data not fetched ( resolved ) ([2aa02c3](https://bitbucket.org/entrib/shopworx/commits/2aa02c3e69280b32bf927d646114630d7280c46e))
+* **roadmap-management:** on refresh roadmap details page not fetch data ([3f07933](https://bitbucket.org/entrib/shopworx/commits/3f0793388f4826035fd11daf4bb47dc6a6c873b2))
+* **roadmap-management:** option buttons shoiuld be floating ([665373c](https://bitbucket.org/entrib/shopworx/commits/665373c000b5302eb5d7a9f9bf029ab92601ad6b))
+* **user-dashboard:** fixed production report name ([590d689](https://bitbucket.org/entrib/shopworx/commits/590d689979f0574a55074914d04ae115bea2cc47))
+* time range issue ([0697384](https://bitbucket.org/entrib/shopworx/commits/0697384d56fac17c08ecc99752bf45e027ea52ce))
+
+
+### Features
+
+* **customer-deployment:** handle unexpected error gracefully ([cc80ac7](https://bitbucket.org/entrib/shopworx/commits/cc80ac72e1698eac16d33e1b0b351e19697e773b))
+* **material-management:** bOM Configuration changes ([33b35b1](https://bitbucket.org/entrib/shopworx/commits/33b35b15f70d2ed22bc824537ded2460e02c5377))
+* **material-management:** bOM Structure changes ([b85485b](https://bitbucket.org/entrib/shopworx/commits/b85485b8ecdbc73afb5a2853c9875abbde31a70b))
+* **matrial-management:** bOM changes ([30a6a93](https://bitbucket.org/entrib/shopworx/commits/30a6a93d439907c59889ad18562e5d4ad263ddb1))
+* **trecibility app:** search records from componentID or batchID ([52f1ca9](https://bitbucket.org/entrib/shopworx/commits/52f1ca99ebb5d8430a980bac30b51b3ec01808f5))
+* **user-dashboard:** added downtime widget for shift summary ([4d6b144](https://bitbucket.org/entrib/shopworx/commits/4d6b1440e6eba45e7bcf66c2811d09130c1f6c5c))
+* **user-dashboard:** added oee summary widget ([0c68e0c](https://bitbucket.org/entrib/shopworx/commits/0c68e0cf45b972171fd8e9f618fe271603610631))
+* **user-dashboard:** added pareto analysis for shift summary ([94afe36](https://bitbucket.org/entrib/shopworx/commits/94afe369aa7f4d0f68587131bd1f280f23119edf))
+* **user-dashboard:** added shift comparision A,P,Q charts ([da11221](https://bitbucket.org/entrib/shopworx/commits/da112211aac6d22266a027820897e29a95cdb361))
+* **user-dashboard:** added shift production widget ([8ce4712](https://bitbucket.org/entrib/shopworx/commits/8ce471212497cf887b683455b958091ae8a20108))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 

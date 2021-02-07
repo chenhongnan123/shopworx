@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** option buttons should be floating ([986b2e8](https://bitbucket.org/entrib/shopworx/commits/986b2e8a04da0f810ba9efcb945675060470234f))
+* **parameter-configuration:** refressh functionality in not correct ([0d9f73c](https://bitbucket.org/entrib/shopworx/commits/0d9f73c9a7b258d24c4e16f1998634ed3f242c6a))
+
+
+
+
+
 # [4.1.0-rc.4](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.3...v4.1.0-rc.4) (2020-10-06)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

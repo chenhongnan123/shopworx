@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **production-layout:** save button for the disabled for changes in Line ([951ca22](https://bitbucket.org/entrib/shopworx/commits/951ca22ad53513027eb1c0e404e787c641c4eb62))
+* **production-layout:** usage start date is less than Manufacturing date while adding station ([6d29945](https://bitbucket.org/entrib/shopworx/commits/6d299452de604cea5f7fe0b486bf7a16a0e250f1))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 

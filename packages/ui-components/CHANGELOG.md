@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **dashbord-viewer:** added vaidations to TV registeration ([c2b5832](https://bitbucket.org/entrib/shopworx/commits/c2b583271025b072fc552485fe095141e822c632))
+* **user-dashboard:** fixed production report name ([590d689](https://bitbucket.org/entrib/shopworx/commits/590d689979f0574a55074914d04ae115bea2cc47))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 
