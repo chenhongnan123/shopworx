@@ -3,7 +3,9 @@
   "success": {
     "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created",
-    "IMPORT_PARAMETER_LIST": "File upload and Parameters created!"
+    "IMPORT_PARAMETER_LIST": "File upload and Parameters created!",
+    "EXPORT_PARAMETER_LIST": "Download File of Parameter List!",
+    "SAMPLE_FILE_DOWNLOAD": "Download the sample file for selected Protocol! "
   },
   "error": {
     "delete_parameter": "Error in deleteing parameter.",

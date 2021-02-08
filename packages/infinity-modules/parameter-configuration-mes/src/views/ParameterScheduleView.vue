@@ -63,7 +63,7 @@
             <v-btn
               small
               color="primary"
-              v-if="substationValue && parameterSelected.length > 0"
+              v-if="substationValue"
               outlined
               class="text-none ml-2"
               @click="exportData"
@@ -975,19 +975,33 @@ export default {
           'paid',
         ];
       }
-      parameterSelected.forEach((parameter) => {
-        const arr = [];
-        column.forEach((key) => {
-          if (key === 'size') {
-            arr.push(parameter.size);
-          } else {
-            arr.push(parameter[key]);
-          }
+      if (parameterSelected.length > 0) {
+        parameterSelected.forEach((parameter) => {
+          const arr = [];
+          column.forEach((key) => {
+            if (key === 'size') {
+              arr.push(parameter.size);
+            } else {
+              arr.push(parameter[key]);
+            }
+          });
+          csvContent.push(arr);
         });
-        csvContent.push(arr);
-      });
+      } else {
+        this.parameterList.forEach((parameter) => {
+          const arr = [];
+          column.forEach((key) => {
+            if (key === 'size') {
+              arr.push(parameter.size);
+            } else {
+              arr.push(parameter[key]);
+            }
+          });
+          csvContent.push(arr);
+        });
+      }
       const csvParser = new CSVParser();
-      const content = csvParser.unparse({
+      let content = csvParser.unparse({
         fields: column,
         data: csvContent,
       });
@@ -995,14 +1009,16 @@ export default {
         fileName: `${fileName}.csv`,
         fileContent: content,
       });
-      const zip = await this.zipService.generateZip();
+      let zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, `${fileName}.zip`);
       this.setAlert({
         show: true,
         type: 'success',
-        message: 'export_parameter_list',
+        message: 'EXPORT_PARAMETER_LIST',
       });
-      return content;
+      content = [];
+      zip = [];
+      // return content;
     },
     async exportSampleData() {
       const fileName = 'sample-file';
@@ -1109,7 +1125,7 @@ export default {
       this.setAlert({
         show: true,
         type: 'success',
-        message: 'export_parameter_list',
+        message: 'SAMPLE_FILE_DOWNLOAD',
       });
       return content;
     },
