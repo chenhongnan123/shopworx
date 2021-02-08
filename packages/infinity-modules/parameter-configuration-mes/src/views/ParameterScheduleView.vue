@@ -63,7 +63,7 @@
             <v-btn
               small
               color="primary"
-              v-if="substationValue"
+              v-if="substationValue && parameterSelected.length > 0"
               outlined
               class="text-none ml-2"
               @click="exportData"
@@ -975,33 +975,19 @@ export default {
           'paid',
         ];
       }
-      if (parameterSelected.length > 0) {
-        parameterSelected.forEach((parameter) => {
-          const arr = [];
-          column.forEach((key) => {
-            if (key === 'size') {
-              arr.push(parameter.size);
-            } else {
-              arr.push(parameter[key]);
-            }
-          });
-          csvContent.push(arr);
+      parameterSelected.forEach((parameter) => {
+        const arr = [];
+        column.forEach((key) => {
+          if (key === 'size') {
+            arr.push(parameter.size);
+          } else {
+            arr.push(parameter[key]);
+          }
         });
-      } else {
-        this.parameterList.forEach((parameter) => {
-          const arr = [];
-          column.forEach((key) => {
-            if (key === 'size') {
-              arr.push(parameter.size);
-            } else {
-              arr.push(parameter[key]);
-            }
-          });
-          csvContent.push(arr);
-        });
-      }
+        csvContent.push(arr);
+      });
       const csvParser = new CSVParser();
-      let content = csvParser.unparse({
+      const content = csvParser.unparse({
         fields: column,
         data: csvContent,
       });
@@ -1009,15 +995,16 @@ export default {
         fileName: `${fileName}.csv`,
         fileContent: content,
       });
-      let zip = await this.zipService.generateZip();
+      const zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.zipService.removeFile({ fileName: `${fileName}.csv` });
       this.setAlert({
         show: true,
         type: 'success',
         message: 'EXPORT_PARAMETER_LIST',
       });
-      content = [];
-      zip = [];
+      const emptyContent = [];
+      this.parameterSelected = emptyContent;
       // return content;
     },
     async exportSampleData() {
