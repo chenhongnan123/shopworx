@@ -23,6 +23,7 @@
           class="text-none"
           @click="saveNewEntry"
           :class="'ml-2'"
+          v-if="showSaveBtn"
         >
           Save
         </v-btn>
@@ -44,6 +45,7 @@
           class="text-none"
           @click="deleteEntry"
           :class="'ml-2'"
+          v-if="showDeleteBtn"
         >
           Delete
         </v-btn>
@@ -98,6 +100,8 @@
       :id="id"
       ref="base"
       @showupdatebtnemt="visibleUpdateBtn"
+      @savebtnshow="visibleSaveBtn"
+      @deletebtnshow="visibleDeleteBtn"
     />
   </div>
 </template>
@@ -116,86 +120,73 @@ export default {
       base: '',
       tab: 0,
       showUpdateBtn: false,
+      showSaveBtn: false,
+      showDeleteBtn: false,
     };
   },
   mounted() {
     this.base = this.$refs.base;
   },
   methods: {
-    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
+    ...mapActions('masters', ['deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
     visibleUpdateBtn(value) {
       this.showUpdateBtn = value;
+    },
+    visibleSaveBtn(value) {
+      this.showSaveBtn = value;
+    },
+    visibleDeleteBtn(value) {
+      this.showDeleteBtn = value;
     },
     addNewEntry() {
       this.base.addRow();
     },
     async deleteEntry() {
-      if (this.base.gridApi.getSelectedRows()) {
-        const selectedRow = this.base.gridApi.getSelectedRows();
-        const name = this.id;
-        let deleted = '';
-        await Promise.all([
-          selectedRow.forEach((row) => {
-            const id = row._id;
-            deleted = this.deleteRecord({ id, name });
-          }),
-        ]);
-        if (deleted) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'DELETE_RECORD',
-          });
-          this.base.deleteSelectedRows();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_DELETE_RECORD',
-          });
-        }
-      }
-    },
-    async saveNewEntry() {
-      if (this.base.updateData.length > 0) {
-        this.base.updateValue();
-      } else {
-        const name = this.id;
-        const payload = [];
-        this.base.rowData.forEach((data) => {
-          if (!data.elementName) {
-            payload.push({
-              ...data,
-              assetid: 4,
+      if (await this.$root.$confirm.open(
+        'Delete record(s)',
+        'Are you you want to delete?',
+      )) {
+        if (this.base.gridApi.getSelectedRows()) {
+          const selectedRow = this.base.gridApi.getSelectedRows();
+          const name = this.id;
+          let deleted = '';
+          await Promise.all([
+            selectedRow.forEach((row) => {
+              const id = row._id;
+              deleted = this.deleteRecord({ id, name });
+            }),
+          ]);
+          if (deleted) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'DELETE_RECORD',
+            });
+            this.base.deleteSelectedRows();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_DELETE_RECORD',
             });
           }
-        });
-        const postData = await this.postBulkRecords({ payload, name });
-        if (postData) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'CREATED_RECORD',
-          });
-          this.base.fetchRecords();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_CREATING_RECORD',
-          });
+          this.base.newData = [];
+          this.showSaveBtn = false;
         }
       }
     },
-    updateValueFun() {
-      this.base.updateValue();
+    saveNewEntry() {
+      this.base.saveModifiedRecords();
     },
     onBtnExport() {
       this.base.exportData();
     },
     refreshUi() {
       this.base.fetchRecords();
+      this.base.newData = [];
+      this.base.updateData = [];
+      this.showSaveBtn = false;
     },
   },
   computed: {
