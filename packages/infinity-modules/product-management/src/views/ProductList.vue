@@ -82,7 +82,9 @@
         </template>
       </v-data-table>
       <add-product/>
-      <duplicate-product v-if="products" :products="products"/>
+      <duplicate-product v-if="products"
+      :products="products"
+      @do-empty="emptyProducts"/>
       <edit-product v-if="editProductData" :product="editProductData"/>
       <delete-product v-if="productToDelete" :productToDelete="productToDelete"/>
     </v-container>
@@ -191,6 +193,9 @@ export default {
     deleteProductDialog(item) {
       this.productToDelete = item;
       this.setDeleteDialog(true);
+      this.products = [];
+    },
+    emptyProducts() {
       this.products = [];
     },
   },

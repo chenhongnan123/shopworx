@@ -496,6 +496,7 @@ export default {
             });
             this.dialogDup = false;
             this.roadmap = {};
+            this.roadmaps = [];
             this.$refs.formduplicate.reset();
             // duplicate also the details of selected row
             const roadmapDetailsList = await this.getDetailsRecords(

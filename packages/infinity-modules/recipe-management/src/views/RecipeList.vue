@@ -64,16 +64,16 @@
           <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
-            {{ $t('displayTags.buttons.duplicateRecipe') }}
+            {{ $t('duplicateRecipe') }}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2"
             @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refreshRecipe') }}
+            {{ $t('refreshRecipe') }}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
-            {{ $t('displayTags.buttons.filtersRecipe') }}
+            {{ $t('filtersRecipe') }}
           </v-btn>
         </v-toolbar>
       </v-col>
@@ -127,6 +127,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -143,6 +147,8 @@
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
             v-model="dupRecipeName"
+            :rules="nameRules"
+            :counter="10"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -150,12 +156,14 @@
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!valid"
           @click="fnSaveDuplicateRecipe"
         >
           {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -268,7 +276,8 @@ export default {
       valid: true,
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
-        (v) => !!v || 'Name required'],
+        (v) => !!v || 'Name required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
       input: {
         linename: '',
         sublinename: '',
@@ -413,6 +422,7 @@ export default {
             this.dialogDup = false;
             this.dupRecipeName = null;
             this.recipe = {};
+            this.recipes = [];
           } else {
             this.setAlert({
               show: true,

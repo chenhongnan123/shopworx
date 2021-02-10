@@ -42,7 +42,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
-  name: 'Planning',
+  name: 'OverallList',
   components: {
     AgGridVue,
   },
@@ -68,7 +68,7 @@ export default {
           resizable: true,
         },
         {
-          headerName: this.$t('Main ID'),
+          headerName: this.$t('Main Id'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,
