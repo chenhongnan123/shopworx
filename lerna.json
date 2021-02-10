@@ -4,7 +4,10 @@
     "packages/infinity",
     "packages/infinity-modules/*",
     "packages/services",
-    "packages/ui-components"
+    "packages/ui-components",
+    "packages/dashboard-viewer",
+    "packages/origin",
+    "packages/origin-modules"
   ],
   "version": "4.2.2"
 }
