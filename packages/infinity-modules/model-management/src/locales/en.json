@@ -25,6 +25,7 @@
     "MODEL_CONFIGURE": "Please configure your ML model with atleast one model file and try again.",
     "FILE_DELETE": "Cannot remove model file. Please retry!",
     "MODEL_DELETE": "Cannot delete the model. Please retry!",
-    "STATUS_NOT_UPDATED": "Model Status is not updated!"
+    "STATUS_NOT_UPDATED": "Model Status is not updated!",
+    "FILE_SIZE_EXCEEDED": "File size with greater than 7 mb is not allowed!"
   }
 }

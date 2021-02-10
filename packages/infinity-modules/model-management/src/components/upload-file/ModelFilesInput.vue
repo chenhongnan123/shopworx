@@ -76,15 +76,24 @@ export default {
     ...mapState('auth', ['sessionId']),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'fetchModelDetails',
       'updateModelFile',
     ]),
     ...mapMutations('modelManagement', ['setFiles', 'setUploadingFiles']),
     fileAdded(file) {
-      const { files } = this;
-      files.push(file);
-      this.setFiles(files);
+      if (file.size > 7000000) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FILE_SIZE_EXCEEDED',
+        });
+      } else {
+        const { files } = this;
+        files.push(file);
+        this.setFiles(files);
+      }
     },
     fileRemoved(file) {
       const { files } = this;
