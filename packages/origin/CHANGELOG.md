@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **customer-deployment:** fixed instance reconfiguration ([3477aee](https://bitbucket.org/entrib/shopworx/commits/3477aeeb9c3e290b31e72a99c4525686e1fbaedd))
+* **customer-deployment:** show customer context only if customer selected ([78bf875](https://bitbucket.org/entrib/shopworx/commits/78bf875c5a6f4016867973010ef006dbecc5349e))
+
+
+### Features
+
+* **customer-deployment:** handle unexpected error gracefully ([cc80ac7](https://bitbucket.org/entrib/shopworx/commits/cc80ac72e1698eac16d33e1b0b351e19697e773b))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **line-mes:** use same date format to shown in all modules ([50927a2](https://bitbucket.org/entrib/shopworx/commits/50927a26f9766ea3c0a05612d687de5fe9782e22))
+* **line-mes(longrun):** chinese translation support ([ea44273](https://bitbucket.org/entrib/shopworx/commits/ea44273e81d38856e855b2f47e1440a0f14723ce))
+* **product type management:** duplicate button should display only when record is selected ([3280bfc](https://bitbucket.org/entrib/shopworx/commits/3280bfc437a50287d250e8d38c72fe55cf1f78aa))
+* **product-management:** change text on button from Update To Save ([3213ce8](https://bitbucket.org/entrib/shopworx/commits/3213ce84b8ff54eab300f0f40eea0b7b4e5f5c59))
+* **product-management:** change the text Save insted of Update on Edit Dialog ([edd1656](https://bitbucket.org/entrib/shopworx/commits/edd1656b1fe18b046812b9b8c2d8312d95887b40))
+* **product-management:** option buttons should be floating ([0442a3b](https://bitbucket.org/entrib/shopworx/commits/0442a3ba106972897c37302c1b45e5c0e9720167))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 **Note:** Version bump only for package @shopworx/product-management
