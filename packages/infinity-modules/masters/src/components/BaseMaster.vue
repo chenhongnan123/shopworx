@@ -4,8 +4,10 @@
     class="transparent"
     style="height: 100%"
   >
+    <v-progress-linear indeterminate v-show="loading"></v-progress-linear>
     <ag-grid-vue
-      v-model="rowData"
+      v-show="!loading"
+      :rowData="rowData"
       rowSelection="multiple"
       class="ag-theme-balham"
       :columnDefs="columnDefs"
@@ -16,7 +18,7 @@
       style="width: 100%; height: 400px;"
       @cellValueChanged="modifyData($event)"
       @selection-changed="onSelectionChanged"
-    ></ag-grid-vue>
+    />
   </v-card>
 </template>
 
@@ -41,21 +43,24 @@ export default {
   props: {
     assetId: {
       type: Number,
-      default: 0,
+      required: true,
     },
     id: {
       type: String,
     },
+    fetchData: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      rowData: [],
+      rowData: null,
       newData: [],
       updateData: [],
       columnDefs: [],
       filteredTags: [],
       isValid: true,
-      loading: false,
       rowsSelected: false,
       showUpdateBtn: false,
       gridApi: null,
@@ -63,11 +68,8 @@ export default {
       gridColumnApi: null,
       defaultColDef: null,
       rowClassRules: null,
+      loading: false,
     };
-  },
-  created() {
-    this.fetchRecords();
-    this.zipService = ZipService;
   },
   computed: {
     ...mapState('masters', ['records']),
@@ -77,11 +79,10 @@ export default {
     },
   },
   watch: {
-    assetId() {
-      this.fetchRecords();
-    },
-    id() {
-      this.fetchRecords();
+    fetchData(value) {
+      if (value) {
+        this.fetchRecords();
+      }
     },
     records() {
       this.setRowData();
@@ -110,6 +111,8 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
+    this.fetchRecords();
+    this.zipService = ZipService;
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
@@ -117,10 +120,12 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
       this.loading = true;
+      this.$emit('savebtnshow', false);
       await this.getRecords({
         elementName: this.id,
         assetId: this.assetId,
       });
+      this.$emit('on-fetch');
       this.loading = false;
     },
     setRowData() {
@@ -140,6 +145,7 @@ export default {
     getNewRowItem() {
       return this.tags.reduce((acc, tag) => {
         acc[tag.tagName] = undefined;
+        acc.edited = true;
         return acc;
       }, {});
     },
@@ -152,6 +158,8 @@ export default {
         add: [this.getNewRowItem()],
         addIndex: 0,
       });
+
+      this.rowData.unshift(this.getNewRowItem());
 
       if (this.newData.length) {
         this.newData.forEach((data) => {
@@ -293,6 +301,11 @@ export default {
         });
       }
       this.$emit('savebtnshow', false);
+      this.updateData = [];
+    },
+    refreshData() {
+      this.fetchRecords();
+      this.newData = [];
       this.updateData = [];
     },
     async exportData() {

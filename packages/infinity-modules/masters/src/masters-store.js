@@ -5,7 +5,7 @@ export default ({
   namespaced: true,
   state: {
     assets: [],
-    records: [],
+    records: null,
     elements: [],
   },
   mutations: {
@@ -91,11 +91,8 @@ export default ({
     getRecords: async ({ commit, dispatch }, {
       elementName,
       assetId,
-      // fromDate,
-      // toDate,
-      // pageSize,
-      // pageNumber,
     }) => {
+      commit('setRecords', null);
       let payload = {
         elementName,
         query: `?query=assetid==${assetId}`,
@@ -103,9 +100,6 @@ export default ({
       if (!assetId) {
         payload = {
           elementName,
-          // fromDate,
-          // toDate,
-          // query: `?query=pagenumber==${pageNumber}&pagesize=${pageSize}`,
         };
       }
       const records = await dispatch(

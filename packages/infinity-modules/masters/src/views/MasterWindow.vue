@@ -82,26 +82,17 @@
         class="text-none"
         v-for="asset in getAssets(id)"
       >
-        <span v-text="asset.assetDescription"></span>
-      </v-tab>
-      <v-tab-item
-        :key="asset.id"
-        v-for="asset in getAssets(id)"
-      >
-        <base-master
-          :assetId="asset.id"
-          :id="id"
-          ref="base"
-        />
-      </v-tab-item>
+      <span v-text="asset.assetDescription"></span>
+    </v-tab>
     </v-tabs>
-    <base-master
-      v-else
+     <base-master
+      :assetId="showTabs(id) ? getAssets(id)[tab].id : 0"
       :id="id"
       ref="base"
-      @showupdatebtnemt="visibleUpdateBtn"
+      :fetchData="fetchData"
       @savebtnshow="visibleSaveBtn"
       @deletebtnshow="visibleDeleteBtn"
+      @on-fetch="fetchData = false"
     />
   </div>
 </template>
@@ -122,10 +113,20 @@ export default {
       showUpdateBtn: false,
       showSaveBtn: false,
       showDeleteBtn: false,
+      fetchData: false,
     };
   },
   mounted() {
     this.base = this.$refs.base;
+  },
+  watch: {
+    id() {
+      this.tab = 0;
+      this.fetchData = true;
+    },
+    tab() {
+      this.fetchData = true;
+    },
   },
   methods: {
     ...mapActions('masters', ['deleteRecord']),
@@ -183,9 +184,7 @@ export default {
       this.base.exportData();
     },
     refreshUi() {
-      this.base.fetchRecords();
-      this.base.newData = [];
-      this.base.updateData = [];
+      this.base.refreshData();
       this.showSaveBtn = false;
     },
   },
