@@ -375,7 +375,7 @@ export default {
           field: tag.tagName,
           hide: true,
         }));
-        if (this.id.includes('real_') || this.id.includes('process_')) {
+        if (this.id.includes('process_') || this.id.includes('production_')) {
           this.columnDefs.push({
             headerName: 'Created Timestamp',
             field: 'createdTimestamp',

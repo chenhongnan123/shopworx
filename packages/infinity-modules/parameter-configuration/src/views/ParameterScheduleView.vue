@@ -593,7 +593,7 @@ export default {
         this.savingImport = false;
         await this.getParameterListRecords(this.getQuery());
         let tagList = [];
-        await this.getSubStationIdElement(`process_${this.substationValue}`);
+        await this.getSubStationIdElement(`production_${this.substationValue}`);
         // add by default timestamp
         tagList.push({
           assetId: 4,
@@ -811,7 +811,7 @@ export default {
         await this.updateTagStatus(payloadData);
         // add tags to real parameters
         tagList = [];
-        await this.getSubStationIdElement(`real_${this.substationValue}`);
+        await this.getSubStationIdElement(`process_${this.substationValue}`);
         // add by default timestamp
         tagList.push({
           assetId: 4,
@@ -1198,7 +1198,7 @@ export default {
       //   (parameter) => this.deleteParameter(parameter.id),
       // ));
       const results = await this.deleteParameter(this.substationValue);
-      await this.getSubStationIdElement(`real_${this.substationValue}`);
+      await this.getSubStationIdElement(`process_${this.substationValue}`);
       const listT = this.subStationElementDeatils;
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
       const payloadData = [];
@@ -1210,7 +1210,7 @@ export default {
         });
       });
       await this.updateTagStatus(payloadData);
-      await this.getSubStationIdElement(`process_${this.substationValue}`);
+      await this.getSubStationIdElement(`production_${this.substationValue}`);
       const listProcess = this.subStationElementDeatils;
       const FilteredTagsProcess = listProcess.tags
         .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
