@@ -44,75 +44,17 @@
             :items="scraps"
             disable-pagination
             v-if="scraps.length"
+            class="mb-2"
           >
             <!-- eslint-disable-next-line -->
-            <template #item.scrapweight="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { scrapweight: parseFloat(item.scrapweight, 10) },
-                })"
-                :return-value.sync="item.scrapweight"
-              >
-                {{ item.scrapweight }}
-                <template #input>
-                  <v-text-field
-                    v-model="item.scrapweight"
-                    type="number"
-                    label="Weight"
-                    suffix="kg"
-                    single-line
-                  ></v-text-field>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <!-- eslint-disable-next-line -->
-            <template #item.reasonname="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { reasonname: item.reasonname },
-                })"
-                :return-value.sync="item.reasonname"
-              >
-                {{ item.reasonname }}
-                <template #input>
-                  <v-autocomplete
-                    single-line
-                    label="Reason"
-                    item-text="reasonname"
-                    item-value="reasonname"
-                    :items="scrapReasons"
-                    v-model="item.reasonname"
-                  ></v-autocomplete>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <!-- eslint-disable-next-line -->
-            <template #item.remark="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { remark: item.remark },
-                })"
-                :return-value.sync="item.remark"
-              >
-                {{ item.remark }}
-                <template #input>
-                  <v-textarea
-                    v-model="item.remark"
-                    label="Remark"
-                    rows="2"
-                    single-line
-                  ></v-textarea>
-                </template>
-              </v-edit-dialog>
+            <template #item.action="{ item, index }">
+              <edit-scrap
+                :scrap="item"
+                :updating="updating"
+                :updated="updated"
+                :scrapReasons="scrapReasons"
+                @on-update="updateScrap"
+              />
             </template>
           </v-data-table>
           <validation-observer
@@ -130,6 +72,7 @@
                     <v-text-field
                       dense
                       outlined
+                      class="mt-1"
                       type="number"
                       label="Weight"
                       suffix="kg"
@@ -149,6 +92,7 @@
                     <v-autocomplete
                       outlined
                       dense
+                      class="mt-1"
                       return-object
                       label="Reason"
                       :disabled="saving"
@@ -215,6 +159,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import EditScrap from './EditScrap.vue';
 
 export default {
   name: 'AssignScrap',
@@ -224,11 +169,16 @@ export default {
       required: true,
     },
   },
+  components: {
+    EditScrap,
+  },
   data() {
     return {
       saving: false,
       loading: false,
       dialog: false,
+      updating: false,
+      updated: false,
       scraps: [],
       newScrap: {
         weight: '',
@@ -240,6 +190,7 @@ export default {
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
         { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: '', value: 'action', sortable: false },
       ],
     };
   },
@@ -326,13 +277,12 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateScrap(item) {
+      this.updating = true;
+      this.updated = false;
       const { id } = item;
       let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasWeightProperty = Object.prototype.hasOwnProperty.call(payload, 'scrapweight');
-      if (hasReasonNameProperty) {
-        payload = this.scrapReasons.find((r) => r.reasonname === payload.reasonname);
-      }
+      const reason = this.scrapReasons.find((r) => r.reasonname === payload.reasonname);
+      payload = { ...payload, reason };
       const updated = await this.updateRecordById({
         elementName: 'scrap',
         id,
@@ -344,22 +294,24 @@ export default {
         this.$set(this.scraps, updatedIndex, {
           ...this.scraps[updatedIndex],
           modifiedtimestamp: 'now',
+          ...payload,
         });
         this.setAlert({
           show: true,
           type: 'success',
           message: 'SCRAP_UPDATE',
         });
-        if (hasWeightProperty) {
-          await this.reFetchProductionList();
-        }
+        await this.reFetchProductionList();
+        this.updated = true;
       } else {
+        this.updated = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'SCRAP_UPDATE',
         });
       }
+      this.updating = false;
     },
     close() {
       this.dialog = false;

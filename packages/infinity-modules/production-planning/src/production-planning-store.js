@@ -327,7 +327,7 @@ export default ({
       commit('setError', false);
       const completedOrAbortedPlans = `(actualstart<${max}%26%26actualend>${min})`;
       const inProgressPlans = `(status=="inProgress"%26%26actualstart<${max})`;
-      const newPlans = `(status=="notStarted"%26%26scheduledstart>${min}%26%26scheduledend<${max})`;
+      const newPlans = `(status=="notStarted"%26%26scheduledstart>${min}%26%26scheduledstart<${max})`;
       const or = '%7C%7C';
       const data = await dispatch(
         'element/getRecordsWithCount',

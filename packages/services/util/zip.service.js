@@ -10,6 +10,9 @@ class ZipService {
     this.instance.file(fileName, fileContent);
   }
 
+  removeFile({ fileName }) {
+    this.instance.remove(fileName);
+  }
 
   addFolder({ folderName }) {
     this.instance.folder(folderName);

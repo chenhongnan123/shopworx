@@ -63,7 +63,7 @@ export default {
           resizable: true,
         },
         {
-          headerName: this.$t('Main ID'),
+          headerName: this.$t('Main Id'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,

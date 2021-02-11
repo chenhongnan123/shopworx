@@ -76,6 +76,7 @@
               v-if="!(substationValue && parameterSelected.length > 0)"
               outlined
               class="text-none ml-2"
+              :disabled="sampleDataBtn"
               @click="exportSampleData"
             >
               Export Sample File
@@ -433,8 +434,12 @@ export default {
         {
           name: 'MELSEC',
         },
+        {
+          name: 'ABPLC',
+        },
       ],
       selectedProtocol: null,
+      sampleDataBtn: true,
       parameterSelected: [],
       tableHeight: window.innerHeight,
       headers: [],
@@ -470,6 +475,20 @@ export default {
         { text: 'Boolean Bit', value: 'bitnumber', width: 120 },
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
+      ],
+      headerAbPlc: [
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Line', value: 'line', width: 120 },
+        { text: 'subline', value: 'subline', width: 120 },
+        { text: 'station', value: 'station', width: 120 },
+        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Category', value: 'parametercategory' },
+        { text: 'Data type', value: 'datatype' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'PLC Parameter', value: 'plc_parameter', width: 140 },
+        { text: 'Prefix', value: 'prefix', width: 120 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -564,8 +583,11 @@ export default {
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
         this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
-      } else {
+      } else if (val === 'MELSEC') {
         this.headers = this.headersMelsec;
+        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+      } else {
+        this.headers = this.headerAbPlc;
         this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
@@ -604,6 +626,11 @@ export default {
     ]),
     onSelectProtocol(value) {
       this.setProtocol(value);
+      if (this.protocol) {
+        this.sampleDataBtn = false;
+      } else {
+        this.sampleDataBtn = true;
+      }
     },
     async saveTableParameter(item, type) {
       const value = item[type];
@@ -899,6 +926,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -914,10 +942,24 @@ export default {
           'plcaddress',
           'paid',
         ];
+      } else if (this.protocol === 'ABPLC') {
+        column = [
+          'plc_parameter',
+          'name',
+          'description',
+          'protocol',
+          'datatype',
+          'size',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'prefix',
+        ];
       } else {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -955,12 +997,15 @@ export default {
       });
       const zip = await this.zipService.generateZip();
       this.zipService.downloadFile(zip, `${fileName}.zip`);
+      this.zipService.removeFile({ fileName: `${fileName}.csv` });
       this.setAlert({
         show: true,
         type: 'success',
-        message: 'export_parameter_list',
+        message: 'EXPORT_PARAMETER_LIST',
       });
-      return content;
+      const emptyContent = [];
+      this.parameterSelected = emptyContent;
+      // return content;
     },
     async exportSampleData() {
       const fileName = 'sample-file';
@@ -969,6 +1014,7 @@ export default {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -984,10 +1030,24 @@ export default {
           'plcaddress',
           'paid',
         ];
+      } else if (this.protocol === 'ABPLC') {
+        column = [
+          'plc_parameter',
+          'name',
+          'description',
+          'size',
+          'protocol',
+          'datatype',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'prefix',
+        ];
       } else {
         column = [
           'name',
           'description',
+          'chinesedescription',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1006,8 +1066,8 @@ export default {
       const csvContent = [];
       const arr = [
         'parametername',
-        '2',
-        '2',
+        'description-text',
+        '描述文字',
         12,
         '6',
         '6',
@@ -1021,7 +1081,23 @@ export default {
         2,
         2,
       ];
-      csvContent.push(arr);
+      const arr2 = [
+        'Shopworx.Handshake.PLCOnline',
+        'PLCOnline',
+        'description(optional)',
+        '',
+        'ethernet',
+        12,
+        100,
+        '192.168.2.10',
+        1,
+        'station1',
+      ];
+      if (this.protocol === 'ABPLC') {
+        csvContent.push(arr2);
+      } else {
+        csvContent.push(arr);
+      }
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,
@@ -1036,7 +1112,7 @@ export default {
       this.setAlert({
         show: true,
         type: 'success',
-        message: 'export_parameter_list',
+        message: 'SAMPLE_FILE_DOWNLOAD',
       });
       return content;
     },
@@ -1230,7 +1306,7 @@ export default {
           this.setAlert({
             show: true,
             type: 'success',
-            message: 'import_parameter_list',
+            message: 'IMPORT_PARAMETER_LIST',
           });
         }
         document.getElementById('uploadFiles').value = null;

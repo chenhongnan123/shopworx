@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **line-mes(longrun):** chinese translation support ([ea44273](https://bitbucket.org/entrib/shopworx/commits/ea44273e81d38856e855b2f47e1440a0f14723ce))
+
+
+### Features
+
+* **trecibility app:** search records from componentID or batchID ([52f1ca9](https://bitbucket.org/entrib/shopworx/commits/52f1ca99ebb5d8430a980bac30b51b3ec01808f5))
+
+
+
+
+
 ## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
 
 **Note:** Version bump only for package @shopworx/traceability-app

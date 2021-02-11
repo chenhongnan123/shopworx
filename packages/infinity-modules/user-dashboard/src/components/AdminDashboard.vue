@@ -5,10 +5,10 @@
         <pending-invites />
       </v-col>
       <v-col cols="12" lg="6" xl="6">
-        <registered-tvs />
+        <user-roles />
       </v-col>
       <v-col cols="12" lg="6" xl="6">
-        <user-roles />
+        <registered-tvs />
       </v-col>
       <v-col cols="12" lg="6" xl="6">
         <business-holidays />

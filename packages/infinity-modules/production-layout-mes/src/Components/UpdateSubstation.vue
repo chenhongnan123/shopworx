@@ -101,6 +101,7 @@ export default {
   created() {
     this.newSubstation = { ...this.substation };
     this.disabled = true;
+    this.btnDisable = false;
   },
   computed: {
     ...mapState('productionLayoutMes', ['subStations']),
@@ -153,6 +154,7 @@ export default {
            === this.newSubstation.initialsubstation === true);
         if (initialSubstationFlag.length > 0) {
           this.newSubstation.initialsubstation = '';
+          this.btnDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -185,7 +187,7 @@ export default {
           .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
         if (finalSubstationFlag.length > 0) {
           this.newSubstation.finalsubstation = '';
-          // this.btnDisable = true;
+          this.btnDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -275,6 +277,8 @@ export default {
     async resetDialog() {
       this.$refs.form.resetValidation();
       this.sublineNew = { ...this.subline };
+      this.newSubstation = { ...this.substation };
+      this.btnDisable = false;
     },
   },
   watch: {

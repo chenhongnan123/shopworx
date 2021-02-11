@@ -164,6 +164,7 @@ export default {
             this.dialog = false;
             this.product = {};
             this.$refs.form.reset();
+            this.$emit('do-empty');
           } else {
             this.setAlert({
               show: true,
