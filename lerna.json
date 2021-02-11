@@ -1,13 +1,14 @@
 {
   "packages": [
     "packages/assets",
+    "packages/dashboard-viewer",
+    "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
-    "packages/services",
-    "packages/ui-components",
-    "packages/dashboard-viewer",
     "packages/origin",
-    "packages/origin-modules"
+    "packages/origin-modules/*",
+    "packages/services",
+    "packages/ui-components"
   ],
   "version": "4.2.3"
 }
