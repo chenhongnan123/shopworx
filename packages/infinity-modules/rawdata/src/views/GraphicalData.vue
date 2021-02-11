@@ -30,7 +30,7 @@
           </template>
         </v-autocomplete>
       </v-responsive>
-      <v-responsive :max-width="240">
+      <v-responsive :max-width="280">
         <v-autocomplete
           :items="tags"
           class="ml-2"
@@ -276,7 +276,7 @@ export default {
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
-      if (this.id.includes('real_') || this.id.includes('process_')) {
+      if (this.id.includes('process_') || this.id.includes('production_')) {
         const element = this.id.split('_');
         await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
         this.rowData = await this.getRecordsByTagData({
