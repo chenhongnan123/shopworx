@@ -4,6 +4,7 @@ class CSVParser {
   parse(file, options = {
     header: true,
     skipEmptyLines: true,
+    encoding: 'UTF-8',
   }) {
     return new Promise((resolve, reject) => {
       const opt = Object.assign(options, {

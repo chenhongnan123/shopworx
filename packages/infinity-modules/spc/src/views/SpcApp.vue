@@ -105,6 +105,7 @@ import {
 } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
+/* eslint-disable */
 import chunk from 'lodash.chunk';
 /* eslint-disable */
 import sortBy from 'lodash.sortby';

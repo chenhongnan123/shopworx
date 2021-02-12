@@ -50,7 +50,7 @@ import StructureBomDetails from './StructureBomDetails.vue';
 import ConfigurationBomDetailsOld from './ConfigurationBomDetailsOld.vue';
 
 export default {
-  name: 'BomDetails',
+  name: 'newBomDetails',
   components: {
     StructureBomDetails,
     ConfigurationBomDetailsOld,

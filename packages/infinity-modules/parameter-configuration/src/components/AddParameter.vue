@@ -359,7 +359,7 @@ export default {
         || Number(parameterObj.parametercategory.id) === 17
         || Number(parameterObj.parametercategory.id) === 18
         || Number(parameterObj.parametercategory.id) === 2) {
-          await this.getSubStationIdElement(`process_${this.substationValue}`);
+          await this.getSubStationIdElement(`production_${this.substationValue}`);
           let dataTypeName = '';
           if (parameterObj.datatype.name === 'String') {
             dataTypeName = 'String';
@@ -404,7 +404,7 @@ export default {
         || Number(parameterObj.parametercategory.id) === 38
         || Number(parameterObj.parametercategory.id) === 11
         || Number(parameterObj.parametercategory.id) === 2) {
-          await this.getSubStationIdElement(`real_${this.substationValue}`);
+          await this.getSubStationIdElement(`process_${this.substationValue}`);
           let dataTypeName = '';
           if (parameterObj.datatype.name === 'String') {
             dataTypeName = 'String';

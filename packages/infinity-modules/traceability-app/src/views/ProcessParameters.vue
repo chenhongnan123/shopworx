@@ -41,7 +41,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
-  name: 'Planning',
+  name: 'ProcessParameters',
   components: {
     AgGridVue,
   },
@@ -261,7 +261,7 @@ export default {
             resizable: true,
           },
           {
-            headerName: this.$t('Main ID'),
+            headerName: this.$t('Main Id'),
             field: 'mainid',
             rowGroup: true,
             resizable: true,
@@ -380,7 +380,7 @@ export default {
                   .filter((p) => p.field === element.tagName);
                 if (data.length === 0) {
                   const matchParam = paramRecord
-                    .find((m) => m.parametername === element.tagName);
+                    .find((m) => m.name === element.tagName);
                   this.headerForCSV.push(`${s.name}_${element.tagName}`);
                   if (this.language === 'zhHans') {
                     this.processParametersheader.push(
@@ -391,7 +391,6 @@ export default {
                       },
                     );
                   } else {
-                    console.log(matchParam.description);
                     this.processParametersheader.push(
                       {
                         headerName: `${s.name}_${matchParam.description}`,

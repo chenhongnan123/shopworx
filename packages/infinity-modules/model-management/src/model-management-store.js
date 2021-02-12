@@ -315,6 +315,7 @@ export default ({
           }
           const eventData = {
             key: model.id,
+            lastModified: model.lastModified,
             status: model.status,
           };
           commit('setLastStatusUpdate', eventData);
@@ -861,6 +862,7 @@ export default ({
         if (created && created.id) {
           const eventData = {
             key: modelId,
+            lastModified: new Date(),
             status,
           };
           commit('setLastStatusUpdate', eventData);

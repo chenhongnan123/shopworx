@@ -75,16 +75,16 @@ export default {
         .filter((s) => s.sublineid === this.subline.id);
       const matchSubStation = getSubStation.forEach(async (item) => {
         const element = await this.getSubStationIdElement(item.id);
-        const getRealElement = await this.getSubStationIdElement(`real_${item.id}`);
-        const getProcessElement = await this.getSubStationIdElement(`process_${item.id}`);
+        const getRealElement = await this.getSubStationIdElement(`process_${item.id}`);
+        const getProcessElement = await this.getSubStationIdElement(`production_${item.id}`);
         const process = {
           status: 'INACTIVE',
-          // elementName: `process_${this.substation.id}`,
+          // elementName: `production_${this.substation.id}`,
           elementId: getProcessElement.id,
         };
         const real = {
           status: 'INACTIVE',
-          // elementName: `real_${this.substation.id}`,
+          // elementName: `process_${this.substation.id}`,
           elementId: getRealElement.id,
         };
         const realPInactive = await this.inactiveRealElement(real);
