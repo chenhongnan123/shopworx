@@ -56,9 +56,9 @@
         :disabled="btnFindisable"
         ></v-switch>
         <v-checkbox v-model="checked" class="mx-2"
-         label="Record process parameters"></v-checkbox>
+         label="Record Production parameters"></v-checkbox>
         <v-checkbox v-model="checkedReal" class="mx-2"
-         label="Record Real parameters"></v-checkbox>
+         label="Record Process parameters"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -207,8 +207,8 @@ export default {
                 siteId: 197,
                 categoryType: 'ASSET',
                 collectionName: 'process',
-                elementName: `real_${substationid}`,
-                elementDescription: `Real_${substationid}`,
+                elementName: `process_${substationid}`,
+                elementDescription: `Process_${substationid}`,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',
@@ -241,8 +241,8 @@ export default {
                 siteId: 197,
                 categoryType: 'ASSET',
                 collectionName: 'production',
-                elementName: `process_${substationid}`,
-                elementDescription: `Process_${substationid}`,
+                elementName: `production_${substationid}`,
+                elementDescription: `Production_${substationid}`,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',

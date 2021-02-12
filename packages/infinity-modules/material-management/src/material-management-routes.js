@@ -13,7 +13,7 @@ const routes = [
       },
       {
         path: ':id/:name/:lineid',
-        name: 'bom-details',
+        name: 'new-bom-details',
         component: () => import(/* webpackChunkName: "material-management" */ './views/NewBomDetails.vue'),
         props: true,
       },

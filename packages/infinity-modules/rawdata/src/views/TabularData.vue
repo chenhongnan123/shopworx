@@ -216,15 +216,7 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     setDatefunction() {
-      if (this.fromdate && this.todate) {
-        this.setDateRange([this.fromdate, this.todate]);
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'SELECT_BOTH_DATES',
-        });
-      }
+      this.setDateRange([this.fromdate, this.todate]);
     },
     onStateChangeVisible() {
       const colState = this.gridColumnApi.getColumnState();
@@ -257,8 +249,16 @@ export default {
       });
     },
     async btnRefresh() {
-      this.flagForPageNumber = false;
-      await this.setRowData();
+      if (this.fromdate && this.todate) {
+        this.flagForPageNumber = false;
+        this.setRowData();
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SELECT_BOTH_DATES',
+        });
+      }
     },
     onExport(e) {
       this.exportReport(e);
@@ -294,7 +294,7 @@ export default {
       this.loading = true;
       const today = new Date(this.dateRange[1]).getTime();
       const yesterday = new Date(this.dateRange[0]).getTime();
-      if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === false) {
+      if (this.parametersChanged === false) {
         const element = this.id.split('_');
         await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
         const changeTags = this.tags;
@@ -323,7 +323,7 @@ export default {
             tags: this.paramList,
           },
         });
-      } else if ((this.id.includes('real_') || this.id.includes('process_')) && this.parametersChanged === true) {
+      } else if (this.parametersChanged === true) {
         const colState = this.gridColumnApi.getColumnState();
         const tagList = [];
         colState.forEach((f) => {
@@ -375,7 +375,7 @@ export default {
           field: tag.tagName,
           hide: true,
         }));
-        if (this.id.includes('real_') || this.id.includes('process_')) {
+        if (this.id.includes('process_') || this.id.includes('production_')) {
           this.columnDefs.push({
             headerName: 'Created Timestamp',
             field: 'createdTimestamp',

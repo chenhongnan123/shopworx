@@ -437,7 +437,7 @@ export default {
     handleClick(value) {
       this.$router.push(
         {
-          name: 'bom-details',
+          name: 'new-bom-details',
           params: {
             id: value.id,
             name: value.name,
