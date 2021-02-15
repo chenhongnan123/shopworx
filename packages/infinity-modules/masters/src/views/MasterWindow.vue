@@ -27,17 +27,6 @@
         >
           Save
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="success"
-          class="text-none"
-          @click="updateValueFun"
-          :class="'ml-2'"
-          v-if="showUpdateBtn"
-        >
-          Update
-        </v-btn> -->
         <v-btn
           small
           outlined
@@ -92,7 +81,7 @@
       :fetchData="fetchData"
       @savebtnshow="visibleSaveBtn"
       @deletebtnshow="visibleDeleteBtn"
-      @on-fetch="fetchData = false"
+      @on-fetch="fetchedData"
     />
   </div>
 </template>
@@ -122,15 +111,23 @@ export default {
   watch: {
     id() {
       this.tab = 0;
-      this.fetchData = true;
+      this.fetchingData();
     },
     tab() {
-      this.fetchData = true;
+      this.fetchingData();
     },
   },
   methods: {
     ...mapActions('masters', ['deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    fetchingData() {
+      this.fetchData = true;
+      this.$emit('fetching', true);
+    },
+    fetchedData() {
+      this.fetchData = false;
+      this.$emit('fetching', false);
+    },
     visibleUpdateBtn(value) {
       this.showUpdateBtn = value;
     },
@@ -154,6 +151,7 @@ export default {
           let deleted = '';
           await Promise.all([
             selectedRow.forEach((row) => {
+              // eslint-disable-next-line
               const id = row._id;
               deleted = this.deleteRecord({ id, name });
             }),
