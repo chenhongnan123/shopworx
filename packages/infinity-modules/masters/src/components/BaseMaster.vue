@@ -5,6 +5,7 @@
     style="height: 100%"
   >
     <v-progress-linear indeterminate v-show="loading"></v-progress-linear>
+
     <ag-grid-vue
       v-show="!loading"
       :rowData="rowData"
@@ -15,6 +16,7 @@
       :defaultColDef="defaultColDef"
       :rowClassRules="rowClassRules"
       :suppressRowClickSelection="true"
+      :suppressDragLeaveHidesColumns="true"
       style="width: 100%; height: 400px;"
       @cellValueChanged="modifyData($event)"
       @selection-changed="onSelectionChanged"
@@ -23,6 +25,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
   mapActions,
   mapGetters,
