@@ -52,14 +52,17 @@
         fixed-header
         :height="tableHeight - 168"
         >
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.productname="{ item }">
           <span @click="handleClick(item)"><a>{{ item.productname }}</a></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.editedtime="{ item }">
           <span v-if="item.editedtime">
             {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
           <v-row>
                 <v-btn

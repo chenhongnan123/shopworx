@@ -483,6 +483,7 @@ export default {
     },
     async fnUpdateNgCode(item) {
       this.updateDialog = true;
+      // eslint-disable-next-line
       this.updateNgCodeId = item._id;
       this.newNgCode.selectedLinenew = item.linename;
       this.newNgCode.sublinename = item.sublinename;

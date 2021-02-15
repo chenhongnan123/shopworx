@@ -33,6 +33,7 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
+/* eslint-disable */
 import spc from './SpcApp';
 import configuration from './Configuration';
 

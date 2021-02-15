@@ -97,6 +97,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
   mapActions,
   mapState,

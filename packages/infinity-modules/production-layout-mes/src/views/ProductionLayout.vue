@@ -172,6 +172,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapActions, mapState, mapMutations } from 'vuex';
 import socketioclient from 'socket.io-client';
 import AddSubline from '../Components/AddSubline.vue';
