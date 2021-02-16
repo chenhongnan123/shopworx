@@ -75,6 +75,10 @@ export default {
           icon: 'mdi-database-export-outline',
           title: 'customerData',
           comingSoon: true,
+        }, {
+          icon: 'mdi-rocket-launch-outline',
+          title: 'logManagement',
+          comingSoon: false,
         }],
       }, {
         title: 'industries',
