@@ -25,6 +25,7 @@ export default {
       icon: 'mdi-wifi-strength-alert-outline',
       text: 'Cannot connect to server',
       color: 'error',
+      timeout: null,
     };
   },
   computed: {
@@ -47,15 +48,18 @@ export default {
         this.text = 'Cannot connect to server';
         this.color = 'error';
       }
-      setTimeout(() => {
+      this.timeout = setTimeout(() => {
         this.getConnectionStatus();
       }, 3000);
     },
   },
   created() {
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.getConnectionStatus();
     }, 3000);
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeout);
   },
 };
 </script>
