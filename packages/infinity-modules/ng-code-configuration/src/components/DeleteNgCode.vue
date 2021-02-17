@@ -61,6 +61,7 @@ export default {
     ...mapActions('ngCodeConfiguration', ['deleteNgCode']),
     async btnDeleteNgCodeConfig(item) {
       this.itemForDelete = item;
+      // eslint-disable-next-line
       const deleted = await this.deleteNgCode(this.itemForDelete._id);
       if (deleted) {
         this.setAlert({

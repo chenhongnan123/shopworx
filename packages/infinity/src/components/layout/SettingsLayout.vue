@@ -12,6 +12,7 @@
           <perfect-scrollbar>
             <v-list
               shaped
+              :disabled="disableList"
               class="pa-0 transparent"
               style="max-height: calc(100vh - 104px)"
             >
@@ -129,6 +130,10 @@ export default {
     windowRouteName: {
       type: String,
       required: true,
+    },
+    disableList: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

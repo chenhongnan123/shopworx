@@ -1,5 +1,5 @@
 import { set } from '@shopworx/services/util/store.helper';
-
+/* eslint-disable */
 export default ({
   namespaced: true,
   state: {

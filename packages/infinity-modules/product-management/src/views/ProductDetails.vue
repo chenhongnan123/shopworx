@@ -105,7 +105,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
-
+/* eslint-disable */
 export default {
   name: 'ProductDetails',
   data() {

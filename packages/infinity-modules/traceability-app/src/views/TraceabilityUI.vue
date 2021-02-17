@@ -141,6 +141,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import { mapState, mapMutations, mapActions } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
