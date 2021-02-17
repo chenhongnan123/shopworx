@@ -212,6 +212,7 @@ export default ({
         thisDate,
         thisShift,
         shiftAvailabletime,
+        currentDate,
         currentShift,
       } = state;
       const date = parseInt(thisDate.replace(/-/g, ''), 10);
@@ -230,12 +231,12 @@ export default ({
       if (data) {
         let { machines } = JSON.parse(data);
         let workingTime = 0;
-        if (currentShift !== thisShift) {
+        if (currentDate === date && currentShift === thisShift) {
+          workingTime = await dispatch('getAvailableTime');
+        } else {
           workingTime = shiftAvailabletime
             .find((s) => s.displayshift === thisShift)
             .availabletimeinms;
-        } else {
-          workingTime = await dispatch('getAvailableTime');
         }
         machines = machines.map((m) => {
           const a = (m.runtime / workingTime) * 100;
