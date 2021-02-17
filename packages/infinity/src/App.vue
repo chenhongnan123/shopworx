@@ -42,8 +42,13 @@ export default {
         this.setIsSessionValid(false);
       }
       return res;
-    }, () => {
-      this.$router.push({ name: '500' });
+    }, (error) => {
+      if (error.response.config.url === '/server/servertime') {
+        this.setIsConnected(false);
+      } else {
+        this.$router.push({ name: '500' });
+      }
+      return Promise.reject(error);
     });
   },
   watch: {
@@ -57,6 +62,7 @@ export default {
     ...mapMutations('helper', [
       'setIsDark',
       'setIsSessionValid',
+      'setIsConnected',
     ]),
   },
 };

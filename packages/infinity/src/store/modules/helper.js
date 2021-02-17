@@ -1,3 +1,4 @@
+import AuthService from '@shopworx/services/api/auth.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -35,6 +36,7 @@ export default ({
     insightsDrawer: false,
     extendedHeader: false,
     infinityLoading: false,
+    isConnected: true,
   },
   mutations: {
     setAlert: set('alert'),
@@ -45,5 +47,19 @@ export default ({
     setInfinityLoading: toggle('infinityLoading'),
     setInsightsDrawer: set('insightsDrawer'),
     toggleInsightsDrawer: toggle('insightsDrawer'),
+    setIsConnected: set('isConnected'),
+  },
+  actions: {
+    getServerTime: async () => {
+      try {
+        const { data } = await AuthService.getServerTime();
+        if (data && data.results) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
   },
 });

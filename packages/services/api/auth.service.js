@@ -21,6 +21,10 @@ class AuthService {
     return this.request.post('/server/users/resetuserpassword', data);
   }
 
+  getServerTime() {
+    return this.request.get('/server/servertime');
+  }
+
   logout() {
     return this.request.get('/server/logout');
   }
