@@ -220,25 +220,25 @@ export default {
       return ((this.thisShiftA - this.previousShiftA) / this.previousShiftA) * 100;
     },
     aDiffText() {
-      return `${this.roundOff(this.aDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.aDiff)).toFixed(2)}%`;
     },
     pDiff() {
       return ((this.thisShiftP - this.previousShiftP) / this.previousShiftP) * 100;
     },
     pDiffText() {
-      return `${this.roundOff(this.pDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.pDiff)).toFixed(2)}%`;
     },
     qDiff() {
       return ((this.thisShiftQ - this.previousShiftQ) / this.previousShiftQ) * 100;
     },
     qDiffText() {
-      return `${this.roundOff(this.qDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.qDiff)).toFixed(2)}%`;
     },
     oeeDiff() {
       return ((this.thisShiftOee - this.previousShiftOee) / this.previousShiftOee) * 100;
     },
     oeeDiffText() {
-      return `${this.roundOff(this.oeeDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.oeeDiff)).toFixed(2)}%`;
     },
   },
   methods: {
