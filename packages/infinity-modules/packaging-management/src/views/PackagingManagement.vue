@@ -348,7 +348,6 @@ export default {
           });
         }
         this.loading = false;
-        console.log(result, 'result');
       } else {
         this.setAlert({
           show: true,
@@ -379,7 +378,6 @@ export default {
             this.isPrintAble = false;
           }
         }
-        console.log(this.packagerecord, 'this.packagerecord');
       }
     },
     initSoket() {
@@ -389,12 +387,9 @@ export default {
         console.log('socket connected successfully');
       });
       socket.on('update_package', async (data) => {
-        console.log(data, 'data');
         if (data.mainid === this.mainid) {
           if (Number(data.status) === 3) {
             const result = await this.getPackageLabelRecord();
-            console.log(result, 'getPackageLabelRecord');
-            console.log(this.packagerecord, 'this.packagerecord');
             if (result.length > 0) {
               const packageLabelRecord = result
                 .filter((item) => item.barcode === this.packagerecord.barcode);
@@ -434,7 +429,6 @@ export default {
           status: 0,
           ngcode: 0,
         })).reverse();
-        console.log(substationList, 'substationList');
         substationList.forEach(async (substation) => {
           const checkInfo = await this.getCheckout(`?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
           + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1');
@@ -442,24 +436,15 @@ export default {
             substation.status = checkInfo[0].substationresult;
             substation.ngcode = checkInfo[0].checkoutngcode;
           }
-          console.log(checkInfo, 'checkInfo');
         });
       }
       this.stationinfolist = substationList;
-      console.log(222);
-      console.log(substationList, mainid, 'checkoutInfo');
     },
     async handlePackageRecord(mainid) {
-      // this.stations.forEach(element => {
-      //   let query = 'query=mainid="xxx"%26%26substationid=="xxxx"%26sortquery=createTimestamp=-1'
-      //   let responese = await getRecord()
-      // });
-      console.log(mainid, 'mainid');
       this.loading = true;
       const packagerecordlist = await this.getPackageRecord(`?query=mainid=="${mainid}"`);
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
-      console.log(packagerecordObj, 'packagerecordObj');
       this.barcode = packagerecordObj.barcode;
       if (packagerecordObj) {
         if (packagerecordObj.status === 3) {
@@ -490,7 +475,6 @@ export default {
           } else {
             this.mainidstatus = 2;
             this.detailMessege = '当前条码不是待包装首个条码';
-            // this.getNGInfo(mainid);
           }
         }
       } else {
@@ -541,7 +525,6 @@ export default {
     async getHistoryRecord() {
       this.packagerecorddialog = true;
       const packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.barcode}"`);
-      console.log(packagehistoryrecord, 'packagehistoryrecord');
       this.packagehistoryrecord = packagehistoryrecord;
     },
     handlePrint() {

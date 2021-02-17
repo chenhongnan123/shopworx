@@ -51,8 +51,6 @@ export default {
       fromdate: null,
       todate: null,
       rowData: [],
-      // gridOptions: null,
-      // gridOptionsPart: null,
       searchMainID: null,
       selectedSubLine: null,
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
@@ -213,12 +211,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -236,7 +228,6 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
-        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
@@ -264,7 +255,6 @@ export default {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
         cFlag = 4;
       }
-      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -275,7 +265,6 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
-      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();

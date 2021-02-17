@@ -202,7 +202,6 @@ export default ({
       if (station) {
         list = station;
         list = list.sort((a, b) => a.name - b.name);
-        console.log(list);
       }
       commit('setSubStationList', list);
       return station;

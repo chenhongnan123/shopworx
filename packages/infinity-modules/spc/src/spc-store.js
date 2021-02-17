@@ -289,7 +289,6 @@ export default {
       const subLineList = await dispatch('element/getRecords', { elementName: 'subline' }, { root: true });
       const stationList = await dispatch('element/getRecords', { elementName: 'station' }, { root: true });
       const subStationList = await dispatch('element/getRecords', { elementName: 'substation' }, { root: true });
-      console.log(lineList, 'lineList');
       const parameterList = await dispatch(
         'element/getRecords',
         {

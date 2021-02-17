@@ -3,9 +3,6 @@
       v-model="dialog"
       max-width="290"
     >
-    <!-- <template v-slot:activator="{ on }">
-    <v-icon v-on="on" v-text="'$delete'"
-    class="float-right" color="error"></v-icon> -->
     <template v-slot:activator="{ on }">
     <v-btn v-on="on"
     small color="primary"
@@ -88,20 +85,11 @@ export default {
       }
     },
     async btnConfirmRework() {
-      // await this.getRunningOrder('?orderstatus="Running"');
       if (this.runningOrderList[0].productname === this.rework.reworkinfo[0].productname) {
-        // let substationidValue = '';
-        // let substationidName = '';
-        // if (this.rework.substationid) {
-        //   substationidValue = this.rework.substationid;
-        //   substationidName = this.rework.substationname;
-        // }
         const object = {
           checkoutngcode: this.rework.ngcodedata[0].ngcode,
           lineid: this.rework.ngcodedata[0].lineid,
           sublineid: this.rework.reworkinfo[0].sublineid,
-          // substationid: substationidValue,
-          // substationname: substationidName,
           linename: this.rework.ngcodedata[0].linename,
           mainid: this.rework.enterManinId,
           roadmapid: this.selectedReworkRoadmap.id,
@@ -122,42 +110,7 @@ export default {
             overallresult: 1,
           },
         };
-        // console.log(payload);
         await this.updateOverAllResult(payload);
-        // this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
-        //   let reworkS = 2;
-        //   let qualityS = 2;
-        //   if (element.reworkstatus === true) {
-        //     reworkS = 1;
-        //   }
-        //   if (element.qualitystatus === true) {
-        //     qualityS = 1;
-        //   }
-        //   if (element.reworkstatus === 1) {
-        //     reworkS = 1;
-        //   }
-        //   if (element.qualitystatus === 1) {
-        //     qualityS = 1;
-        //   }
-        //   let payloadComponent = {};
-        //   if (element.quality === false) {
-        //     payloadComponent = {
-        //       query: element._id,
-        //       payload: {
-        //         reworkstatus: reworkS,
-        //       },
-        //     };
-        //   } else {
-        //     payloadComponent = {
-        //       query: element._id,
-        //       payload: {
-        //         reworkstatus: reworkS,
-        //         qualitystatus: qualityS,
-        //       },
-        //     };
-        //   }
-        //   await this.updateComponentById(payloadComponent);
-        // });
         this.componantList.forEach(async (element) => {
           const payloadComponent = {
             query: element._id,

@@ -57,10 +57,7 @@ export default {
     },
   },
   created() {
-    // this.getRunningOrder('?orderstatus=Running');
     this.getRoadMapDetailsRecord();
-    // this.getOrder('?query=orderstatus!="Running"');
-    // this.btnDeleteStation();
     this.getRunningOrder();
     this.getSubStations();
   },
@@ -89,20 +86,6 @@ export default {
         });
         this.dialog = false;
       } else {
-        // get plc parameter
-        // const getSubStation = this.subStations
-        //   .filter((s) => s.sublineid === this.subline.id);
-        // const matchSubStation = getSubStation.forEach(async (item) => {
-        //   const element = await this.getSubStationIdElement(item.id);
-        //   const eleList = await this.inactiveElement(
-        //     {
-        //       elementId: element.id,
-        //       status: 'INACTIVE',
-        //     },
-        //   );
-        //   console.log(eleList);
-        // });
-        // await Promise.all([matchSubStation]);
         const gotRoadmap = this.roadMapDetailsRecord
           .filter((s) => s.sublineid === this.subline.id);
         if (gotRoadmap.length > 0) {

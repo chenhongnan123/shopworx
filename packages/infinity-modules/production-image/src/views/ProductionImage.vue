@@ -80,58 +80,6 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
-          <!-- <v-autocomplete
-          clearable
-          class="mt-6 mr-4"
-          label="Select Module"
-          return-object
-          item-text="name"
-        >
-          <template v-slot:item="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-autocomplete> -->
-          <!-- <v-menu
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          ref="menu"
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              small
-              outlined
-              v-on="on"
-              v-bind="attrs"
-              color="primary"
-              class="text-none"
-            >
-              <v-icon small left>mdi-calendar-range-outline</v-icon>
-              {{ dateRangeText }}
-              <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
-            </v-btn>
-          </template>
-          <v-date-picker
-            range
-            v-model="dates"
-            no-title scrollable
-          >
-            <v-spacer></v-spacer>
-            <v-btn
-              text
-              color="primary"
-              class="text-none"
-              @click="saveDateRange"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-menu> -->
           <v-text-field
             class="mt-6"
             type="datetime-local"
@@ -325,17 +273,7 @@ export default {
       selectedStation: null,
       selectedSubStation: null,
       loading: false,
-      items: [
-        // {
-        //   src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        //   createdTimestamp: '2020-09-20:19:30',
-        //   mainid: 'vvvv',
-        //   lineId: 'line1',
-        //   sublineid: 'subline-1',
-        //   stationid: 'station-1',
-        //   substationid: 'substation-1',
-        // },
-      ],
+      items: [],
     };
   },
   mounted() {},
@@ -353,32 +291,14 @@ export default {
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);
-      // this.subStationList.forEach((element) => {
-      //   this.headers.push({
-      //     headerName: element.name,
-      //     field: `${element.id}result`,
-      //   });
-      // });
     },
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
       await this.getStations(query);
-      // this.subStationList.forEach((element) => {
-      //   this.headers.push({
-      //     headerName: element.name,
-      //     field: `${element.id}result`,
-      //   });
-      // });
     },
     async handleStationClick(item) {
       const query = `?query=stationid=="${item.id}"`;
       await this.getSubStations(query);
-      // this.subStationList.forEach((element) => {
-      //   this.headers.push({
-      //     headerName: element.name,
-      //     field: `${element.id}result`,
-      //   });
-      // });
     },
     async search() {
       const that = this;
@@ -431,15 +351,6 @@ export default {
             });
           });
       });
-      // if (ifChecked) {
-      //   console.log(1);
-      // } else {
-      //   that.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'EndDateTime Can Not Before StartDateTime ',
-      //   });
-      // }
     },
 
     getReference(query) {

@@ -185,22 +185,17 @@ export default {
         this.gridColumnApi.setColumnGroupState(state.groupState);
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
-      } else {
-        // this.resetState();
       }
     },
     async fetchRecords() {
       const records = await this.getRecords({
         elementName: 'businesshours',
       });
-      // console.log(records);
       const time = records[0].starttime;
       const splitTime = time.slice(0, 2);
       const day = new Date();
       const now = day.setHours(splitTime);
       const toDate = new Date().getTime();
-      // console.log(now);
-      // console.log(toDate);
       this.fromdate = now;
       this.todate = toDate;
       this.btnSearchProcessParameters();
@@ -210,12 +205,6 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
-      /* console.log('***********************');
-      console.log('colState: ', colState);
-      console.log('groupState: ', groupState);
-      console.log('sortState: ', sortState);
-      console.log('filterState: ', filterState);
-      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -292,7 +281,6 @@ export default {
           },
         );
       }
-      // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let cFlag = 0;
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
@@ -319,8 +307,6 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
-      // param += 'pagenumber=1&pagesize=20';
-      // await this.getPartStatus(param);
       if (this.trecibilityState.selectedSubStation) {
         const elementDetails = await
         this.getProcessElement(this.trecibilityState.selectedSubStation.id);
@@ -403,9 +389,6 @@ export default {
               }
             });
             await Promise.all(this.partStatusList.map(async (f) => {
-              // const componenetData = await this.getComponentList(`?query=mainid=="${f.mainid}"`);
-              // const subAssemblyIdData = componenetData.filter(
-              //  (id) => id.componentname === 'subassemblyid');
               const processData = await this.getProcessParameters({
                 elementname: s.id,
                 payload: `?query=mainid=="${f.mainid}"`,
@@ -435,15 +418,6 @@ export default {
                     subassemblyid1: '',
                     subassemblyid2: '',
                   };
-                  // if (subAssemblyIdData.lenght > 0) {
-                  //   this.headerForCSV.push('subassemblyid1', 'subassemblyid2');
-                  //   if (subAssemblyIdData.lenght === 1) {
-                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
-                  //   } else {
-                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
-                  //     object.subassemblyid2 = subAssemblyIdData[1].componentvalue;
-                  //   }
-                  // }
                   this.parametersList.forEach((para) => {
                     if (processDataObject[para.name]) {
                       object[`${s.name}_${para.name}`] = processDataObject[para.name];
@@ -455,36 +429,9 @@ export default {
                 }
               }
             }));
-          //   if (processData) {
-          //   const finalData = processData.map((l) => ({
-          //     ...l,
-          //     substationname: s.name,
-          //   }));
-          //   if (this.processParametersList.length === 0) {
-          //     const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
-          //     if (check.length !== 0) {
-          //       this.processParametersList = finalData;
-          //     }
-          //   } else {
-          //     finalData.forEach((f) => {
-          //       const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
-          //       if (checkData.length !== 0) {
-          //         this.processParametersList.push(f);
-          //       }
-          //     });
-          //   }
-          //   if (this.processParametersList.length === 0) {
-          //     this.processParametersList = finalData;
-          //   } else {
-          //     finalData.forEach((f) => {
-          //       this.processParametersList.push(f);
-          //     });
-          //   }
-          // }
           }
         }));
         this.processParametersList = this.processParametersListFirst;
-        console.log(this.processParametersList);
         this.gridApi = this.gridOptions.api;
         this.gridApi.expandAll();
         if (cFlag === 1) {
