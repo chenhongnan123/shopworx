@@ -4,16 +4,31 @@ import { sortArray } from '@shopworx/services/util/sort.service';
 export default ({
   namespaced: true,
   state: {
+    logs: [],
     assets: [],
     records: [],
     elements: [],
   },
   mutations: {
+    setLogs: set('logs'),
     setAssets: set('assets'),
     setRecords: set('records'),
     setElements: set('elements'),
   },
   actions: {
+    getSwxLogs: async ({ dispatch, commit }, query) => {
+      query = `?query=logcode=="${query}"`;
+      const logList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'swxlogs',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLogs', logList);
+      return true;
+    },
     updateRecord: async ({ dispatch, commit }, payloadData) => {
       const created = await dispatch(
         'element/updateRecordById',
