@@ -8,7 +8,9 @@
       :headers="headers"
       :items="logs"
       :items-per-page="5"
-      class="elevation-1"
+      class="elevation-1 mb-4"
+      height="200"
+      @click:row="handleClick"
     ></v-data-table>
     <!-- <ag-grid-vue
       v-model="rowData"
@@ -22,6 +24,28 @@
       @selection-changed="onSelectionChanged"
       @cellValueChanged="editMethod"
     ></ag-grid-vue> -->
+    <v-card
+      v-if="selectedRowData.length > 0"
+      class="mt-4"
+      height="200">
+    <v-card-title>
+        <span class="headline">Details</span>
+         <v-spacer></v-spacer>
+    </v-card-title>
+    <v-card-text>
+      <v-row>
+      <v-col cols="4">
+        <h2>Metadata</h2>
+      </v-col>
+      <v-col cols="8">
+        {{selectedRowData}}
+      </v-col>
+    </v-row>
+    </v-card-text>
+    <v-card-actions>
+        <v-spacer></v-spacer>
+    </v-card-actions>
+    </v-card>
   </v-card>
 </template>
 
@@ -54,6 +78,7 @@ export default {
   },
   data() {
     return {
+      selectedRowData: [],
       loading: false,
       rowData: [],
       isValid: true,
@@ -75,7 +100,6 @@ export default {
         },
         { text: 'Log Code', value: 'logcode' },
         { text: 'Source', value: 'logsource' },
-        { text: 'MetaData', value: 'metadata' },
       ],
     };
   },
@@ -98,6 +122,7 @@ export default {
     id() {
       this.fetchRecords();
       this.getSwxLogs(this.id);
+      this.selectedRowData = [];
     },
     records() {
       this.setRowData();
@@ -126,6 +151,10 @@ export default {
   methods: {
     ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs']),
     ...mapMutations('helper', ['setAlert']),
+    async handleClick(item) {
+      this.selectedRowData = [];
+      this.selectedRowData = item.metadata;
+    },
     async fetchRecords() {
       this.loading = true;
       await this.getRecords({

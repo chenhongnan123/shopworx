@@ -55,8 +55,8 @@ export default {
   },
   async created() {
     this.loading = true;
-    await this.getElements();
-    await this.getAssets();
+    // await this.getElements();
+    // await this.getAssets();
     this.loading = false;
   },
   methods: {
