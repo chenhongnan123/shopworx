@@ -9,6 +9,7 @@
       :items="logs"
       :items-per-page="5"
       class="elevation-1 mb-4"
+      show-select
       height="200"
       @click:row="handleClick"
     ></v-data-table>
@@ -93,11 +94,16 @@ export default {
       updateData: [],
       headers: [
         {
+          text: 'Time',
+          value: 'createdTimestamp',
+        },
+        {
           text: 'Log Type',
           align: 'start',
           sortable: false,
           value: 'logtype',
         },
+        { text: 'Sub-Station', value: 'substationid' },
         { text: 'Log Code', value: 'logcode' },
         { text: 'Source', value: 'logsource' },
       ],

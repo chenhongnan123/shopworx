@@ -28,24 +28,15 @@ export default {
       staticItemList: [
         {
           id: 1,
-          title: 'User Log',
-          to: 'UL',
-          icon: 'User Log',
-        }, {
+          title: 'Communication Log',
+          to: 'CL',
+          icon: 'Communication Log',
+        },
+        {
           id: 2,
           title: 'Machine Failure Log',
           to: 'MF',
           icon: 'Machine Failure Log',
-        }, {
-          id: 3,
-          title: 'Communication Log',
-          to: 'CL',
-          icon: 'Communication Log',
-        }, {
-          id: 4,
-          title: 'Power Failure Log',
-          to: 'PF',
-          icon: 'Power Failure Log',
         },
       ],
     };
