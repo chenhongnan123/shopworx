@@ -7,6 +7,7 @@ export default ({
     logs: [],
     assets: [],
     records: [],
+    logcodes: [],
     elements: [],
   },
   mutations: {
@@ -14,6 +15,7 @@ export default ({
     setAssets: set('assets'),
     setRecords: set('records'),
     setElements: set('elements'),
+    setLogCodes: set('logcodes'),
   },
   actions: {
     getSwxLogs: async ({ dispatch, commit }, query) => {
@@ -27,6 +29,19 @@ export default ({
         { root: true },
       );
       commit('setLogs', logList);
+      return true;
+    },
+    getSwxLogCodes: async ({ dispatch, commit }, query) => {
+      query = `?query=code=="${query}"`;
+      const codeList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'swxlogcodes',
+          query,
+        },
+        { root: true },
+      );
+      commit('setLogCodes', codeList);
       return true;
     },
     updateRecord: async ({ dispatch, commit }, payloadData) => {

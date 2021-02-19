@@ -30,7 +30,6 @@
       <v-btn
         small
         outlined
-        v-on="on"
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
       >
@@ -39,7 +38,6 @@
       <v-btn
         small
         outlined
-        v-on="on"
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
       >
@@ -67,28 +65,53 @@
       @selection-changed="onSelectionChanged"
       @cellValueChanged="editMethod"
     ></ag-grid-vue> -->
-    <v-card
-      v-if="selectedRowData.length > 0"
-      class="mt-4"
-      height="190">
-    <v-card-title>
-        <span class="headline">Details</span>
-         <v-spacer></v-spacer>
-    </v-card-title>
-    <v-card-text>
-      <v-row>
-      <v-col cols="4">
-        <h2>Metadata</h2>
-      </v-col>
-      <v-col cols="8">
-        {{selectedRowData}}
-      </v-col>
-    </v-row>
-    </v-card-text>
-    <v-card-actions>
-        <v-spacer></v-spacer>
-    </v-card-actions>
-    </v-card>
+    <div v-if="selectedRowData.length > 0 || selectedRowDataswxCodes.length > 0">
+    <v-tabs
+      v-model="tab"
+      background-color="transparent"
+      color="primary"
+    >
+      <v-tab
+      >
+        Details
+      </v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item
+      >
+      <v-card
+         class="mt-0"
+         height="190">
+          <v-card-title>
+            <!-- <span class="headline">Details</span> -->
+            <v-spacer></v-spacer>
+          </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="6">
+             <h2>Metadata</h2>
+              {{selectedRowData}}
+            </v-col>
+            <v-col cols="6">
+             <h2>Description</h2>
+              <div v-if="this.language === 'zhHans'">
+                {{selectedRowDataswxCodes[0].cndescription || 'no descriprion'}}
+              </div>
+              <div v-else>
+                {{selectedRowDataswxCodes[0].endescription || 'no descriprion'}}
+              </div>
+              <h2>Type</h2>
+              {{selectedRowDataswxCodes[0].type}}
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+        </v-card-actions>
+     </v-card>
+     </v-tab-item>
+    </v-tabs-items>
+    </div>
   </v-card>
 </template>
 
@@ -121,7 +144,11 @@ export default {
   },
   data() {
     return {
+      tab: null,
+      todate: null,
+      fromdate: null,
       selectedRowData: [],
+      selectedRowDataswxCodes: [],
       loading: false,
       rowData: [],
       isValid: true,
@@ -134,6 +161,7 @@ export default {
       rowsSelected: false,
       showUpdateBtn: false,
       updateData: [],
+      language: null,
       headers: [
         {
           text: 'Time',
@@ -162,13 +190,20 @@ export default {
     };
   },
   created() {
+    this.language = this.currentLocale;
     this.fetchRecords();
     this.zipService = ZipService;
     this.getSwxLogs(this.id);
+    this.getSwxLogCodes(this.id);
   },
   computed: {
-    ...mapState('logManagement', ['records', 'logs']),
+    ...mapState('logManagement', ['records', 'logs', 'logcodes']),
     ...mapGetters('logManagement', ['getTags']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
     tags() {
       return this.getTags(this.id, this.assetId);
     },
@@ -180,7 +215,9 @@ export default {
     id() {
       this.fetchRecords();
       this.getSwxLogs(this.id);
+      this.getSwxLogCodes(this.id);
       this.selectedRowData = [];
+      this.selectedRowDataswxCodes = [];
     },
     records() {
       this.setRowData();
@@ -207,11 +244,13 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
     ...mapMutations('helper', ['setAlert']),
     async handleClick(item) {
       this.selectedRowData = [];
+      this.selectedRowDataswxCodes = [];
       this.selectedRowData = item.metadata;
+      this.selectedRowDataswxCodes = this.logcodes;
     },
     async fetchRecords() {
       this.loading = true;
