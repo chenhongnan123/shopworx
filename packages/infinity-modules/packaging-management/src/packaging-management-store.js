@@ -9,6 +9,17 @@ export default ({
     setPackageRecordlist: set('packagerecordlist'),
   },
   actions: {
+    getLabelFile: async ({ dispatch }) => {
+      const data = await dispatch(
+        'file/getFile',
+        '/lingzhong.prn',
+        { root: true },
+      );
+      if (data) {
+        return data;
+      }
+      return false;
+    },
     getPackageRecord: async ({ dispatch }, query) => {
       const list = await dispatch(
         'element/getRecords',

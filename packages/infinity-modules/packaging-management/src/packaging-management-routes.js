@@ -1,8 +1,8 @@
 const routes = [
   {
     path: 'packaging-management',
-    name: 'packagingManagement',
-    component: () => import(/* webpackChunkName: "packaging-management" */ './views/PackagingManagement.vue'),
+    name: 'packaging-management',
+    component: () => import(/* webpackChunkName: "parameter-configuration" */ './views/PackagingManagement.vue'),
     meta: {
       // permissionRequired: true,
     },
