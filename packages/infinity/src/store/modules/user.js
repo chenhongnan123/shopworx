@@ -407,12 +407,13 @@ export default ({
                 modules.items.push({ header: module.moduleName });
               }
               module.details.forEach((detail) => {
+                const isExternal = detail.webAppLink.includes('/#');
                 modules.items.push({
                   id: detail.id,
                   icon: detail.iconURL,
                   to: detail.webAppLink,
                   title: detail.webAppName,
-                  external: isDashboard,
+                  external: isExternal,
                 });
               });
             } else if (isReport) {

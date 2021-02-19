@@ -89,6 +89,8 @@ export default {
     save: 'mdi-content-save',
     basicperformance: 'mdi-speedometer',
     understandingtrends: 'mdi-trending-up',
-    modelManagement: 'mdi-memory'
+    modelManagement: 'mdi-memory',
+    formBuilder: 'mdi-form-select',
+    eLogbook: 'mdi-book-open-outline',
   },
 };

@@ -280,7 +280,9 @@
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
-    "packagingManagement": "Packaging"
+    "packagingManagement": "Packaging",
+    "formBuilder": "Form Builder",
+    "eLogbook": "e-logbook"
   },
   "account": {
     "account": "Account",
