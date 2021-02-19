@@ -4,13 +4,55 @@
     class="transparent"
     style="height: 100%"
   >
+   <v-toolbar
+      flat
+      dense
+      class="stick"
+      :color="$vuetify.theme.dark ? '#121212' : ''"
+    >
+    <v-responsive :max-width="250">
+      <v-text-field
+          class="mt-8 ml-0"
+          type="datetime-local"
+          v-model="fromdate"
+          :label="$t('From date')"
+      ></v-text-field>
+    </v-responsive>
+    <v-responsive :max-width="260">
+      <v-text-field
+          class="mt-8 ml-4"
+          type="datetime-local"
+          v-model="todate"
+          :label="$t('To date')"
+      ></v-text-field>
+    </v-responsive>
+      <v-spacer></v-spacer>
+      <v-btn
+        small
+        outlined
+        v-on="on"
+        color="primary"
+        class="text-none ml-2 mr-2 mt-3"
+      >
+        Search
+      </v-btn>
+      <v-btn
+        small
+        outlined
+        v-on="on"
+        color="primary"
+        class="text-none ml-2 mr-2 mt-3"
+      >
+        Refresh
+      </v-btn>
+    </v-toolbar>
     <v-data-table
       :headers="headers"
       :items="logs"
       :items-per-page="5"
-      class="elevation-1 mb-4"
+      class="elevation-1 mb-4 mt-2"
       show-select
-      height="200"
+      height="190"
       @click:row="handleClick"
     ></v-data-table>
     <!-- <ag-grid-vue
@@ -28,7 +70,7 @@
     <v-card
       v-if="selectedRowData.length > 0"
       class="mt-4"
-      height="200">
+      height="190">
     <v-card-title>
         <span class="headline">Details</span>
          <v-spacer></v-spacer>
@@ -103,8 +145,18 @@ export default {
           sortable: false,
           value: 'logtype',
         },
-        { text: 'Sub-Station', value: 'substationid' },
-        { text: 'Log Code', value: 'logcode' },
+        {
+          text: 'Sub-Station',
+          align: 'start',
+          sortable: false,
+          value: 'substationid',
+        },
+        {
+          text: 'Log Code',
+          align: 'start',
+          sortable: false,
+          value: 'logcode',
+        },
         { text: 'Source', value: 'logsource' },
       ],
     };
