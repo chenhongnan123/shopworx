@@ -80,36 +80,8 @@
         <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
             {{ $t('Export') }}
           </v-btn>
-          <!-- <v-btn small
-            :loading="saving"
-            color="primary" class="text-none ml-2" @click="btnExportDemo">
-            Export Demo
-          </v-btn> -->
         </v-toolbar>
     </portal>
-    <!-- <v-toolbar
-          flat
-          dense
-          class="stick"
-          :color="$vuetify.theme.dark ? '#121212': ''"
-        >
-        <v-spacer></v-spacer>
-         <v-btn
-            small
-            color="normal"
-            outlined
-            class="text-none ml-2"
-            :disabled="prevDisabled"
-            @click="prevSearch((pageNumber-=1))">Prev
-            </v-btn>
-            <v-btn
-            small
-            color="normal"
-            outlined
-            class="text-none ml-2"
-            @click="nextSearch(pageNumber+=1)">Next
-            </v-btn>
-        </v-toolbar> -->
     <PartStatusView ref="partstatus" :pageNumber="pageNumber"/>
     <v-tabs
         dense
@@ -126,7 +98,6 @@
           {{ $t('Quality History') }}
         </v-tab>
       </v-tabs>
-    <!-- <recipe-filter></recipe-filter> -->
     <template>
       <v-fade-transition mode="out-in">
           <overall-list v-if="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
@@ -244,20 +215,8 @@ export default {
       const subline = this.subLineList;
       const firstSubline = subline[0];
       this.newTrecibility.selectedSubLine = firstSubline;
-      // this.newTrecibility.fromdate = '2020-09-21T13:59';
-      // const tDate = (new Date()).toISOString().slice(0, 16).replace(/-/g, '-');
-      // const cDate = new Date(tDate).getTime();
-      // alert(tDate);
-      // this.newTrecibility.todate = tDate;
-      // this.setAlert({
-      //   show: true,
-      //   type: 'success',
-      //   message: 'FETCH_RECORD',
-      // });
     },
     async btnExport() {
-      // const nameEement = this.id;
-      // partstatus table
       this.saving = true;
       let fileName = 'partstatus_data';
       let parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
@@ -352,10 +311,7 @@ export default {
       }
       const componenetData = await this.getComponentList(param);
       const processSendDataArray = [];
-      // const duplicateMainIdCheck = [];
       componenetData.forEach((component) => {
-        // if (!duplicateMainIdCheck.includes(component.mainid)) {
-        //  duplicateMainIdCheck.push(component.mainid);
         const dataPresentFlag = processSendDataArray.filter((f) => f.componentvalue
           === component.componentvalue);
         if (dataPresentFlag.length === 0) {
@@ -418,7 +374,6 @@ export default {
         const subStationDataList = this.subStationListData
           .filter((sub) => sub.sublineid === bomData[0].boundsublineid);
         await Promise.all(subStationDataList.map(async (s) => {
-          // const elementDetails = await this.getProcessElement(s.id);
           if (s[`headers_${s.id}`]) {
             s[`headers_${s.id}`].tags.forEach(async (element) => {
               if (element.tagName !== 'mainid') {
@@ -433,10 +388,6 @@ export default {
             if (processData.length > 0) {
               processData = processData.filter((a) => a.mainid === request[subAssemblyIdFieldName]);
             }
-            // await this.getProcessParameters({
-            //   elementname: s.id,
-            //   payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
-            // });
             if (this.$refs.process.processParametersList.find((pro) => pro
               .mainid === request.mainid)) {
               const object = this.$refs.process.processParametersList.find((pp) => pp
@@ -506,7 +457,6 @@ export default {
         param += `dateto=${toDate}&`;
       }
       param += 'sortquery=modifiedtimestamp==-1';
-      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
     },
     async btnProcessParametersLogic() {
@@ -515,7 +465,6 @@ export default {
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.processParametersheader = [];
       this.processParametersheader.push('createdTimestamp', 'mainid');
-      // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
          && (fromDate || toDate)) {
@@ -540,9 +489,6 @@ export default {
         param += `dateto=${toDate}&`;
       }
       param += 'sortquery=modifiedtimestamp==-1';
-      console.log(param);
-      // param += 'pagenumber=1&pagesize=20';
-      // await this.getPartStatus(param);
       await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
       await Promise.all(this.subStationList.map(async (s) => {
         const elementDetails = await this.getProcessElement(s.id);
@@ -596,38 +542,6 @@ export default {
           });
         }
       }));
-      // await Promise.all(this.subStationList.map(async (s) => {
-      //   const elementDetails = await this.getProcessElement(s.id);
-      //   if (elementDetails) {
-      //     elementDetails.tags.forEach((element) => {
-      //       if (element.tagName !== 'mainid') {
-      //         const data = this.processParametersheader
-      //           .filter((p) => p === element.tagName);
-      //         if (data.length === 0) {
-      //           console.log(element.tagName);
-      //           this.processParametersheader.push(element.tagName);
-      //         }
-      //       }
-      //     });
-      //     const processData = await this.getProcessParameters({
-      //       elementname: s.id,
-      //       payload: param,
-      //     });
-      //     if (processData) {
-      //       const finalData = processData.map((l) => ({
-      //         ...l,
-      //         substationname: s.name,
-      //       }));
-      //       if (this.processParametersList.length === 0) {
-      //         this.processParametersList = finalData;
-      //       } else {
-      //         finalData.forEach((f) => {
-      //           this.processParametersList.push(f);
-      //         });
-      //       }
-      //     }
-      //   }
-      // }));
     },
     addToZip(file) {
       this.zipService.addFile(file);
@@ -656,21 +570,16 @@ export default {
         });
       } else {
         await this.$refs.partstatus.btnSearchCheckOut();
-        // this.$refs.partstatus.handleSubLineClick();
         if (this.recipeView === 0) {
           this.$refs.overall.btnSearchCheckOut();
           this.$refs.overall.handleSubLineClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
         if (this.recipeView === 1) {
           this.$refs.process.btnSearchProcessParameters();
-          // this.$refs.process.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
         if (this.recipeView === 2) {
           this.$refs.quality.btnSearchProcessParameters();
           this.$refs.quality.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
         }
       }
     },
@@ -698,9 +607,6 @@ export default {
         this.$refs.quality.prevSearch();
       }
     },
-    // async clearInput() {
-    //   this.newTrecibility.selectedSubLine = '';
-    // },
   },
 };
 </script>

@@ -80,14 +80,12 @@ export default {
       this.dialog = false;
     },
     async btnUpdateOverAllResult() {
-      // console.log(this.rework);
       const payloadRework = {
         query: this.rework.reworkinfo[0]._id,
         payload: {
           overallresult: 1,
         },
       };
-      // console.log(payloadRework);
       await this.updateOverAllResult(payloadRework);
       const payload = {
         query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
@@ -95,7 +93,6 @@ export default {
           overallresult: 2,
         },
       };
-      // console.log(payload);
       await this.updateOverAllResultPartStatus(payload);
       this.componantList.forEach(async (element) => {
         const payloadComponent = {

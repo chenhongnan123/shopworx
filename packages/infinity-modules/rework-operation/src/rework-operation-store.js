@@ -195,12 +195,7 @@ export default ({
         { root: true },
       );
       component = component.map((c) => {
-        // let rework = false;
-        // let quality = false;
         const checkquality = c.qualitystatus;
-        // if (c.reworkstatus === 1) {
-        //   rework = true;
-        // }
         if (c.qualitystatus === 1) {
           c.qualitystatus = 4;
         }
@@ -215,7 +210,6 @@ export default ({
           checkquality,
         };
       });
-      console.log(component);
       commit('setComponentList', component);
       return true;
     },

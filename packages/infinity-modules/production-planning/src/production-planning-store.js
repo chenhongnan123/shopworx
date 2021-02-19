@@ -699,9 +699,8 @@ export default ({
 
     partMatrixComposition: (_, { planningSchema }) => (assetId) => {
       if (planningSchema && planningSchema.length) {
-        return planningSchema
-          .find((schema) => schema.assetId === assetId)
-          .partMatrixComposition;
+        const schema = planningSchema.find((s) => s.assetId === assetId);
+        return schema ? schema.partMatrixComposition : [];
       }
       return [];
     },

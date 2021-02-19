@@ -187,9 +187,6 @@ export default {
       },
     };
   },
-  mounted() {
-    console.log(chunk);
-  },
   async created() {
     this.zipService = ZipService;
     await this.getLines('');
@@ -247,7 +244,6 @@ export default {
             stdevvalue: stdev,
           };
         });
-        console.log(tableData);
         // eslint-disable-next-line max-len
         this.initCpk(
           tableData.map((item) => item.cpk),

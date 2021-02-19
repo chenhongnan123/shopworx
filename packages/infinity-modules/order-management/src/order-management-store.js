@@ -1,4 +1,3 @@
-// import HourService from '@shopworx/services/api/hour.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -108,12 +107,6 @@ export default ({
           };
         }));
       }
-      // let listUpdated = [];
-      // if (list && list.length) {
-      //   listUpdated = list.map((l) => ({
-      //     ...l,
-      //   }));
-      // }
       commit('setSubStationWiseOrderCounts', listUpdated);
       return true;
     },
@@ -154,17 +147,10 @@ export default ({
               .filter((o) => o.ordernumber === item.ordernumber);
             const substationInfo = substations
               .filter((st) => st.id === matchOrder[0].substationid);
-            // item.actualcount = actualUpdatecount[0].ordercount;
-            // console.log(substationInfo);
             const stresult = substationInfo
               .filter((sr) => sr.substationresult === 7 || sr.substationresult === 1);
             const stationInfo = stations
               .filter((s) => s.id === substationInfo[0].stationid);
-            // console.log(stationInfo);
-            // console.log(stresult);
-            // const modesOk = stresult
-            //   .filter((ms) => ms.modestatus === 0);
-            // console.log(modesOk);
             item.okcount = stresult.length;
             const stationname = stations
               .filter((o) => o.id === stationInfo[0].id);
@@ -175,7 +161,6 @@ export default ({
               .filter((o) => o.ordernumber === item.ordernumber);
             const substationInfo = substations
               .filter((st) => st.id === matchOrder[0].substationid);
-            // item.actualcount = actualUpdatecount[0].ordercount;
             const stresultPart = substationInfo
               .filter((sr) => sr.substationresult !== 1);
             const modesNg = stresultPart

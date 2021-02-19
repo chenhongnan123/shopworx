@@ -209,7 +209,6 @@ export default ({
       const { data } = await HourService.getNonWorkingTime(start, end);
       const nonWorkingTime = data.results;
       const totalTime = end - start;
-      console.log(totalTime - nonWorkingTime);
       return totalTime - nonWorkingTime;
     },
   },

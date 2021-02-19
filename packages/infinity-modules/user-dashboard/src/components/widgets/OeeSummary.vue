@@ -12,13 +12,20 @@
         color="primary"
         rotate="-90"
       >
-        <span class="display-1">
+        <div class="display-1">
           {{ thisShiftOeeText }}
-          <v-icon small :color="getColor(oeeDiff)" class="mt-1">
+        </div>
+        <div>
+          <v-icon :color="getColor(oeeDiff)">
             {{ getIcon(oeeDiff) }}
           </v-icon>
-          <span class="caption">{{ oeeDiffText }}</span>
-        </span>
+          <span
+            :class="`caption ${getColor(oeeDiff)}--text`"
+            style="margin-left: -8px;"
+          >
+            {{ oeeDiffText }}
+          </span>
+        </div>
       </v-progress-circular>
       <div class="headline mt-2">
         OEE
@@ -34,30 +41,45 @@
           Availability
           <span class="headline font-weight-medium">
             {{ thisShiftAText }}
-            <v-icon small :color="getColor(aDiff)" class="mt-1">
+            <v-icon :color="getColor(aDiff)" class="mt-1">
               {{ getIcon(aDiff) }}
             </v-icon>
-            <span class="caption">{{ aDiffText }}</span>
+            <span
+              :class="`caption ${getColor(aDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ aDiffText }}
+            </span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Performance
           <span class="headline font-weight-medium">
             {{ thisShiftPText }}
-            <v-icon small :color="getColor(pDiff)" class="mt-1">
+            <v-icon :color="getColor(pDiff)" class="mt-1">
               {{ getIcon(pDiff) }}
             </v-icon>
-            <span class="caption">{{ pDiffText }}</span>
+            <span
+              :class="`caption ${getColor(pDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ pDiffText }}
+            </span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Quality
           <span class="headline font-weight-medium">
             {{ thisShiftQText }}
-            <v-icon small :color="getColor(qDiff)" class="mt-1">
+            <v-icon :color="getColor(qDiff)" class="mt-1">
               {{ getIcon(qDiff) }}
             </v-icon>
-            <span class="caption">{{ qDiffText }}</span>
+            <span
+              :class="`caption ${getColor(qDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ qDiffText }}
+            </span>
           </span>
         </v-tab>
       </v-tabs>
@@ -198,25 +220,25 @@ export default {
       return ((this.thisShiftA - this.previousShiftA) / this.previousShiftA) * 100;
     },
     aDiffText() {
-      return `${this.roundOff(this.aDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.aDiff)).toFixed(2)}%`;
     },
     pDiff() {
       return ((this.thisShiftP - this.previousShiftP) / this.previousShiftP) * 100;
     },
     pDiffText() {
-      return `${this.roundOff(this.pDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.pDiff)).toFixed(2)}%`;
     },
     qDiff() {
       return ((this.thisShiftQ - this.previousShiftQ) / this.previousShiftQ) * 100;
     },
     qDiffText() {
-      return `${this.roundOff(this.qDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.qDiff)).toFixed(2)}%`;
     },
     oeeDiff() {
       return ((this.thisShiftOee - this.previousShiftOee) / this.previousShiftOee) * 100;
     },
     oeeDiffText() {
-      return `${this.roundOff(this.oeeDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.oeeDiff)).toFixed(2)}%`;
     },
   },
   methods: {
@@ -238,12 +260,18 @@ export default {
     getIcon(number) {
       let icon = 'mdi-minus';
       if (number > 0) {
-        icon = 'mdi-arrow-up';
+        icon = 'mdi-menu-up';
       } else if (number < 0) {
-        icon = 'mdi-arrow-down';
+        icon = 'mdi-menu-down';
       }
       return icon;
     },
   },
 };
 </script>
+
+<style>
+.v-progress-circular .v-progress-circular__info {
+  display: block;
+}
+</style>
