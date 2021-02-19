@@ -87,7 +87,11 @@
                 </v-stepper-step>
               </v-stepper-header>
             </v-stepper>
-            <v-toolbar-title class="ng-station-title" v-if="stationinfolist.length > 0">
+            <v-toolbar-title
+            class="ng-station-title"
+            v-if="stationinfolist.length > 0
+            && stationinfolist.some((stationinfo) => stationinfo.status === 0)"
+            >
               {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}} 站存在问题
             </v-toolbar-title>
             <v-divider></v-divider>
@@ -98,19 +102,22 @@
              style="background-color:rgba(245, 247, 247, 1);color:#333;">
               <p>
                 <span>问题站点:</span>
-                <span v-if="stationinfolist.length > 0">
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
                   {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}}
                 </span>
               </p>
               <p>
                 <span>问题代码:</span>
-                <span v-if="stationinfolist.length > 0">
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
                   {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
                 </span>
               </p>
               <p>
                 <span>问题原因:</span>
-                <span v-if="stationinfolist.length > 0">
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
                   {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
                 </span>
               </p>
@@ -141,13 +148,13 @@
               <v-col>
                 <div :class="['parts-status-group-item', packagerecord.point1 ? 'completed' : '']">
                   <p>工件1</p>
-                  <p>已完成</p>
+                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
               <v-col>
                 <div :class="['parts-status-group-item', packagerecord.point2 ? 'completed' : '']">
                   <p>工件2</p>
-                  <p>请拿取</p>
+                  <p>{{packagerecord.point2 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
             </v-row>
@@ -213,7 +220,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Total number
+          每箱总数
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="packageDialog = false">
@@ -276,6 +283,7 @@
      :packagerecorddialog = "packagerecorddialog"
      :packagehistoryrecord = "packagehistoryrecord"
       @setPackageRecordDialog="packagerecorddialog=false"
+      @handlePrint="handlePrint"
     />
   </div>
 </template>
@@ -289,6 +297,7 @@ export default {
   name: 'ParameterConfiguration',
   data() {
     return {
+      labelprn: '',
       packagerecordlist: [],
       mainid: '',
       barcode: '',
@@ -318,7 +327,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -326,7 +335,7 @@ export default {
         const postData = {
           id: this.labelrule._id,
           payload: {
-            maxnumber: this.inputTotalNumber,
+            quantity: this.inputTotalNumber,
           },
         };
         this.loading = true;
@@ -358,9 +367,15 @@ export default {
       }
     },
     async init() {
-      const [labelrule] = await this.getLabelRule();
-      this.labelrule = labelrule;
-      this.totalNumber = labelrule.maxnumber;
+      const labelprn = await this.getLabelFile();
+      this.labelprn = labelprn;
+      console.log(labelprn, 'labelprn');
+      const labelruleList = await this.getLabelRule();
+      const labelrule = labelruleList.find((i) => i.type === 'barcode');
+      if (labelrule) {
+        this.labelrule = labelrule;
+        this.totalNumber = labelrule.quantity;
+      }
       const packagerecordlist = await this.getPackageRecord();
       const packagerecordlistinprogress = packagerecordlist
         .filter((packagerecord) => (packagerecord.status === 1) || (packagerecord.status === 2));
@@ -370,20 +385,21 @@ export default {
         [this.packagerecord] = packagerecordlistinprogress;
         this.mainidstatus = 1;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
-        const packageLabelRecordList = await this.getPackageLabelRecord(`?query=barcode=="${this.barcode}"`);
-        if (packageLabelRecordList.length > 0) {
-          [this.packageLabelRecord] = packageLabelRecordList;
-          if (Number(this.packageLabelRecord.qty) === Number(labelrule.maxnumber)) {
-            this.isPrintAble = true;
-          } else {
-            this.isPrintAble = false;
-          }
-        }
-        console.log(this.packagerecord, 'this.packagerecord');
+        // const packageLabelRecordList = await this.getPackageLabelRecord(
+        // `?query=barcode=="${this.barcode}"`);
+        // if (packageLabelRecordList.length > 0) {
+        //   [this.packageLabelRecord] = packageLabelRecordList;
+        //   if (Number(this.packageLabelRecord.qty) === Number(labelrule.quantity)) {
+        //     this.isPrintAble = true;
+        //   } else {
+        //     this.isPrintAble = false;
+        //   }
+        // }
+        // console.log(this.packagerecord, 'this.packagerecord');
       }
     },
     initSoket() {
-      const socket = socketioclient.connect('192.168.8.113:10190');
+      const socket = socketioclient.connect('192.168.8.116:10190');
       // let socket = socketioclient.connect(`${swxapi.serverip}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
@@ -402,7 +418,8 @@ export default {
                 [this.packageLabelRecord] = packageLabelRecord;
                 if (packageLabelRecord[0].status === 0) {
                   if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
-                    this.isPrintAble = true;
+                    // this.isPrintAble = true;
+                    this.handlePrint();
                   } else {
                     this.reset();
                   }
@@ -431,7 +448,7 @@ export default {
         substationList = substationList.map((item) => ({
           id: item.id,
           name: item.name,
-          status: 0,
+          status: 3,
           ngcode: 0,
         })).reverse();
         console.log(substationList, 'substationList');
@@ -460,8 +477,8 @@ export default {
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
       console.log(packagerecordObj, 'packagerecordObj');
-      this.barcode = packagerecordObj.barcode;
       if (packagerecordObj) {
+        this.barcode = packagerecordObj.barcode;
         if (packagerecordObj.status === 3) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已包装完成';
@@ -490,7 +507,6 @@ export default {
           } else {
             this.mainidstatus = 2;
             this.detailMessege = '当前条码不是待包装首个条码';
-            // this.getNGInfo(mainid);
           }
         }
       } else {
@@ -539,13 +555,53 @@ export default {
       this.loading = false;
     },
     async getHistoryRecord() {
+      if (!this.mainid) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: '请扫描条码',
+        });
+        return;
+      }
       this.packagerecorddialog = true;
       const packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.barcode}"`);
       console.log(packagehistoryrecord, 'packagehistoryrecord');
       this.packagehistoryrecord = packagehistoryrecord;
     },
     handlePrint() {
-      this.reset();
+      window.BrowserPrint.getDefaultDevice('printer', (selectedDevice) => {
+        const { labelrule } = this;
+        const {
+          productnumber,
+          quantity,
+          supplier,
+          description,
+          internalcode,
+          pkginfo,
+          remark,
+          modifiedtimestamp,
+        } = labelrule;
+        const {
+          barcode,
+          qrcode,
+        } = this.packageLabelRecord;
+        const labelprn = this.labelprn.replace(/description/g, description)
+          .replace(/partnumber/g, productnumber)
+          .replace(/quality/g, quantity)
+          .replace(/mfgdata/g, `${modifiedtimestamp.substr(6, 4)}/${modifiedtimestamp.substr(3, 2)}/${modifiedtimestamp.substr(0, 2)}`)
+          .replace(/internalcode/g, internalcode)
+          .replace(/supplier/g, supplier)
+          .replace(/pkginfo/g, pkginfo)
+          .replace(/remark/g, remark)
+          .replace(/1111111111/g, qrcode)
+          .replace(/0000000000/g, barcode);
+        selectedDevice.send(labelprn, () => {
+          console.log('success');
+          this.reset();
+        }, () => {
+          console.log('error');
+        });
+      });
     },
     reset() {
       this.mainid = '';
