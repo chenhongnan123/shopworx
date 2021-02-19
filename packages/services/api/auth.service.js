@@ -1,5 +1,7 @@
+import axios from 'axios';
 import ApiService from './api.service';
 
+let source = null;
 class AuthService {
   constructor() {
     this.request = ApiService;
@@ -21,8 +23,25 @@ class AuthService {
     return this.request.post('/server/users/resetuserpassword', data);
   }
 
-  getServerTime() {
-    return this.request.get('/server/servertime');
+  getServerTime(sessionId) {
+    const { CancelToken } = axios;
+    source = CancelToken.source();
+    // eslint-disable-next-line
+    const id = setTimeout(() => {
+      source.cancel('timeout');
+    }, 2000);
+    return axios
+      .get('/server/servertime', {
+        headers: {
+          sessionId,
+        },
+        cancelToken: source.token
+      })
+      .then((res) => {
+        // eslint-disable-next-line
+        clearTimeout(id);
+        return res;
+      });
   }
 
   logout() {

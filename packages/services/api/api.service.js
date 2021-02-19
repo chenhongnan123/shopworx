@@ -32,10 +32,6 @@ class ApiService {
     return this.instance;
   }
 
-  getAxiosCancellationToken() {
-    return axios.CancelToken;
-  }
-
   get(url, config = {}) {
     return this.request('GET', url, {}, config);
   }

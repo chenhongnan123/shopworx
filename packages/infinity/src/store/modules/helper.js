@@ -50,15 +50,18 @@ export default ({
     setIsConnected: set('isConnected'),
   },
   actions: {
-    getServerTime: async () => {
+    getServerTime: async ({ commit, rootState }) => {
+      const { sessionId } = rootState.auth;
       try {
-        const { data } = await AuthService.getServerTime();
+        const { data } = await AuthService.getServerTime(sessionId);
         if (data && data.results) {
           return true;
         }
       } catch (e) {
+        commit('setIsConnected', false);
         return false;
       }
+      commit('setIsConnected', false);
       return false;
     },
   },
