@@ -12,7 +12,8 @@ export default ({
     getLabelFile: async ({ dispatch }) => {
       const data = await dispatch(
         'file/getFile',
-        '/lingzhong.prn',
+        // '/lingzhong.prn',
+        '/infinity/lingzhong.prn',
         { root: true },
       );
       if (data) {
@@ -68,6 +69,17 @@ export default ({
       const list = await dispatch(
         'element/getRecords',
         { elementName: 'checkout', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
+    getNgConfig: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'ngcodeconfig', query },
         { root: true },
       );
       if (list) {

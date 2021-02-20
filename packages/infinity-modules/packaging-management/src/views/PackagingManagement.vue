@@ -80,7 +80,7 @@
                 <v-stepper-step
                   step=""
                   complete
-                  :rules="!stationinfo.status ? [() => false] :  [() => true]"
+                  :rules="stationinfo.status === 2 ? [() => false] :  [() => true]"
                   v-for="(stationinfo, k) in stationinfolist"
                   :key="k"
                 >
@@ -90,9 +90,9 @@
             <v-toolbar-title
             class="ng-station-title"
             v-if="stationinfolist.length > 0
-            && stationinfolist.some((stationinfo) => stationinfo.status === 0)"
+            && stationinfolist.some((stationinfo) => stationinfo.status === 2)"
             >
-              {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}} 站存在问题
+              {{stationinfolist.find((stationinfo) => stationinfo.status === 2).name}} 站存在问题
             </v-toolbar-title>
             <v-divider></v-divider>
             <div style="color:#999;font-size:14px;line-height:30px;">详细信息</div>
@@ -103,22 +103,30 @@
               <p>
                 <span>问题站点:</span>
                 <span v-if="stationinfolist.length > 0
-                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}}
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)">
+                  {{stationinfolist.find((stationinfo) => stationinfo.status === 2).name}}
                 </span>
               </p>
               <p>
                 <span>问题代码:</span>
                 <span v-if="stationinfolist.length > 0
-                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)">
+                  {{stationinfolist.find((stationinfo) => stationinfo.status === 2).ngcode}}
                 </span>
               </p>
               <p>
                 <span>问题原因:</span>
                 <span v-if="stationinfolist.length > 0
-                && stationinfolist.some((stationinfo) => stationinfo.status === 0)">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)
+                && ngConfigList.some((ngConfig) =>
+                    ngConfig.ngcode === stationinfolist.some((stationinfo) =>
+                    stationinfo.status === 2).ngcode)
+                ">
+                  {{
+                    ngConfigList.find((ngConfig) =>
+                    ngConfig.ngcode === stationinfolist.find((stationinfo) =>
+                    stationinfo.status === 2).ngcode).ngdescription
+                  }}
                 </span>
               </p>
             </v-card>
@@ -317,6 +325,7 @@ export default {
       labelrule: null,
       packagerecorddialog: false,
       packagehistoryrecord: [],
+      ngConfigList: [],
     };
   },
   components: {
@@ -328,7 +337,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getNgConfig']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -396,7 +405,7 @@ export default {
     },
     initSoket() {
       // const socket = socketioclient.connect('192.168.8.116:10190');
-      const socket = socketioclient.connect(`${window.location.host}:10190`);
+      let socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
       });
@@ -430,7 +439,7 @@ export default {
         substationList = substationList.map((item) => ({
           id: item.id,
           name: item.name,
-          status: 3,
+          status: 2,
           ngcode: 0,
         })).reverse();
         substationList.forEach(async (substation) => {
@@ -443,6 +452,7 @@ export default {
         });
       }
       this.stationinfolist = substationList;
+      this.ngConfigList = await this.getNgConfig();
     },
     async handlePackageRecord(mainid) {
       // this.stations.forEach(element => {
@@ -494,6 +504,9 @@ export default {
               this.mainidstatus = 2;
               this.detailMessege = '当前条码不是待包装首个条码';
             }
+          } else {
+            this.mainidstatus = 1;
+            this.detailMessege = '';
           }
           const packageLabelRecordList = await this.getPackageLabelRecord(
             '?query=status==0',
