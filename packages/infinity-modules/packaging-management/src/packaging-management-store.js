@@ -88,6 +88,19 @@ export default ({
       );
       return putPackageRecord;
     },
+    updatePackageLabelRecord: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
+      const putPackageRecord = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'packagelabel',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return putPackageRecord;
+    },
     updateLabelRule: async ({ dispatch }, postData) => {
       const { id, payload } = postData;
       const putLabelRule = await dispatch(

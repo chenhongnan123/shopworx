@@ -154,7 +154,7 @@
               <v-col>
                 <div :class="['parts-status-group-item', packagerecord.point2 ? 'completed' : '']">
                   <p>工件2</p>
-                  <p>{{packagerecord.point2 ? '已完成' : '请拿取'}}</p>
+                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
             </v-row>
@@ -193,7 +193,7 @@
               <p>{{packageLabelRecord.qty||0}}</p>
               <p>当前打包数</p>
             </v-col>
-            <v-col cols="3" class="text-center package-number-total" @click="packageDialog=true">
+            <v-col cols="3" class="text-center package-number-total" @click="handleOpenTotalNumber">
               <p>{{totalNumber}}</p>
               <p>每箱总数<v-icon color="primary">mdi-pencil</v-icon> </p>
             </v-col>
@@ -280,6 +280,7 @@
       </v-card>
     </v-dialog>
     <package-record
+     :packagerecord = "packagerecord"
      :packagerecorddialog = "packagerecorddialog"
      :packagehistoryrecord = "packagehistoryrecord"
       @setPackageRecordDialog="packagerecorddialog=false"
@@ -327,7 +328,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -357,7 +358,6 @@ export default {
           });
         }
         this.loading = false;
-        console.log(result, 'result');
       } else {
         this.setAlert({
           show: true,
@@ -369,38 +369,34 @@ export default {
     async init() {
       const labelprn = await this.getLabelFile();
       this.labelprn = labelprn;
-      console.log(labelprn, 'labelprn');
       const labelruleList = await this.getLabelRule();
       const labelrule = labelruleList.find((i) => i.type === 'barcode');
       if (labelrule) {
         this.labelrule = labelrule;
         this.totalNumber = labelrule.quantity;
       }
+      const packageLabelRecordList = await this.getPackageLabelRecord(
+        '?query=status==0',
+      );
+      if (packageLabelRecordList.length > 0) {
+        [this.packageLabelRecord] = packageLabelRecordList;
+      } else {
+        this.packageLabelRecord = {};
+      }
       const packagerecordlist = await this.getPackageRecord();
       const packagerecordlistinprogress = packagerecordlist
-        .filter((packagerecord) => (packagerecord.status === 1) || (packagerecord.status === 2));
+        .filter((packagerecord) => (packagerecord.status === 1));
       if (packagerecordlistinprogress.length > 0) {
         this.mainid = packagerecordlistinprogress[0].mainid;
-        this.barcode = packagerecordlistinprogress[0].barcode;
+        // this.barcode = packagerecordlistinprogress[0].barcode;
         [this.packagerecord] = packagerecordlistinprogress;
         this.mainidstatus = 1;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
-        // const packageLabelRecordList = await this.getPackageLabelRecord(
-        // `?query=barcode=="${this.barcode}"`);
-        // if (packageLabelRecordList.length > 0) {
-        //   [this.packageLabelRecord] = packageLabelRecordList;
-        //   if (Number(this.packageLabelRecord.qty) === Number(labelrule.quantity)) {
-        //     this.isPrintAble = true;
-        //   } else {
-        //     this.isPrintAble = false;
-        //   }
-        // }
-        // console.log(this.packagerecord, 'this.packagerecord');
       }
     },
     initSoket() {
-      const socket = socketioclient.connect('192.168.8.116:10190');
-      // let socket = socketioclient.connect(`${swxapi.serverip}:10190`);
+      // const socket = socketioclient.connect('192.168.8.116:10190');
+      let socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
       });
@@ -408,28 +404,14 @@ export default {
         console.log(data, 'data');
         if (data.mainid === this.mainid) {
           if (Number(data.status) === 3) {
-            const result = await this.getPackageLabelRecord();
-            console.log(result, 'getPackageLabelRecord');
-            console.log(this.packagerecord, 'this.packagerecord');
-            if (result.length > 0) {
-              const packageLabelRecord = result
-                .filter((item) => item.barcode === this.packagerecord.barcode);
-              if (packageLabelRecord.length > 0) {
-                [this.packageLabelRecord] = packageLabelRecord;
-                if (packageLabelRecord[0].status === 0) {
-                  if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
-                    // this.isPrintAble = true;
-                    this.handlePrint();
-                  } else {
-                    this.reset();
-                  }
-                } else {
-                  this.setAlert({
-                    show: true,
-                    type: 'error',
-                    message: '此条码已被打印',
-                  });
-                }
+            const packageLabelRecord = await this.getPackageLabelRecord('?query=status==0');
+            if (packageLabelRecord.length > 0) {
+              [this.packageLabelRecord] = packageLabelRecord;
+              if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
+                // this.isPrintAble = true;
+                this.handlePrint();
+              } else {
+                this.reset();
               }
             }
           } else {
@@ -451,7 +433,6 @@ export default {
           status: 3,
           ngcode: 0,
         })).reverse();
-        console.log(substationList, 'substationList');
         substationList.forEach(async (substation) => {
           const checkInfo = await this.getCheckout(`?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
           + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1');
@@ -459,54 +440,68 @@ export default {
             substation.status = checkInfo[0].substationresult;
             substation.ngcode = checkInfo[0].checkoutngcode;
           }
-          console.log(checkInfo, 'checkInfo');
         });
       }
       this.stationinfolist = substationList;
-      console.log(222);
-      console.log(substationList, mainid, 'checkoutInfo');
     },
     async handlePackageRecord(mainid) {
       // this.stations.forEach(element => {
       //   let query = 'query=mainid="xxx"%26%26substationid=="xxxx"%26sortquery=createTimestamp=-1'
       //   let responese = await getRecord()
       // });
-      console.log(mainid, 'mainid');
       this.loading = true;
-      const packagerecordlist = await this.getPackageRecord(`?query=mainid=="${mainid}"`);
+      const packagerecordlist = await this.getPackageRecord();
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
-      console.log(packagerecordObj, 'packagerecordObj');
       if (packagerecordObj) {
-        this.barcode = packagerecordObj.barcode;
+        // this.barcode = packagerecordObj.barcode;
+        this.packagerecord = packagerecordObj;
         if (packagerecordObj.status === 3) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已包装完成';
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            `?query=barcode=="${packagerecordObj.barcode}"`,
+          );
+          if (packageLabelRecordList.length > 0) {
+            [this.packageLabelRecord] = packageLabelRecordList;
+          } else {
+            this.packageLabelRecord = {};
+          }
         } else if (packagerecordObj.status === 4) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已报废';
-        } else if (packagerecordObj.status === 0) {
-          const packagerecordlistnotstart = packagerecordlist
-            .filter((packagerecord) => packagerecord.status === 0);
-          const packagerecordfirst = packagerecordlistnotstart[
-            packagerecordlistnotstart.length - 1
-          ];
-          if (
-            packagerecordfirst.mainid === this.mainid
-          ) {
-            this.mainidstatus = 1;
-            this.detailMessege = '';
-            this.packagerecord = { ...packagerecordfirst };
-            const postData = {
-              id: packagerecordfirst._id,
-              payload: {
-                status: 1,
-              },
-            };
-            await this.updatePackageRecord(postData);
+        } else if (packagerecordObj.status === 0 || packagerecordObj.status === 1) {
+          if (packagerecordObj.status === 0) {
+            const packagerecordlistnotstart = packagerecordlist
+              .filter((packagerecord) => packagerecord.status === 0);
+            const packagerecordfirst = packagerecordlistnotstart[
+              packagerecordlistnotstart.length - 1
+            ];
+            if (
+              packagerecordfirst.mainid === this.mainid
+            ) {
+              this.mainidstatus = 1;
+              this.detailMessege = '';
+              this.packagerecord = { ...packagerecordfirst };
+              const postData = {
+                id: packagerecordfirst._id,
+                payload: {
+                  status: 1,
+                },
+              };
+              await this.updatePackageRecord(postData);
+            } else {
+              this.mainidstatus = 2;
+              this.detailMessege = '当前条码不是待包装首个条码';
+            }
+          }
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            '?query=status==0',
+          );
+          if (packageLabelRecordList.length > 0) {
+            [this.packageLabelRecord] = packageLabelRecordList;
           } else {
-            this.mainidstatus = 2;
-            this.detailMessege = '当前条码不是待包装首个条码';
+            this.packageLabelRecord = {};
           }
         }
       } else {
@@ -555,7 +550,7 @@ export default {
       this.loading = false;
     },
     async getHistoryRecord() {
-      if (!this.mainid) {
+      if (!this.mainid && !this.packageLabelRecord.barcode) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -564,9 +559,20 @@ export default {
         return;
       }
       this.packagerecorddialog = true;
-      const packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.barcode}"`);
-      console.log(packagehistoryrecord, 'packagehistoryrecord');
+      let packagehistoryrecord = [];
+      packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.packageLabelRecord.barcode}"`);
       this.packagehistoryrecord = packagehistoryrecord;
+    },
+    handleOpenTotalNumber() {
+      if (this.packageLabelRecord.qty && this.packageLabelRecord.qty > 0) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: '当前箱数未完成不可修改总数',
+        });
+        return;
+      }
+      this.packageDialog = true;
     },
     handlePrint() {
       window.BrowserPrint.getDefaultDevice('printer', (selectedDevice) => {
@@ -594,8 +600,16 @@ export default {
           .replace(/pkginfo/g, pkginfo)
           .replace(/remark/g, remark)
           .replace(/1111111111/g, qrcode)
-          .replace(/0000000000/g, barcode);
-        selectedDevice.send(labelprn, () => {
+          .replace(/SMTC0002300000002/g, barcode);
+        selectedDevice.send(labelprn, async () => {
+          const postData = {
+            id: this.packageLabelRecord._id,
+            payload: {
+              status: 1,
+            },
+          };
+          await this.updatePackageLabelRecord(postData);
+          this.packageLabelRecord = {};
           console.log('success');
           this.reset();
         }, () => {
@@ -608,6 +622,7 @@ export default {
       this.mainidstatus = 0;
       this.detailMessege = '';
       this.packagerecord = {};
+      // this.packageLabelRecord = {};
       this.stationinfolist = [];
       this.scrapDialog = false;
       this.isPrintAble = false;

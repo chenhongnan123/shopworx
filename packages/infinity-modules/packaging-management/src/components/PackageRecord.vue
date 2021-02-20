@@ -47,6 +47,7 @@
           color="primary"
           class="text-none"
           @click="handlePrint"
+          :disabled="Number(packagerecord.status) !== 3"
         >
           重新打印
         </v-btn>
@@ -61,7 +62,7 @@ export default {
     return {
     };
   },
-  props: ['packagerecorddialog', 'packagehistoryrecord'],
+  props: ['packagerecorddialog', 'packagehistoryrecord', 'packagerecord'],
   computed: {
     dialog: {
       get() {
