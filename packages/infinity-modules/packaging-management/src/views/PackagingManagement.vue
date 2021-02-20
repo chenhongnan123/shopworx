@@ -119,7 +119,7 @@
                 <span v-if="stationinfolist.length > 0
                 && stationinfolist.some((stationinfo) => stationinfo.status === 2)
                 && ngConfigList.some((ngConfig) =>
-                    ngConfig.ngcode === stationinfolist.some((stationinfo) =>
+                    ngConfig.ngcode === stationinfolist.find((stationinfo) =>
                     stationinfo.status === 2).ngcode)
                 ">
                   {{
