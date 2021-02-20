@@ -396,7 +396,7 @@ export default {
     },
     initSoket() {
       // const socket = socketioclient.connect('192.168.8.116:10190');
-      let socket = socketioclient.connect(`${window.location.host}:10190`);
+      const socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
       });
