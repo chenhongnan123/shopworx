@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **production-planning:** fix matrix onboarding error ([8f1077f](https://bitbucket.org/entrib/shopworx/commits/8f1077f06393870927b1d45100215b1cd3ecd528))
+* **production-planning:** fix onboarding based on license ([d1dcea9](https://bitbucket.org/entrib/shopworx/commits/d1dcea9c7d87ea2745371458d5fd68c00d3edaf9))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

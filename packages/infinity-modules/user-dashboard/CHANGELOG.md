@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **shift-summary:** fixed availability calculation for previous shifts ([4bd2936](https://bitbucket.org/entrib/shopworx/commits/4bd29369abf4b854627223ae2ba5dfa32c427be8))
+* **shift-summary:** fixed percentage change in oee summary ([02211a7](https://bitbucket.org/entrib/shopworx/commits/02211a751777cc4ff7a357cbdc10613da6b1726d))
+* **shift-summary:** updated icons and text display for oee summary ([0b7244b](https://bitbucket.org/entrib/shopworx/commits/0b7244b2bf87e4cbdc59675de03394a7bd9252d0))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

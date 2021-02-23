@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **infinity:** clear connection status timeout on destroy ([24406ba](https://bitbucket.org/entrib/shopworx/commits/24406baea0eeabd45a13f537b5b53a89c2cc61cc))
+* **infinity:** fix back button layout ([6e189a9](https://bitbucket.org/entrib/shopworx/commits/6e189a997c4f636a6e1ebd95061040e81307eb1e))
+* **infinity:** fixed connection status display ([5c62ea5](https://bitbucket.org/entrib/shopworx/commits/5c62ea5f8027c137800110b999ff2d2f3f93f96e))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** RA-I291 ([e52df12](https://bitbucket.org/entrib/shopworx/commits/e52df1283244a14ea9b7e50579b62897cdcc12e0))
+
+
+### Features
+
+* **core:** added connection status indicator ([d7862c3](https://bitbucket.org/entrib/shopworx/commits/d7862c37cf22a9e0fd1b0f6f9efd50839d8f3e42))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

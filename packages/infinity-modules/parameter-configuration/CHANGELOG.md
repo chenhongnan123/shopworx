@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I408 all validation check ([71af3bf](https://bitbucket.org/entrib/shopworx/commits/71af3bf20a79662593a95f00590923fc62460d04))
+* **parameter-configuration:** RA-I408 with all validation ([a747e1d](https://bitbucket.org/entrib/shopworx/commits/a747e1da9d4fe47815727fec6bf87be4a7365951))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 
