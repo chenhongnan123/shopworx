@@ -3,6 +3,7 @@ import ParameterConfiguration from '@shopworx/parameter-configuration';
 import ParameterConfigurationMes from '@shopworx/parameter-configuration-mes';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
+import calibrationApp from '@shopworx/calibration-app';
 import Masters from '@shopworx/masters';
 import ProductionPlanning from '@shopworx/production-planning';
 import ProductionLog from '@shopworx/production-log';
@@ -158,6 +159,11 @@ Vue.use(ProductionLayout, {
   i18n,
 });
 Vue.use(ProductionLayoutMes, {
+  router,
+  store,
+  i18n,
+});
+Vue.use(calibrationApp, {
   router,
   store,
   i18n,

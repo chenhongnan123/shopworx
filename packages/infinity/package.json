@@ -12,6 +12,7 @@
     "@mdi/font": "^5.8.55",
     "@shopworx/admin": "^4.2.4",
     "@shopworx/assets": "^4.2.4",
+    "@shopworx/calibration-app": "^4.2.4",
     "@shopworx/downtime-log": "^4.2.4",
     "@shopworx/masters": "^4.2.4",
     "@shopworx/material-management": "^4.2.4",

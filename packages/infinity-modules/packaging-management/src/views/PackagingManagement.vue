@@ -21,10 +21,14 @@
           rounded
           clearable
           label="请扫描条码信息。"
-          :disabled="loading"
+          :disabled="loading || inputDisabled"
           prepend-inner-icon="mdi-barcode-scan"
           @change="handlePackageRecord"
+          class="textfield"
         ></v-text-field>
+        <div class="test">
+          <ag-grid-vue></ag-grid-vue>
+        </div>
         <v-card
         >
           <v-row no-gutters class="px-2">
@@ -154,13 +158,13 @@
           <div class="parts-status-group">
             <v-row class="px-10">
               <v-col>
-                <div :class="['parts-status-group-item', packagerecord.point1 ? 'completed' : '']">
+                <div :class="['parts-status-group-item', !packagerecord.point1 ? 'completed' : '']">
                   <p>工件1</p>
                   <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
               <v-col>
-                <div :class="['parts-status-group-item', packagerecord.point2 ? 'completed' : '']">
+                <div :class="['parts-status-group-item', !packagerecord.point2 ? 'completed' : '']">
                   <p>工件2</p>
                   <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
@@ -298,6 +302,9 @@
 </template>
 
 <script>
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import { AgGridVue } from 'ag-grid-vue';
 import { mapMutations, mapActions } from 'vuex';
 import socketioclient from 'socket.io-client';
 import PackageRecord from '../components/PackageRecord';
@@ -326,10 +333,11 @@ export default {
       packagerecorddialog: false,
       packagehistoryrecord: [],
       ngConfigList: [],
+      inputDisabled: false,
     };
   },
   components: {
-    PackageRecord,
+    PackageRecord, AgGridVue,
   },
   created() {
     this.init();
@@ -337,7 +345,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getNgConfig']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getOrderList', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getNgConfig']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -378,9 +386,11 @@ export default {
     async init() {
       const labelprn = await this.getLabelFile();
       this.labelprn = labelprn;
-      const labelruleList = await this.getLabelRule();
-      const labelrule = labelruleList.find((i) => i.type === 'barcode');
-      if (labelrule) {
+      const orderList = await this.getOrderList('?query=orderstatus=="Running"');
+      let labelruleList = await this.getLabelRule();
+      labelruleList = labelruleList.filter((i) => i.type === 'barcode');
+      if (labelruleList.length > 0 && orderList.length > 0) {
+        const labelrule = labelruleList.find((i) => i.productname === orderList[0].productnumber);
         this.labelrule = labelrule;
         this.totalNumber = labelrule.quantity;
       }
@@ -400,6 +410,7 @@ export default {
         // this.barcode = packagerecordlistinprogress[0].barcode;
         [this.packagerecord] = packagerecordlistinprogress;
         this.mainidstatus = 1;
+        this.inputDisabled = true;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
       }
     },
@@ -623,6 +634,8 @@ export default {
           };
           await this.updatePackageLabelRecord(postData);
           this.packageLabelRecord = {};
+          this.inputDisabled = false;
+          document.querySelector('.textfield input').focus();
           console.log('success');
           this.reset();
         }, () => {

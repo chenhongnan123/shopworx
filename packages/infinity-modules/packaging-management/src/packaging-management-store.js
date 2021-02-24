@@ -126,5 +126,16 @@ export default ({
       );
       return putLabelRule;
     },
+    getOrderList: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'order', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
   },
 });
