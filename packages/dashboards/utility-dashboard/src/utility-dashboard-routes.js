@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: 'utility-dashboard',
+    path: 'utility',
     component: () => import(/* webpackChunkName: "utility-dashboard" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
@@ -8,7 +8,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: '',
+        name: 'utilityDashboard',
         component: () => import(/* webpackChunkName: "utility-dashboard" */ './views/UtilityDashboard.vue'),
       },
     ],
