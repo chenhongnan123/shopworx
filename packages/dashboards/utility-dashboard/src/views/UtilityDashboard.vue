@@ -17,6 +17,23 @@
         Save
       </v-btn>
       </portal>
+      <portal to="dashboard-upload-layout">
+        <div>
+          <label for="file" style="cursor: pointer;">
+            <v-icon left color="primary">mdi-cloud-upload-outline</v-icon>
+            Upload layout
+          </label>
+          <input
+            type="file"
+            name="file"
+            accept="image/*"
+            id="file"
+            class="fileinput"
+            @change="onChange"
+          />
+        </div>
+      </portal>
+
       <div v-if="url">
         <image-marker :imgurl="url" @showBtn="showBtn" ref="marker"/>
       </div>
@@ -94,6 +111,7 @@ export default {
       'setShowHeaderButtons',
     ]),
     onChange(e) {
+      this.url = '';
       const img = new Image();
       img.src = URL.createObjectURL(e.target.files[0]);
       img.onload = () => {

@@ -23,17 +23,18 @@
       <v-spacer></v-spacer>
       <portal-target name="dashboard-actions" />
       <template v-if="showHeaderButtons">
-      <send-to-tv />
-      <v-btn
-        class="text-none mr-2"
-        color="primary"
-        outlined
-        small
-        @click="previewDashboard"
-      >
-        <v-icon left>mdi-television</v-icon>
-        Preview
-      </v-btn>
+        <send-to-tv />
+        <v-btn
+          class="text-none mr-2"
+          color="primary"
+          outlined
+          small
+          @click="previewDashboard"
+        >
+          <v-icon left>mdi-television</v-icon>
+          Preview
+        </v-btn>
+      </template>
       <v-btn
         class="text-none mr-2"
         color="primary"
@@ -44,7 +45,6 @@
         <v-icon left>mdi-cog-outline</v-icon>
         Configure
       </v-btn>
-      </template>
       <v-btn
         class="text-none mr-2"
         color="primary"
