@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+
 import ConfigDrawer from '../components/ConfigDrawer.vue';
 import ShopfloorLoading from '../components/ShopfloorLoading.vue';
 

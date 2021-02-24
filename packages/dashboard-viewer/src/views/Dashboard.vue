@@ -5,6 +5,7 @@
       flat
       v-if="!isTV && !isFullscreen"
       :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
+      style="z-index: 99"
     >
       <img
         :src="require(`@shopworx/assets/logo/${shopworxLogo}.png`)"
@@ -20,6 +21,8 @@
         <portal-target name="dashboard-title"></portal-target>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <portal-target name="dashboard-actions" />
+      <template v-if="showHeaderButtons">
       <send-to-tv />
       <v-btn
         class="text-none mr-2"
@@ -41,6 +44,7 @@
         <v-icon left>mdi-cog-outline</v-icon>
         Configure
       </v-btn>
+      </template>
       <v-btn
         class="text-none mr-2"
         color="primary"
@@ -72,7 +76,7 @@ export default {
   },
   computed: {
     ...mapGetters('helper', ['isTV']),
-    ...mapState('helper', ['isFullscreen']),
+    ...mapState('helper', ['isFullscreen', 'showHeaderButtons']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
