@@ -28,6 +28,10 @@
         </v-btn>
         {{ location.name }}
       </div>
+      <div v-if="requiredWidth" class="errormsg" :style="{top: styles.top, left: btnleft}">
+        Please select the minimum area.
+      </div>
+      <template v-else>
       <v-btn
         v-if="showBtn"
         elevation="2"
@@ -41,15 +45,7 @@
           mdi-check
         </v-icon>
       </v-btn>
-      <!-- <button v-if="showBtn"
-        class="markbtn"
-        :style="{top: styles.top, left: btnleft}"
-        @click="openModel"
-      >
-        <v-icon small>
-          mdi-check
-        </v-icon>
-      </button> -->
+      </template>
       <Jcrop
         :src="imgurl"
         @update="updateCords"
@@ -109,7 +105,7 @@ export default {
       locations: [],
       showBtn: false,
       showModal: false,
-      minHeightWidth: false,
+      requiredWidth: false,
       rect: [10, 10, 100, 100],
       fontSizes: [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 30],
     };
@@ -155,9 +151,9 @@ export default {
       this.btnleft = ((e.sel.w + e.sel.x) / this.map.width) * 100 + '%';
 
       if (e.sel.w < (this.map.width / 100) * 4 || e.sel.h < (this.map.width / 100) * 4) {
-        this.minHeightWidth = true;
+        this.requiredWidth = true;
       } else {
-        this.minHeightWidth = false;
+        this.requiredWidth = false;
       }
     },
     addLocation() {
@@ -219,6 +215,17 @@ export default {
   position: absolute;
   padding: 4px;
   margin: -22px 0px 0px -35px;
+  display: flex;
+}
+.errormsg {
+  background: #fff;
+  color: red;
+  font-size: 14px;
+  border-radius: 6px;
+  z-index: 10;
+  position: absolute;
+  padding: 2px 12px;
+  margin: -27px 0px 0px -51px;
   display: flex;
 }
 .close {
