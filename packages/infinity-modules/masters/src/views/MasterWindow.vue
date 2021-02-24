@@ -57,7 +57,6 @@
         >
           <v-icon small v-text="'$download'" left></v-icon>
           Export
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
         </v-btn>
       </span>
     </portal>

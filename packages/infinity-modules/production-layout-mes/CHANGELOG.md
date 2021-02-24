@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I280 cannot add final and initial substation more than one(minor) ([5745a35](https://bitbucket.org/entrib/shopworx/commits/5745a35085d6d67b2a42104a602370742811b578))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/production-layout-mes

@@ -312,38 +312,10 @@ export default {
       this.updateData = [];
     },
     async exportData() {
-      const nameEement = this.id;
-      const fileName = `${nameEement}_Master_Table`;
-      const parameterSelected = this.rowData.map((item) => ({ ...item }));
-      const column = parameterSelected[0].questions;
-      const csvContent = [];
-      parameterSelected.forEach((parameter) => {
-        const arr = [];
-        column.forEach((key) => {
-          arr.push(parameter[key]);
-        });
-        csvContent.push(arr);
-      });
-      const csvParser = new CSVParser();
-      const content = csvParser.unparse({
-        fields: column,
-        data: csvContent,
-      });
-      this.addToZip({
-        fileName: `${fileName}.csv`,
-        fileContent: content,
-      });
-      const zip = await this.zipService.generateZip();
-      this.zipService.downloadFile(zip, `${fileName}.zip`);
-      this.setAlert({
-        show: true,
-        type: 'success',
-        message: 'DOWNLOADED',
-      });
-      return content;
-    },
-    addToZip(file) {
-      this.zipService.addFile(file);
+      const params = {
+        fileName: `${this.id}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsCsv(params);
     },
   },
 };

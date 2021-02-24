@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **icons:** updated icons for master data ([a4982dd](https://bitbucket.org/entrib/shopworx/commits/a4982dde5019af9c95ec4c1d639c7a29e5896a08))
+* **infinity:** clear connection status timeout on destroy ([24406ba](https://bitbucket.org/entrib/shopworx/commits/24406baea0eeabd45a13f537b5b53a89c2cc61cc))
+* **infinity:** fix back button layout ([6e189a9](https://bitbucket.org/entrib/shopworx/commits/6e189a997c4f636a6e1ebd95061040e81307eb1e))
+* **infinity:** fixed connection status display ([5c62ea5](https://bitbucket.org/entrib/shopworx/commits/5c62ea5f8027c137800110b999ff2d2f3f93f96e))
+* **master-data:** update export to use ag grid API ([4bc30e2](https://bitbucket.org/entrib/shopworx/commits/4bc30e21cb6d17968e3a1ea1ac65222983a10998))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** fix hide column issue after drag out of the table ([602aaf9](https://bitbucket.org/entrib/shopworx/commits/602aaf9d3be348b86197cde9c0f03e68c47f8f78))
+* **masters:** imporve and fixes master data ([2433a85](https://bitbucket.org/entrib/shopworx/commits/2433a852591065344878db39687ee793490ba240))
+* **masters:** RA-I291 ([e52df12](https://bitbucket.org/entrib/shopworx/commits/e52df1283244a14ea9b7e50579b62897cdcc12e0))
+* **ml-management:** RA-I458 file size > 7mb not allowed to upload ([358b22f](https://bitbucket.org/entrib/shopworx/commits/358b22f2f46a90ffbd5ebfbf63f8b06865ad665e))
+* **parameter-config:** enable Export data button on selection of protocol ([a5efd05](https://bitbucket.org/entrib/shopworx/commits/a5efd052272cd1befe712cf33969379359369037))
+* **parameter-configuration:** problem while creating single parameter ([f980c9f](https://bitbucket.org/entrib/shopworx/commits/f980c9f9b013dcc9e24e39aa31fe3a1dd6b72b07))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+* **parameter-configuration:** RA-I398 with point two and three ([cc137c5](https://bitbucket.org/entrib/shopworx/commits/cc137c59690f63c6c70ebd5c7d1ef18e689e2507))
+* **parameter-configuration:** RA-I408 all validation check ([71af3bf](https://bitbucket.org/entrib/shopworx/commits/71af3bf20a79662593a95f00590923fc62460d04))
+* **parameter-configuration:** RA-I408 with all validation ([a747e1d](https://bitbucket.org/entrib/shopworx/commits/a747e1da9d4fe47815727fec6bf87be4a7365951))
+* **product-management:** simmiler like RA-I180 ([b2a3bde](https://bitbucket.org/entrib/shopworx/commits/b2a3bdec88ebfe8d0e574563ad6562ce0bd73347))
+* **production-layout:** RA-I280 cannot add final and initial substation more than one(minor) ([5745a35](https://bitbucket.org/entrib/shopworx/commits/5745a35085d6d67b2a42104a602370742811b578))
+* **production-planning:** fix matrix onboarding error ([8f1077f](https://bitbucket.org/entrib/shopworx/commits/8f1077f06393870927b1d45100215b1cd3ecd528))
+* **production-planning:** fix onboarding based on license ([d1dcea9](https://bitbucket.org/entrib/shopworx/commits/d1dcea9c7d87ea2745371458d5fd68c00d3edaf9))
+* **raw-data:** ERA-I425 ([84011ae](https://bitbucket.org/entrib/shopworx/commits/84011ae2802d75e1c5d2fc1f6425e756ff3f0be9))
+* **raw-data:** RA-I424 ([8f3b1bf](https://bitbucket.org/entrib/shopworx/commits/8f3b1bf7334883af3092803b4792f3e4c7886ace))
+* **roadmap-management:** simmiler like RA-I180 ([997db0b](https://bitbucket.org/entrib/shopworx/commits/997db0b8912bf036fc5d81987357a813939b47bd))
+* **shift-summary:** fixed availability calculation for previous shifts ([4bd2936](https://bitbucket.org/entrib/shopworx/commits/4bd29369abf4b854627223ae2ba5dfa32c427be8))
+* **shift-summary:** fixed percentage change in oee summary ([02211a7](https://bitbucket.org/entrib/shopworx/commits/02211a751777cc4ff7a357cbdc10613da6b1726d))
+* **shift-summary:** updated icons and text display for oee summary ([0b7244b](https://bitbucket.org/entrib/shopworx/commits/0b7244b2bf87e4cbdc59675de03394a7bd9252d0))
+
+
+### Features
+
+* **core:** added connection status indicator ([d7862c3](https://bitbucket.org/entrib/shopworx/commits/d7862c37cf22a9e0fd1b0f6f9efd50839d8f3e42))
+* **parameter-configuration:** RA-I470 add the 'chinesedescription' column in sample-csv and downloaded csv file ([a8b7282](https://bitbucket.org/entrib/shopworx/commits/a8b7282ba9b34d0e39d71e601f4aa61fd2539b8a))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

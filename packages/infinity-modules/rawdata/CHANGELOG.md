@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **raw-data:** ERA-I425 ([84011ae](https://bitbucket.org/entrib/shopworx/commits/84011ae2802d75e1c5d2fc1f6425e756ff3f0be9))
+* **raw-data:** RA-I424 ([8f3b1bf](https://bitbucket.org/entrib/shopworx/commits/8f3b1bf7334883af3092803b4792f3e4c7886ace))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/rawdata
