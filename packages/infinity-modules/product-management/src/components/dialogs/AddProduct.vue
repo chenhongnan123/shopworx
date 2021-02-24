@@ -44,7 +44,6 @@
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
             v-model="product.productname"
-            :rules="productNameRule"
             required
           ></v-text-field>
           <v-text-field

@@ -26,9 +26,7 @@
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
             v-model="productName"
-            :rules="productNameRule"
             required
-            :counter="10"
             @keyup="validName"
         ></v-text-field>
         <v-text-field
