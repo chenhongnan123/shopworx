@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **master-data:** update export to use ag grid API ([4bc30e2](https://bitbucket.org/entrib/shopworx/commits/4bc30e21cb6d17968e3a1ea1ac65222983a10998))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** fix hide column issue after drag out of the table ([602aaf9](https://bitbucket.org/entrib/shopworx/commits/602aaf9d3be348b86197cde9c0f03e68c47f8f78))
+* **masters:** imporve and fixes master data ([2433a85](https://bitbucket.org/entrib/shopworx/commits/2433a852591065344878db39687ee793490ba240))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/masters

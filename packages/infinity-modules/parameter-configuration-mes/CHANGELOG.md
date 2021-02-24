@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **parameter-config:** enable Export data button on selection of protocol ([a5efd05](https://bitbucket.org/entrib/shopworx/commits/a5efd052272cd1befe712cf33969379359369037))
+* **parameter-configuration:** problem while creating single parameter ([f980c9f](https://bitbucket.org/entrib/shopworx/commits/f980c9f9b013dcc9e24e39aa31fe3a1dd6b72b07))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+* **parameter-configuration:** RA-I398 with point two and three ([cc137c5](https://bitbucket.org/entrib/shopworx/commits/cc137c59690f63c6c70ebd5c7d1ef18e689e2507))
+
+
+### Features
+
+* **parameter-configuration:** RA-I470 add the 'chinesedescription' column in sample-csv and downloaded csv file ([a8b7282](https://bitbucket.org/entrib/shopworx/commits/a8b7282ba9b34d0e39d71e601f4aa61fd2539b8a))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration-mes
