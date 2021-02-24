@@ -142,7 +142,7 @@ export default {
       customername: '',
       productNameRule: [(v) => !!v || 'Product Name Required',
         // (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
-        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
+        (v) => !/[^a-zA-Z0-9-]/.test(v) || 'Special Characters ( including space ) not allowed'],
       selectLineRule: [(v) => !!v || 'Line selection Required'],
       selectProductTypeRule: [(v) => !!v || 'Roadmap selection Required'],
       selectBomRule: [(v) => !!v || 'BOM selection Required'],
