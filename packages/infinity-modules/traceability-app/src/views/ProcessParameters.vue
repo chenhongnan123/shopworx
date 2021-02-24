@@ -371,7 +371,7 @@ export default {
         await Promise.all(this.subStationList.map(async (s) => {
           const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
             (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
+            C%7Cparametercategory=="18"%7C%7Cparametercategory=="57")`);
           const elementDetails = await this.getProcessElement(s.id);
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {

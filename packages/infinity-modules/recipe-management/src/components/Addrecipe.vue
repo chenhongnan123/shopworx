@@ -279,28 +279,29 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            line: 'Line1',
+            line: this.input.linename,
             subline: this.input.sublinename,
             stationname: this.input.stationname,
             editedby: this.userName,
             editedtime: new Date().getTime(),
             versionnumber: this.editedVersionNumber + 1,
           };
-          let created = false;
+          let updated = false;
           const request = this.recipe;
           const object = {
             payload: request,
             query: `?query=recipenumber=="${this.updateRecipeNumber}"`,
           };
-          created = await this.updateRecipe(object);
-          if (created) {
+          updated = await this.updateRecipe(object);
+          if (updated) {
             this.setAlert({
               show: true,
               type: 'success',
               message: 'RECIPE_UPDATED',
             });
-            this.dialog = false;
             this.recipe = {};
+            this.$refs.form.reset();
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,
@@ -308,7 +309,11 @@ export default {
               message: 'ERROR_UPDATING_RECIPE',
             });
           }
+          this.flagNewUpdate = false;
           this.saving = false;
+          this.recipe = {};
+          this.$refs.form.reset();
+          this.dialog = false;
         } else {
           // add new recipe
           this.saving = true;
@@ -345,12 +350,14 @@ export default {
               message: 'ERROR_CREATING_RECIPE',
             });
           }
+          this.$refs.form.reset();
           this.saving = false;
         }
       }
     },
     async dialogReset() {
       this.saving = false;
+      this.flagNewUpdate = false;
       this.$refs.form.reset();
     },
     async getfilteredStationNames(item) {

@@ -26,7 +26,7 @@
     "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record",
     "RECIPE_SUBLINE_NAME_EMPTY": "Select Subline Name from DropDown",
     "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown",
-    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name All ready Exist"
+    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name Already Exist!"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
