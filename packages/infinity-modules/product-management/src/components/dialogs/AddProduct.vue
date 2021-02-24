@@ -205,6 +205,7 @@ export default {
             lineid: this.lineSelected.id,
             roadmapname: this.selectedRoadmap.name,
             roadmapid: this.selectedRoadmap.id,
+            roadmaptype: this.selectedRoadmap.roadmaptype,
             productversionnumber: 1,
             createdby: this.userName,
             assetid: 4,

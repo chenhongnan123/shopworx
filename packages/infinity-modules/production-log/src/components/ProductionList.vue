@@ -24,10 +24,8 @@
           class="mt-2"
           v-for="(machineData, machineKey, j) in shiftData"
         >
-          <span class="title">
+          <div class="title d-inline-block">
             {{ machineKey }}
-          </span>
-          <span class="title float-right mr-4">
             <assign-operator
               :shift="shiftKey"
               :machine="machineKey"
@@ -36,17 +34,61 @@
                 operatorname: machineData.operatorname,
               }"
             />
-          </span>
-          <div
-            :key="k"
-            class="mb-4 mt-2"
-            v-for="(productionList, k) in machineData.production"
-          >
-            <production-list-item
-              :production="productionList"
-              class="mr-4"
-            />
           </div>
+          <v-data-table
+            :items="machineData.production"
+            :headers="headers"
+            disable-pagination
+            hide-default-footer
+          >
+            <!-- eslint-disable-next-line -->
+            <template #item.firstcycle="{ item }">
+              {{ new Date(item.firstcycle).toLocaleTimeString('en-GB') }}
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.lastcycle="{ item }">
+              {{ new Date(item.lastcycle).toLocaleTimeString('en-GB') }}
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.produced="{ item }">
+              <span class="info--text">
+                {{ item.produced }}
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.accepted="{ item }">
+              <span class="success--text">
+                {{ item.accepted }}
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.rejected="{ item }">
+              <div class="error--text d-inline-block mt-1">
+                {{ item.rejected }}
+              </div>
+              <span class="float-right">
+                <assign-rejections :production="item" />
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.rework="{ item }">
+              <div class="warning--text d-inline-block mt-1">
+                {{ item.rework }}
+              </div>
+              <span class="float-right">
+                <assign-rework :production="item" />
+              </span>
+            </template>
+            <!-- eslint-disable-next-line -->
+            <template #item.scrap="{ item }">
+              <div class="warning--text d-inline-block mt-1">
+                {{ parseFloat(item.scrap).toFixed(2) }}
+              </div>
+              <span class="float-right">
+                <assign-scrap :production="item" />
+              </span>
+            </template>
+          </v-data-table>
         </div>
       </div>
     </template>
@@ -58,8 +100,10 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import ProductionLoading from './ProductionLoading.vue';
 import ProductionError from './ProductionError.vue';
 import ProductionNoRecords from './ProductionNoRecords.vue';
-import ProductionListItem from './ProductionListItem.vue';
 import AssignOperator from './AssignOperator.vue';
+import AssignRejections from './AssignRejections.vue';
+import AssignRework from './AssignRework.vue';
+import AssignScrap from './AssignScrap.vue';
 
 export default {
   name: 'ProductionList',
@@ -67,15 +111,34 @@ export default {
     ProductionLoading,
     ProductionError,
     ProductionNoRecords,
-    ProductionListItem,
     AssignOperator,
+    AssignRejections,
+    AssignRework,
+    AssignScrap,
+  },
+  data() {
+    return {
+      headers: [
+        { text: 'Plan', value: 'planid' },
+        {
+          text: 'Part',
+          value: 'partname',
+          width: '25%',
+        },
+        { text: 'Production start', value: 'firstcycle' },
+        { text: 'Production end', value: 'lastcycle' },
+        { text: 'Produced', value: 'produced' },
+        { text: 'Accepted', value: 'accepted' },
+        { text: 'Rejected', value: 'rejected' },
+        { text: 'Rework', value: 'rework' },
+        { text: 'Scrap (in Kg)', value: 'scrap' },
+      ],
+    };
   },
   computed: {
     ...mapState('productionLog', [
       'loading',
       'error',
-      'selectedDate',
-      'operators',
     ]),
     ...mapGetters('productionLog', ['production']),
   },
@@ -84,13 +147,6 @@ export default {
   },
   created() {
     this.fetchProductionList();
-  },
-  watch: {
-    selectedDate(val) {
-      if (val) {
-        this.fetchProductionList();
-      }
-    },
   },
 };
 </script>

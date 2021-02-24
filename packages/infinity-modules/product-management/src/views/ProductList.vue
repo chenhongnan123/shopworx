@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      <span>Product Type</span>
+      <span>{{$t('productManagement')}}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -14,31 +14,34 @@
       </v-btn>
     </portal>
     <v-container fluid class="py-0">
-      <v-row justify="center">
-        <v-col cols="12" md="7"></v-col>
-        <v-col cols="12" md="5" justify="end">
-         <div style="float:right;">
-          <v-btn small color="primary"
-          class="text-none" @click="setAddProductDialog(true)">
-            <v-icon small left>mdi-plus</v-icon>
-            {{ $t('displayTags.buttons.addProductType') }}
-          </v-btn>
-          <v-btn small color="primary" outlined
-          class="text-none ml-2" @click="addDuplicateProduct()">
-            <v-icon small left>mdi-content-duplicate</v-icon>
-            {{ $t('displayTags.buttons.duplicateProductType') }}
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-            <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refresh') }}
-          </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
-            <v-icon small left>mdi-filter-variant</v-icon>
-            {{ $t('displayTags.buttons.filters') }}
-          </v-btn>
-         </div>
-        </v-col>
-      </v-row>
+      <portal to="app-extension">
+        <v-row justify="center">
+          <v-col cols="12" md="7"></v-col>
+          <v-col cols="12" md="5" justify="end">
+          <div style="float:right;">
+            <v-btn small color="primary"
+            class="text-none" @click="setAddProductDialog(true)">
+              <v-icon small left>mdi-plus</v-icon>
+              {{ $t('displayTags.buttons.addProductType') }}
+            </v-btn>
+            <v-btn small color="primary" outlined
+            v-if="!recordSelection"
+            class="text-none ml-2" @click="addDuplicateProduct()">
+              <v-icon small left>mdi-content-duplicate</v-icon>
+              {{ $t('displayTags.buttons.duplicateProductType') }}
+            </v-btn>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+              <v-icon small left>mdi-refresh</v-icon>
+              {{ $t('displayTags.buttons.refresh') }}
+            </v-btn>
+            <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+              <v-icon small left>mdi-filter-variant</v-icon>
+              {{ $t('displayTags.buttons.filters') }}
+            </v-btn>
+          </div>
+          </v-col>
+        </v-row>
+      </portal>
       <v-data-table
         v-model="products"
         :headers="headers"
@@ -46,14 +49,20 @@
         item-key="productnumber"
         :single-select="true"
         show-select
+        fixed-header
+        :height="tableHeight - 168"
         >
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.productname="{ item }">
           <span @click="handleClick(item)"><a>{{ item.productname }}</a></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.editedtime="{ item }">
-          <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
+          <span v-if="item.editedtime">
+            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
           <v-row>
                 <v-btn
@@ -76,7 +85,9 @@
         </template>
       </v-data-table>
       <add-product/>
-      <duplicate-product v-if="products" :products="products"/>
+      <duplicate-product v-if="products"
+      :products="products"
+      @do-empty="emptyProducts"/>
       <edit-product v-if="editProductData" :product="editProductData"/>
       <delete-product v-if="productToDelete" :productToDelete="productToDelete"/>
     </v-container>
@@ -105,13 +116,13 @@ export default {
     return {
       headers: [
         {
-          text: 'No.',
+          text: this.$t('No.'),
           value: 'numberIndex',
         },
-        { text: this.$i18n.t('displayTags.lineName'), value: 'linename' },
-        { text: this.$i18n.t('displayTags.productTypeNameHeader'), value: 'productname' },
+        { text: this.$t('Line'), value: 'linename' },
+        { text: this.$t('Product Type Name'), value: 'productname' },
         { text: this.$i18n.t('displayTags.productTypeNumber'), value: 'productnumber' },
-        { text: this.$i18n.t('displayTags.customerHeader'), value: 'customername' },
+        { text: this.$i18n.t('Customer'), value: 'customername' },
         { text: this.$i18n.t('displayTags.roadmap'), value: 'roadmapname' },
         { text: this.$i18n.t('displayTags.bom'), value: 'bomname' },
         { text: this.$i18n.t('displayTags.version'), value: 'productversionnumber' },
@@ -119,11 +130,13 @@ export default {
         { text: this.$i18n.t('displayTags.lastEditedBy'), value: 'editedby' },
         { text: this.$i18n.t('displayTags.actions'), sortable: false, value: 'actions' },
       ],
+      recordSelection: false,
       loadingLine: false,
       product: {},
       products: [],
       saving: false,
       hover: true,
+      tableHeight: window.innerHeight,
       lineSelected: null,
       subLineSelected: null,
       stationSelected: null,
@@ -133,15 +146,16 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getProductListRecords('');
     this.products = [];
   },
   computed: {
-    ...mapState('productManagement', ['productList', 'lineList']),
+    ...mapState('productManagement', ['productList', 'lineList'/** ,  'filterLine', 'filterSubLine', 'filterStation' */]),
   },
   methods: {
     ...mapActions('productManagement', ['getProductListRecords', 'createProduct']),
-    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('productManagement', ['toggleFilter', 'setFilterLine', 'setAddProductDialog',
       'setDuplicateDialog', 'setEditDialog', 'setDeleteDialog']),
     showFilter: {
@@ -177,10 +191,26 @@ export default {
     updateProductType(item) {
       this.editProductData = item;
       this.setEditDialog(true);
+      this.products = [];
     },
     deleteProductDialog(item) {
       this.productToDelete = item;
       this.setDeleteDialog(true);
+      this.products = [];
+    },
+    emptyProducts() {
+      this.products = [];
+    },
+  },
+  watch: {
+    products: {
+      handler(val) {
+        if (val.length === 0 || val.length > 1) {
+          this.recordSelection = true;
+        } else {
+          this.recordSelection = false;
+        }
+      },
     },
   },
 };

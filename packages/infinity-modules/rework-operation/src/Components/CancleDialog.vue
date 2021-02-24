@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
+    // ...mapActions('reworkOperation', ['deleteSubline']),
     async checkMainId() {
       if (this.rework.enterManinId) {
         this.dialog = true;

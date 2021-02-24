@@ -31,6 +31,7 @@ export default ({
     productDetailsRecord: [],
     roadMapDetailsRecord: [],
     runningOrderList: [],
+    subStationWiseOrderCount: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -62,8 +63,53 @@ export default ({
     setProductDetailsRecord: set('productDetailsRecord'),
     setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
     setrunningOrderList: set('runningOrderList'),
+    setSubStationWiseOrderCounts: set('subStationWiseOrderCount'),
   },
   actions: {
+    getSubStationWiseOrderCounts: async ({ dispatch, commit }, payload) => {
+      let list = [];
+      if (payload.substationlist && payload.substationlist.length) {
+        list = payload.substationlist.map((l) => ({
+          ...l,
+          okcount: 0,
+          ngcount: 0,
+        }));
+      }
+      let listUpdated = [];
+      if (list.length) {
+        // OK = checkout which substationid + ordernumber +
+        // modestatus == 0 + substationresult==1 or substationresult==7
+        // NG = partstatus which substationid + ordernumber +
+        // modestatus == 0 + substationresult != 1
+        listUpdated = await Promise.all(list.map(async (item) => {
+          const checkout = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'checkout',
+              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26modestatus==0%26%26(substationresult==1%7C%7Csubstationresult==7)`,
+            },
+            { root: true },
+          );
+          const okcount = checkout.length;
+          const partstatus = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'checkout',
+              query: `?query=substationid=="${item.substationid}"%26%26ordernumber=="${payload.ordernumber}"%26%26modestatus==0%26%26(substationresult!=1%26%26substationresult!=7)`,
+            },
+            { root: true },
+          );
+          const ngcount = partstatus.length;
+          return {
+            ...item,
+            okcount,
+            ngcount,
+          };
+        }));
+      }
+      commit('setSubStationWiseOrderCounts', listUpdated);
+      return true;
+    },
     getRunningOrder: async ({ dispatch, commit }, query) => {
       query = '?query=orderstatus=="Running"';
       const runningOrderList = await dispatch(
@@ -246,7 +292,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
+        const query = '?query=visible==true';
         const orders = await dispatch(
           'element/getRecords',
           {
@@ -422,11 +468,13 @@ export default ({
         }
       }
     },
-
-    getOrderListRecords: async ({ dispatch, commit }, query) => {
+    getHiddenOrderListRecords: async ({ dispatch, commit }, query) => {
       const orders = await dispatch(
         'element/getRecords',
-        { elementName: 'order' },
+        {
+          elementName: 'order',
+          query: '?query=visible==false',
+        },
         { root: true },
       );
       const partStatus = await dispatch(
@@ -463,6 +511,62 @@ export default ({
           item.ngcount = modesNg.length;
         }
       });
+      let orderUpdate = [];
+      if (orders && orders.length) {
+        orderUpdate = orders.map((l) => ({
+          ...l,
+        }));
+      }
+      commit('setOrderList', orderUpdate);
+      return true;
+    },
+    getOrderListRecords: async ({ dispatch, commit }, query) => {
+      const orders = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'order',
+          query,
+        },
+        { root: true },
+      );
+      const partStatus = await dispatch(
+        'element/getRecords',
+        { elementName: 'partstatus' },
+        { root: true },
+      );
+      const orderCount = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'ordercount',
+          query: '',
+        },
+        { root: true },
+      );
+      orders.forEach(async (item) => {
+        if (orderCount.length) {
+          const actualUpdatecount = orderCount
+            .filter((oc) => oc.ordernumber === item.ordernumber);
+          item.actualcount = actualUpdatecount[0].ordercount;
+        }
+        if (partStatus.length) {
+          const okUpdatecount = partStatus
+            .filter((mc) => mc.ordernumber === item.ordernumber);
+          const over = okUpdatecount
+            .filter((ov) => ov.overallresult === 1 || ov.overallresult === 7);
+          const modes = over
+            .filter((ms) => ms.modestatus === 0);
+          const ngOverall = okUpdatecount
+            .filter((ms) => ms.overallresult !== 1 && ms.overallresult !== 7);
+          const modesNg = ngOverall
+            .filter((ms) => ms.modestatus === 0);
+          item.okcount = modes.length;
+          item.ngcount = modesNg.length;
+        }
+      });
+
+      const object = orders.find((f) => f.orderstatus === 'Running');
+      orders.splice(orders.indexOf(object), 1);
+      orders.splice(0, 0, object);
       let orderUpdate = [];
       if (orders && orders.length) {
         orderUpdate = orders.map((l) => ({

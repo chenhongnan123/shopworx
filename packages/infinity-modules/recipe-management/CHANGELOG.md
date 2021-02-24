@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **line-mes:** use same date format to shown in all modules ([50927a2](https://bitbucket.org/entrib/shopworx/commits/50927a26f9766ea3c0a05612d687de5fe9782e22))
+* **recipe-management:** dependent dropdown ([6b5da6c](https://bitbucket.org/entrib/shopworx/commits/6b5da6c7211c4ebd03ab3c934cbf0ea3c78b8ad9))
+* **recipe-management:** duplicate button display on UI ([8471cda](https://bitbucket.org/entrib/shopworx/commits/8471cda3450502a030dac332b8dd78a1b5ff9124))
+* **recipe-management:** on page refresh data not fetched in recipe details page ([2370b9e](https://bitbucket.org/entrib/shopworx/commits/2370b9e86a581c9a334c53903f2b1de07b70bc88))
+* **recipe-management:** option buttons should be floating ([9a63a9e](https://bitbucket.org/entrib/shopworx/commits/9a63a9e4bda5d5e4f0704dc82b926ac8e74da8fc))
+* **recipe-management:** recipe details not fetched ([b560ab7](https://bitbucket.org/entrib/shopworx/commits/b560ab72dc612c87400cc466ef1cdc0d20f7b7c4))
+* **recipe-management:** refresh functionality ([de74387](https://bitbucket.org/entrib/shopworx/commits/de7438748470442d738697e12479fe0942839d6b))
+* **recipe-management:** refresh the list with filtered list as well as without filtered list ([5a079e9](https://bitbucket.org/entrib/shopworx/commits/5a079e958b596e24b06964693b0aebfe7fcce903))
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/recipe-management
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/recipe-management

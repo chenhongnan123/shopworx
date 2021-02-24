@@ -1,6 +1,6 @@
 {
   "traceabilityApp": "Traceability",
-  "title": "Traceability",
+  "appTitleTraceability": "Traceability",
   "headers": {
     "list": "Overall",
     "changeover": "Process parameters"
@@ -17,7 +17,36 @@
     "GET_RECORDS_BY_SUBLINEID": "Fetched the records by selected Subline",
     "GET_RECORDS_BY_MAINID": "Fetched the records by provided MainID",
     "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
-    "GET_RECORDS": "Fetched thr records!",
+    "GET_RECORDS": "Fetched the records!",
     "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
-  }
+  },
+  "Search ID":	"Search ID",
+  "Select Sub-Line":	"Select Subline",
+  "Select Sub-Station":	"Select Sub-Station",
+  "From date":	"From date",
+  "To date":	"To date",
+  "Export":	"Export",	
+  "Components":	"Components",
+  "Parameters":	"Parameters",
+  "Quality History":	"Quality History",
+  "Created Date": "Created Date",
+  "Modified Date": "Modified Date",
+  "Main Id": "Main ID",
+  "Completed Product ID": "Completed Product ID",
+  "Overall result": "Overall result",
+  "NG Code": "NG Code",
+  "Sub station": "Sub station",
+  "Order Name": "Order Name",
+  "Package batchId": "Package batchId",
+  "Carrier ID": "Carrier ID",
+  "Product Name": "Product Name",
+  "Component name": "Component Name",
+  "Component value": "Component Value",
+  "Bound status": "Bound Status",
+  "Rework status": "Rework Status",
+  "Quality status": "Quality Status",
+  "Description": "Description (en)",
+  "Recipe name": "Recipe Name",
+  "Substation result": "Substation Result",
+  "Order name": "Order Name"
 }

@@ -16,6 +16,10 @@ export default ({
     componentList: [],
     trecibilityState: {},
     sortedSubStation: [],
+    parametersList: [],
+    runningOrder: [],
+    bomDetailsList: [],
+    subStationListData: [],
   },
   mutations: {
     setLineList: set('lineList'),
@@ -31,8 +35,36 @@ export default ({
     setComponentList: set('componentList'),
     setTrecibilityState: set('trecibilityState'),
     setSortedSubStation: set('sortedSubStation'),
+    setParametersList: set('parametersList'),
+    setRunningOrderList: set('runningOrder'),
+    setBOMDetailsList: set('bomDetailsList'),
+    setSubStationListData: set('subStationListData'),
   },
   actions: {
+    getRunningOrder: async ({ dispatch, commit }, query) => {
+      const runningOrderList = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'order',
+          query,
+        },
+        { root: true },
+      );
+      commit('setRunningOrderList', runningOrderList);
+      return true;
+    },
+    getBOMDetails: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'bomdetails',
+          query,
+        },
+        { root: true },
+      );
+      commit('setBOMDetailsList', list);
+      return true;
+    },
     getPartStatus: async ({ dispatch, commit }, query) => {
       const part = await dispatch(
         'element/getRecords',
@@ -43,6 +75,18 @@ export default ({
         { root: true },
       );
       commit('setPartStatusList', part);
+      return part;
+    },
+    getParametersList: async ({ dispatch, commit }, query) => {
+      const part = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      commit('setParametersList', part);
       return part;
     },
     getProcessParameters: async ({ dispatch, commit }, { elementname, payload }) => {
@@ -74,6 +118,14 @@ export default ({
         },
         { root: true },
       );
+      // let checkout = [];
+      // if (list && list.length) {
+      //   checkout = list.map((l) => ({
+      //     ...l,
+      //     componentname: '',
+      //     componentvalue: '',
+      //   }));
+      // }
       commit('setComponentList', list);
       return list;
     },
@@ -138,6 +190,7 @@ export default ({
       return station;
     },
     getSubStations: async ({ dispatch, commit }, query) => {
+      let list = [];
       const station = await dispatch(
         'element/getRecords',
         {
@@ -146,7 +199,43 @@ export default ({
         },
         { root: true },
       );
-      commit('setSubStationList', station);
+      if (station) {
+        list = station;
+        list = list.sort((a, b) => a.name - b.name);
+      }
+      commit('setSubStationList', list);
+      return station;
+    },
+    // new logic
+    getSubStationElementsData: async ({ dispatch, commit }, payload) => {
+      const station = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query: '',
+        },
+        { root: true },
+      );
+      if (station) {
+        await Promise.all(station.map(async (element) => {
+          const elementHeaders = await dispatch(
+            'element/getElement',
+            element.id,
+            { root: true },
+          );
+          element[`headers_${element.id}`] = elementHeaders;
+          const paramters = await dispatch(
+            'element/getRecords',
+            {
+              elementName: element.id,
+              query: payload,
+            },
+            { root: true },
+          );
+          element[`data_${element.id}`] = paramters;
+        }));
+      }
+      commit('setSubStationListData', station);
       return station;
     },
     getSortedSubStations: async ({ dispatch, commit }, query) => {

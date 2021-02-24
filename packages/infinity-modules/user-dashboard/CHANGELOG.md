@@ -3,6 +3,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **shift-summary:** fixed availability calculation for previous shifts ([4bd2936](https://bitbucket.org/entrib/shopworx/commits/4bd29369abf4b854627223ae2ba5dfa32c427be8))
+* **shift-summary:** fixed percentage change in oee summary ([02211a7](https://bitbucket.org/entrib/shopworx/commits/02211a751777cc4ff7a357cbdc10613da6b1726d))
+* **shift-summary:** updated icons and text display for oee summary ([0b7244b](https://bitbucket.org/entrib/shopworx/commits/0b7244b2bf87e4cbdc59675de03394a7bd9252d0))
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **production-log:** fixed rework and scrap update ([a69e812](https://bitbucket.org/entrib/shopworx/commits/a69e812c7092454727ae9eb72b9566082e5c1cff))
+* **user-dashboard:** fixed production report name ([590d689](https://bitbucket.org/entrib/shopworx/commits/590d689979f0574a55074914d04ae115bea2cc47))
+
+
+### Features
+
+* **user-dashboard:** added downtime widget for shift summary ([4d6b144](https://bitbucket.org/entrib/shopworx/commits/4d6b1440e6eba45e7bcf66c2811d09130c1f6c5c))
+* **user-dashboard:** added oee summary widget ([0c68e0c](https://bitbucket.org/entrib/shopworx/commits/0c68e0cf45b972171fd8e9f618fe271603610631))
+* **user-dashboard:** added pareto analysis for shift summary ([94afe36](https://bitbucket.org/entrib/shopworx/commits/94afe369aa7f4d0f68587131bd1f280f23119edf))
+* **user-dashboard:** added shift comparision A,P,Q charts ([da11221](https://bitbucket.org/entrib/shopworx/commits/da112211aac6d22266a027820897e29a95cdb361))
+* **user-dashboard:** added shift production widget ([8ce4712](https://bitbucket.org/entrib/shopworx/commits/8ce471212497cf887b683455b958091ae8a20108))
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/user-dashboard
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/user-dashboard

@@ -1,5 +1,6 @@
 <template>
   <v-container fluid class="py-0">
+    <portal to="app-extension">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -60,17 +61,21 @@
           <v-btn v-if="recipes.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="fnCreateDupRecipe">
             <v-icon small left>mdi-content-duplicate</v-icon>
-            {{ $t('displayTags.buttons.duplicateRecipe') }}
+            {{ $t('duplicateRecipe') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
+          <v-btn small color="primary" outlined class="text-none ml-2"
+            @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            {{ $t('displayTags.buttons.refreshRecipe') }}
+            {{ $t('refreshRecipe') }}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
-            {{ $t('displayTags.buttons.filtersRecipe') }}
+            {{ $t('filtersRecipe') }}
           </v-btn>
         </v-toolbar>
+      </v-col>
+    </v-row>
+    </portal>
         <v-data-table
         v-model="recipes"
         :headers="headers"
@@ -78,14 +83,20 @@
         item-key="recipenumber"
         :single-select="true"
         show-select
+        fixed-header
+        :height="tableHeight - 168"
         >
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.recipename="{ item }">
           <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.editedtime="{ item }">
-          <span v-if="item.editedtime">{{ new Date(item.editedtime).toLocaleString() }}</span>
+          <span v-if="item.editedtime">
+            {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
           <v-row><v-btn
               icon
@@ -107,8 +118,7 @@
             </v-btn></v-row>
         </template>
       </v-data-table>
-      </v-col>
-    </v-row>
+    <!-- <AddRecipe /> -->
   <v-dialog
     scrollable
     persistent
@@ -117,6 +127,10 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -133,6 +147,8 @@
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
             v-model="dupRecipeName"
+            :rules="nameRules"
+            :counter="10"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -140,12 +156,14 @@
         <v-btn
           color="primary"
           class="text-none"
+          :disabled="!valid"
           @click="fnSaveDuplicateRecipe"
         >
           {{ $t('displayTags.buttons.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
   <v-dialog
     scrollable
@@ -194,6 +212,9 @@ export default {
   },
   data() {
     return {
+      sublines: null,
+      stations: null,
+      deleting: false,
       headers: [
         {
           text: 'No.',
@@ -251,10 +272,12 @@ export default {
       updateRecipeNumber: '',
       editedVersionNumber: 0,
       itemForDelete: null,
+      tableHeight: window.innerHeight,
       valid: true,
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
-        (v) => !!v || 'Name required'],
+        (v) => !!v || 'Name required',
+        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
       input: {
         linename: '',
         sublinename: '',
@@ -264,7 +287,16 @@ export default {
     };
   },
   async created() {
+    this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
+  },
+  async mounted() {
+    this.$root.$on('filteredSubline', (data) => {
+      this.sublines = data;
+    });
+    this.$root.$on('filteredStation', (data) => {
+      this.stations = data;
+    });
   },
   async beforeDestroy() {
     await this.btnReset();
@@ -291,8 +323,8 @@ export default {
         'getSubLines',
         'getStations',
         'getSubStations']),
-    ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
+    ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
     showFilter: {
       get() {
         return this.filter;
@@ -318,10 +350,29 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
-      await this.btnApply();
+      let param = '';
+      if (this.sublines && !this.stations) {
+        param += `?query=sublineid=="${this.sublines.id || null}"`;
+      }
+      if (this.stations && !this.sublines) {
+        param += `?query=stationid=="${this.stations.id || null}"`;
+      }
+      if (this.sublines && this.stations) {
+        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
+      }
+      await this.getRecipeListRecords(param);
     },
     handleClick(value) {
-      this.$router.push({ name: 'recipe-details', params: { id: value } });
+      this.$router.push({
+        name: 'recipe-details',
+        params: {
+          id: value.recipenumber,
+          linename: value.linename,
+          sublinename: value.sublinename,
+          substationname: value.substationname,
+          recipename: value.recipename,
+        },
+      });
     },
     fnLineModel() {
       this.showLineFilter = false;
@@ -369,6 +420,7 @@ export default {
             this.dialogDup = false;
             this.dupRecipeName = null;
             this.recipe = {};
+            this.recipes = [];
           } else {
             this.setAlert({
               show: true,
@@ -403,10 +455,12 @@ export default {
       this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
       this.$refs.addUpdateRecipe.input.stationname = item.stationname;
       this.$refs.addUpdateRecipe.input.substationname = item.substationname;
+      this.recipes = [];
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
+      this.recipes = [];
     },
     fnDeleteOnYes() {
       let deleted = false;

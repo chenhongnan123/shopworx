@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **icons:** updated icons for master data ([a4982dd](https://bitbucket.org/entrib/shopworx/commits/a4982dde5019af9c95ec4c1d639c7a29e5896a08))
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/assets
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **icon:** updated master data icon ([08fcd21](https://bitbucket.org/entrib/shopworx/commits/08fcd21265d7b42ca436c0620ce4adb7284119c1))
+
+
+### Features
+
+* **dashboard-viewer:** added tv dashboard viewer ([32a3f37](https://bitbucket.org/entrib/shopworx/commits/32a3f378c1078bb62e07670495a75250b0b1795b))
+* **report-viewer:** added quality as a report category ([a9a290f](https://bitbucket.org/entrib/shopworx/commits/a9a290fa4b0e5f442a08896d4159daee1c452fa2))
+* mL Model UI added ([303bab7](https://bitbucket.org/entrib/shopworx/commits/303bab7a0968488f0e849a7251e1bc98cacf2ca8))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 

@@ -26,6 +26,18 @@ export default ({
       return false;
     },
 
+    getRecordsByTags: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.getRecordsByTags(payload);
+        if (data && data.results) {
+          return data;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, element) => {
       try {
         const { data } = await ElementService.createElement(element);
@@ -43,7 +55,7 @@ export default ({
       try {
         const { data } = await ElementService.createElementTags(payload);
         if (data && data.results) {
-          return true;
+          return data.results;
         }
       } catch (e) {
         return false;
@@ -416,6 +428,17 @@ export default ({
       try {
         const { data } = await ElementService.changeElementStatusById(payload, elementId);
         if (data && data.id) {
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+    updateElementStatusById: async (_, { payload, id }) => {
+      try {
+        const { data } = await ElementService.updateElementStatusById(id, payload);
+        if (data && data.updated) {
           return true;
         }
       } catch (e) {

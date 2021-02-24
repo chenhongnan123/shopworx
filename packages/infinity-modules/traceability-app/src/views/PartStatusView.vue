@@ -61,59 +61,59 @@ export default {
       processParametersheader: [],
       headersPartStatus: [
         {
-          headerName: 'Created Date',
+          headerName: this.$t('Created Date'),
           field: 'createdTimestamp',
           resizable: true,
         },
         {
-          headerName: 'Modified Date',
+          headerName: this.$t('Modified Date'),
           field: 'modifiedtimestamp',
           resizable: true,
         },
         {
-          headerName: 'Main ID',
+          headerName: this.$t('Main Id'),
           field: 'mainid',
           rowGroup: true,
           resizable: true,
         },
         {
-          headerName: 'Overall result',
+          headerName: this.$t('Completed Product ID'),
+          field: 'completedproductid',
+          resizable: true,
+        },
+        {
+          headerName: this.$t('Overall result'),
           field: 'overallresult',
           resizable: true,
         },
         {
-          headerName: 'NG Code',
+          headerName: this.$t('NG Code'),
           field: 'checkoutngcode',
           resizable: true,
         },
         {
-          headerName: 'Sub station',
+          headerName: this.$t('Sub station'),
           field: 'substationid',
           resizable: true,
         },
         {
-          headerName: 'Order Name',
+          headerName: this.$t('Order Name'),
           field: 'ordername',
           resizable: true,
         },
         {
-          headerName: 'Package batchId',
+          headerName: this.$t('Package batchId'),
           field: 'packagebatchid',
           resizable: true,
         },
         {
-          headerName: 'Carrier ID',
+          headerName: this.$t('Carrier ID'),
           field: 'carrierid',
           resizable: true,
         },
         {
-          headerName: 'Product Name',
+          headerName: this.$t('Product Name'),
           field: 'producttypename',
-          resizable: true,
-        },
-        {
-          headerName: 'Completed Product ID',
-          field: 'completedproductid',
           resizable: true,
         },
       ],
@@ -138,6 +138,7 @@ export default {
       'componentList',
       'partStatusList',
       'componentData',
+      'recipeViewState',
       'trecibilityState']),
   },
   async created() {
@@ -158,7 +159,7 @@ export default {
     };
   },
   mounted() {
-    this.restoreState();
+    // this.restoreState();
     this.gridApi = this.gridOptionsPart.api;
     this.gridColumnApi = this.gridOptionsPart.columnApi;
   },
@@ -251,27 +252,21 @@ export default {
         param += `mainid=="${this.trecibilityState.searchMainID}"||`;
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
-        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
+        param += `completedproductid=="${this.trecibilityState.searchMainID}"%26%26`;
         cFlag = 1;
       }
       if (this.trecibilityState.selectedSubLine) {
-        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
+        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"%26%26`;
         cFlag = 2;
       }
       if (fromDate) {
-        param += `datefrom=${fromDate}&`;
+        param += `(modifiedtimestamp>=timestamp('${fromDate}')%26%26`;
       }
       if (toDate) {
-        param += `dateto=${toDate}&`;
+        param += `modifiedtimestamp<=timestamp('${toDate}')))&`;
       }
       param += 'sortquery=modifiedtimestamp==-1';
       await this.getPartStatus(param);
-      this.partStatusList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptionsPart.api.refreshCells();
-        }
-      });
       this.gridApi = this.gridOptionsPart.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -306,13 +301,25 @@ export default {
         });
       }
     },
-    async nextSearch() {
-      const pagenumber = this.pageNumber;
+    onCellClicked(node) {
+      if (node.colDef.field === 'mainid') {
+        this.trecibilityState.searchMainID = node.data.mainid;
+        this.setTrecibilityState(this.trecibilityState);
+        if (this.recipeViewState === 0) {
+          this.getDataForComponent();
+        } else {
+          this.setRecipeViewState(0);
+        }
+      }
+    },
+    async getDataForComponent() {
+      let cFlag = 0;
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
          && (fromDate || toDate)) {
+        cFlag = 3;
         param = '?';
       } else {
         param = '?query=';
@@ -322,100 +329,53 @@ export default {
         param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
         param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
         param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
+        cFlag = 1;
+      }
+      if (this.trecibilityState.selectedSubStation) {
+        param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
+        cFlag = 4;
       }
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
+        cFlag = 2;
       }
       if (fromDate) {
         param += `datefrom=${fromDate}&`;
       }
       if (toDate) {
-        param += `dateto=${toDate}&`;
+        param += `dateto=${toDate}`;
       }
-      param += `pagenumber=${pagenumber}&pagesize=20`;
       await this.getComponentList(param);
-      param += '&sortquery=modifiedtimestamp==-1';
-      await this.getPartStatus(param);
-      this.componentList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptions.api.refreshCells();
-        }
-      });
-      this.partStatusList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptionsPart.api.refreshCells();
-        }
-      });
-      this.gridApi = this.gridOptions.api;
-      this.gridApi.expandAll();
-      this.gridApi = this.gridOptionsPart.api;
-      this.gridApi.expandAll();
-      this.setAlert({
-        show: true,
-        type: 'success',
-        message: 'Next',
-      });
-    },
-    async prevSearch() {
-      const pagenumber = this.pageNumber;
-      this.prevDisabled = true;
-      const fromDate = new Date(this.trecibilityState.fromdate).getTime();
-      const toDate = new Date(this.trecibilityState.todate).getTime();
-      let param = '';
-      if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubLine
-         && (fromDate || toDate)) {
-        param = '?';
+      if (cFlag === 1) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS_BY_MAINID',
+        });
+      } else if (cFlag === 2) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS_BY_SUBLINEID',
+        });
+      } else if (cFlag === 3) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS_DATE_RANGE',
+        });
+      } else if (cFlag === 4) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NOT_VALID_INPUT',
+        });
       } else {
-        param = '?query=';
-      }
-      if (this.searchMainID) {
-        param += `mainid=="${this.trecibilityState.searchMainID}"||`;
-        param += `productid=="${this.trecibilityState.searchMainID}"||`;
-        param += `carrierid=="${this.trecibilityState.searchMainID}"||`;
-        param += `packagebatchid=="${this.trecibilityState.searchMainID}"||`;
-        param += `completedproductid=="${this.trecibilityState.searchMainID}"&`;
-      }
-      if (this.trecibilityState.selectedSubLine) {
-        param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
-      }
-      if (fromDate) {
-        param += `datefrom=${fromDate}&`;
-      }
-      if (toDate) {
-        param += `dateto=${toDate}&`;
-      }
-      param += `pagenumber=${pagenumber}&pagesize=20`;
-      param += '&sortquery=modifiedtimestamp==-1';
-      await this.getPartStatus(param);
-      this.componentList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptions.api.refreshCells();
-        }
-      });
-      this.partStatusList.forEach((e) => {
-        if (this.subStationList.filter((s) => s.id === e.substationid).length > 0) {
-          e.substationid = this.subStationList.filter((s) => s.id === e.substationid)[0].name;
-          this.gridOptionsPart.api.refreshCells();
-        }
-      });
-      this.gridApi = this.gridOptions.api;
-      this.gridApi.expandAll();
-      this.gridApi = this.gridOptionsPart.api;
-      this.gridApi.expandAll();
-      this.setAlert({
-        show: true,
-        type: 'success',
-        message: 'Prev',
-      });
-    },
-    onCellClicked(node) {
-      if (node.colDef.field === 'mainid') {
-        this.trecibilityState.searchMainID = node.data.mainid;
-        this.setTrecibilityState(this.trecibilityState);
-        this.setRecipeViewState(0);
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'GET_RECORDS',
+        });
       }
     },
   },

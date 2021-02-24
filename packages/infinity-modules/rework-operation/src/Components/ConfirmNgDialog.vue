@@ -10,7 +10,7 @@
     </v-btn>
     </template>
       <v-card>
-        <v-card-title class="headline">Confirm NG?
+        <v-card-title class="headline">{{ $t('Comfirm NG') }}
            <v-spacer></v-spacer>
            <v-btn icon small @click="dialog = false">
            <v-icon>mdi-close</v-icon>
@@ -35,7 +35,7 @@
     </v-dialog>
 </template>
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapState } from 'vuex';
 
 export default {
   data() {
@@ -52,6 +52,9 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState('reworkOperation', ['componantList']),
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('reworkOperation',
@@ -63,7 +66,7 @@ export default {
         'setPartStatusList',
         'setSelectedReworkRoadmap',
       ]),
-    ...mapActions('reworkOperation', ['updateOverAllResultPartStatus', 'updateOverAllResult']),
+    ...mapActions('reworkOperation', ['updateOverAllResultPartStatus', 'updateOverAllResult', 'updateComponentById']),
     async checkMainId() {
       if (this.rework.enterManinId) {
         this.dialog = true;
@@ -91,6 +94,15 @@ export default {
         },
       };
       await this.updateOverAllResultPartStatus(payload);
+      this.componantList.forEach(async (element) => {
+        const payloadComponent = {
+          query: element._id,
+          payload: {
+            qualitystatus: element.qualitystatus,
+          },
+        };
+        await this.updateComponentById(payloadComponent);
+      });
       this.dialog = false;
       this.rework = [];
       this.setDisableSave(false);

@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -12,7 +12,7 @@
         small
         v-on="on"
         color="primary"
-        class="text-none ml-4 mb-1"
+        class="text-none mb-1"
       >
         <v-icon>mdi-update</v-icon>
       </v-btn>
@@ -42,77 +42,20 @@
             :headers="headers"
             hide-default-footer
             :items="reworks"
+            disable-pagination
             v-if="reworks.length"
+            class="mb-2"
           >
-            <template v-slot:item.reworkquantity="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { reworkquantity: parseInt(item.reworkquantity, 10) },
-                })"
-                :return-value.sync="item.reworkquantity"
-              >
-                {{ item.reworkquantity }}
-                <template v-slot:input>
-                  <v-text-field
-                    v-model="item.reworkquantity"
-                    type="number"
-                    label="Qty"
-                    :rules="[(v) => (
-                      Number.isInteger(Number(v)) > 0
-                      && v <= parseInt(production.accepted, 10)
-                    )
-                      || 'Should be less than accepted qty']"
-                    single-line
-                  ></v-text-field>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <template v-slot:item.reasonname="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { reasonname: item.reasonname },
-                })"
-                :return-value.sync="item.reasonname"
-              >
-                {{ item.reasonname }}
-                <template v-slot:input>
-                  <v-autocomplete
-                    single-line
-                    label="Reason"
-                    item-text="reasonname"
-                    item-value="reasonname"
-                    :items="reworkReasons"
-                    v-model="item.reasonname"
-                  ></v-autocomplete>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <template v-slot:item.remark="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateRework({
-                  id: item._id,
-                  payload: { remark: item.remark },
-                })"
-                :return-value.sync="item.remark"
-              >
-                {{ item.remark }}
-                <template v-slot:input>
-                  <v-textarea
-                    v-model="item.remark"
-                    label="Remark"
-                    rows="2"
-                    single-line
-                  ></v-textarea>
-                </template>
-              </v-edit-dialog>
+            <!-- eslint-disable-next-line -->
+            <template #item.action="{ item, index }">
+              <edit-rework
+                :rework="item"
+                :updating="updating"
+                :updated="updated"
+                :reworkReasons="reworkReasons"
+                :acceptedQty="parseInt(production.produced, 10) - getReworked(reworks, index)"
+                @on-update="updateRework"
+              />
             </template>
           </v-data-table>
           <validation-observer
@@ -129,8 +72,10 @@
                   >
                     <v-text-field
                       dense
+                      class="mt-1"
                       outlined
                       type="number"
+                      suffix="pcs"
                       label="Quantity"
                       :disabled="saving"
                       hide-details="auto"
@@ -148,6 +93,7 @@
                     <v-autocomplete
                       outlined
                       dense
+                      class="mt-1"
                       return-object
                       label="Reason"
                       :disabled="saving"
@@ -214,6 +160,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import EditRework from './EditRework.vue';
 
 export default {
   name: 'AssignRework',
@@ -223,11 +170,16 @@ export default {
       required: true,
     },
   },
+  components: {
+    EditRework,
+  },
   data() {
     return {
       saving: false,
       loading: false,
       dialog: false,
+      updating: false,
+      updated: false,
       reworks: [],
       newRework: {
         qty: '',
@@ -238,6 +190,8 @@ export default {
         { text: 'Qty', value: 'reworkquantity' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: '', value: 'action', sortable: false },
       ],
     };
   },
@@ -265,10 +219,19 @@ export default {
     ...mapActions('element', ['updateRecordById']),
     ...mapMutations('productionLog', ['setProductionList']),
     ...mapMutations('helper', ['setAlert']),
+    getReworked(reworks, index) {
+      return reworks
+        .filter((r, i) => i !== index)
+        .reduce((result, cur) => {
+          result += parseInt(cur.reworkquantity, 10);
+          return result;
+        }, 0);
+    },
     async getRework() {
       this.loading = true;
       this.reworks = await this.fetchRework({
         shift: this.production.shift,
+        part: this.production.partname,
         planId: this.production.planid,
       });
       this.loading = false;
@@ -283,10 +246,11 @@ export default {
         planid: this.production.planid,
         partname: this.production.partname,
         machinename: this.production.machinename,
-        reworkquantity: qty,
+        reworkquantity: parseInt(qty, 10),
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addRework(payload);
       if (id) {
@@ -296,7 +260,7 @@ export default {
           remark: '',
         };
         this.reworks = [
-          { ...payload, _id: id },
+          { ...payload, _id: id, modifiedtimestamp: 'now' },
           ...this.reworks,
         ];
         this.updateShiftStats(qty);
@@ -312,6 +276,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const rework = parseInt(this.productionList[index].rework, 10) + parseInt(reworkQty, 10);
       shiftProduction.splice(index, 1, {
@@ -321,34 +286,41 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateRework(item) {
+      this.updating = true;
+      this.updated = false;
       const { id } = item;
       let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasQtyProperty = Object.prototype.hasOwnProperty.call(payload, 'reworkquantity');
-      if (hasReasonNameProperty) {
-        payload = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
-      }
+      const reason = this.reworkReasons.find((r) => r.reasonname === payload.reasonname);
+      payload = { ...payload, reason };
       const updated = await this.updateRecordById({
         elementName: 'rework',
         id,
         payload,
       });
       if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.reworks.findIndex((s) => s._id === id);
+        this.$set(this.reworks, updatedIndex, {
+          ...this.reworks[updatedIndex],
+          modifiedtimestamp: 'now',
+          ...payload,
+        });
         this.setAlert({
           show: true,
           type: 'success',
           message: 'REWORK_UPDATE',
         });
-        if (hasQtyProperty) {
-          await this.reFetchProductionList();
-        }
+        await this.reFetchProductionList();
+        this.updated = true;
       } else {
+        this.updated = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'REWORK_UPDATE',
         });
       }
+      this.updating = false;
     },
     close() {
       this.dialog = false;

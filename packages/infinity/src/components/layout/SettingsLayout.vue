@@ -9,32 +9,36 @@
       </portal>
       <v-row>
         <v-col cols="12" md="3" xl="2">
-          <v-list
-            shaped
-            class="pa-0 transparent"
-          >
-            <template v-for="(item, index) in items">
-              <v-subheader
-                :key="index"
-                v-if="item.header"
-                class="text-uppercase"
-                v-text="$t(`${item.header}`)"
-              ></v-subheader>
-              <v-divider
-                :key="index"
-                v-else-if="item.divider"
-              ></v-divider>
-              <v-list-item
-                link
-                v-else
-                :key="index"
-                color="primary"
-                :to="{ params: { id: item.to } }"
-              >
-                <v-list-item-title v-text="$t(`${item.title}`)"></v-list-item-title>
-              </v-list-item>
-            </template>
-          </v-list>
+          <perfect-scrollbar>
+            <v-list
+              shaped
+              :disabled="disableList"
+              class="pa-0 transparent"
+              style="max-height: calc(100vh - 104px)"
+            >
+              <template v-for="(item, index) in items">
+                <v-subheader
+                  :key="index"
+                  v-if="item.header"
+                  class="text-uppercase"
+                  v-text="$t(`${item.header}`)"
+                ></v-subheader>
+                <v-divider
+                  :key="index"
+                  v-else-if="item.divider"
+                ></v-divider>
+                <v-list-item
+                  link
+                  v-else
+                  :key="index"
+                  color="primary"
+                  :to="{ params: { id: item.to } }"
+                >
+                  <v-list-item-title v-text="$t(`${item.title}`)"></v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </perfect-scrollbar>
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" md="8" xl="7">
@@ -126,6 +130,10 @@ export default {
     windowRouteName: {
       type: String,
       required: true,
+    },
+    disableList: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

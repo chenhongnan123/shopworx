@@ -13,6 +13,10 @@ class ElementService {
     return this.request.get(`/server/elements/site/${id}`);
   }
 
+  getRecordsByTags(payload) {
+    return this.request.post(`/server/elements/${payload.elementName}/getrecords${payload.queryParam}`, payload.request);
+  }
+
   createElement(payload) {
     return this.request.post('/server/elements', payload);
   }
@@ -55,6 +59,10 @@ class ElementService {
   
   updateRecordByQuery(elementName, queryParam, payload) {
     return this.request.put(`/server/elements/${elementName}/records${queryParam}`, payload);
+  }
+
+  updateElementStatusById(id, payload) {
+    return this.request.put(`/server/elements/schema/${id}`, payload);
   }
 
   updateTagById(payload) {

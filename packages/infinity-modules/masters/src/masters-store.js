@@ -1,10 +1,11 @@
 import { set } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
   state: {
     assets: [],
-    records: [],
+    records: null,
     elements: [],
   },
   mutations: {
@@ -13,6 +14,32 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
+    updateRecord: async ({ dispatch, commit }, payloadData) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: payloadData.name,
+          id: payloadData.query,
+          payload: payloadData.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = '';
+        const record = await dispatch(
+          'element/getRecords',
+          {
+            elementName: payloadData.name,
+            query,
+          },
+          { root: true },
+        );
+        if (record) {
+          commit('setRecords', record);
+          // return record;
+        }
+      }
+    },
     postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
         'element/postBulkRecords',
@@ -61,7 +88,11 @@ export default ({
       }
     },
 
-    getRecords: async ({ commit, dispatch }, { elementName, assetId }) => {
+    getRecords: async ({ commit, dispatch }, {
+      elementName,
+      assetId,
+    }) => {
+      commit('setRecords', null);
       let payload = {
         elementName,
         query: `?query=assetid==${assetId}`,
@@ -100,7 +131,7 @@ export default ({
         list = groups
           .map((group) => {
             const header = { header: group.toLowerCase() };
-            const items = provisioningElements
+            const items = sortArray(provisioningElements, 'elementDescription')
               .map((elem) => {
                 if (elem.categoryType === group) {
                   return {

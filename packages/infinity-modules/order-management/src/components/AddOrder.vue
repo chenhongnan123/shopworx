@@ -7,10 +7,14 @@
     transition="dialog-transition"
     :fullscreen="$vuetify.breakpoint.smAndDown"
   >
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation>
     <v-card>
       <v-card-title primary-title>
         <span>
-          Create Order
+          {{ $t('Create Order') }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
@@ -20,7 +24,7 @@
       <v-card-text>
         <v-autocomplete
           clearable
-          label="Select Line"
+          :label="$t('Select Line')"
           :items="lineList"
           return-object
           :disabled="saving"
@@ -38,7 +42,7 @@
         </v-autocomplete>
         <v-autocomplete
           clearable
-          label="Select Product Name"
+          :label="$t('Select Product Name')"
           :items="parts"
           return-object
           :disabled="saving"
@@ -57,7 +61,7 @@
         </v-autocomplete>
         <v-text-field
             :disabled="saving"
-            label="Order Name"
+            :label="$t('Order Name')"
             prepend-icon="mdi-tray-plus"
             :counter="10"
             :rules="nameRules"
@@ -65,7 +69,7 @@
         ></v-text-field>
         <v-autocomplete
           clearable
-          label="Select Order Type"
+          :label="$t('Order Type')"
           :items="orderTypeList"
           :disabled="saving"
           item-text="name"
@@ -81,7 +85,7 @@
         </v-autocomplete>
         <v-text-field
             :disabled="true"
-            label="Customer"
+            :label="$t('Customer')"
             prepend-icon="mdi-tray-plus"
             v-model="plan.customername"
         ></v-text-field>
@@ -95,21 +99,21 @@
             <template v-if="displayPlanningFields">
               <v-text-field
                 :disabled="true"
-                label="Roadmap name"
+                :label="$t('Roadmap name')"
                 prepend-icon="mdi-tray-plus"
                 v-model="plan.roadmapname"
               ></v-text-field>
               <v-text-field
                 type="number"
                 :disabled="saving"
-                label="Target quantity"
+                :label="$t('Target quantity')"
                 prepend-icon="mdi-tray-plus"
                 v-model="plan.targetcount"
               ></v-text-field>
               <v-text-field
                 type="datetime-local"
                 v-model="plan.scheduledstart"
-                label="Scheduled start"
+                :label="$t('Scheduled start')"
                 prepend-icon="mdi-clock-start"
               ></v-text-field>
             </template>
@@ -122,12 +126,14 @@
           color="primary"
           class="text-none"
           :loading="saving"
+          :disabled="!valid"
           @click="saveOrder"
         >
-          Save
+          {{ $t('Save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+  </v-form>
   </v-dialog>
 </template>
 
@@ -165,6 +171,7 @@ export default {
       myResult: [],
       dateValue: '',
       selectedLine: null,
+      valid: true,
       btnDisable: false,
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
         (v) => !!v || 'Name required',
@@ -268,6 +275,7 @@ export default {
         this.plan.roadmapid = this.partMatrixRecords[0].roadmapid;
         this.plan.roadmaptype = this.partMatrixRecords[0].roadmaptype;
         this.plan.customername = this.partMatrixRecords[0].customername;
+        // this.plan.producttype = this.partMatrixRecords[0].producttype;
         if (this.partMatrixRecords[0].bomid) {
           this.plan.bomid = this.partMatrixRecords[0].bomid;
         } else {
@@ -334,6 +342,7 @@ export default {
             assetid: this.assetId,
             scheduledstart: new Date(this.plan.scheduledstart).getTime(),
             ordercreatedtime: new Date().getTime(),
+            visible: true,
           };
           let created = false;
           const payload = this.plan;
@@ -352,6 +361,7 @@ export default {
             this.showFamilyParts = false;
             this.displayPlanningFields = false;
             this.familyPlan = [];
+            // order details in new table
             await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
             const payloadDetails = [];
             this.productDetailsList.forEach((product) => {
@@ -369,6 +379,7 @@ export default {
               });
             });
             await this.createBulkOrderProduct(payloadDetails);
+            // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
             const payloadRoadDetails = [];
             this.roadmapDetailsList.forEach((roadmap) => {

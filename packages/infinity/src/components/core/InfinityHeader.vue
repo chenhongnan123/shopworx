@@ -7,12 +7,12 @@
     :color="$vuetify.theme.dark ? '#121212' : 'white'"
   >
     <v-app-bar-nav-icon
-      v-if="$vuetify.breakpoint.mdAndDown && $route.params.id === undefined"
+      v-if="$vuetify.breakpoint.mdAndDown"
       @click="$emit('toggle-drawer')"
     ></v-app-bar-nav-icon>
     <v-btn
       icon
-      v-else-if="$vuetify.breakpoint.mdAndDown && $route.params.id"
+      v-else-if="$vuetify.breakpoint.smAndDown && $route.params.id"
       @click="$router.back()"
     >
       <v-icon v-text="'$left'"></v-icon>
@@ -57,3 +57,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-toolbar .v-toolbar__extension {
+  z-index: -1;
+}
+</style>

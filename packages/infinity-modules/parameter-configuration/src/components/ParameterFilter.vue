@@ -14,7 +14,7 @@
         Parameter filters
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click="toggleFilter">
+      <v-btn icon @click="closeFilter">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-toolbar>
@@ -34,7 +34,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -53,7 +53,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -72,7 +72,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -91,7 +91,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -109,13 +109,13 @@
             item-text="name"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
           </v-autocomplete>
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="directionList"
             outlined
@@ -128,12 +128,12 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
-        </v-autocomplete>
+        </v-autocomplete> -->
         <v-autocomplete
             class="mt-5"
             :items="categoryList"
@@ -147,7 +147,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -166,7 +166,7 @@
             item-value="id"
             clearable
           >
-          <template v-slot:item="{ item }">
+          <template #item="{ item }">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
@@ -225,14 +225,6 @@ export default {
       },
       set(val) {
         this.setSelectedParameterName(val);
-      },
-    },
-    parameterDirection: {
-      get() {
-        return this.selectedParameterDirection;
-      },
-      set(val) {
-        this.setSelectedParameterDirection(val);
       },
     },
     parameterCategory: {
@@ -305,9 +297,6 @@ export default {
       if (this.selectedParameterName) {
         query += `name=="${this.selectedParameterName}"%26%26`;
       }
-      if (this.selectedParameterDirection) {
-        query += `parameterdirection=="${this.selectedParameterDirection}"%26%26`;
-      }
       if (this.selectedParameterCategory) {
         query += `parametercategory=="${this.selectedParameterCategory}"%26%26`;
       }
@@ -329,7 +318,6 @@ export default {
       this.getParameterListRecords('?query=stationid==null');
       this.toggleFilter();
       this.selectedParameterName = '';
-      this.selectedParameterDirection = '';
       this.selectedParameterCategory = '';
       this.selectedParameterDatatype = '';
       this.selectedParameterStartAdress = '';
@@ -337,6 +325,20 @@ export default {
       this.subline = '';
       this.station = '';
       this.substation = '';
+      this.parameterName = '';
+    },
+    closeFilter() {
+      this.getParameterListRecords('?pagenumber=1&pagesize=10');
+      this.toggleFilter();
+      this.selectedParameterName = '';
+      this.selectedParameterCategory = '';
+      this.selectedParameterDatatype = '';
+      this.selectedParameterStartAdress = '';
+      this.line = '';
+      this.subline = '';
+      this.station = '';
+      this.substation = '';
+      this.parameterName = '';
     },
   },
 };

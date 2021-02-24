@@ -5,12 +5,16 @@ class FileService {
     this.request = ApiService;
   }
 
-  uploadFile(fileParam) {
-    return this.request.post(`/server/uploadfile/${fileParam}`);
+  uploadFile(fileParam, formData) {
+    return this.request.post(`/server/uploadfile/${fileParam}`, formData, {
+      'Content-Type': 'multipart/form-data',
+    });
   }
 
   downloadFile(downloadLink) {
-    return this.request.get(`${downloadLink}?disposition=inline`);
+    return this.request.get(`${downloadLink}?disposition=attachment`, {
+      responseType: 'blob',
+    });
   }
 
   deleteFile(elementName, id) {

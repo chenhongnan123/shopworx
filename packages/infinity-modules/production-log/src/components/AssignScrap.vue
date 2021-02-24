@@ -3,7 +3,7 @@
     persistent
     scrollable
     v-model="dialog"
-    max-width="500px"
+    max-width="600px"
     transition="dialog-transition"
   >
     <template #activator="{ on }">
@@ -12,7 +12,7 @@
         small
         v-on="on"
         color="primary"
-        class="text-none ml-4 mb-1"
+        class="text-none mb-1"
       >
         <v-icon>mdi-update</v-icon>
       </v-btn>
@@ -42,72 +42,19 @@
             :headers="headers"
             hide-default-footer
             :items="scraps"
+            disable-pagination
             v-if="scraps.length"
+            class="mb-2"
           >
-            <template v-slot:item.scrapweight="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { scrapweight: parseFloat(item.scrapweight, 10) },
-                })"
-                :return-value.sync="item.scrapweight"
-              >
-                {{ item.scrapweight }}
-                <template v-slot:input>
-                  <v-text-field
-                    v-model="item.scrapweight"
-                    type="number"
-                    label="Weight (in Kg)"
-                    single-line
-                  ></v-text-field>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <template v-slot:item.reasonname="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { reasonname: item.reasonname },
-                })"
-                :return-value.sync="item.reasonname"
-              >
-                {{ item.reasonname }}
-                <template v-slot:input>
-                  <v-autocomplete
-                    single-line
-                    label="Reason"
-                    item-text="reasonname"
-                    item-value="reasonname"
-                    :items="scrapReasons"
-                    v-model="item.reasonname"
-                  ></v-autocomplete>
-                </template>
-              </v-edit-dialog>
-            </template>
-            <template v-slot:item.remark="{ item }">
-              <v-edit-dialog
-                large
-                persistent
-                @save="updateScrap({
-                  id: item._id,
-                  payload: { remark: item.remark },
-                })"
-                :return-value.sync="item.remark"
-              >
-                {{ item.remark }}
-                <template v-slot:input>
-                  <v-textarea
-                    v-model="item.remark"
-                    label="Remark"
-                    rows="2"
-                    single-line
-                  ></v-textarea>
-                </template>
-              </v-edit-dialog>
+            <!-- eslint-disable-next-line -->
+            <template #item.action="{ item, index }">
+              <edit-scrap
+                :scrap="item"
+                :updating="updating"
+                :updated="updated"
+                :scrapReasons="scrapReasons"
+                @on-update="updateScrap"
+              />
             </template>
           </v-data-table>
           <validation-observer
@@ -125,8 +72,10 @@
                     <v-text-field
                       dense
                       outlined
+                      class="mt-1"
                       type="number"
-                      label="Weight (in Kg)"
+                      label="Weight"
+                      suffix="kg"
                       :disabled="saving"
                       hide-details="auto"
                       v-model="newScrap.weight"
@@ -143,6 +92,7 @@
                     <v-autocomplete
                       outlined
                       dense
+                      class="mt-1"
                       return-object
                       label="Reason"
                       :disabled="saving"
@@ -209,6 +159,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import EditScrap from './EditScrap.vue';
 
 export default {
   name: 'AssignScrap',
@@ -218,11 +169,16 @@ export default {
       required: true,
     },
   },
+  components: {
+    EditScrap,
+  },
   data() {
     return {
       saving: false,
       loading: false,
       dialog: false,
+      updating: false,
+      updated: false,
       scraps: [],
       newScrap: {
         weight: '',
@@ -233,6 +189,8 @@ export default {
         { text: 'Weight (in Kg)', value: 'scrapweight' },
         { text: 'Reason', value: 'reasonname' },
         { text: 'Remark', value: 'remark' },
+        { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: '', value: 'action', sortable: false },
       ],
     };
   },
@@ -264,6 +222,7 @@ export default {
       this.loading = true;
       this.scraps = await this.fetchScrap({
         shift: this.production.shift,
+        part: this.production.partname,
         planId: this.production.planid,
       });
       this.loading = false;
@@ -278,10 +237,11 @@ export default {
         planid: this.production.planid,
         partname: this.production.partname,
         machinename: this.production.machinename,
-        scrapweight: weight,
+        scrapweight: parseFloat(weight, 10),
         remark,
         ...reason,
         timestamp: this.getShiftStart(this.production.shift),
+        timeType: 'BUSINESS_TIME',
       };
       const id = await this.addScrap(payload);
       if (id) {
@@ -291,7 +251,7 @@ export default {
           remark: '',
         };
         this.scraps = [
-          { ...payload, _id: id },
+          { ...payload, _id: id, modifiedtimestamp: 'now' },
           ...this.scraps,
         ];
         this.updateShiftStats(weight);
@@ -307,6 +267,7 @@ export default {
         prod.shift === this.production.shift
         && prod.machinename === this.production.machinename
         && prod.partname === this.production.partname
+        && prod.planid === this.production.planid
       ));
       const scrap = parseFloat(this.productionList[index].scrap, 10) + parseFloat(scrapWeight, 10);
       shiftProduction.splice(index, 1, {
@@ -316,34 +277,41 @@ export default {
       this.setProductionList(shiftProduction);
     },
     async updateScrap(item) {
+      this.updating = true;
+      this.updated = false;
       const { id } = item;
       let { payload } = item;
-      const hasReasonNameProperty = Object.prototype.hasOwnProperty.call(payload, 'reasonname');
-      const hasWeightProperty = Object.prototype.hasOwnProperty.call(payload, 'scrapweight');
-      if (hasReasonNameProperty) {
-        payload = this.scrapReasons.find((r) => r.reasonname === payload.reasonname);
-      }
+      const reason = this.scrapReasons.find((r) => r.reasonname === payload.reasonname);
+      payload = { ...payload, reason };
       const updated = await this.updateRecordById({
         elementName: 'scrap',
         id,
         payload,
       });
       if (updated) {
+        // eslint-disable-next-line
+        const updatedIndex = this.scraps.findIndex((s) => s._id === id);
+        this.$set(this.scraps, updatedIndex, {
+          ...this.scraps[updatedIndex],
+          modifiedtimestamp: 'now',
+          ...payload,
+        });
         this.setAlert({
           show: true,
           type: 'success',
           message: 'SCRAP_UPDATE',
         });
-        if (hasWeightProperty) {
-          await this.reFetchProductionList();
-        }
+        await this.reFetchProductionList();
+        this.updated = true;
       } else {
+        this.updated = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'SCRAP_UPDATE',
         });
       }
+      this.updating = false;
     },
     close() {
       this.dialog = false;

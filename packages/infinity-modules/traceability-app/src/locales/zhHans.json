@@ -1,3 +1,52 @@
 {
-  "planning": "Planning"
+  "traceabilityApp": "Traceability",
+  "appTitleTraceability": "追溯报表",
+  "headers": {
+    "list": "Overall",
+    "changeover": "Process parameters"
+  },
+  "error": {
+    "SELECT_SUBSTATION": "Select SubStation !",
+    "EITHER_DATE_EMPTY": "Either one of from Date OR to Date is empty!",
+    "NOT_VALID_INPUT": "Get Record by Substation ID is not Allowed!",
+    "NOT_VALID_INPUT_SUB": "Get Record by Subline ID is not Allowed!",
+    "SELECT_SUBLINE": "Select Subline (Mandetory)"
+  },
+  "success": {
+    "GET_RECORDS_DATE_RANGE": "Fetched the records in given Date Range!",
+    "GET_RECORDS_BY_SUBLINEID": "Fetched the records by selected Subline",
+    "GET_RECORDS_BY_MAINID": "Fetched the records by provided MainID",
+    "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
+    "GET_RECORDS": "Fetched the records!",
+    "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
+  },
+  "Search ID":	"搜索ID",
+  "Select Sub-Line":	"选择子线",
+  "Select Sub-Station":	"选择子站",
+  "From date":	"起始时间",
+  "To date":	"截止时间",
+  "Export":	"导出",	
+  "Components":	"零部件信息",
+  "Parameters":	"生产档案",
+  "Quality History":	"质量信息",
+  "Created Date": "创建日期",
+  "Modified Date": "修改日期",
+  "Main Id": "主条码",
+  "Completed Product ID": "成品码",
+  "Overall result": "产品总结果",
+  "NG Code": "NG码",
+  "Sub station": "工位",
+  "Order Name": "订单名称",
+  "Package batchId": "包装码",
+  "Carrier ID": "托盘号",
+  "Product Name": "产品名称",
+  "Component name": "零件名",
+  "Component value": "零件码",
+  "Bound status": "绑定状态",
+  "Rework status": "返工状态",
+  "Quality status": "质量状态",
+  "Description": "描述",
+  "Recipe name": "配方名称",
+  "Substation result": "工位结果",
+  "Order name": "订单名称"
 }

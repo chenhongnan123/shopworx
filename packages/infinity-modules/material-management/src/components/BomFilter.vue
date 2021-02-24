@@ -33,6 +33,7 @@
             item-text="name"
             item-value="id"
             clearable
+            @change="getBomNameFromLine"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -40,9 +41,28 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
+          <!-- <v-autocomplete
+            class="mt-5"
+            :items="sublineList"
+            outlined
+            dense
+            hide-details
+            v-model="subline"
+            name="name"
+            label="Select Subine"
+            item-text="name"
+            item-value="id"
+            clearable
+          >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
-            :items="bomList"
+            :items="bomNameInState"
             outlined
             dense
             hide-details
@@ -50,7 +70,10 @@
             name="name"
             label="Bom Name"
             item-text="name"
+            item-value="id"
             clearable
+            return-object
+            @change="getBomNumFromName"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -60,7 +83,7 @@
           </v-autocomplete>
           <v-autocomplete
             class="mt-5"
-            :items="bomList"
+            :items="bomNumInState"
             outlined
             dense
             hide-details
@@ -68,7 +91,9 @@
             name="name"
             label="Bom Number"
             item-text="bomnumber"
+            item-value="id"
             clearable
+            @change="setNumValue"
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -113,7 +138,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'sublineValue', 'categoryList']),
+    ...mapState('bomManagement', ['filter', 'bomList', 'lineList', 'sublineList', 'lineValue', 'bomValue', 'categoryList', 'bomNumInState', 'bomNameInState']),
     showFilter: {
       get() {
         return this.filter;
@@ -132,18 +157,20 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('bomManagement', ['setFilter', 'toggleFilter', 'setLineValue', 'setSublineValue']),
+    ...mapMutations('bomManagement', ['setFilter', 'toggleFilter', 'setLineValue', 'setBomValue', 'seBomNumberInState', 'setBomNameInState', 'setBomNumValue']),
     ...mapActions('bomManagement', ['getBomListRecords', 'getSublineList']),
     btnApply() {
       let query = '?query=';
       if (this.bomname) {
-        query += `name=="${this.bomname}"&`;
+        query += `name=="${this.bomname.name}"&`;
       }
       if (this.bomnumber) {
         query += `bomnumber=="${this.bomnumber}"&`;
       }
       query += `lineid=="${this.line || null}"`;
+      // const query = `?query=substationid=="${this.substationValue || null}"`;
       this.getBomListRecords(query);
+      this.toggleFilter();
     },
     btnReset() {
       this.getBomListRecords('');
@@ -155,6 +182,20 @@ export default {
       this.manufacturer = '';
       this.line = '';
       this.subline = '';
+      this.setBomValue('');
+      this.setBomNumValue('');
+    },
+    async getBomNameFromLine(item) {
+      const bomName = this.bomList.filter((o) => o.lineid === item);
+      this.setBomNameInState(bomName);
+    },
+    async getBomNumFromName(item) {
+      this.setBomValue(item.id);
+      const bomNum = this.bomList.filter((o) => o.id === item.id);
+      this.seBomNumberInState(bomNum);
+    },
+    async setNumValue(item) {
+      this.setBomNumValue(item);
     },
   },
 };

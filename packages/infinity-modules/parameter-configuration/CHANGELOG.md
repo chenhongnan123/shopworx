@@ -3,28 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
-
-**Note:** Version bump only for package @shopworx/parameter-configuration
-
-
-
-
-
-## [4.1.2](https://bitbucket.org/entrib/shopworx/compare/v4.1.1...v4.1.2) (2020-10-26)
-
-**Note:** Version bump only for package @shopworx/parameter-configuration
-
-
-
-
-
-## [4.1.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.0-rc.4...v4.1.1) (2020-10-20)
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 
 ### Bug Fixes
 
-* **parameter-configuration:** mandetory field icon ([c97ef51](https://bitbucket.org/entrib/shopworx/commits/c97ef514477d81300469e26e513cc3183e149d5e))
+* **parameter-configuration:** RA-I408 all validation check ([71af3bf](https://bitbucket.org/entrib/shopworx/commits/71af3bf20a79662593a95f00590923fc62460d04))
+* **parameter-configuration:** RA-I408 with all validation ([a747e1d](https://bitbucket.org/entrib/shopworx/commits/a747e1da9d4fe47815727fec6bf87be4a7365951))
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** option buttons should be floating ([986b2e8](https://bitbucket.org/entrib/shopworx/commits/986b2e8a04da0f810ba9efcb945675060470234f))
+* **parameter-configuration:** refressh functionality in not correct ([0d9f73c](https://bitbucket.org/entrib/shopworx/commits/0d9f73c9a7b258d24c4e16f1998634ed3f242c6a))
 
 
 

@@ -13,12 +13,6 @@ export default ({
     elementOnboarded: false,
     machines: [],
     shifts: [],
-    filters: {},
-    sort: {},
-    selectedMachine: null,
-    selectedShift: null,
-    selectedDate: null,
-    selectedSort: null,
     productionList: [],
     loading: false,
     error: false,
@@ -27,6 +21,7 @@ export default ({
     rejectionReasons: [],
     reworkReasons: [],
     scrapReasons: [],
+    lastRefreshedAt: null,
   },
   mutations: {
     setMasterData: set('masterData'),
@@ -37,10 +32,6 @@ export default ({
     setElementOnboarded: set('elementOnboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
-    setSelectedMachine: set('selectedMachine'),
-    setSelectedShift: set('selectedShift'),
-    setSelectedDate: set('selectedDate'),
-    setSelectedSort: set('selectedSort'),
     setLoading: set('loading'),
     setError: set('error'),
     setProductionCount: set('productionCount'),
@@ -51,6 +42,7 @@ export default ({
     setScrapReasons: set('scrapReasons'),
     setUnavailableDataElements: set('unavailableDataElements'),
     setUnavailableElements: set('unavailableElements'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
   },
   actions: {
     getDataOnboardingState: async ({ commit, dispatch }) => {
@@ -402,12 +394,12 @@ export default ({
     fetchProductionList: async ({
       commit,
       dispatch,
-      state,
+      rootGetters,
       rootState,
     }) => {
-      const { selectedDate } = state;
+      const filters = rootGetters['webApp/filters'];
       const { activeSite } = rootState.user;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       commit('setLoading', true);
       commit('setProductionList', []);
       commit('setError', false);
@@ -427,6 +419,7 @@ export default ({
         commit('setProductionList', production);
         commit('setProductionCount', records);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       } else {
         commit('setProductionList', []);
         commit('setProductionCount', 0);
@@ -438,12 +431,12 @@ export default ({
     reFetchProductionList: async ({
       commit,
       dispatch,
-      state,
+      rootGetters,
       rootState,
     }) => {
-      const { selectedDate } = state;
+      const filters = rootGetters['webApp/filters'];
       const { activeSite } = rootState.user;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       const data = await dispatch(
         'report/executeReport',
         {
@@ -460,18 +453,18 @@ export default ({
         commit('setProductionList', production);
         commit('setProductionCount', records);
         commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
       }
     },
 
-    fetchHourlyProduction: async ({ dispatch, state, rootState }, {
-      machine,
+    fetchHourlyProduction: async ({ dispatch, rootGetters, rootState }, {
       part,
       shift,
       planId,
     }) => {
-      const { selectedDate } = state;
+      const filters = rootGetters['webApp/filters'];
       const { activeSite } = rootState.user;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       const data = await dispatch(
         'report/executeReport',
         {
@@ -480,7 +473,7 @@ export default ({
             siteid: activeSite,
             dateVal: date,
             shiftFilter: `{${shift}}`,
-            machineFilter: `{${machine}}`,
+            planFilter: `{${planId}}`,
             partFilter: `{${part}}`,
           },
         },
@@ -491,6 +484,8 @@ export default ({
         const computedProduction = await Promise.all(production.map(async (prod) => {
           let rejections = await dispatch('fetchRejections', {
             planId,
+            part,
+            date,
             hour: prod.hour,
           });
           rejections = rejections.map((rej) => ({
@@ -515,36 +510,45 @@ export default ({
       return false;
     },
 
-    fetchRejections: async ({ dispatch }, { planId, hour }) => {
+    fetchRejections: async ({ dispatch }, {
+      planId,
+      part,
+      date,
+      hour,
+    }) => {
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'rejection',
-          query: `?query=planid=="${planId}"%26%26hour==${hour}`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26hour==${hour}`,
         },
         { root: true },
       );
       return records;
     },
 
-    fetchRework: async ({ dispatch }, { planId, shift }) => {
+    fetchRework: async ({ rootGetters, dispatch }, { planId, part, shift }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'rework',
-          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
         },
         { root: true },
       );
       return records;
     },
 
-    fetchScrap: async ({ dispatch }, { planId, shift }) => {
+    fetchScrap: async ({ rootGetters, dispatch }, { planId, part, shift }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       const records = await dispatch(
         'element/getRecords',
         {
           elementName: 'scrap',
-          query: `?query=planid=="${planId}"%26%26shiftName=="${shift}"`,
+          query: `?query=planid=="${planId}"%26%26partname=="${part}"%26%26date==${date}%26%26shiftName=="${shift}"`,
         },
         { root: true },
       );
@@ -590,9 +594,14 @@ export default ({
       return record && record.id;
     },
 
-    updateOperator: async ({ dispatch, commit, state }, { payload, shift, machine }) => {
-      const { selectedDate } = state;
-      const date = parseInt(selectedDate.replace(/-/g, ''), 10);
+    updateOperator: async ({
+      dispatch,
+      commit,
+      state,
+      rootGetters,
+    }, { payload, shift, machine }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
       const updated = await dispatch(
         'element/upsertRecordByQuery',
         {
@@ -655,77 +664,69 @@ export default ({
       return shiftList;
     },
 
-    getShiftStart: ({ shifts, selectedDate }) => (shiftName) => {
+    getShiftStart: (
+      { shifts },
+      getters,
+      rootState,
+      rootGetters,
+    ) => (shiftName) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = filters.date.value;
       const currentShift = shifts
         .sort((a, b) => a.sortindex - b.sortindex)
         .find((s) => s.shift === shiftName);
       const [hr, min] = currentShift.starttime.split(':');
-      const [year, month, day] = selectedDate.split('-');
+      const [year, month, day] = date.split('-');
       return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },
 
-    getHourStart: ({ selectedDate }) => (displayHour) => {
+    getHourStart: (
+      state,
+      getters,
+      rootState,
+      rootGetters,
+    ) => (displayHour) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = filters.date.value;
       const [start] = displayHour.split('-');
       const [hr, min] = start.split(':');
-      const [year, month, day] = selectedDate.split('-');
+      const [year, month, day] = date.split('-');
       return new Date(year, month - 1, day, parseInt(hr, 10), parseInt(min, 10), 0).getTime();
     },
 
-    production: ({
-      productionList,
-      selectedShift,
-      selectedMachine,
-      selectedSort,
-    }) => {
+    production: ({ productionList }, getters, rootState, rootGetters) => {
       let production = null;
       if (productionList && productionList.length) {
-        production = productionList
-          .filter((prod) => {
-            if (selectedShift !== 'All Shifts' && selectedMachine !== 'All Machines') {
-              return (prod.shift === selectedShift && prod.machinename === selectedMachine);
-            }
-            if (selectedShift !== 'All Shifts' && selectedMachine === 'All Machines') {
-              return prod.shift === selectedShift;
-            }
-            if (selectedShift === 'All Shifts' && selectedMachine !== 'All Machines') {
-              return prod.machinename === selectedMachine;
-            }
-            return prod;
-          })
-          .sort((a, b) => {
-            if (selectedSort.value === 'new') {
-              return b.firstcycle - a.firstcycle;
-            }
-            return a.firstcycle - b.firstcycle;
-          })
-          .reduce((result, currentValue) => {
-            const {
-              shift,
-              machinename,
-              operatorname,
-              operatorcode,
-            } = currentValue;
-            if (!result[shift]) {
-              result[shift] = {};
-              result[shift][machinename] = {
-                operatorcode: operatorcode === '-' ? null : operatorcode,
-                operatorname: operatorname === '-' ? null : operatorname,
-                production: [],
-              };
-            }
-            if (!result[shift][machinename]) {
-              result[shift][machinename] = {
-                operatorcode: operatorcode === '-' ? null : operatorcode,
-                operatorname: operatorname === '-' ? null : operatorname,
-                production: [],
-              };
-            }
-            result[shift][machinename].production = [
-              ...result[shift][machinename].production,
-              currentValue,
-            ];
-            return result;
-          }, {});
+        production = rootGetters['webApp/filteredRecords'](productionList);
+        production = rootGetters['webApp/sortedRecords'](production);
+        production = production.reduce((result, currentValue) => {
+          const {
+            shift,
+            machinename,
+            operatorname,
+            operatorcode,
+          } = currentValue;
+          if (!result[shift]) {
+            result[shift] = {};
+            result[shift][machinename] = {
+              operatorcode: operatorcode === '-' ? null : operatorcode,
+              operatorname: operatorname === '-' ? null : operatorname,
+              production: [],
+            };
+          }
+          if (!result[shift][machinename]) {
+            result[shift][machinename] = {
+              operatorcode: operatorcode === '-' ? null : operatorcode,
+              operatorname: operatorname === '-' ? null : operatorname,
+              production: [],
+            };
+          }
+          result[shift][machinename].production = [
+            ...result[shift][machinename].production,
+            currentValue,
+          ];
+          return result;
+        }, {});
       }
       if (!production || !Object.keys(production).length) {
         production = null;

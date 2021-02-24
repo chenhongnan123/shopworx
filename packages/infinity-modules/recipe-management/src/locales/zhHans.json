@@ -1,5 +1,5 @@
 {
-  "title": "配方管理",
+  "recipeManagement": "配方管理",
   "headers": {
     "list": "列表",
     "changeover": "换型"
@@ -32,5 +32,8 @@
     "RECIPE_CREATED": "配方已创建！",
     "RECIPE_UPDATED": "配方已更新！",
     "RECIPE_RECORD_DELETED": "Recipe Record DELETED."
-  }
+  },
+  "duplicateRecipe": "复制配方",
+  "refreshRecipe": "刷新配方",
+  "filtersRecipe": "筛选配方"
 }

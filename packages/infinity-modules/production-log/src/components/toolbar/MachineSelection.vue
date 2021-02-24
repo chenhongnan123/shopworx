@@ -13,42 +13,61 @@
 import {
   mapGetters,
   mapMutations,
-  mapState,
   mapActions,
 } from 'vuex';
+
+const FIELD_NAME = 'machinename';
 
 export default {
   name: 'MachineSelection',
   computed: {
+    ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionLog', ['machineList']),
-    ...mapState('productionLog', ['selectedMachine']),
+    isMachineFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     machine: {
       get() {
-        return this.selectedMachine;
+        const machineFilter = this.filters && this.filters[FIELD_NAME];
+        if (machineFilter) {
+          return machineFilter.value;
+        }
+        return this.machineList[0];
       },
-      set(val) {
-        this.setSelectedMachine(val);
+      set(machineVal) {
+        this.setMachineFilter(machineVal);
       },
     },
   },
-  methods: {
-    ...mapMutations('productionLog', ['setSelectedMachine']),
-    ...mapActions('productionLog', ['fetchMachines']),
-  },
   created() {
     if (this.machineList && this.machineList.length) {
-      if (!this.selectedMachine) {
-        this.setSelectedMachine(this.machineList[0]);
+      if (this.isMachineFilterInactive) {
+        this.setMachineFilter(this.machineList[0]);
       }
     } else {
       this.fetchMachines();
     }
   },
+  methods: {
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('productionLog', ['fetchMachines']),
+    setMachineFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
+  },
   watch: {
     machineList(val) {
       if (val && val.length) {
-        if (!this.selectedMachine) {
-          this.setSelectedMachine(val[0]);
+        if (this.isMachineFilterInactive) {
+          this.setMachineFilter(val[0]);
         }
       }
     },

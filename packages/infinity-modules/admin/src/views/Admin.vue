@@ -2,7 +2,7 @@
   <settings-layout
     :items="items"
     windowRouteName="adminWindow"
-    headerTitle="Admin Console"
+    :headerTitle="$t('adminTitle')"
   >
     <admin-window />
   </settings-layout>
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       items: [
-        {
+        /* {
           header: 'admin.general',
         },
         {
@@ -34,7 +34,7 @@ export default {
           icon: '$alerts',
           to: 'alerts',
         },
-        { divider: true },
+        { divider: true }, */
         {
           header: 'admin.management',
         },
@@ -72,7 +72,7 @@ export default {
           icon: '$holidays',
           to: 'holidays',
         },
-        { divider: true },
+        /* { divider: true },
         {
           header: 'admin.billing',
         },
@@ -85,7 +85,7 @@ export default {
           title: 'admin.assets.title',
           icon: '$list',
           to: 'assets',
-        },
+        }, */
       ],
     };
   },

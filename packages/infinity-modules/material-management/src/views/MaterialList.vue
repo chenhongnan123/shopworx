@@ -321,6 +321,15 @@ export default {
         materialcategory: [
           (v) => !!v || 'Category is required',
         ],
+        // lifetime: [
+        //   (v) => !!v || 'lifetime is required',
+        // ],
+        // materialtype: [
+        //   (v) => !!v || 'Materialtype Typeid is required',
+        // ],
+        // manufacturer: [
+        //   (v) => !!v || 'Manufacturer is required',
+        // ],
       },
     };
   },
@@ -464,6 +473,7 @@ export default {
     },
     async RefreshUI() {
       await this.getMaterialListRecords('');
+      // this.parameterListSave = this.parameterList.map((item) => ({ ...item }));
     },
     btnSaveData() {
       this.setAlert({

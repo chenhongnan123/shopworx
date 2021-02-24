@@ -23,6 +23,7 @@
           class="text-none"
           @click="saveNewEntry"
           :class="'ml-2'"
+          v-if="showSaveBtn"
         >
           Save
         </v-btn>
@@ -33,6 +34,7 @@
           class="text-none"
           @click="deleteEntry"
           :class="'ml-2'"
+          v-if="showDeleteBtn"
         >
           Delete
         </v-btn>
@@ -41,6 +43,7 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
           Refresh
@@ -50,10 +53,10 @@
           outlined
           color="primary"
           class="text-none ml-2"
+          @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
           Export
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
         </v-btn>
       </span>
     </portal>
@@ -67,23 +70,17 @@
         class="text-none"
         v-for="asset in getAssets(id)"
       >
-        <span v-text="asset.assetDescription"></span>
-      </v-tab>
-      <v-tab-item
-        :key="asset.id"
-        v-for="asset in getAssets(id)"
-      >
-        <base-master
-          :assetId="asset.id"
-          :id="id"
-          ref="base"
-        />
-      </v-tab-item>
+      <span v-text="asset.assetDescription"></span>
+    </v-tab>
     </v-tabs>
-    <base-master
-      v-else
+     <base-master
+      :assetId="showTabs(id) ? getAssets(id)[tab].id : 0"
       :id="id"
       ref="base"
+      :fetchData="fetchData"
+      @savebtnshow="visibleSaveBtn"
+      @deletebtnshow="visibleDeleteBtn"
+      @on-fetch="fetchedData"
     />
   </div>
 </template>
@@ -101,70 +98,91 @@ export default {
     return {
       base: '',
       tab: 0,
+      showUpdateBtn: false,
+      showSaveBtn: false,
+      showDeleteBtn: false,
+      fetchData: false,
     };
   },
   mounted() {
     this.base = this.$refs.base;
   },
+  watch: {
+    id() {
+      this.tab = 0;
+      this.fetchingData();
+    },
+    tab() {
+      this.fetchingData();
+    },
+  },
   methods: {
-    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
+    ...mapActions('masters', ['deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    fetchingData() {
+      this.fetchData = true;
+      this.$emit('fetching', true);
+    },
+    fetchedData() {
+      this.fetchData = false;
+      this.$emit('fetching', false);
+    },
+    visibleUpdateBtn(value) {
+      this.showUpdateBtn = value;
+    },
+    visibleSaveBtn(value) {
+      this.showSaveBtn = value;
+    },
+    visibleDeleteBtn(value) {
+      this.showDeleteBtn = value;
+    },
     addNewEntry() {
       this.base.addRow();
     },
     async deleteEntry() {
-      if (this.base.gridApi.getSelectedRows()) {
-        const selectedRow = this.base.gridApi.getSelectedRows();
-        const name = this.id;
-        let deleted = '';
-        await Promise.all([
-          selectedRow.forEach((row) => {
-            const id = row._id;
-            deleted = this.deleteRecord({ id, name });
-          }),
-        ]);
-        if (deleted) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'DELETE_RECORD',
-          });
-          this.base.deleteSelectedRows();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_DELETE_RECORD',
-          });
+      if (await this.$root.$confirm.open(
+        'Delete record(s)',
+        'Are you you want to delete?',
+      )) {
+        if (this.base.gridApi.getSelectedRows()) {
+          const selectedRow = this.base.gridApi.getSelectedRows();
+          const name = this.id;
+          let deleted = '';
+          await Promise.all([
+            selectedRow.forEach((row) => {
+              // eslint-disable-next-line
+              const id = row._id;
+              deleted = this.deleteRecord({ id, name });
+            }),
+          ]);
+          if (deleted) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'DELETE_RECORD',
+            });
+            this.base.deleteSelectedRows();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_DELETE_RECORD',
+            });
+          }
+          this.base.newData = [];
+          this.showSaveBtn = false;
         }
       }
     },
-    async saveNewEntry() {
-      const name = this.id;
-      const payload = [];
-      this.base.rowData.forEach((data) => {
-        if (!data.elementName) {
-          payload.push({
-            ...data,
-            assetid: 4,
-          });
-        }
-      });
-      const postData = await this.postBulkRecords({ payload, name });
-      if (postData) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'CREATED_RECORD',
-        });
-        this.base.fetchRecords();
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'ERROR_CREATING_RECORD',
-        });
-      }
+    saveNewEntry() {
+      this.base.saveModifiedRecords();
+    },
+    onBtnExport() {
+      this.base.exportData();
+    },
+    refreshUi() {
+      this.base.refreshData();
+      this.showSaveBtn = false;
     },
   },
   computed: {

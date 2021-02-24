@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-text class="pt-0">
       <v-data-table
-        :items="modelFiles"
+        :items="fileList"
         :headers="headers"
         :loading="deleting"
         hide-default-footer
@@ -12,11 +12,11 @@
           No file available
         </template>
         <template #item.name="{ item }">
-          {{ item.originalFilename }}.{{item.extension}}
+          {{ item.originalFilename }}.{{ item.extension }}
         </template>
         <template #item.actions="{ item }">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+          <!-- <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
               <v-btn
                 icon
                 v-on="on"
@@ -29,9 +29,9 @@
               </v-btn>
             </template>
             <span>Download file</span>
-          </v-tooltip>
+          </v-tooltip> -->
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 icon
                 v-on="on"
@@ -40,7 +40,7 @@
                 :disabled="deleting"
                 @click="deleteModelFile(item)"
               >
-                <v-icon>mdi-delete-outline</v-icon>
+                <v-icon v-text="'$delete'"></v-icon>
               </v-btn>
             </template>
             <span>Delete file</span>
@@ -49,7 +49,7 @@
       </v-data-table>
       <model-files-input
         ref="dropzone"
-        :modelId="model.id"
+        :modelId="model.model_id"
       />
     </v-card-text>
     <v-card-actions>
@@ -89,6 +89,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       deleting: false,
       headers: [
         { text: 'Name', value: 'name' },
@@ -101,6 +102,23 @@ export default {
       ],
     };
   },
+  async created() {
+    this.fileList = this.modelFiles;
+  },
+  watch: {
+    modelFiles: {
+      handler(val) {
+        if (val && val.length) {
+          val.forEach((v, i) => {
+            this.$set(this.fileList, i, v);
+          });
+        } else {
+          this.fileList = [];
+        }
+      },
+      deep: true,
+    },
+  },
   computed: {
     ...mapState('modelManagement', ['files', 'uploadingFiles']),
     modelFiles() {
@@ -112,12 +130,36 @@ export default {
     ...mapActions('modelManagement', ['fetchModelDetails']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
+    async updateProps(val) {
+      this.fileList.push(val.modelFiles);
+    },
     async uploadFiles() {
-      this.setUploadingFiles(true);
-      this.$refs.dropzone.startQueueProcessing();
+      let flag = false;
+      const demolList = [];
+      for (let i = 0; i < this.$refs.dropzone.files.length; i += 1) {
+        if (demolList.includes(this.$refs.dropzone.files[i].name)) {
+          flag = true;
+        } else {
+          demolList.push(this.$refs.dropzone.files[i].name);
+          const list = this.modelFiles.filter((f) => `${f.originalFilename}.${f.extension}` === this.$refs.dropzone.files[i].name);
+          if (list.length > 0) {
+            flag = true;
+          }
+        }
+      }
+      if (flag) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FILES_DEPLICATE',
+        });
+      } else {
+        this.setUploadingFiles(true);
+        this.$refs.dropzone.startQueueProcessing();
+      }
     },
     async downloadModelFile(link) {
-      this.downloadFile(link);
+      await this.downloadFile(link);
     },
     async deleteModelFile(file) {
       if (await this.$root.$confirm.open(
@@ -131,7 +173,8 @@ export default {
           id: file.id,
         });
         if (deleted) {
-          await this.fetchModelDetails(this.model.id);
+          await this.fetchModelDetails(this.model.model_id);
+          this.fileList = this.modelFiles;
           this.setAlert({
             show: true,
             type: 'success',

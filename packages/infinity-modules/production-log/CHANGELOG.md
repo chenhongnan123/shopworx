@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+**Note:** Version bump only for package @shopworx/production-log
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **production-log:** fixed rejection update ([2110c26](https://bitbucket.org/entrib/shopworx/commits/2110c2643bc7f4597f1458d17d55e5b21ad70930))
+* **production-log:** fixed rejection update ([c862315](https://bitbucket.org/entrib/shopworx/commits/c8623151ae64565a046e47352b0ea832effa72e1))
+* **production-log:** fixed rework and scrap update ([a69e812](https://bitbucket.org/entrib/shopworx/commits/a69e812c7092454727ae9eb72b9566082e5c1cff))
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **production-log:** fixed update rejection and rework function ([434203b](https://bitbucket.org/entrib/shopworx/commits/434203bb9501136f86054c1fa2a59a60a96f92c3))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/production-log
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/production-log
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* **production-og:** fixed accepted qty calculation ([bd1ad0b](https://bitbucket.org/entrib/shopworx/commits/bd1ad0bc3c09895cbc6be027495d79a7f3f29288))
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **config:** reset config if no config found ([5b683f7](https://bitbucket.org/entrib/shopworx/commits/5b683f7f9417713589dd240c451a54fea91f2294))
+* **core:** updated time format from 12 to 24 hour clock ([fd593b5](https://bitbucket.org/entrib/shopworx/commits/fd593b56aa6faffe744ea48c88caff2e24638a76))
+* **log:** fixed filter and sort for production/downtime log ([6f1e39c](https://bitbucket.org/entrib/shopworx/commits/6f1e39cdf61670d5a21d5d64db1c2597a5d71b49))
+* **log-app:** fixed refresh on error / no records ([73e7c51](https://bitbucket.org/entrib/shopworx/commits/73e7c519a31a81a98f85d642efc06ecc62a41826))
+* **log-app:** updated filter drawer layout ([45dfd2a](https://bitbucket.org/entrib/shopworx/commits/45dfd2a7afc8ce82dc33a3a7acba7270f24bb0dc))
+* **log-app:** updated toolbar to show total records ([2707d1b](https://bitbucket.org/entrib/shopworx/commits/2707d1b74177404ae5dda26d8cf75b66dcccf200))
+* **onboarding:** updated error heading to error color ([c9c16ba](https://bitbucket.org/entrib/shopworx/commits/c9c16ba894ae00dcd3c5b31cd8a7638c6f63c12c))
+* **production-log:** added suffix to qty ([1362cc7](https://bitbucket.org/entrib/shopworx/commits/1362cc7ca244d83abe8596dc16724b5221fb9d00))
+* **production-log:** display plan wise part production ([3164f1b](https://bitbucket.org/entrib/shopworx/commits/3164f1b246127c98cc998480a1b91353a206a22e))
+* **production-log:** fix hourly rejections display for a date ([4c91ceb](https://bitbucket.org/entrib/shopworx/commits/4c91ceb44dd7c908393a96e665f6e59e30bf35ed))
+* **production-log:** fixed add new rejection shift qty display ([89ae992](https://bitbucket.org/entrib/shopworx/commits/89ae992aef9477f7e5a98c8d63dea3140fff2ab6))
+* **production-log:** fixed calculations after update ([92ff3bd](https://bitbucket.org/entrib/shopworx/commits/92ff3bd7ff30f95b3da0627cd59357d36d6341d5))
+* **production-log:** fixed complete onbaording redirection ([e8d1dda](https://bitbucket.org/entrib/shopworx/commits/e8d1ddaed37c5e009c6f77898aea210ef5446e20))
+* **production-log:** fixed rejected qty in an hour ([92639a9](https://bitbucket.org/entrib/shopworx/commits/92639a9e5bd71fa9a308913dd281e64b6f510e48))
+* **production-log:** fixed shift wise rework and scrap display ([9ec959c](https://bitbucket.org/entrib/shopworx/commits/9ec959c9b4d6de45848f9a845ad07db14443a9de))
+* **production-log:** fixed update rejections ([a209af3](https://bitbucket.org/entrib/shopworx/commits/a209af37c72a69c94c2beb42e62bbfa0a0ce8462))
+* **production-log:** updated rework display color from red to yellow ([a3116c4](https://bitbucket.org/entrib/shopworx/commits/a3116c4e01e8126644c0ab4d480ffa540f4c25db))
+* **time-tags:** added time type to update production logs ([17f5268](https://bitbucket.org/entrib/shopworx/commits/17f5268788e21fcfb5bfe7b4737b55b43d2530ac))
+
+
+### Features
+
+* **apps:** added last refresh time of data list ([480b95d](https://bitbucket.org/entrib/shopworx/commits/480b95d0952167fc6b61880d4f7e3ac5ee328e2d))
+* **production-layout:** updated layout to data table ([8829b02](https://bitbucket.org/entrib/shopworx/commits/8829b0253b69942d8b7369bfccb65745f1b29ec5))
+* **production-log:** added modified timestamp to quality values ([ca7794b](https://bitbucket.org/entrib/shopworx/commits/ca7794b03ba9ebd1d29059cd2da305a7769601f9))
+* **production-log:** updated layout for mobile view ([dad75f3](https://bitbucket.org/entrib/shopworx/commits/dad75f36554ec02927bd38543220fc27f3c9f642))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 

@@ -1,0 +1,289 @@
+{
+  "$vuetify": {
+    "badge": "Badge",
+    "close": "Close",
+    "dataIterator": 
+    {
+      "noResultsText": "No matching records found",
+      "loadingText": "Loading items..."
+    },
+    "dataTable": 
+    {
+      "itemsPerPageText": "Rows per page:",
+      "ariaLabel": 
+      {
+        "sortDescending": "Sorted descending.",
+        "sortAscending": "Sorted ascending.",
+        "sortNone": "Not sorted.",
+        "activateNone": "Activate to remove sorting.",
+        "activateDescending": "Activate to sort descending.",
+        "activateAscending": "Activate to sort ascending."
+      },
+      "sortBy": "Sort by"
+    },
+    "dataFooter": 
+    {
+      "itemsPerPageText": "Items per page:",
+      "itemsPerPageAll": "All",
+      "nextPage": "Next page",
+      "prevPage": "Previous page",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "pageText": "{0}-{1} of {2}"
+    },
+    "datePicker": 
+    {
+      "itemsSelected": "{0} selected",
+      "nextMonthAriaLabel": "Next month",
+      "nextYearAriaLabel": "Next year",
+      "prevMonthAriaLabel": "Previous month",
+      "prevYearAriaLabel": "Previous year"
+    },
+    "noDataText": "No data available",
+    "carousel": 
+    {
+      "prev": "Previous visual",
+      "next": "Next visual",
+      "ariaLabel": 
+      {
+        "delimiter": "Carousel slide {0} of {1}"
+      }
+    },
+    "calendar": 
+    {
+      "moreEvents": "{0} more"
+    },
+    "fileInput": 
+    {
+      "counter": "{0} files",
+      "counterSize": "{0} files ({1} in total)"
+    },
+    "timePicker": 
+    {
+      "am": "AM",
+      "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "Pagination Navigation",
+        "next": "Next page",
+        "previous": "Previous page",
+        "page": "Goto Page {0}",
+        "currentPage": "Current Page, Page {0}"
+      }
+    }
+  },
+  "success": {
+    "OTP_SENT": "One time password sent on registered email/phone.",
+    "PASSWORD_RESET": "New password sent on registered email/phone.",
+    "UPDATE": "Updated!",
+    "PASSWORDLESS": "Request created to enable passwordless.",
+    "INSTANCE_RECONFIG": "Request created to reconfigure instance.",
+    "INSTALL_DEBIAN": "Request created to install debian.",
+    "PASSWORDLESS_ENABLED": "Passwordless enabled for device ID {device}.",
+    "DEBIAN_INSTALLED": "Nodebot ID {nodebot} installed on deployment manager ID {service}.",
+    "INSTANCE_DEPLOYED": "Instance ID {instance} deployed on device ID {device}.",
+    "INSTANCE_REMOVED": "Instance ID {instance} removed from device ID {device}.",
+    "INSTANCE_DELETED": "Instance ID {instance} terminated.",
+    "INSTANCE_RECONFIGURED": "Instance ID {instance} reconfigured."
+  },
+  "error": {
+    "ERROR_CREATING_RECORD": "Error in adding record.",
+    "ERROR_DELETE_RECORD": "Error in deleting record.",
+    "NOT_VALID": "{_field_} is not valid.",
+    "NO_LICENSE": "You do not have an active licence. Please contact ShopWorx support.",
+    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licence. Please try again.",
+    "INVALID_SESSION": "Session expired: Please login again.",
+    "USER_ALREADY_EXIST": "User already exists.",
+    "USER_NOT_FOUND": "User account not found.",
+    "EMAIL_NOT_FOUND": "User account not found.",
+    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
+    "INVALID_USER": "Login failed: User not found.",
+    "INVALID_OTP": "Login failed: Incorrect OTP.",
+    "UPDATE": "Error while updating! Please retry.",
+    "PASSWORDLESS": "Error while enabling passwordless. Please retry.",
+    "INSTANCE_RECONFIG": "Error while reconfiguring instance. Please retry.",
+    "INSTALL_DEBIAN": "Error while installing debian. Please retry.",
+    "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb",
+    "UPLOAD_DEBIAN": "Unable to upload the debian file. Please retry.",
+    "UPDATE_INSTANCE_CONFIG": "Unable to update instance config. Please retry."
+  },
+  "fields": {
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "otp": "OTP",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "name": "Name",
+    "type": "Type",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "date": "Date",
+    "shift": "Shift",
+    "role": "Role",
+    "partname": "Part name",
+    "machinename": "Machine name",
+    "moldname": "Mold name",
+    "toolname": "Tool name",
+    "equipmentname": "Equipment name",
+    "quantity": "Quantity",
+    "activecavity": "Active cavity",
+    "cycletime": "Cycle time",
+    "delaytime": "Delay time",
+    "familyactivecavity": "Active cavity",
+    "scheduledstart": "Scheduled start",
+    "rejectedQuantity": "Quantity",
+    "rejectionReason": "Reason",
+    "reworkQuantity": "Quantity",
+    "reworkReason": "Reason",
+    "scrapWeight": "Weight",
+    "scrapReason": "Reason",
+    "downtimeReason": "Reason",
+    "downtimeStart": "Start time",
+    "downtimeEnd": "End time",
+    "modelName": "Model name"
+  },
+  "snackbar": {
+    "close": "Close",
+    "redirectToLogin": "Redirecting in {time}"
+  },
+  "helper": {
+    "or": "or",
+    "help": "Help",
+    "next": "Next",
+    "skip": "Skip for now",
+    "loading": "Loading..."
+  },
+  "notFound": {
+    "title": "That's an error!",
+    "subTitle1": "The requested URL",
+    "subTitle2": "{url}",
+    "subTitle3": "was not found on this server.",
+    "goHome": "Go back home"
+  },
+  "serverError": {
+    "title": "Shoot!",
+    "subTitle1": "Well, this is unexpected...",
+    "subTitle2": "Error code 500.",
+    "subTitle3": "An error has occured and we're working to fix the problem! We'll be up and running shortly.",
+    "goHome": "Go back home"
+  },
+  "forbidden": {
+    "title": "Access forbidden!",
+    "subTitle1": "You tried to access a page you did not have prior",
+    "subTitle2": "authorization",
+    "subTitle3": "for.",
+    "goHome": "Go back home"
+  },
+  "login": {
+    "title": "Log in to Origin",
+    "subTitle": "Use your ShopWorx Account",
+    "identifier": "Email or phone",
+    "password": "Password",
+    "otp": "OTP",
+    "resendOtp": "Resend otp?",
+    "resendOtpIn": "Resend otp in {time}",
+    "sendOtp": "Send OTP",
+    "forgotPassword": "Forgot password?",
+    "login": "Login securely",
+    "loginWithOtp": "Login with otp",
+    "loginWithPassword": "Login with password"
+  },
+  "forgotPassword": {
+    "title": "Reset password?",
+    "subTitle": "Enter your email or phone number",
+    "reset": "Reset password"
+  },
+  "welcome": {
+    "title": "Welcome! We have been expecting you.",
+    "subTitle1": "First things first, let's start by",
+    "subTitle2": "creating your account.",
+    "subTitle3": "It will take less than a minute.",
+    "start": "Let's get started"
+  },
+  "register": {
+    "account": {
+      "title": "Update your ShopWorx Account",
+      "update": "Update account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email (Optional)",
+      "phone": "Phone (Optional)"
+    },
+    "password": {
+      "title": "Update your ShopWorx Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "updated": "Your ShopWorx account is updated!"
+  },
+  "modules": {
+    "provision": "Provision",
+    "devTools": "Dev Tools",
+    "customerSupport": "Customer Support",
+    "customers": "Customer",
+    "industries": "Industries",
+    "users": "Origin Users",
+    "solutions": "Solutions",
+    "reports": "Reports",
+    "insights": "Insights",
+    "dashboards": "Dashboards",
+    "models": "ML Models",
+    "customerAssets": "Assets & License",
+    "customerSms": "SMS settings",
+    "customerWebhooks": "Webhooks",
+    "customerSolutions": "Roles & Access",
+    "customerUsers": "Users",
+    "customerDeployment": "Deployment Manager",
+    "customerData": "Data export"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile settings",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  },
+  "help": {
+    "help": "Help",
+    "legal": "Legal",
+    "version": "Version",
+    "keyboardShortcuts": "Keyboard shortcuts",
+    "support": "Support",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy"
+  },
+  "user": {
+    "general": "General",
+    "security": "Security",
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "reset": "Reset",
+      "update": "Update profile"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "display": "Display settings",
+      "language": "Language",
+      "darkMode": "Dark mode"
+    },
+    "password": {
+      "title": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "auditLog": {
+      "title": "Audit log"
+    }
+  }
+}

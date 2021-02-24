@@ -61,6 +61,14 @@
               </v-btn>
             </span>
           </div>
+          <proceed-dialog ref="ProceedDialog"
+            :openDialog="openDialog"
+            :responce="responce"
+            :duplicateBnum="duplicateBnum"
+            :duplicateStartnum="duplicateStartnum"
+            :dupDbAddress="dupDbAddress"
+            :paramLength="paramLength"
+            :dummyNames="dummyNames"/>
           <div style="float:right;">
             <v-btn
             small
@@ -82,8 +90,8 @@
             <v-btn small color="error"
               outlined
               class="text-none ml-2"
-              @click="confirmDialog = true"
-              v-if="parameterList.length && parameterSelected.length">
+              :disabled="isAddButtonOK"
+              @click="confirmDialog = true">
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
@@ -111,6 +119,7 @@
             outlined
             class="text-none ml-2"
             :disabled="isAddButtonOK"
+            :loading="savingImport"
             @click="importData">
               Import
             </v-btn>
@@ -140,10 +149,12 @@
         :headers="headers"
         item-key="_id"
         :items="parameterList"
-        :options="{itemsPerPage:5}"
+        :footer-props="{
+        'items-per-page-options': [100, 300, 500, 1000]}"
+        :items-per-page="100"
         show-select
         >
-          <template v-slot:item.name="props">
+          <template #item.name="props">
             <v-edit-dialog
               :return-value.sync="props.item.name"
               @save="saveTableParameter(props.item, 'name')"
@@ -156,7 +167,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.name"
@@ -166,7 +177,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.description="props">
+          <template #item.description="props">
             <v-edit-dialog
               :return-value.sync="props.item.description"
               large
@@ -183,7 +194,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-textarea
                   :disabled="substationValue ? false : true"
                   v-model="props.item.description"
@@ -193,7 +204,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.parametercategory="props">
+          <template #item.parametercategory="props">
             <v-select
               :disabled="(substationValue ? false : true) || saving"
               :items="categoryList"
@@ -207,7 +218,7 @@
               depressed
             ></v-select>
           </template>
-          <template v-slot:item.datatype="props">
+          <template #item.datatype="props">
             <v-select
               :disabled="(substationValue ? false : true) || saving"
               :items="datatypeList"
@@ -221,7 +232,7 @@
               depressed
             ></v-select>
           </template>
-          <template v-slot:item.bitnumber="props">
+          <template #item.bitnumber="props">
             <v-edit-dialog
               :return-value.sync="props.item.bitnumber"
               @save="saveTableParameter(props.item, 'bitnumber')"
@@ -234,7 +245,7 @@
               >
               mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="!substationValue
                   || props.item.datatype !== 12"
@@ -246,7 +257,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.size="props">
+          <template #item.size="props">
             <v-edit-dialog
               :return-value.sync="props.item.size"
               @save="saveTableParameter(props.item, 'size')"
@@ -259,7 +270,7 @@
               >
               mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="!substationValue
                   || props.item.datatype !== 11"
@@ -271,7 +282,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.startaddress="props">
+          <template #item.startaddress="props">
             <v-edit-dialog
               :return-value.sync="props.item.startaddress"
               @save="saveTableParameter(props.item, 'startaddress')"
@@ -283,7 +294,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.startaddress"
@@ -294,7 +305,7 @@
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.dbaddress="props">
+          <template #item.dbaddress="props">
             <v-edit-dialog
               :return-value.sync="props.item.dbaddress"
               @save="saveTableParameter(props.item, 'dbaddress')"
@@ -306,7 +317,7 @@
               >
                 mdi-pencil
               </v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :disabled="substationValue ? false : true"
                   v-model="props.item.dbaddress"
@@ -337,7 +348,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          Are you sure to delete the items selected ?
+          Are you sure to delete all the Parameters ?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -373,18 +384,93 @@ import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
 import AddParameter from '../components/AddParameter.vue';
 import ParameterFilter from '../components/ParameterFilter.vue';
+import ProceedDialog from '../components/ProceedDialog.vue';
 
 export default {
   name: 'PlanScheduleView',
   data() {
     return {
+      ProceedDialog: '',
       parameterSelected: [],
+      dialog: false,
+      openDialog: false,
+      responce: [],
+      resLen: [],
+      paramLength: [],
+      dataForCreation: [],
+      duplicateBnum: [],
+      duplicateStartnum: [],
+      dupDbAddress: [],
+      dummyNames: [],
+      validateFlag: true,
+      masterTags: [{
+        tagName: 'name',
+        tagDescription: 'Parameter Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'description',
+        tagDescription: 'Parameter Description',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'protocol',
+        tagDescription: 'Protcol Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'datatype',
+        tagDescription: 'Datatype',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'bitnumber',
+        tagDescription: 'BitnNumber',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'dbaddress',
+        tagDescription: 'DB Address',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'size',
+        tagDescription: 'Size',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'multiplicationfactor',
+        tagDescription: 'Mutiplication Factor',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parameterunit',
+        tagDescription: 'Parameter Unit',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parametercategory',
+        tagDescription: 'Parameter Category',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'paid',
+        tagDescription: 'Paid',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'startaddress',
+        tagDescription: 'Start Address',
+        required: true,
+        emgTagType: 'int',
+      }],
       headers: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
         { text: 'subline', value: 'subline', width: 120 },
         { text: 'station', value: 'station', width: 120 },
         { text: 'substation', value: 'substation', width: 120 },
+        // { text: 'Show Real/Non Real', value: 'showparameter', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -400,7 +486,32 @@ export default {
       confirmDialog: false,
       socket: null,
       saving: false,
+      savingImport: false,
     };
+  },
+  async mounted() {
+    this.ProceedDialog = this.$refs.ProceedDialog;
+    this.$root.$on('confirmationSignal', (data) => {
+      this.dialog = data;
+    });
+    this.$root.$on('clearResponce', (data) => {
+      const clear = data;
+      if (clear) {
+        document.getElementById('uploadFiles').value = null;
+        this.responce = [];
+        this.duplicateBnum = [];
+        this.duplicateStartnum = [];
+        this.dupDbAddress = [];
+        this.paramLength = [];
+        this.dummyNames = [];
+      }
+    });
+    this.$root.$on('getListofParams', (data) => {
+      const getList = data;
+      if (getList) {
+        this.getParameterListRecords(this.getQuery());
+      }
+    });
   },
   async created() {
     this.zipService = ZipService;
@@ -410,10 +521,16 @@ export default {
     this.socket.on('connect', () => {
     });
   },
+  destroyed() {
+    this.setLineValue('');
+    this.setSublineValue('');
+    this.setStationValue('');
+    this.setSubstationValue('');
+  },
   computed: {
     ...mapState('parameterConfiguration', [
       'addParameterDialog', 'parameterList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype',
-      'subStationElementDeatils', 'createElementResponse']),
+      'subStationElementDeatils', 'createElementResponse', 'createResult']),
     isAddButtonOK() {
       if (this.lineValue
         && this.sublineValue
@@ -431,37 +548,512 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     sublineValue(val) {
       if (!val) {
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     stationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords('?pagenumber=1&pagesize=10');
       }
     },
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
+    createResult: {
+      handler(val) {
+        if (val) {
+          this.executeCreateFunction(val);
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
+    ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setCreateParam']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
+    async executeCreateFunction(val) {
+      if (val) {
+        this.responce = [];
+        this.savingImport = false;
+        await this.getParameterListRecords(this.getQuery());
+        let tagList = [];
+        await this.getSubStationIdElement(`production_${this.substationValue}`);
+        // add by default timestamp
+        tagList.push({
+          assetId: 4,
+          tagName: 'timestamp',
+          tagDescription: 'timestamp',
+          emgTagType: 'Long',
+          lineid: 777,
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'lineid',
+          tagDescription: 'lineid',
+          emgTagType: 'Int',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'sublineid',
+          tagDescription: 'subline ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'stationid',
+          tagDescription: 'Station ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'substationid',
+          tagDescription: 'Substation ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        });
+        this.dataForCreation.forEach((item) => {
+          if (Number(item.parametercategory) === 15
+          || Number(item.parametercategory) === 17
+          || Number(item.parametercategory) === 18
+          || Number(item.parametercategory) === 2) {
+            let dataTypeName = '';
+            if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
+              dataTypeName = 'String';
+            } else {
+              dataTypeName = 'Double';
+            }
+            const tagname = item.name;
+            tagList.push({
+              assetId: 4,
+              tagName: tagname.toLowerCase().trim(),
+              tagDescription: item.name,
+              emgTagType: dataTypeName,
+              tagOrder: 1,
+              connectorId: 2,
+              defaultValue: '',
+              elementId: this.subStationElementDeatils.element.id,
+              hide: false,
+              identifier: true,
+              interactionType: '',
+              mode: '',
+              required: true,
+              sampling: true,
+              lowerRangeValue: 1,
+              upperRangeValue: 1,
+              alarmFlag: true,
+              alarmId: 1,
+              derivedField: false,
+              derivedFunctionName: '',
+              derivedFieldType: '',
+              displayType: true,
+              displayUnit: 1,
+              isFamily: true,
+              familyQueryTag: '',
+              filter: true,
+              filterFromElementName: '',
+              filterFromTagName: '',
+              filterQuery: '',
+            });
+          }
+        });
+        await this.createTagElement(tagList);
+        let payloadData = [];
+        tagList.forEach((l) => {
+          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+          if (!tag[0].created) {
+            payloadData.push({
+              elementId: l.elementId,
+              tagId: tag[0].tagId,
+              status: 'ACTIVE',
+            });
+          }
+        });
+        await this.updateTagStatus(payloadData);
+        // add tags to real parameters
+        tagList = [];
+        await this.getSubStationIdElement(`process_${this.substationValue}`);
+        // add by default timestamp
+        tagList.push({
+          assetId: 4,
+          tagName: 'timestamp',
+          tagDescription: 'timestamp',
+          emgTagType: 'Long',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'lineid',
+          tagDescription: 'lineid',
+          emgTagType: 'Int',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'sublineid',
+          tagDescription: 'subline ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'stationid',
+          tagDescription: 'Station ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        },
+        {
+          assetId: 4,
+          tagName: 'substationid',
+          tagDescription: 'Substation ID',
+          emgTagType: 'String',
+          tagOrder: 1,
+          connectorId: 2,
+          defaultValue: '',
+          elementId: this.subStationElementDeatils.element.id,
+          hide: false,
+          identifier: true,
+          interactionType: '',
+          mode: '',
+          required: true,
+          sampling: true,
+          lowerRangeValue: 1,
+          upperRangeValue: 1,
+          alarmFlag: true,
+          alarmId: 1,
+          derivedField: false,
+          derivedFunctionName: '',
+          derivedFieldType: '',
+          displayType: true,
+          displayUnit: 1,
+          isFamily: true,
+          familyQueryTag: '',
+          filter: true,
+          filterFromElementName: '',
+          filterFromTagName: '',
+          filterQuery: '',
+        });
+        this.dataForCreation.forEach((item) => {
+          if (Number(item.parametercategory) === 42
+          || Number(item.parametercategory) === 45
+          || Number(item.parametercategory) === 38
+          || Number(item.parametercategory) === 11
+          || Number(item.parametercategory) === 2) {
+            let dataTypeName = '';
+            if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
+              dataTypeName = 'String';
+            } else {
+              dataTypeName = 'Double';
+            }
+            const tagname = item.name;
+            tagList.push({
+              assetId: 4,
+              tagName: tagname.toLowerCase().trim(),
+              tagDescription: item.name,
+              emgTagType: dataTypeName,
+              tagOrder: 1,
+              connectorId: 2,
+              defaultValue: '',
+              elementId: this.subStationElementDeatils.element.id,
+              hide: false,
+              identifier: true,
+              interactionType: '',
+              mode: '',
+              required: true,
+              sampling: true,
+              lowerRangeValue: 1,
+              upperRangeValue: 1,
+              alarmFlag: true,
+              alarmId: 1,
+              derivedField: false,
+              derivedFunctionName: '',
+              derivedFieldType: '',
+              displayType: true,
+              displayUnit: 1,
+              isFamily: true,
+              familyQueryTag: '',
+              filter: true,
+              filterFromElementName: '',
+              filterFromTagName: '',
+              filterQuery: '',
+            });
+          }
+        });
+        await this.createTagElement(tagList);
+        payloadData = [];
+        tagList.forEach((l) => {
+          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+          if (!tag[0].created) {
+            payloadData.push({
+              elementId: l.elementId,
+              tagId: tag[0].tagId,
+              status: 'ACTIVE',
+            });
+          }
+        });
+        await this.updateTagStatus(payloadData);
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'IMPORT_PARAMETER_LIST',
+        });
+        this.savingImport = false;
+        this.setCreateParam(false);
+        document.getElementById('uploadFiles').value = null;
+      }
+    },
+    async showParameters(event, item) {
+      const object = {
+        id: item._id,
+        payload: {
+          showparameter: event,
+        },
+      };
+      const updateResult = await this.updateParameter(object);
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'Data Updated',
+        });
+      }
+    },
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -602,11 +1194,11 @@ export default {
       await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
-      const results = await Promise.all(this.parameterSelected.map(
-        (parameter) => this.deleteParameter(parameter.id),
-      ));
-      const selectedSubStaionlist = this.parameterSelected.map((sl) => sl.substationid);
-      await this.getSubStationIdElement(selectedSubStaionlist[0]);
+      // const results = await Promise.all(this.parameterSelected.map(
+      //   (parameter) => this.deleteParameter(parameter.id),
+      // ));
+      const results = await this.deleteParameter(this.substationValue);
+      await this.getSubStationIdElement(`process_${this.substationValue}`);
       const listT = this.subStationElementDeatils;
       const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
       const payloadData = [];
@@ -618,7 +1210,20 @@ export default {
         });
       });
       await this.updateTagStatus(payloadData);
-      if (results.every((bool) => bool === true)) {
+      await this.getSubStationIdElement(`production_${this.substationValue}`);
+      const listProcess = this.subStationElementDeatils;
+      const FilteredTagsProcess = listProcess.tags
+        .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+      const payloadDataProcess = [];
+      FilteredTagsProcess.forEach(async (tag) => {
+        payloadDataProcess.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
+          status: 'INACTIVE',
+        });
+      });
+      await this.updateTagStatus(payloadDataProcess);
+      if (results) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());
         if (parameterList.length === 0) {
@@ -662,7 +1267,6 @@ export default {
           });
         }
       });
-      await this.downloadToPLC(object);
     },
     getQuery() {
       let query = '?query=';
@@ -755,7 +1359,6 @@ export default {
         'multiplicationfactor',
         'parameterunit',
         'parametercategory',
-        'plcaddress',
         'paid',
       ];
       const csvContent = [];
@@ -773,7 +1376,6 @@ export default {
         2,
         '2',
         '2',
-        2,
         2,
       ];
       csvContent.push(arr);
@@ -799,7 +1401,21 @@ export default {
       this.$refs.uploader.click();
     },
     async onFilesChanged(e) {
+      this.validateFlag = true;
+      this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
+      const ext = /^.+\.([^.]+)$/.exec(files[0].name);
+      const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
+      if (getFileExtension !== 'csv' && getFileExtension !== 'CSV') {
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_ONLY_CSV',
+        });
+        document.getElementById('uploadFiles').value = null;
+        return;
+      }
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       data.forEach((item) => {
@@ -818,166 +1434,315 @@ export default {
           item.isswapped = this.datatypeList
             .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
             .isswapped === 1;
-          if (Number(item.datatypeList) === 11) {
+          // if (Number(item.datatypeList) === 11) {
+          //   item.size = this.datatypeList
+          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+          // }
+          if (Number(item.datatype) !== 11) {
             item.size = this.datatypeList
               .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
           }
         }
         item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().trim();
+        item.name = item.name.toLowerCase().replace(/\W/g, '');
         item.assetid = 4;
         delete item.monitorvalue;
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
-      if (new Set(nameList).size === nameList.length) {
+      const duplicateNames = nameList.map((item) => item)
+        .filter((value, index, self) => self.indexOf(value) !== index);
+      const res = [];
+      dataList.forEach((d, r) => {
+        this.masterTags.forEach((t) => {
+          if (t.required) {
+            const val = d[t.tagName];
+            if (val === null || val === '' || val === undefined) {
+              res.push({ row: r + 2, tag: t.tagDescription });
+              this.responce = res;
+            }
+          }
+        });
+      });
+      if (nameList) {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
-          for (let i = 0; i < isBooleanList.length; i += 1) {
-            for (let k = i + 1; k < isBooleanList.length; k += 1) {
-              if (
-                Number(isBooleanList[i].dbaddress) === Number(isBooleanList[k].dbaddress)
-                && Number(isBooleanList[i].startaddress) === Number(isBooleanList[k].startaddress)
-                && Number(isBooleanList[i].bitnumber) === Number(isBooleanList[k].bitnumber)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_Boolean_Bit',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
+          const listDbaddress = dataList.map((item) => item.dbaddress);
+          const duplicatedbAddress = listDbaddress.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicatedbAddress.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_DBADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicatedbAddress) {
+            const dbresponce = [];
+            duplicatedbAddress.forEach((p) => {
+              if (p.length > 0) {
+                dbresponce.push(` value( dbaddress ): ${p} `);
+                this.dupDbAddress = dbresponce;
+                this.$root.$emit('parameterCreation', true);
               }
+            });
+          }
+          const listStartAdd = dataList.map((item) => item.startaddress);
+          const duplicatestartAddress = listStartAdd.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicatestartAddress.length > 0) {
+            this.$root.$emit('parameterCreation', true);
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_START_ADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicatestartAddress) {
+            const resStartNum = [];
+            duplicatestartAddress.forEach((p) => {
+              if (p.length > 0) {
+                resStartNum.push(` value( startaddress ): ${p} `);
+                this.duplicateStartnum = resStartNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          const listBitNum = dataList.map((item) => item.bitnumber);
+          const duplicateBitnumber = listBitNum.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicateBitnumber.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_BIT_NUMBER',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateBitnumber) {
+            const resBitNum = [];
+            duplicateBitnumber.forEach((p) => {
+              if (p.length > 0) {
+                resBitNum.push(` value( bitnumber ): ${p} `);
+                this.duplicateBnum = resBitNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (duplicateNames.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (nameList) {
+            const resLen = [];
+            nameList.forEach((p, index) => {
+              if (p.length > 15) {
+                resLen.push(` name: ${p} | row: ${index + 2} `);
+                this.paramLength = resLen;
+                this.savingImport = false;
+                this.validateFlag = false;
+                this.$root.$emit('parameterCreation', true);
+                document.getElementById('uploadFiles').value = null;
+                // return;
+              }
+            });
+            // return;
+          }
+          if (this.paramLength.length > 0) {
+            this.validateFlag = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'PARAMETER_NAME_LENGTH',
+            });
+            // this.paramLength = [];
+            // return;
+          }
+          if (this.validateFlag === true) {
+            if (this.responce.length > 0) {
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+              this.$root.$emit('payload', data);
+              this.dialog = true;
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'EMPTY_FIELDS',
+              });
+              // document.getElementById('uploadFiles').value = null;
+              // return;
+            } else {
+              this.$root.$emit('payload', data);
+              this.$root.$emit('successPayload', true);
             }
           }
         }
         if (noBooleanList.length) {
-          for (let i = 0; i < noBooleanList.length; i += 1) {
-            for (let k = i + 1; k < noBooleanList.length; k += 1) {
-              if (
-                Number(noBooleanList[i].dbaddress) === Number(noBooleanList[k].dbaddress)
-                && Number(noBooleanList[i].startaddress) === Number(noBooleanList[k].startaddress)
-              ) {
-                this.setAlert({
-                  show: true,
-                  type: 'error',
-                  message: 'duplicate_parameter_startaddress',
-                });
-                document.getElementById('uploadFiles').value = null;
-                return;
+          const listDbaddress = dataList.map((item) => item.dbaddress);
+          const duplicatedbAddress = listDbaddress.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicatedbAddress.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_DBADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicatedbAddress) {
+            const dbresponce = [];
+            duplicatedbAddress.forEach((p) => {
+              if (p.length > 0) {
+                dbresponce.push(` value( dbaddress ): ${p} `);
+                this.dupDbAddress = dbresponce;
+                this.$root.$emit('parameterCreation', true);
               }
+            });
+          }
+          const listStartAdd = dataList.map((item) => item.startaddress);
+          const duplicatestartAddress = listStartAdd.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicatestartAddress.length > 0) {
+            this.$root.$emit('parameterCreation', true);
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_START_ADDRESS',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicatestartAddress) {
+            const resStartNum = [];
+            duplicatestartAddress.forEach((p) => {
+              if (p.length > 0) {
+                resStartNum.push(` value( startaddress ): ${p} `);
+                this.duplicateStartnum = resStartNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          const listBitNum = dataList.map((item) => item.bitnumber);
+          const duplicateBitnumber = listBitNum.map((item) => item)
+            .filter((value, index, self) => self.indexOf(value) !== index);
+          if (duplicateBitnumber.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_BIT_NUMBER',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateBitnumber) {
+            const resBitNum = [];
+            duplicateBitnumber.forEach((p) => {
+              if (p.length > 0) {
+                resBitNum.push(` value( bitnumber ): ${p} `);
+                this.duplicateBnum = resBitNum;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (duplicateNames.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (nameList) {
+            const resLen = [];
+            nameList.forEach((p, index) => {
+              if (p.length > 15) {
+                resLen.push(` name: ${p} | row: ${index + 2} `);
+                this.paramLength = resLen;
+                this.savingImport = false;
+                this.validateFlag = false;
+                this.$root.$emit('parameterCreation', true);
+                document.getElementById('uploadFiles').value = null;
+                // return;
+              }
+            });
+            // return;
+          }
+          if (this.paramLength.length > 0) {
+            this.validateFlag = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'PARAMETER_NAME_LENGTH',
+            });
+            // this.paramLength = [];
+            // return;
+          }
+          if (this.validateFlag === true) {
+            if (this.responce.length > 0) {
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+              this.$root.$emit('payload', data);
+              this.dialog = true;
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'EMPTY_FIELDS',
+              });
+              // document.getElementById('uploadFiles').value = null;
+              // return;
             }
           }
         }
-        const createResult = await this.createParameterList(data);
-        if (createResult) {
-          await this.getParameterListRecords(this.getQuery());
-          const tagList = [];
-          await this.getSubStationIdElement(this.substationValue);
-          tagList.push({
-            assetId: 4,
-            tagName: 'mainid',
-            tagDescription: 'mainid',
-            emgTagType: 'String',
-            tagOrder: 1,
-            connectorId: 2,
-            defaultValue: '',
-            elementId: this.subStationElementDeatils.element.id,
-            hide: false,
-            identifier: true,
-            interactionType: '',
-            mode: '',
-            required: true,
-            sampling: true,
-            lowerRangeValue: 1,
-            upperRangeValue: 1,
-            alarmFlag: true,
-            alarmId: 1,
-            derivedField: false,
-            derivedFunctionName: '',
-            derivedFieldType: '',
-            displayType: true,
-            displayUnit: 1,
-            isFamily: true,
-            familyQueryTag: '',
-            filter: true,
-            filterFromElementName: '',
-            filterFromTagName: '',
-            filterQuery: '',
-          });
-          data.forEach((item) => {
-            if (Number(item.parametercategory) === 15
-            || Number(item.parametercategory) === 17
-            || Number(item.parametercategory) === 18) {
-              let dataTypeName = '';
-              if (this.datatypeList.filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String') {
-                dataTypeName = 'String';
-              } else {
-                dataTypeName = 'Double';
-              }
-              const tagname = item.name;
-              tagList.push({
-                assetId: 4,
-                tagName: tagname.toLowerCase().trim(),
-                tagDescription: item.name,
-                emgTagType: dataTypeName,
-                tagOrder: 1,
-                connectorId: 2,
-                defaultValue: '',
-                elementId: this.subStationElementDeatils.element.id,
-                hide: false,
-                identifier: true,
-                interactionType: '',
-                mode: '',
-                required: true,
-                sampling: true,
-                lowerRangeValue: 1,
-                upperRangeValue: 1,
-                alarmFlag: true,
-                alarmId: 1,
-                derivedField: false,
-                derivedFunctionName: '',
-                derivedFieldType: '',
-                displayType: true,
-                displayUnit: 1,
-                isFamily: true,
-                familyQueryTag: '',
-                filter: true,
-                filterFromElementName: '',
-                filterFromTagName: '',
-                filterQuery: '',
-              });
-            }
-          });
-          await this.createTagElement(tagList);
-          const payloadData = [];
-          tagList.forEach((l) => {
-            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
-              });
-            }
-          });
-          await this.updateTagStatus(payloadData);
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'import_parameter_list',
-          });
-        }
-        document.getElementById('uploadFiles').value = null;
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'duplicate_parameter_name',
-        });
-        document.getElementById('uploadFiles').value = null;
       }
     },
     addToZip(file) {
@@ -987,6 +1752,7 @@ export default {
   components: {
     AddParameter,
     ParameterFilter,
+    ProceedDialog,
   },
 };
 </script>

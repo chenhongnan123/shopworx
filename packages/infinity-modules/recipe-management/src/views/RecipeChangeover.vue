@@ -147,6 +147,7 @@ export default {
     };
   },
   async created() {
+    // await this.getRecipeListRecords('');
     this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
     this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
   },

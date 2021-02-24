@@ -9,7 +9,9 @@ export default ({
     userState: null,
     activeSite: null,
     mySolutions: [],
+    myDevices: [],
     licenses: [],
+    isDeviceElemAvailable: false,
   },
   mutations: {
     setMe: set('me'),
@@ -17,7 +19,9 @@ export default ({
     setUserState: set('userState'),
     setActiveSite: set('activeSite'),
     setMySolutions: set('mySolutions'),
+    setMyDevices: set('myDevices'),
     setLicenses: set('licenses'),
+    setIsDeviceElemAvailable: set('isDeviceElemAvailable'),
   },
   actions: {
     getMe: async ({ commit }) => {
@@ -221,6 +225,87 @@ export default ({
       }
       return true;
     },
+
+    getDeviceElement: async ({ commit, dispatch }) => {
+      const element = await dispatch(
+        'element/getElement',
+        'devices',
+        { root: true },
+      );
+      if (!element) {
+        const deviceMaster = await dispatch('getDeviceMaster');
+        if (deviceMaster) {
+          const elementId = await dispatch('createDeviceElement', deviceMaster);
+          if (elementId) {
+            commit('setIsDeviceElemAvailable', true);
+            return true;
+          }
+        }
+        commit('setIsDeviceElemAvailable', false);
+        return false;
+      }
+      commit('setIsDeviceElemAvailable', true);
+      return true;
+    },
+
+    getDeviceMaster: async ({ dispatch }) => {
+      const masterElements = await dispatch(
+        'industry/getMasterElements',
+        null,
+        { root: true },
+      );
+      return masterElements
+        .find((elem) => elem.masterElement.elementName === 'devices');
+    },
+
+    createDeviceElement: async ({ dispatch }, deviceMaster) => {
+      const element = deviceMaster.masterElement;
+      const tags = deviceMaster.masterTags;
+      const payload = {
+        element,
+        tags,
+      };
+      const elementId = await dispatch(
+        'element/createElementAndTags',
+        payload,
+        { root: true },
+      );
+      return elementId;
+    },
+
+    getMyDevices: async ({ commit, dispatch }) => {
+      const devices = await dispatch(
+        'element/getRecords',
+        { elementName: 'devices' },
+        { root: true },
+      );
+      commit('setMyDevices', devices);
+    },
+
+    createTV: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'devices',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    updateTV: async ({ dispatch }, { id, payload }) => {
+      const updated = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'devices',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return updated;
+    },
   },
   getters: {
     isAccountUpdated: ({ userState }) => {
@@ -273,6 +358,13 @@ export default ({
       return '';
     },
 
+    roleName: ({ me }) => {
+      if (me && me.user) {
+        return me.role.roleName;
+      }
+      return '';
+    },
+
     sites: ({ me }) => {
       if (me && me.site && me.site.length) {
         return me.site.map((s) => ({
@@ -303,17 +395,28 @@ export default ({
         mySolutions.forEach((solution) => solution.modules
           .sort((a, b) => a.id - b.id)
           .map((module) => {
-            if (module.moduleName.toUpperCase().trim() === 'APPS'
-            || module.moduleName.toUpperCase().trim() === 'DASHBOARDS') {
+            const isApp = module.moduleName.toUpperCase().trim() === 'APPS';
+            const isDashboard = module.moduleName.toUpperCase().trim() === 'DASHBOARDS';
+            const isReport = module.moduleName.toUpperCase().trim() === 'REPORTS';
+            const isMaster = module.moduleName.toUpperCase().trim() === 'MASTERS';
+            const isRawData = module.moduleName.toUpperCase().trim() === 'RAWDATA';
+            const isAdmin = module.moduleName.toUpperCase().trim() === 'ADMIN';
+            const isInsight = module.moduleName.toUpperCase().trim() === 'INSIGHTS';
+            if (isApp || isDashboard) {
+              if (isDashboard) {
+                modules.items.push({ header: module.moduleName });
+              }
               module.details.forEach((detail) => {
+                const isExternal = detail.webAppLink.includes('/#');
                 modules.items.push({
                   id: detail.id,
                   icon: detail.iconURL,
                   to: detail.webAppLink,
                   title: detail.webAppName,
+                  external: isExternal,
                 });
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            } else if (isReport) {
               modules.items.push({ header: module.moduleName });
               module.details.forEach((detail) => {
                 modules.items.push({
@@ -323,21 +426,28 @@ export default ({
                   title: detail.reportsCategoryName,
                 });
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'MASTERS') {
+            } else if (isMaster) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
                 title: module.moduleName,
                 icon: `$${module.moduleName}`,
               });
-            } else if (module.moduleName.toUpperCase().trim() === 'ADMIN') {
+            } else if (isRawData) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
                 title: module.moduleName,
                 icon: `$${module.moduleName}`,
               });
-            } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+            } else if (isAdmin) {
+              modules.adminItems.push({
+                id: module.id,
+                to: module.moduleLink,
+                title: module.moduleName,
+                icon: `$${module.moduleName}`,
+              });
+            } else if (!isInsight) {
               modules.items.push({ header: module.moduleName });
               module.details.forEach((detail) => {
                 modules.items.push({
@@ -376,6 +486,39 @@ export default ({
         isProvisioned = mods.includes(appName);
       }
       return isProvisioned;
+    },
+
+    myDashboards: ({ mySolutions }) => {
+      const dashboards = [];
+      if (mySolutions && mySolutions.length) {
+        mySolutions.forEach((solution) => solution.modules
+          .sort((a, b) => a.id - b.id)
+          .map((module) => {
+            const isDashboard = module.moduleName.toUpperCase().trim() === 'DASHBOARDS';
+            if (isDashboard) {
+              module.details.forEach((detail) => {
+                dashboards.push({
+                  id: detail.id,
+                  icon: detail.iconURL,
+                  to: detail.webAppLink,
+                  title: detail.webAppName,
+                });
+              });
+            }
+            return dashboards;
+          }));
+      }
+      return dashboards;
+    },
+
+    myTvs: ({ myDevices }) => {
+      let tvs = [];
+      if (myDevices && myDevices.length) {
+        tvs = myDevices.filter((device) => device.devicetype
+          .toUpperCase()
+          .trim() === 'TV');
+      }
+      return tvs;
     },
   },
 });

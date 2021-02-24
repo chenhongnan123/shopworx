@@ -9,7 +9,6 @@
     @vdropzone-file-added="fileAdded"
     @vdropzone-removed-file="fileRemoved"
     @vdropzone-processing="processingUpload"
-    @vdropzone-queue-complete="queueComplete"
     @vdropzone-upload-progress="uploadProgress"
   >
     <div class="text-center py-2">
@@ -77,15 +76,24 @@ export default {
     ...mapState('auth', ['sessionId']),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'fetchModelDetails',
       'updateModelFile',
     ]),
     ...mapMutations('modelManagement', ['setFiles', 'setUploadingFiles']),
     fileAdded(file) {
-      const { files } = this;
-      files.push(file);
-      this.setFiles(files);
+      if (file.size > 7000000) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FILE_SIZE_EXCEEDED',
+        });
+      } else {
+        const { files } = this;
+        files.push(file);
+        this.setFiles(files);
+      }
     },
     fileRemoved(file) {
       const { files } = this;
@@ -130,8 +138,12 @@ export default {
         modelId: this.modelId,
         id: res.id,
       });
+      await this.fetchModelDetails(this.modelId);
+      this.dropzone.removeAllFiles();
+      this.setUploadingFiles(false);
     },
     async queueComplete() {
+      // @vdropzone-queue-complete="queueComplete"
       await this.fetchModelDetails(this.modelId);
       this.dropzone.removeAllFiles();
       this.setUploadingFiles(false);

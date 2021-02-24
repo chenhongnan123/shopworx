@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **infinity:** fixed connection status display ([5c62ea5](https://bitbucket.org/entrib/shopworx/commits/5c62ea5f8027c137800110b999ff2d2f3f93f96e))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+
+
+### Features
+
+* **core:** added connection status indicator ([d7862c3](https://bitbucket.org/entrib/shopworx/commits/d7862c37cf22a9e0fd1b0f6f9efd50839d8f3e42))
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+
+### Bug Fixes
+
+* **production-layout, Raw-data:** RA-I412,RA-I426, RA-I435" ([025002d](https://bitbucket.org/entrib/shopworx/commits/025002dc73907de58c84baf6be1485e277f6fd7d))
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* **api:** fixed create access api ([94989a5](https://bitbucket.org/entrib/shopworx/commits/94989a51094a6277eb36ca67c505d92e432af451))
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* **production-planning:** fixed plan update ([0112460](https://bitbucket.org/entrib/shopworx/commits/0112460baf59b05fad5e9e50ec5ca85982b73d62))
+
+
+### Features
+
+* **element-service:** fetch record by id ([b09ad04](https://bitbucket.org/entrib/shopworx/commits/b09ad04c7968ecd624d1d64850580d3dbb5a15b7))
+* **production-planning:** added delete and abort plan feature ([ff4d417](https://bitbucket.org/entrib/shopworx/commits/ff4d417e9dff2e35ee2c0688057f50b119c41592))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 

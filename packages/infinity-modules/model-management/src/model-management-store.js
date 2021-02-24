@@ -1,4 +1,4 @@
-import { set, reactiveSet } from '@shopworx/services/util/store.helper';
+import { set, reactiveSet, toggle } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 
 const ELEMENTS = {
@@ -11,6 +11,7 @@ const ELEMENTS = {
   PARAMETERS: 'parameters',
   TRANSFORMATIONS: 'mltransformationoutput',
   MODEL_INPUTS: 'modelinputs',
+  MODEL_LOGS: 'modeldeploymentorderslogs',
   MODEL_FILES: 'modelfiles',
   MODEL_OUTPUTS: 'modeloutputs',
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
@@ -31,7 +32,9 @@ export default ({
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,
+    selectedStationName: null,
     selectedSubstation: null,
+    selectedSubstationName: null,
     selectedProcess: null,
     selectedProcessName: null,
     lineDetails: [],
@@ -46,13 +49,112 @@ export default ({
     files: [],
     createdModelId: null,
     lastStatusUpdate: {},
+    deployedModels: [],
+    selectedModel: null,
+    customizeMode: false,
+    allWidgets: [
+      {
+        component: 'model-info',
+        title: 'Model details',
+        maxCount: 1,
+        minWidth: 5,
+        minHeight: 7,
+        maxWidth: 6,
+        maxHeight: 7,
+        config: null,
+        configured: true,
+      },
+      {
+        component: 'model-output',
+        title: 'Model output',
+        maxCount: 1,
+        minWidth: 6,
+        minHeight: 18,
+        maxWidth: 7,
+        maxHeight: 18,
+        config: null,
+        configured: true,
+      },
+      {
+        component: 'model-warnings',
+        title: 'Alerts',
+        maxCount: 1,
+        minWidth: 5,
+        minHeight: 10,
+        maxWidth: 6,
+        maxHeight: 10,
+        config: null,
+        configured: true,
+      },
+    ],
+    widgets: [
+      {
+        x: 0,
+        y: 0,
+        w: 5,
+        h: 7,
+        i: 0,
+        definition: {
+          component: 'model-info',
+          title: 'Model details',
+          maxCount: 1,
+          minWidth: 5,
+          minHeight: 7,
+          maxWidth: 6,
+          maxHeight: 7,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 5,
+        y: 0,
+        w: 7,
+        h: 18,
+        i: 1,
+        definition: {
+          component: 'model-output',
+          title: 'Model output',
+          maxCount: 1,
+          minWidth: 6,
+          minHeight: 18,
+          maxWidth: 7,
+          maxHeight: 18,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+      {
+        x: 0,
+        y: 7,
+        w: 5,
+        h: 10,
+        i: 2,
+        definition: {
+          component: 'model-warnings',
+          title: 'Alerts',
+          maxCount: 1,
+          minWidth: 5,
+          minHeight: 10,
+          maxWidth: 6,
+          maxHeight: 10,
+          config: null,
+          configured: true,
+        },
+        moved: false,
+      },
+    ],
   },
   mutations: {
     setLines: set('lines'),
     setSelectedLine: set('selectedLine'),
     setSelectedSubline: set('selectedSubline'),
     setSelectedStation: set('selectedStation'),
+    setSelectedStationName: set('selectedStationName'),
     setSelectedSubstation: set('selectedSubstation'),
+    setSelectedSubstationName: set('selectedSubstationName'),
     setSelectedProcess: set('selectedProcess'),
     setSelectedProcessName: set('selectedProcessName'),
     setLineDetails: set('lineDetails'),
@@ -67,6 +169,12 @@ export default ({
     setFiles: set('files'),
     setCreatedModelId: set('createdModelId'),
     setLastStatusUpdate: reactiveSet('lastStatusUpdate'),
+    setDeployedModels: set('deployedModels'),
+    setSelectedModel: set('selectedModel'),
+    setCustomizeMode: set('customizeMode'),
+    toggleCustomizeMode: toggle('customizeMode'),
+    setAllWidgets: set('allWidgets'),
+    setWidgets: set('widgets'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -180,18 +288,24 @@ export default ({
       const mappedModels = await Promise.all(models
         .map(async ({
           _id,
+          // eslint-disable-next-line
+          model_id,
           modelname,
           modeldescription,
           modifiedtimestamp,
+          modelupdatestatus,
         }) => {
           let model = {
             id: _id,
+            // eslint-disable-next-line
+            model_id,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
             status: 'N.A',
+            modelUpdateStatus: modelupdatestatus,
           };
-          const deployment = await dispatch('getLastDeploymentStatus', _id);
+          const deployment = await dispatch('getLastDeploymentStatus', model_id);
           if (deployment) {
             model = {
               ...model,
@@ -201,6 +315,7 @@ export default ({
           }
           const eventData = {
             key: model.id,
+            lastModified: model.lastModified,
             status: model.status,
           };
           commit('setLastStatusUpdate', eventData);
@@ -226,21 +341,58 @@ export default ({
       return deployment[0];
     },
 
-    getInputParameters: async ({ commit, dispatch }) => {
+    getInputParameters: async ({ commit, dispatch, state }) => {
+      const {
+        selectedSubstation,
+      } = state;
+      const list = [];
+      list.push({
+        header: 'Real Parameters',
+      });
       const parameters = await dispatch(
         'element/getRecords',
         {
           elementName: ELEMENTS.PARAMETERS,
-          query: '?query=parametercategory=="51"',
+          query: `?query=substationid=="${selectedSubstation}"`,
         },
         { root: true },
       );
-      const params = sortArray(parameters, 'description')
-        .map(({ id, description }) => ({
-          id,
+      const realParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '42'
+          || p.parametercategory === '45'
+          || p.parametercategory === '38'
+          || p.parametercategory === '11'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
           description,
+          group: 'Real Parameters',
         }));
-      commit('setInputParameters', params);
+      realParam.forEach((f) => {
+        list.push(f);
+      });
+      list.push({
+        divider: true,
+      });
+      list.push({
+        header: 'Non Real Parameters',
+      });
+      const nonRealParam = sortArray(parameters
+        .filter((p) => p.parametercategory === '15'
+          || p.parametercategory === '17'
+          || p.parametercategory === '18'
+          || p.parametercategory === '2'), 'description')
+        .map(({ id, name, description }) => ({
+          parameterId: id,
+          name,
+          description,
+          group: 'Non Real Parameters',
+        }));
+      nonRealParam.forEach((n) => {
+        list.push(n);
+      });
+      commit('setInputParameters', list);
     },
 
     getOutputTransformations: async ({ commit, dispatch }) => {
@@ -276,6 +428,54 @@ export default ({
         return a;
       }, {});
       commit('setModelDetails', modelDetails);
+    },
+
+    fetchDeployedModels: async ({ state, commit, dispatch }, modelId) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedProcess,
+        selectedStationName,
+        selectedSubstationName,
+        selectedProcessName,
+      } = state;
+      const query = `?query=lineid==${selectedLine}%26%26stationid=="${selectedStation}"%26%26subprocessid=="${selectedProcess}"%26%26modelid=="${modelId}"`;
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          query,
+        },
+        { root: true },
+      );
+      let modelList = [];
+      if (models) {
+        modelList = models.map((l) => ({
+          ...l,
+          logs: [],
+        }));
+        Promise.all(modelList.map(async (l) => {
+          let list = await dispatch(
+            'element/getRecords',
+            {
+              elementName: 'modeldeploymentorderslogs',
+              // eslint-disable-next-line
+              query: `?query=modeldeploymentorderid=="${l._id}"`,
+            },
+            { root: true },
+          );
+          list = list.map((m) => ({
+            ...m,
+            stationid: selectedStationName,
+            substationid: selectedSubstationName,
+            subprocessid: selectedProcessName,
+            operationname: l.operationname,
+          }));
+          // eslint-disable-next-line
+          l.logs = list;
+        }));
+      }
+      commit('setDeployedModels', modelList);
     },
 
     getModelInputs: async ({ dispatch }, query) => {
@@ -544,6 +744,7 @@ export default ({
             substationid: selectedSubstation,
             subprocessid: selectedProcess,
             assetid: ASSETID,
+            modelupdatestatus: true,
           },
         },
         { root: true },
@@ -588,11 +789,39 @@ export default ({
         return {
           // eslint-disable-next-line
           id: model._id,
+          model_id: model.model_id,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
           status: 'N.A',
         };
+      }
+      return false;
+    },
+
+    fetchModelByName: async ({ commit, dispatch }, modelname) => {
+      commit('setSelectedModel', null);
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODELS,
+          query: `?query=modelname=="${modelname}"`,
+        },
+        { root: true },
+      );
+      if (models && models.length === 1) {
+        const [model] = models;
+        const payload = {
+          // eslint-disable-next-line
+          id: model._id,
+          model_id: model.model_id,
+          name: model.modelname,
+          description: model.modeldescription,
+          lastModified: formatDate(model.modifiedtimestamp),
+          status: 'N.A',
+        };
+        commit('setSelectedModel', payload);
+        return true;
       }
       return false;
     },
@@ -633,6 +862,7 @@ export default ({
         if (created && created.id) {
           const eventData = {
             key: modelId,
+            lastModified: new Date(),
             status,
           };
           commit('setLastStatusUpdate', eventData);
@@ -670,7 +900,7 @@ export default ({
       return false;
     },
 
-    deleteModel: async ({ state, commit, dispatch }, modelId) => {
+    deleteModel: async ({ state, commit, dispatch }, { modelId, id }) => {
       const { modelDetails } = state;
       const deleteInputs = dispatch(
         'element/deleteRecordByQuery',
@@ -684,6 +914,32 @@ export default ({
         'element/deleteRecordByQuery',
         {
           elementName: ELEMENTS.MODEL_OUTPUTS,
+          queryParam: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
+      const models = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          query: `?query=modelid=="${modelId}"`,
+        },
+        { root: true },
+      );
+      const deleteOrdersLogs = await Promise.all([
+        models.forEach((m) => dispatch(
+          'element/deleteRecordByQuery',
+          {
+            elementName: ELEMENTS.MODEL_LOGS,
+            queryParam: `?query=modeldeploymentorderid=="${m._id}"`,
+          },
+          { root: true },
+        )),
+      ]);
+      const deleteOrders = dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
           queryParam: `?query=modelid=="${modelId}"`,
         },
         { root: true },
@@ -702,8 +958,8 @@ export default ({
       const deleteModel = dispatch(
         'element/deleteRecordById',
         {
-          elementName: ELEMENTS.MODEL_OUTPUTS,
-          id: modelId,
+          elementName: ELEMENTS.MODELS,
+          id,
         },
         { root: true },
       );
@@ -712,6 +968,8 @@ export default ({
         deleteFiles,
         deleteOutputs,
         deleteModel,
+        deleteOrders,
+        deleteOrdersLogs,
       ]);
       if (deleted) {
         await dispatch('getModels');
@@ -736,15 +994,25 @@ export default ({
         );
       }
     },
+    updateStatusOfModel: async ({ dispatch }, payload) => {
+      const updateStatus = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'models',
+          id: payload.id,
+          payload: { modelupdatestatus: payload.modelupdatestatus },
+        },
+        { root: true },
+      );
+      return updateStatus;
+    },
   },
   getters: {
     isDeploymentAllowed: ({ modelDetails }) => {
       let isAllowed = false;
       if (modelDetails) {
-        const isInputConfigured = modelDetails.modelInputs.length > 0;
         const isFileConfigured = modelDetails.modelFiles.length > 0;
-        const isOutputConfigured = modelDetails.modelOutputs.length > 0;
-        isAllowed = isInputConfigured && isFileConfigured && isOutputConfigured;
+        isAllowed = isFileConfigured;
       }
       return isAllowed;
     },

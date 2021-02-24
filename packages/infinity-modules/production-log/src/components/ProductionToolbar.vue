@@ -8,10 +8,13 @@
       <v-spacer></v-spacer>
       <div class="mt-1">
         <span class="title">
-          <span v-if="productionCount">
-            {{ productionCount }} records |
+          <span v-if="filterCount">
+            {{ filterCount }} of {{ productionCount }} records
+            <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
-          {{ machine }} | {{ shift }} - {{ date }}
+          <span v-if="$vuetify.breakpoint.smAndUp">
+            {{ machine }} | {{ shift }} - {{ date }}
+          </span>
         </span>
       </div>
       <v-btn
@@ -29,7 +32,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
@@ -43,35 +46,20 @@ export default {
     ...mapState('productionLog', [
       'drawer',
       'productionList',
-      'selectedDuration',
-      'selectedMachine',
-      'selectedShift',
-      'selectedDate',
-      'selectedProductions',
-      'toggleSelection',
+      'productionCount',
     ]),
+    ...mapGetters('webApp', ['filters', 'filteredRecords']),
     machine() {
-      return this.selectedMachine ? this.selectedMachine : '';
+      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
     shift() {
-      return this.selectedShift ? this.selectedShift : '';
+      return this.filters && this.filters.shift ? this.filters.shift.value : '';
     },
     date() {
-      return this.selectedDate ? formatDate(new Date(this.selectedDate), 'PP') : '';
+      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
     },
-    productionCount() {
-      const production = this.productionList.filter((prod) => {
-        if (this.selectedShift !== 'All Shifts' && this.selectedMachine !== 'All Machines') {
-          return (prod.shift === this.selectedShift && prod.machinename === this.selectedMachine);
-        }
-        if (this.selectedShift !== 'All Shifts' && this.selectedMachine === 'All Machines') {
-          return prod.shift === this.selectedShift;
-        }
-        if (this.selectedShift === 'All Shifts' && this.selectedMachine !== 'All Machines') {
-          return prod.machinename === this.selectedMachine;
-        }
-        return prod;
-      });
+    filterCount() {
+      const production = this.filteredRecords(this.productionList);
       return production.length;
     },
   },

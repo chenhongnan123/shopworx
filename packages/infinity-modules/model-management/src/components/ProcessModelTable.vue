@@ -17,12 +17,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <v-row
-        no-gutters
-        align="center"
-        justify="center"
-        v-if="fetchingMaster"
-      >
+      <v-row no-gutters align="center" justify="center" v-if="fetchingMaster">
         <v-col cols="12" align="center">
           <v-progress-circular
             indeterminate
@@ -31,9 +26,7 @@
           ></v-progress-circular>
         </v-col>
         <v-col cols="12" align="center">
-          <span>
-            Fetching parameters and transformations...
-          </span>
+          <span> Fetching parameters and transformations... </span>
         </v-col>
       </v-row>
       <template v-else>
@@ -51,37 +44,38 @@
           :items="models"
           :search="search"
           :headers="headers"
-          hide-default-footer
           :loading="fetchingModels"
           :custom-filter="filterModels"
+          :options.sync="options"
+          :items-per-page="5"
         >
-          <template #loading>
-            Fetching models...
-          </template>
-          <template #no-data>
-            No model available
-          </template>
+          <template #loading> Fetching models... </template>
+          <template #no-data> No model available </template>
           <template #no-results>
             No matching model found for '{{ search }}'
           </template>
-          <template #item="{ item }">
+          <template #item="{ item }" v-slot:activator="{ on, attrs }">
             <tr>
               <td>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <div
+                <div>
+                    <a
                       v-on="on"
                       v-bind="attrs"
-                      class="font-weight-medium"
+                      class="font-weight-medium text-decoration-underline"
+                      @click="$router.push({
+                        name: 'modelDetails',
+                        params: { id: item.name },
+                      })"
                     >
                       {{ item.name }}
-                    </div>
-                  </template>
-                  <span>{{ item.description || 'N.A' }}</span>
-                </v-tooltip>
+                    </a>
+                </div>
               </td>
               <td>
-                {{ new Date(item.lastModified).toLocaleString() }}
+                {{ item.model_id }}
+              </td>
+              <td>
+                <model-last-modified :model="item" />
               </td>
               <td>
                 <model-status :model="item" />
@@ -93,25 +87,70 @@
                 <model-details-dialog :model="item" />
               </td>
               <td>
-                <deploy-model :model="item" />
+                <div class="d-inline ma-0 pa-0">
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      @click="onClickCheckBox"
+                      icon
+                    >
+                    <v-checkbox
+                      color="blue"
+                      hide-details
+                      :value = item.modelUpdateStatus
+                      v-model="item.modelUpdateStatus"
+                      @change="changeModelStatus($event, item)"
+                      :disabled="!isAdmin"
+                    ></v-checkbox>
+                    </v-btn>
+                  </template>
+                  <span v-if="item.modelUpdateStatus">Deactivate model</span>
+                  <span v-else>Activate model</span>
+                </v-tooltip>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                    @click="onClickDisabledModel(item)"
+                    icon
+                  >
+                  <deploy-model
+                  :model="item" />
+                    </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="onClickCheckBox"
+                  icon
+                >
                 <delete-model :model="item" />
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
         </v-data-table>
-        </template>
+      </template>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import
+{
+  mapState,
+  mapActions,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import CreateModelDialog from './CreateModelDialog.vue';
 import DeploymentLogsDialog from './DeploymentLogsDialog.vue';
 import ModelDetailsDialog from './ModelDetailsDialog.vue';
 import DeployModel from './DeployModel.vue';
 import DeleteModel from './DeleteModel.vue';
 import ModelStatus from './ModelStatus.vue';
+import ModelLastModified from './ModelLastModified.vue';
 
 export default {
   name: 'ProcessModelTable',
@@ -122,12 +161,21 @@ export default {
     DeployModel,
     DeleteModel,
     ModelStatus,
+    ModelLastModified,
   },
   data() {
     return {
       search: '',
+      allowedCheckBox: false,
+      options: {
+        descending: true,
+        page: 1,
+        rowsPerPage: 5,
+        stop: false,
+      },
       headers: [
-        { text: 'Details', value: 'name' },
+        { text: 'Model name', value: 'name' },
+        { text: 'Model Id', value: 'model_id' },
         { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
@@ -155,15 +203,27 @@ export default {
       ],
     };
   },
-  async created() {
-    this.setFetchingMaster(true);
-    await Promise.all([
-      this.getInputParameters(),
-      this.getOutputTransformations(),
-    ]);
-    this.setFetchingMaster(false);
+  created() {
+    // this.getUserRoles();
+    // this.getMe();
+    // this.checkedloggedUser();
+    // this.setFetchingMaster(true);
+    // await Promise.all([
+    //   await this.getInputParameters(),
+    //   await this.getOutputTransformations(),
+    // ]);
+    // this.setFetchingMaster(false);
+  },
+  watch: {
+    models: {
+      handler() {
+        this.search = '';
+      },
+    },
   },
   computed: {
+    ...mapState('user', ['roles', 'me']),
+    ...mapGetters('user', ['isAdmin']),
     ...mapState('modelManagement', [
       'selectedProcessName',
       'fetchingModels',
@@ -172,20 +232,105 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
+    ...mapActions('user', ['getUserRoles', 'getMe']),
     ...mapActions('modelManagement', [
       'getModels',
       'getInputParameters',
       'getOutputTransformations',
+      'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    onClickCheckBox() {
+      if (!this.isAdmin) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ONLY_ADMIN_OPERATION',
+        });
+      }
+    },
+    onClickDisabledModel(item) {
+      if (!item.modelUpdateStatus) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MODEL_NOT_ACTIVE',
+        });
+      }
+    },
     filterModels(value, search, item) {
-      return item.name
-        .toLowerCase()
-        .indexOf(search.toLowerCase()) > -1
-        || item.description
-          .toLowerCase()
-          .indexOf(search.toLowerCase()) > -1;
+      if (item.description) {
+        return (
+          item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+           || item.description.toLowerCase().indexOf(search.toLowerCase()) > -1
+        );
+      }
+      return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+    },
+    async changeModelStatus(event, item) {
+      if (event) {
+        const makeTrue = {
+          id: item.id,
+          modelupdatestatus: true,
+        };
+        const update = await this.updateStatusOfModel(makeTrue);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_ACTIVATE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      } else {
+        const makeFalse = {
+          id: item.id,
+          modelupdatestatus: false,
+        };
+        const update = await this.updateStatusOfModel(makeFalse);
+        if (update) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'STATUS_UPDATED_AS_NOT_ACTIVE',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'STATUS_NOT_UPDATED',
+          });
+        }
+      }
+    },
+    async checkedloggedUser() {
+      const loggedRoleType = this.me.role.roleType;
+      if (loggedRoleType === 'ADMINISTRATOR') {
+        this.allowedCheckBox = true;
+      } else {
+        this.allowedCheckBox = false;
+      }
     },
   },
 };
 </script>
+<style scoped>
+.toolTipProperty:before {
+  content:"DESCRIPTION:";
+  font-size: 15PX;
+  display: block;
+}
+ .toolTipProperty {
+  display: inline-block !important;
+  padding: 2px;
+  width: fit-content;
+  height: fit-content;
+}
+.v-input--selection-controls{ padding-bottom: 18px; }
+</style>

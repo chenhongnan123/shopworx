@@ -9,69 +9,30 @@ export default ({
     onboarded: true,
     machines: [],
     shifts: [],
-    filters: {},
-    sort: {},
-    selectedMachine: null,
-    selectedShift: null,
-    selectedDate: null,
-    selectedDuration: null,
-    selectedType: null,
-    selectedSort: null,
-    selectedStatus: null,
     downtimeList: [],
     loading: false,
     error: false,
     downtimeReasons: [],
     downtimeCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
     toggleSelection: false,
     selectedDowntimes: [],
+    lastRefreshedAt: null,
   },
   mutations: {
     setMasterData: set('masterData'),
-    setSelectedDowntimes: (state, payload) => {
-      if (payload.selected) {
-        state.selectedDowntimes.push(payload);
-      } else {
-        // eslint-disable-next-line
-        const index = state.selectedDowntimes.findIndex((item) => item._id === payload.id);
-        state.selectedDowntimes.splice(index, 1);
-      }
-    },
-    clearCheckedItems: (state) => {
-      state.selectedDowntimes = [];
-    },
+    setSelectedDowntimes: set('selectedDowntimes'),
     setToggleSelection: set('toggleSelection'),
     setDrawer: set('drawer'),
     toggleDrawer: toggle('drawer'),
     setOnboarded: set('onboarded'),
     setMachines: set('machines'),
     setShifts: set('shifts'),
-    setSelectedMachine: set('selectedMachine'),
-    setSelectedShift: set('selectedShift'),
-    setSelectedDate: set('selectedDate'),
-    setSelectedDuration: set('selectedDuration'),
-    setSelectedType: set('selectedType'),
-    setSelectedSort: set('selectedSort'),
-    setSelectedStatus: set('selectedStatus'),
     setLoading: set('loading'),
     setError: set('error'),
     setDowntimeReasons: set('downtimeReasons'),
     setDowntimeCount: set('downtimeCount'),
-    resetPageNumber: (state) => {
-      state.pageNumber = 1;
-    },
-    incrementPageNumber: (state) => {
-      state.pageNumber += 1;
-    },
-    setDowntimeList: (state, payload) => {
-      if (payload && payload.length) {
-        state.downtimeList = [...state.downtimeList, ...payload];
-      } else {
-        state.downtimeList = [];
-      }
-    },
+    setDowntimeList: set('downtimeList'),
+    setLastRefreshedAt: set('lastRefreshedAt'),
   },
   actions: {
     getOnboardingState: async ({ commit, dispatch }) => {
@@ -198,72 +159,31 @@ export default ({
       return false;
     },
 
-    fetchDowntimeList: async ({ commit, dispatch, state }) => {
-      const {
-        selectedMachine,
-        selectedDate,
-        selectedShift,
-        selectedDuration,
-        selectedType,
-        selectedSort,
-        selectedStatus,
-        pageNumber,
-        pageSize,
-      } = state;
-      if (selectedSort) {
-        commit('clearCheckedItems');
-        const date = parseInt(selectedDate.replace(/-/g, ''), 10);
-        const duration = parseInt(selectedDuration && selectedDuration.value, 10);
-        let query = `date==${date}`;
-        if (selectedStatus.value) {
-          query += `%26%26${selectedStatus.value}`;
-        }
-        if (selectedMachine && selectedMachine !== 'All Machines') {
-          query += `%26%26machinename=="${selectedMachine}"`;
-        }
-        if (selectedShift && selectedShift !== 'All Shifts') {
-          query += `%26%26shiftName=="${selectedShift}"`;
-        }
-        if (duration) {
-          query += `%26%26downtimeduration%3E${duration}`;
-        }
-        if (selectedType && selectedType.value) {
-          if (selectedType.value === 'reason') {
-            query += '%26%26exists%20reasonname';
-          } else {
-            query += '%26%26notexists%20reasonname';
-          }
-        }
-        const sortQuery = selectedSort.value;
-        const paginatedQuery = `pagenumber=${pageNumber}&pagesize=${pageSize}`;
-        if (pageNumber === 1) {
-          commit('setDowntimeList', []);
-          commit('setLoading', true);
-          commit('setError', false);
-        }
-        const data = await dispatch(
-          'element/getRecordsWithCount',
-          {
-            elementName: 'downtime',
-            query: `?query=${query}&sortquery=${sortQuery}&${paginatedQuery}`,
-          },
-          { root: true },
-        );
-        if (data && data.results) {
-          const downtimes = data.results.map((dt) => ({
-            ...dt,
-            selected: false,
-          }));
-          commit('setDowntimeList', downtimes);
-          commit('setDowntimeCount', data.totalCount);
-          commit('setError', false);
-        } else {
-          commit('setDowntimeList', []);
-          commit('setDowntimeCount', 0);
-          commit('setError', true);
-        }
-        commit('setLoading', false);
+    fetchDowntimeList: async ({ commit, dispatch, rootGetters }) => {
+      const filters = rootGetters['webApp/filters'];
+      const date = parseInt(filters.date.value.replace(/-/g, ''), 10);
+      commit('setLoading', true);
+      commit('setDowntimeList', []);
+      commit('setError', false);
+      const data = await dispatch(
+        'element/getRecordsWithCount',
+        {
+          elementName: 'downtime',
+          query: `?query=date==${date}`,
+        },
+        { root: true },
+      );
+      if (data && data.results) {
+        commit('setDowntimeList', data.results);
+        commit('setDowntimeCount', data.totalCount);
+        commit('setError', false);
+        commit('setLastRefreshedAt', new Date().toLocaleTimeString('en-GB'));
+      } else {
+        commit('setDowntimeList', []);
+        commit('setDowntimeCount', 0);
+        commit('setError', true);
       }
+      commit('setLoading', false);
     },
 
     updateReason: async ({ dispatch, commit, state }, { id, payload }) => {
@@ -326,6 +246,19 @@ export default ({
         shiftList = ['All Shifts', ...shifts];
       }
       return shiftList;
+    },
+
+    downtime: ({ downtimeList }, getters, rootState, rootGetters) => {
+      let downtime = null;
+      if (downtimeList && downtimeList.length) {
+        downtime = rootGetters['webApp/filteredRecords'](downtimeList);
+        downtime = rootGetters['webApp/sortedRecords'](downtime);
+        downtime = rootGetters['webApp/groupedRecords'](downtime);
+      }
+      if (!downtime || !Object.keys(downtime).length) {
+        downtime = null;
+      }
+      return downtime;
     },
   },
 });

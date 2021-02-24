@@ -6,7 +6,7 @@
     max-width="500px"
     transition="dialog-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ on, attrs }" v-if="!isDashboardView">
       <v-icon small color="primary">mdi-memory</v-icon>
       <a
         v-on="on"
@@ -15,6 +15,19 @@
       >
         Configure model
       </a>
+    </template>
+    <template #activator="{ on, attrs }" v-else>
+      <v-btn
+        class="text-none mr-2"
+        color="white"
+        small
+        outlined
+        v-on="on"
+        v-bind="attrs"
+      >
+        <v-icon left small color="white">mdi-memory</v-icon>
+        Configure model
+      </v-btn>
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
@@ -59,6 +72,10 @@ export default {
       type: Object,
       required: true,
     },
+    isDashboardView: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     EditModelConfig,
@@ -76,7 +93,7 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.fetchModelDetails(this.model.id);
+        await this.fetchModelDetails(this.model.model_id);
         this.loading = false;
       }
     },

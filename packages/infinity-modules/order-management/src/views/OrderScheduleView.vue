@@ -11,17 +11,22 @@
           <v-spacer></v-spacer>
           <v-btn small color="primary" class="text-none" @click="setAddPlanDialog(true)">
             <v-icon small left>mdi-plus</v-icon>
-            Add order
+            {{ $t('Add order') }}
           </v-btn>
           <v-btn
           small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            Refresh
+            {{ $t('Refresh') }}
           </v-btn>
           <v-btn
-          v-if="visible"
+          v-if="orders.length > 0"
+          small color="primary" outlined class="text-none ml-2" @click="archiveRecord">
+            {{ $t('Archive') }}
+          </v-btn>
+          <v-btn
+          v-if="orders.length > 0"
           small color="primary" outlined class="text-none ml-2" @click="MoveUp">
-            Move Up
+           {{ $t('MoveUp') }}
           </v-btn>
           <v-btn
           v-if="visible"
@@ -40,7 +45,7 @@
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
-            Filters
+            {{ $t('Filter') }}
           </v-btn>
         </v-toolbar>
         <v-data-table
@@ -64,7 +69,8 @@
           <span :class="orderC(item.orderstatus)">{{ item.productname }}</span>
         </template>
         <template v-slot:item.ordername="{ item }">
-          <span :class="orderC(item.orderstatus)"
+          <span @mouseover="hover = true"
+            @mouseleave="hover = false" :class="orderC(item.orderstatus)"
             @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
         <template v-slot:item.ordercreatedtime="{ item }">
@@ -144,7 +150,9 @@
             ><template v-slot:selection="{ item }">
                 <span :class="orderC(item)">{{ item }}</span>
               </template></v-select>
-            <span v-if='item.orderstatus == "Completed"'>
+            <span :class="orderC(item.orderstatus)"
+              v-if='item.orderstatus == "Completed"'>
+              <span style='color:red;margin-right:1.00em; display:inline-block;'></span>
               {{ item.orderstatus }}
             </span>
         </template>
@@ -162,6 +170,7 @@ export default {
   data() {
     return {
       drawer: true,
+      hover: true,
       orders: [],
       max25chars: 25,
       visible: false,
@@ -188,33 +197,33 @@ export default {
       orderStatusToChangeFromRunning: ['Running', 'Interrupted', 'Completed'],
       headers: [
         {
-          text: 'Line',
+          text: this.$t('Line'),
           value: 'linename',
         },
         {
-          text: 'Order Name',
+          text: this.$t('Order Name'),
           value: 'ordername',
         },
         {
-          text: 'Order Number',
+          text: this.$t('Order Number'),
           value: 'ordernumber',
         },
-        { text: 'Order Type', value: 'ordertype' },
-        { text: 'Product Name', value: 'productname' },
-        { text: 'Customer Name', value: 'customername' },
-        { text: 'Order Status', value: 'orderstatus' },
-        { text: 'Order Created Time', value: 'ordercreatedtime' },
-        { text: 'Order Start Time', value: 'scheduledstart' },
-        { text: 'Order Exp End Time', value: 'orderexpendtime' },
-        { text: 'Target Count', value: 'targetcount' },
-        { text: 'Actual Count', value: 'actualcount' },
-        { text: 'Ok Count', value: 'okcount' },
-        { text: 'NG Count', value: 'ngcount' },
+        { text: this.$t('Order Type'), value: 'ordertype' },
+        { text: this.$t('Product Name'), value: 'productname' },
+        { text: this.$t('Customer Name'), value: 'customername' },
+        { text: this.$t('Order Status'), value: 'orderstatus' },
+        { text: this.$t('Order Created Time'), value: 'ordercreatedtime' },
+        { text: this.$t('Order Start Time'), value: 'scheduledstart' },
+        { text: this.$t('Order Exp End Time'), value: 'orderexpendtime' },
+        { text: this.$t('Target Count'), value: 'targetcount' },
+        { text: this.$t('Actual Count'), value: 'actualcount' },
+        { text: this.$t('OK Count'), value: 'okcount' },
+        { text: this.$t('NG Count'), value: 'ngcount' },
       ],
     };
   },
   async created() {
-    await this.getOrderListRecords('');
+    await this.getOrderListRecords('?query=visible==true');
     this.orders = [];
   },
   computed: {
@@ -245,8 +254,33 @@ export default {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },
     async RefreshUI() {
-      await this.getOrderListRecords('');
+      await this.getOrderListRecords('?query=visible==true');
       this.orders = [];
+    },
+    async archiveRecord() {
+      if (this.orders[0].orderstatus === 'Interrupted'
+        || this.orders[0].orderstatus === 'Completed') {
+        this.orders.visible = false;
+        const object = {
+          visible: this.orders.visible,
+        };
+        const updated = await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
+        if (updated) {
+          await this.getOrderListRecords('?query=visible==true');
+          this.orders = [];
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'ORDER_HIDE',
+          });
+        }
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'ORDER_NOT_INTERRUPTED',
+        });
+      }
     },
     check(event) {
       if (event.length > 0) {
@@ -267,7 +301,7 @@ export default {
     },
     async MoveUp() {
       if (this.orders.length > 0) {
-        if (this.orders[0].orderstatus === 'Released') {
+        if (this.orders[0].orderstatus === 'Running') {
           let resultObject = null;
           for (let i = 0; i < this.orderList.length; i += 1) {
             if (this.orders[0].ordername === this.orderList[i].ordername) {
@@ -275,30 +309,21 @@ export default {
               resultObject = this.orderList[j];
             }
           }
-          if (resultObject.orderstatus === 'Released') {
-            const object = {
-              indexno: resultObject.indexno,
-            };
-            await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
-            const object2 = {
-              indexno: this.orders[0].indexno,
-            };
-            await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
-
-            await this.getOrderListRecords('');
-            this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'DATA_SAVED',
-            });
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'NO_OTHER_RELEASED',
-            });
-          }
+          const object = {
+            indexno: resultObject.indexno,
+          };
+          await this.updateOrder({ query: `?query=ordernumber=="${this.orders[0].ordernumber}"`, payload: object });
+          const object2 = {
+            indexno: this.orders[0].indexno,
+          };
+          await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
+          await this.getOrderListRecords('?query=visible==true');
+          this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'DATA_SAVED',
+          });
         } else {
           this.setAlert({
             show: true,
@@ -333,7 +358,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -369,7 +394,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -404,7 +429,7 @@ export default {
           };
           await this.updateOrder({ query: `?query=ordernumber=="${resultObject.ordernumber}"`, payload: object2 });
 
-          await this.getOrderListRecords('');
+          await this.getOrderListRecords('?query=visible==true');
           this.orderList = this.orderList.sort((a, b) => a.indexno - b.indexno);
           this.setAlert({
             show: true,
@@ -489,6 +514,15 @@ export default {
   position: sticky;
   top: 104px;
   z-index: 1;
+}
+.example {
+  height: 200px;
+  border: solid #CCCCCC 2px;
+  padding: 0 10px;
+  white-space: normal;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
 }
 .card-border {
   border-left: 4px solid green;

@@ -11,7 +11,7 @@
     </v-btn>
     </template>
       <v-card>
-        <v-card-title class="headline">Confirm Rework?
+        <v-card-title class="headline">{{ $t('Comfirm Rework') }}
            <v-spacer></v-spacer>
            <v-btn icon small @click="dialog = false">
            <v-icon>mdi-close</v-icon>
@@ -96,6 +96,7 @@ export default {
           ordername: this.rework.reworkinfo[0].ordername,
           ordernumber: this.rework.reworkinfo[0].ordernumber,
           ordertype: this.rework.reworkinfo[0].ordertype,
+          customername: this.rework.reworkinfo[0].customername,
           producttypename: this.rework.reworkinfo[0].productname,
           productid: this.rework.reworkinfo[0].productid,
           overallresult: 1,
@@ -110,38 +111,13 @@ export default {
           },
         };
         await this.updateOverAllResult(payload);
-        this.componantList.filter((f) => f.boundstatus === 1).forEach(async (element) => {
-          let reworkS = 2;
-          let qualityS = 2;
-          if (element.reworkstatus === true) {
-            reworkS = 1;
-          }
-          if (element.qualitystatus === true) {
-            qualityS = 1;
-          }
-          if (element.reworkstatus === 1) {
-            reworkS = 1;
-          }
-          if (element.qualitystatus === 1) {
-            qualityS = 1;
-          }
-          let payloadComponent = {};
-          if (element.quality === false) {
-            payloadComponent = {
-              query: element._id,
-              payload: {
-                reworkstatus: reworkS,
-              },
-            };
-          } else {
-            payloadComponent = {
-              query: element._id,
-              payload: {
-                reworkstatus: reworkS,
-                qualitystatus: qualityS,
-              },
-            };
-          }
+        this.componantList.forEach(async (element) => {
+          const payloadComponent = {
+            query: element._id,
+            payload: {
+              qualitystatus: element.qualitystatus,
+            },
+          };
           await this.updateComponentById(payloadComponent);
         });
         await this.getReworkList('?query=overallresult!="1"');

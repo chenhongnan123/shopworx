@@ -40,6 +40,24 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
+          <!-- <v-autocomplete
+            clearable
+            label="Subine"
+            :items="sublineList"
+            :disabled="saving"
+            item-text="name"
+            item-value="id"
+            prepend-icon="$production"
+            v-model="bomObj.sublineid"
+            :rules="rules.subline"
+          >
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete> -->
           <v-text-field
               :disabled="saving"
               :rules="rules.name"
@@ -81,6 +99,7 @@
 import {
   mapActions,
   mapState,
+  // mapGetters,
   mapMutations,
 } from 'vuex';
 
@@ -123,6 +142,9 @@ export default {
         this.setaddBomDialog(val);
       },
     },
+  },
+  created() {
+    // await this.getPageDataList();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

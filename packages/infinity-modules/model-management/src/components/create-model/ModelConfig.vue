@@ -35,17 +35,16 @@
       <v-btn
         color="primary"
         class="text-none"
-        :loading="deploying"
-        @click="deployModel"
+        @click="cancel"
       >
-        Deploy
+        Finish
       </v-btn>
     </v-card-actions>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import EditModelConfig from '../EditModelConfig.vue';
 
 export default {
@@ -63,24 +62,35 @@ export default {
   computed: {
     ...mapState('modelManagement', ['createdModelId']),
   },
-  async created() {
-    this.loading = true;
-    this.model = await this.getModelById(this.createdModelId);
-    await this.fetchModelDetails(this.createdModelId);
-    this.loading = false;
+  watch: {
+    createdModelId: {
+      immediate: true,
+      async handler(val) {
+        if (val) {
+          this.loading = true;
+          this.model = null;
+          this.model = await this.getModelById(this.createdModelId);
+          await this.fetchModelDetails(this.model.model_id);
+          this.loading = false;
+        }
+      },
+    },
   },
   methods: {
+    ...mapMutations('modelManagement', ['setCreatedModelId', 'setModelDetails']),
     ...mapActions('modelManagement', [
       'createNewDeploymentOrder',
       'fetchModelDetails',
       'getModelById',
     ]),
     cancel() {
+      this.setCreatedModelId(null);
+      this.setModelDetails(null);
       this.$emit('on-cancel');
     },
     async deployModel() {
       this.deploying = true;
-      const created = await this.createNewDeploymentOrder(this.createdModelId);
+      const created = await this.createNewDeploymentOrder(this.model.model_id);
       if (created) {
         this.cancel();
       }

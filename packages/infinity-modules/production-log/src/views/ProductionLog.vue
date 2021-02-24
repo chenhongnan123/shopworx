@@ -12,14 +12,21 @@
           v-text="'$settings'"
         ></v-icon>
       </v-btn>
-      <v-btn
-        icon
-        small
-        class="ml-2 mb-1"
-        @click="refreshProductions"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            small
+            v-on="on"
+            v-bind="attrs"
+            class="ml-2 mb-1"
+            @click="refreshProductions"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </template>
+        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+      </v-tooltip>
     </portal>
     <production-log-loading v-if="loading" />
     <template v-else>
@@ -56,10 +63,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('productionLog', ['dataOnboarded', 'elementOnboarded']),
+    ...mapState('productionLog', [
+      'dataOnboarded',
+      'elementOnboarded',
+      'lastRefreshedAt',
+    ]),
+    ...mapState('webApp', ['config', 'storageLocation']),
   },
   async created() {
     this.loading = true;
+    const config = localStorage.getItem(this.storageLocation.production);
+    if (config) {
+      this.setConfig(JSON.parse(config));
+    } else {
+      this.resetConfig();
+    }
     await this.getDataOnboardingState();
     if (this.dataOnboarded) {
       await this.getElementOnboardingState();
@@ -76,6 +94,7 @@ export default {
     this.loading = false;
   },
   methods: {
+    ...mapMutations('webApp', ['setConfig', 'resetConfig']),
     ...mapMutations('productionLog', ['setElementOnboarded']),
     ...mapMutations('helper', ['setExtendedHeader']),
     ...mapActions('webApp', ['getAppSchema']),
@@ -109,6 +128,12 @@ export default {
       if (val) {
         await this.initApp();
       }
+    },
+    config: {
+      deep: true,
+      handler(val) {
+        localStorage.setItem(this.storageLocation.production, JSON.stringify(val));
+      },
     },
   },
 };

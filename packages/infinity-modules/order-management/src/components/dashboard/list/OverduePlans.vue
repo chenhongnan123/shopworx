@@ -3,7 +3,7 @@
     :plans="plans"
     :error="error"
     :loading="loading"
-    :title="'Interrupted Orders'"
+    :title="$t('Interrupted Orders')"
     @refresh-widget="fetchPlans"
   ></order-widget>
 </template>

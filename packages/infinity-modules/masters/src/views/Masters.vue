@@ -3,10 +3,11 @@
     <settings-layout
       v-if="!loading"
       :items="masterItems"
-      headerTitle="Master Data"
+      :disableList="fetching"
+      :headerTitle="$t('masters')"
       windowRouteName="masterWindow"
     >
-      <master-window />
+      <master-window @fetching="fetchingData" />
     </settings-layout>
   </div>
 </template>
@@ -25,6 +26,7 @@ export default {
   data() {
     return {
       loading: false,
+      fetching: false,
     };
   },
   computed: {
@@ -38,6 +40,9 @@ export default {
   },
   methods: {
     ...mapActions('masters', ['getElements', 'getAssets']),
+    fetchingData(e) {
+      this.fetching = e;
+    },
   },
 };
 </script>

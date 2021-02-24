@@ -51,6 +51,16 @@
               ></v-text-field>
             </v-col>
             <v-spacer></v-spacer>
+            <!-- <v-col cols="12" md="1">
+              <v-btn
+                x-large
+                :disabled="disableSave"
+                icon color="primary"
+                @click="saveProductDetails()"
+                >
+                <v-icon left>mdi-content-save</v-icon>
+              </v-btn>
+            </v-col> -->
           </v-row>
         </v-col>
       </v-row>
@@ -95,7 +105,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
-
+/* eslint-disable */
 export default {
   name: 'ProductDetails',
   data() {

@@ -48,7 +48,7 @@ export default {
     return {
       dialog: false,
       loading: false,
-      expanded: 0,
+      expanded: null,
       details: [{
         header: 'Input parameters',
         icon: 'mdi-database-arrow-left-outline',

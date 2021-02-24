@@ -1,34 +1,21 @@
 <template>
-  <v-menu
-    offset-y
-    ref="menu"
-    v-model="menu"
-    min-width="290px"
-    :close-on-content-click="false"
-  >
-    <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        v-model="date"
-        prepend-inner-icon="$workingDays"
-        readonly
-        outlined
-        dense
-        label="Date"
-        v-bind="attrs"
-        v-on="on"
-      ></v-text-field>
-    </template>
-    <v-date-picker
-      no-title
-      :max="today"
-      v-model="date"
-      @input="menu = false"
-    ></v-date-picker>
-  </v-menu>
+  <v-date-picker
+    flat
+    no-title
+    full-width
+    :max="today"
+    v-model="date"
+  ></v-date-picker>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import {
+  mapGetters,
+  mapMutations,
+  mapActions,
+} from 'vuex';
+
+const FIELD_NAME = 'date';
 
 export default {
   name: 'DateSelection',
@@ -39,23 +26,43 @@ export default {
     };
   },
   computed: {
-    ...mapState('downtimeLog', ['selectedDate']),
+    ...mapGetters('webApp', ['filters']),
+    isDateFilterInactive() {
+      return !Object
+        .keys(this.filters)
+        .includes(FIELD_NAME);
+    },
     date: {
       get() {
-        return this.selectedDate;
+        const dateFilter = this.filters && this.filters[FIELD_NAME];
+        if (dateFilter) {
+          return dateFilter.value;
+        }
+        return this.today;
       },
-      set(val) {
-        this.setSelectedDate(val);
+      async set(dateVal) {
+        this.setDateFilter(dateVal);
+        await this.fetchDowntimeList();
       },
     },
   },
   created() {
-    if (!this.selectedDate) {
-      this.setSelectedDate(this.today);
+    if (this.isDateFilterInactive) {
+      this.setDateFilter(this.today);
     }
   },
   methods: {
-    ...mapMutations('downtimeLog', ['setSelectedDate']),
+    ...mapMutations('webApp', ['setFilter']),
+    ...mapActions('downtimeLog', ['fetchDowntimeList']),
+    setDateFilter(val) {
+      this.setFilter({
+        field: FIELD_NAME,
+        value: {
+          value: val,
+          operation: 'eq',
+        },
+      });
+    },
   },
 };
 </script>

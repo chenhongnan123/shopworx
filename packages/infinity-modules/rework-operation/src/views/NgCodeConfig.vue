@@ -132,6 +132,23 @@
           item-text="name"
           prepend-icon="$production"
           label="Process NG Code"/>
+        <!-- <v-autocomplete
+          clearable
+          label="Select Sub-Line name"
+          :items="subLineList"
+          return-object
+          :disabled="saving"
+          item-text="name"
+          v-model="subLineSelected"
+          :loading="loadingParts"
+          prepend-icon="$production"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete> -->
         <v-select
           v-model="input.machinename"
           :items="roadMaps"
@@ -150,6 +167,23 @@
             prepend-icon="mdi-tray-plus"
             v-model="ngConfigInput.reworkDescription"
         ></v-text-field>
+        <!-- <v-autocomplete
+          clearable
+          label="Select Station name"
+          :items="stationList"
+          return-object
+          :disabled="saving"
+          item-text="name"
+          v-model="stationSelected"
+          :loading="loadingParts"
+          prepend-icon="$production"
+        >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

@@ -4,7 +4,7 @@
     :error="error"
     :loading="loading"
     :starredPlans="true"
-    :title="'Released Orders'"
+    :title="$t('Released Orders')"
     @refresh-widget="fetchPlans"
   ></order-widget>
 </template>

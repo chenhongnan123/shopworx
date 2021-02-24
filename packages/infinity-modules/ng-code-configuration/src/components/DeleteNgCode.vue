@@ -3,7 +3,7 @@
       v-model="dialog"
       max-width="290"
     >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$delete'"
     class="float-right" color="error"></v-icon>
     </template>
@@ -61,6 +61,7 @@ export default {
     ...mapActions('ngCodeConfiguration', ['deleteNgCode']),
     async btnDeleteNgCodeConfig(item) {
       this.itemForDelete = item;
+      // eslint-disable-next-line
       const deleted = await this.deleteNgCode(this.itemForDelete._id);
       if (deleted) {
         this.setAlert({

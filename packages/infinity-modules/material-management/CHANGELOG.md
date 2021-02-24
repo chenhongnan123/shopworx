@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+
+### Bug Fixes
+
+* **bom-management:** after apply button ckicked filter windown get closed ([ec998c0](https://bitbucket.org/entrib/shopworx/commits/ec998c0c28aa1cbccb6edc415659c361adf80d01))
+* **in bom detail page on page refresh data not fetched:** push the missing changes ([86f788b](https://bitbucket.org/entrib/shopworx/commits/86f788b1eec9343c6bbde80a553106e560ea71aa))
+* **material-manageement:** show the columns in BOM Configuration table depend on what component type ([3af117c](https://bitbucket.org/entrib/shopworx/commits/3af117c6628ebd8176871825385aede55bf3e044))
+* **material-management:** date and time format should be same accross all moule ([628214b](https://bitbucket.org/entrib/shopworx/commits/628214b48561daf46bea1a788983b5bb4a26c55b))
+* **material-management:** dependent dropdown in Filter window ([2891ca3](https://bitbucket.org/entrib/shopworx/commits/2891ca3a83a996934814b465f5a54faee89b401a))
+* **material-management:** dependent dropdown in Material Filter ([e06fdfc](https://bitbucket.org/entrib/shopworx/commits/e06fdfcf109d09e8b7a30c3e3d1d25305eb51acc))
+* **material-management:** filter should close on apply button click ([63c4099](https://bitbucket.org/entrib/shopworx/commits/63c40998bdd253f11787d9e17216385474f7560c))
+* **material-management:** rA-I184 (BOM) ([1e641b9](https://bitbucket.org/entrib/shopworx/commits/1e641b9301c6c6d4bbfe931adaba74822db31b67))
+* **material-management:** shown the colum and parameter from selection of component type ([41137fd](https://bitbucket.org/entrib/shopworx/commits/41137fda9e7104d729d327367b1c07fbf0360681))
+* **material-management:** update data in table after change in material or bound subline value ([e7fe162](https://bitbucket.org/entrib/shopworx/commits/e7fe1629cf9b1ea899de09d5017c82d20a8f1438))
+* **material-management:** visibility of column in BOM Configuration on component Type Selection ([7eb18fa](https://bitbucket.org/entrib/shopworx/commits/7eb18fa9ce592a63aed976cee00cb004c2051e83))
+* **material-management(bom):** on page regresh data not fetched in bomDetails page ([3c96db8](https://bitbucket.org/entrib/shopworx/commits/3c96db8748a804fc4196d010baf05f2f0e0209c4))
+
+
+### Features
+
+* **material-management:** bOM Configuration changes ([33b35b1](https://bitbucket.org/entrib/shopworx/commits/33b35b15f70d2ed22bc824537ded2460e02c5377))
+* **material-management:** bOM Structure changes ([b85485b](https://bitbucket.org/entrib/shopworx/commits/b85485b8ecdbc73afb5a2853c9875abbde31a70b))
+* **matrial-management:** bOM changes ([30a6a93](https://bitbucket.org/entrib/shopworx/commits/30a6a93d439907c59889ad18562e5d4ad263ddb1))
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/material-management
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/material-management

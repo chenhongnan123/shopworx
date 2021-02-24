@@ -115,16 +115,27 @@ export default {
       'fetchingMaster',
     ]),
   },
+  created() {
+    this.fetchLineDetails();
+  },
   methods: {
     ...mapMutations('modelManagement', [
       'setSelectedSubline',
       'setSelectedStation',
+      'setSelectedStationName',
       'setSelectedSubstation',
+      'setSelectedSubstationName',
       'setSelectedProcess',
       'setSelectedProcessName',
+      'setFetchingMaster',
     ]),
-    ...mapActions('modelManagement', ['fetchLineDetails', 'getModels']),
-    setSelected({
+    ...mapActions('modelManagement', [
+      'fetchLineDetails',
+      'getModels',
+      'getInputParameters',
+      'getOutputTransformations',
+    ]),
+    async setSelected({
       subline,
       station,
       substation,
@@ -132,10 +143,18 @@ export default {
     }) {
       this.setSelectedSubline(subline.id);
       this.setSelectedStation(station.id);
+      this.setSelectedStationName(station.name);
       this.setSelectedSubstation(substation.id);
+      this.setSelectedSubstationName(substation.name);
       this.setSelectedProcess(process.id);
       this.setSelectedProcessName(process.name);
-      this.getModels();
+      this.setFetchingMaster(true);
+      await this.getModels();
+      await Promise.all([
+        this.getInputParameters(),
+        this.getOutputTransformations(),
+      ]);
+      this.setFetchingMaster(false);
     },
   },
   watch: {

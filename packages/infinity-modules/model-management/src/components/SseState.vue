@@ -40,6 +40,7 @@ export default {
     ...mapMutations('modelManagement', ['setLastStatusUpdate']),
     sseInit() {
       this.sseClient = new EventSource('/sse/alert');
+      this.readyState = this.sseClient.readyState;
       this.sseClient.onopen = () => {
         if (this.timeout != null) {
           clearTimeout(this.timeout);
@@ -60,13 +61,21 @@ export default {
       });
       this.sseClient.onerror = (event) => {
         this.readyState = event.target.readyState;
-        if (event.target.readyState === EventSource.CONNECTING) {
-          this.sseClient.close();
-          this.timeout = setTimeout(() => {
-            this.sseInit();
-          }, 5000);
-        }
+        this.sseClient.close();
+        this.reconnectSse();
       };
+    },
+    reconnectSse() {
+      let sseOK = false;
+      if (this.sseClient === null) {
+        sseOK = false;
+      } else {
+        sseOK = (this.sseClient.readyState !== EventSource.CLOSED);
+      }
+      this.readyState = this.sseClient.readyState;
+      if (!sseOK) {
+        this.sseInit();
+      }
     },
   },
 };

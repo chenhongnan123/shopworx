@@ -144,6 +144,18 @@ export default ({
       }
       return false;
     },
+    updateRecordById: async ({ dispatch }, payload) => {
+      const putParameter = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'component',
+          id: payload.id,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      return putParameter;
+    },
     updateOverAllResultPartStatus: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
@@ -183,18 +195,19 @@ export default ({
         { root: true },
       );
       component = component.map((c) => {
-        let rework = false;
-        let quality = false;
-        if (c.reworkstatus === 1) {
-          rework = true;
-        }
+        const checkquality = c.qualitystatus;
         if (c.qualitystatus === 1) {
-          quality = true;
+          c.qualitystatus = 4;
+        }
+        if (c.qualitystatus === 2) {
+          c.qualitystatus = 3;
+        }
+        if (c.qualitystatus === 0) {
+          c.qualitystatus = 4;
         }
         return {
           ...c,
-          rework,
-          quality,
+          checkquality,
         };
       });
       commit('setComponentList', component);

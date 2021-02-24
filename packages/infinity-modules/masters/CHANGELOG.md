@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **master-data:** update export to use ag grid API ([4bc30e2](https://bitbucket.org/entrib/shopworx/commits/4bc30e21cb6d17968e3a1ea1ac65222983a10998))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** fix hide column issue after drag out of the table ([602aaf9](https://bitbucket.org/entrib/shopworx/commits/602aaf9d3be348b86197cde9c0f03e68c47f8f78))
+* **masters:** imporve and fixes master data ([2433a85](https://bitbucket.org/entrib/shopworx/commits/2433a852591065344878db39687ee793490ba240))
+
+
+
+
+
+## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.1...v4.2.2) (2021-01-28)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.1](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.3...v4.2.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* **Masters:** refresh UI button not working ([d6d49f8](https://bitbucket.org/entrib/shopworx/commits/d6d49f8354d366c89c4018a52db6c28fafe6e230))
+
+
+### Features
+
+* **Masters:** export ( download ) data table in CSV format ([3ace942](https://bitbucket.org/entrib/shopworx/commits/3ace9421e7f293fd66b05d39de0198f2129ca88b))
+* **Masters:** update value in table ([843123f](https://bitbucket.org/entrib/shopworx/commits/843123f02f5852debd62117d876e9add59dede5c))
+
+
+
+
+
+# [4.2.0-alpha.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.2...v4.2.0-alpha.3) (2020-12-16)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.2.0-alpha.2](https://bitbucket.org/entrib/shopworx/compare/v4.2.0-alpha.1...v4.2.0-alpha.2) (2020-12-14)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.2.0-alpha.1](https://bitbucket.org/entrib/shopworx/compare/v4.1.3...v4.2.0-alpha.1) (2020-12-08)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/masters
