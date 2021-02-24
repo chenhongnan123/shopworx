@@ -1,7 +1,7 @@
 const routes = [
   {
     path: 'utility-dashboard',
-    component: () => import(/* webpackChunkName: "live-shopfloor" */ './views/Index.vue'),
+    component: () => import(/* webpackChunkName: "utility-dashboard" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
     },
@@ -9,7 +9,7 @@ const routes = [
       {
         path: '',
         name: '',
-        component: () => import(/* webpackChunkName: "live-shopfloor" */ './views/UtilityDashboard.vue'),
+        component: () => import(/* webpackChunkName: "utility-dashboard" */ './views/UtilityDashboard.vue'),
       },
     ],
   },
