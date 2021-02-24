@@ -89,7 +89,7 @@
       rowGroupPanelShow="always"
       :enableRangeSelection="false"
       class="ag-theme-balham ma-5"
-      style="width: 100%; height: 350px;"
+      style="width: 100%; height: calc(100vh - 150px);"
       :pagination="true"
       :defaultColDef="defaultColDef"
       :gridOptions="gridOptions"
