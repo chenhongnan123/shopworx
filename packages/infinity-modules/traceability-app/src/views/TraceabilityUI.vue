@@ -162,6 +162,7 @@ export default {
     this.backAndfourth();
   },
   async created() {
+    this.language = this.currentLocale;
     this.zipService = ZipService;
     const view = localStorage.getItem('planView');
     this.recipeView = view ? JSON.parse(view) : 0;
@@ -179,6 +180,7 @@ export default {
       processParametersheader: [],
       processParametersList: [],
       saving: false,
+      language: null,
     };
   },
   computed: {
@@ -195,6 +197,11 @@ export default {
       'runningOrder',
       'bomDetailsList',
     ]),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
     recipeView: {
       get() {
         return this.recipeViewState;
@@ -261,11 +268,15 @@ export default {
       this.saving = true;
       let fileName = 'partstatus_data';
       let parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
+      let headerKeys = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
       let column = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
+      if (this.language === 'zhHans') {
+        column = ['创建日期', '修改日期', '成品码', '主条码', '工位结果', '产品总结果', '订单名称', '包装码', '产品名称'];
+      }
       let csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        headerKeys.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -283,11 +294,15 @@ export default {
       await this.btnComponentLogic();
       fileName = 'component_data';
       parameterSelected = this.componentList.map((item) => ({ ...item }));
+      headerKeys = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
       column = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
+      if (this.language === 'zhHans') {
+        column = ['创建日期', '成品码', '主条码', '工位结果', '零件名', '零件码', '绑定状态', '返工状态', '质量状态'];
+      }
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        headerKeys.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -306,11 +321,15 @@ export default {
       fileName = 'process_parameter_data';
       parameterSelected = this.$refs.process
         .processParametersList.map((item) => ({ ...item }));
+      let columnHeader = this.$refs.process.headerForCSV;
       column = this.$refs.process.headerForCSV;
+      if (this.currentLocale === 'zhHans') {
+        column = this.$refs.process.headerForCSVChinese;
+      } 
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        columnHeader.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -508,6 +527,15 @@ export default {
       param += 'sortquery=modifiedtimestamp==-1';
       // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
+      await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all(this.componentList.map((com) => {
+        const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
+        console.log(data);
+        if (data.length > 0 && this.currentLocale === 'zhHans') {
+          com.componentname = data[0].chinesedescription;
+        }
+        return com;
+      }));
     },
     async btnProcessParametersLogic() {
       this.processParametersList = [];

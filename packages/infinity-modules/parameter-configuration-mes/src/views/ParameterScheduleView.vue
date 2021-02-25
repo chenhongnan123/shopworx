@@ -1245,7 +1245,6 @@ export default {
             if (
               Number(item.parametercategory) === 15
                || Number(item.parametercategory) === 17
-               || Number(item.parametercategory) === 57
                || Number(item.parametercategory) === 18) {
               let dataTypeName = '';
               if (

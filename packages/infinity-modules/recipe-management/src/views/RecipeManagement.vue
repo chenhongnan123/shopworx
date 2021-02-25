@@ -53,8 +53,7 @@ export default {
     RecipeFilter,
   },
   async created() {
-    const view = localStorage.getItem('planView');
-    this.recipeView = view ? JSON.parse(view) : 0;
+    this.recipeView = 0;
     this.setExtendedHeader(true);
     await this.getLines('');
     await this.getSubLines('');

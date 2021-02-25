@@ -75,7 +75,7 @@ export default {
         },
         {
           headerName: this.$t('Sub station'),
-          field: 'substationid',
+          field: 'substationname',
           resizable: true,
         },
         {
@@ -130,7 +130,13 @@ export default {
       'componentList',
       'partStatusList',
       'componentData',
-      'trecibilityState']),
+      'trecibilityState',
+      'parametersList']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   async created() {
     if (this.trecibilityState.selectedSubLine) {
@@ -176,7 +182,8 @@ export default {
         'getProcessElement',
         'getProcessParameters',
         'getPartStatus',
-        'getComponentData']),
+        'getComponentData',
+        'getParametersList']),
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
       await this.getSubStations(query);
@@ -277,6 +284,15 @@ export default {
       }
       // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
+      await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all(this.componentList.map((com) => {
+        const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
+        console.log(data);
+        if (data.length > 0 && this.currentLocale === 'zhHans') {
+          com.componentname = data[0].chinesedescription;
+        }
+        return com;
+      }));
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
