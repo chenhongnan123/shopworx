@@ -54,7 +54,7 @@ export default ({
         list = await Promise.all(param.map(async (f) => {
           const paramList = await dispatch(
             'element/getRecords',
-            { elementName: 'parameters', query: `?query=parametercategory=="${f.id}"%26%26substationid=="${request.substation}"` },
+            { elementName: 'parameters', query: `?query=parametercategory=="${f.id}"&&substationid=="${request.substation}"` },
             { root: true },
           );
           return paramList.map((p) => p.name);
