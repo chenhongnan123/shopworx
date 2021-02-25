@@ -201,13 +201,17 @@
               <img src="../asset/pedding-bg.svg">
               <v-icon class="mt-3 ml-3" style="font-size:40px;">mdi-download</v-icon>
             </v-col>
-            <v-col cols="4" class="text-center package-number-current">
+            <v-col cols="2" class="text-center package-number-current">
               <p>{{packageLabelRecord.qty||0}}</p>
               <p>当前打包数</p>
             </v-col>
             <v-col cols="3" class="text-center package-number-total" @click="handleOpenTotalNumber">
               <p>{{totalNumber}}</p>
               <p>每箱总数<v-icon color="primary">mdi-pencil</v-icon> </p>
+            </v-col>
+            <v-col cols="2" class="text-center package-number-current">
+              <p>{{orderCount||0}}</p>
+              <p>订单已完成箱数</p>
             </v-col>
              <v-col
               cols="3"
@@ -334,6 +338,8 @@ export default {
       packagehistoryrecord: [],
       ngConfigList: [],
       inputDisabled: false,
+      currentOrder: {},
+      orderCount: 0,
     };
   },
   components: {
@@ -390,9 +396,11 @@ export default {
       let labelruleList = await this.getLabelRule();
       labelruleList = labelruleList.filter((i) => i.type === 'barcode');
       if (labelruleList.length > 0 && orderList.length > 0) {
+        [this.currentOrder] = orderList;
         const labelrule = labelruleList.find((i) => i.productname === orderList[0].productnumber);
         this.labelrule = labelrule;
         this.totalNumber = labelrule.quantity;
+        this.getOrderCount(orderList[0]);
       }
       const packageLabelRecordList = await this.getPackageLabelRecord(
         '?query=status==0',
@@ -413,6 +421,12 @@ export default {
         this.inputDisabled = true;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
       }
+    },
+    async getOrderCount(currentOrder) {
+      const orderList = await this.getPackageLabelRecord(
+        `?query=status==1%26%26ordernumber==%22${currentOrder.ordernumber}%22`,
+      );
+      this.orderCount = orderList.length;
     },
     initSoket() {
       // const socket = socketioclient.connect('192.168.8.116:10190');
@@ -637,6 +651,7 @@ export default {
               },
             };
             await this.updatePackageLabelRecord(postData);
+            await this.getOrderCount(this.currentOrder);
             this.packageLabelRecord = {};
             this.inputDisabled = false;
             this.isPrintAble = false;
