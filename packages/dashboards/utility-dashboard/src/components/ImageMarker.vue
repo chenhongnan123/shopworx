@@ -53,7 +53,40 @@
         :rect="rect"
         :options="options"
       />
-      <div class="mask" v-show="showModal">
+      <v-dialog
+        v-model="showModal"
+        scrollable
+        persistent
+        max-width="500px"
+        transition="dialog-transition"
+      >
+        <v-card>
+          <v-card-text>
+            <v-select
+              :items="mappings"
+              v-model="name"
+              item-text="metername"
+              item-value="metername"
+              label="Select meter"
+              required
+            ></v-select>
+            <v-select
+              :items="fontSizes"
+              v-model="fontSize"
+              label="Font size*"
+              required
+            ></v-select>
+            <p>* Realtime value of the meter will be displayed in the selected font size.</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+              <v-btn @click="addLocation" color="primary" class="text-none">
+                Map meter
+              </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- <div class="mask" v-show="showModal">
         <div class="modal-wrapper">
           <div class="form">
             <v-text-field
@@ -67,15 +100,9 @@
               label="Font size"
               required
             />
-            <v-card-actions>
-              <v-spacer></v-spacer>
-                <v-btn @click="addLocation" color="green lighten-1 white--text">
-                  Add
-                </v-btn>
-            </v-card-actions>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -89,6 +116,10 @@ export default {
     imgurl: {
       type: String,
       required: true,
+    },
+    mappings: {
+      type: Array,
+      default: () => [],
     },
   },
   components: { Jcrop },
