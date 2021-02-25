@@ -24,6 +24,14 @@
           <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel v-if="optionalRes.length > 0">
+      <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL', optionalRes.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in optionalRes" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
       <v-expansion-panel v-if="duplicateBnum.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $t('error.DUPLICATE_BIT_NUM_ERROR', duplicateBnum.length) }}
@@ -119,6 +127,10 @@ export default {
       type: Array,
       required: true,
     },
+    optionalRes: {
+      type: Array,
+      required: true,
+    },
     duplicateBnum: {
       type: Array,
       default: () => [],
@@ -141,6 +153,15 @@ export default {
     },
   },
   watch: {
+    responce: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
     dupDbAddress: {
       handler(val) {
         if (val.length > 0) {
@@ -212,6 +233,7 @@ export default {
     this.$root.$off('successPayload', false);
     this.duplicateBnum = [];
     this.responce = [];
+    this.optionalRes = [];
     this.duplicateBnum = [];
     this.duplicateStartnum = [];
     this.dupDbAddress = [];
@@ -248,6 +270,7 @@ export default {
     async cancleCreation() {
       this.dialog = false;
       this.responce = [];
+      this.optionalRes = [];
       this.duplicateBnum = [];
       this.duplicateStartnum = [];
       this.dupDbAddress = [];
