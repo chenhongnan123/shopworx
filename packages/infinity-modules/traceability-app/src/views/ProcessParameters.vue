@@ -57,6 +57,7 @@ export default {
       isFullScreen: false,
       processParametersheader: [],
       headerForCSV: [],
+      headerForCSVChinese: [],
       language: null,
       headers: [
         {
@@ -251,7 +252,9 @@ export default {
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.headerForCSV = [];
+      this.headerForCSVChinese = [];
       this.headerForCSV.push('createdTimestamp', 'mainid', 'completedproductid');
+      this.headerForCSVChinese.push('创建日期', '主条码', '成品码');
       this.processParametersheader = [];
       if (this.language === 'zhHans') {
         this.processParametersheader.push(
@@ -371,7 +374,7 @@ export default {
         await Promise.all(this.subStationList.map(async (s) => {
           const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
             (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18"%7C%7Cparametercategory=="57")`);
+            C%7Cparametercategory=="18")`);
           const elementDetails = await this.getProcessElement(s.id);
           if (elementDetails) {
             elementDetails.tags.forEach(async (element) => {
@@ -382,6 +385,7 @@ export default {
                   const matchParam = paramRecord
                     .find((m) => m.name === element.tagName);
                   this.headerForCSV.push(`${s.name}_${element.tagName}`);
+                  this.headerForCSVChinese.push(`${s.name}_${matchParam.chinesedescription}`);
                   if (this.language === 'zhHans') {
                     this.processParametersheader.push(
                       {

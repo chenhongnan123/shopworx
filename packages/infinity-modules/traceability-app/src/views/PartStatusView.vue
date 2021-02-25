@@ -93,7 +93,7 @@ export default {
         },
         {
           headerName: this.$t('Sub station'),
-          field: 'substationid',
+          field: 'substationname',
           resizable: true,
         },
         {
