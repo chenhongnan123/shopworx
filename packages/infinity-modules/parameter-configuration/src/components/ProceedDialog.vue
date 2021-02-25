@@ -77,7 +77,7 @@
           <v-btn
             color="primary"
             class="text-none"
-            @click="createParamsBtn"
+            @click.once="createParamsBtn"
             :loading="deleting"
             :disabled="yesBtnDisable"
           >
