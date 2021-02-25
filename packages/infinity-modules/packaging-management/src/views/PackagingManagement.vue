@@ -171,7 +171,7 @@
               </v-col>
             </v-row>
           </div>
-          <!-- <v-btn
+          <v-btn
             x-large
             color="primary"
             class="mt-10"
@@ -183,7 +183,7 @@
             <v-icon>mdi-plus</v-icon>
             打印标签
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             x-large
             color="warning"
             class="mt-5"
@@ -427,8 +427,10 @@ export default {
             const packageLabelRecord = await this.getPackageLabelRecord('?query=status==0');
             if (packageLabelRecord.length > 0) {
               [this.packageLabelRecord] = packageLabelRecord;
+              if (packageLabelRecord[0].qty > 0) {
+                this.isPrintAble = true;
+              }
               if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
-                // this.isPrintAble = true;
                 this.handlePrint();
               } else {
                 this.reset();
@@ -626,20 +628,26 @@ export default {
           .replace(/1111111111/g, qrcode)
           .replace(/SMTC0002300000002/g, barcode);
         selectedDevice.send(labelprn, async () => {
-          const postData = {
-            id: this.packageLabelRecord._id,
-            payload: {
-              status: 1,
-            },
-          };
-          await this.updatePackageLabelRecord(postData);
-          this.packageLabelRecord = {};
-          this.inputDisabled = false;
-          document.querySelector('.textfield input').focus();
-          console.log('success');
-          this.reset();
+          console.log('printer first success');
+          selectedDevice.send(labelprn, async () => {
+            const postData = {
+              id: this.packageLabelRecord._id,
+              payload: {
+                status: 1,
+              },
+            };
+            await this.updatePackageLabelRecord(postData);
+            this.packageLabelRecord = {};
+            this.inputDisabled = false;
+            this.isPrintAble = false;
+            document.querySelector('.textfield input').focus();
+            console.log('printer second success');
+            this.reset();
+          }, () => {
+            console.log('printer second error');
+          });
         }, () => {
-          console.log('error');
+          console.log('printer first error');
         });
       });
     },
@@ -650,8 +658,8 @@ export default {
       this.packagerecord = {};
       // this.packageLabelRecord = {};
       this.stationinfolist = [];
-      this.scrapDialog = false;
-      this.isPrintAble = false;
+      // this.scrapDialog = false;
+      // this.isPrintAble = false;
     },
   },
 };
