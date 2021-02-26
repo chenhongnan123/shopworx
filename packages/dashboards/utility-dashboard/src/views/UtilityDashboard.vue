@@ -31,7 +31,6 @@
           />
         </div>
       </portal>
-
       <div v-if="url">
         <image-marker
           :imgurl="url"
@@ -99,7 +98,7 @@ export default {
   data() {
     return {
       file: null,
-      url: '',
+      url: '/server/media/image/base_1614322738601.png',
       showSaveButton: false,
       error: false,
       snackbar: false,
@@ -109,23 +108,18 @@ export default {
     };
   },
   async created() {
-    this.setShowHeaderButtons(false);
-    await this.fetchMeters();
     this.setActiveDashboard();
+    this.setShowHeaderButtons(false);
     await this.getAppSchema();
     if (this.appSchema) {
       const data = JSON.parse(this.appSchema.appschema);
-      const blob = await this.downloadFile(data.downloadLink);
-      const reader = new FileReader();
-      reader.readAsDataURL(blob); 
-      reader.onloadend = () => {
-        const base64data = reader.result;
-        this.url = base64data;
-      }
       this.areaMap = data.areaMap;
     }
+    await this.fetchMeters();
     // TODO: if found -> render schema (download file)
     // TODO: else -> upload schema
+  },
+  mounted() {
   },
   computed: {
     ...mapState('utilityDashboard', ['meters', 'showSaveBtn']),
@@ -134,7 +128,7 @@ export default {
   },
   methods: {
     ...mapActions('utilityDashboard', ['fetchMeters']),
-    ...mapActions('file', ['uploadFile', 'downloadFile']),
+    ...mapActions('file', ['uploadFile', 'getImage']),
     ...mapActions('webApp', ['getAppSchema', 'updateAppSchema']),
     ...mapActions('element', ['getRecordById']),
     ...mapMutations('utilityDashboard', ['setShowSaveBtn']),
@@ -183,8 +177,10 @@ export default {
           id: fileId,
         });
         if (file) {
+          console.log(file);
           const schema = {
             downloadLink: file.downloadlink,
+            fileName: `${file.filename}.${file.extension}`,
             areaMap: this.$refs.marker.locations,
           };
           await this.updateAppSchema(schema);
