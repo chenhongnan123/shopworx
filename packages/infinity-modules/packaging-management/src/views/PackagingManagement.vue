@@ -144,17 +144,17 @@
         class="text-center"
         height="600px"
         >
-          <!-- <div style="width:400px; margin:0 auto;position:relative;">
+          <div style="width:400px; margin:0 auto;position:relative;">
             <img src="../asset/production.svg" width="100%"/>
-            <span
+            <!-- <span
             :class="['production-part', packagerecord.point1 ? 'completed' : '']"
             style="top:43%;left:82%;"
             >1</span>
             <span
             :class="['production-part', packagerecord.point2 ? 'completed' : '']"
             style="top:60%;left:86%;"
-            >2</span>
-          </div> -->
+            >2</span> -->
+          </div>
           <div class="parts-status-group">
             <v-row class="px-10">
               <v-col>
