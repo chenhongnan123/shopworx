@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import LiveShopfloor from '@shopworx/live-shopfloor';
 import MachineDashboard from '@shopworx/machine-dashboard';
+import UtilityDashboard from '@shopworx/utility-dashboard';
 
 import store from './store';
 import router from './router';
@@ -13,6 +14,12 @@ Vue.use(LiveShopfloor, {
 });
 
 Vue.use(MachineDashboard, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(UtilityDashboard, {
   router,
   store,
   i18n,

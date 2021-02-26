@@ -182,7 +182,6 @@ export default {
     },
     refreshUi() {
       this.base.refreshData();
-      this.showSaveBtn = false;
     },
   },
   computed: {

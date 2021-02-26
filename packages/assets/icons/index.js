@@ -23,6 +23,7 @@ export default {
     maintenanceSummary: 'mdi-file-search-outline',
     maintenance: 'mdi-wrench-outline',
     shopfloorDashboard: 'mdi-view-dashboard-outline',
+    utilityDashboard: 'mdi-flash-outline',
     productionLog: 'mdi-circle-edit-outline',
     downtimeLog: 'mdi-timeline-clock-outline',
     production: 'mdi-cogs',
