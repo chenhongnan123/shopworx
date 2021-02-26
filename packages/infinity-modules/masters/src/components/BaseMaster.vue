@@ -124,6 +124,7 @@ export default {
     async fetchRecords() {
       this.loading = true;
       this.$emit('savebtnshow', false);
+      this.$emit('deletebtnshow', false);
       await this.getRecords({
         elementName: this.id,
         assetId: this.assetId,
