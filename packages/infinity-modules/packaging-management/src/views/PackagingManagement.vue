@@ -144,7 +144,7 @@
         class="text-center"
         height="600px"
         >
-          <div style="width:400px; margin:0 auto;position:relative;">
+          <!-- <div style="width:400px; margin:0 auto;position:relative;">
             <img src="../asset/production.svg" width="100%"/>
             <span
             :class="['production-part', packagerecord.point1 ? 'completed' : '']"
@@ -154,18 +154,18 @@
             :class="['production-part', packagerecord.point2 ? 'completed' : '']"
             style="top:60%;left:86%;"
             >2</span>
-          </div>
+          </div> -->
           <div class="parts-status-group">
             <v-row class="px-10">
               <v-col>
                 <div :class="['parts-status-group-item', !packagerecord.point1 ? 'completed' : '']">
-                  <p>工件1</p>
+                  <p>物料1</p>
                   <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
               <v-col>
                 <div :class="['parts-status-group-item', !packagerecord.point2 ? 'completed' : '']">
-                  <p>工件2</p>
+                  <p>物料2</p>
                   <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
@@ -640,7 +640,7 @@ export default {
           .replace(/pkginfo/g, pkginfo)
           .replace(/remark/g, remark)
           .replace(/1111111111/g, qrcode)
-          .replace(/SMTC0002300000002/g, barcode);
+          .replace(/SMTC0>5002300000002/g, barcode);
         selectedDevice.send(labelprn, async () => {
           console.log('printer first success');
           selectedDevice.send(labelprn, async () => {
