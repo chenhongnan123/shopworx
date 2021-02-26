@@ -1,5 +1,4 @@
 import FileService from '@shopworx/services/api/file.service';
-import { saveFile } from '@shopworx/services/util/file.service';
 
 export default ({
   actions: {
@@ -15,13 +14,11 @@ export default ({
     downloadFile: async (_, downloadLink) => {
       try {
         const { data } = await FileService.downloadFile(downloadLink);
-        const fileName = downloadLink.split('/');
-        const blob = new Blob([data], { type: 'application/json' });
-        await saveFile(blob, `${fileName[4]}.${fileName[5]}`);
+        const blob = new Blob([data], { type: 'image/jpeg' });
+        return blob;
       } catch (e) {
         return false;
       }
-      return true;
     },
 
     deleteFile: async (_, { elementName, id }) => {

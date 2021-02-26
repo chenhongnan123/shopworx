@@ -121,6 +121,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    areaMap: {
+      type: Array,
+      default: () => [],
+    }
   },
   components: { Jcrop },
   data() {
@@ -143,6 +147,9 @@ export default {
   },
   mounted() {
     this.getImageInfo();
+    if (this.areaMap) {
+      this.locations = this.areaMap;
+    }
   },
   methods: {
     getImageInfo() {

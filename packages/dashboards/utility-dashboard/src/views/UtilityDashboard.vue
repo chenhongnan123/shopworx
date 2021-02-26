@@ -38,6 +38,7 @@
           @showBtn="showBtn"
           ref="marker"
           :mappings="meters"
+          :areaMap="areaMap"
         />
       </div>
 
@@ -74,6 +75,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
   mapActions,
   mapMutations,
@@ -102,15 +104,26 @@ export default {
       error: false,
       snackbar: false,
       text: 'Please upload minimum (width 1024px) image.',
+      schema: {},
+      areaMap: [],
     };
   },
   async created() {
     this.setShowHeaderButtons(false);
     await this.fetchMeters();
     this.setActiveDashboard();
-    // TODO: fetch dashboard schema
     await this.getAppSchema();
-    console.log(this.appSchema);
+    if (this.appSchema) {
+      const data = JSON.parse(this.appSchema.appschema);
+      const blob = await this.downloadFile(data.downloadLink);
+      const reader = new FileReader();
+      reader.readAsDataURL(blob); 
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        this.url = base64data;
+      }
+      this.areaMap = data.areaMap;
+    }
     // TODO: if found -> render schema (download file)
     // TODO: else -> upload schema
   },
@@ -121,7 +134,7 @@ export default {
   },
   methods: {
     ...mapActions('utilityDashboard', ['fetchMeters']),
-    ...mapActions('file', ['uploadFile']),
+    ...mapActions('file', ['uploadFile', 'downloadFile']),
     ...mapActions('webApp', ['getAppSchema', 'updateAppSchema']),
     ...mapActions('element', ['getRecordById']),
     ...mapMutations('utilityDashboard', ['setShowSaveBtn']),
