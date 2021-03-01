@@ -11,6 +11,14 @@ export default ({
   mutations: {
     setAssets: set('assets'),
     setRecords: set('records'),
+    deleteRecord: (state, id) => {
+      const { records } = state;
+      // eslint-disable-next-line
+      const index = records.findIndex((r) => r._id === id);
+      if (index > -1) {
+        records.splice(index, 1);
+      }
+    },
     setElements: set('elements'),
   },
   actions: {
@@ -54,7 +62,7 @@ export default ({
       }
       return false;
     },
-    deleteRecord: async ({ dispatch }, { id, name }) => {
+    deleteRecord: async ({ commit, dispatch }, { id, name }) => {
       const deleteBomdetail = await dispatch(
         'element/deleteRecordById',
         {
@@ -63,6 +71,9 @@ export default ({
         },
         { root: true },
       );
+      if (deleteBomdetail) {
+        commit('deleteRecord', id);
+      }
       return deleteBomdetail;
     },
     getAssets: async ({ commit, dispatch }) => {

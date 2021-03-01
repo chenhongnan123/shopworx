@@ -28,6 +28,10 @@ class SiteService {
   getMasterSolutions() {
     return this.request.get('/server/solution/getallforsite');
   }
+
+  getReports() {
+    return this.request.get('/server/reports?withFilters=false');
+  }
 }
 
 export default new SiteService();
