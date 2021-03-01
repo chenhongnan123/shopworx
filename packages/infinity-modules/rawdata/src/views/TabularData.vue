@@ -295,7 +295,7 @@ export default {
       const yesterday = new Date(this.dateRange[0]).getTime();
       if (this.parametersChanged === false) {
         const element = this.id.split('_');
-        await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[0] });
+        await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
         const changeTags = this.tags;
         await changeTags.forEach((f) => {
           const checkTag = this.paramList.filter((p) => p === f.tagName);
