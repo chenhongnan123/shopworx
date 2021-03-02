@@ -36,6 +36,7 @@ export default ({
     isFullscreen: false,
     dashboardLoading: false,
     configDrawer: false,
+    showHeaderButtons: true,
   },
   mutations: {
     setAlert: set('alert'),
@@ -46,6 +47,7 @@ export default ({
     setConfigDrawer: set('configDrawer'),
     toggleConfigDrawer: toggle('configDrawer'),
     setDashboardLoading: toggle('dashboardLoading'),
+    setShowHeaderButtons: set('showHeaderButtons'),
   },
   getters: {
     isTV: ({ userAgent }) => userAgent.includes('wv'),

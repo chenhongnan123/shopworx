@@ -1,4 +1,3 @@
-import SiteService from '@shopworx/services/api/site.service';
 import { set } from '@shopworx/services/util/store.helper';
 
 export default ({
@@ -11,32 +10,38 @@ export default ({
     setActiveAppId: set('activeAppId'),
   },
   actions: {
-    getAppSchema: async ({ commit, state, rootState }, appId = null) => {
-      try {
-        const { me } = rootState.user;
-        const roleId = me.role.id;
-        let activeAppId = appId;
-        if (!appId) {
-          ({ activeAppId } = state);
-        }
-        const { data } = await SiteService.getApp(roleId, activeAppId);
-        if (data && data.results) {
-          try {
-            commit('setAppSchema', JSON.parse(data.results.schema));
-          } catch (e) {
-            /* commit('helper/setAlert', {
-              show: true,
-              type: 'error',
-              message: 'INVALID_APP_SCHEMA',
-            }, {
-              root: true,
-            }); */
-          }
-        }
-      } catch (e) {
-        return false;
+    getAppSchema: async ({ commit, state, dispatch }) => {
+      const { activeAppId } = state;
+      const records = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'appschema',
+          query: `?query=appid=="${activeAppId}"`,
+        },
+        { root: true },
+      );
+      if (records && records.length === 1) {
+        commit('setAppSchema', records[0]);
       }
-      return true;
+    },
+    updateAppSchema: async ({ commit, state, dispatch }, appSchema) => {
+      const { activeAppId } = state;
+      const payload = {
+        appid: activeAppId,
+        appschema: appSchema,
+      };
+      const upsert = await dispatch(
+        'element/upsertRecordByQuery',
+        {
+          elementName: 'appschema',
+          record: payload,
+          query: `?query=appid=="${activeAppId}"`,
+        },
+        { root: true },
+      );
+      if (upsert) {
+        commit('setAppSchema', appSchema);
+      }
     },
   },
 });

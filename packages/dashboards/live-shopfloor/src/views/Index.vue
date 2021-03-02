@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+
 import ConfigDrawer from '../components/ConfigDrawer.vue';
 import ShopfloorLoading from '../components/ShopfloorLoading.vue';
 
@@ -35,6 +36,7 @@ export default {
     };
   },
   async created() {
+    this.setShowHeaderButtons(true);
     const self = this;
     this.setLoading(true);
     await this.getShifts();
@@ -90,6 +92,9 @@ export default {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
+    ]),
+    ...mapMutations('helper', [
+      'setShowHeaderButtons',
     ]),
     ...mapActions('shopfloor', [
       'getBusinessTime',
