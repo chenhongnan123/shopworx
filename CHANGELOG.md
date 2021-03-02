@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **data-visualizer:** RA-I490 PO | Row data UI | Default tags/columns are not displaying on selecting parameter ([182969f](https://bitbucket.org/entrib/shopworx/commits/182969f89f8302aaa227b465ce57fe64ff933cf8))
+* **master-data:** fixed button state on data refresh ([a9f1d25](https://bitbucket.org/entrib/shopworx/commits/a9f1d250b3eef85174f35cec360b760d6ebe6841))
+* **master-data:** fixed delete records ([7717937](https://bitbucket.org/entrib/shopworx/commits/77179376935cbbc475184c8580262f64863a7fdd))
+* **parameter-configuration:** empty fields not allowed while uploading ([5cd9bd4](https://bitbucket.org/entrib/shopworx/commits/5cd9bd487eb23f5f38390c72b7a9b5af98dc193c))
+* **parameter-configuration:** RA-I489 Parameter Configuration | After importing file, Yes button should be disable after one click ([e01fded](https://bitbucket.org/entrib/shopworx/commits/e01fdedcad1c7ccb7cc5d9bb2231bded11d86e98))
+* **shift-summary:** fixed oee display widget ([b096641](https://bitbucket.org/entrib/shopworx/commits/b09664139b7b2d7e8209cbf1f5eca0cf0b0ee3a1))
+* **shift-summary:** updated change from percent to absolute ([367af49](https://bitbucket.org/entrib/shopworx/commits/367af49a439349b5dc310e0028c0eacebf688d90))
+
+
+### Features
+
+* **admin-console:** user can now create a new role ([91b2f11](https://bitbucket.org/entrib/shopworx/commits/91b2f111dbf9753f6e34a8fdb15fc8a7ac8bec3d))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 
