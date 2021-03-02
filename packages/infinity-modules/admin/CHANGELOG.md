@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Features
+
+* **admin-console:** user can now create a new role ([91b2f11](https://bitbucket.org/entrib/shopworx/commits/91b2f111dbf9753f6e34a8fdb15fc8a7ac8bec3d))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 **Note:** Version bump only for package @shopworx/admin
