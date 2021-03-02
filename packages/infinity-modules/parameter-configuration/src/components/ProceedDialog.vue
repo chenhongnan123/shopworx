@@ -85,7 +85,7 @@
           <v-btn
             color="primary"
             class="text-none"
-            @click.once="createParamsBtn"
+            @click="createParamsBtn"
             :loading="deleting"
             :disabled="yesBtnDisable"
           >
@@ -245,6 +245,7 @@ export default {
     ...mapMutations('parameterConfiguration', ['setCreateParam']),
     ...mapActions('parameterConfiguration', ['createParameterList']),
     async createParamsBtn() {
+      this.deleting = true;
       const createResult = await this.createParameterList(this.payloadData);
       this.dialog = false;
       this.payloadData = [];
@@ -266,6 +267,7 @@ export default {
           message: 'SOMETHING_WRONG_UPLOADING',
         });
       }
+      this.deleting = false;
     },
     async cancleCreation() {
       this.dialog = false;
