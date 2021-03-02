@@ -2,20 +2,10 @@
   <div>
     <portal to="settings-header">
       <span>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          disabled
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'$addRole'"
-          ></v-icon>
-          Create new role
-        </v-btn>
+        <create-role
+          :roles="userRoles"
+          @on-success="refresh"
+        />
         <v-btn
           small
           outlined
@@ -68,6 +58,7 @@
           disable-pagination
           hide-default-footer
         >
+          <!-- eslint-disable-next-line -->
           <template #item.roleType="{ item }">
             <v-switch
               value
@@ -77,7 +68,8 @@
               @change="updateRoleType(item)"
             ></v-switch>
           </template>
-          <template #item.actions="{ item }">
+          <!-- eslint-disable-next-line -->
+          <!-- <template #item.actions="{ item }">
             <v-btn
               icon
               small
@@ -88,7 +80,7 @@
             >
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn>
-          </template>
+          </template> -->
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-card-text>
@@ -128,9 +120,13 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import CreateRole from './CreateRole.vue';
 
 export default {
   name: 'UserRoles',
+  components: {
+    CreateRole,
+  },
   data() {
     return {
       expanded: [],
@@ -155,12 +151,12 @@ export default {
           sortable: false,
           value: 'roleType',
         },
-        {
+        /* {
           text: 'Actions',
           align: 'start',
           sortable: false,
           value: 'actions',
-        },
+        }, */
       ],
     };
   },
@@ -212,7 +208,11 @@ export default {
       'deleteModuleAccess',
       'deleteWebAppAccess',
       'deleteReportsCategoryAccess',
-      'createAccess',
+      'deleteReportAccess',
+      'deleteReportViewAccess',
+      'createModuleAccess',
+      'createReportAccess',
+      'createReportViewAccess',
     ]),
     async refresh() {
       this.loading = true;
@@ -416,6 +416,8 @@ export default {
         this.deleteModuleAccess(item.roleId),
         this.deleteWebAppAccess(item.roleId),
         this.deleteReportsCategoryAccess(item.roleId),
+        this.deleteReportAccess(item.roleId),
+        this.deleteReportViewAccess(item.roleId),
       ]);
       if (results.every((res) => res === true)) {
         const permissionsByModule = item.permissions.reduce((result, currentValue) => {
@@ -426,6 +428,7 @@ export default {
           result[moduleId].push(currentValue);
           return result;
         }, {});
+        let reportCategoryIds = [];
         const payload = {
           roleId: item.roleId,
           moduleAndReportsCategoryIds: Object.keys(permissionsByModule).map((moduleId) => {
@@ -442,13 +445,21 @@ export default {
               || modules[0].moduleName.toUpperCase().trim() === 'CONFIGURATION') {
               mod.webAppIds = modules.map((m) => m.id);
             } else if (modules[0].moduleName.toUpperCase().trim() === 'REPORTS') {
-              mod.reportsCategoryIds = modules.map((m) => m.id);
+              reportCategoryIds = modules.map((m) => m.id);
+              mod.reportsCategoryIds = reportCategoryIds;
             }
             return mod;
           }),
         };
-        const created = await this.createAccess(payload);
-        if (created) {
+        const created = await Promise.all([
+          this.createModuleAccess(payload),
+          this.createReportAccess(item.roleId),
+          this.createReportViewAccess({
+            reportCategoryIds,
+            roleId: item.roleId,
+          }),
+        ]);
+        if (created.every((r) => r === true)) {
           this.setAlert({
             show: true,
             type: 'success',

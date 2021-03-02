@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **data-visualizer:** RA-I490 PO | Row data UI | Default tags/columns are not displaying on selecting parameter ([182969f](https://bitbucket.org/entrib/shopworx/commits/182969f89f8302aaa227b465ce57fe64ff933cf8))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** empty fields not allowed while uploading ([5cd9bd4](https://bitbucket.org/entrib/shopworx/commits/5cd9bd487eb23f5f38390c72b7a9b5af98dc193c))
+* **parameter-configuration:** RA-I489 Parameter Configuration | After importing file, Yes button should be disable after one click ([e01fded](https://bitbucket.org/entrib/shopworx/commits/e01fdedcad1c7ccb7cc5d9bb2231bded11d86e98))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

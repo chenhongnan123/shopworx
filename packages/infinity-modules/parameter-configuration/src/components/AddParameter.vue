@@ -28,6 +28,7 @@
               label="Parameter Name*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.name"
+              counter="20"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -154,6 +155,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
+            :disabled="!valid"
             @click="saveParameter"
           >
             Save
@@ -193,6 +195,10 @@ export default {
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
+          (v) => (v && v.length <= 20) || 'Max length 20 characters.',
+          (v) => /^[A-Za-z0-9-_]+$/.test(v)
+            || 'Parameter name should not contain empty space or special characters',
+          (v) => !this.paramNames.includes(v) || 'Parameter name is not available',
         ],
         parametercategory: [
           (v) => !!v || 'Category is required',
@@ -258,6 +264,9 @@ export default {
         this.setAddParameterDialog(val);
       },
     },
+    paramNames() {
+      return this.parameterList.map((d) => d.name);
+    },
   },
   watch: {
     parameterObj: {
@@ -299,11 +308,12 @@ export default {
           startaddress,
           booleanbit,
         } = parameterObj;
-        if (this.parameterList.some((parameter) => name === parameter.name)) {
+        if (this.parameterList.some((parameter) => name.toLowerCase()
+           === parameter.name.toLowerCase())) {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'parameter name is present',
+            message: 'DUPLICATE_PARAMETER_NAME',
           });
           return;
         }

@@ -6,7 +6,7 @@
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
         size="180"
-        :value="thisShiftOee"
+        :value="88"
         button
         width="15"
         color="primary"
@@ -217,25 +217,25 @@ export default {
       return (this.previousShiftSummary && this.previousShiftSummary.oee) || 0;
     },
     aDiff() {
-      return ((this.thisShiftA - this.previousShiftA) / this.previousShiftA) * 100;
+      return this.thisShiftA - this.previousShiftA;
     },
     aDiffText() {
       return `${this.roundOff(Math.abs(this.aDiff)).toFixed(2)}%`;
     },
     pDiff() {
-      return ((this.thisShiftP - this.previousShiftP) / this.previousShiftP) * 100;
+      return this.thisShiftP - this.previousShiftP;
     },
     pDiffText() {
       return `${this.roundOff(Math.abs(this.pDiff)).toFixed(2)}%`;
     },
     qDiff() {
-      return ((this.thisShiftQ - this.previousShiftQ) / this.previousShiftQ) * 100;
+      return this.thisShiftQ - this.previousShiftQ;
     },
     qDiffText() {
       return `${this.roundOff(Math.abs(this.qDiff)).toFixed(2)}%`;
     },
     oeeDiff() {
-      return ((this.thisShiftOee - this.previousShiftOee) / this.previousShiftOee) * 100;
+      return this.thisShiftOee - this.previousShiftOee;
     },
     oeeDiffText() {
       return `${this.roundOff(Math.abs(this.oeeDiff)).toFixed(2)}%`;

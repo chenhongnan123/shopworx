@@ -84,17 +84,18 @@
     "PLAN_UPDATED": "Plan updated!",
     "PLAN_DELETED": "Plan deleted!",
     "ASSET_UPDATE": "Asset updated!",
-    "CREATED_RECORD": "Record added successfully.",
-    "DELETE_RECORD": "Record deleted successfully.",
-    "ROLE_UPDATED": "Role updated successfully.",
-    "USER_DELETED": "User removed successfully.",
+    "CREATED_RECORD": "Record added successfully!",
+    "DELETE_RECORD": "Record deleted successfully!",
+    "ROLE_UPDATED": "Role updated successfully!",
+    "USER_DELETED": "User removed successfully!",
     "DOWNTIME_UPDATE": "Downtime reason updated!",
     "OPERATOR_UPDATE": "Operator updated!",
     "REJECTION_UPDATE": "Rejection updated!",
     "REWORK_UPDATE": "Rework updated!",
     "SCRAP_UPDATE": "Scrap updated!",
     "PERMISSION_UPDATE": "Role permission updated!",
-    "MATRIX_UPDATE": "Part matrix updated!"
+    "MATRIX_UPDATE": "Part matrix updated!",
+    "ROLE_CREATED": "Role created successfully!"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -124,7 +125,9 @@
     "REWORK_NOT_ALLOWED": "Cannot update rework. Quantity should be less than accepted quantity.",
     "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
     "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
-    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry."
+    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry.",
+    "ROLE_CREATED": "Error while creating the role. Please retry.",
+    "ROLE_CREATE_RETRY": "Role created successfully but we couldn't define role access. Please update the permissions from the table."
   },
   "fields": {
     "email": "Email",
@@ -253,6 +256,7 @@
     "shopfloorDashboard": "Shopfloor Dashboard",
     "productionImage": "Production Image",
     "liveShopfloor": "Live Shopfloor",
+    "utilityDashboard": "Utility",
     "orderManagement": "Order",
     "productionLog": "Production Log",
     "downtimeLog": "Downtime Log",

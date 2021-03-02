@@ -51,7 +51,6 @@
       <v-btn
         small
         outlined
-        v-on="on"
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"

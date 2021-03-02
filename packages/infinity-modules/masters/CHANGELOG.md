@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **master-data:** fixed button state on data refresh ([a9f1d25](https://bitbucket.org/entrib/shopworx/commits/a9f1d250b3eef85174f35cec360b760d6ebe6841))
+* **master-data:** fixed delete records ([7717937](https://bitbucket.org/entrib/shopworx/commits/77179376935cbbc475184c8580262f64863a7fdd))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

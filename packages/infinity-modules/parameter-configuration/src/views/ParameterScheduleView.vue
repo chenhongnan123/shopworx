@@ -64,6 +64,7 @@
           <proceed-dialog ref="ProceedDialog"
             :openDialog="openDialog"
             :responce="responce"
+            :optionalRes="optionalRes"
             :duplicateBnum="duplicateBnum"
             :duplicateStartnum="duplicateStartnum"
             :dupDbAddress="dupDbAddress"
@@ -395,6 +396,7 @@ export default {
       dialog: false,
       openDialog: false,
       responce: [],
+      optionalRes: [],
       resLen: [],
       paramLength: [],
       dataForCreation: [],
@@ -411,7 +413,7 @@ export default {
       }, {
         tagName: 'description',
         tagDescription: 'Parameter Description',
-        required: true,
+        required: false,
         emgTagType: 'string',
       }, {
         tagName: 'protocol',
@@ -446,7 +448,7 @@ export default {
       }, {
         tagName: 'parameterunit',
         tagDescription: 'Parameter Unit',
-        required: true,
+        required: false,
         emgTagType: 'int',
       }, {
         tagName: 'parametercategory',
@@ -462,6 +464,11 @@ export default {
         tagName: 'startaddress',
         tagDescription: 'Start Address',
         required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'maxdecimal',
+        tagDescription: 'Max Decimal',
+        required: false,
         emgTagType: 'int',
       }],
       headers: [
@@ -1450,6 +1457,14 @@ export default {
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
+      const floatOrDoubles = dataList.filter((fd) => fd.maxdecimal === '' || fd.maxdecimal === undefined);
+      floatOrDoubles.forEach((md) => {
+        if (md.datatype === '9' || md.datatype === '10' || Number(md.datatype) === 9 || Number(md.datatype) === 10) {
+          md.maxdecimal = 4;
+        } else {
+          md.maxdecimal = 0;
+        }
+      });
       const nameList = dataList.map((item) => item.name);
       const duplicateNames = nameList.map((item) => item)
         .filter((value, index, self) => self.indexOf(value) !== index);
@@ -1458,9 +1473,21 @@ export default {
         this.masterTags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
-            if (val === null || val === '' || val === undefined) {
+            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
               res.push({ row: r + 2, tag: t.tagDescription });
               this.responce = res;
+            }
+          }
+        });
+      });
+      const resopt = [];
+      dataList.forEach((d, r) => {
+        this.masterTags.forEach((op) => {
+          if (!op.required) {
+            const val = d[op.tagName];
+            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
+              resopt.push({ row: r + 2, tag: op.tagDescription });
+              this.optionalRes = resopt;
             }
           }
         });
@@ -1566,7 +1593,7 @@ export default {
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
-              if (p.length > 15) {
+              if (p.length > 20) {
                 resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
@@ -1580,6 +1607,7 @@ export default {
           }
           if (this.paramLength.length > 0) {
             this.validateFlag = false;
+            this.savingImport = false;
             this.setAlert({
               show: true,
               type: 'error',
@@ -1588,8 +1616,27 @@ export default {
             // this.paramLength = [];
             // return;
           }
+          if (dataList.length > 1000) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ROW_LIMIT',
+            });
+          }
+          if (this.responce.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'EMPTY_FIELDS',
+            });
+            this.$root.$emit('parameterCreation', true);
+          }
           if (this.validateFlag === true) {
-            if (this.responce.length > 0) {
+            if (this.optionalRes.length > 0) {
               this.savingImport = false;
               this.$root.$emit('parameterCreation', true);
               this.$root.$emit('payload', data);
@@ -1597,7 +1644,7 @@ export default {
               this.setAlert({
                 show: true,
                 type: 'error',
-                message: 'EMPTY_FIELDS',
+                message: 'OPTIONAL_EMPTY_FIELDS',
               });
               // document.getElementById('uploadFiles').value = null;
               // return;
@@ -1705,7 +1752,7 @@ export default {
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
-              if (p.length > 15) {
+              if (p.length > 20) {
                 resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
@@ -1727,8 +1774,27 @@ export default {
             // this.paramLength = [];
             // return;
           }
+          if (dataList.length > 1000) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ROW_LIMIT',
+            });
+          }
+          if (this.responce.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'EMPTY_FIELDS',
+            });
+            this.$root.$emit('parameterCreation', true);
+          }
           if (this.validateFlag === true) {
-            if (this.responce.length > 0) {
+            if (this.optionalRes.length > 0) {
               this.savingImport = false;
               this.$root.$emit('parameterCreation', true);
               this.$root.$emit('payload', data);
@@ -1736,10 +1802,8 @@ export default {
               this.setAlert({
                 show: true,
                 type: 'error',
-                message: 'EMPTY_FIELDS',
+                message: 'OPTIONAL_EMPTY_FIELDS',
               });
-              // document.getElementById('uploadFiles').value = null;
-              // return;
             }
           }
         }

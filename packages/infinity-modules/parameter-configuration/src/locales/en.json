@@ -16,10 +16,13 @@
     "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
     "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
     "PARAMETER_NAME_LENGTH": "Parameter name length exceeded (15 char max)",
-    "EMPTY_COLUMN_ERROR": "Column that dont have any data",
+    "EMPTY_COLUMN_ERROR": "Below location Special character, Space or Empty Value Found(required field)",
     "DUPLICATE_BIT_NUM_ERROR": "Duplicate value in Bit Number column",
     "DUPLICATE_START_NUM_ERROR": "Duplicate value in Start Address column",
     "DUPLICATE_DB_ADDRESS_ERROR": "Duplicate value in DB Address column",
-    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length"
+    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length(20)",
+    "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
+    "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
+    "ROW_LIMIT": "Row limit exceeded! (max 1000)"
   }
 }
