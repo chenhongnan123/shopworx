@@ -1774,8 +1774,27 @@ export default {
             // this.paramLength = [];
             // return;
           }
+          if (dataList.length > 1000) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ROW_LIMIT',
+            });
+          }
+          if (this.responce.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'EMPTY_FIELDS',
+            });
+            this.$root.$emit('parameterCreation', true);
+          }
           if (this.validateFlag === true) {
-            if (this.responce.length > 0) {
+            if (this.optionalRes.length > 0) {
               this.savingImport = false;
               this.$root.$emit('parameterCreation', true);
               this.$root.$emit('payload', data);
@@ -1783,10 +1802,8 @@ export default {
               this.setAlert({
                 show: true,
                 type: 'error',
-                message: 'EMPTY_FIELDS',
+                message: 'OPTIONAL_EMPTY_FIELDS',
               });
-              // document.getElementById('uploadFiles').value = null;
-              // return;
             }
           }
         }
