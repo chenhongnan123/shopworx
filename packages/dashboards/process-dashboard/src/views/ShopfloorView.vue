@@ -15,7 +15,7 @@
       <grid-layout
         :layout.sync="dashboardWidgets"
         :col-num="12"
-        :row-height="36"
+        :row-height="30"
         :is-draggable="configDrawer"
         :is-resizable="false"
         :is-mirrored="false"
