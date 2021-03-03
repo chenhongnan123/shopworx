@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **product-management:** simmiler like RA-I180 ([b2a3bde](https://bitbucket.org/entrib/shopworx/commits/b2a3bdec88ebfe8d0e574563ad6562ce0bd73347))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

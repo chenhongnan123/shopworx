@@ -280,7 +280,8 @@
     "insights": "Insights",
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
-    "packagingManagement": "Packaging"
+    "packagingManagement": "Packaging",
+    "calibrationApp": "Calibration"
   },
   "account": {
     "account": "Account",

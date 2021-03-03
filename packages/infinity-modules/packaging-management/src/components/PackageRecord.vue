@@ -9,7 +9,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Package Record
+          打包记录
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
@@ -46,6 +46,8 @@
         <v-btn
           color="primary"
           class="text-none"
+          @click="handlePrint"
+          :disabled="Number(packagerecord.status) !== 3"
         >
           重新打印
         </v-btn>
@@ -60,7 +62,7 @@ export default {
     return {
     };
   },
-  props: ['packagerecorddialog', 'packagehistoryrecord'],
+  props: ['packagerecorddialog', 'packagehistoryrecord', 'packagerecord'],
   computed: {
     dialog: {
       get() {
@@ -69,6 +71,11 @@ export default {
       set(val) {
         this.$emit('setPackageRecordDialog', val);
       },
+    },
+  },
+  methods: {
+    handlePrint() {
+      this.$emit('handlePrint');
     },
   },
 };

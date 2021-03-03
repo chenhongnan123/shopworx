@@ -9,6 +9,18 @@ export default ({
     setPackageRecordlist: set('packagerecordlist'),
   },
   actions: {
+    getLabelFile: async ({ dispatch }) => {
+      const data = await dispatch(
+        'file/getFile',
+        // '/lingzhong.prn',
+        '/infinity/lingzhong.prn',
+        { root: true },
+      );
+      if (data) {
+        return data;
+      }
+      return false;
+    },
     getPackageRecord: async ({ dispatch }, query) => {
       const list = await dispatch(
         'element/getRecords',
@@ -64,12 +76,36 @@ export default ({
       }
       return [];
     },
+    getNgConfig: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'ngcodeconfig', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
     updatePackageRecord: async ({ dispatch }, postData) => {
       const { id, payload } = postData;
       const putPackageRecord = await dispatch(
         'element/updateRecordById',
         {
           elementName: 'package',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return putPackageRecord;
+    },
+    updatePackageLabelRecord: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
+      const putPackageRecord = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'packagelabel',
           id,
           payload,
         },
@@ -89,6 +125,17 @@ export default ({
         { root: true },
       );
       return putLabelRule;
+    },
+    getOrderList: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'order', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
     },
   },
 });

@@ -21,10 +21,14 @@
           rounded
           clearable
           label="请扫描条码信息。"
-          :disabled="loading"
+          :disabled="loading || inputDisabled"
           prepend-inner-icon="mdi-barcode-scan"
           @change="handlePackageRecord"
+          class="textfield"
         ></v-text-field>
+        <div class="test">
+          <ag-grid-vue></ag-grid-vue>
+        </div>
         <v-card
         >
           <v-row no-gutters class="px-2">
@@ -80,15 +84,19 @@
                 <v-stepper-step
                   step=""
                   complete
-                  :rules="!stationinfo.status ? [() => false] :  [() => true]"
+                  :rules="stationinfo.status === 2 ? [() => false] :  [() => true]"
                   v-for="(stationinfo, k) in stationinfolist"
                   :key="k"
                 >
                 </v-stepper-step>
               </v-stepper-header>
             </v-stepper>
-            <v-toolbar-title class="ng-station-title" v-if="stationinfolist.length > 0">
-              {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}} 站存在问题
+            <v-toolbar-title
+            class="ng-station-title"
+            v-if="stationinfolist.length > 0
+            && stationinfolist.some((stationinfo) => stationinfo.status === 2)"
+            >
+              {{stationinfolist.find((stationinfo) => stationinfo.status === 2).name}} 站存在问题
             </v-toolbar-title>
             <v-divider></v-divider>
             <div style="color:#999;font-size:14px;line-height:30px;">详细信息</div>
@@ -98,20 +106,31 @@
              style="background-color:rgba(245, 247, 247, 1);color:#333;">
               <p>
                 <span>问题站点:</span>
-                <span v-if="stationinfolist.length > 0">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).name}}
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)">
+                  {{stationinfolist.find((stationinfo) => stationinfo.status === 2).name}}
                 </span>
               </p>
               <p>
                 <span>问题代码:</span>
-                <span v-if="stationinfolist.length > 0">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)">
+                  {{stationinfolist.find((stationinfo) => stationinfo.status === 2).ngcode}}
                 </span>
               </p>
               <p>
                 <span>问题原因:</span>
-                <span v-if="stationinfolist.length > 0">
-                  {{stationinfolist.find((stationinfo) => stationinfo.status === 0).ngcode}}
+                <span v-if="stationinfolist.length > 0
+                && stationinfolist.some((stationinfo) => stationinfo.status === 2)
+                && ngConfigList.some((ngConfig) =>
+                    ngConfig.ngcode === stationinfolist.find((stationinfo) =>
+                    stationinfo.status === 2).ngcode)
+                ">
+                  {{
+                    ngConfigList.find((ngConfig) =>
+                    ngConfig.ngcode === stationinfolist.find((stationinfo) =>
+                    stationinfo.status === 2).ngcode).ngdescription
+                  }}
                 </span>
               </p>
             </v-card>
@@ -127,32 +146,32 @@
         >
           <div style="width:400px; margin:0 auto;position:relative;">
             <img src="../asset/production.svg" width="100%"/>
-            <span
+            <!-- <span
             :class="['production-part', packagerecord.point1 ? 'completed' : '']"
             style="top:43%;left:82%;"
             >1</span>
             <span
             :class="['production-part', packagerecord.point2 ? 'completed' : '']"
             style="top:60%;left:86%;"
-            >2</span>
+            >2</span> -->
           </div>
           <div class="parts-status-group">
             <v-row class="px-10">
               <v-col>
-                <div :class="['parts-status-group-item', packagerecord.point1 ? 'completed' : '']">
-                  <p>工件1</p>
-                  <p>已完成</p>
+                <div :class="['parts-status-group-item', !packagerecord.point1 ? 'completed' : '']">
+                  <p>物料1</p>
+                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
               <v-col>
-                <div :class="['parts-status-group-item', packagerecord.point2 ? 'completed' : '']">
-                  <p>工件2</p>
-                  <p>请拿取</p>
+                <div :class="['parts-status-group-item', !packagerecord.point2 ? 'completed' : '']">
+                  <p>物料2</p>
+                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
             </v-row>
           </div>
-          <!-- <v-btn
+          <v-btn
             x-large
             color="primary"
             class="mt-10"
@@ -164,7 +183,7 @@
             <v-icon>mdi-plus</v-icon>
             打印标签
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             x-large
             color="warning"
             class="mt-5"
@@ -182,13 +201,17 @@
               <img src="../asset/pedding-bg.svg">
               <v-icon class="mt-3 ml-3" style="font-size:40px;">mdi-download</v-icon>
             </v-col>
-            <v-col cols="4" class="text-center package-number-current">
+            <v-col cols="2" class="text-center package-number-current">
               <p>{{packageLabelRecord.qty||0}}</p>
               <p>当前打包数</p>
             </v-col>
-            <v-col cols="3" class="text-center package-number-total" @click="packageDialog=true">
+            <v-col cols="3" class="text-center package-number-total" @click="handleOpenTotalNumber">
               <p>{{totalNumber}}</p>
               <p>每箱总数<v-icon color="primary">mdi-pencil</v-icon> </p>
+            </v-col>
+            <v-col cols="2" class="text-center package-number-current">
+              <p>{{orderCount||0}}</p>
+              <p>订单已完成箱数</p>
             </v-col>
              <v-col
               cols="3"
@@ -213,7 +236,7 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Total number
+          每箱总数
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="packageDialog = false">
@@ -273,14 +296,19 @@
       </v-card>
     </v-dialog>
     <package-record
+     :packagerecord = "packagerecord"
      :packagerecorddialog = "packagerecorddialog"
      :packagehistoryrecord = "packagehistoryrecord"
       @setPackageRecordDialog="packagerecorddialog=false"
+      @handlePrint="handlePrint"
     />
   </div>
 </template>
 
 <script>
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import { AgGridVue } from 'ag-grid-vue';
 import { mapMutations, mapActions } from 'vuex';
 import socketioclient from 'socket.io-client';
 import PackageRecord from '../components/PackageRecord';
@@ -289,6 +317,7 @@ export default {
   name: 'ParameterConfiguration',
   data() {
     return {
+      labelprn: '',
       packagerecordlist: [],
       mainid: '',
       barcode: '',
@@ -307,10 +336,14 @@ export default {
       labelrule: null,
       packagerecorddialog: false,
       packagehistoryrecord: [],
+      ngConfigList: [],
+      inputDisabled: false,
+      currentOrder: {},
+      orderCount: 0,
     };
   },
   components: {
-    PackageRecord,
+    PackageRecord, AgGridVue,
   },
   created() {
     this.init();
@@ -318,7 +351,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getPackageRecord', 'getLabelRule', 'getPackageLabelRecord', 'updatePackageRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getOrderList', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getNgConfig']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -326,7 +359,7 @@ export default {
         const postData = {
           id: this.labelrule._id,
           payload: {
-            maxnumber: this.inputTotalNumber,
+            quantity: this.inputTotalNumber,
           },
         };
         this.loading = true;
@@ -348,7 +381,6 @@ export default {
           });
         }
         this.loading = false;
-        console.log(result, 'result');
       } else {
         this.setAlert({
           show: true,
@@ -358,33 +390,47 @@ export default {
       }
     },
     async init() {
-      const [labelrule] = await this.getLabelRule();
-      this.labelrule = labelrule;
-      this.totalNumber = labelrule.maxnumber;
+      const labelprn = await this.getLabelFile();
+      this.labelprn = labelprn;
+      const orderList = await this.getOrderList('?query=orderstatus=="Running"');
+      let labelruleList = await this.getLabelRule();
+      labelruleList = labelruleList.filter((i) => i.type === 'barcode');
+      if (labelruleList.length > 0 && orderList.length > 0) {
+        [this.currentOrder] = orderList;
+        const labelrule = labelruleList.find((i) => i.productname === orderList[0].productnumber);
+        this.labelrule = labelrule;
+        this.totalNumber = labelrule.quantity;
+        this.getOrderCount(orderList[0]);
+      }
+      const packageLabelRecordList = await this.getPackageLabelRecord(
+        '?query=status==0',
+      );
+      if (packageLabelRecordList.length > 0) {
+        [this.packageLabelRecord] = packageLabelRecordList;
+      } else {
+        this.packageLabelRecord = {};
+      }
       const packagerecordlist = await this.getPackageRecord();
       const packagerecordlistinprogress = packagerecordlist
-        .filter((packagerecord) => (packagerecord.status === 1) || (packagerecord.status === 2));
+        .filter((packagerecord) => (packagerecord.status === 1));
       if (packagerecordlistinprogress.length > 0) {
         this.mainid = packagerecordlistinprogress[0].mainid;
-        this.barcode = packagerecordlistinprogress[0].barcode;
+        // this.barcode = packagerecordlistinprogress[0].barcode;
         [this.packagerecord] = packagerecordlistinprogress;
         this.mainidstatus = 1;
+        this.inputDisabled = true;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
-        const packageLabelRecordList = await this.getPackageLabelRecord(`?query=barcode=="${this.barcode}"`);
-        if (packageLabelRecordList.length > 0) {
-          [this.packageLabelRecord] = packageLabelRecordList;
-          if (Number(this.packageLabelRecord.qty) === Number(labelrule.maxnumber)) {
-            this.isPrintAble = true;
-          } else {
-            this.isPrintAble = false;
-          }
-        }
-        console.log(this.packagerecord, 'this.packagerecord');
       }
     },
+    async getOrderCount(currentOrder) {
+      const orderList = await this.getPackageLabelRecord(
+        `?query=status==1%26%26ordernumber==%22${currentOrder.ordernumber}%22`,
+      );
+      this.orderCount = orderList.length;
+    },
     initSoket() {
-      const socket = socketioclient.connect('192.168.8.113:10190');
-      // let socket = socketioclient.connect(`${swxapi.serverip}:10190`);
+      // const socket = socketioclient.connect('192.168.8.116:10190');
+      const socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
       });
@@ -392,27 +438,16 @@ export default {
         console.log(data, 'data');
         if (data.mainid === this.mainid) {
           if (Number(data.status) === 3) {
-            const result = await this.getPackageLabelRecord();
-            console.log(result, 'getPackageLabelRecord');
-            console.log(this.packagerecord, 'this.packagerecord');
-            if (result.length > 0) {
-              const packageLabelRecord = result
-                .filter((item) => item.barcode === this.packagerecord.barcode);
-              if (packageLabelRecord.length > 0) {
-                [this.packageLabelRecord] = packageLabelRecord;
-                if (packageLabelRecord[0].status === 0) {
-                  if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
-                    this.isPrintAble = true;
-                  } else {
-                    this.reset();
-                  }
-                } else {
-                  this.setAlert({
-                    show: true,
-                    type: 'error',
-                    message: '此条码已被打印',
-                  });
-                }
+            const packageLabelRecord = await this.getPackageLabelRecord('?query=status==0');
+            if (packageLabelRecord.length > 0) {
+              [this.packageLabelRecord] = packageLabelRecord;
+              if (packageLabelRecord[0].qty > 0) {
+                this.isPrintAble = true;
+              }
+              if (packageLabelRecord[0].qty === Number(this.totalNumber)) {
+                this.handlePrint();
+              } else {
+                this.reset();
               }
             }
           } else {
@@ -431,10 +466,9 @@ export default {
         substationList = substationList.map((item) => ({
           id: item.id,
           name: item.name,
-          status: 0,
+          status: 2,
           ngcode: 0,
         })).reverse();
-        console.log(substationList, 'substationList');
         substationList.forEach(async (substation) => {
           const checkInfo = await this.getCheckout(`?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
           + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1');
@@ -442,55 +476,72 @@ export default {
             substation.status = checkInfo[0].substationresult;
             substation.ngcode = checkInfo[0].checkoutngcode;
           }
-          console.log(checkInfo, 'checkInfo');
         });
       }
       this.stationinfolist = substationList;
-      console.log(222);
-      console.log(substationList, mainid, 'checkoutInfo');
+      this.ngConfigList = await this.getNgConfig();
     },
     async handlePackageRecord(mainid) {
       // this.stations.forEach(element => {
       //   let query = 'query=mainid="xxx"%26%26substationid=="xxxx"%26sortquery=createTimestamp=-1'
       //   let responese = await getRecord()
       // });
-      console.log(mainid, 'mainid');
       this.loading = true;
-      const packagerecordlist = await this.getPackageRecord(`?query=mainid=="${mainid}"`);
+      const packagerecordlist = await this.getPackageRecord();
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
-      console.log(packagerecordObj, 'packagerecordObj');
-      this.barcode = packagerecordObj.barcode;
       if (packagerecordObj) {
+        // this.barcode = packagerecordObj.barcode;
+        this.packagerecord = packagerecordObj;
         if (packagerecordObj.status === 3) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已包装完成';
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            `?query=barcode=="${packagerecordObj.barcode}"`,
+          );
+          if (packageLabelRecordList.length > 0) {
+            [this.packageLabelRecord] = packageLabelRecordList;
+          } else {
+            this.packageLabelRecord = {};
+          }
         } else if (packagerecordObj.status === 4) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已报废';
-        } else if (packagerecordObj.status === 0) {
-          const packagerecordlistnotstart = packagerecordlist
-            .filter((packagerecord) => packagerecord.status === 0);
-          const packagerecordfirst = packagerecordlistnotstart[
-            packagerecordlistnotstart.length - 1
-          ];
-          if (
-            packagerecordfirst.mainid === this.mainid
-          ) {
+        } else if (packagerecordObj.status === 0 || packagerecordObj.status === 1) {
+          if (packagerecordObj.status === 0) {
+            const packagerecordlistnotstart = packagerecordlist
+              .filter((packagerecord) => packagerecord.status === 0);
+            const packagerecordfirst = packagerecordlistnotstart[
+              packagerecordlistnotstart.length - 1
+            ];
+            if (
+              packagerecordfirst.mainid === this.mainid
+            ) {
+              this.mainidstatus = 1;
+              this.detailMessege = '';
+              this.packagerecord = { ...packagerecordfirst };
+              const postData = {
+                id: packagerecordfirst._id,
+                payload: {
+                  status: 1,
+                },
+              };
+              await this.updatePackageRecord(postData);
+            } else {
+              this.mainidstatus = 2;
+              this.detailMessege = '当前条码不是待包装首个条码';
+            }
+          } else {
             this.mainidstatus = 1;
             this.detailMessege = '';
-            this.packagerecord = { ...packagerecordfirst };
-            const postData = {
-              id: packagerecordfirst._id,
-              payload: {
-                status: 1,
-              },
-            };
-            await this.updatePackageRecord(postData);
+          }
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            '?query=status==0',
+          );
+          if (packageLabelRecordList.length > 0) {
+            [this.packageLabelRecord] = packageLabelRecordList;
           } else {
-            this.mainidstatus = 2;
-            this.detailMessege = '当前条码不是待包装首个条码';
-            // this.getNGInfo(mainid);
+            this.packageLabelRecord = {};
           }
         }
       } else {
@@ -539,22 +590,91 @@ export default {
       this.loading = false;
     },
     async getHistoryRecord() {
+      if (!this.mainid && !this.packageLabelRecord.barcode) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: '请扫描条码',
+        });
+        return;
+      }
       this.packagerecorddialog = true;
-      const packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.barcode}"`);
-      console.log(packagehistoryrecord, 'packagehistoryrecord');
+      let packagehistoryrecord = [];
+      packagehistoryrecord = await this.getPackageRecord(`?query=barcode=="${this.packageLabelRecord.barcode}"`);
       this.packagehistoryrecord = packagehistoryrecord;
     },
+    handleOpenTotalNumber() {
+      if (this.packageLabelRecord.qty && this.packageLabelRecord.qty > 0) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: '当前箱数未完成不可修改总数',
+        });
+        return;
+      }
+      this.packageDialog = true;
+    },
     handlePrint() {
-      this.reset();
+      window.BrowserPrint.getDefaultDevice('printer', (selectedDevice) => {
+        const { labelrule } = this;
+        const {
+          productnumber,
+          quantity,
+          supplier,
+          description,
+          internalcode,
+          pkginfo,
+          remark,
+          modifiedtimestamp,
+        } = labelrule;
+        const {
+          barcode,
+          qrcode,
+        } = this.packageLabelRecord;
+        const labelprn = this.labelprn.replace(/description/g, description)
+          .replace(/partnumber/g, productnumber)
+          .replace(/quality/g, quantity)
+          .replace(/mfgdata/g, `${modifiedtimestamp.substr(6, 4)}/${modifiedtimestamp.substr(3, 2)}/${modifiedtimestamp.substr(0, 2)}`)
+          .replace(/internalcode/g, internalcode)
+          .replace(/supplier/g, supplier)
+          .replace(/pkginfo/g, pkginfo)
+          .replace(/remark/g, remark)
+          .replace(/1111111111/g, qrcode)
+          .replace(/SMTC0>5002300000002/g, barcode);
+        selectedDevice.send(labelprn, async () => {
+          console.log('printer first success');
+          selectedDevice.send(labelprn, async () => {
+            const postData = {
+              id: this.packageLabelRecord._id,
+              payload: {
+                status: 1,
+              },
+            };
+            await this.updatePackageLabelRecord(postData);
+            await this.getOrderCount(this.currentOrder);
+            this.packageLabelRecord = {};
+            this.inputDisabled = false;
+            this.isPrintAble = false;
+            document.querySelector('.textfield input').focus();
+            console.log('printer second success');
+            this.reset();
+          }, () => {
+            console.log('printer second error');
+          });
+        }, () => {
+          console.log('printer first error');
+        });
+      });
     },
     reset() {
       this.mainid = '';
       this.mainidstatus = 0;
       this.detailMessege = '';
       this.packagerecord = {};
+      // this.packageLabelRecord = {};
       this.stationinfolist = [];
-      this.scrapDialog = false;
-      this.isPrintAble = false;
+      // this.scrapDialog = false;
+      // this.isPrintAble = false;
     },
   },
 };

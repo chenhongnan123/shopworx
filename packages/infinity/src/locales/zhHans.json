@@ -215,7 +215,8 @@
     "traceability": "追溯报表",
     "ngCodeConfiguration": "异常管理",
     "reworkOperation": "返工管理",
-    "packagingManagement": "包装管理"
+    "packagingManagement": "包装管理",
+    "calibrationApp": "标定"
   },
   "account": {
     "account": "帐户",
