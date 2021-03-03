@@ -257,6 +257,7 @@
     "productionImage": "Production Image",
     "liveShopfloor": "Live Shopfloor",
     "utilityDashboard": "Utility",
+    "processDashboard": "Live Process",
     "orderManagement": "Order",
     "productionLog": "Production Log",
     "downtimeLog": "Downtime Log",

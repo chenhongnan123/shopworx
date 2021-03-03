@@ -24,6 +24,7 @@ export default {
     maintenance: 'mdi-wrench-outline',
     shopfloorDashboard: 'mdi-view-dashboard-outline',
     utilityDashboard: 'mdi-flash-outline',
+    processDashboard: 'mdi-gauge',
     productionLog: 'mdi-circle-edit-outline',
     downtimeLog: 'mdi-timeline-clock-outline',
     production: 'mdi-cogs',
