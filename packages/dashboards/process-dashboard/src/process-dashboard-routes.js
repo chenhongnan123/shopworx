@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: 'process-dashboard',
+    path: 'process',
     component: () => import(/* webpackChunkName: "process-dashboard" */ './views/Index.vue'),
     meta: {
       permissionRequired: true,
