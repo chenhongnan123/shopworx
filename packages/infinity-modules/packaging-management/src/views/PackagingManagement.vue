@@ -407,6 +407,9 @@ export default {
       );
       if (packageLabelRecordList.length > 0) {
         [this.packageLabelRecord] = packageLabelRecordList;
+        if (this.packageLabelRecord.qty > 0) {
+          this.isPrintAble = true;
+        }
       } else {
         this.packageLabelRecord = {};
       }
@@ -421,6 +424,7 @@ export default {
         this.inputDisabled = true;
         this.getNGInfo(packagerecordlistinprogress[0].mainid);
       }
+      document.querySelector('.textfield input').focus();
     },
     async getOrderCount(currentOrder) {
       const orderList = await this.getPackageLabelRecord(
@@ -463,21 +467,69 @@ export default {
     async getNGInfo(mainid) {
       let substationList = await this.getSubstationList();
       if (substationList.length) {
-        substationList = substationList.map((item) => ({
-          id: item.id,
-          name: item.name,
-          status: 2,
-          ngcode: 0,
-        })).reverse();
-        substationList.forEach(async (substation) => {
-          const checkInfo = await this.getCheckout(`?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
-          + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1');
-          if (checkInfo.length) {
-            substation.status = checkInfo[0].substationresult;
-            substation.ngcode = checkInfo[0].checkoutngcode;
+        const checkoutList = await Promise.all(substationList.map((substation) => this.getCheckout(
+          `?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
+          + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1',
+        )));
+        console.log(checkoutList, 'checkoutList');
+        substationList = substationList.map((item, key) => {
+          const obj = {
+            id: item.id,
+            name: item.name,
+            status: 2,
+            ngcode: 0,
+          };
+          if (checkoutList[key].length > 0) {
+            obj.status = checkoutList[key][0].substationresult;
+            obj.ngcode = checkoutList[key][0].checkoutngcode;
+          } else {
+            obj.status = 3;
           }
-        });
+          return obj;
+        }).reverse();
+        if (
+          substationList.some((i) => i.name === 'OP100-1' && i.status === 1)
+          || substationList.some((i) => i.name === 'OP100-2' && i.status === 1)
+        ) {
+          substationList.forEach((item) => {
+            if (item.name === 'OP100-1' || item.name === 'OP100-2') {
+              item.status = 1;
+            }
+          });
+        } else if (
+          substationList.some((i) => i.name === 'OP100-1' && i.status === 3)
+          && substationList.some((i) => i.name === 'OP100-2' && i.status === 2)
+        ) {
+          substationList.forEach((item) => {
+            if (item.name === 'OP100-1') {
+              item.status = 1;
+            }
+          });
+        }
+        if (substationList.some((i) => i.status === 3)) {
+          substationList.forEach((item) => {
+            if (item.status === 3) {
+              item.status = 2;
+            }
+          });
+        }
+        // substationList = substationList.map((item) => ({
+        //   id: item.id,
+        //   name: item.name,
+        //   status: 2,
+        //   ngcode: 0,
+        // })).reverse();
+        // substationList.forEach(async (substation) => {
+        //   const checkInfo = await this.getCheckout(`?query=substationid==
+        //   %22${substation.id}%22%26%26mainid==%22${mainid}%22&`
+        //   + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1');
+        //   if (checkInfo.length) {
+        //     substation.status = checkInfo[0].substationresult;
+        //     substation.ngcode = checkInfo[0].checkoutngcode;
+        //   }
+        // });
       }
+      console.log(substationList, 'substationList');
       this.stationinfolist = substationList;
       this.ngConfigList = await this.getNgConfig();
     },
@@ -540,6 +592,9 @@ export default {
           );
           if (packageLabelRecordList.length > 0) {
             [this.packageLabelRecord] = packageLabelRecordList;
+            if (this.packageLabelRecord.qty > 0) {
+              this.isPrintAble = true;
+            }
           } else {
             this.packageLabelRecord = {};
           }
@@ -619,7 +674,6 @@ export default {
         const { labelrule } = this;
         const {
           productnumber,
-          quantity,
           supplier,
           description,
           internalcode,
@@ -630,10 +684,11 @@ export default {
         const {
           barcode,
           qrcode,
+          qty,
         } = this.packageLabelRecord;
         const labelprn = this.labelprn.replace(/description/g, description)
           .replace(/partnumber/g, productnumber)
-          .replace(/quality/g, quantity)
+          .replace(/quality/g, qty)
           .replace(/mfgdata/g, `${modifiedtimestamp.substr(6, 4)}/${modifiedtimestamp.substr(3, 2)}/${modifiedtimestamp.substr(0, 2)}`)
           .replace(/internalcode/g, internalcode)
           .replace(/supplier/g, supplier)
@@ -655,7 +710,6 @@ export default {
             this.packageLabelRecord = {};
             this.inputDisabled = false;
             this.isPrintAble = false;
-            document.querySelector('.textfield input').focus();
             console.log('printer second success');
             this.reset();
           }, () => {
@@ -673,6 +727,7 @@ export default {
       this.packagerecord = {};
       // this.packageLabelRecord = {};
       this.stationinfolist = [];
+      document.querySelector('.textfield input').focus();
       // this.scrapDialog = false;
       // this.isPrintAble = false;
     },
