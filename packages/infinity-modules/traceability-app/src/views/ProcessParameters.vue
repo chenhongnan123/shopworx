@@ -384,24 +384,26 @@ export default {
                 if (data.length === 0) {
                   const matchParam = paramRecord
                     .find((m) => m.name === element.tagName);
-                  this.headerForCSV.push(`${s.name}_${element.tagName}`);
-                  this.headerForCSVChinese.push(`${s.name}_${matchParam.chinesedescription}`);
-                  if (this.language === 'zhHans') {
-                    this.processParametersheader.push(
-                      {
-                        headerName: `${s.name}_${matchParam.chinesedescription}`,
-                        field: `${s.name}_${element.tagName}`,
-                        resizable: true,
-                      },
-                    );
-                  } else {
-                    this.processParametersheader.push(
-                      {
-                        headerName: `${s.name}_${matchParam.description}`,
-                        field: `${s.name}_${element.tagName}`,
-                        resizable: true,
-                      },
-                    );
+                  if (matchParam) {
+                    this.headerForCSV.push(`${s.name}_${element.tagName}`);
+                    this.headerForCSVChinese.push(`${s.name}_${matchParam.chinesedescription}`);
+                    if (this.language === 'zhHans') {
+                      this.processParametersheader.push(
+                        {
+                          headerName: `${s.name}_${matchParam.chinesedescription}`,
+                          field: `${s.name}_${element.tagName}`,
+                          resizable: true,
+                        },
+                      );
+                    } else {
+                      this.processParametersheader.push(
+                        {
+                          headerName: `${s.name}_${matchParam.name}`,
+                          field: `${s.name}_${element.tagName}`,
+                          resizable: true,
+                        },
+                      );
+                    }
                   }
                 }
               }

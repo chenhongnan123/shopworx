@@ -325,7 +325,8 @@ export default {
       column = this.$refs.process.headerForCSV;
       if (this.currentLocale === 'zhHans') {
         column = this.$refs.process.headerForCSVChinese;
-      } 
+      }
+      console.log(column.length);
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
