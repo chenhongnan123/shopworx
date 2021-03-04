@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="py-0">
-    <portal to="app-extension">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -78,7 +77,6 @@
         </v-toolbar>
       </v-col>
     </v-row>
-    </portal>
         <v-data-table
         v-model="recipes"
         :headers="headers"
@@ -329,14 +327,6 @@ export default {
         'getSubStations']),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
-    showFilter: {
-      get() {
-        return this.filter;
-      },
-      set(val) {
-        this.setFilter(val);
-      },
-    },
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);

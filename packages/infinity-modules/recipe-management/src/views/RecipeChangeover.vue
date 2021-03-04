@@ -65,12 +65,8 @@
           <td>{{ item.machinename }}</td>
           <td>{{ item.recipename }}</td>
           <td>{{ item.recipenumber}}</td>
-          <td v-if="index == 1" style="background: red">Recipe2</td>
-          <td v-else-if="index == 2">Recipe3</td>
-          <td v-else>Recipe1</td>
-          <td v-if="index == 1" style="background: red">recipe-2</td>
-          <td v-else-if="index == 2">recipe-3</td>
-          <td v-else>recipe-1</td>
+          <td></td>
+          <td></td>
           </tr>
         </template>
       </v-data-table>
