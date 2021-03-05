@@ -136,9 +136,9 @@ export default {
     this.fromdate = fromdate;
     this.todate = todate;
     if (substationid || mainid || fromdate || todate) {
-      this.btnSearchProcessParameters();
+      await this.btnSearchProcessParameters();
     } else {
-      this.btnSearchProcessParameters();
+      await this.btnSearchProcessParameters();
       // await this.fetchRecords();
     }
   },
@@ -194,14 +194,11 @@ export default {
       const records = await this.getRecords({
         elementName: 'businesshours',
       });
-      // console.log(records);
       const time = records[0].starttime;
       const splitTime = time.slice(0, 2);
       const day = new Date();
       const now = day.setHours(splitTime);
       const toDate = new Date().getTime();
-      // console.log(now);
-      // console.log(toDate);
       this.fromdate = now;
       this.todate = toDate;
       this.btnSearchProcessParameters();
@@ -245,6 +242,20 @@ export default {
     async handleStationClick(item) {
       const query = `?query=stationid=="${item.id}"`;
       await this.getSubStations(query);
+    },
+    async exportGridExcel() {
+      const name = 'process_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsExcel(params);
+    },
+    async exportGridCSV() {
+      const name = 'process_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
     },
     async btnSearchProcessParameters() {
       this.processParametersList = [];
@@ -490,7 +501,6 @@ export default {
           }
         }));
         this.processParametersList = this.processParametersListFirst;
-        console.log(this.processParametersList);
         this.gridApi = this.gridOptions.api;
         this.gridApi.expandAll();
         if (cFlag === 1) {

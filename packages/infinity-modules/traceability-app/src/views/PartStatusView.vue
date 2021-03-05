@@ -396,6 +396,20 @@ export default {
         });
       }
     },
+    async exportGridCSV() {
+      const name = 'partstatus_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'partstatus_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
+    },
   },
 };
 </script>

@@ -184,10 +184,10 @@ export default {
         'getPartStatus',
         'getComponentData',
         'getParametersList']),
-    async handleSubLineClick(item) {
-      const query = `?query=sublineid=="${item.id}"`;
-      await this.getSubStations(query);
-    },
+    // async handleSubLineClick(item) {
+    //   const query = `?query=sublineid=="${item.id}"`;
+    //   await this.getSubStations(query);
+    // },
     restoreState() {
       if (!this.isBaseReport) {
         // this.setGridState(this.gridObject);
@@ -337,6 +337,21 @@ export default {
         this.setRecipeViewState(0);
         this.setSubStationInfo(data);
       }
+    },
+    async exportGridCSV() {
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      alert('overall');
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

@@ -77,9 +77,13 @@
         <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
             {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
-        <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
+        <!-- <v-btn small :loading="saving" color="primary"
+           class="text-none ml-2" @click="btnExport">
             {{ $t('Export') }}
-          </v-btn>
+        </v-btn> -->
+          <export-reports
+          :label="this.$t('Export')"
+          @on-export="onExport"/>
           <!-- <v-btn small
             :loading="saving"
             color="primary" class="text-none ml-2" @click="btnExportDemo">
@@ -129,13 +133,15 @@
     <!-- <recipe-filter></recipe-filter> -->
     <template>
       <v-fade-transition mode="out-in">
-          <overall-list v-if="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
+          <overall-list v-show="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <process-parameters v-if="recipeView === 1" ref="process" :pageNumber="pageNumber"/>
+          <process-parameters v-show="recipeView === 1" ref="process"
+           :pageNumber="pageNumber"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <quality-history-view v-if="recipeView === 2" ref="quality" :pageNumber="pageNumber" />
+          <quality-history-view v-show="recipeView === 2" ref="quality"
+           :pageNumber="pageNumber"/>
       </v-fade-transition>
     </template>
   </div>
@@ -149,6 +155,7 @@ import OverallList from './OverallList.vue';
 import ProcessParameters from './ProcessParameters.vue';
 import PartStatusView from './PartStatusView.vue';
 import QualityHistoryView from './QualityHistoryView.vue';
+import ExportReports from './ExportReports.vue';
 
 export default {
   name: 'Trecibility',
@@ -157,6 +164,7 @@ export default {
     ProcessParameters,
     PartStatusView,
     QualityHistoryView,
+    ExportReports
   },
   async updated() {
     this.backAndfourth();
@@ -262,6 +270,28 @@ export default {
       //   message: 'FETCH_RECORD',
       // });
     },
+    onExport(e) {
+      this.exportReport(e);
+    },
+    async exportReport(type) {
+      if (type === 'gridCSV') {
+        this.exportGridCSV();
+      } else if (type === 'gridExcel') {
+        await this.exportGridExcel();
+      }
+    },
+    async exportGridCSV() {
+      this.$refs.partstatus.exportGridCSV();
+      this.$refs.overall.exportGridCSV();
+      this.$refs.process.exportGridCSV();
+      this.$refs.quality.exportGridCSV();
+    },
+    exportGridExcel() {
+      this.$refs.partstatus.exportGridExcel();
+      this.$refs.overall.exportGridExcel();
+      this.$refs.process.exportGridExcel();
+      this.$refs.quality.exportGridExcel();
+    },
     async btnExport() {
       // const nameEement = this.id;
       // partstatus table
@@ -319,6 +349,7 @@ export default {
       // process table
       // await this.btnProcessParametersLogic();
       fileName = 'process_parameter_data';
+      // await this.getProcessParameters();
       parameterSelected = this.$refs.process
         .processParametersList.map((item) => ({ ...item }));
       let columnHeader = this.$refs.process.headerForCSV;

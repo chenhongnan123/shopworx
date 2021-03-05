@@ -153,6 +153,8 @@ export default {
     // this.restoreState();
     this.gridApi = this.gridOptionsCheckOut.api;
     this.gridColumnApi = this.gridOptionsCheckOut.columnApi;
+    this.gridApi = this.gridOptions.api;
+    this.gridColumnApi = this.gridOptions.columnApi;
     // this.btnSearchProcessParameters();
   },
   methods: {
@@ -307,6 +309,20 @@ export default {
           message: 'GET_RECORDS',
         });
       }
+    },
+    async exportGridCSV() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

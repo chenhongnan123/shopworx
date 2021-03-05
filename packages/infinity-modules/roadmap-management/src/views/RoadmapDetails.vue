@@ -597,7 +597,6 @@ export default {
     },
     fnUpdateRecipeDetails(item) {
       this.flagEdit = true;
-      this.dialog = true;
       this.itemToUpdate = item;
       this.roadmapDetail.linename = item.linename;
       this.roadmapDetail.sublinename = item.sublinename;
@@ -605,9 +604,16 @@ export default {
       this.roadmapDetail.substationname = item.substationname;
       this.roadmapDetail.process = item.process;
       this.roadmapDetail.amtpresubstation = item.amtpresubstation;
+      this.roadmapDetail.presubline = item.presubline;
       this.roadmapDetail.prestationname = item.prestationname;
       this.roadmapDetail.presubstationname = item.presubstationname;
       this.recipeValue = item.parametervalue;
+      this.getSubLineList();
+      this.getStationList();
+      this.getSubStationList();
+      this.getPreStationList();
+      this.getPreSubStationList();
+      this.dialog = true;
     },
     deleteRecipeDeatils(item) {
       this.itemForDelete = item;
