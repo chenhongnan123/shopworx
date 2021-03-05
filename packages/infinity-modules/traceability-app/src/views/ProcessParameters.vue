@@ -159,6 +159,18 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
     // this.restoreState();
   },
+  watch: {
+    processParametersList: {
+      handler(val) {
+        if (val.length > 0) {
+          this.$root.$emit('dataLoded', true);
+        }
+      },
+    },
+  },
+  beforeDestroy() {
+    this.$root.$off('dataLoded', false);
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('element', ['getRecords']),

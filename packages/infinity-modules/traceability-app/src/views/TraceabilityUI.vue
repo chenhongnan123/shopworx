@@ -74,7 +74,9 @@
           v-model="newTrecibility.todate"
           :label="$t('To date')"
         ></v-text-field>
-        <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
+        <v-btn small color="primary" class="text-none ml-2"
+           :loading="searchBtnLoading"
+           @click="btnSearch">
             {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
         <!-- <v-btn small :loading="saving" color="primary"
@@ -179,6 +181,18 @@ export default {
     // await this.getSubStations();
     // await this.fetchRecords();
     await this.showInput();
+    this.$root.$on('dataLoded', (data) => {
+      const getList = data;
+      if (getList) {
+        this.searchBtnLoading = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PROCESS_PARAMETERS_NOT_LOADED_YET',
+        });
+      }
+    });
   },
   data() {
     return {
@@ -189,6 +203,7 @@ export default {
       processParametersList: [],
       saving: false,
       language: null,
+      searchBtnLoading: false,
     };
   },
   computed: {
@@ -715,7 +730,11 @@ export default {
           message: 'SELECT_SUBLINE',
         });
       } else {
+        this.searchBtnLoading = true;
         await this.$refs.partstatus.btnSearchCheckOut();
+        await this.$refs.overall.btnSearchCheckOut();
+        await this.$refs.process.btnSearchProcessParameters();
+        await this.$refs.quality.btnSearchProcessParameters();
         // this.$refs.partstatus.handleSubLineClick();
         if (this.recipeView === 0) {
           this.$refs.overall.btnSearchCheckOut();

@@ -10,6 +10,7 @@
         v-on="on"
         color="primary"
         class="text-none ml-2"
+        :disabled="enbleSearchBtn"
       >
         <v-icon small left>mdi-cloud-download-outline</v-icon>
         Export
@@ -36,6 +37,7 @@ export default {
   name: 'ExportReports',
   data() {
     return {
+      enbleSearchBtn: true,
       exportTypes: [
         {
           name: 'CSV',
@@ -49,6 +51,14 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.$root.$on('dataLoded', (data) => {
+      const getList = data;
+      if (getList) {
+        this.enbleSearchBtn = false;
+      }
+    });
   },
   methods: {
     exportReport(type) {

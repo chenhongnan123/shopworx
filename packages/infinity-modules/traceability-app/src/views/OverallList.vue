@@ -184,10 +184,10 @@ export default {
         'getPartStatus',
         'getComponentData',
         'getParametersList']),
-    // async handleSubLineClick(item) {
-    //   const query = `?query=sublineid=="${item.id}"`;
-    //   await this.getSubStations(query);
-    // },
+    async handleSubLineClick(item) {
+      const query = `?query=sublineid=="${item.id}"`;
+      await this.getSubStations(query);
+    },
     restoreState() {
       if (!this.isBaseReport) {
         // this.setGridState(this.gridObject);
@@ -346,7 +346,6 @@ export default {
       await this.gridApi.exportDataAsCsv(params);
     },
     exportGridExcel() {
-      alert('overall');
       const name = 'component_data';
       const params = {
         fileName: `${name}-${new Date().toLocaleString()}`,
