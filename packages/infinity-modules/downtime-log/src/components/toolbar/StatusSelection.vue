@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     return-object
@@ -8,7 +8,7 @@
     :items="statusList"
     label="Status"
     prepend-inner-icon="mdi-progress-check"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>

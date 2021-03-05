@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     return-object
@@ -8,7 +8,7 @@
     :items="sortList"
     label="Order by"
     prepend-inner-icon="mdi-sort-variant"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
