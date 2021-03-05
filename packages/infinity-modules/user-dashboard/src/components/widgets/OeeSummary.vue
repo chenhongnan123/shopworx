@@ -33,6 +33,7 @@
       <v-tabs
         grow
         center-active
+        show-arrows
         class="mt-4"
         v-model="tab"
         icons-and-text
