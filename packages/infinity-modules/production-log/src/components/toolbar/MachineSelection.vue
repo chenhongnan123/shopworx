@@ -1,7 +1,17 @@
 <template>
+  <v-select
+    dense
+    outlined
+    v-if="isMobile"
+    label="Machine"
+    v-model="machine"
+    :items="machineList"
+    prepend-inner-icon="mdi-crosshairs"
+  ></v-select>
   <v-combobox
     dense
     outlined
+    v-else
     label="Machine"
     v-model="machine"
     :items="machineList"
@@ -23,6 +33,9 @@ export default {
   computed: {
     ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionLog', ['machineList']),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     isMachineFilterInactive() {
       return !Object
         .keys(this.filters)

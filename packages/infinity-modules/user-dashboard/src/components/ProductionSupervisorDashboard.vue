@@ -3,7 +3,7 @@
     <portal to="app-header">
       Shift summary
       <shift-selector v-if="currentDate" />
-      <v-tooltip bottom>
+      <v-tooltip bottom v-if="!isMobile">
         <template #activator="{ on, attrs }">
           <v-btn
             icon
@@ -24,9 +24,9 @@
       <v-col cols="12" lg="6" xl="5">
         <oee-summary />
       </v-col>
-      <v-col cols="12" lg="6" xl="7">
+      <v-col cols="12" lg="6" xl="7" v-if="!isMobile">
         <v-row>
-          <v-col cols="12">
+          <v-col cols="12" class="pt-0">
             <shift-production />
           </v-col>
           <v-col cols="12">
@@ -76,6 +76,9 @@ export default {
       'lastRefreshedAt',
       'loading',
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
   },
   methods: {
     ...mapActions('userDashboard', [

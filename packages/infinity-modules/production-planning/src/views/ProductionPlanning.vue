@@ -7,7 +7,7 @@
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-tooltip bottom>
+      <v-tooltip bottom v-if="!isMobile">
         <template #activator="{ on, attrs }">
           <v-btn
             icon
@@ -77,6 +77,9 @@ export default {
       return this.isCalendarView
         ? 'planning-calendar'
         : 'planning-list';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
     },
   },
   created() {

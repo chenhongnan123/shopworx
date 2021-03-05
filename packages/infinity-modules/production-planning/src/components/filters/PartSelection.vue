@@ -1,6 +1,16 @@
 <template>
+  <v-select
+    dense
+    outlined
+    v-if="isMobile"
+    label="Part"
+    v-model="part"
+    :items="partList"
+    prepend-inner-icon="$production"
+  ></v-select>
   <v-combobox
     dense
+    v-else
     outlined
     label="Part"
     v-model="part"
@@ -23,6 +33,9 @@ export default {
   computed: {
     ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionPlanning', ['partList']),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     isPartFilterInactive() {
       return !Object
         .keys(this.filters)

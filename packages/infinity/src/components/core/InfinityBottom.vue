@@ -9,10 +9,10 @@
       <span v-text="$t('modules.home')"></span>
       <v-icon v-text="'$home'"></v-icon>
     </v-btn>
-    <v-btn disabled :to="{ name: 'search'}">
+    <!-- <v-btn disabled :to="{ name: 'search'}">
       <span v-text="$t('modules.searchMobile')"></span>
       <v-icon v-text="'$search'"></v-icon>
-    </v-btn>
+    </v-btn> -->
     <v-btn @click="toggleInsightsDrawer">
       <span v-text="$t('modules.insights')"></span>
       <v-icon v-text="'$insights'"></v-icon>

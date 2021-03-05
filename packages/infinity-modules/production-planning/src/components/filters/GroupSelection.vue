@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     return-object
@@ -8,7 +8,7 @@
     :items="groupList"
     label="Group by"
     prepend-inner-icon="mdi-select-group"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>

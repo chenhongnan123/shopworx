@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     return-object
@@ -8,7 +8,7 @@
     :items="durationList"
     label="Downtime duration"
     prepend-inner-icon="$downtimeLog"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
