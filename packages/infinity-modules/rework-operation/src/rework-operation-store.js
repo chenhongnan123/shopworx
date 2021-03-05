@@ -330,5 +330,31 @@ export default ({
       commit('setroadMapsList', roadMaps);
       return true;
     },
+    createOrUpdateManidStore: async ({ dispatch }, { payload }) => {
+      const created = await dispatch(
+        'element/upsertRecordByQuery',
+        {
+          elementName: 'mainidstore',
+          query: payload.query,
+          record: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    deletePartStatus: async ({ dispatch }, mainid) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'partstatus',
+          queryParam: `?query=mainid=="${mainid}"`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
   },
 });
