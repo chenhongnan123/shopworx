@@ -112,11 +112,11 @@ export default {
           icon: '$password',
           to: 'password',
         },
-        {
+        /* {
           title: 'user.auditLog.title',
           icon: '$log',
           to: 'audit-log',
-        },
+        }, */
       ],
     };
   },
