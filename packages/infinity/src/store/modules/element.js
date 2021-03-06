@@ -314,6 +314,18 @@ export default ({
       }
     },
 
+    sendTestModel: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.sendTestModel(payload);
+        if (data && data.errors) {
+          return data;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecords: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);

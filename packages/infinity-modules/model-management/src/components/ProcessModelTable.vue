@@ -272,7 +272,7 @@ export default {
       ],
     };
   },
-  created() {
+  async created() {
     // this.getUserRoles();
     // this.getMe();
     // this.checkedloggedUser();
@@ -282,6 +282,8 @@ export default {
     //   await this.getOutputTransformations(),
     // ]);
     // this.setFetchingMaster(false);
+    await this.getLineInfo();
+    console.log(this.lineInfo);
   },
   watch: {
     models: {
@@ -297,6 +299,7 @@ export default {
       'selectedProcessName',
       'fetchingModels',
       'fetchingMaster',
+      'lineInfo',
       'models',
     ]),
   },
@@ -308,19 +311,30 @@ export default {
       'getInputParameters',
       'getOutputTransformations',
       'updateStatusOfModel',
+      'getLineInfo',
+      'sendTestModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
     testModelClick(item) {
       this.testModelId = item.model_id;
       this.dialog = true;
     },
-    testModel() {
+    async testModel() {
       const object = {
-        mainid: this.testMainId,
+        url: `http://${this.lineInfo[0].ipaddr}:5000/executemodel?modelid=${this.testModelId}`,
+        payload: {
+          mainid: this.testMainId,
+        },
       };
-      console.log(this.testModelId);
-      console.log(object);
-      this.dialog = false;
+      const data = await this.sendTestModel(object);
+      if (data) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: data,
+        });
+        this.dialog = false;
+      }
     },
     onClickCheckBox() {
       if (!this.isAdmin) {

@@ -52,6 +52,7 @@ export default ({
     fullParameterList: [],
     modelDetails: null,
     files: [],
+    lineInfo: null,
     createdModelId: null,
     lastStatusUpdate: {},
     deployedModels: [],
@@ -186,6 +187,7 @@ export default ({
     setModelTypeList: set('modelTypeList'),
     setNonRealElementInfo: set('nonRealElementInfo'),
     setFullParameterList: set('fullParameterList'),
+    setLineInfo: set('lineInfo'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -735,6 +737,34 @@ export default ({
       if (element) {
         commit('setNonRealElementInfo', element);
       }
+    },
+
+    getLineInfo: async ({ commit, dispatch, state }) => {
+      const {
+        selectedLine,
+      } = state;
+      const element = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.LINE,
+          query: `?query=id=="${selectedLine}"`,
+        },
+        { root: true },
+      );
+      if (element) {
+        commit('setLineInfo', element);
+      }
+    },
+
+    sendTestModel: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/sendTestModel',
+        {
+          payload,
+        },
+        { root: true },
+      );
+      return created;
     },
 
     createWebhook: async ({ dispatch }, payload) => {
