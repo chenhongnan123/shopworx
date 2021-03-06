@@ -139,7 +139,7 @@ export default ({
         },
         { root: true },
       );
-      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '33');
+      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '7');
       commit('setParamtersList', parameters);
       return parameters;
     },
@@ -177,7 +177,7 @@ export default ({
         'element/deleteRecordByQuery',
         {
           elementName: 'recipedetails',
-          queryParam: `?query=tagname=="${id}"`,
+          queryParam: id,
         },
         { root: true },
       );

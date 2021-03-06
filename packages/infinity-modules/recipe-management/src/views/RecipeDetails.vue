@@ -208,6 +208,7 @@ export default {
     this.recipename = this.recipeList[0].recipename;
   },
   async created() {
+    console.log(this.$route.params);
     await this.getRecipeDetailListRecords(
       `?query=recipeid=="${this.$route.params.id}"`,
     );
@@ -228,31 +229,31 @@ export default {
           payload.push({
             tagname: element.name,
             datatype: element.datatype,
-            recipeid: this.recipeList[0].recipenumber,
+            recipeid: this.$route.params.id,
             parametervalue: '',
-            lineid: this.recipeList[0].lineid,
-            linename: this.recipeList[0].linename,
-            sublineid: this.recipeList[0].sublineid,
-            sublinename: this.$this.recipeList[0].sublinename,
+            lineid: this.$route.params.lineid,
+            linename: this.$route.params.linename,
+            sublineid: this.$route.params.sublineid,
+            sublinename: this.$route.params.sublinename,
             assetid: 4,
           });
         } else {
           payload.push({
             tagname: element.name,
             datatype: element.datatype,
-            recipeid: this.this.recipeList[0].recipenumber,
+            recipeid: this.$route.params.id,
             parametervalue: 0,
-            lineid: this.this.recipeList[0].lineid,
-            linename: this.this.recipeList[0].linename,
-            sublineid: this.recipeList[0].sublineid,
-            sublinename: this.this.recipeList[0].sublinename,
+            lineid: this.$route.params.lineid,
+            linename: this.$route.params.linename,
+            sublineid: this.$route.params.sublineid,
+            sublinename: this.$route.params.sublinename,
             assetid: 4,
           });
         }
       });
       await this.createRecipeDetails(payload);
       await this.getRecipeDetailListRecords(
-        `?query=recipeid=='${this.$route.params.id}'`,
+        `?query=recipeid=="${this.$route.params.id}"`,
       );
     }
     this.socket = socketioclient.connect('http://:10190');

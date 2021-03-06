@@ -341,7 +341,7 @@ export default {
     await this.getNgCodeRecords('');
     // this.getSingleNgCodeDetail('');
     // this.getComponentRecords('');
-    await this.getRoadmapList('?query=roadmaptype=="rework"');
+    await this.getRoadmapList('?query=roadmaptype=="Rework"');
     await this.getReworkList('?query=overallresult!="1"');
     await this.getRunningOrder('?query=orderstatus=="Running"');
   },
