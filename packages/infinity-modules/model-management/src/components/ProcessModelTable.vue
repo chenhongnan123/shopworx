@@ -127,12 +127,78 @@
                 <delete-model :model="item" />
                 </v-btn>
                 </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="testModelClick(item)"
+                  icon
+                >
+                 <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-on="on"
+                      v-bind="attrs"
+                      color="success"
+                    >
+                      <v-icon v-text="'$test'"></v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Test model</span>
+                </v-tooltip>
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
         </v-data-table>
       </template>
     </v-card-text>
+    <v-dialog
+    scrollable
+    persistent
+    v-model="dialog"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Test Model
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+         <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+        <v-text-field
+        dense
+        class="mt-4"
+        outlined
+        v-model="testMainId"
+        label="Main Id"
+        prepend-icon="mdi-memory"
+      ></v-text-field>
+         </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="testModel"
+        >
+          {{ $t('displayTags.buttons.save') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   </v-card>
 </template>
 
@@ -166,7 +232,10 @@ export default {
   data() {
     return {
       search: '',
+      dialog: false,
       allowedCheckBox: false,
+      testModelId: '',
+      testMainId: '',
       options: {
         descending: true,
         page: 1,
@@ -241,6 +310,18 @@ export default {
       'updateStatusOfModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    testModelClick(item) {
+      this.testModelId = item.model_id;
+      this.dialog = true;
+    },
+    testModel() {
+      const object = {
+        mainid: this.testMainId,
+      };
+      console.log(this.testModelId);
+      console.log(object);
+      this.dialog = false;
+    },
     onClickCheckBox() {
       if (!this.isAdmin) {
         this.setAlert({

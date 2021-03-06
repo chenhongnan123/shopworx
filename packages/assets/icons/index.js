@@ -87,6 +87,7 @@ export default {
     tick: 'mdi-check-circle-outline',
     locale: 'mdi-web',
     delete: 'mdi-delete-outline',
+    test: 'mdi-list-status',
     save: 'mdi-content-save',
     basicperformance: 'mdi-speedometer',
     understandingtrends: 'mdi-trending-up',

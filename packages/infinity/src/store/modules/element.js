@@ -302,6 +302,18 @@ export default ({
       }
     },
 
+    createWebhook: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.createWebhook(payload);
+        if (data && data.errors) {
+          return false;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecords: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
