@@ -31,7 +31,7 @@ import ModelInputs from './model-details/ModelInputs.vue';
 import ModelFiles from './model-details/ModelFiles.vue';
 import ModelOutputs from './model-details/ModelOutputs.vue';
 import ModelCritical from './model-details/ModelCritical.vue';
-import ModelTrigger from './model-details/ModelTrigger.vue'
+import ModelTrigger from './model-details/ModelTrigger.vue';
 
 export default {
   name: 'EditModelConfig',
@@ -57,7 +57,7 @@ export default {
         header: 'Create trigger',
         icon: 'mdi-database-cog-outline',
         component: 'model-trigger',
-      },{
+      }, {
         header: 'Input parameters',
         icon: 'mdi-database-arrow-left-outline',
         component: 'model-inputs',
