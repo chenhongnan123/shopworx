@@ -645,7 +645,8 @@ export default {
         return;
       }
       if (type === 'name') {
-        if (parameterListSave.some((parameter) => value === parameter.name)) {
+        if (parameterListSave.some((parameter) => value.toLowerCase().split(' ').join('')
+           === parameter.name.toLowerCase().split(' ').join(''))) {
           this.setAlert({
             show: true,
             type: 'error',
