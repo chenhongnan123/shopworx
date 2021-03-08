@@ -282,8 +282,8 @@ export default {
     //   await this.getOutputTransformations(),
     // ]);
     // this.setFetchingMaster(false);
-    await this.getLineInfo();
-    console.log(this.lineInfo);
+    await this.getSubLineInfo();
+    console.log(this.subLineInfo);
   },
   watch: {
     models: {
@@ -299,7 +299,7 @@ export default {
       'selectedProcessName',
       'fetchingModels',
       'fetchingMaster',
-      'lineInfo',
+      'subLineInfo',
       'models',
     ]),
   },
@@ -311,7 +311,7 @@ export default {
       'getInputParameters',
       'getOutputTransformations',
       'updateStatusOfModel',
-      'getLineInfo',
+      'getSubLineInfo',
       'sendTestModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
@@ -321,7 +321,7 @@ export default {
     },
     async testModel() {
       const object = {
-        url: `http://${this.lineInfo[0].ipaddr}:5000/executemodel?modelid=${this.testModelId}`,
+        url: `http://${this.subLineInfo[0].ipaddress}:5000/executemodel?modelid=${this.testModelId}`,
         payload: {
           mainid: this.testMainId,
         },

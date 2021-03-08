@@ -52,7 +52,7 @@ export default ({
     fullParameterList: [],
     modelDetails: null,
     files: [],
-    lineInfo: null,
+    subLineInfo: null,
     createdModelId: null,
     lastStatusUpdate: {},
     deployedModels: [],
@@ -187,7 +187,7 @@ export default ({
     setModelTypeList: set('modelTypeList'),
     setNonRealElementInfo: set('nonRealElementInfo'),
     setFullParameterList: set('fullParameterList'),
-    setLineInfo: set('lineInfo'),
+    setSubLineInfo: set('subLineInfo'),
   },
   actions: {
     getLines: async ({ dispatch, commit }) => {
@@ -739,20 +739,20 @@ export default ({
       }
     },
 
-    getLineInfo: async ({ commit, dispatch, state }) => {
+    getSubLineInfo: async ({ commit, dispatch, state }) => {
       const {
-        selectedLine,
+        selectedSubline,
       } = state;
       const element = await dispatch(
         'element/getRecords',
         {
-          elementName: ELEMENTS.LINE,
-          query: `?query=id=="${selectedLine}"`,
+          elementName: ELEMENTS.SUBLINE,
+          query: `?query=id=="${selectedSubline}"`,
         },
         { root: true },
       );
       if (element) {
-        commit('setLineInfo', element);
+        commit('setSubLineInfo', element);
       }
     },
 
