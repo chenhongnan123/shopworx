@@ -68,7 +68,7 @@ export default {
         {
           headerName: 'Main ID',
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
@@ -289,7 +289,7 @@ export default {
           {
             headerName: this.$t('Main Id'),
             field: 'mainid',
-            rowGroup: true,
+            // rowGroup: true,
             resizable: true,
           },
           {
@@ -308,7 +308,7 @@ export default {
           {
             headerName: this.$t('Main ID'),
             field: 'mainid',
-            rowGroup: true,
+            // rowGroup: true,
             resizable: true,
           },
           {

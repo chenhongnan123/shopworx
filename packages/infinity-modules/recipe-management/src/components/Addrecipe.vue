@@ -109,8 +109,6 @@
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
-            :rules="nameRules"
-            :counter="10"
         ></v-text-field>
         <!-- <v-autocomplete
           clearable
@@ -237,7 +235,8 @@ export default {
     async saveRecipe() {
       this.$refs.form.validate();
       const recipeNameFlag = this.recipeList
-        .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join(''));
+        .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join('')
+          && rn.substationid === this.input.substationname.id);
       if (!this.recipe.recipename) {
         this.setAlert({
           show: true,
@@ -265,7 +264,7 @@ export default {
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-        && o.stationname === this.input.stationname);
+        && o.substationid === this.input.substationid);
         //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';

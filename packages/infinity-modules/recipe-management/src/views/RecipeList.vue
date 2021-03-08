@@ -300,7 +300,6 @@ export default {
     });
   },
   async beforeDestroy() {
-    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
   },
@@ -357,7 +356,6 @@ export default {
       await this.getRecipeListRecords(param);
     },
     handleClick(value) {
-      console.log(value);
       this.$router.push({
         name: 'recipe-details',
         params: {
@@ -452,7 +450,11 @@ export default {
       this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
       this.$refs.addUpdateRecipe.input.stationname = item.stationname;
       this.$refs.addUpdateRecipe.input.substationname = item.substationname;
+      this.$refs.addUpdateRecipe.input.substationid = item.substationid;
       this.recipes = [];
+      this.getSubLines('');
+      this.getStations('');
+      this.getSubStations('');
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;
