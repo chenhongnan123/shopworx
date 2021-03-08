@@ -28,6 +28,7 @@
               label="Parameter Name*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.name"
+              :counter="20"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -244,6 +245,7 @@ export default {
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
+          (v) => (v && v.length <= 20) || 'Parameter Name must be less than 20 characters',
         ],
         // description: [
         //   (v) => !!v || 'Parameter Description is required',
