@@ -708,6 +708,7 @@ export default {
       this.zipService.addFile(file);
     },
     async btnSearch() {
+      this.searchBtnLoading = true;
       if (this.newTrecibility.fromdate && this.newTrecibility.todate
          && !this.newTrecibility.selectedSubLine) {
         this.setAlert({
