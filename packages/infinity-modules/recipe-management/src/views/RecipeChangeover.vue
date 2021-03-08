@@ -63,6 +63,7 @@
           <td>{{ index+1 }}</td>
           <td>{{ item.sublinename }}</td>
           <td>{{ item.machinename }}</td>
+          <td>{{ item.substationname }}</td>
           <td>{{ item.recipename }}</td>
           <td>{{ item.recipenumber}}</td>
           <td></td>
@@ -110,6 +111,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
+import socketioclient from 'socket.io-client';
 
 export default {
   name: 'RecipeList',
@@ -128,6 +130,10 @@ export default {
           text: 'Station name',
           value: 'machinename',
         },
+        {
+          text: 'SubStation name',
+          value: 'substationname',
+        },
         { text: 'Recipe name', value: 'recipename' },
         { text: 'Recipe number', value: 'recipenumber' },
         { text: 'PLC Recipe name', value: 'plcrecipename' },
@@ -143,15 +149,40 @@ export default {
     };
   },
   async created() {
+    this.socket = socketioclient.connect('http://:10190');
+    this.socket.on('connect', () => {
+      // console.log('connected to socketwebhook');
+    });
     // await this.getRecipeListRecords('');
     this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
     this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
+    this.recipeList.forEach(async (recipe) => {
+      const object = {
+        lineid: Number(recipe.lineid),
+        sublineid: recipe.sublineid,
+        substationid: recipe.substationid,
+      };
+      this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
+        console.log('event received');
+        if (data) {
+          console.log(data);
+          if (data[recipe.substationid]) {
+            this.$set(recipe, 'plcrecipename', data.recipename);
+            console.log(data.recipename);
+          }
+        }
+      });
+      await this.getMonitorValues(object);
+    });
+  },
+  beforeDestroy() {
+    this.socket.close();
   },
   computed: {
     ...mapState('recipeManagement', ['filterLine', 'filterSubLine', 'filterStation']),
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getProductDetails', 'getOrderRecords']),
+    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getProductDetails', 'getOrderRecords', 'getMonitorValues']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter']),
     showFilter: {

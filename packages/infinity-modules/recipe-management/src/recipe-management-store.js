@@ -188,7 +188,7 @@ export default ({
       return deleted;
     },
     // getProductDetails
-    getProductDetails: async ({ dispatch }, query) => {
+    getProductDetails: async ({ dispatch, commit }, query) => {
       const orders = await dispatch(
         'element/getRecords',
         {
@@ -197,6 +197,15 @@ export default ({
         },
         { root: true },
       );
+      let recipe = [];
+      if (orders && orders.length) {
+        recipe = orders.map((l) => ({
+          ...l,
+          recipename: '',
+          recipenumber: '',
+        }));
+      }
+      commit('setRecipeList', recipe);
       return orders;
     },
     getLines: async ({ dispatch, commit }, query) => {
