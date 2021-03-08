@@ -25,11 +25,11 @@ export default ({
       state,
       commit,
       dispatch,
-      getters,
+      rootGetters,
     }, payload) => {
       try {
         const { loginType } = state;
-        const { isWebView } = getters;
+        const isWebView = rootGetters['helper/isWebView'];
         ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticate(payload);
         if (data && data.sessionId) {
@@ -46,6 +46,7 @@ export default ({
           commit('setSessionId', null);
           SessionService.removeSession();
           ApiService.removeHeader();
+          onLogin(null);
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -65,11 +66,11 @@ export default ({
       state,
       commit,
       dispatch,
-      getters,
+      rootGetters,
     }, payload) => {
       try {
         const { loginType } = state;
-        const { isWebView } = getters;
+        const isWebView = rootGetters['helper/isWebView'];
         ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticateWithOtp(payload);
         if (data && data.sessionId) {
@@ -86,6 +87,7 @@ export default ({
           commit('setSessionId', null);
           SessionService.removeSession();
           ApiService.removeHeader();
+          onLogin(null);
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -101,9 +103,9 @@ export default ({
       return false;
     },
 
-    logoutUser: async ({ commit, rootState, getters }) => {
+    logoutUser: async ({ commit, rootState, rootGetters }) => {
       try {
-        const { isWebView } = getters;
+        const isWebView = rootGetters['helper/isWebView'];
         const { data } = await AuthService.logout();
         if (data && data.results) {
           const { storageLocation } = rootState.webApp;
