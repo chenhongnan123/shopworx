@@ -6,7 +6,7 @@
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
         size="180"
-        :value="88"
+        :value="thisShiftOee"
         button
         width="15"
         color="primary"
