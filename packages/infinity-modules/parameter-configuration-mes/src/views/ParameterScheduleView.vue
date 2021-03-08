@@ -872,6 +872,7 @@ export default {
       this.socket.on(
         `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
         (data) => {
+          console.log('event received');
           if (data) {
             this.parameterList.forEach((element) => {
               if (data[element.name] || data[element.name] === 0) {

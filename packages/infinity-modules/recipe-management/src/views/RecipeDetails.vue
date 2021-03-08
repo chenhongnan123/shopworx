@@ -300,7 +300,7 @@ export default {
         substationid: this.recipeList[0].substationid,
       };
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
-        // console.log('event received');
+        console.log('event received');
         if (data) {
           this.recipeListDetails.forEach((element) => {
             if (data[element.tagname]) {
@@ -316,17 +316,17 @@ export default {
       this.recipeListDetails.forEach((element) => {
         if (element.datatype === '11') {
           parameterList.push({
-            tagname: element.tagname,
+            parametername: element.tagname,
             parametervalue: element.parametervalue,
           });
         } else if (element.datatype === '9') {
           parameterList.push({
-            tagname: element.tagname,
+            parametername: element.tagname,
             parametervalue: parseFloat(element.parametervalue, 10),
           });
         } else {
           parameterList.push({
-            tagname: element.tagname,
+            parametername: element.tagname,
             parametervalue: Number(element.parametervalue),
           });
         }
@@ -339,6 +339,7 @@ export default {
         // tagname, parametervalue
         recipeparameter: parameterList,
       };
+      console.log(object);
       this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
       });
       await this.uploadToPLC(object);
