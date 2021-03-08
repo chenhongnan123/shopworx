@@ -109,6 +109,8 @@
             label="Recipe Name"
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
+            :rules="nameRules"
+            :counter="20"
         ></v-text-field>
         <!-- <v-autocomplete
           clearable
@@ -173,7 +175,7 @@ export default {
       recipename: '',
       nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
         (v) => !!v || 'Name required',
-        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
+        (v) => (v && v.length <= 20) || 'Name must be less than 20 characters'],
       sublineSelect: [(v) => !!v || 'required'],
       stationSelect: [(v) => !!v || 'required'],
       input: {
