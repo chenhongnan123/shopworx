@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **charts:** fixed charts to work in dark mode ([1e9fb62](https://bitbucket.org/entrib/shopworx/commits/1e9fb625f8e8cdcad0956325cf22faca47d147d4))
+
+
+### Features
+
+* **insights:** updated insights to be fullscreen on mobile ([0959b4e](https://bitbucket.org/entrib/shopworx/commits/0959b4ef908571ae24a6118a5f2314bc5f631f0b))
+* **shift-summary:** show tab arrows in oee widget ([3a8b0af](https://bitbucket.org/entrib/shopworx/commits/3a8b0af237e8a51405bedd2070ee1574aebf8ccf))
+
+
+
+
+
 ## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
 
 
