@@ -24,7 +24,7 @@
         class="ml-2"
         @click="toggleDrawer(true)"
       >
-        <v-icon small v-if="!drawer">mdi-pencil</v-icon>
+        <v-icon small v-if="!drawer">mdi-filter-variant</v-icon>
         <v-icon small v-else>mdi-check</v-icon>
       </v-btn>
     </v-toolbar>
