@@ -31,6 +31,12 @@
           required
           hint="For example, 123"
          @keyup="validateNumber"></v-text-field>
+         <v-text-field label="Serial Number *" type="number"
+         hint="For example, 1,2,3,4"
+         v-model="newSubstation.serialnumber"
+         :rules ="numberRules"
+         counter="10"
+          required></v-text-field>
         <v-text-field label="Description" type="Description"
         hint="For example, Updated by Manager"
          v-model="newSubstation.description"></v-text-field>
