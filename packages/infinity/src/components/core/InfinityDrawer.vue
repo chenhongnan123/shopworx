@@ -191,10 +191,11 @@ export default {
     drawerItems() {
       let items = [...this.items];
       if (this.isMobile) {
-        items = this.items.filter((i) => (
-          (i.header !== 'dashboards' && i.header !== 'reports')
-          && (!i.to.includes('reports') && !i.to.includes('dashboards'))
-        ));
+        items = this.items.filter((i) => {
+          const isReportHeader = i.header === 'reports';
+          const areReportItems = i.to && i.to.includes('reports');
+          return !isReportHeader && !areReportItems;
+        });
       }
       return items;
     },
