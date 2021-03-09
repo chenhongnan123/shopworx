@@ -63,7 +63,7 @@
           >
             <v-form @submit.prevent="handleSubmit(addNewScrap)">
               <v-row>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                   <validation-provider
                     name="scrapWeight"
                     rules="required"
@@ -83,7 +83,7 @@
                     ></v-text-field>
                   </validation-provider>
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="12" sm="8">
                   <validation-provider
                     name="scrapReason"
                     rules="required"

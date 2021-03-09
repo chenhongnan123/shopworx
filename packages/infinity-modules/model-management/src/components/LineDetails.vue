@@ -133,6 +133,7 @@ export default {
       'fetchLineDetails',
       'getModels',
       'getInputParameters',
+      'getCriticalParameters',
       'getOutputTransformations',
     ]),
     async setSelected({
@@ -153,6 +154,7 @@ export default {
       await Promise.all([
         this.getInputParameters(),
         this.getOutputTransformations(),
+        this.getCriticalParameters(),
       ]);
       this.setFetchingMaster(false);
     },

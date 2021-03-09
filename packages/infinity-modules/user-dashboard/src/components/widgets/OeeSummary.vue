@@ -6,7 +6,7 @@
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
         size="180"
-        :value="88"
+        :value="thisShiftOee"
         button
         width="15"
         color="primary"
@@ -33,6 +33,7 @@
       <v-tabs
         grow
         center-active
+        show-arrows
         class="mt-4"
         v-model="tab"
         icons-and-text
@@ -91,10 +92,10 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="downtimeByMachine">
-          <highcharts class="mt-4" :options="downtimeByMachine"></highcharts>
+          <highcharts class="mt-4" :options="downtimeByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="downtimeByReason">
-          <highcharts class="mt-4" :options="downtimeByReason"></highcharts>
+          <highcharts class="mt-4" :options="downtimeByReasonOptions"></highcharts>
         </v-col>
       </v-row>
       <v-row v-else-if="tab === 1">
@@ -105,10 +106,10 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="productionByMachine">
-          <highcharts class="mt-4" :options="productionByMachine"></highcharts>
+          <highcharts class="mt-4" :options="productionByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="targetByMachine">
-          <highcharts class="mt-4" :options="targetByMachine"></highcharts>
+          <highcharts class="mt-4" :options="targetByMachineOptions"></highcharts>
         </v-col>
       </v-row>
       <v-row v-if="tab === 2">
@@ -119,10 +120,10 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="rejectionByMachine">
-          <highcharts class="mt-4" :options="rejectionByMachine"></highcharts>
+          <highcharts class="mt-4" :options="rejectionByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="rejectionByReason">
-          <highcharts class="mt-4" :options="rejectionByReason"></highcharts>
+          <highcharts class="mt-4" :options="rejectionByReasonOptions"></highcharts>
         </v-col>
       </v-row>
     </v-card-text>
@@ -167,9 +168,16 @@ export default {
   data() {
     return {
       tab: 0,
+      downtimeByMachineOptions: {},
+      downtimeByReasonOptions: {},
+      productionByMachineOptions: {},
+      targetByMachineOptions: {},
+      rejectionByMachineOptions: {},
+      rejectionByReasonOptions: {},
     };
   },
   computed: {
+    ...mapState('helper', ['isDark']),
     ...mapState('userDashboard', [
       'thisShiftSummary',
       'previousShiftSummary',
@@ -265,6 +273,55 @@ export default {
         icon = 'mdi-menu-down';
       }
       return icon;
+    },
+    setColors(options) {
+      const opt = { ...options };
+      opt.title.style = {};
+      opt.title.style.color = this.isDark ? '#FFFFFF' : '#333333';
+      opt.yAxis = options.yAxis.map((axis) => {
+        const labels = {
+          style: { color: this.isDark ? '#FFFFFF' : '#666666' },
+        };
+        if (axis.labels) {
+          return { ...axis, labels: { ...axis.labels, ...labels } };
+        }
+        return {
+          ...axis,
+          labels,
+        };
+      });
+      opt.xAxis.labels = {};
+      opt.xAxis.labels.style = {};
+      opt.xAxis.labels.style.color = this.isDark ? '#FFFFFF' : '#666666';
+      return opt;
+    },
+  },
+  watch: {
+    downtimeByMachine(val) {
+      this.downtimeByMachineOptions = this.setColors(val);
+    },
+    downtimeByReason(val) {
+      this.downtimeByReasonOptions = this.setColors(val);
+    },
+    productionByMachine(val) {
+      this.productionByMachineOptions = this.setColors(val);
+    },
+    targetByMachine(val) {
+      this.targetByMachineOptions = this.setColors(val);
+    },
+    rejectionByMachine(val) {
+      this.rejectionByMachineOptions = this.setColors(val);
+    },
+    rejectionByReason(val) {
+      this.rejectionByReasonOptions = this.setColors(val);
+    },
+    isDark() {
+      this.downtimeByMachineOptions = this.setColors(this.downtimeByMachine);
+      this.downtimeByReasonOptions = this.setColors(this.downtimeByReason);
+      this.productionByMachineOptions = this.setColors(this.productionByMachine);
+      this.targetByMachineOptions = this.setColors(this.targetByMachine);
+      this.rejectionByMachineOptions = this.setColors(this.rejectionByMachine);
+      this.rejectionByReasonOptions = this.setColors(this.rejectionByReason);
     },
   },
 };

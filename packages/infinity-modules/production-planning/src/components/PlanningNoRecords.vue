@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container :fill-height="!isMobile">
     <v-row
       align="center"
       justify="center"
@@ -41,6 +41,9 @@ export default {
       return this.$vuetify.theme.dark
         ? 'not-found-dark'
         : 'not-found-light';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {

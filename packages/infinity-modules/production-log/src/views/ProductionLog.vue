@@ -7,11 +7,11 @@
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
+      <!-- <v-btn icon small class="ml-2 mb-1">
         <v-icon
           v-text="'$settings'"
         ></v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn

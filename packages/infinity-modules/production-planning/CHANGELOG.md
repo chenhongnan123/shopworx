@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Features
+
+* **app-filters:** updated filters to v-select on mobile device ([b97d54b](https://bitbucket.org/entrib/shopworx/commits/b97d54bb3caff6fd427c1fb0221e3b083c586414))
+* **production-planning:** updated app for mobile view ([5e6e778](https://bitbucket.org/entrib/shopworx/commits/5e6e778b05f1551d645320d55ff2e3cb5761c4ed))
+
+
+
+
+
 ## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
 
 **Note:** Version bump only for package @shopworx/production-planning

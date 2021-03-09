@@ -33,6 +33,14 @@ class ElementService {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
 
+  createWebhook(payload) {
+    return this.request.post(`/server/webhook`, payload);
+  }
+
+  sendTestModel(payload) {
+    return this.request.post(payload.url, payload.payload);
+  }
+
   uploadFiles(elementName, payload) {
     return this.request.post(`/server/uploadfile/${payload.filecontent}/${payload.filename}?elementName=${elementName}&extension=${payload.fileextension}&assetId=${payload.assetid}`, '');
   }

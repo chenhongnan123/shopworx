@@ -28,10 +28,25 @@ export default {
           title: {
             text: null,
           },
+          labels: {
+            style: {
+              color: '',
+            },
+          },
         },
         yAxis: {
           title: {
             text: null,
+          },
+          labels: {
+            style: {
+              color: '',
+            },
+          },
+        },
+        legend: {
+          itemStyle: {
+            color: '',
           },
         },
         series: [],
@@ -42,6 +57,7 @@ export default {
     this.updateChartType();
   },
   computed: {
+    ...mapState('helper', ['isDark']),
     ...mapState('reports', ['chartType', 'report']),
   },
   watch: {
@@ -78,6 +94,20 @@ export default {
         this.updateCategory(categories);
         this.updateSeries(series, seriesName, seriesDescription);
       }
+    },
+    isDark: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.options.yAxis.labels.style.color = '#FFFFFF';
+          this.options.xAxis.labels.style.color = '#FFFFFF';
+          this.options.legend.itemStyle.color = '#FFFFFF';
+        } else {
+          this.options.yAxis.labels.style.color = '#666666';
+          this.options.xAxis.labels.style.color = '#666666';
+          this.options.legend.itemStyle.color = '#333333';
+        }
+      },
     },
   },
   methods: {

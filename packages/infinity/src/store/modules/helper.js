@@ -9,6 +9,7 @@ export default ({
       type: null,
       message: null,
     },
+    userAgent: navigator.userAgent,
     isSessionValid: true,
     locales: [
       {
@@ -64,5 +65,8 @@ export default ({
       commit('setIsConnected', false);
       return false;
     },
+  },
+  getters: {
+    isWebView: ({ userAgent }) => userAgent.includes('wv'),
   },
 });
