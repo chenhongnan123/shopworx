@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
  infinityloader.js
  @author: ashinde@entrib.com
@@ -8,10 +9,10 @@
 
 // Set session id on login
 export const onLogin = (sessionId) => {
-  Infinity.onLogin(sessionId);
+  App.onLogin(sessionId);
 };
 
 // Remove session id on logout
 export const onLogout = () => {
-  Infinity.onLogout();
+  App.onLogout();
 };
