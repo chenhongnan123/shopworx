@@ -10,6 +10,7 @@
         outlined
         color="primary"
         @click="goToImport"
+        v-if="!isMobile"
         class="text-none ml-2"
       >
         ...or import instead
@@ -58,6 +59,9 @@ export default {
   },
   computed: {
     ...mapState('productionPlanning', ['machines', 'parts', 'partMatrixElement']),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
   },
   async created() {
     const machinesNotAvailable = this.machines.length === 0;

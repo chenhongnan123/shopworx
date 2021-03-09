@@ -1,12 +1,12 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     label="Shift"
     v-model="shift"
     :items="shiftList"
     prepend-inner-icon="$shiftHours"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>

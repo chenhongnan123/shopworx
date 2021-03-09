@@ -5,7 +5,7 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <template v-if="isCalendarView">
+      <template v-if="isCalendarView && !isMobile">
         <v-btn
           class="text-none"
           color="primary"
@@ -33,7 +33,7 @@
           {{ calendarRef.title }}
         </span>
       </template>
-      <span class="title" v-else>
+      <span class="title" v-else-if="!isMobile">
         {{ date }}
       </span>
       <v-spacer></v-spacer>
@@ -50,6 +50,7 @@
         small
         outlined
         color="primary"
+        v-if="!isMobile"
         :to="{ name: 'reorderPlans' }"
         class="text-none mr-2"
       >
@@ -74,10 +75,10 @@
           <v-list-item @click="viewType = 'default'">
             <v-list-item-title>List</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="viewType = 'month'">
+          <v-list-item v-if="!isMobile" @click="viewType = 'month'">
             <v-list-item-title>Month</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="viewType = 'week'">
+          <v-list-item v-if="!isMobile" @click="viewType = 'week'">
             <v-list-item-title>Week</v-list-item-title>
           </v-list-item>
           <v-list-item @click="viewType = 'day'">
@@ -130,6 +131,9 @@ export default {
       'today',
       'calendarRef',
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
     ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionPlanning', ['isCalendarView']),
     viewType: {

@@ -1,6 +1,16 @@
 <template>
+  <v-select
+    dense
+    outlined
+    v-if="isMobile"
+    label="Machine"
+    v-model="machine"
+    :items="machineList"
+    prepend-inner-icon="mdi-crosshairs"
+  ></v-select>
   <v-combobox
     dense
+    v-else
     outlined
     label="Machine"
     v-model="machine"
@@ -27,6 +37,9 @@ export default {
       return !Object
         .keys(this.filters)
         .includes(FIELD_NAME);
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
     machine: {
       get() {

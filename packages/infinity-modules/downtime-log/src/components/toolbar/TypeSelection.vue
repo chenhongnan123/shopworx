@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     label="Type"
@@ -8,7 +8,7 @@
     item-text="name"
     :items="typeList"
     prepend-inner-icon="mdi-text-box-multiple-outline"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
