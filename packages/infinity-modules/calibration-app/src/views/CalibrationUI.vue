@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="app-header">
-      Calibration
+      {{$t('calibration')}}
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -18,7 +18,7 @@
         <v-autocomplete
           class="ml-4"
           clearable
-          label="Select Substation"
+          :label="$t('selectsubstation')"
           :items="subStationList"
           return-object
           item-text="name"
@@ -31,11 +31,12 @@
         <v-autocomplete
           class="ml-4"
           clearable
-          label="Select Mode"
+          :label="$t('selectmode')"
           :items="modeList"
           return-object
           item-text="description"
           v-model="mode"
+          :disabled="!substation"
         >
         </v-autocomplete>
       </v-col>
@@ -44,7 +45,7 @@
           class="ml-4"
           type="date"
           v-model="datefrom"
-          label="开始时间"
+          :label="$t('startdate')"
         ></v-text-field>
       </v-col>
       <v-col cols="3">
@@ -52,7 +53,7 @@
           class="ml-4"
           type="date"
           v-model="dateto"
-          label="结束时间"
+          :label="$t('enddate')"
         ></v-text-field>
       </v-col>
       <v-col>
@@ -63,18 +64,16 @@
          :loading="saving"
          :disabled="!datefrom || !dateto"
          @click="handleSearch">
-         搜索
+         {{$t('searchbtn')}}
          </v-btn>
-      </v-col>
-      <v-col>
          <v-btn
          small
          color="primary"
          class="text-none ml-5 mt-4"
          :loading="saving"
-         :disabled="calibrationDetailList.length === 0"
+         :disabled="calibrationDetailList.length === 1"
          @click="handleExport">
-         导出
+         {{$t('exportbtn')}}
          </v-btn>
       </v-col>
     </v-row>
@@ -120,40 +119,7 @@ export default {
       calibrationParameterList: [],
       defaultColDef: {},
       gridOptions: {},
-      headers: [
-        {
-          headerName: 'Substation',
-          field: 'substationname',
-          rowGroup: true,
-        },
-        {
-          headerName: 'Calibration Mode',
-          field: 'calibrationmode',
-          rowGroup: true,
-        },
-        {
-          headerName: 'ID',
-          field: 'id',
-          rowGroup: true,
-        },
-        {
-          headerName: 'Mode Description',
-          field: 'modedescription',
-        },
-        {
-          headerName: 'Parameter Name',
-          field: 'parametername',
-          sortable: true,
-        },
-        {
-          headerName: 'Parameter Description',
-          field: 'parameterdescription',
-        },
-        {
-          headerName: 'Parameter Value',
-          field: 'parametervalue',
-        },
-      ],
+      headers: [],
     };
   },
   components: {
@@ -172,14 +138,60 @@ export default {
   },
   created() {
     this.zipService = ZipService;
-    this.timeout = null;
+    // this.timeout = null;
     this.init();
     // this.handleSearch();
+  },
+  computed: {
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   methods: {
     ...mapActions('calibrationApp', ['getSubstationList', 'getModeList', 'getCalibrationDetail', 'getCalibrationParameter']),
     async init() {
+      this.headers = [
+        {
+          headerName: this.$t('substation'),
+          field: 'substationname',
+          rowGroup: true,
+        },
+        {
+          headerName: this.$t('calibrationmode'),
+          field: 'calibrationmode',
+          rowGroup: true,
+        },
+        {
+          headerName: this.$t('id'),
+          field: 'id',
+          rowGroup: true,
+        },
+        {
+          headerName: this.$t('parametervalue'),
+          field: 'parametervalue',
+        },
+        {
+          headerName: this.$t('modedescription'),
+          field: 'modedescription',
+        },
+        {
+          headerName: this.$t('parametername'),
+          field: 'parametername',
+          sortable: true,
+        },
+        {
+          headerName: this.$t('parameterdescription'),
+          field: 'parameterdescription',
+        },
+        {
+          headerName: this.$t('createdTimestamp'),
+          field: 'createdTimestamp',
+        },
+      ];
       this.subStationList = await this.getSubstationList();
+      this.modeList = await this.getModeList();
       this.calibrationParameterList = await this.getCalibrationParameter();
       const nowdate = `${new Date().getFullYear()}-${this.addZero(new Date().getMonth() + 1)}-${this.addZero(new Date().getDate())}`;
       const beforedate = `${new Date().getFullYear()}-${this.addZero(new Date().getMonth() + 1)}-${this.addZero(new Date().getDate() - 1)}`;
@@ -190,7 +202,7 @@ export default {
       if (obj) {
         this.modeList = await this.getModeList(`?query=substationid=="${obj.id}"`);
       } else {
-        this.modeList = [];
+        this.modeList = await this.getModeList();
       }
       this.mode = null;
     },
@@ -225,10 +237,10 @@ export default {
         });
       }
       this.calibrationDetailList = calibrationDetailList;
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(() => {
-        this.gridOptions.api.expandAll();
-      }, 100);
+      // clearTimeout(this.timeout);
+      // this.timeout = setTimeout(() => {
+      //   this.gridOptions.api.expandAll();
+      // }, 100);
       this.saving = false;
     },
     addToZip(file) {
@@ -245,12 +257,14 @@ export default {
     },
     async handleExport() {
       this.saving = true;
-      const column = ['substationid', 'substationname', 'calibrationmode', 'parameterdescription', 'parametername', 'parametervalue', 'createdTimestamp', 'modifiedtimestamp'];
+      const columnKey = ['substationid', 'substationname', 'calibrationmode', 'parametervalue', 'parameterdescription', 'parametername', 'createdTimestamp'];
+      const column = [`${this.$t('substation')} Id`, this.$t('substation'), this.$t('calibrationmode'), this.$t('parametervalue'), this.$t('parameterdescription'), this.$t('parametername'), this.$t('createdTimestamp')];
+      // console.log(column);
       const csvContent = [];
       const fileName = 'calibration';
       this.calibrationDetailList.forEach((detail) => {
         const arr = [];
-        column.forEach((key) => {
+        columnKey.forEach((key) => {
           arr.push(detail[key]);
         });
         csvContent.push(arr);
@@ -265,7 +279,7 @@ export default {
         fileContent: content,
       });
       const zip = await this.zipService.generateZip();
-      this.zipService.downloadFile(zip, 'calibration.zip');
+      this.zipService.downloadFile(zip, `${fileName}.zip`);
       this.saving = false;
     },
   },

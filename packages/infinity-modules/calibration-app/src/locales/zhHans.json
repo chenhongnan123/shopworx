@@ -1,0 +1,18 @@
+{
+  "calibration": "标定",
+  "selectsubstation": "选择工站",
+  "selectmode": "选择模式",
+  "startdate": "开始日期",
+  "enddate": "结束日期",
+  "searchbtn": "搜索",
+  "exportbtn": "导出",
+  "substation": "工站",
+  "calibrationmode": "标定模式",
+  "id": "ID",
+  "modedescription": "模式描述",
+  "parametername": "参数名称",
+  "parameterdescription": "参数描述",
+  "parametervalue": "参数值",
+  "createdTimestamp": "创建时间",
+  "modifiedtimestamp": "修改时间"
+}
