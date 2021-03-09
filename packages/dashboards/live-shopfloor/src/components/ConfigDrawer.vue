@@ -20,8 +20,8 @@
         <v-card-text>
           <theme />
           <view-type class="mt-4" />
-          <display-type class="mt-4" />
-          <group class="mt-4" />
+          <!-- <display-type class="mt-4" /> -->
+          <!-- <group class="mt-4" /> -->
         </v-card-text>
       </v-card>
     </perfect-scrollbar>
@@ -31,17 +31,17 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
 import ViewType from './config/ViewType.vue';
-import DisplayType from './config/DisplayType.vue';
+// import DisplayType from './config/DisplayType.vue';
 import Theme from './config/Theme.vue';
-import Group from './config/Group.vue';
+// import Group from './config/Group.vue';
 
 export default {
   name: 'ConfigDrawer',
   components: {
     ViewType,
-    DisplayType,
+    // DisplayType,
     Theme,
-    Group,
+    // Group,
   },
   computed: {
     ...mapState('helper', ['configDrawer', 'isFullscreen']),
