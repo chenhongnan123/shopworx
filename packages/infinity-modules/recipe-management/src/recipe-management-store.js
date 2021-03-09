@@ -201,12 +201,13 @@ export default ({
       if (orders && orders.length) {
         recipe = orders.map((l) => ({
           ...l,
-          recipename: '',
-          recipenumber: '',
+          plcrecipename: '-',
+          plcrecipenumber: '--',
         }));
+        console.log(recipe);
       }
       commit('setRecipeList', recipe);
-      return orders;
+      return recipe;
     },
     getLines: async ({ dispatch, commit }, query) => {
       const line = await dispatch(

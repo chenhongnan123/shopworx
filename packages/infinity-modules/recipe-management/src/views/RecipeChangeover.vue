@@ -21,18 +21,18 @@
                         <v-list-item-subtitle>
                           <div><font color=primary>Current order</font></div>
                         </v-list-item-subtitle>
-                        <v-list-item-title>
+                        <!-- <v-list-item-title>
                           <span v-text="orderList[0].ordername">e</span>
-                        </v-list-item-title>
+                        </v-list-item-title> -->
                       </v-col>
-                      <v-col cols="12" md="3" xl="2">
+                      <!-- <v-col cols="12" md="3" xl="2">
                         <v-list-item-subtitle>
                           <div><font color=primary>Product</font></div>
                         </v-list-item-subtitle>
                         <v-list-item-title>
                           <span v-text="orderList[0].productname"></span>
                         </v-list-item-title>
-                      </v-col>
+                      </v-col> -->
                     </v-row>
         <v-spacer></v-spacer>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="fnChangeOver">
@@ -156,7 +156,8 @@ export default {
     // await this.getRecipeListRecords('');
     this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
     this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
-    this.recipeList.forEach(async (recipe) => {
+    const list = await Promise.all(this.recipeList.map(async (recipe) => {
+      let { plcrecipename, plcrecipenumber } = recipe;
       const object = {
         lineid: Number(recipe.lineid),
         sublineid: recipe.sublineid,
@@ -165,15 +166,17 @@ export default {
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
         console.log('event received');
         if (data) {
-          console.log(data);
-          if (data[recipe.substationid]) {
-            this.$set(recipe, 'plcrecipename', data.recipename);
-            console.log(data.recipename);
+          if (data.substationid === recipe.substationid) {
+            plcrecipename = data.substationname;
+            plcrecipenumber = data.substationname;
           }
         }
       });
       await this.getMonitorValues(object);
-    });
+      return { ...recipe, plcrecipename, plcrecipenumber };
+    }));
+    console.log(list);
+    this.recipeList = list;
   },
   beforeDestroy() {
     this.socket.close();
