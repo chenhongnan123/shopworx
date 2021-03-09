@@ -152,7 +152,7 @@ export default {
     ...mapState('rawdata', ['records', 'dateRange', 'report', 'paramList', 'categoryList']),
     ...mapGetters('rawdata', ['masterItems', 'getTags']),
     tags() {
-      return this.getTags(this.id, 4);
+      return this.getTags(this.id);
     },
   },
   async created() {

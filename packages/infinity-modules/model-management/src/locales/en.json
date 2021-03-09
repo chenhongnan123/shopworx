@@ -1,6 +1,8 @@
 {
   "success": {
     "PARAMETER_CREATE": "Input parameter added!",
+    "TRIGGER_CREATE": "Trigger created!",
+    "TRIGGER_DELETE": "Trigger removed!",
     "PARAMETER_DELETE": "Input parameter removed!",
     "TRANSFORMATION_CREATE": "Output transformation added!",
     "TRANSFORMATION_DELETE": "Output transformation removed!",
@@ -16,6 +18,8 @@
     "MODEL_NOT_ACTIVE": "Model is not Active",
     "FILES_DEPLICATE": "Duplicate files, please check again",
     "PARAMETER_CREATE": "Cannot add input parameter. Please retry!",
+    "TRIGGER_CREATE": "Trigger not created, Please retry!",
+    "TRIGGER_DELETE": "Cannot remove trigger. Please retry!",
     "PARAMETER_DELETE": "Cannot remove input parameter. Please retry!",
     "TRANSFORMATION_CREATE": "Cannot add output transformation. Please retry!",
     "TRANSFORMATION_DELETE": "Cannot remove output transformation. Please retry!",

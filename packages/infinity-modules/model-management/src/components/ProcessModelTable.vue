@@ -127,12 +127,78 @@
                 <delete-model :model="item" />
                 </v-btn>
                 </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="testModelClick(item)"
+                  icon
+                >
+                 <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-on="on"
+                      v-bind="attrs"
+                      color="success"
+                    >
+                      <v-icon v-text="'$test'"></v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Test model</span>
+                </v-tooltip>
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
         </v-data-table>
       </template>
     </v-card-text>
+    <v-dialog
+    scrollable
+    persistent
+    v-model="dialog"
+    max-width="500px"
+    transition="dialog-transition"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
+  >
+    <v-card>
+      <v-card-title primary-title>
+        <span>
+          Test Model
+        </span>
+        <v-spacer></v-spacer>
+        <v-btn icon small @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+         <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+        <v-text-field
+        dense
+        class="mt-4"
+        outlined
+        v-model="testMainId"
+        label="Main Id"
+        prepend-icon="mdi-memory"
+      ></v-text-field>
+         </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          class="text-none"
+          @click="testModel"
+        >
+          {{ $t('displayTags.buttons.save') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   </v-card>
 </template>
 
@@ -166,7 +232,10 @@ export default {
   data() {
     return {
       search: '',
+      dialog: false,
       allowedCheckBox: false,
+      testModelId: '',
+      testMainId: '',
       options: {
         descending: true,
         page: 1,
@@ -203,7 +272,7 @@ export default {
       ],
     };
   },
-  created() {
+  async created() {
     // this.getUserRoles();
     // this.getMe();
     // this.checkedloggedUser();
@@ -213,6 +282,7 @@ export default {
     //   await this.getOutputTransformations(),
     // ]);
     // this.setFetchingMaster(false);
+    await this.getSubLineInfo();
   },
   watch: {
     models: {
@@ -228,6 +298,7 @@ export default {
       'selectedProcessName',
       'fetchingModels',
       'fetchingMaster',
+      'subLineInfo',
       'models',
     ]),
   },
@@ -239,8 +310,31 @@ export default {
       'getInputParameters',
       'getOutputTransformations',
       'updateStatusOfModel',
+      'getSubLineInfo',
+      'sendTestModel',
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster']),
+    testModelClick(item) {
+      this.testModelId = item.model_id;
+      this.dialog = true;
+    },
+    async testModel() {
+      const object = {
+        url: `http://${this.subLineInfo[0].ipaddress}:5000/executemodel?modelid=${this.testModelId}`,
+        payload: {
+          mainid: this.testMainId,
+        },
+      };
+      const data = await this.sendTestModel(object);
+      if (data) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: data,
+        });
+        this.dialog = false;
+      }
+    },
     onClickCheckBox() {
       if (!this.isAdmin) {
         this.setAlert({
