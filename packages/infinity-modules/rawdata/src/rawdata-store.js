@@ -258,11 +258,9 @@ export default ({
     },
 
     getTags: ({ elements }) => (element, assetId) => {
-      console.log(assetId);
       let tags = [];
       if (elements && elements.length) {
         const elem = elements.find((e) => e.element.elementName === element);
-        console.log(elem);
         if (elem) {
           ({ tags } = elem);
           return tags;

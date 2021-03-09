@@ -150,7 +150,6 @@ export default {
     // },
   },
   created() {
-    console.log(this.modelCriticals);
   },
   methods: {
     ...mapActions('modelManagement', [
@@ -182,8 +181,6 @@ export default {
       } else {
         const object = param[param.length - 1];
         if (object) {
-          console.log(this.maxlimit);
-          console.log(this.minlimit);
           await this.createCriticalParameter({
             modelId: this.model.model_id,
             maxLimit: this.maxlimit,

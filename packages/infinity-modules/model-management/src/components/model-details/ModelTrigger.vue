@@ -89,7 +89,6 @@ export default {
       triggerName: `process_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
-    console.log(this.nonRealElement);
   },
   methods: {
     ...mapActions('modelManagement', [
@@ -101,8 +100,6 @@ export default {
       'getNonRealElementInfo',
     ]),
     async onElementSelect(val) {
-      console.log(val);
-      console.log(this.nonRealElement);
       // add data to new element and add entry to webhook table
       const object = {
         modelid: this.model.model_id,
@@ -112,7 +109,6 @@ export default {
       const result = await this.addTriggerData(object);
       if (result) {
         await this.getNonRealElementInfo(val[0].triggerName);
-        console.log(this.nonRealElementInfo);
         // add entry to webhook table
         const webhookObject = {
           webhookURL: `http://localhost:10190/update/${val[0].triggerName}`,
@@ -142,8 +138,6 @@ export default {
       } else {
         const object = param[param.length - 1];
         if (object) {
-          console.log(this.maxlimit);
-          console.log(this.minlimit);
           await this.createCriticalParameter({
             modelId: this.model.model_id,
             maxLimit: this.maxlimit,

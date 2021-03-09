@@ -324,9 +324,7 @@ export default {
             },
           });
         } else {
-          console.log(this.tags);
           const t = this.columnDefs.find((f) => f.field === 'createdTimestamp');
-          console.log(t);
           if (!t) {
             this.columnDefs.push({
               headerName: 'Created Timestamp',

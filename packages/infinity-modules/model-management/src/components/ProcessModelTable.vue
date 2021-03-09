@@ -283,7 +283,6 @@ export default {
     // ]);
     // this.setFetchingMaster(false);
     await this.getSubLineInfo();
-    console.log(this.subLineInfo);
   },
   watch: {
     models: {
