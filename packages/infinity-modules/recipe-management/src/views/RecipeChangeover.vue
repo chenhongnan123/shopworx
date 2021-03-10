@@ -99,7 +99,7 @@
         <v-btn
           color="primary"
           class="text-none"
-          @click="fnDeleteOnYes"
+          @click="fnDoChangever"
         >
           Yes
         </v-btn>
@@ -182,10 +182,18 @@ export default {
     this.socket.close();
   },
   computed: {
-    ...mapState('recipeManagement', ['filterLine', 'filterSubLine', 'filterStation']),
+    ...mapState('recipeManagement', ['filterLine', 'filterSubLine', 'filterStation', 'recipeListDetails']),
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getProductDetails', 'getOrderRecords', 'getMonitorValues']),
+    ...mapActions('recipeManagement',
+    [
+      'getRecipeListRecords',
+      'getProductDetails',
+      'getOrderRecords',
+      'getMonitorValues',
+      'getRecipeDetailListRecords',
+      'uploadToPLC'
+      ]),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter']),
     showFilter: {
@@ -195,6 +203,44 @@ export default {
       set(val) {
         this.setFilter(val);
       },
+    },
+    async fnDoChangever() {
+      await Promise.all(this.recipeList.map(async (recipe) => {
+        await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"`);
+        if (recipeListDetails.length > 0) {
+          const parameterList = [];
+          this.recipeListDetails.forEach((element) => {
+            if (element.datatype === '11') {
+              parameterList.push({
+                parametername: element.tagname,
+                parametervalue: element.parametervalue,
+              });
+            } else if (element.datatype === '9') {
+              parameterList.push({
+                parametername: element.tagname,
+                parametervalue: parseFloat(element.parametervalue, 10),
+              });
+            } else {
+              parameterList.push({
+                parametername: element.tagname,
+                parametervalue: Number(element.parametervalue),
+              });
+            }
+          });
+          const object = {
+            lineid: Number(recipe.lineid),
+            sublineid: recipe.sublineid,
+            substationid: recipe.substationid,
+            recipenumber: recipe.recipenumber,
+            // tagname, parametervalue
+            recipeparameter: parameterList,
+          };
+          console.log(object);
+          this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
+          });
+          await this.uploadToPLC(object);
+        }
+      }));
     },
     addNewRecipe() {
       this.dialog = true;
