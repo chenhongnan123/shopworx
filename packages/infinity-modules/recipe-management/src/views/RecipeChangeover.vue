@@ -186,13 +186,13 @@ export default {
   },
   methods: {
     ...mapActions('recipeManagement',
-    [
-      'getRecipeListRecords',
-      'getProductDetails',
-      'getOrderRecords',
-      'getMonitorValues',
-      'getRecipeDetailListRecords',
-      'uploadToPLC'
+      [
+        'getRecipeListRecords',
+        'getProductDetails',
+        'getOrderRecords',
+        'getMonitorValues',
+        'getRecipeDetailListRecords',
+        'uploadToPLC',
       ]),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('recipeManagement', ['toggleFilter']),
@@ -207,7 +207,7 @@ export default {
     async fnDoChangever() {
       await Promise.all(this.recipeList.map(async (recipe) => {
         await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"`);
-        if (recipeListDetails.length > 0) {
+        if (this.recipeListDetails.length > 0) {
           const parameterList = [];
           this.recipeListDetails.forEach((element) => {
             if (element.datatype === '11') {
