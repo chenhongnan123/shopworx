@@ -26,12 +26,15 @@
     "ERROR_DELETING_RECIPE": "Error in Deleting Recipe Record",
     "RECIPE_SUBLINE_NAME_EMPTY": "Select Subline Name from DropDown",
     "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown",
-    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name Already Exist!"
+    "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name Already Exist!",
+    "RECIPE_DETAILS_NOT_CREATED": "something went wrong while updating recipe details!",
+    "VERSIONNUM_NOT_UPDATED": "somthing went wrong while updating versionnumber!"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
     "RECIPE_UPDATED": "Recipe updated!",
-    "RECIPE_RECORD_DELETED": "Recipe Record DELETED."
+    "RECIPE_RECORD_DELETED": "Recipe Record DELETED.",
+    "VERSIONNUM_UPDATED": "Respective recipie's version nummber updated!"
   },
   "duplicateRecipe": "Duplicate",
   "refreshRecipe": "Refresh",

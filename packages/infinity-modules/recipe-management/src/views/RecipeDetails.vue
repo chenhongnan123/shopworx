@@ -19,6 +19,11 @@
         <v-col cols="12" xl="10" class="py-0">
           <v-toolbar flat dense class="stick" :color="$vuetify.theme.dark ? '#121212': ''">
             <v-spacer></v-spacer>
+             <v-btn small color="primary" outlined class="text-none ml-2"
+              :disabled="!saveBtnEnable"
+              @click="saveVersion">
+              Save
+            </v-btn>
             <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>Refresh
             </v-btn>
@@ -197,6 +202,7 @@ export default {
       toggleDisable: true,
       itemToUpdate: {},
       itemForDelete: null,
+      saveBtnEnable: false,
     };
   },
   async mounted() {
@@ -206,6 +212,17 @@ export default {
     this.substationname = this.recipeList[0].substationname;
     this.substationid = this.recipeList[0].substationid;
     this.recipename = this.recipeList[0].recipename;
+  },
+  watch: {
+    recipeListDetails: {
+      handler(val) {
+        if (val.length > 0) {
+          this.saveBtnEnable = true;
+        } else {
+          this.saveBtnEnable = false;
+        }
+      },
+    },
   },
   async created() {
     console.log(this.$route.params);
@@ -415,6 +432,49 @@ export default {
       await this.updateRecipe(object2);
       this.dialog = false;
       await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"`);
+    },
+    async saveVersion() {
+      const list = this.recipeListDetails;
+      const currentRecipeId = this.recipeListDetails[0].recipeid;
+      const currntRecord = await this.getRecipeListRecords(`?query=recipenumber=="${currentRecipeId}"`);
+      const currentVersion = currntRecord[0].versionnumber;
+      const updatedlist = {
+        ...list,
+        assetid: 4,
+        recipeversionnum: currentVersion,
+      };
+      const payload = [];
+      payload.push(updatedlist);
+      const created = await this.createRecipeDetails(payload);
+      if (created) {
+        const recipe = {
+          versionnumber: currentVersion + 1,
+        };
+        const object = {
+          payload: recipe,
+          query: `?query=recipenumber=="${currentRecipeId}"`,
+        };
+        const updated = this.updateRecipe(object);
+        if (updated) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'VERSIONNUM_UPDATED',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'VERSIONNUM_NOT_UPDATED',
+          });
+        }
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'RECIPE_DETAILS_NOT_CREATED',
+        });
+      }
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;
