@@ -423,7 +423,7 @@ export default {
       const recipe = {
         editedby: this.userName,
         editedtime: new Date().getTime(),
-        versionnumber: this.recipeList[0].versionnumber + 1,
+        // versionnumber: this.recipeList[0].versionnumber + 1,
       };
       const object2 = {
         payload: recipe,
@@ -438,15 +438,22 @@ export default {
       const currentRecipeId = this.recipeListDetails[0].recipeid;
       const currntRecord = await this.getRecipeListRecords(`?query=recipenumber=="${currentRecipeId}"`);
       const currentVersion = currntRecord[0].versionnumber;
-      const updatedlist = {
-        ...list,
-        assetid: 4,
-        recipeversionnum: currentVersion,
-      };
-      const payload = [];
-      payload.push(updatedlist);
-      const created = await this.createRecipeDetails(payload);
-      if (created) {
+      list.forEach(async (ls) => {
+        const updatedlist = {
+          assetid: 4,
+          versionnumber: currentVersion,
+          tagname: ls.tagname,
+          datatype: ls.datatype,
+          recipeid: ls.recipeid,
+          parametervalue: ls.parametervalue,
+          lineid: ls.lineid,
+          linename: ls.linename,
+          sublineid: ls.sublineid,
+          sublinename: ls.sublinename,
+        };
+        const payload = [];
+        payload.push(updatedlist);
+        await this.createRecipeDetails(payload);
         const recipe = {
           versionnumber: currentVersion + 1,
         };
@@ -468,13 +475,45 @@ export default {
             message: 'VERSIONNUM_NOT_UPDATED',
           });
         }
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'RECIPE_DETAILS_NOT_CREATED',
-        });
-      }
+      });
+      // });
+      // const updatedlist = {
+      //   ...list,
+      //   assetid: 4,
+      //   versionnumber: currentVersion,
+      // };
+      // const payload = [];
+      // payload.push(updatedlist);
+      // const created = await this.createRecipeDetails(payload);
+      // if (created) {
+      //   const recipe = {
+      //     versionnumber: currentVersion + 1,
+      //   };
+      //   const object = {
+      //     payload: recipe,
+      //     query: `?query=recipenumber=="${currentRecipeId}"`,
+      //   };
+      //   const updated = this.updateRecipe(object);
+      //   if (updated) {
+      //     this.setAlert({
+      //       show: true,
+      //       type: 'success',
+      //       message: 'VERSIONNUM_UPDATED',
+      //     });
+      //   } else {
+      //     this.setAlert({
+      //       show: true,
+      //       type: 'error',
+      //       message: 'VERSIONNUM_NOT_UPDATED',
+      //     });
+      //   }
+      // } else {
+      //   this.setAlert({
+      //     show: true,
+      //     type: 'error',
+      //     message: 'RECIPE_DETAILS_NOT_CREATED',
+      //   });
+      // }
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;

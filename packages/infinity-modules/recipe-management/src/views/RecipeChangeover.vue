@@ -136,6 +136,7 @@ export default {
         },
         { text: 'Recipe name', value: 'recipename' },
         { text: 'Recipe number', value: 'recipenumber' },
+        { text: 'Recipe version', value: 'versionnumber' },
         { text: 'PLC Recipe name', value: 'plcrecipename' },
         { text: 'PLC Recipe number', value: 'plcrecipenumber' },
       ],
@@ -166,16 +167,19 @@ export default {
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
         console.log('event received');
         if (data) {
+          console.log(data);
           if (data.substationid === recipe.substationid) {
-            plcrecipename = data.substationname;
+            plcrecipename = data.recipename;
             plcrecipenumber = data.substationname;
+            this.$set(recipe, 'plcrecipename', data.recipename);
+            this.$set(recipe, 'plcrecipenumber', '9970968377');
           }
         }
       });
       await this.getMonitorValues(object);
       return { ...recipe, plcrecipename, plcrecipenumber };
     }));
-    console.log(list);
+    this.recipeList = [];
     this.recipeList = list;
   },
   beforeDestroy() {
@@ -211,16 +215,68 @@ export default {
           const parameterList = [];
           this.recipeListDetails.forEach((element) => {
             if (element.datatype === '11') {
+              if (element.parametername === 'recipename') {
+                console.log('recipename block 11');
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipename,
+                });
+                console.log(parameterList);
+              } else if (element.parametername === 'recipeversion') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipeversion,
+                });
+              } else if (element.parametername === 'recipenumber') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipenumber,
+                });
+              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: element.parametervalue,
               });
             } else if (element.datatype === '9') {
+              if (element.parametername === 'recipename') {
+                console.log('recipename block 9');
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipename,
+                });
+              } else if (element.parametername === 'recipeversion') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipeversion,
+                });
+              } else if (element.parametername === 'recipenumber') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipenumber,
+                });
+              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: parseFloat(element.parametervalue, 10),
               });
             } else {
+              if (element.parametername === 'recipename') {
+                console.log('recipename block');
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipename,
+                });
+              } else if (element.parametername === 'recipeversion') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipeversion,
+                });
+              } else if (element.parametername === 'recipenumber') {
+                parameterList.push({
+                  parametername: element.tagname,
+                  parametervalue: recipe.recipenumber,
+                });
+              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: Number(element.parametervalue),
@@ -232,6 +288,9 @@ export default {
             sublineid: recipe.sublineid,
             substationid: recipe.substationid,
             recipenumber: recipe.recipenumber,
+            recipename: recipe.recipename,
+            versionnumber: recipe.versionnumber,
+            recipeversion: recipe.versionnumber,
             // tagname, parametervalue
             recipeparameter: parameterList,
           };
@@ -241,6 +300,7 @@ export default {
           await this.uploadToPLC(object);
         }
       }));
+      this.dialogConfirm = false;
     },
     addNewRecipe() {
       this.dialog = true;
