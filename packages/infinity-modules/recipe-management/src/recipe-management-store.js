@@ -201,10 +201,10 @@ export default ({
       if (orders && orders.length) {
         recipe = orders.map((l) => ({
           ...l,
-          plcrecipename: '-',
-          plcrecipenumber: '--',
+          plcrecipename: '',
+          plcrecipenumber: '',
+          plcrecipeversion: '',
         }));
-        console.log(recipe);
       }
       commit('setRecipeList', recipe);
       return recipe;

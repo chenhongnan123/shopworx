@@ -123,11 +123,14 @@
               label="Value"
               prepend-icon="mdi-tray-plus"
               v-model="recipeValue"
+              @input="checkDatatype(datatype)"
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" class="text-none" @click="fnUpdateRecipeValue">Save</v-btn>
+            <v-btn color="primary" class="text-none"
+             :disabled="btnDisable"
+             @click="fnUpdateRecipeValue">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -203,6 +206,7 @@ export default {
       itemToUpdate: {},
       itemForDelete: null,
       saveBtnEnable: false,
+      btnDisable: false,
     };
   },
   async mounted() {
@@ -309,6 +313,127 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     addNewRecipe() {
       this.dialog = true;
+    },
+    checkDatatype(item) {
+      if (item === '9') {
+        const n = this.recipeValue;
+        const t = function retStr() {
+          return parseFloat(n);
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (Number.isInteger(val)) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_FLOAT',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.length > 5 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '3' || item === '5' || item === '7' || item === '2' || item === '4' || item === '8') {
+        const n = this.recipeValue;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_INTEGER',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_INTEGER',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '12') {
+        const n = this.recipeValue;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        const val3 = n;
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'BOOLEAN_NUMBER',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.length > 1 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_BOOLEAN',
+          });
+        } else if (val3.charCodeAt(0) === 48) {
+          this.btnDisable = false;
+        } else if (val3.charCodeAt(0) >= 50 && val3.charCodeAt(0) <= 57) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ONLY_BOOLEAN',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '10') {
+        const n = this.recipeValue;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_DOUBLE',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_DOUBLE',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '11') {
+        const n = this.recipeValue;
+        if (n.length === 0 || n.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_STRING',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      }
     },
     async RefreshUI() {
       const object = {
@@ -519,6 +644,7 @@ export default {
       this.dialog = true;
       this.itemToUpdate = item;
       this.recipeValue = item.parametervalue;
+      this.datatype = item.datatype;
     },
     deleteRecipeDeatils(item) {
       this.itemForDelete = item;

@@ -28,7 +28,17 @@
     "RECIPE_STATION_NAME_EMPTY": "Select Station Name from Dropdown",
     "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name Already Exist!",
     "RECIPE_DETAILS_NOT_CREATED": "something went wrong while updating recipe details!",
-    "VERSIONNUM_NOT_UPDATED": "somthing went wrong while updating versionnumber!"
+    "VERSIONNUM_NOT_UPDATED": "somthing went wrong while updating versionnumber!",
+    "NOT_INTEGER": "Only Integer allowed!",
+    "BOOLEAN_NUMBER": "Only boolean number 0 or 1 allowed!",
+    "NOT_DOUBLE": "Only Double allowed!",
+    "INPUT_LENGTH": "After Floating point (.) only three digits allowed OR blank space not allowed!",
+    "INPUT_LENGTH_STRING": "Blank space, empty value not allowed!",
+    "INPUT_LENGTH_INTEGER": "Blank space, empty value not allowed!",
+    "INPUT_LENGTH_DOUBLE": "Blank space, empty value not allowed!",
+    "INPUT_LENGTH_BOOLEAN": "Please Enter Minimum:1 to Maximum:1 boolean digits!",
+    "NOT_FLOAT": "Only Float allowed!",
+    "ONLY_BOOLEAN": "Please Enter Boolean 0 as{false} or 1 as {true}"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",

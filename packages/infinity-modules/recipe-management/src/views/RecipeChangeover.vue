@@ -21,18 +21,18 @@
                         <v-list-item-subtitle>
                           <div><font color=primary>Current order</font></div>
                         </v-list-item-subtitle>
-                        <!-- <v-list-item-title>
+                        <v-list-item-title>
                           <span v-text="orderList[0].ordername">e</span>
-                        </v-list-item-title> -->
+                        </v-list-item-title>
                       </v-col>
-                      <!-- <v-col cols="12" md="3" xl="2">
+                      <v-col cols="12" md="3" xl="2">
                         <v-list-item-subtitle>
                           <div><font color=primary>Product</font></div>
                         </v-list-item-subtitle>
                         <v-list-item-title>
                           <span v-text="orderList[0].productname"></span>
                         </v-list-item-title>
-                      </v-col> -->
+                      </v-col>
                     </v-row>
         <v-spacer></v-spacer>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="fnChangeOver">
@@ -55,7 +55,6 @@
           <td>
             <v-checkbox
             v-model="changeover"
-            :value ="item"
             primary
             hide-details
             ></v-checkbox>
@@ -65,7 +64,11 @@
           <td>{{ item.machinename }}</td>
           <td>{{ item.substationname }}</td>
           <td>{{ item.recipename }}</td>
-          <td>{{ item.recipenumber}}</td>
+          <!-- <td>{{ item.recipenumber}}</td> -->
+          <td>{{ item.recipeversion}}</td>
+          <td>{{ item.plcrecipename}}</td>
+          <!-- <td>{{ item.plcrecipenumber}}</td> -->
+          <td>{{ item.plcrecipeversion}}</td>
           <td></td>
           <td></td>
           </tr>
@@ -135,10 +138,11 @@ export default {
           value: 'substationname',
         },
         { text: 'Recipe name', value: 'recipename' },
-        { text: 'Recipe number', value: 'recipenumber' },
+        // { text: 'Recipe number', value: 'recipenumber' },
         { text: 'Recipe version', value: 'versionnumber' },
         { text: 'PLC Recipe name', value: 'plcrecipename' },
-        { text: 'PLC Recipe number', value: 'plcrecipenumber' },
+        // { text: 'PLC Recipe number', value: 'plcrecipenumber' },
+        { text: 'PLC Recipe Version', value: 'plcrecipeversion' },
       ],
       dialog: false,
       recipe: {},
@@ -158,7 +162,7 @@ export default {
     this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
     this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
     const list = await Promise.all(this.recipeList.map(async (recipe) => {
-      let { plcrecipename, plcrecipenumber } = recipe;
+      let { plcrecipename, plcrecipeversion } = recipe;
       const object = {
         lineid: Number(recipe.lineid),
         sublineid: recipe.sublineid,
@@ -168,18 +172,24 @@ export default {
         console.log('event received');
         if (data) {
           console.log(data);
+          console.log(recipe.recipename);
           if (data.substationid === recipe.substationid) {
+            console.log(data.substationid);
+            console.log(recipe.substationid);
             plcrecipename = data.recipename;
-            plcrecipenumber = data.substationname;
-            this.$set(recipe, 'plcrecipename', data.recipename);
-            this.$set(recipe, 'plcrecipenumber', '9970968377');
+            plcrecipeversion = data.recipeversion;
           }
         }
       });
       await this.getMonitorValues(object);
-      return { ...recipe, plcrecipename, plcrecipenumber };
+      return {
+        ...recipe,
+        plcrecipename,
+        // plcrecipenumber,
+        plcrecipeversion,
+      };
     }));
-    this.recipeList = [];
+    console.log(list);
     this.recipeList = list;
   },
   beforeDestroy() {
@@ -215,74 +225,61 @@ export default {
           const parameterList = [];
           this.recipeListDetails.forEach((element) => {
             if (element.datatype === '11') {
-              if (element.parametername === 'recipename') {
-                console.log('recipename block 11');
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipename,
-                });
-                console.log(parameterList);
-              } else if (element.parametername === 'recipeversion') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipeversion,
-                });
-              } else if (element.parametername === 'recipenumber') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipenumber,
-                });
-              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: element.parametervalue,
               });
             } else if (element.datatype === '9') {
-              if (element.parametername === 'recipename') {
-                console.log('recipename block 9');
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipename,
-                });
-              } else if (element.parametername === 'recipeversion') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipeversion,
-                });
-              } else if (element.parametername === 'recipenumber') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipenumber,
-                });
-              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: parseFloat(element.parametervalue, 10),
               });
             } else {
-              if (element.parametername === 'recipename') {
-                console.log('recipename block');
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipename,
-                });
-              } else if (element.parametername === 'recipeversion') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipeversion,
-                });
-              } else if (element.parametername === 'recipenumber') {
-                parameterList.push({
-                  parametername: element.tagname,
-                  parametervalue: recipe.recipenumber,
-                });
-              }
               parameterList.push({
                 parametername: element.tagname,
                 parametervalue: Number(element.parametervalue),
               });
             }
           });
+          const recipecheck = parameterList.filter((n) => n.parametername === 'recipename');
+          if (recipecheck.length > 0) {
+            parameterList.forEach((pr) => {
+              if (pr.parametername === 'recipename') {
+                pr.parametervalue = recipe.recipename;
+              }
+            });
+          } else {
+            parameterList.push({
+              parametername: 'recipename',
+              parametervalue: recipe.recipename,
+            });
+          }
+          const versioncheck = parameterList.filter((n) => n.parametername === 'recipeversion');
+          if (versioncheck.length > 0) {
+            parameterList.forEach((pr) => {
+              if (pr.parametername === 'recipeversion') {
+                pr.parametervalue = Number(recipe.recipeversion);
+              }
+            });
+          } else {
+            parameterList.push({
+              parametername: 'recipeversion',
+              parametervalue: Number(recipe.recipeversion),
+            });
+          }
+          const recipenumcheck = parameterList.filter((n) => n.parametername === 'recipenumber');
+          if (recipenumcheck.length > 0) {
+            parameterList.forEach((pr) => {
+              if (pr.parametername === 'recipenumber') {
+                pr.parametervalue = recipe.recipenumber;
+              }
+            });
+          } else {
+            parameterList.push({
+              parametername: 'recipenumber',
+              parametervalue: recipe.recipenumber,
+            });
+          }
           const object = {
             lineid: Number(recipe.lineid),
             sublineid: recipe.sublineid,
@@ -290,7 +287,7 @@ export default {
             recipenumber: recipe.recipenumber,
             recipename: recipe.recipename,
             versionnumber: recipe.versionnumber,
-            recipeversion: recipe.versionnumber,
+            recipeversion: recipe.recipeversion,
             // tagname, parametervalue
             recipeparameter: parameterList,
           };
