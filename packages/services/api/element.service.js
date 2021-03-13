@@ -48,6 +48,10 @@ class ElementService {
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
   }
+
+  getTrainingLogsRecords(jobId) {
+    return this.request.get(`http://localhost:8000/logs/${jobId}`);
+  }
   
   getRecordById(elementName, id) {
     return this.request.get(`/server/elements/${elementName}/records/${id}`);

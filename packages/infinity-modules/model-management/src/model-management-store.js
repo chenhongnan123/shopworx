@@ -18,6 +18,7 @@ const ELEMENTS = {
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
   MODEL_TYPE: 'modeltype',
   MODEL_TRIGGER: 'modeltrigger',
+  MODEL_TRAINING: 'modeltraining',
 };
 const ASSETID = 4;
 const OPERATION_NAME = 'Deploy Model';
@@ -32,6 +33,7 @@ export default ({
   namespaced: true,
   state: {
     lines: [],
+    showModelUI: true,
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,
@@ -60,6 +62,11 @@ export default ({
     customizeMode: false,
     modelTypeList: [],
     nonRealElementInfo: null,
+    selectedModelObject: {},
+    traningData: [],
+    trainingLogs: [],
+    elementInformation: null,
+    fileRecords: [],
     allWidgets: [
       {
         component: 'model-info',
@@ -188,8 +195,45 @@ export default ({
     setNonRealElementInfo: set('nonRealElementInfo'),
     setFullParameterList: set('fullParameterList'),
     setSubLineInfo: set('subLineInfo'),
+    setShowModelUI: set('showModelUI'),
+    setSelectedModelObject: set('selectedModelObject'),
+    setTrainingData: set('traningData'),
+    setElementInformation: set('elementInformation'),
+    setRecords: set('fileRecords'),
+    setTrainingLogs: set('trainingLogs'),
   },
   actions: {
+    getTrainingLogs: async ({ dispatch, commit }, jobId) => {
+      const log = await dispatch(
+        'element/getTrainingLogsRecords',
+        {
+          jobId,
+        },
+        { root: true },
+      );
+      commit('setTrainingLogs', log.logs);
+    },
+    getRecordsByTagData: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/getRecordsByTags',
+        { payload },
+        { root: true },
+      );
+      if (data) {
+        commit('setRecords', data.results);
+      }
+      return data;
+    },
+    getTagsForSelectedElement: async ({ dispatch, commit }, eleName) => {
+      console.log(eleName);
+      const info = await dispatch(
+        'element/getElement',
+        eleName,
+        { root: true },
+      );
+      commit('setElementInformation', info);
+    },
+
     getLines: async ({ dispatch, commit }) => {
       const lines = await dispatch(
         'element/getRecords',
@@ -672,6 +716,66 @@ export default ({
             show: true,
             type: 'error',
             message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    fetchTrainingData: async ({ dispatch, commit }, modelid) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      commit('setTrainingData', training);
+    },
+
+    addModelTraningData: async ({ dispatch, state, commit }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        ...request,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+      };
+      console.log(payload);
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRIGGER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRIGGER_CREATE',
           },
           { root: true },
         );

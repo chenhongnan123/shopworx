@@ -147,6 +147,26 @@
                 </v-tooltip>
                 </v-btn>
                 </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="trainModelClick(item)"
+                  icon
+                >
+                 <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-on="on"
+                      v-bind="attrs"
+                      color="success"
+                    >
+                      <v-icon v-text="'$maintenance'"></v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Train model</span>
+                </v-tooltip>
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
@@ -312,11 +332,17 @@ export default {
       'updateStatusOfModel',
       'getSubLineInfo',
       'sendTestModel',
+      'fetchTrainingData',
     ]),
-    ...mapMutations('modelManagement', ['setFetchingMaster']),
+    ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI', 'setSelectedModelObject']),
     testModelClick(item) {
       this.testModelId = item.model_id;
       this.dialog = true;
+    },
+    async trainModelClick(item) {
+      this.setSelectedModelObject(item);
+      this.setShowModelUI(false);
+      await this.fetchTrainingData(item.model_id);
     },
     async testModel() {
       const object = {
