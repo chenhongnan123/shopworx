@@ -527,6 +527,11 @@ export default {
     },
     async fnUpdateRecipeValue() {
       console.log(this.itemToUpdate);
+      this.recipeListDetails.forEach((f) => {
+        if (f.tagname === this.itemToUpdate.tagname) {
+          f.parametervalue = this.recipeValue;
+        }
+      });
     },
     async saveVersion() {
       const list = this.recipeListDetails;
