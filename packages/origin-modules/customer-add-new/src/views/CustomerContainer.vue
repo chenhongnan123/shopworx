@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col lg="3" xl="2">
+      <v-col sm="4" md="4" lg="3" xl="2">
         <v-sheet rounded="lg">
           <v-list color="transparent">
             <template v-for="(item, index) in items">
@@ -14,13 +14,20 @@
                 link
                 v-else
                 :key="index"
-                :to="{ params: { id: item.to } }"
+                color="primary"
+                :to="{ params: { id: item.step } }"
               >
                 <v-list-item-icon>
                   <v-icon
-                    :color="item.status === 'complete' ? 'success' : 'primary'"
+                    v-if="!customerData[item.step].isComplete"
                   >
-                    {{ icons[item.status] }}
+                    {{ item.icon }}
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    color="success"
+                  >
+                    mdi-checkbox-marked-circle
                   </v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
@@ -35,10 +42,13 @@
       </v-col>
       <v-col>
         <v-sheet
-          min-height="70vh"
+          height="calc(100vh - 104px)"
           rounded="lg"
         >
-          <!--  -->
+          <component
+            :is="selectedComponent"
+            :info="currentInfoObject"
+          />
         </v-sheet>
       </v-col>
     </v-row>
@@ -46,66 +56,86 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+import CustomerAndSites from '../components/CustomerAndSites.vue';
+import AssetsAndLicense from '../components/AssetsAndLicense.vue';
+import RolesAndAccess from '../components/RolesAndAccess.vue';
+
 export default {
   name: 'CustomerContainer',
+  components: {
+    CustomerAndSites,
+    AssetsAndLicense,
+    RolesAndAccess,
+  },
   data() {
     return {
-      icons: {
-        pending: 'mdi-checkbox-blank-circle-outline',
-        inProgress: 'mdi-checkbox-blank-circle',
-        complete: 'mdi-checkbox-marked-circle',
-      },
       items: [{
         name: 'Customer & sites',
-        to: '1',
-        status: 'inProgress',
+        icon: 'mdi-account-star-outline',
+        step: '1',
       }, {
         name: 'Assets & license',
-        to: '2',
-        status: 'pending',
+        icon: 'mdi-license',
+        step: '2',
       }, {
         name: 'Roles & access',
-        to: '3',
-        status: 'pending',
-      }, {
-        name: 'Add users',
-        to: '4',
-        status: 'pending',
+        icon: 'mdi-shield-star-outline',
+        step: '3',
       }, {
         divider: true,
       }, {
-        name: 'Review & finish',
-        to: '5',
-        status: 'pending',
+        name: 'Review & on-board',
+        icon: 'mdi-file-settings-outline',
+        step: '4',
       }],
     };
   },
   created() {
+    // check for complete steps
+    const data = localStorage.getItem('new-customer-data');
+    if (data) {
+      this.setCustomerData(JSON.parse(data));
+    } else {
+      localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
+    }
+    // Redirect based on completed steps
     this.redirect();
   },
-  watch: {
-    id() {
-      this.redirect();
-    },
-  },
   computed: {
+    ...mapState('newCustomer', ['customerData']),
     id() {
       return this.$route.params.id;
     },
+    selectedComponent() {
+      let component = '';
+      const step = parseInt(this.id, 10);
+      if (step === 1) {
+        component = 'customer-and-sites';
+      } else if (step === 2) {
+        component = 'assets-and-license';
+      } else if (step === 3) {
+        component = 'roles-and-access';
+      }
+      return component;
+    },
+    currentInfoObject() {
+      return this.customerData[this.id];
+    },
   },
   methods: {
+    ...mapMutations('newCustomer', [
+      'setCustomerData',
+    ]),
     redirect() {
-      this.routes = this.items.filter((item) => item.to);
-      const to = this.routes.map((item) => item.to);
+      this.routes = this.items.filter((item) => item.step);
+      const to = this.routes.map((item) => item.step);
       if (this.id === undefined) {
-        if (this.items && this.items.length) {
-          this.$router.push({ params: { id: to[0] } });
-        }
+        this.$router.push({ params: { id: 1 } });
       } else if (this.id) {
         const validId = to.includes(this.id);
         if (!validId) {
-          const invalidPath = this.$route.fullPath;
-          this.$router.push({ name: '404', params: { 0: invalidPath } });
+          this.$router.push({ params: { id: 1 } });
         }
       }
     },

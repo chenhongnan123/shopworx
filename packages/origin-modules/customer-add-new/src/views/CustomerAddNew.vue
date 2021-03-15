@@ -26,7 +26,7 @@
         <v-btn
           class="text-none"
           color="secondary"
-          :to="{ name: 'customerAssets' }"
+          @click="exit"
         >
           Exit & return to Origin
         </v-btn>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import CustomerContainer from './CustomerContainer.vue';
 
 export default {
@@ -51,6 +52,38 @@ export default {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
         : 'shopworx-light';
+    },
+  },
+  methods: {
+    ...mapMutations('newCustomer', ['setCustomerData']),
+    async exit() {
+      if (await this.$root.$confirm.open(
+        'Exit on-boarding',
+        `Are you sure you want to exit customer on-boarding?
+        This will delete the saved data.`,
+      )) {
+        const customerData = {
+          1: {
+            data: null,
+            isComplete: false,
+          },
+          2: {
+            data: null,
+            isComplete: false,
+          },
+          3: {
+            data: null,
+            isComplete: false,
+          },
+          4: {
+            data: null,
+            isComplete: false,
+          },
+        };
+        this.setCustomerData(customerData);
+        localStorage.removeItem('new-customer-data');
+        this.$router.push({ name: 'customerAssets' });
+      }
     },
   },
 };

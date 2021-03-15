@@ -5,6 +5,10 @@ class IndustryService {
     this.request = ApiService;
   }
   
+  getIndustries() {
+    return this.request.get('/server/industry');
+  }
+  
   getMasterByIndustry(id) {
     return this.request.get(`/server/masterelement/industry/${id}`);
   }
