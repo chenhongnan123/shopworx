@@ -224,6 +224,7 @@
   "modules": {
     "provision": "Provision",
     "devTools": "Dev Tools",
+    "addNewCustomer": "Add New Customer",
     "customerSupport": "Customer Support",
     "customers": "Customer",
     "industries": "Industries",
