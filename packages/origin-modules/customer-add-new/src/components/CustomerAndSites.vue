@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     ...mapActions('newCustomer', ['getIndustries']),
-    ...mapMutations('newCustomer', ['updateCustomerData']),
+    ...mapMutations('newCustomer', ['updateCustomerData', 'setSelectedIndustry']),
     getName(description) {
       return description
         ? description
@@ -185,6 +185,7 @@ export default {
       this.pinCode = pinCode;
       this.contactNumber = contactNumber;
       this.contactName = contactName;
+      this.setSelectedIndustry(industryId);
     },
     save() {
       const {
@@ -232,6 +233,7 @@ export default {
       };
       this.updateCustomerData(data);
       localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
+      this.setSelectedIndustry(industryId);
       this.$router.push({ params: { id: 2 } });
     },
   },
