@@ -203,6 +203,18 @@ export default ({
     setTrainingLogs: set('trainingLogs'),
   },
   actions: {
+    getInProgressTrainingData: async ({ dispatch }) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: '?query=trainingstatus=="In Progress"',
+        },
+        { root: true },
+      );
+      return training;
+    },
+
     getTrainingLogs: async ({ dispatch, commit }, jobId) => {
       const log = await dispatch(
         'element/getTrainingLogsRecords',

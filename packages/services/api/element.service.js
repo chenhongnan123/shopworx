@@ -50,7 +50,7 @@ class ElementService {
   }
 
   getTrainingLogsRecords(jobId) {
-    return this.request.get(`http://localhost:8000/logs/${jobId}`);
+    return this.request.get(`/logs/${jobId}`);
   }
   
   getRecordById(elementName, id) {

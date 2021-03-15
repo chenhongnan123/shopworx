@@ -14,7 +14,6 @@
           item-text="elementName"
           return-object
           hide-details
-          multiple
           @input="searchInput=null"
           :search-input.sync="searchInput"
         >
@@ -207,7 +206,7 @@ export default {
       header: 'Real ELement',
     });
     const object = {
-      elementName: `real_${this.selectedSubstation}`,
+      elementName: `production_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
     this.realElement = [];
@@ -258,7 +257,7 @@ export default {
       const oldDataEndTime = new Date(this.oldEndTime).getTime();
       await this.getRecordsByTagData({
         elementName: this.selectedElementName,
-        queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}`,
+        queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}&pagenumber=1&pagesize=500`,
         request: {
           tags: tagsList,
         },
@@ -280,7 +279,7 @@ export default {
       const newDataEndTime = new Date(this.newEndTime).getTime();
       await this.getRecordsByTagData({
         elementName: this.selectedElementName,
-        queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}`,
+        queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}&pagenumber=1&pagesize=500`,
         request: {
           tags: tagsList,
         },
@@ -309,6 +308,7 @@ export default {
         outputfolder: `${this.selectedModelObject.name}-${timestamp}`,
         inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
         modelid: this.selectedModelObject.model_id,
+        trainingstatus: 'In Progress',
       };
       console.log(object);
       await this.addModelTraningData(object);
@@ -318,7 +318,7 @@ export default {
         header: 'Real ELement',
       });
       const object1 = {
-        elementName: `production_${this.selectedSubstation}`,
+        elementName: `real_${this.selectedSubstation}`,
       };
       this.elementList.push(object1);
       this.realElement = [];
@@ -335,7 +335,7 @@ export default {
     async onElementSelect(val) {
       // get tags for selected element
       console.log(val);
-      this.selectedElementName = val[0].elementName;
+      this.selectedElementName = val.elementName;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
     },

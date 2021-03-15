@@ -5,14 +5,14 @@
     max-width="600px"
     transition="dialog-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ attrs }">
       <v-btn
         small
-        v-on="on"
         v-bind="attrs"
         color="primary"
         class="text-none ml-5"
         :disabled="fetchingMaster"
+        @click="OpenDialog"
       >
         <v-icon left small>mdi-plus</v-icon>
         Start new Training
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import TrainingData from './training-details/TrainingData.vue';
 
 export default {
@@ -68,9 +68,23 @@ export default {
     },
   },
   methods: {
+    ...mapActions('modelManagement', ['getInProgressTrainingData']),
+    ...mapMutations('helper', ['setAlert']),
     onCancel() {
       this.dialog = false;
       this.step = 1;
+    },
+    async OpenDialog() {
+      const data = await this.getInProgressTrainingData();
+      if (data.length > 0) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TRAINING_IN_PROGRESS',
+        });
+      } else {
+        this.dialog = true;
+      }
     },
   },
 };

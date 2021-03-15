@@ -14,6 +14,7 @@
     "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Inactivate now!"
   },
   "error": {
+    "TRAINING_IN_PROGRESS": "Training already In Progress",
     "ONLY_ADMIN_OPERATION": "Only Admin user can perform this Operation.",
     "MODEL_NOT_ACTIVE": "Model is not Active",
     "FILES_DEPLICATE": "Duplicate files, please check again",

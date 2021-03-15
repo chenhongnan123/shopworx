@@ -51,9 +51,6 @@
               Inactive
             </span>
           </template>
-          <template #item.trainingstatus>
-            In Progress
-          </template>
           <template #item.logs="{ item }">
             <v-btn
               class="text-none"
@@ -64,6 +61,37 @@
             >
               View logs
             </v-btn>
+          </template>
+          <template #item.actions="{ item }">
+            <div class="d-inline ma-0 pa-0">
+                <v-btn
+                    @click="onClickDisabledModel(selectedModelObject)"
+                    icon
+                  >
+                  <deploy-model
+                  :model="selectedModelObject" />
+                    </v-btn>
+                </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="downloadConfigFile(item)"
+                  icon
+                >
+                 <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-on="on"
+                      v-bind="attrs"
+                      color="success"
+                    >
+                      <v-icon v-text="'$download'"></v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Download config</span>
+                </v-tooltip>
+                </v-btn>
+                </div>
           </template>
         </v-data-table>
       </template>
@@ -100,11 +128,13 @@ import
   mapGetters,
 } from 'vuex';
 import CreateTrainDialog from './CreateTrainDialog.vue';
+import DeployModel from './DeployModel.vue';
 
 export default {
   name: 'ProcessModelTable',
   components: {
     CreateTrainDialog,
+    DeployModel,
   },
   data() {
     return {
@@ -144,6 +174,12 @@ export default {
           value: 'logs',
           sortable: false,
         },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+          filterable: false,
+        },
       ],
     };
   },
@@ -166,7 +202,6 @@ export default {
       'selectedModelObject',
       'models',
       'traningData',
-      'selectedModelObject',
       'trainingLogs',
     ]),
   },
@@ -183,13 +218,21 @@ export default {
       'fetchTrainingData',
       'getTrainingLogs',
     ]),
-    ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI']),
+    ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI', 'setTrainingLogs']),
     async fnViewLogs(item) {
-      console.log(item);
+      this.setTrainingLogs([]);
       this.dialogLogs = true;
       if (item.jobid) {
         await this.getTrainingLogs(item.jobid);
       }
+    },
+    downloadConfigFile(item) {
+      const csvData = new Blob([item.configjson], { type: 'text/json;charset=utf-8;' });
+      const csvURL = window.URL.createObjectURL(csvData);
+      const testLink = document.createElement('a');
+      testLink.href = csvURL;
+      testLink.setAttribute('download', 'config.json');
+      testLink.click();
     },
     goBack() {
       this.setShowModelUI(true);

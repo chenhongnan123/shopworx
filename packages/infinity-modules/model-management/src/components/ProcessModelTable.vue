@@ -214,7 +214,7 @@
           class="text-none"
           @click="testModel"
         >
-          {{ $t('displayTags.buttons.save') }}
+          Test Model
         </v-btn>
       </v-card-actions>
     </v-card>
