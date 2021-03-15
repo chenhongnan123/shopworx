@@ -300,6 +300,22 @@ export default ({
       }
       return created;
     },
+    updateProductDetails: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'productdetails',
+          id: `?query=recipenumber=="${payload.id}"`,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        dispatch('getProductDetails');
+        return true;
+      }
+      return created;
+    },
     updateRecipeDetails: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',

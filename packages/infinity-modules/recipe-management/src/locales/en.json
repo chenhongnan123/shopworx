@@ -32,7 +32,7 @@
     "NOT_INTEGER": "Only Integer allowed!",
     "BOOLEAN_NUMBER": "Only boolean number 0 or 1 allowed!",
     "NOT_DOUBLE": "Only Double allowed!",
-    "INPUT_LENGTH": "After Floating point (.) only three digits allowed OR blank space not allowed!",
+    "INPUT_LENGTH": "After Floating point (.) only Five digits allowed OR blank space not allowed!",
     "INPUT_LENGTH_STRING": "Blank space, empty value not allowed!",
     "INPUT_LENGTH_INTEGER": "Blank space, empty value not allowed!",
     "INPUT_LENGTH_DOUBLE": "Blank space, empty value not allowed!",

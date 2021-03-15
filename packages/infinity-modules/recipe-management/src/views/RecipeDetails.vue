@@ -257,6 +257,7 @@ export default {
             sublineid: this.$route.params.sublineid,
             sublinename: this.$route.params.sublinename,
             assetid: 4,
+            versionnumber: 1,
           });
         } else {
           payload.push({
@@ -269,6 +270,7 @@ export default {
             sublineid: this.$route.params.sublineid,
             sublinename: this.$route.params.sublinename,
             assetid: 4,
+            versionnumber: 1,
           });
         }
       });
@@ -309,6 +311,7 @@ export default {
       'uploadToPLC',
       'downloadFromPLC',
       'getRecipeListRecords',
+      'updateProductDetails',
       'getDataTypes']),
     ...mapMutations('helper', ['setAlert']),
     addNewRecipe() {
@@ -318,18 +321,19 @@ export default {
       if (item === '9') {
         const n = this.recipeValue;
         const t = function retStr() {
-          return parseFloat(n);
+          const reg = /^[+-]?\d+(\.\d+)?$/;
+          return reg.test(n);
         };
         const val = t();
         const val2 = n.toString();
-        if (Number.isInteger(val)) {
+        if (!val) {
           this.setAlert({
             show: true,
             type: 'error',
             message: 'NOT_FLOAT',
           });
           this.btnDisable = true;
-        } else if (val2.length === 0 || val2.length > 5 || val2.charCodeAt(0) <= 32) {
+        } else if (val2.length === 0 || val2.length > 8 || val2.charCodeAt(0) <= 32) {
           this.btnDisable = true;
           this.setAlert({
             show: true,
@@ -532,6 +536,7 @@ export default {
           f.parametervalue = this.recipeValue;
         }
       });
+      this.dialog = false;
     },
     async saveVersion() {
       const list = this.recipeListDetails;
@@ -556,12 +561,18 @@ export default {
       await this.createRecipeDetails(payload);
       const recipe = {
         versionnumber: currentVersion + 1,
+        recipeversion: currentVersion + 1,
       };
       const object = {
         payload: recipe,
         query: `?query=recipenumber=="${currentRecipeId}"`,
       };
+      const productDetailUpdate = {
+        payload: recipe,
+        id: currentRecipeId,
+      };
       const updated = this.updateRecipe(object);
+      await this.updateProductDetails(productDetailUpdate);
       if (updated) {
         this.setAlert({
           show: true,
