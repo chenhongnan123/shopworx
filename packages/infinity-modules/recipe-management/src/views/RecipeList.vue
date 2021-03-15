@@ -360,6 +360,7 @@ export default {
         name: 'recipe-details',
         params: {
           id: value.recipenumber,
+          versionnumber: value.versionnumber,
           lineid: value.lineid,
           linename: value.linename,
           sublineid: value.sublineid,

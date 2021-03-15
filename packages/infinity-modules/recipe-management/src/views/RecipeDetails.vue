@@ -231,7 +231,7 @@ export default {
   async created() {
     console.log(this.$route.params);
     await this.getRecipeDetailListRecords(
-      `?query=recipeid=="${this.$route.params.id}"`,
+      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
     );
     await this.getDataTypes('');
     // this.substationname = this.$route.params.id.substationname;
@@ -274,7 +274,7 @@ export default {
       });
       await this.createRecipeDetails(payload);
       await this.getRecipeDetailListRecords(
-        `?query=recipeid=="${this.$route.params.id}"`,
+        `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
       );
     }
     this.socket = socketioclient.connect('http://:10190');
@@ -526,47 +526,17 @@ export default {
       await this.downloadFromPLC(object);
     },
     async fnUpdateRecipeValue() {
-      let request = '';
-      if (this.itemToUpdate.datatype === '11') {
-        request = {
-          parametervalue: this.recipeValue,
-        };
-      } else if (this.itemToUpdate.datatype === '9') {
-        request = {
-          parametervalue: parseFloat(this.recipeValue, 10),
-        };
-      } else {
-        request = {
-          parametervalue: Number(this.recipeValue),
-        };
-      }
-      const object = {
-        payload: request,
-        query: `?query=tagname=="${this.itemToUpdate.tagname}"%26%26recipeid=="${this.$route.params.id}"`,
-      };
-      await this.updateRecipeDetails(object);
-      const recipe = {
-        editedby: this.userName,
-        editedtime: new Date().getTime(),
-        // versionnumber: this.recipeList[0].versionnumber + 1,
-      };
-      const object2 = {
-        payload: recipe,
-        query: `?query=recipenumber=="${this.$route.params.id}"`,
-      };
-      await this.updateRecipe(object2);
-      this.dialog = false;
-      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"`);
+      console.log(this.itemToUpdate);
     },
     async saveVersion() {
       const list = this.recipeListDetails;
-      const currentRecipeId = this.recipeListDetails[0].recipeid;
-      const currntRecord = await this.getRecipeListRecords(`?query=recipenumber=="${currentRecipeId}"`);
-      const currentVersion = currntRecord[0].versionnumber;
-      list.forEach(async (ls) => {
+      const currentRecipeId = this.$route.params.id;
+      const currentVersion = this.$route.params.versionnumber;
+      const payload = [];
+      list.forEach((ls) => {
         const updatedlist = {
           assetid: 4,
-          versionnumber: currentVersion,
+          versionnumber: currentVersion + 1,
           tagname: ls.tagname,
           datatype: ls.datatype,
           recipeid: ls.recipeid,
@@ -576,69 +546,30 @@ export default {
           sublineid: ls.sublineid,
           sublinename: ls.sublinename,
         };
-        const payload = [];
         payload.push(updatedlist);
-        await this.createRecipeDetails(payload);
-        const recipe = {
-          versionnumber: currentVersion + 1,
-        };
-        const object = {
-          payload: recipe,
-          query: `?query=recipenumber=="${currentRecipeId}"`,
-        };
-        const updated = this.updateRecipe(object);
-        if (updated) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'VERSIONNUM_UPDATED',
-          });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'VERSIONNUM_NOT_UPDATED',
-          });
-        }
       });
-      // });
-      // const updatedlist = {
-      //   ...list,
-      //   assetid: 4,
-      //   versionnumber: currentVersion,
-      // };
-      // const payload = [];
-      // payload.push(updatedlist);
-      // const created = await this.createRecipeDetails(payload);
-      // if (created) {
-      //   const recipe = {
-      //     versionnumber: currentVersion + 1,
-      //   };
-      //   const object = {
-      //     payload: recipe,
-      //     query: `?query=recipenumber=="${currentRecipeId}"`,
-      //   };
-      //   const updated = this.updateRecipe(object);
-      //   if (updated) {
-      //     this.setAlert({
-      //       show: true,
-      //       type: 'success',
-      //       message: 'VERSIONNUM_UPDATED',
-      //     });
-      //   } else {
-      //     this.setAlert({
-      //       show: true,
-      //       type: 'error',
-      //       message: 'VERSIONNUM_NOT_UPDATED',
-      //     });
-      //   }
-      // } else {
-      //   this.setAlert({
-      //     show: true,
-      //     type: 'error',
-      //     message: 'RECIPE_DETAILS_NOT_CREATED',
-      //   });
-      // }
+      await this.createRecipeDetails(payload);
+      const recipe = {
+        versionnumber: currentVersion + 1,
+      };
+      const object = {
+        payload: recipe,
+        query: `?query=recipenumber=="${currentRecipeId}"`,
+      };
+      const updated = this.updateRecipe(object);
+      if (updated) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'VERSIONNUM_UPDATED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'VERSIONNUM_NOT_UPDATED',
+        });
+      }
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;
@@ -663,7 +594,7 @@ export default {
       };
       await this.updateRecipe(object);
       this.dialogConfirm = false;
-      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"`);
+      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`);
     },
   },
 };
