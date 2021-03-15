@@ -1,3 +1,4 @@
+import 'ag-grid-enterprise';
 import routes from './src/customer-add-new-routes';
 import store from './src/customer-add-new-store';
 

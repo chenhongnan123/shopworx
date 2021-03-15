@@ -8,7 +8,7 @@
       <perfect-scrollbar>
         <v-card-text style="max-height: calc(100vh - 156px);">
           <div v-if="items.length">
-            <div class="title">Select atleast one asset</div>
+            <div class="title">Select atleast one asset type</div>
             <template v-for="item in items">
               <v-checkbox
                 hide-details
@@ -16,14 +16,15 @@
                 :label="item.name"
                 v-model="item.selected"
               ></v-checkbox>
-              <v-card flat :key="`r-${item.id}`" v-if="item.selected">
-                <v-card-text>
-                  {{ item }}
-                </v-card-text>
-              </v-card>
+              <asset-input
+                :ref="`asset${item.id}`"
+                :asset-info="item"
+                v-if="item.selected"
+                :key="`input-${item.id}`"
+              />
             </template>
           </div>
-          <div v-else>
+          <div v-else-if="!loading">
             Provision customer and site to view this section.
           </div>
         </v-card-text>
@@ -45,9 +46,13 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import AssetInput from './assets/AssetInput.vue';
 
 export default {
   name: 'AssetsAndLicense',
+  components: {
+    AssetInput,
+  },
   props: {
     info: {
       type: Object,
@@ -56,13 +61,22 @@ export default {
   },
   data() {
     return {
-      tab: 0,
       loading: false,
       isValid: false,
       items: [],
-      requiredRule: [
-        (v) => !!v || 'Required.',
-      ],
+      licensePayload: {
+        license: '',
+        status: 'ACTIVE',
+        assetId: '',
+        totalAssetCount: 0,
+        currentAssetCount: 0,
+        expiryTimestamp: 1924972199000, // 31st Dec, 2030
+        expiryDate: '31-12-2030',
+        category: '',
+        comments: '',
+        beginTimestamp: '',
+        begineDate: '',
+      },
     };
   },
   async created() {
@@ -79,20 +93,6 @@ export default {
       id: a.id,
       name: a.assetDescription,
       selected: false,
-      assetsPayload: [],
-      licensePayload: {
-        license: '',
-        status: 'ACTIVE',
-        assetId: a.id,
-        totalAssetCount: 0,
-        currentAssetCount: 0,
-        expiryTimestamp: 1924972199000, // 31st Dec, 2030
-        expiryDate: '31-12-2030',
-        category: '',
-        comments: '',
-        beginTimestamp: '',
-        begineDate: '',
-      },
     }));
     if (this.info.data) {
       this.setDetails();
@@ -115,26 +115,17 @@ export default {
       'updateCustomerData',
       'setSelectedIndustry',
     ]),
-    addNewAsset() {
-      const pos = this.tab + 1;
-      this.items.push({
-        name: `Asset ${pos}`,
-      });
-      this.tab += 1;
-    },
-    deleteAsset() {
-      this.items.splice(this.tab, 1);
-    },
     setDetails() {},
     save() {
-      const data = {
+      console.log(this.$refs);
+      /* const data = {
         key: 2,
         data: null,
         status: 'complete',
       };
       this.updateCustomerData(data);
       localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
-      this.$router.push({ params: { id: 3 } });
+      this.$router.push({ params: { id: 3 } }); */
     },
   },
 };

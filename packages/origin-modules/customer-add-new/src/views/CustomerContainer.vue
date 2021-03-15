@@ -60,6 +60,7 @@ import { mapState, mapMutations } from 'vuex';
 import CustomerAndSites from '../components/CustomerAndSites.vue';
 import AssetsAndLicense from '../components/AssetsAndLicense.vue';
 import RolesAndAccess from '../components/RolesAndAccess.vue';
+import ReviewAndOnboard from '../components/ReviewAndOnboard.vue';
 
 export default {
   name: 'CustomerContainer',
@@ -67,6 +68,7 @@ export default {
     CustomerAndSites,
     AssetsAndLicense,
     RolesAndAccess,
+    ReviewAndOnboard,
   },
   data() {
     return {
@@ -116,6 +118,8 @@ export default {
         component = 'assets-and-license';
       } else if (step === 3) {
         component = 'roles-and-access';
+      } else if (step === 4) {
+        component = 'review-and-onboard';
       }
       return component;
     },
