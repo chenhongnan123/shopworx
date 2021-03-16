@@ -2,7 +2,7 @@
   <v-card flat v-if="payload">
     <v-card-text class="ml-4">
       <v-row no-gutters>
-        <v-col cols="3">
+        <v-col cols="4">
           <div class="caption">
             Site name
           </div>
@@ -10,7 +10,7 @@
             {{ payload.siteDescription }}
           </div>
         </v-col>
-        <v-col cols="9">
+        <v-col cols="8">
           <div class="caption">
             Address
           </div>
@@ -18,23 +18,15 @@
             {{ payload.addressLine1 }}
           </div>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <div class="caption">
-            Area
+            Area, City
           </div>
           <div class="title">
-            {{ payload.area }}
+            {{ payload.area }}, {{ payload.city }}
           </div>
         </v-col>
-        <v-col cols="3">
-          <div class="caption">
-            City
-          </div>
-          <div class="title">
-            {{ payload.city }}
-          </div>
-        </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <div class="caption">
             State
           </div>
@@ -42,7 +34,7 @@
             {{ payload.state }}
           </div>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="4">
           <div class="caption">
             Pincode
           </div>

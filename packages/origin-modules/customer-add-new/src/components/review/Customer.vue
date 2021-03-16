@@ -2,7 +2,7 @@
   <v-card flat v-if="payload">
     <v-card-text class="ml-4">
       <v-row no-gutters>
-        <v-col cols="6">
+        <v-col cols="4">
           <div class="caption">
             Customer name
           </div>
@@ -10,7 +10,7 @@
             {{ payload.customerDescription }}
           </div>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="8">
           <div class="caption">
             Industry
           </div>
@@ -40,7 +40,6 @@ export default {
   methods: {
     ...mapActions('newCustomer', ['getIndustries']),
     getIndustry() {
-      console.log(this.industries);
       return this.industries
         .find((i) => i.id === this.payload.industryId)
         .industryDescription;

@@ -157,11 +157,17 @@ export default {
           }
         }
       }
-      console.log(this.items);
     },
     save() {
       const licenseTimestamp = new Date().getTime();
       const selectedAssets = this.items.filter((i) => i.selected);
+      let totalAssetCount = 0;
+      for (let i = 0; i < selectedAssets.length; i += 1) {
+        const [input] = this.$refs[`asset${selectedAssets[i].id}`];
+        const { rowData } = input;
+        totalAssetCount += rowData.length;
+      }
+      console.log(totalAssetCount);
       const payload = selectedAssets.map((a) => {
         const {
           id,
@@ -184,9 +190,12 @@ export default {
         return {
           licensePayload: {
             ...this.licensePayload,
+            assetId: id,
             beginTimestamp: licenseTimestamp,
             beginDate: formatDate(licenseTimestamp, 'dd-MM-yyyy'),
             license,
+            totalAssetCount,
+            currentAssetCount: records.length,
           },
           assetPayload: {
             element,
