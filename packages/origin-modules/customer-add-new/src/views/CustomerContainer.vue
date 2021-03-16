@@ -59,7 +59,6 @@
 import { mapState, mapMutations } from 'vuex';
 import CustomerAndSites from '../components/CustomerAndSites.vue';
 import AssetsAndLicense from '../components/AssetsAndLicense.vue';
-import RolesAndAccess from '../components/RolesAndAccess.vue';
 import ReviewAndOnboard from '../components/ReviewAndOnboard.vue';
 
 export default {
@@ -67,7 +66,6 @@ export default {
   components: {
     CustomerAndSites,
     AssetsAndLicense,
-    RolesAndAccess,
     ReviewAndOnboard,
   },
   data() {
@@ -81,15 +79,11 @@ export default {
         icon: 'mdi-license',
         step: '2',
       }, {
-        name: 'Roles & access',
-        icon: 'mdi-shield-star-outline',
-        step: '3',
-      }, {
         divider: true,
       }, {
         name: 'Review & on-board',
         icon: 'mdi-file-settings-outline',
-        step: '4',
+        step: '3',
       }],
     };
   },
@@ -117,8 +111,6 @@ export default {
       } else if (step === 2) {
         component = 'assets-and-license';
       } else if (step === 3) {
-        component = 'roles-and-access';
-      } else if (step === 4) {
         component = 'review-and-onboard';
       }
       return component;

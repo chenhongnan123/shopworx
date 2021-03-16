@@ -75,10 +75,6 @@ export default {
             data: null,
             isComplete: false,
           },
-          4: {
-            data: null,
-            isComplete: false,
-          },
         };
         this.setCustomerData(customerData);
         localStorage.removeItem('new-customer-data');
