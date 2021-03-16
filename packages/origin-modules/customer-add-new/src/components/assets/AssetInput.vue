@@ -100,7 +100,12 @@ export default {
   },
   computed: {
     tags() {
-      return this.assetInfo.tags.filter((t) => t.tagName !== 'assetid');
+      return this.assetInfo.tags
+        .filter((t) => (
+          t.tagName !== 'assetid'
+          && t.tagName !== 'manualplanstart'
+          && t.tagName !== 'manualplanstop'
+        ));
     },
   },
   methods: {

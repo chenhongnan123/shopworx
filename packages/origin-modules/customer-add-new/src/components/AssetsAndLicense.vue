@@ -102,6 +102,8 @@ export default {
       let tags = [];
       if (a.assetName === 'press' || a.assetName === 'injectionmolding') {
         ({ element, tags } = this.machineElement(a.id));
+      } else if (a.assetName.includes('meter')) {
+        ({ element, tags } = this.meterElement(a.id));
       }
       return {
         id: a.id,
@@ -123,7 +125,10 @@ export default {
       'customerData',
       'selectedIndustry',
     ]),
-    ...mapGetters('newCustomer', ['machineElement']),
+    ...mapGetters('newCustomer', [
+      'machineElement',
+      'meterElement',
+    ]),
     isSelected() {
       return !!this.items.filter((i) => i.selected).length;
     },

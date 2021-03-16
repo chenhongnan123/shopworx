@@ -155,7 +155,10 @@ export default ({
   },
   getters: {
     machineElement: ({ masterElementsAndTags }) => (assetId) => {
-      let elem = null;
+      let elem = {
+        element: null,
+        tags: [],
+      };
       if (masterElementsAndTags && masterElementsAndTags.length) {
         const masterElem = masterElementsAndTags
           .find((m) => m.masterElement.elementName === 'machine');
@@ -165,6 +168,26 @@ export default ({
             .filter((t) => t.assetId === assetId)
             .sort((a, b) => a.id - b.id),
         };
+      }
+      return elem;
+    },
+
+    meterElement: ({ masterElementsAndTags }) => (assetId) => {
+      let elem = {
+        element: null,
+        tags: [],
+      };
+      if (masterElementsAndTags && masterElementsAndTags.length) {
+        const masterElem = masterElementsAndTags
+          .find((m) => m.masterElement.elementName === 'meter');
+        if (masterElem) {
+          elem = {
+            element: masterElem.masterElement,
+            tags: masterElem.masterTags
+              .filter((t) => t.assetId === assetId)
+              .sort((a, b) => a.id - b.id),
+          };
+        }
       }
       return elem;
     },
