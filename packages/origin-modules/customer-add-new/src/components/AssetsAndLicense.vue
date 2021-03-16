@@ -45,7 +45,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import {
+  mapState,
+  mapMutations,
+  mapActions,
+  mapGetters,
+} from 'vuex';
 import AssetInput from './assets/AssetInput.vue';
 
 export default {
@@ -88,12 +93,24 @@ export default {
       } = customerPayload;
       this.setSelectedIndustry(industryId);
     }
-    await this.getAssets();
-    this.items = this.assets.map((a) => ({
-      id: a.id,
-      name: a.assetDescription,
-      selected: false,
-    }));
+    await Promise.all([
+      this.getAssets(),
+      this.getMasterElementsAndTags(),
+    ]);
+    this.items = this.assets.map((a) => {
+      let element = null;
+      let tags = [];
+      if (a.assetName === 'press' || a.assetName === 'injectionmolding') {
+        ({ element, tags } = this.machineElement(a.id));
+      }
+      return {
+        id: a.id,
+        name: a.assetDescription,
+        selected: false,
+        element,
+        tags,
+      };
+    });
     if (this.info.data) {
       this.setDetails();
     }
@@ -102,15 +119,20 @@ export default {
   computed: {
     ...mapState('newCustomer', [
       'assets',
+      'masterElementsandTags',
       'customerData',
       'selectedIndustry',
     ]),
+    ...mapGetters('newCustomer', ['machineElement']),
     isSelected() {
       return !!this.items.filter((i) => i.selected).length;
     },
   },
   methods: {
-    ...mapActions('newCustomer', ['getAssets']),
+    ...mapActions('newCustomer', [
+      'getAssets',
+      'getMasterElementsAndTags',
+    ]),
     ...mapMutations('newCustomer', [
       'updateCustomerData',
       'setSelectedIndustry',

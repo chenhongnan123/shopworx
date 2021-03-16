@@ -22,7 +22,7 @@
           <v-btn
             small
             color="error"
-            @click="addRow"
+            @click="deleteSelectedRows"
             class="text-none ml-2 mt-3"
             :disabled="!rowsSelected"
           >
@@ -41,7 +41,7 @@
         :suppressRowClickSelection="true"
         :suppressDragLeaveHidesColumns="true"
         style="width: 100%; height: 300px;"
-        @selection-changed="onSelectionChanged(n)"
+        @selection-changed="onSelectionChanged"
       />
     </v-card-text>
   </v-card>
@@ -91,12 +91,25 @@ export default {
       headerCheckboxSelection: this.isFirstColumn,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
     };
+    this.setColumnDefs();
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
+    this.gridApi.sizeColumnsToFit();
+  },
+  computed: {
+    tags() {
+      return this.assetInfo.tags.filter((t) => t.tagName !== 'assetid');
+    },
   },
   methods: {
+    setColumnDefs() {
+      this.columnDefs = this.tags.map((tag) => ({
+        headerName: tag.tagDescription,
+        field: tag.tagName,
+      }));
+    },
     isFirstColumn(params) {
       const displayedColumns = params.columnApi.getAllDisplayedColumns();
       const thisIsFirstColumn = displayedColumns[0] === params.column;
@@ -104,6 +117,12 @@ export default {
     },
     onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
+    },
+    getNewRowItem() {
+      return this.tags.reduce((acc, tag) => {
+        acc[tag.tagName] = undefined;
+        return acc;
+      }, {});
     },
     addRow() {
       this.gridApi.applyTransaction({

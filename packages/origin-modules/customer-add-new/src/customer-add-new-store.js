@@ -99,6 +99,7 @@ export default ({
     industries: [],
     selectedIndustry: null,
     assets: [],
+    masterElementsAndTags: [],
   },
   mutations: {
     setCustomerData: set('customerData'),
@@ -106,6 +107,7 @@ export default ({
     setIndustries: set('industries'),
     setSelectedIndustry: set('selectedIndustry'),
     setAssets: set('assets'),
+    setMasterElementsAndTags: set('masterElementsAndTags'),
   },
   actions: {
     getIndustries: async ({ commit }) => {
@@ -135,6 +137,36 @@ export default ({
         return false;
       }
       return false;
+    },
+
+    getMasterElementsAndTags: async ({ commit, state }) => {
+      try {
+        const { selectedIndustry } = state;
+        const { data } = await IndustryService.getMasterByIndustry(selectedIndustry);
+        if (data && data.results) {
+          commit('setMasterElementsAndTags', data.results);
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+  },
+  getters: {
+    machineElement: ({ masterElementsAndTags }) => (assetId) => {
+      let elem = null;
+      if (masterElementsAndTags && masterElementsAndTags.length) {
+        const masterElem = masterElementsAndTags
+          .find((m) => m.masterElement.elementName === 'machine');
+        elem = {
+          element: masterElem.masterElement,
+          tags: masterElem.masterTags
+            .filter((t) => t.assetId === assetId)
+            .sort((a, b) => a.id - b.id),
+        };
+      }
+      return elem;
     },
   },
 });
