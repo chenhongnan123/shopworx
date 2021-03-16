@@ -167,7 +167,6 @@ export default {
         const { rowData } = input;
         totalAssetCount += rowData.length;
       }
-      console.log(totalAssetCount);
       const payload = selectedAssets.map((a) => {
         const {
           id,

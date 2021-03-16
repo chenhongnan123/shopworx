@@ -1,5 +1,5 @@
 <template>
-  <v-card flat v-if="payload">
+  <v-card flat v-if="!waiting && payload">
     <v-card-text class="ml-4">
       <v-row no-gutters>
         <v-col cols="4">
@@ -24,12 +24,28 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'Customer',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      waiting: false,
+    };
+  },
   async created() {
+    this.waiting = true;
+    if (this.payload) {
+      this.setSelectedIndustry(this.payload.industryId);
+    }
     await this.getIndustries();
+    this.waiting = false;
   },
   computed: {
     ...mapState('newCustomer', ['customerData', 'industries']),
@@ -38,11 +54,22 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('newCustomer', ['setSelectedIndustry']),
     ...mapActions('newCustomer', ['getIndustries']),
     getIndustry() {
       return this.industries
         .find((i) => i.id === this.payload.industryId)
         .industryDescription;
+    },
+  },
+  watch: {
+    loading(val) {
+      if (val) {
+        console.log('customer');
+        setTimeout(() => {
+          this.$emit('on-complete');
+        }, 3000);
+      }
     },
   },
 };

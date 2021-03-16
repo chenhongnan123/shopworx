@@ -1,5 +1,5 @@
 <template>
-  <v-card flat v-if="payload && payload.length">
+  <v-card flat v-if="!waiting && payload && payload.length">
     <v-card-text class="ml-4">
       <v-row
         no-gutters
@@ -40,8 +40,21 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Assets',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      waiting: false,
+    };
+  },
   async created() {
+    this.waiting = true;
     await this.getAssets();
+    this.waiting = false;
   },
   computed: {
     ...mapState('newCustomer', ['customerData', 'assets']),
@@ -52,9 +65,21 @@ export default {
   methods: {
     ...mapActions('newCustomer', ['getAssets']),
     getAsset(id) {
-      return this.assets
-        .find((i) => i.id === id)
-        .assetDescription;
+      const asset = this.assets.find((i) => i.id === id);
+      if (asset) {
+        return asset.assetDescription;
+      }
+      return '';
+    },
+  },
+  watch: {
+    loading(val) {
+      if (val) {
+        console.log('assets');
+        setTimeout(() => {
+          this.$emit('on-complete');
+        }, 3000);
+      }
     },
   },
 };

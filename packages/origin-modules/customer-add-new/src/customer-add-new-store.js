@@ -1,4 +1,4 @@
-import { set, reactiveSet } from '@shopworx/services/util/store.helper';
+import { set, reactiveSet, reactiveSetArray } from '@shopworx/services/util/store.helper';
 import IndustryService from '@shopworx/services/api/industry.service';
 
 export default ({
@@ -91,6 +91,7 @@ export default ({
     setSelectedIndustry: set('selectedIndustry'),
     setAssets: set('assets'),
     setMasterElementsAndTags: set('masterElementsAndTags'),
+    updateOnboardingSteps: reactiveSetArray('onboardingSteps'),
   },
   actions: {
     getIndustries: async ({ commit }) => {

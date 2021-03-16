@@ -1,6 +1,6 @@
 <template>
   <v-form ref="form" v-model="isValid" @submit.prevent="save">
-    <perfect-scrollbar>
+    <perfect-scrollbar ref="scroll">
       <v-card
         flat
         class="transparent"
@@ -38,6 +38,8 @@
             </span>
             <component
               :is="step.component"
+              @on-complete="onComplete(n)"
+              :loading="step.isLoading"
             />
           </div>
           <div class="mt-4 mb-2">
@@ -47,6 +49,7 @@
             single-line
             v-model="customer"
             outlined
+            :disabled="saving"
             :rules="requiredRule"
           ></v-text-field>
         </v-card-text>
@@ -54,6 +57,7 @@
           <v-btn
             block
             :disabled="!isValid || !isDataAvailable || !isConfirmed"
+            :loading="saving"
             color="primary"
             type="submit"
           >
@@ -66,7 +70,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Customer from './review/Customer.vue';
 import Site from './review/Site.vue';
 import Sms from './review/Sms.vue';
@@ -94,6 +98,7 @@ export default {
   },
   data() {
     return {
+      saving: false,
       loading: false,
       isValid: false,
       customer: '',
@@ -116,8 +121,50 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('newCustomer', ['updateOnboardingSteps']),
+    onComplete(index) {
+      const len = this.onboardingSteps.length;
+      const step = this.onboardingSteps[index];
+      this.updateOnboardingSteps({
+        index,
+        payload: {
+          ...step,
+          isLoading: false,
+          isComplete: true,
+        },
+      });
+      if (len !== index + 1) {
+        const nextStep = this.onboardingSteps[index + 1];
+        this.updateOnboardingSteps({
+          index: index + 1,
+          payload: {
+            ...nextStep,
+            isLoading: true,
+            isComplete: false,
+          },
+        });
+      } else {
+        this.saving = false;
+        console.log('success');
+        // show user dialog
+      }
+    },
     async save() {
-      console.log('hi');
+      if (await this.$root.$confirm.open(
+        'On-board customer',
+        `This will take a while. Please do not refresh the page until complete.
+        Click on 'agree' to confirm.`,
+      )) {
+        this.saving = true;
+        this.updateOnboardingSteps({
+          index: 0,
+          payload: {
+            ...this.onboardingSteps[0],
+            isLoading: true,
+          },
+        });
+        this.$refs.scroll.$el.scrollTop = 0;
+      }
     },
   },
 };

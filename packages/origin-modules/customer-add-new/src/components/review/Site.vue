@@ -52,10 +52,26 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'Site',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     ...mapState('newCustomer', ['customerData']),
     payload() {
       return this.customerData['1'].data && this.customerData['1'].data.sitePayload;
+    },
+  },
+  watch: {
+    loading(val) {
+      if (val) {
+        console.log('site');
+        setTimeout(() => {
+          this.$emit('on-complete');
+        }, 3000);
+      }
     },
   },
 };

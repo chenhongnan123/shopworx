@@ -16,10 +16,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-
 export default {
   name: 'Sms',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       payload: {
@@ -76,18 +80,14 @@ export default {
       },
     };
   },
-  async created() {
-    await this.getIndustries();
-  },
-  computed: {
-    ...mapState('newCustomer', ['customerData', 'industries']),
-  },
-  methods: {
-    ...mapActions('newCustomer', ['getIndustries']),
-    getIndustry() {
-      return this.industries
-        .find((i) => i.id === this.payload.industryId)
-        .industryDescription;
+  watch: {
+    loading(val) {
+      if (val) {
+        console.log('sms');
+        setTimeout(() => {
+          this.$emit('on-complete');
+        }, 3000);
+      }
     },
   },
 };
