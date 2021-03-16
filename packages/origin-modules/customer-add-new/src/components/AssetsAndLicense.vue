@@ -51,6 +51,7 @@ import {
   mapActions,
   mapGetters,
 } from 'vuex';
+import { formatDate } from '@shopworx/services/util/date.service';
 import AssetInput from './assets/AssetInput.vue';
 
 export default {
@@ -107,10 +108,13 @@ export default {
       }
       return {
         id: a.id,
+        assetName: a.assetName,
         name: a.assetDescription,
         selected: false,
         element,
         tags,
+        records: [],
+        license: '',
       };
     });
     if (this.info.data) {
@@ -142,17 +146,64 @@ export default {
       'updateCustomerData',
       'setSelectedIndustry',
     ]),
-    setDetails() {},
+    setDetails() {
+      const { data } = this.info;
+      for (let i = 0; i < this.items.length; i += 1) {
+        for (let j = 0; j < data.length; j += 1) {
+          if (this.items[i].id === data[j].assetPayload.assetId) {
+            this.items[i].selected = true;
+            this.items[i].license = data[j].licensePayload.license;
+            this.items[i].records = data[j].assetPayload.records;
+          }
+        }
+      }
+      console.log(this.items);
+    },
     save() {
-      console.log(this.$refs);
-      /* const data = {
+      const licenseTimestamp = new Date().getTime();
+      const selectedAssets = this.items.filter((i) => i.selected);
+      const payload = selectedAssets.map((a) => {
+        const {
+          id,
+          element,
+          tags,
+        } = a;
+        const [input] = this.$refs[`asset${id}`];
+        const {
+          license,
+          rowData,
+        } = input;
+        let records = [...rowData];
+        if (a.assetName === 'press' || a.assetName === 'injectionmolding') {
+          records = rowData.map((r) => ({
+            ...r,
+            manualplanstart: false,
+            manualplanstop: false,
+          }));
+        }
+        return {
+          licensePayload: {
+            ...this.licensePayload,
+            beginTimestamp: licenseTimestamp,
+            beginDate: formatDate(licenseTimestamp, 'dd-MM-yyyy'),
+            license,
+          },
+          assetPayload: {
+            element,
+            tags,
+            records,
+            assetId: id,
+          },
+        };
+      });
+      const data = {
         key: 2,
-        data: null,
-        status: 'complete',
+        data: payload,
+        isComplete: true,
       };
       this.updateCustomerData(data);
       localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
-      this.$router.push({ params: { id: 3 } }); */
+      this.$router.push({ params: { id: 3 } });
     },
   },
 };

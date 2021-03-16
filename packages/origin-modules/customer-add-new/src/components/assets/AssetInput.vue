@@ -97,6 +97,8 @@ export default {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
     this.gridApi.sizeColumnsToFit();
+    this.license = this.assetInfo.license;
+    this.rowData = [...this.assetInfo.records];
   },
   computed: {
     tags() {
@@ -134,6 +136,7 @@ export default {
         add: [this.getNewRowItem()],
         addIndex: 0,
       });
+      this.rowData.unshift(this.getNewRowItem());
     },
     deleteSelectedRows() {
       const selectedRows = this.gridApi.getSelectedRows();
