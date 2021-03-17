@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="settings-header">
-      <span>
+      <span class="d-flex align-center">
         <invite-users @invited="onInvited" />
         <v-btn
           small

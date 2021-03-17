@@ -23,6 +23,7 @@
         Invite users
       </v-btn>
     </template>
+    <v-form @submit.prevent="onSubmit" ref="form" v-model="isValid">
     <v-card>
       <v-card-title primary-title>
         <span>
@@ -33,97 +34,92 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <validation-observer ref="form" #default="{ handleSubmit }">
-        <v-form @submit.prevent="handleSubmit(onSubmit)">
-          <v-card-text>
-            <v-row v-if="invitedUsers && invitedUsers.length">
-              <template v-for="(user, index) in invitedUsers">
-                <v-col cols="12" :key="index">
-                  <span>{{ user.identifier }}</span>
-                  <span class="mx-2">|</span>
-                  <span>
-                    {{ $t('setup.inviteUsers.invited') }}
-                    <v-icon
-                      color="success"
-                      v-text="'$tick'"
-                    ></v-icon>
-                  </span>
-                </v-col>
-              </template>
-            </v-row>
-            <v-row
-              :key="index"
-              v-for="(user, index) in users"
-            >
-              <v-col cols="5" class="py-0">
-                <identifier-input
-                  :loading="loading"
-                  v-model="user.identifier"
-                  :id="`identifier-${index}`"
-                  @on-update="setIdentifier($event, index)"
-                />
-              </v-col>
-              <v-col cols="4" class="py-0">
-                <validation-provider
-                  name="role"
-                  rules="required"
-                  #default="{ errors }"
-                >
-                  <v-select
-                    :items="roles"
-                    item-value="roleId"
-                    hide-details="auto"
-                    :disabled="loading"
-                    :id="`role-${index}`"
-                    v-model="user.roleId"
-                    :error-messages="errors"
-                    item-text="roleDescription"
-                    :label="$t('setup.inviteUsers.role')"
-                  ></v-select>
-                </validation-provider>
-              </v-col>
-              <v-col cols="3" class="my-auto">
-                <v-btn
-                  icon
-                  small
-                  class="mx-2"
-                  @click="addUser"
-                  :id="`add-${index}`"
-                >
-                  <v-icon v-text="'$add'"></v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  small
-                  class="pa-0"
-                  :id="`remove-${index}`"
-                  @click="removeUser(index)"
-                  :disabled="users.length === 1"
-                >
-                  <v-icon v-text="'$remove'"></v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              type="submit"
-              color="primary"
-              id="inviteUsers"
-              class="text-none"
-              :loading="loading"
-            >
-              Invite
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </validation-observer>
+      <v-card-text>
+        <v-row v-if="invitedUsers && invitedUsers.length">
+          <template v-for="(user, index) in invitedUsers">
+            <v-col cols="12" :key="index">
+              <span>{{ user.identifier }}</span>
+              <span class="mx-2">|</span>
+              <span>
+                {{ $t('setup.inviteUsers.invited') }}
+                <v-icon
+                  color="success"
+                  v-text="'$tick'"
+                ></v-icon>
+              </span>
+            </v-col>
+          </template>
+        </v-row>
+          <v-row
+            :key="index"
+            v-for="(user, index) in users"
+          >
+            <v-col cols="6" class="py-0">
+              <identifier-input
+                :loading="loading"
+                v-model="user.identifier"
+                :id="`identifier-${index}`"
+                @on-update="setIdentifier($event, index)"
+                :error="user.error"
+              />
+            </v-col>
+            <v-col cols="3" class="py-0">
+              <v-select
+                :items="roles"
+                :rules="[v => !!v || 'Role is required']"
+                item-value="roleId"
+                hide-details="auto"
+                :disabled="loading"
+                :id="`role-${index}`"
+                v-model="user.roleId"
+                error-messages=""
+                item-text="roleDescription"
+                :label="$t('setup.inviteUsers.role')"
+              ></v-select>
+            </v-col>
+            <v-col cols="3" class="my-auto">
+              <v-btn
+                icon
+                small
+                class="mx-2"
+                @click="addUser"
+                :id="`add-${index}`"
+              >
+                <v-icon v-text="'$add'"></v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                small
+                class="pa-0"
+                :id="`remove-${index}`"
+                @click="removeUser(index)"
+                :disabled="users.length === 1"
+              >
+                <v-icon v-text="'$remove'"></v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          type="submit"
+          color="primary"
+          id="inviteUsers"
+          class="text-none mb-2 mr-3"
+          :loading="loading"
+          :disabled="!isValid"
+        >
+            Invite
+        </v-btn>
+      </v-card-actions>
     </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState, mapActions } from 'vuex';
 import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
@@ -138,6 +134,7 @@ export default {
       loading: false,
       users: [],
       invitedUsers: [],
+      isValid: false,
     };
   },
   computed: {
@@ -151,6 +148,7 @@ export default {
     setIdentifier({ isMobile, prefix }, index) {
       this.users[index].isMobile = isMobile;
       this.users[index].prefix = prefix;
+      delete this.users[index].error;
     },
     addUser() {
       this.users.push({
@@ -165,6 +163,7 @@ export default {
       this.users.splice(index, 1);
     },
     async onSubmit() {
+      this.$refs.form.validate();
       this.loading = true;
       const payload = this.users.map((user) => ({
         identifier: user.isMobile
@@ -189,9 +188,9 @@ export default {
                 ? `${user.prefix}${user.identifier}`
                 : user.identifier));
               const message = JSON.parse(currentUser.message);
-              this.$refs.form.setErrors({
-                identifier: [this.$i18n.t(`error.${message.errorCode}`)],
-              });
+              // this.$refs.form.setErrors({
+              //   identifier: [this.$i18n.t(`error.${message.errorCode}`)],
+              // });
               return {
                 ...user,
                 error: this.$i18n.t(`error.${message.errorCode}`),
