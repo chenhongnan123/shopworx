@@ -119,7 +119,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { mapState, mapActions } from 'vuex';
 import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
