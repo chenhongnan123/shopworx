@@ -66,10 +66,11 @@ export default ({
     createElementAndTags: async ({ dispatch }, {
       element,
       tags,
+      webhooks = [],
     }) => {
       let tagsCreated = false;
       try {
-        const elementId = await dispatch('createElement', { element });
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -162,10 +163,11 @@ export default ({
       tags,
       records,
       assetId = 0,
+      webhooks = [],
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', { element });
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
