@@ -8,7 +8,7 @@
             v-on="on"
             style="margin-right: 2px;"
           >
-            <img :src="`/flag/${flag}.svg`" width="22" />
+            <img :src="require(`@shopworx/assets/flags/${flag}.svg`)" width="22" />
           </div>
         </template>
         <v-list>
@@ -18,7 +18,11 @@
             @click="onSelectFlag(country)"
           >
             <v-list-item-title class="d-flex">
-              <img :src="`/flag/${country.flag}.svg`" width="22" class="mr-2"/>
+              <img
+                :src="require(`@shopworx/assets/flags/${country.flag}.svg`)"
+                width="22"
+                class="mr-2"
+              />
               <span>{{ country.name }} ({{ country.code }})</span>
             </v-list-item-title>
           </v-list-item>
