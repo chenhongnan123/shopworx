@@ -38,10 +38,22 @@ export default ({
       return false;
     },
 
-    createElement: async ({ dispatch }, element) => {
+    createElement: async ({ dispatch }, {
+      element,
+      webhooks = [],
+    }) => {
       try {
         const { data } = await ElementService.createElement(element);
         if (data && data.results) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId: data.elementId,
+              },
+            });
+          }
           return data.elementId;
         }
         const elem = await dispatch('getElement', element.elementName);
@@ -69,7 +81,7 @@ export default ({
     }) => {
       let tagsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -92,7 +104,7 @@ export default ({
     }) => {
       let recordsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           for (let i = 0; i < webhooks.length; i += 1) {
             // eslint-disable-next-line
@@ -133,7 +145,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -174,7 +186,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,

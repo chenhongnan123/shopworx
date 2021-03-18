@@ -26,10 +26,22 @@ export default ({
       return false;
     },
 
-    createElement: async ({ dispatch }, element) => {
+    createElement: async ({ dispatch }, {
+      element,
+      webhooks = [],
+    }) => {
       try {
         const { data } = await ElementService.createElement(element);
         if (data && data.results) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId: data.elementId,
+              },
+            });
+          }
           return data.elementId;
         }
         const elem = await dispatch('getElement', element.elementName);
@@ -55,20 +67,20 @@ export default ({
       element,
       tags,
     }) => {
-      let elementId = null;
+      let tagsCreated = false;
       try {
-        elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
             elementId,
           }));
-          await dispatch('createElementTags', tagsToProvision);
+          tagsCreated = await dispatch('createElementTags', tagsToProvision);
         }
       } catch (e) {
         return false;
       }
-      return elementId;
+      return tagsCreated;
     },
 
     createBulkRecords: async ({ dispatch }, {
@@ -76,10 +88,11 @@ export default ({
       tags,
       records,
       assetId,
+      webhooks = [],
     }) => {
       let recordsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -111,7 +124,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -128,7 +141,6 @@ export default ({
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecordById', {
                   elementName: element.elementName,
-                  // eslint-disable-next-line
                   id: r._id,
                 });
               })]);
@@ -153,7 +165,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -170,7 +182,6 @@ export default ({
               await Promise.all([rec.forEach((r) => {
                 dispatch('deleteRecordById', {
                   elementName: element.elementName,
-                  // eslint-disable-next-line
                   id: r._id,
                 });
               })]);
@@ -199,7 +210,6 @@ export default ({
           await Promise.all([rec.forEach((r) => {
             dispatch('deleteRecordById', {
               elementName,
-              // eslint-disable-next-line
               id: r._id,
             });
           })]);
@@ -255,7 +265,6 @@ export default ({
           await Promise.all([rec.forEach((r) => {
             dispatch('deleteRecordById', {
               elementName,
-              // eslint-disable-next-line
               id: r._id,
             });
           })]);
@@ -294,6 +303,18 @@ export default ({
       }
     },
 
+    createWebhook: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.createWebhook(payload);
+        if (data && data.errors) {
+          return false;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecords: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
@@ -309,7 +330,6 @@ export default ({
     getRecordById: async (_, { elementName, id }) => {
       try {
         const { data } = await ElementService.getRecordById(elementName, id);
-        // eslint-disable-next-line
         if (data && data._id) {
           return data;
         }
@@ -362,7 +382,7 @@ export default ({
       try {
         const { data } = await ElementService.updateRecordById(elementName, id, payload);
         if (data && data.id) {
-          return true;
+          return data;
         }
       } catch (e) {
         return false;
