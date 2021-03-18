@@ -30,7 +30,7 @@
           Invite users
         </span>
         <v-spacer></v-spacer>
-        <v-btn icon @click="dialog = false">
+        <v-btn icon @click="closeDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -162,7 +162,6 @@ export default {
       this.users.splice(index, 1);
     },
     async onSubmit() {
-      this.$refs.form.validate();
       this.loading = true;
       const payload = this.users.map((user) => ({
         identifier: user.isMobile
@@ -200,9 +199,17 @@ export default {
           this.addUser();
           this.success = true;
           this.$emit('invited');
+          this.$refs.form.reset();
         }
       }
       this.loading = false;
+    },
+    closeDialog() {
+      this.dialog = false;
+      this.users = [];
+      this.invitedUsers = [];
+      this.addUser();
+      this.$refs.form.reset();
     },
   },
 };
