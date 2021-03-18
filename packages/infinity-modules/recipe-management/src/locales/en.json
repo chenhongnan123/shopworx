@@ -9,6 +9,7 @@
       "lineName": "Line",
       "stationName": "Station",
       "sublineName": "Subline",
+      "recipeName": "Recipe",
     "buttons" : {
       "addNewRecipe" : "Add Recipe",
       "duplicateRecipe": "Duplicate",

@@ -44,6 +44,18 @@
             label="Select Station"
             @change="onChangeStation(stations)"
           ></v-autocomplete>
+          <div class="subheading font-weight-regular mt-4"></div>
+          <v-autocomplete
+            v-model="recipes"
+            :items="recipeList"
+            outlined
+            dense
+            hide-details
+            return-object
+            item-text="recipename"
+            label="Select Recipe name"
+            @change="onChangeRecipe(recipes)"
+          ></v-autocomplete>
         </v-card-text>
       </perfect-scrollbar>
       <v-card-actions>
@@ -73,6 +85,7 @@ export default {
       lines: null,
       sublines: null,
       stations: null,
+      recipes: null,
     };
   },
   computed: {
@@ -88,7 +101,7 @@ export default {
   },
   methods: {
     ...mapActions('recipeManagement', ['getRecipeListRecords']),
-    ...mapMutations('recipeManagement', ['setFilter', 'toggleFilter', 'setFilterSubLine', 'setFilterStation', 'setRecipeList']),
+    ...mapMutations('recipeManagement', ['setFilter', 'toggleFilter', 'setFilterSubLine', 'setFilterStation', 'setRecipeList', 'setFilterRecipe']),
     onChangeLine() {
     },
     onChangeSubLine(val) {
@@ -96,6 +109,10 @@ export default {
     },
     onChangeStation(val) {
       this.$root.$emit('filteredStation', val);
+    },
+    onChangeRecipe(val) {
+      console.log(val);
+      this.$root.$emit('filteredRecipe', val);
     },
     btnApply() {
       if (this.sublines != null) {
@@ -106,10 +123,20 @@ export default {
           this.setFilterStation(this.stations);
           this.setRecipeList(this.filterBList.filter((o) => o.stationid === this.stations.id));
         }
+        if (this.recipes != null) {
+          this.setFilterRecipe(this.recipes);
+          this.setRecipeList(this.filterBList
+            .filter((o) => o.recipename === this.recipes.recipename));
+        }
       } else if (this.stations != null) {
         this.setFilterStation(this.stations);
         const newStation = this.filterBList.filter((o) => o.stationid === this.stations.id);
         this.setRecipeList(newStation);
+      } else if (this.recipes != null) {
+        this.setFilterRecipe(this.recipes);
+        console.log(this.filterBList);
+        const newRecipe = this.filterBList.filter((o) => o.recipename === this.recipes.recipename);
+        this.setRecipeList(newRecipe);
       }
       this.toggleFilter();
     },

@@ -178,6 +178,8 @@ export default {
             console.log(recipe.substationid);
             plcrecipename = data.recipename;
             plcrecipeversion = data.recipeversion;
+            this.$set(recipe, 'plcrecipename', data.recipename);
+            this.$set(recipe, 'plcrecipeversion', data.recipeversion);
           }
         }
       });
@@ -220,7 +222,7 @@ export default {
     },
     async fnDoChangever() {
       await Promise.all(this.recipeList.map(async (recipe) => {
-        await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"`);
+        await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"%26%26versionnumber==${recipe.recipeversion}`);
         if (this.recipeListDetails.length > 0) {
           const parameterList = [];
           this.recipeListDetails.forEach((element) => {

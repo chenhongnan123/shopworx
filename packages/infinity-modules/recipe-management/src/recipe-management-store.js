@@ -14,6 +14,7 @@ export default ({
     filterLine: {},
     filterSubLine: {},
     filterStation: {},
+    filterRecipe: {},
     filterBList: [],
     stationNamebySubline: [],
     datatypeList: [],
@@ -34,6 +35,7 @@ export default ({
     setFilterLine: set('filterLine'),
     setFilterSubLine: set('filterSubLine'),
     setFilterStation: set('filterStation'),
+    setFilterRecipe: set('filterRecipe'),
     setFilterBackupList: set('filterBList'),
     setStationNamebySubline: set('stationNamebySubline'),
     setDataTypeList: set('datatypeList'),
@@ -139,7 +141,7 @@ export default ({
         },
         { root: true },
       );
-      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '7');
+      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '7' || d.parametercategory === '58');
       commit('setParamtersList', parameters);
       return parameters;
     },

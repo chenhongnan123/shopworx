@@ -55,6 +55,25 @@
            {{filterStation.name}}
          </v-chip>
         </div>
+        <div v-if="filterRecipe.recipename != null" class="text-none ml-2">
+          <v-btn text
+          v-if="chipforRecipe"
+         >
+           {{ $t('displayTags.recipeName') }}
+         </v-btn>
+          <v-chip
+            v-if="chipforRecipe"
+            class="ma-2"
+            close
+            close-icon="mdi-close"
+            color="info"
+            label
+            outlined
+            @click:close="(chipforRecipe = false); btnReset();"
+           >
+           {{filterRecipe.recipename}}
+         </v-chip>
+        </div>
         <v-spacer></v-spacer>
         <!-- <v-btn small color="primary" class="text-none ml-2"> -->
                         <AddRecipe ref="addUpdateRecipe"/>
@@ -215,6 +234,7 @@ export default {
     return {
       sublines: null,
       stations: null,
+      recipesfilter: null,
       deleting: false,
       headers: [
         {
@@ -256,6 +276,7 @@ export default {
       ],
       chipforSubline: true,
       chipforStation: true,
+      chipforRecipe: true,
       visible: false,
       dialog: false,
       dialogDup: false,
@@ -298,6 +319,9 @@ export default {
     this.$root.$on('filteredStation', (data) => {
       this.stations = data;
     });
+    this.$root.$on('filteredRecipe', (data) => {
+      this.recipesfilter = data;
+    });
   },
   async beforeDestroy() {
     await this.btnReset();
@@ -306,7 +330,7 @@ export default {
   computed: {
     ...mapState('recipeManagement', ['recipeList', 'stationList',
       'lineList', 'subLineList', 'filterLine', 'filterSubLine',
-      'filterStation', 'subStationList']),
+      'filterStation', 'subStationList', 'filterRecipe']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -590,6 +614,10 @@ export default {
     } else if (this.stations != null) {
       this.setFilterStation(this.stations);
       this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
+    } else if (this.recipesfilter != null) {
+      this.setRecipeList(this.filterBList.filter(
+        (o) => o.recipename === this.recipesfilter.recipename,
+      ));
     }
     this.toggleFilter();
   },

@@ -355,7 +355,6 @@ export default {
               type: 'success',
               message: 'ORDER_CREATED',
             });
-            this.dialog = false;
             this.selectedPart = null;
             this.assetId = null;
             this.partMatrix = {};
@@ -410,6 +409,8 @@ export default {
               });
             });
             await this.createBulkOrderRoadmap(payloadRoadDetails);
+            this.saving = false;
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,
@@ -417,7 +418,6 @@ export default {
               message: 'ERROR_CREATING_PLAN',
             });
           }
-          this.saving = false;
         }
       }
     },

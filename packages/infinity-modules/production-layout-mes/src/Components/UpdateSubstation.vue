@@ -40,6 +40,15 @@
         <v-text-field label="Description" type="Description"
         hint="For example, Updated by Manager"
          v-model="newSubstation.description"></v-text-field>
+        <v-textarea
+        dense
+        rows="3"
+        outlined
+        single-line
+        v-model="newSubstation.jsondata"
+        label="Paste JSON here"
+        :rules="configRules"
+      ></v-textarea>
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
@@ -96,6 +105,10 @@ export default {
       valid: true,
       name: '',
       numbers: '',
+      configRules: [
+        (v) => !!v || 'Configuration is required.',
+        (v) => this.isValidJsonString(v) || 'Input valid JSON configuration.',
+      ],
       numberRules: [(value) => !!value || 'Number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
       ],
@@ -115,6 +128,17 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayoutMes', ['updateSubstation']),
+    isValidJsonString(jsonString) {
+      if (!(jsonString && typeof jsonString === 'string')) {
+        return false;
+      }
+      try {
+        JSON.parse(jsonString);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
     compareValues(val) {
       if (val.name !== this.substation.name) {
         this.payload.name = val.name;

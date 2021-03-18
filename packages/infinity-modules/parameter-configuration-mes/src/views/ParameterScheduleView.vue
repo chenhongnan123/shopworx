@@ -489,6 +489,7 @@ export default {
         { text: 'Size', value: 'size', width: 80 },
         { text: 'PLC Parameter', value: 'plc_parameter', width: 140 },
         { text: 'Prefix', value: 'prefix', width: 120 },
+        { text: 'Monitor', value: 'monitorvalue', width: 130 },
       ],
       parameterListSave: [],
       confirmDialog: false,

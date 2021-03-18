@@ -51,6 +51,15 @@
         <v-text-field label="Description"
          hint="For example, added by Manager"
          type="text" v-model="newSubstation.description"></v-text-field>
+        <v-textarea
+        dense
+        rows="3"
+        outlined
+        single-line
+        v-model="newSubstation.jsondata"
+        label="Paste JSON here"
+        :rules="configRules"
+      ></v-textarea>
          <v-switch
         v-model="newSubstation.initialsubstation"
         label="Initial Sub Station"
@@ -92,6 +101,10 @@ export default {
       valid: true,
       name: '',
       numbers: '',
+      configRules: [
+        (v) => !!v || 'Configuration is required.',
+        (v) => this.isValidJsonString(v) || 'Input valid JSON configuration.',
+      ],
       numberRules: [(v) => v.length > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
@@ -125,6 +138,17 @@ export default {
         this.btnInitdisable = true;
       } else {
         this.btnInitdisable = false;
+      }
+    },
+    isValidJsonString(jsonString) {
+      if (!(jsonString && typeof jsonString === 'string')) {
+        return false;
+      }
+      try {
+        JSON.parse(jsonString);
+        return true;
+      } catch (error) {
+        return false;
       }
     },
     async getfilteredStations() {
