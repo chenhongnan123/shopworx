@@ -208,11 +208,7 @@ export default {
       'deleteModuleAccess',
       'deleteWebAppAccess',
       'deleteReportsCategoryAccess',
-      'deleteReportAccess',
-      'deleteReportViewAccess',
       'createModuleAccess',
-      'createReportAccess',
-      'createReportViewAccess',
     ]),
     async refresh() {
       this.loading = true;
@@ -416,8 +412,6 @@ export default {
         this.deleteModuleAccess(item.roleId),
         this.deleteWebAppAccess(item.roleId),
         this.deleteReportsCategoryAccess(item.roleId),
-        this.deleteReportAccess(item.roleId),
-        this.deleteReportViewAccess(item.roleId),
       ]);
       if (results.every((res) => res === true)) {
         const permissionsByModule = item.permissions.reduce((result, currentValue) => {
@@ -428,7 +422,6 @@ export default {
           result[moduleId].push(currentValue);
           return result;
         }, {});
-        let reportCategoryIds = [];
         const payload = {
           roleId: item.roleId,
           moduleAndReportsCategoryIds: Object.keys(permissionsByModule).map((moduleId) => {
@@ -445,21 +438,13 @@ export default {
               || modules[0].moduleName.toUpperCase().trim() === 'CONFIGURATION') {
               mod.webAppIds = modules.map((m) => m.id);
             } else if (modules[0].moduleName.toUpperCase().trim() === 'REPORTS') {
-              reportCategoryIds = modules.map((m) => m.id);
-              mod.reportsCategoryIds = reportCategoryIds;
+              mod.reportsCategoryIds = modules.map((m) => m.id);
             }
             return mod;
           }),
         };
-        const created = await Promise.all([
-          this.createModuleAccess(payload),
-          this.createReportAccess(item.roleId),
-          this.createReportViewAccess({
-            reportCategoryIds,
-            roleId: item.roleId,
-          }),
-        ]);
-        if (created.every((r) => r === true)) {
+        const created = await this.createModuleAccess(payload);
+        if (created) {
           this.setAlert({
             show: true,
             type: 'success',
