@@ -1,5 +1,7 @@
 import { set, reactiveSet, reactiveSetArray } from '@shopworx/services/util/store.helper';
 import IndustryService from '@shopworx/services/api/industry.service';
+import CustomerService from '@shopworx/services/api/customer.service';
+import SiteService from '@shopworx/services/api/site.service';
 
 export default ({
   namespaced: true,
@@ -19,23 +21,8 @@ export default ({
       },
     },
     onboardingSteps: [{
-      name: 'Customer',
-      component: 'customer',
-      isComplete: false,
-      isLoading: false,
-    }, {
-      name: 'Site',
-      component: 'site',
-      isComplete: false,
-      isLoading: false,
-    }, {
       name: 'SMS settings',
       component: 'sms',
-      isComplete: false,
-      isLoading: false,
-    }, {
-      name: 'Assets',
-      component: 'assets',
       isComplete: false,
       isLoading: false,
     }, {
@@ -130,6 +117,57 @@ export default ({
         if (data && data.results) {
           commit('setMasterElementsAndTags', data.results);
           return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    createCustomer: async (_, payload) => {
+      try {
+        const { data } = await CustomerService.addCustomer(payload);
+        if (data && data.created) {
+          return { id: data.customerId };
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    createSite: async ({ dispatch }, { siteName, payload }) => {
+      try {
+        const { data } = await CustomerService.addSite(siteName, payload);
+        if (data && data.created) {
+          const active = await dispatch('setActiveCustomer', payload.customerId);
+          if (active) {
+            return { id: active.siteId };
+          }
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    setActiveCustomer: async (_, customerId) => {
+      try {
+        const { data } = await CustomerService.setActiveCustomer(customerId);
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addLicense: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addLicense(payload);
+        if (data && data.created) {
+          return data.created;
         }
       } catch (e) {
         return false;

@@ -76,11 +76,21 @@ export default ({
       tags,
       records,
       assetId,
+      webhooks = [],
     }) => {
       let recordsCreated = false;
       try {
         const elementId = await dispatch('createElement', element);
         if (elementId) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId,
+              },
+            });
+          }
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
             elementId,
@@ -281,6 +291,18 @@ export default ({
     postRecord: async (_, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postRecord(elementName, payload);
+        if (data && data.errors) {
+          return false;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    createWebhook: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.createWebhook(payload);
         if (data && data.errors) {
           return false;
         }

@@ -15,12 +15,14 @@
                 :key="item.id"
                 :label="item.name"
                 v-model="item.selected"
+                :disabled="info.isComplete || item.isComplete || saving"
               ></v-checkbox>
               <asset-input
                 :ref="`asset${item.id}`"
                 :asset-info="item"
                 v-if="item.selected"
                 :key="`input-${item.id}`"
+                :disable="info.isComplete || item.isComplete || saving"
               />
             </template>
           </div>
@@ -33,7 +35,8 @@
         <v-btn
           block
           v-if="items.length"
-          :disabled="!isValid || !isSelected"
+          :loading="saving"
+          :disabled="!isValid || !isSelected || info.isComplete"
           color="primary"
           type="submit"
         >
@@ -67,9 +70,11 @@ export default {
   },
   data() {
     return {
+      saving: false,
       loading: false,
       isValid: false,
       items: [],
+      savedData: [],
       licensePayload: {
         license: '',
         status: 'ACTIVE',
@@ -81,7 +86,7 @@ export default {
         category: '',
         comments: '',
         beginTimestamp: '',
-        begineDate: '',
+        beginDate: '',
       },
     };
   },
@@ -111,6 +116,7 @@ export default {
         assetName: a.assetName,
         name: a.assetDescription,
         selected: false,
+        isComplete: false,
         element,
         tags,
         records: [],
@@ -119,6 +125,7 @@ export default {
     });
     if (this.info.data) {
       this.setDetails();
+      this.savedData = [...this.info.data];
     }
     this.loading = false;
   },
@@ -141,33 +148,39 @@ export default {
     ...mapActions('newCustomer', [
       'getAssets',
       'getMasterElementsAndTags',
+      'addLicense',
     ]),
+    ...mapActions('element', ['createBulkRecords']),
     ...mapMutations('newCustomer', [
       'updateCustomerData',
       'setSelectedIndustry',
     ]),
+    ...mapMutations('helper', ['setAlert']),
     setDetails() {
       const { data } = this.info;
       for (let i = 0; i < this.items.length; i += 1) {
         for (let j = 0; j < data.length; j += 1) {
           if (this.items[i].id === data[j].assetPayload.assetId) {
             this.items[i].selected = true;
+            this.items[i].isComplete = data[j].isComplete;
             this.items[i].license = data[j].licensePayload.license;
             this.items[i].records = data[j].assetPayload.records;
           }
         }
       }
     },
-    save() {
+    async save() {
+      this.saving = true;
       const licenseTimestamp = new Date().getTime();
-      const selectedAssets = this.items.filter((i) => i.selected);
+      const totalAssets = this.items.filter((i) => i.selected);
       let totalAssetCount = 0;
-      for (let i = 0; i < selectedAssets.length; i += 1) {
-        const [input] = this.$refs[`asset${selectedAssets[i].id}`];
+      for (let i = 0; i < totalAssets.length; i += 1) {
+        const [input] = this.$refs[`asset${totalAssets[i].id}`];
         const { rowData } = input;
         totalAssetCount += rowData.length;
       }
-      const payload = selectedAssets.map((a) => {
+      const selectedAssets = this.items.filter((i) => i.selected && !i.isComplete);
+      const createAssets = selectedAssets.map(async (a, index) => {
         const {
           id,
           element,
@@ -186,32 +199,65 @@ export default {
             manualplanstop: false,
           }));
         }
-        return {
-          licensePayload: {
-            ...this.licensePayload,
-            assetId: id,
-            beginTimestamp: licenseTimestamp,
-            beginDate: formatDate(licenseTimestamp, 'dd-MM-yyyy'),
-            license,
-            totalAssetCount,
-            currentAssetCount: records.length,
-          },
-          assetPayload: {
-            element,
-            tags,
-            records,
-            assetId: id,
-          },
+        const licensePayload = {
+          ...this.licensePayload,
+          assetId: id,
+          beginTimestamp: licenseTimestamp,
+          beginDate: formatDate(licenseTimestamp, 'dd-MM-yyyy'),
+          license,
+          totalAssetCount,
+          currentAssetCount: records.length,
         };
+        const assetPayload = {
+          element,
+          tags,
+          records,
+          assetId: id,
+          webhooks: [{
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'WRITE',
+          }, {
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'UPDATE',
+          }],
+        };
+        const licenseCreated = await this.addLicense(licensePayload);
+        if (licenseCreated) {
+          const assetsCreated = await this.createBulkRecords(assetPayload);
+          if (assetsCreated) {
+            this.savedData.push({
+              licensePayload,
+              assetPayload,
+              isComplete: true,
+            });
+            const data = {
+              key: 2,
+              data: this.savedData,
+              isComplete: index === selectedAssets.length - 1,
+            };
+            this.updateCustomerData(data);
+            localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
+          }
+          return assetsCreated;
+        }
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'INVALID_LICENSE',
+          options: {
+            asset: a.assetName,
+          },
+        });
+        return false;
       });
-      const data = {
-        key: 2,
-        data: payload,
-        isComplete: true,
-      };
-      this.updateCustomerData(data);
-      localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
-      this.$router.push({ params: { id: 3 } });
+      const created = await Promise.all(createAssets);
+      this.setDetails();
+      if (created.every((c) => c === true)) {
+        this.$router.push({ params: { id: 3 } });
+      }
+      this.saving = false;
     },
   },
 };

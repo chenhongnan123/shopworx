@@ -14,7 +14,7 @@
                 label="Customer name"
                 v-model="customerDescription"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -25,7 +25,7 @@
                 item-value="id"
                 v-model="industryId"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-select>
             </v-col>
           </v-row>
@@ -36,7 +36,7 @@
                 label="Contact name"
                 v-model="contactName"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -45,7 +45,7 @@
                 prefix="+91"
                 v-model="contactNumber"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -53,7 +53,7 @@
             label="Address"
             v-model="addressLine1"
             :rules="requiredRule"
-            :disabled="loading"
+            :disabled="loading || saving || info.isComplete"
           ></v-text-field>
           <v-row>
             <v-col cols="3">
@@ -61,7 +61,7 @@
                 label="Area"
                 v-model="area"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -69,7 +69,7 @@
                 label="City"
                 v-model="city"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -77,7 +77,7 @@
                 label="State"
                 v-model="state"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -85,7 +85,7 @@
                 label="Pincode"
                 v-model="pinCode"
                 :rules="requiredRule"
-                :disabled="loading"
+                :disabled="loading || saving || info.isComplete"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -94,7 +94,8 @@
       <v-card-actions>
         <v-btn
           block
-          :disabled="!isValid"
+          :disabled="!isValid || info.isComplete"
+          :loading="saving"
           color="primary"
           type="submit"
         >
@@ -118,6 +119,7 @@ export default {
   },
   data() {
     return {
+      saving: false,
       loading: false,
       isValid: false,
       customerDescription: '',
@@ -146,7 +148,11 @@ export default {
     ...mapState('newCustomer', ['industries', 'customerData']),
   },
   methods: {
-    ...mapActions('newCustomer', ['getIndustries']),
+    ...mapActions('newCustomer', [
+      'getIndustries',
+      'createCustomer',
+      'createSite',
+    ]),
     ...mapMutations('newCustomer', ['updateCustomerData', 'setSelectedIndustry']),
     getName(description) {
       return description
@@ -187,7 +193,8 @@ export default {
       this.contactName = contactName;
       this.setSelectedIndustry(industryId);
     },
-    save() {
+    async save() {
+      this.saving = true;
       const {
         customerDescription,
         industryId,
@@ -214,6 +221,7 @@ export default {
         addressLine1,
         addressLine2: '',
         addressLine3: '',
+        addressType: 'BILLING_ADDRESS',
         area,
         city,
         state,
@@ -223,18 +231,33 @@ export default {
         x: '',
         y: '',
       };
-      const data = {
-        key: 1,
-        data: {
-          customerPayload,
-          sitePayload,
-        },
-        isComplete: true,
-      };
-      this.updateCustomerData(data);
-      localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
-      this.setSelectedIndustry(industryId);
-      this.$router.push({ params: { id: 2 } });
+      const createdCustomer = await this.createCustomer(customerPayload);
+      if (createdCustomer && createdCustomer.id) {
+        customerPayload.id = createdCustomer.id;
+        const createdSite = await this.createSite({
+          siteName: sitePayload.siteName,
+          payload: {
+            ...sitePayload,
+            customerId: createdCustomer.id,
+          },
+        });
+        if (createdSite && createdSite.id) {
+          sitePayload.id = createdSite.id;
+          const data = {
+            key: 1,
+            data: {
+              customerPayload,
+              sitePayload,
+            },
+            isComplete: true,
+          };
+          this.updateCustomerData(data);
+          localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
+          this.setSelectedIndustry(industryId);
+          this.$router.push({ params: { id: 2 } });
+        }
+      }
+      this.saving = false;
     },
   },
 };

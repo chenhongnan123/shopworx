@@ -9,6 +9,10 @@ class SiteService {
     return this.request.get(`/server/sites/${siteId}/onboardingcompleted/true`);
   }
 
+  addLicense(payload) {
+    return this.request.post('/server/customerlicense', payload);
+  }
+
   getLicense(customerId, siteId) {
     return this.request.get(`/server/customerlicense/${customerId}/${siteId}`);
   }

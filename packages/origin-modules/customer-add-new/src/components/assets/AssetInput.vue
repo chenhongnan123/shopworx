@@ -2,19 +2,13 @@
   <v-card flat>
     <v-card-text>
       <v-row no-gutters>
-        <v-col lg="6" xl="4">
-          <v-text-field
-            label="License key*"
-            v-model="license"
-            :rules="requiredRule"
-          ></v-text-field>
-        </v-col>
-        <v-col class="text-right">
+        <v-col>
           <v-btn
             small
             @click="addRow"
             color="success"
-            class="text-none mt-3"
+            class="text-none"
+            :disabled="disable"
           >
             <v-icon left>mdi-plus</v-icon>
             Add asset
@@ -23,8 +17,8 @@
             small
             color="error"
             @click="deleteSelectedRows"
-            class="text-none ml-2 mt-3"
-            :disabled="!rowsSelected"
+            class="text-none ml-2"
+            :disabled="!rowsSelected || disable"
           >
             <v-icon left>mdi-delete</v-icon>
             Delete selected asset(s)
@@ -43,14 +37,60 @@
         style="width: 100%; height: 300px;"
         @selection-changed="onSelectionChanged"
       />
+      <div class="mt-8">
+        Please share the following with the license generator:
+      </div>
+      <ul>
+        <li>
+          Asset count: <span class="primary--text font-weight-medium">
+            {{ rowData.length }}
+          </span>
+        </li>
+        <li>
+          Asset Id: <span class="primary--text font-weight-medium">
+            {{ assetInfo.id }}
+          </span>
+        </li>
+        <li>
+          Customer Id: <span class="primary--text font-weight-medium">
+            {{ customerId }}
+          </span>
+        </li>
+        <li>
+          Site Id: <span class="primary--text font-weight-medium">
+            {{ siteId }}
+          </span>
+        </li>
+        <li>
+          License start date: <span class="primary--text font-weight-medium">
+            {{ beginDate }}
+          </span>
+        </li>
+        <li>
+          License expiry date: <span class="primary--text font-weight-medium">
+            31-12-2030
+          </span>
+        </li>
+      </ul>
+      <v-text-field
+        outlined
+        dense
+        class="mt-4"
+        v-model="license"
+        :disabled="disable"
+        label="License key*"
+        :rules="requiredRule"
+      ></v-text-field>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'AssetInput',
@@ -61,6 +101,10 @@ export default {
     assetInfo: {
       type: Object,
       required: true,
+    },
+    disable: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -73,6 +117,7 @@ export default {
       gridOptions: null,
       gridColumnApi: null,
       defaultColDef: null,
+      licenseTimestamp: new Date().getTime(),
       requiredRule: [
         (v) => !!v || 'Required.',
       ],
@@ -84,7 +129,7 @@ export default {
     };
     this.defaultColDef = {
       filter: false,
-      editable: true,
+      editable: !this.disable,
       resizable: true,
       floatingFilter: false,
       checkboxSelection: this.isFirstColumn,
@@ -101,6 +146,7 @@ export default {
     this.rowData = [...this.assetInfo.records];
   },
   computed: {
+    ...mapState('newCustomer', ['customerData']),
     tags() {
       return this.assetInfo.tags
         .filter((t) => (
@@ -108,6 +154,15 @@ export default {
           && t.tagName !== 'manualplanstart'
           && t.tagName !== 'manualplanstop'
         ));
+    },
+    beginDate() {
+      return formatDate(this.licenseTimestamp, 'dd-MM-yyyy');
+    },
+    customerId() {
+      return this.customerData['1'].data.customerPayload.id;
+    },
+    siteId() {
+      return this.customerData['1'].data.sitePayload.id;
     },
   },
   methods: {
@@ -120,7 +175,7 @@ export default {
     isFirstColumn(params) {
       const displayedColumns = params.columnApi.getAllDisplayedColumns();
       const thisIsFirstColumn = displayedColumns[0] === params.column;
-      return thisIsFirstColumn;
+      return thisIsFirstColumn && !this.disable;
     },
     onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;

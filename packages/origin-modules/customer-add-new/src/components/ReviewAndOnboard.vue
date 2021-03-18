@@ -71,10 +71,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import Customer from './review/Customer.vue';
-import Site from './review/Site.vue';
 import Sms from './review/Sms.vue';
-import Assets from './review/Assets.vue';
 import Apps from './review/Apps.vue';
 import Reports from './review/Reports.vue';
 import ReportViews from './review/ReportViews.vue';
@@ -85,10 +82,7 @@ import Roles from './review/Roles.vue';
 export default {
   name: 'ReviewAndOnboard',
   components: {
-    Customer,
-    Site,
     Sms,
-    Assets,
     Apps,
     Reports,
     ReportViews,
@@ -121,7 +115,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('newCustomer', ['updateOnboardingSteps']),
+    ...mapMutations('newCustomer', [
+      'updateOnboardingSteps',
+      'updateCustomerData',
+    ]),
     onComplete(index) {
       const len = this.onboardingSteps.length;
       const step = this.onboardingSteps[index];
@@ -133,6 +130,12 @@ export default {
           isComplete: true,
         },
       });
+      const data = {
+        key: 3,
+        data: this.onboardingSteps,
+        isComplete: false,
+      };
+      this.updateCustomerData(data);
       if (len !== index + 1) {
         const nextStep = this.onboardingSteps[index + 1];
         this.updateOnboardingSteps({
@@ -143,6 +146,12 @@ export default {
             isComplete: false,
           },
         });
+        const d = {
+          key: 3,
+          data: this.onboardingSteps,
+          isComplete: false,
+        };
+        this.updateCustomerData(d);
       } else {
         this.saving = false;
         console.log('success');

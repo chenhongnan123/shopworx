@@ -88,11 +88,21 @@ export default ({
       tags,
       records,
       assetId,
+      webhooks = [],
     }) => {
       let recordsCreated = false;
       try {
         const elementId = await dispatch('createElement', element);
         if (elementId) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId,
+              },
+            });
+          }
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
             elementId,
