@@ -1,37 +1,16 @@
 <template>
   <div class="d-flex align-center">
     <div class="d-flex mr-2">
-      <v-menu v-if="prefix">
-        <template v-slot:activator="{ on, attrs }">
-          <div
-            v-bind="attrs"
-            v-on="on"
-            style="margin-right: 2px;"
-          >
-            <img :src="require(`@shopworx/assets/flags/${flag}.svg`)" width="22" />
-          </div>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="(country, i) in countries"
-            :key="i"
-            @click="onSelectFlag(country)"
-          >
-            <v-list-item-title class="d-flex">
-              <img
-                :src="require(`@shopworx/assets/flags/${country.flag}.svg`)"
-                width="22"
-                class="mr-2"
-              />
-              <span>{{ country.name }} ({{ country.code }})</span>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <span v-if="!prefix">
+      <country-selection
+        v-if="prefix"
+        :countryCode="prefix"
+        @on-select="onSelectFlag"
+        styles="margin-right: 2px; margin-top: 4px;"
+      />
+      <span v-else>
         <v-icon>
-        {{'$identifier'}}
-      </v-icon>
+          {{'$identifier'}}
+        </v-icon>
       </span>
     </div>
 
@@ -39,6 +18,7 @@
       :id="id"
       autofocus
       type="email"
+      ref="username"
       :prefix="prefix"
       :disabled="loading"
       v-model="identifier"
@@ -46,12 +26,12 @@
       :error-messages="errorMsg"
       :label="$t('login.identifier')"
       :rules="identifierValidationRules"
-      ref="username"
     ></v-text-field>
   </div>
 </template>
 
 <script>
+import CountrySelection from '@/components/auth/CountrySelection.vue';
 /* eslint-disable */
 export default {
   name: 'IdentifierInput',
@@ -72,34 +52,13 @@ export default {
       type: String,
     },
   },
+  components: {
+    CountrySelection
+  },
   data() {
     return {
-      showFlags: false,
-      flag: 'IN',
-      countryCode: '+91',
       errorMsg: '',
-      countries: [
-        {
-          name: 'India',
-          flag: 'IN',
-          code: '+91',
-        },
-        {
-          name: 'China',
-          flag: 'CN',
-          code: '+86',
-        },
-        {
-          name: 'Thailand',
-          flag: 'TH',
-          code: '+66',
-        },
-        {
-          name: 'Germany',
-          flag: 'DE',
-          code: '+49',
-        },
-      ],
+      countryCode: '+91',
     };
   },
   computed: {
@@ -176,18 +135,16 @@ export default {
       }
       return false;
     },
-    setFlag(country) {
-      this.flag = country.flag;
+    onSelectFlag(country) {
       this.countryCode = country.code;
-    },
-    async onSelectFlag(country) {
-      await this.setFlag(country);
-      this.$refs.username.validate();
-      this.$emit('on-update', {
-        isMobile: this.isMobileNumber,
-        prefix: this.prefix.slice(1),
+      this.$nextTick(() => {
+        this.$refs.username.validate();
+        this.$emit('on-update', {
+          isMobile: this.isMobileNumber,
+          prefix: this.prefix.slice(1),
+        });
       });
-    }
+    },
   },
 };
 </script>
