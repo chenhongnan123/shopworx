@@ -16,7 +16,7 @@
       </template>
     </v-row>
     <validation-observer ref="form" #default="{ handleSubmit }">
-      <v-form @submit.prevent="handleSubmit(onSubmit)">
+      <v-form @submit.prevent="handleSubmit(onSubmit)" v-model="isValid">
         <v-card
           flat
           :key="index"
@@ -30,6 +30,7 @@
                 v-model="user.identifier"
                 :id="`identifier-${index}`"
                 @on-update="setIdentifier($event, index)"
+                :error="user.error"
               />
             </v-col>
             <v-col cols="4" class="py-0">
@@ -82,6 +83,7 @@
           id="inviteUsers"
           class="text-none"
           :loading="loading"
+          :disabled="!isValid"
         >
           <v-icon
             left
@@ -129,6 +131,7 @@ export default {
       invitedUsers: [],
       loading: false,
       success: false,
+      isValid: false,
     };
   },
   computed: {
@@ -143,6 +146,7 @@ export default {
     setIdentifier({ isMobile, prefix }, index) {
       this.users[index].isMobile = isMobile;
       this.users[index].prefix = prefix;
+      delete this.users[index].error;
     },
     addUser() {
       this.users.push({
