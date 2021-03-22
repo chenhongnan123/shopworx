@@ -60,6 +60,20 @@
               <v-text-field :disabled="!toggleDisable" label="Recipe Name"
                v-model="recipename"></v-text-field>
             </v-col>
+            <v-col cols="12" md="2" class="py-2">
+              <v-select
+                solo
+                outline
+                dense
+                single-line
+                v-model="filters"
+                hide-details
+                item-text="name"
+                item-value="id"
+                :items="recipeFilters"
+                @change="changeRecipeList()"
+              ></v-select>
+            </v-col>
           </v-row>
           <v-data-table :headers="headers" :items="recipeListDetails" item-key="tagname">
             <template v-slot:item="{ item, index }">
@@ -171,6 +185,20 @@ export default {
   name: 'RecipeDetails',
   data() {
     return {
+      filters: {
+        name: 'Recipe Parameters',
+        id: 1,
+      },
+      recipeFilters: [
+        {
+          name: 'Recipe Parameters',
+          id: 1,
+        },
+        {
+          name: 'Calibration',
+          id: 2,
+        },
+      ],
       headers: [
         {
           text: 'No.',
@@ -231,7 +259,7 @@ export default {
   async created() {
     console.log(this.$route.params);
     await this.getRecipeDetailListRecords(
-      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
     );
     await this.getDataTypes('');
     // this.substationname = this.$route.params.id.substationname;
@@ -246,11 +274,12 @@ export default {
         `?query=substationid=="${this.substationid}"`,
       );
       this.parametersList.forEach((element) => {
-        if (element.datatype === '11') {
+        if (element.datatype === 11) {
           payload.push({
             tagname: element.name,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
+            parametercategory: element.parametercategory,
             parametervalue: '',
             lineid: this.$route.params.lineid,
             linename: this.$route.params.linename,
@@ -264,6 +293,7 @@ export default {
             tagname: element.name,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
+            parametercategory: element.parametercategory,
             parametervalue: 0,
             lineid: this.$route.params.lineid,
             linename: this.$route.params.linename,
@@ -276,7 +306,7 @@ export default {
       });
       await this.createRecipeDetails(payload);
       await this.getRecipeDetailListRecords(
-        `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+        `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
       );
     }
     this.socket = socketioclient.connect('http://:10190');
@@ -316,6 +346,18 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     addNewRecipe() {
       this.dialog = true;
+    },
+    async changeRecipeList() {
+      const filterSelected = this.filters;
+      if (filterSelected === 1) {
+        await this.getRecipeDetailListRecords(
+          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
+        );
+      } else {
+        await this.getRecipeDetailListRecords(
+          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26parametercategory=="58"`,
+        );
+      }
     },
     checkDatatype(item) {
       if (item === '9') {
@@ -449,9 +491,7 @@ export default {
         console.log('event received');
         if (data) {
           this.recipeListDetails.forEach((element) => {
-            if (data[element.tagname]) {
-              this.$set(element, 'monitorvalue', data[element.tagname]);
-            }
+            this.$set(element, 'monitorvalue', data[element.tagname]);
           });
         }
       });
@@ -505,26 +545,27 @@ export default {
           this.recipeListDetails.forEach(async (element) => {
             if (data[element.tagname]) {
               this.$set(element, 'parametervalue', data[element.tagname]);
-              const request = {
-                parametervalue: data[element.tagname],
-              };
-              const objectForUpdate = {
-                payload: request,
-                query: `?query=tagname=="${element.tagname}"%26%26recipeid=="${this.$route.params.id}"`,
-              };
-              await this.updateRecipeDetails(objectForUpdate);
+              // const request = {
+              //   parametervalue: data[element.tagname],
+              // };
+              // const objectForUpdate = {
+              //   payload: request,
+              //   query: `?query=tagname=="${element.tagname}"%26
+              // %26recipeid=="${this.$route.params.id}"`,
+              // };
+              // await this.updateRecipeDetails(objectForUpdate);
             }
           });
-          const recipe = {
-            editedby: this.userName,
-            editedtime: new Date().getTime(),
-            versionnumber: this.recipeList[0].versionnumber + 1,
-          };
-          const object2 = {
-            payload: recipe,
-            query: `?query=recipenumber=="${this.$route.params.id}"`,
-          };
-          this.updateRecipe(object2);
+          // const recipe = {
+          //   editedby: this.userName,
+          //   editedtime: new Date().getTime(),
+          //   versionnumber: this.recipeList[0].versionnumber + 1,
+          // };
+          // const object2 = {
+          //   payload: recipe,
+          //   query: `?query=recipenumber=="${this.$route.params.id}"`,
+          // };
+          // this.updateRecipe(object2);
         }
       });
       await this.downloadFromPLC(object);
@@ -536,6 +577,7 @@ export default {
           f.parametervalue = this.recipeValue;
         }
       });
+      this.saveBtnEnable = true;
       this.dialog = false;
     },
     async saveVersion() {
@@ -550,6 +592,7 @@ export default {
           tagname: ls.tagname,
           datatype: ls.datatype,
           recipeid: ls.recipeid,
+          parametercategory: ls.parametercategory,
           parametervalue: ls.parametervalue,
           lineid: ls.lineid,
           linename: ls.linename,
@@ -573,6 +616,7 @@ export default {
       };
       const updated = this.updateRecipe(object);
       await this.updateProductDetails(productDetailUpdate);
+      this.saveBtnEnable = false;
       if (updated) {
         this.setAlert({
           show: true,

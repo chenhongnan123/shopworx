@@ -206,6 +206,8 @@ export default ({
           plcrecipename: '',
           plcrecipenumber: '',
           plcrecipeversion: '',
+          notmatchname: 1,
+          notmatchversion: 1,
         }));
       }
       commit('setRecipeList', recipe);

@@ -1261,9 +1261,7 @@ export default {
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
         if (data) {
           this.parameterList.forEach((element) => {
-            if (data[element.name] || data[element.name] === 0) {
-              this.$set(element, 'monitorvalue', data[element.name]);
-            }
+            this.$set(element, 'monitorvalue', data[element.name]);
           });
         }
       });

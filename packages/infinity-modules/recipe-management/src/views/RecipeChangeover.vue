@@ -64,11 +64,12 @@
           <td>{{ item.machinename }}</td>
           <td>{{ item.substationname }}</td>
           <td>{{ item.recipename }}</td>
-          <!-- <td>{{ item.recipenumber}}</td> -->
           <td>{{ item.recipeversion}}</td>
-          <td>{{ item.plcrecipename}}</td>
-          <!-- <td>{{ item.plcrecipenumber}}</td> -->
-          <td>{{ item.plcrecipeversion}}</td>
+          <td v-if="item.notmatchname == 1"><font color=error>{{ item.plcrecipename}}</font></td>
+          <td v-else>{{ item.plcrecipename}}</td>
+          <td v-if="item.notmatchversion == 1">
+            <font color=error>{{ item.plcrecipeversion}}</font></td>
+          <td v-else>{{ item.plcrecipeversion}}</td>
           <td></td>
           <td></td>
           </tr>
@@ -161,8 +162,8 @@ export default {
     // await this.getRecipeListRecords('');
     this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
     this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
-    const list = await Promise.all(this.recipeList.map(async (recipe) => {
-      let { plcrecipename, plcrecipeversion } = recipe;
+    for (let i = 0; i < this.recipeList.length; i += 1) {
+      const recipe = this.recipeList[i];
       const object = {
         lineid: Number(recipe.lineid),
         sublineid: recipe.sublineid,
@@ -173,26 +174,55 @@ export default {
         if (data) {
           console.log(data);
           console.log(recipe.recipename);
+          console.log(data.substationid);
+          console.log(recipe.substationid);
           if (data.substationid === recipe.substationid) {
-            console.log(data.substationid);
-            console.log(recipe.substationid);
-            plcrecipename = data.recipename;
-            plcrecipeversion = data.recipeversion;
-            this.$set(recipe, 'plcrecipename', data.recipename);
-            this.$set(recipe, 'plcrecipeversion', data.recipeversion);
+            console.log('matched');
+            this.recipeList[i].plcrecipename = data.recipename;
+            this.recipeList[i].plcrecipeversion = data.recipeversion;
+            if (recipe.recipename === data.recipename) {
+              this.recipeList[i].notmatchname = 0;
+            }
+            if (recipe.recipeversion === data.recipeversion) {
+              this.recipeList[i].notmatchversion = 0;
+            }
           }
         }
       });
+      // eslint-disable-next-line
       await this.getMonitorValues(object);
-      return {
-        ...recipe,
-        plcrecipename,
-        // plcrecipenumber,
-        plcrecipeversion,
-      };
-    }));
-    console.log(list);
-    this.recipeList = list;
+    }
+    // this.recipeList = this.recipeList.map(async (recipe) => {
+    //   let { plcrecipename, plcrecipeversion } = recipe;
+    //   const object = {
+    //     lineid: Number(recipe.lineid),
+    //     sublineid: recipe.sublineid,
+    //     substationid: recipe.substationid,
+    //   };
+    //   this.socket.on(`update_parameter_${object.lineid}
+    // _${object.sublineid}_${object.substationid}`, (data) => {
+    //     console.log('event received');
+    //     if (data) {
+    //       console.log(data);
+    //       console.log(recipe.recipename);
+    //       if (data.substationid === recipe.substationid) {
+    //         console.log(data.substationid);
+    //         console.log(recipe.substationid);
+    //         plcrecipename = data.recipename;
+    //         plcrecipeversion = data.recipeversion;
+    //         this.$set(recipe, 'plcrecipename', data.recipename);
+    //         this.$set(recipe, 'plcrecipeversion', data.recipeversion);
+    //       }
+    //     }
+    //   });
+    //   await this.getMonitorValues(object);
+    //   return {
+    //     ...recipe,
+    //     plcrecipename,
+    //     // plcrecipenumber,
+    //     plcrecipeversion,
+    //   };
+    // })
   },
   beforeDestroy() {
     this.socket.close();
@@ -305,7 +335,38 @@ export default {
       this.dialog = true;
     },
     async RefreshUI() {
-      await this.getRecipeListRecords('');
+      this.orderList = await this.getOrderRecords('?query=orderstatus=="Running"');
+      this.recipeList = await this.getProductDetails(`?query=productnumber=="${this.orderList[0].productid}"`);
+      for (let i = 0; i < this.recipeList.length; i += 1) {
+        const recipe = this.recipeList[i];
+        const object = {
+          lineid: Number(recipe.lineid),
+          sublineid: recipe.sublineid,
+          substationid: recipe.substationid,
+        };
+        this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
+          console.log('event received');
+          if (data) {
+            console.log(data);
+            console.log(recipe.recipename);
+            console.log(data.substationid);
+            console.log(recipe.substationid);
+            if (data.substationid === recipe.substationid) {
+              console.log('matched');
+              this.recipeList[i].plcrecipename = data.recipename;
+              this.recipeList[i].plcrecipeversion = data.recipeversion;
+              if (recipe.recipename === data.recipename) {
+                this.recipeList[i].notmatchname = 0;
+              }
+              if (recipe.recipeversion === data.recipeversion) {
+                this.recipeList[i].notmatchversion = 0;
+              }
+            }
+          }
+        });
+        // eslint-disable-next-line
+        await this.getMonitorValues(object);
+      }
     },
     fnChangeOver() {
       this.dialogConfirm = true;
