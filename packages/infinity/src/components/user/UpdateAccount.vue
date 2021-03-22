@@ -4,7 +4,7 @@
       {{ $t('register.account.title') }}
     </div>
     <validation-observer #default="{ handleSubmit }">
-      <v-form @submit.prevent="handleSubmit(onUpdateAccount)">
+      <v-form @submit.prevent="handleSubmit(onUpdateAccount)" v-model="isValid">
         <v-card-text>
           <validation-provider
             rules="required"
@@ -56,22 +56,29 @@
             ></v-text-field>
           </validation-provider>
           <validation-provider
-            rules="digits:10"
             name="phone"
             #default="{ errors }"
           >
-            <v-text-field
-              type="tel"
-              id="phone_input"
-              prefix="+91"
-              v-model="phone"
-              v-if="showPhone"
-              autocomplete="tel"
-              :disabled="loading"
-              :error-messages="errors"
-              prepend-icon="$phone"
-              :label="$t('register.account.phone')"
-            ></v-text-field>
+            <div class="d-flex align-center">
+              <country-selection
+                :countryCode="prefix"
+                @on-select="onSelectFlag"
+                styles="margin-right: 10px;"
+              />
+              <v-text-field
+                type="tel"
+                ref="phone"
+                id="phone_input"
+                v-model="phone"
+                :prefix="prefix"
+                v-if="showPhone"
+                autocomplete="tel"
+                :disabled="loading"
+                :rules="phoneRules"
+                :error-messages="errors"
+                :label="$t('register.account.phone')"
+              ></v-text-field>
+            </div>
           </validation-provider>
         </v-card-text>
         <v-card-actions>
@@ -83,6 +90,7 @@
             class="text-none"
             id="update_account_btn"
             :loading="loading"
+            :disabled="!isValid"
           >
             <v-icon
               left
@@ -98,15 +106,21 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-
+import CountrySelection from '@/components/auth/CountrySelection.vue';
+/* eslint-disable */
 export default {
   name: 'UpdateAccount',
+  components: {
+    CountrySelection,
+  },
   data() {
     return {
       email: '',
       phone: '',
+      prefix: '+91',
       lastName: '',
       firstName: '',
+      isValid: false,
       loading: false,
     };
   },
@@ -136,6 +150,35 @@ export default {
       }
       return show;
     },
+    phoneRules() {
+      if (this.phone) {
+        if (this.prefix === '+91') {
+          return [
+            v => /^[7-9][0-9]{9}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.prefix === '+86') {
+          return [
+            v => /^1[0-9]{10}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.prefix === '+66') {
+          return [
+            v => /^[6,8,9][0-9]{8}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.prefix === '+49') {
+          return [
+            v => /^1[0-9]{9,10}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+      }
+      if (!this.email && !this.phone) {
+        return [
+           v => !!v || 'Phone or email is required',
+          ];
+      }
+    },
   },
   methods: {
     ...mapActions('user', ['updateUser']),
@@ -146,6 +189,9 @@ export default {
       this.phone = user.phoneNumber
         ? user.phoneNumber.substring(2)
         : user.phoneNumber;
+      this.prefix = user.phoneNumber
+        ? `+${user.phoneNumber.substring(0, 2)}`
+        : '+91';
     },
     async onUpdateAccount() {
       this.loading = true;
@@ -159,10 +205,18 @@ export default {
         payload.emailId = this.email;
       }
       if (this.phone) {
-        payload.phoneNumber = `91${this.phone}`;
+        payload.phoneNumber = `${this.prefix.slice(1)}${this.phone}`;
       }
       await this.updateUser(payload);
       this.loading = false;
+    },
+    onSelectFlag(country) {
+      this.prefix = country.code;
+      this.phone = this.phone + ' ';
+      this.$nextTick(() => {
+        this.$refs.phone.validate();
+        this.phone = this.phone.trim();
+      });
     },
   },
 };

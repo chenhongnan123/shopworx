@@ -1,6 +1,6 @@
 <template>
   <validation-observer #default="{ handleSubmit }">
-    <v-form @submit.prevent="handleSubmit(onSubmit)">
+    <v-form @submit.prevent="handleSubmit(onSubmit)" v-model="isValid">
       <v-card-text>
         <identifier-input
           id="identifier_input"
@@ -65,6 +65,7 @@
           class="text-none"
           v-if="!otpGenerated"
           :loading="loadingOtp"
+          :disabled="!isValid"
         >
           <v-icon
             left
@@ -130,6 +131,7 @@ export default {
       resendTimer: 30,
       loadingOtp: false,
       otpGenerated: false,
+      isValid: false,
     };
   },
   methods: {
