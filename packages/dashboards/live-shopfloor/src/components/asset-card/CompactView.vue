@@ -79,7 +79,7 @@
           style="font-size: 1.2rem"
         >
           <span>Down reason</span>
-          -
+          {{ machine.downreason || '-' }}
         </div>
       </div>
       <div v-if="machine.machinestatus === 'NOPLAN'" class="mx-n2">

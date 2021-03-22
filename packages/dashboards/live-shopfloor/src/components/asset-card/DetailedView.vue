@@ -77,7 +77,7 @@
             Down reason
           </div>
           <div class="display-1">
-            -
+            {{ machine.downreason || '-' }}
           </div>
         </div>
         <div v-if="machine.machinestatus === 'NOPLAN'" class="px-4 mt-2">
