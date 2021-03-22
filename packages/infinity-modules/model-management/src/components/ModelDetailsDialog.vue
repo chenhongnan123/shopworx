@@ -3,7 +3,7 @@
     v-model="dialog"
     scrollable
     persistent
-    max-width="500px"
+    max-width="650px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }" v-if="!isDashboardView">

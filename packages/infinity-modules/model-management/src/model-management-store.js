@@ -203,12 +203,26 @@ export default ({
     setTrainingLogs: set('trainingLogs'),
   },
   actions: {
+    updateModelDates: async ({ dispatch }, request) => {
+      console.log(request);
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: ELEMENTS.MODELS,
+          queryParam: request.query,
+          payload: request.payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
     getInProgressTrainingData: async ({ dispatch }) => {
       const training = await dispatch(
         'element/getRecords',
         {
           elementName: ELEMENTS.MODEL_TRAINING,
-          query: '?query=trainingstatus=="In Progress"',
+          query: '?query=status=="In Progress"',
         },
         { root: true },
       );
@@ -597,10 +611,7 @@ export default ({
       return { modelInputs: inputs };
     },
 
-    getModelCriticals: async ({ dispatch, state }, query) => {
-      const {
-        fullParameterList,
-      } = state;
+    getModelCriticals: async ({ dispatch }, query) => {
       const modelCriticals = await dispatch(
         'element/getRecords',
         {
@@ -611,12 +622,13 @@ export default ({
       );
       const criticals = modelCriticals.map(({
         parameterid,
+        parametername,
         _id,
         maxlimit,
         minlimit,
       }) => ({
         parameterId: parameterid,
-        parametername: fullParameterList.find((f) => f.id === parameterid).name,
+        parameterName: parametername,
         id: _id,
         maxLimit: maxlimit,
         minLimit: minlimit,
@@ -686,7 +698,7 @@ export default ({
 
     createInputParameter: async (
       { state, commit, dispatch },
-      { modelId, parameterId },
+      { modelId, parameterId, selectedElement },
     ) => {
       const {
         selectedLine,
@@ -702,6 +714,7 @@ export default ({
         assetid: ASSETID,
         modelid: modelId,
         parameterid: parameterId,
+        selectedelementname: selectedElement,
       };
       const created = await dispatch(
         'element/postRecord',
@@ -777,7 +790,7 @@ export default ({
           {
             show: true,
             type: 'success',
-            message: 'TRIGGER_CREATE',
+            message: 'TRAINING_SAVED',
           },
           { root: true },
         );
@@ -787,7 +800,7 @@ export default ({
           {
             show: true,
             type: 'error',
-            message: 'TRIGGER_CREATE',
+            message: 'TRAINING_SAVED',
           },
           { root: true },
         );
@@ -901,6 +914,7 @@ export default ({
         parameterId,
         maxLimit,
         minLimit,
+        parameterName,
       },
     ) => {
       const {
@@ -917,6 +931,7 @@ export default ({
         assetid: ASSETID,
         modelid: modelId,
         parameterid: parameterId,
+        parametername: parameterName,
         maxlimit: maxLimit,
         minlimit: minLimit,
       };
@@ -1163,6 +1178,7 @@ export default ({
     createNewModel: async ({ state, commit, dispatch }, payload) => {
       const {
         selectedLine,
+        selectedSubline,
         selectedStation,
         selectedSubstation,
         selectedProcess,
@@ -1174,6 +1190,7 @@ export default ({
           payload: {
             ...payload,
             lineid: selectedLine,
+            sublineid: selectedSubline,
             stationid: selectedStation,
             substationid: selectedSubstation,
             subprocessid: selectedProcess,
@@ -1289,6 +1306,8 @@ export default ({
               operationname: OPERATION_NAME,
               modelid: modelId,
               assetid: ASSETID,
+              deploymode: 1,
+              outputpath: '',
             },
           },
           { root: true },
@@ -1332,6 +1351,68 @@ export default ({
         { root: true },
       );
       return false;
+    },
+
+    createTrainingNewDeploymentOrder: async ({
+      state,
+      commit,
+      dispatch,
+    }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      await dispatch('fetchModelDetails', request.modelid);
+      const status = DEPLOYMENT_STATUS;
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          payload: {
+            lineid: selectedLine,
+            stationid: selectedStation,
+            substationid: selectedSubstation,
+            subprocessid: selectedProcess,
+            status,
+            operationname: OPERATION_NAME,
+            modelid: request.modelid,
+            assetid: ASSETID,
+            deploymode: 2,
+            outputpath: request.outputfolder,
+          },
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        const eventData = {
+          key: request.modelid,
+          lastModified: new Date(),
+          status,
+        };
+        commit('setLastStatusUpdate', eventData);
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
     },
 
     deleteModel: async ({ state, commit, dispatch }, { modelId, id }) => {

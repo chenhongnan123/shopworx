@@ -12,7 +12,6 @@
           item-text="name"
           item-value="parameterId"
           hide-details
-          multiple
           @change="onChange()"
           @input="searchInput=null"
           :search-input.sync="searchInput"
@@ -47,6 +46,7 @@
         dense
         outlined
         v-model="maxlimit"
+        type="number"
         label="Maxinum limit*"
       ></v-text-field>
       </v-col>
@@ -56,6 +56,7 @@
         dense
         outlined
         v-model="minlimit"
+        type="number"
         label="Minimum limit*"
       ></v-text-field>
       </v-col>
@@ -95,7 +96,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'modelCriticals',
@@ -118,7 +119,7 @@ export default {
       headers: [
         {
           text: 'Parameter name',
-          value: 'parametername',
+          value: 'parameterName',
         },
         {
           text: 'Max limit',
@@ -152,6 +153,7 @@ export default {
   created() {
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'createCriticalParameter',
       'deleteCriticalParameter',
@@ -170,22 +172,29 @@ export default {
       this.saveInputParam(this.parameterList);
     },
     async saveInputParam(param) {
+      console.log(param);
       await Promise.all(this.modelCriticals.map(async (element) => {
-        const checkData = param.filter((f) => f === element.parameterId);
-        if (checkData.length === 0) {
+        if (element.parameterId === param) {
           await this.deleteCriticalParameter(element.id);
         }
       }));
-      if (this.modelCriticals.find((input) => input.parameterId === param[param.length - 1])) {
-        // duplicate entry
+      if (this.maxlimit === 0 || this.minlimit === 0) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'FIELDS_EMPTY',
+        });
       } else {
-        const object = param[param.length - 1];
+        const object = param;
+        console.log(this.criticalParameters);
+        console.log(object);
         if (object) {
           await this.createCriticalParameter({
             modelId: this.model.model_id,
             maxLimit: this.maxlimit,
             minLimit: this.minlimit,
             parameterId: object,
+            parameterName: this.criticalParameters.find((f) => f.parameterId === object).name,
           });
         }
       }

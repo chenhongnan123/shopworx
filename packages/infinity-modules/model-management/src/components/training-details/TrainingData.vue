@@ -206,7 +206,7 @@ export default {
       header: 'Real ELement',
     });
     const object = {
-      elementName: `production_${this.selectedSubstation}`,
+      elementName: `process_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
     this.realElement = [];
@@ -296,19 +296,23 @@ export default {
       testLink.href = csvURL;
       testLink.setAttribute('download', `${this.selectedElementName}-${timestamp}.csv`);
       testLink.click();
-
+      const oldStartTime = new Date(this.oldStartTime);
+      const oldEndTime = new Date(this.oldEndTime);
+      const newStartTime = new Date(this.newStartTime);
+      const newEndTime = new Date(this.newEndTime);
       const object = {
         realelement: this.selectedElementName,
-        oldstarttime: this.oldStartTime,
-        oldendtime: this.oldEndTime,
-        newstarttime: this.newStartTime,
-        newendtime: this.newEndTime,
+        oldtraindatastarttime: `${oldStartTime.getDay()}-${oldStartTime.getMonth() + 1}-${oldStartTime.getFullYear()}:${oldStartTime.getHours()}:${oldStartTime.getMinutes()}:${oldStartTime.getSeconds()}`,
+        oldtraindataendtime: `${oldEndTime.getDay()}-${oldEndTime.getMonth() + 1}-${oldEndTime.getFullYear()}:${oldEndTime.getHours()}:${oldEndTime.getMinutes()}:${oldEndTime.getSeconds()}`,
+        newtraindatastarttime: `${newStartTime.getDay()}-${newStartTime.getMonth() + 1}-${newStartTime.getFullYear()}:${newStartTime.getHours()}:${newStartTime.getMinutes()}:${newStartTime.getSeconds()}`,
+        newtraindataendtime: `${newEndTime.getDay()}-${newEndTime.getMonth() + 1}-${newEndTime.getFullYear()}:${newEndTime.getHours()}:${newEndTime.getMinutes()}:${newEndTime.getSeconds()}`,
         configjson: this.configJson,
-        inputfolder: `${this.selectedModelObject.name}-${timestamp}`,
-        outputfolder: `${this.selectedModelObject.name}-${timestamp}`,
+        inputfolder: `/home/emgda/shopworx/data/${this.selectedModelObject.name}-${timestamp}`,
+        outputfolder: `/home/emgda/shopworx/model-output/${this.selectedModelObject.name}-${timestamp}`,
         inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
         modelid: this.selectedModelObject.model_id,
-        trainingstatus: 'In Progress',
+        status: 'In Progress',
+        trainingmode: 'Manual',
       };
       console.log(object);
       await this.addModelTraningData(object);
@@ -318,7 +322,7 @@ export default {
         header: 'Real ELement',
       });
       const object1 = {
-        elementName: `real_${this.selectedSubstation}`,
+        elementName: `process_${this.selectedSubstation}`,
       };
       this.elementList.push(object1);
       this.realElement = [];

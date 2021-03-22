@@ -86,7 +86,7 @@ export default {
       header: 'Non Real ELement',
     });
     const object = {
-      triggerName: `process_${this.selectedSubstation}`,
+      triggerName: `production_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
   },

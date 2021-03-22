@@ -68,8 +68,9 @@
                     @click="onClickDisabledModel(selectedModelObject)"
                     icon
                   >
-                  <deploy-model
-                  :model="selectedModelObject" />
+                  <deploy-training
+                  :model="selectedModelObject"
+                  :training="item"/>
                     </v-btn>
                 </div>
                 <div class="d-inline ma-0 pa-0">
@@ -128,13 +129,13 @@ import
   mapGetters,
 } from 'vuex';
 import CreateTrainDialog from './CreateTrainDialog.vue';
-import DeployModel from './DeployModel.vue';
+import DeployTraining from './DeployTraining.vue';
 
 export default {
   name: 'ProcessModelTable',
   components: {
     CreateTrainDialog,
-    DeployModel,
+    DeployTraining,
   },
   data() {
     return {
@@ -167,7 +168,11 @@ export default {
         },
         {
           text: 'Training status',
-          value: 'trainingstatus',
+          value: 'status',
+        },
+        {
+          text: 'Training Mode',
+          value: 'trainingmode',
         },
         {
           text: 'Logs',
