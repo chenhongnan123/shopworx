@@ -9,6 +9,26 @@ class SiteService {
     return this.request.get(`/server/sites/${siteId}/onboardingcompleted/true`);
   }
 
+  addSmsProvider(payload) {
+    return this.request.post('/server/smsprovider', payload);
+  }
+
+  addWebapp(payload) {
+    return this.request.post('/server/webapp', payload);
+  }
+
+  addReport(payload) {
+    return this.request.post('/server/addreport', payload);
+  }
+
+  addReportView(payload) {
+    return this.request.post('/server/reportview', payload);
+  }
+
+  addReportViewMapping(payload) {
+    return this.request.post('/server/reportviewmapping', payload);
+  }
+
   addLicense(payload) {
     return this.request.post('/server/customerlicense', payload);
   }

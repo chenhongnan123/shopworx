@@ -28,40 +28,25 @@ export default ({
     }, {
       name: 'Web apps',
       component: 'apps',
-      total: 0,
-      completed: 0,
       isComplete: false,
       isLoading: false,
     }, {
       name: 'Reports',
       component: 'reports',
-      total: 0,
-      completed: 0,
       isComplete: false,
       isLoading: false,
     }, {
       name: 'Report views',
       component: 'report-views',
-      total: 0,
-      completed: 0,
       isComplete: false,
       isLoading: false,
     }, {
-      name: 'Insight categories',
-      component: 'insight-categories',
-      total: 0,
-      completed: 0,
-      isComplete: false,
-      isLoading: false,
-    }, {
-      name: 'Insight views',
+      name: 'Insights',
       component: 'insight-views',
-      total: 0,
-      completed: 0,
       isComplete: false,
       isLoading: false,
     }, {
-      name: 'Roles',
+      name: 'Roles & access',
       component: 'roles',
       isComplete: false,
       isLoading: false,
@@ -78,6 +63,7 @@ export default ({
     setSelectedIndustry: set('selectedIndustry'),
     setAssets: set('assets'),
     setMasterElementsAndTags: set('masterElementsAndTags'),
+    setOnboardingSteps: set('onboardingSteps'),
     updateOnboardingSteps: reactiveSetArray('onboardingSteps'),
   },
   actions: {
@@ -166,6 +152,102 @@ export default ({
     addLicense: async (_, payload) => {
       try {
         const { data } = await SiteService.addLicense(payload);
+        if (data && data.created) {
+          return data.created;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addSmsProvider: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addSmsProvider(payload);
+        if (data && data.created) {
+          return data.created;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    getModules: async () => {
+      try {
+        const { data } = await IndustryService.getModules();
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    getReports: async () => {
+      try {
+        const { data } = await SiteService.getReports();
+        if (data && data.results) {
+          return data.results.map((r) => r.report);
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    getReportCategories: async () => {
+      try {
+        const { data } = await IndustryService.getReportCategories();
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addWebapp: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addWebapp(payload);
+        if (data && data.created) {
+          return data.created;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addReport: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addReport(payload);
+        if (data && data.created) {
+          return data.created;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addReportView: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addReportView(payload);
+        if (data && data.created) {
+          return data.reportViewId;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    addReportViewMapping: async (_, payload) => {
+      try {
+        const { data } = await SiteService.addReportViewMapping(payload);
         if (data && data.created) {
           return data.created;
         }

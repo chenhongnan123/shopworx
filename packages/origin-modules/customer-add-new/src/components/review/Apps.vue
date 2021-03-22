@@ -14,6 +14,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import apps from '../../data/webappsPayload';
+
 export default {
   name: 'Apps',
   props: {
@@ -24,74 +27,34 @@ export default {
   },
   data() {
     return {
-      apps: [{
-        isComplete: false,
-        isLoading: false,
-        payload: {
-          webAppName: 'home',
-          webAppDescription: 'Home',
-          iconURL: '$home',
-          webAppLink: 'user-dashboard',
-          moduleId: 225,
-          defaultSchema: '',
-        },
-      }, {
-        isComplete: false,
-        isLoading: false,
-        payload: {
-          webAppName: 'productionPlanning',
-          webAppDescription: 'Production Planning',
-          iconURL: '$productionPlanning',
-          webAppLink: 'production-planning',
-          moduleId: 225,
-          defaultSchema: '[{"assetId":2,"primaryDisplayTag":"planid","partMatrixComposition":["part","machine","mold"]},{"assetId":3,"primaryDisplayTag":"planid","partMatrixComposition":["part","machine","tool"]}]',
-        },
-      }, {
-        isComplete: false,
-        isLoading: false,
-        payload: {
-          webAppName: 'productionLog',
-          webAppDescription: 'Production Log',
-          iconURL: '$productionLog',
-          webAppLink: 'production-log',
-          moduleId: 225,
-          defaultSchema: '',
-        },
-      }, {
-        isComplete: false,
-        isLoading: false,
-        payload: {
-          webAppName: 'downtimeLog',
-          webAppDescription: 'Downtime Log',
-          iconURL: '$downtimeLog',
-          webAppLink: 'downtime-log',
-          moduleId: 225,
-          defaultSchema: '',
-        },
-      }, {
-        isComplete: false,
-        isLoading: false,
-        payload: {
-          webAppName: 'liveShopfloor',
-          webAppDescription: 'Shopfloor Dashboard',
-          iconURL: '$shopfloorDashboard',
-          webAppLink: '/dashboards/#/d/live-shopfloor',
-          moduleId: 231,
-          defaultSchema: '',
-        },
-      }],
+      apps,
     };
   },
-  created() {
-    // get all modules
+  methods: {
+    ...mapActions('newCustomer', ['addWebapp', 'getModules']),
   },
   watch: {
-    loading(val) {
+    async loading(val) {
       if (val) {
-        console.log('apps');
-        setTimeout(() => {
-          this.$emit('on-complete');
-        }, 3000);
+        const modules = await this.getModules();
+        if (modules && modules.length) {
+          const created = [];
+          for (let i = 0; i < this.apps.length; i += 1) {
+            const app = this.apps[i];
+            const { payload } = app;
+            const module = modules.find((m) => m.moduleName === payload.moduleName);
+            if (module) {
+              payload.moduleId = module.id;
+              delete payload.moduleName;
+            }
+            // eslint-disable-next-line
+            const added = await this.addWebapp(payload);
+            created.push(added);
+          }
+          if (created.every((c) => c)) {
+            this.$emit('on-complete');
+          }
+        }
       }
     },
   },

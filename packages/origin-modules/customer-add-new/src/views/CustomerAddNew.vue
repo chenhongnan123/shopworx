@@ -78,6 +78,7 @@ export default {
         };
         this.setCustomerData(customerData);
         localStorage.removeItem('new-customer-data');
+        localStorage.removeItem('onboarding-steps');
         this.$router.push({ name: 'customerAssets' });
       }
     },

@@ -16,6 +16,14 @@ class IndustryService {
   getAssets() {
     return this.request.get(`/server/asset`);
   }
+
+  getModules() {
+    return this.request.get(`/server/module/all`);
+  }
+
+  getReportCategories() {
+    return this.request.get(`/server/reportscategory/all`);
+  }
 }
 
 export default new IndustryService();

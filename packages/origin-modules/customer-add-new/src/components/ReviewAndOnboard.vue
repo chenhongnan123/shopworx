@@ -11,7 +11,7 @@
           v-if="loading"
           :indeterminate="true"
         ></v-progress-linear>
-        <v-card-text>
+        <v-card-text v-else-if="isMe">
           <div
             v-for="(step, n) in onboardingSteps"
             :key="n"
@@ -40,6 +40,7 @@
               :is="step.component"
               @on-complete="onComplete(n)"
               :loading="step.isLoading"
+              :complete="step.isComplete"
             />
           </div>
           <div class="mt-4 mb-2">
@@ -52,6 +53,9 @@
             :disabled="saving"
             :rules="requiredRule"
           ></v-text-field>
+        </v-card-text>
+        <v-card-text v-else>
+          Provision customer, site and assets to view this section.
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -70,7 +74,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import Sms from './review/Sms.vue';
 import Apps from './review/Apps.vue';
 import Reports from './review/Reports.vue';
@@ -96,10 +100,26 @@ export default {
       loading: false,
       isValid: false,
       customer: '',
+      isMe: false,
       requiredRule: [
         (v) => !!v || 'Required.',
       ],
     };
+  },
+  async created() {
+    this.loading = true;
+    let data = localStorage.getItem('onboarding-steps');
+    data = JSON.parse(data);
+    if (data) {
+      const lastIndex = data.findIndex((step) => step.isLoading);
+      if (lastIndex > -1) {
+        data[lastIndex].isLoading = false;
+      }
+      this.setOnboardingSteps(data);
+    }
+    localStorage.setItem('onboarding-steps', JSON.stringify(this.onboardingSteps));
+    this.isMe = await this.getMe();
+    this.loading = false;
   },
   computed: {
     ...mapState('newCustomer', ['onboardingSteps', 'customerData']),
@@ -118,7 +138,9 @@ export default {
     ...mapMutations('newCustomer', [
       'updateOnboardingSteps',
       'updateCustomerData',
+      'setOnboardingSteps',
     ]),
+    ...mapActions('user', ['getMe']),
     onComplete(index) {
       const len = this.onboardingSteps.length;
       const step = this.onboardingSteps[index];
@@ -130,12 +152,7 @@ export default {
           isComplete: true,
         },
       });
-      const data = {
-        key: 3,
-        data: this.onboardingSteps,
-        isComplete: false,
-      };
-      this.updateCustomerData(data);
+      localStorage.setItem('onboarding-steps', JSON.stringify(this.onboardingSteps));
       if (len !== index + 1) {
         const nextStep = this.onboardingSteps[index + 1];
         this.updateOnboardingSteps({
@@ -146,13 +163,15 @@ export default {
             isComplete: false,
           },
         });
-        const d = {
+        localStorage.setItem('onboarding-steps', JSON.stringify(this.onboardingSteps));
+      } else {
+        const data = {
           key: 3,
           data: this.onboardingSteps,
-          isComplete: false,
+          isComplete: true,
         };
-        this.updateCustomerData(d);
-      } else {
+        this.updateCustomerData(data);
+        localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
         this.saving = false;
         console.log('success');
         // show user dialog
@@ -165,10 +184,14 @@ export default {
         Click on 'agree' to confirm.`,
       )) {
         this.saving = true;
+        let lastIndex = this.onboardingSteps.findIndex((step) => !step.isComplete);
+        if (lastIndex < 0) {
+          lastIndex = 0;
+        }
         this.updateOnboardingSteps({
-          index: 0,
+          index: lastIndex,
           payload: {
-            ...this.onboardingSteps[0],
+            ...this.onboardingSteps[lastIndex],
             isLoading: true,
           },
         });
