@@ -65,33 +65,6 @@
                 @on-select="onSelectFlag"
                 styles="margin-right: 10px;"
               />
-              <!-- <v-menu v-if="prefix">
-                <template v-slot:activator="{ on, attrs }">
-                  <div
-                    v-bind="attrs"
-                    v-on="on"
-                    style="margin-right: 10px; margin-top: -1rem;"
-                  >
-                    <img :src="require(`@shopworx/assets/flags/${flag}.svg`)" width="22" />
-                  </div>
-                </template>
-                <v-list>
-                  <v-list-item
-                    v-for="(country, i) in countries"
-                    :key="i"
-                    @click="onSelectFlag(country)"
-                  >
-                    <v-list-item-title class="d-flex">
-                      <img
-                        :src="require(`@shopworx/assets/flags/${country.flag}.svg`)"
-                        width="22"
-                        class="mr-2"
-                      />
-                      <span>{{ country.name }} ({{ country.code }})</span>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu> -->
               <v-text-field
                 type="tel"
                 ref="phone"

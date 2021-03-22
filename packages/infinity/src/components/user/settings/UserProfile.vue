@@ -50,33 +50,33 @@
             #default="{ errors }"
           >
             <v-text-field
-              id="email"
               filled
+              id="email"
               type="email"
               v-model="email"
               :disabled="loading"
               autocomplete="email"
-              :error-messages="errors"
               prepend-icon="$email"
+              :error-messages="errors"
               :label="$t('user.profile.email')"
             ></v-text-field>
           </validation-provider>
           <div class="d-flex align-center">
             <country-selection
-              @on-select="onSelectFlag"
               :countryCode="prefix"
+              @on-select="onSelectFlag"
               styles="margin-right: 10px; margin-top: -1rem;"
             />
             <v-text-field
               filled
               type="tel"
               id="phone"
-              :prefix="prefix"
-              v-model="phone"
-              :rules="phoneRules"
-              autocomplete="tel"
-              :disabled="loading"
               ref="phone"
+              v-model="phone"
+              :prefix="prefix"
+              autocomplete="tel"
+              :rules="phoneRules"
+              :disabled="loading"
               :label="$t('user.profile.phone')"
             ></v-text-field>
             </div>
@@ -116,12 +116,12 @@ export default {
   },
   data() {
     return {
-      email: '',
-      isValid: false,
       phone: '',
+      email: '',
       lastName: '',
       firstName: '',
       prefix: '+91',
+      isValid: false,
       loading: false,
     };
   },

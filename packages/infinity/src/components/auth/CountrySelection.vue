@@ -2,8 +2,8 @@
   <v-menu>
     <template v-slot:activator="{ on, attrs }">
       <div
-        v-bind="attrs"
         v-on="on"
+        v-bind="attrs"
         :style="styles"
       >
         <img :src="require(`@shopworx/assets/flags/${flag}.svg`)" width="22" />
