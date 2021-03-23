@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **charts:** fixed charts to work in dark mode ([1e9fb62](https://bitbucket.org/entrib/shopworx/commits/1e9fb625f8e8cdcad0956325cf22faca47d147d4))
+* **infinity-drawer:** display dashbaords on mobile view ([ce1a765](https://bitbucket.org/entrib/shopworx/commits/ce1a7658ec96ea9c9dac8f8d217d8be1fa609a54))
+* **mobile:** fixed login & logout for webview ([0c689e9](https://bitbucket.org/entrib/shopworx/commits/0c689e96ea4dac99103c3343efc31448fe8be745))
+* **settings-layout:** fixed settings layout to stretch for desktops ([2abad19](https://bitbucket.org/entrib/shopworx/commits/2abad1975532933b5067d33b3fd0b3cc14c60fb8))
+* **web-view:** fixed login and logout in webview ([8373598](https://bitbucket.org/entrib/shopworx/commits/83735986eac20fe7420bfb84e3694ea8d295e685))
+
+
+### Features
+
+* **infinity-drawer:** disabled dashbaords and reports on mobile ([8fd06b6](https://bitbucket.org/entrib/shopworx/commits/8fd06b614dbd398b293be4c230c1c639ed7652df))
+* **insights:** updated insights to be fullscreen on mobile ([0959b4e](https://bitbucket.org/entrib/shopworx/commits/0959b4ef908571ae24a6118a5f2314bc5f631f0b))
+* **web-view:** integrated APIs for login and logout on web view ([815854e](https://bitbucket.org/entrib/shopworx/commits/815854ebb7347fdb8e3dd79030e7bcce83424c82))
+
+
+
+
+
 ## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
 
 

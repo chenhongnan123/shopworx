@@ -14,6 +14,7 @@
         height="38"
       />
       <v-toolbar-title
+        v-if="$vuetify.breakpoint.smAndUp"
         :class="$vuetify.breakpoint.mdAndUp
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
@@ -23,12 +24,13 @@
       <v-spacer></v-spacer>
       <portal-target name="dashboard-actions" />
       <template v-if="showHeaderButtons">
-        <send-to-tv />
+        <send-to-tv v-if="!isMobile" />
         <v-btn
           class="text-none mr-2"
           color="primary"
           outlined
           small
+          v-if="!isMobile"
           @click="previewDashboard"
         >
           <v-icon left>mdi-television</v-icon>
@@ -81,6 +83,9 @@ export default {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
         : 'shopworx-light';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {

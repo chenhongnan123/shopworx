@@ -1,26 +1,38 @@
 <template>
-  <validation-provider
-    vid="identifier"
-    #default="{ errors }"
-    :name="identifierField"
-    :rules="identifierValidationRules"
-  >
+  <div class="d-flex align-center">
+    <div class="d-flex mr-2">
+      <country-selection
+        v-if="prefix"
+        :countryCode="prefix"
+        @on-select="onSelectFlag"
+        styles="margin-right: 2px; margin-top: 4px;"
+      />
+      <span v-else>
+        <v-icon>
+          {{'$identifier'}}
+        </v-icon>
+      </span>
+    </div>
+
     <v-text-field
       :id="id"
       autofocus
       type="email"
+      ref="username"
       :prefix="prefix"
       :disabled="loading"
       v-model="identifier"
       autocomplete="username"
-      :error-messages="errors"
+      :error-messages="errorMsg"
       :label="$t('login.identifier')"
-      prepend-icon="$identifier"
+      :rules="identifierValidationRules"
     ></v-text-field>
-  </validation-provider>
+  </div>
 </template>
 
 <script>
+import CountrySelection from '@/components/auth/CountrySelection.vue';
+/* eslint-disable */
 export default {
   name: 'IdentifierInput',
   props: {
@@ -36,13 +48,25 @@ export default {
       type: Boolean,
       default: false,
     },
+    error: {
+      type: String,
+    },
+  },
+  components: {
+    CountrySelection
+  },
+  data() {
+    return {
+      errorMsg: '',
+      countryCode: '+91',
+    };
   },
   computed: {
     isMobileNumber() {
       return this.isNumberic(this.identifier);
     },
     prefix() {
-      return this.isMobileNumber ? '+91' : '';
+      return this.isMobileNumber ? this.countryCode : '';
     },
     identifierField() {
       return this.isMobileNumber
@@ -50,7 +74,37 @@ export default {
         : 'email';
     },
     identifierValidationRules() {
-      return this.isMobileNumber ? 'required|digits:10' : 'required|email';
+      if (this.isMobileNumber) {
+        if (this.countryCode === '+91') {
+          return [
+            v => !!v || 'Phone is required',
+            v => /^[7-9][0-9]{9}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.countryCode === '+86') {
+          return [
+            v => !!v || 'Phone is required',
+            v => /^1[0-9]{10}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.countryCode === '+66') {
+          return [
+            v => !!v || 'Phone is required',
+            v => /^[6,8,9][0-9]{8}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+        if (this.countryCode === '+49') {
+          return [
+            v => !!v || 'Phone is required',
+            v => /^1[0-9]{9,10}$/.test(v) || 'Phone must be valid',
+          ];
+        }
+      } else {
+        return [
+          v => !!v || 'E-mail is required',
+          v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        ];
+      }
     },
     identifier: {
       get() {
@@ -67,7 +121,11 @@ export default {
         isMobile: this.isMobileNumber,
         prefix: this.prefix.slice(1),
       });
+      this.errorMsg = '';
     },
+    error() {
+      this.errorMsg = this.error;
+    }
   },
   methods: {
     isNumberic(candidate) {
@@ -76,6 +134,16 @@ export default {
         return (candidate.trim() !== '') && Number.isFinite(Number(candidate));
       }
       return false;
+    },
+    onSelectFlag(country) {
+      this.countryCode = country.code;
+      this.$nextTick(() => {
+        this.$refs.username.validate();
+        this.$emit('on-update', {
+          isMobile: this.isMobileNumber,
+          prefix: this.prefix.slice(1),
+        });
+      });
     },
   },
 };

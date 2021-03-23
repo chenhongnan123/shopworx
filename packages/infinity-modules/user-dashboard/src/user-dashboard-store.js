@@ -641,9 +641,9 @@ export default ({
           payload: {
             siteid: activeSite,
             dateVal: date,
-            shiftFilter: `{${shift}}`,
-            planFilter: `{${planId}}`,
-            partFilter: `{${part}}`,
+            shiftVal: shift,
+            planVal: planId,
+            partVal: part,
           },
         },
         { root: true },
