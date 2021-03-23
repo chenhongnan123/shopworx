@@ -15,7 +15,7 @@
         <v-icon>mdi-rocket-launch-outline</v-icon>
       </v-btn>
     </template>
-    <span>Deploy model</span>
+    <span>Deploy training</span>
   </v-tooltip>
 </template>
 
@@ -27,6 +27,10 @@ export default {
   name: 'DeployModel',
   props: {
     model: {
+      type: Object,
+      required: true,
+    },
+    training: {
       type: Object,
       required: true,
     },
@@ -46,16 +50,20 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('modelManagement', ['createNewDeploymentOrder']),
+    ...mapActions('modelManagement', ['createTrainingNewDeploymentOrder']),
     async deployModel() {
       if (this.model.modelUpdateStatus) {
         if (await this.$root.$confirm.open(
-          'Deploy model',
-          `Please confirm the deployment for "${this.model.name}".
+          'Deploy training',
+          `Please confirm the deployment training for model : "${this.model.name}".
           You cannot stop the deployment once it is started.`,
         )) {
           this.deploying = true;
-          await this.createNewDeploymentOrder(this.model.modelid);
+          const object = {
+            modelid: this.model.modelid,
+            outputfolder: this.training.outputfolder,
+          };
+          await this.createTrainingNewDeploymentOrder(object);
           this.deploying = false;
         }
       } else {

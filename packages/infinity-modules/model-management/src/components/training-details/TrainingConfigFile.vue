@@ -49,32 +49,8 @@
       </v-data-table>
       <model-files-input
         ref="dropzone"
-        :modelId="model.modelid"
+        :modelId="selectedModelObject.modelid"
       />
-      <v-row
-        class="mt-2"
-        no-gutters
-      >
-      <v-col cols="6" md="6" lg="6">
-      <v-text-field
-        dense
-        outlined
-        type="datetime-local"
-        v-model="trainStartTime"
-        label="Train data start date-time*"
-      ></v-text-field>
-      </v-col>
-      <v-col cols="6" md="6" lg="6">
-      <v-text-field
-        dense
-        class="ml-2"
-        outlined
-        type="datetime-local"
-        v-model="trainEndTime"
-        label="Train data end date-time*"
-      ></v-text-field>
-      </v-col>
-      </v-row>
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -115,8 +91,6 @@ export default {
     return {
       fileList: [],
       deleting: false,
-      trainStartTime: '',
-      trainEndTime: '',
       headers: [
         { text: 'Name', value: 'name' },
         {
@@ -146,31 +120,20 @@ export default {
     },
   },
   computed: {
-    ...mapState('modelManagement', ['files', 'uploadingFiles']),
+    ...mapState('modelManagement', ['files', 'uploadingFiles', 'selectedModelObject']),
     modelFiles() {
-      return this.modelDetails && this.modelDetails.modelFiles;
+      return [];
     },
   },
   methods: {
     ...mapActions('file', ['downloadFile', 'deleteFile']),
-    ...mapActions('modelManagement', ['fetchModelDetails', 'updateModelDates']),
+    ...mapActions('modelManagement', ['fetchModelDetails']),
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setUploadingFiles']),
     async updateProps(val) {
       this.fileList.push(val.modelFiles);
     },
     async uploadFiles() {
-      // update start date and end date to Model element
-      const startTime = new Date(this.trainStartTime);
-      const endTime = new Date(this.trainEndTime);
-      const request = {
-        payload: {
-          trainstarttime: `${startTime.getDay()}-${startTime.getMonth() + 1}-${startTime.getFullYear()}:${startTime.getHours()}:${startTime.getMinutes()}:${startTime.getSeconds()}`,
-          trainendtime: `${endTime.getDay()}-${endTime.getMonth() + 1}-${endTime.getFullYear()}:${endTime.getHours()}:${endTime.getMinutes()}:${endTime.getSeconds()}`,
-        },
-        query: `?query=modelid=="${this.model.modelid}"`,
-      };
-      await this.updateModelDates(request);
       let flag = false;
       const demolList = [];
       for (let i = 0; i < this.$refs.dropzone.files.length; i += 1) {
@@ -210,7 +173,7 @@ export default {
           id: file.id,
         });
         if (deleted) {
-          await this.fetchModelDetails(this.model.modelid);
+          await this.fetchModelDetails(this.selectedModelObject.modelid);
           this.fileList = this.modelFiles;
           this.setAlert({
             show: true,

@@ -122,11 +122,20 @@ export default {
       let flag = false;
       const checkNames = this.models.filter((f) => f.name === this.name);
       if (checkNames.length === 0) {
-        const payload = {
-          modelname: this.name,
-          modeldescription: this.description,
-          modeltype: this.selectedModelType.name,
-        };
+        let payload = {};
+        if (this.selectedModelType) {
+          payload = {
+            modelname: this.name,
+            modeldescription: this.description,
+            modeltype: this.selectedModelType.name,
+          };
+        } else {
+          payload = {
+            modelname: this.name,
+            modeldescription: this.description,
+            modeltype: '',
+          };
+        }
         flag = this.createNewModel(payload);
       } else {
         flag = false;

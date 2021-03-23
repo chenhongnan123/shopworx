@@ -20,7 +20,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <edit-model-config :model="model" v-else />
+    <edit-training-config :model="model" v-else />
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn
@@ -45,12 +45,12 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
-import EditModelConfig from '../EditModelConfig.vue';
+import EditTrainingConfig from './EditTrainingConfig.vue';
 
 export default {
   name: 'ModelConfig',
   components: {
-    EditModelConfig,
+    EditTrainingConfig,
   },
   data() {
     return {

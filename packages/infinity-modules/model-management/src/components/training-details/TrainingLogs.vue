@@ -2,36 +2,34 @@
   <v-dialog
     v-model="dialog"
     scrollable
-    persistent
-    max-width="650px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }" v-if="!isDashboardView">
-      <v-icon small color="primary">mdi-memory</v-icon>
+      <v-icon small color="primary">mdi-console</v-icon>
       <a
         v-on="on"
         v-bind="attrs"
         color="primary"
       >
-        Configure model
+        View logs
       </a>
     </template>
     <template #activator="{ on, attrs }" v-else>
       <v-btn
-        class="text-none mr-2"
+        class="text-none"
         color="white"
         small
         outlined
         v-on="on"
         v-bind="attrs"
       >
-        <v-icon left small color="white">mdi-memory</v-icon>
-        Configure model
+        <v-icon left small color="white">mdi-console</v-icon>
+        View logs
       </v-btn>
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        Model details for {{ model.name }}
+        Logs {{ model }}
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -51,22 +49,30 @@
           </v-col>
           <v-col cols="12" align="center">
             <span>
-              Fetching model configurations...
+              Fetching model logs...
             </span>
           </v-col>
         </v-row>
       </v-card-text>
-      <edit-model-config :model="model" v-else />
+       <v-data-table
+       v-if="trainingLogs.length > 0"
+            :items="trainingLogs"
+            :headers="headers"
+            class="mb-2"
+          >
+          </v-data-table>
+      <v-card-text class="py-0" v-else>
+        No logs available
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import EditModelConfig from './EditModelConfig.vue';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModelDetailsDialog',
+  name: 'DeploymentLogsDialog',
   props: {
     model: {
       type: Object,
@@ -77,23 +83,32 @@ export default {
       default: false,
     },
   },
-  components: {
-    EditModelConfig,
-  },
   data() {
     return {
       dialog: false,
       loading: false,
+      headers: [
+        { text: 'ID', value: 'id' },
+        { text: 'TimeStamp', value: 'timestamp' },
+        { text: 'Text', value: 'text' },
+      ],
     };
   },
+  computed: {
+    ...mapState('modelManagement', [
+      'deployedModels',
+      'trainingLogs',
+    ]),
+  },
   methods: {
-    ...mapActions('modelManagement', ['fetchModelDetails']),
+    ...mapMutations('modelManagement', ['setDeployedModels']),
+    ...mapActions('modelManagement', ['getTrainingLogs']),
   },
   watch: {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.fetchModelDetails(this.model.modelid);
+        // await this.getTrainingLogs();
         this.loading = false;
       }
     },
