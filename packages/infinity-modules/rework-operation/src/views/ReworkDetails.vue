@@ -476,7 +476,7 @@ export default {
         .filter((i) => i.mainid === this.rework.enterManinId);
       if (this.checkMainId.length > 0) {
         // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
-        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"`);
+        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26qualitystatus!=3`);
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
         // console.log(singlengcodeconfig);

@@ -356,5 +356,16 @@ export default ({
       );
       return deleteParameter;
     },
+    deleteRecord: async ({ dispatch }, { id, name }) => {
+      const deleteBomdetail = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: name,
+          id,
+        },
+        { root: true },
+      );
+      return deleteBomdetail;
+    },
   },
 });
