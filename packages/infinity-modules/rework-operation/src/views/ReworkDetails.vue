@@ -250,6 +250,16 @@ export default {
   data() {
     return {
       selectedHeader: [],
+      bindStatus: [
+        {
+          name: this.$t('Bind'),
+          value: 1,
+        },
+        {
+          name: this.$t('Unbind'),
+          value: 2,
+        },
+      ],
       qualityStatusList: [
         {
           name: 'Default',
@@ -301,6 +311,7 @@ export default {
         },
         { text: this.$t('Current Quality'), value: 'checkquality' },
         { text: this.$t('Set Quality'), value: 'qualitystatus' },
+        { text: this.$t('Set Bind'), value: 'isbind' },
         // { text: 'Bound?', value: 'boundstatus' },
         // { text: 'Keep?', value: 'rework' },
         // { text: 'Good?', value: 'quality' },
@@ -479,7 +490,7 @@ export default {
         .filter((i) => i.mainid === this.rework.enterManinId);
       if (this.checkMainId.length > 0) {
         // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
-        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"`);
+        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26qualitystatus!=3`);
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
         // console.log(singlengcodeconfig);
