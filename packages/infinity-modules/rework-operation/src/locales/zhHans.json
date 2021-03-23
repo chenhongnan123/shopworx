@@ -75,5 +75,8 @@
   "Comfirm Rework":	"确认返工",
   "Comfirm OK":	"确认OK",
   "Comfirm NG":	"确认NG",
-  "Rework Roadmap": "返工路线图"
+  "Rework Roadmap": "返工路线图",
+  "Scraped": "已报废",
+  "Reworked": "再使用",
+  "Unbind": "解绑"
 }

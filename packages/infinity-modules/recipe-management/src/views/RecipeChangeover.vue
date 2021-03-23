@@ -11,7 +11,9 @@
         <v-row justify="left">
                       <v-col cols="12" md="2" xl="2">
                         <v-list-item-subtitle>
-                          <div><font color=primary>Line</font></div>
+                          <div><font color=primary>
+                              {{this.$t('Line')}}
+                            </font></div>
                         </v-list-item-subtitle>
                         <v-list-item-title>
                           <span>Line1</span>
@@ -19,7 +21,9 @@
                       </v-col>
                       <v-col cols="12" md="3" xl="2">
                         <v-list-item-subtitle>
-                          <div><font color=primary>Current order</font></div>
+                          <div><font color=primary>
+                            {{this.$t('Current order')}}
+                            </font></div>
                         </v-list-item-subtitle>
                         <v-list-item-title>
                           <span v-text="orderList[0].ordername">e</span>
@@ -27,7 +31,9 @@
                       </v-col>
                       <v-col cols="12" md="3" xl="2">
                         <v-list-item-subtitle>
-                          <div><font color=primary>Product</font></div>
+                          <div><font color=primary>
+                            {{this.$t('Product')}}
+                            </font></div>
                         </v-list-item-subtitle>
                         <v-list-item-title>
                           <span v-text="orderList[0].productname"></span>
@@ -36,11 +42,11 @@
                     </v-row>
         <v-spacer></v-spacer>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="fnChangeOver">
-            Changeover
+            {{this.$t('Changeover')}}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
             <v-icon small left>mdi-refresh</v-icon>
-            Refresh
+            {{this.$t('Refresh')}}
           </v-btn>
         </v-toolbar>
         <v-data-table
@@ -123,27 +129,27 @@ export default {
     return {
       headers: [
         {
-          text: 'No.',
+          text: this.$t('No.'),
           value: 'number',
         },
         {
-          text: 'Subline',
+          text: this.$t('Subline'),
           value: 'sublinename',
         },
         {
-          text: 'Station name',
+          text: this.$t('Station name'),
           value: 'machinename',
         },
         {
-          text: 'SubStation name',
+          text: this.$t('SubStation name'),
           value: 'substationname',
         },
-        { text: 'Recipe name', value: 'recipename' },
+        { text: this.$t('Recipe name'), value: 'recipename' },
         // { text: 'Recipe number', value: 'recipenumber' },
-        { text: 'Recipe version', value: 'versionnumber' },
-        { text: 'PLC Recipe name', value: 'plcrecipename' },
+        { text: this.$t('Recipe version'), value: 'versionnumber' },
+        { text: this.$t('PLC Recipe name'), value: 'plcrecipename' },
         // { text: 'PLC Recipe number', value: 'plcrecipenumber' },
-        { text: 'PLC Recipe Version', value: 'plcrecipeversion' },
+        { text: this.$t('PLC Recipe version'), value: 'plcrecipeversion' },
       ],
       dialog: false,
       recipe: {},

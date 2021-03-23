@@ -29,7 +29,7 @@
             hide-details
             return-object
             item-text="name"
-            label="Select Subline"
+            :label="this.$t('Select Subline')"
             @change="onChangeSubLine(sublines)"
           ></v-autocomplete>
           <div class="subheading font-weight-regular mt-4"></div>
@@ -41,7 +41,7 @@
             hide-details
             return-object
             item-text="name"
-            label="Select Station"
+            :label="this.$t('Select Station')"
             @change="onChangeStation(stations)"
           ></v-autocomplete>
           <div class="subheading font-weight-regular mt-4"></div>
@@ -53,7 +53,7 @@
             hide-details
             return-object
             item-text="recipename"
-            label="Select Recipe name"
+            :label="this.$t('Select Recipe name')"
             @change="onChangeRecipe(recipes)"
           ></v-autocomplete>
         </v-card-text>

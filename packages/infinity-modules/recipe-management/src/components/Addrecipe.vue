@@ -33,7 +33,7 @@
       <v-card-text>
         <v-autocomplete
           clearable
-          label="Select Line name"
+          :label="this.$t('Select Line name')"
           :items="lineList"
           return-object
           :disabled="saving"
@@ -59,7 +59,7 @@
           :rules="sublineSelect"
           required
           prepend-icon="$production"
-          label="Select Sub-Line name"
+          :label="this.$t('Select Sub-Line name')"
           @change="handleSubLineClick">
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -94,7 +94,7 @@
           :rules="stationSelect"
           required
           prepend-icon="$production"
-          label="Select Station name"
+          :label="this.$t('Select Station name')"
           @change="handleStationClick"/>
         <v-select
           clearable
@@ -104,9 +104,9 @@
           return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Sub-Station name"/>
+          :label="this.$t('Select Sub-Station name')"/>
         <v-text-field
-            label="Recipe Name"
+            :label="this.$t('Recipe Name')"
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
             :rules="nameRules"
@@ -138,7 +138,7 @@
           :disabled="!valid"
           @click="saveRecipe"
         >
-          {{ $t('displayTags.buttons.save') }}
+          {{ $t('Save') }}
         </v-btn>
       </v-card-actions>
     </v-card>

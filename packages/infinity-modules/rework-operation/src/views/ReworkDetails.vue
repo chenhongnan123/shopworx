@@ -208,44 +208,20 @@
                   </v-col>
                     <v-data-table
                       v-model="reworkdetails"
-                      :headers="headers"
+                      :headers="selectedHeader"
                       :items="componantList"
                       item-key="_id"
                       :single-select="true"
                       >
-                      <template v-slot:item.rework="{ item }">
-                        <v-checkbox
-                            v-if="item.boundstatus === 1"
-                            primary
-                            hide-details
-                            v-model="item.rework"
-                            @change="checkBoxRework($event, item)"
-                            ></v-checkbox>
-                      </template>
-                      <template v-slot:item.quality="{ item }">
-                        <v-checkbox
-                            v-if="item.boundstatus === 1 && item.reworkstatus !== 1"
-                            primary
-                            hide-details
-                            v-model="item.quality"
-                            @change="checkBoxQuality($event, item)"
-                            ></v-checkbox>
-                      </template>
-                      <template v-slot:item.qualitystatus="{ item }">
-                        <v-select
-                          hide-details
-                          :items="setQualityStatusList"
-                          item-value="value"
-                          item-text="name"
-                          v-model="item.qualitystatus"/>
-                      </template>
-                      <template v-slot:item.bound>
-                        <span>1</span>
-                      </template>
-                      <template v-slot:item.checkquality="{ item }">
-                        <span v-if="item.checkquality">{{ qualityStatusList
-                          .find((f) => f.value === item.checkquality).name }}</span>
-                        <span v-else> Default </span>
+                      <template v-slot:item="{ item }">
+                        <tr>
+                          <td v-if="language === 'en'">{{ item.componentname }}</td>
+                          <td v-else>{{ item.chinesedescription }}</td>
+                          <td>{{ item.componentvalue }}</td>
+                          <td>{{ item.substationname }}</td>
+                          <td>{{ item.checkquality }}</td>
+                          <td>{{ item.qualitystatus }}</td>
+                        </tr>
                       </template>
                     </v-data-table>
                 </v-card-text>
@@ -273,6 +249,7 @@ export default {
   },
   data() {
     return {
+      selectedHeader: [],
       qualityStatusList: [
         {
           name: 'Default',
@@ -287,28 +264,51 @@ export default {
           value: 2,
         },
         {
-          name: 'Scraped',
+          name: this.$t('Scraped'),
           value: 3,
         },
         {
-          name: 'Reworked',
+          name: this.$t('Reworked'),
           value: 4,
         },
       ],
       setQualityStatusList: [
         {
-          name: 'Scraped',
+          name: this.$t('Scraped'),
           value: 3,
         },
         {
-          name: 'Reworked',
+          name: this.$t('Reworked'),
           value: 4,
         },
+        {
+          name: this.$t('Unbind'),
+          value: 5,
+        },
       ],
-      headers: [
+      headersEn: [
         {
           text: this.$t('Component'),
           value: 'componentname',
+        },
+        {
+          text: this.$t('Component Value'),
+          value: 'componentvalue',
+        },
+        {
+          text: this.$t('Sub-Station name'),
+          value: 'substationname',
+        },
+        { text: this.$t('Current Quality'), value: 'checkquality' },
+        { text: this.$t('Set Quality'), value: 'qualitystatus' },
+        // { text: 'Bound?', value: 'boundstatus' },
+        // { text: 'Keep?', value: 'rework' },
+        // { text: 'Good?', value: 'quality' },
+      ],
+      headersCn: [
+        {
+          text: this.$t('Component'),
+          value: 'chinesedescription',
         },
         {
           text: this.$t('Component Value'),
@@ -336,6 +336,12 @@ export default {
     };
   },
   async created() {
+    this.language = this.currentLocale;
+    if (this.language === 'zhHans') {
+      this.selectedHeader = this.headersCn;
+    } else {
+      this.selectedHeader = this.headersEn;
+    }
     // await this.getComponentRecords(`?query=mainid=="${this.reworkItem.mainid}"`);
     // await this.getNgCodeRecords(`?query=ngcode==${this.reworkItem.checkoutngcode}`);
     await this.getNgCodeRecords('');
@@ -362,6 +368,11 @@ export default {
       'partStatusList',
       'roadmapList',
       'roadmapDetailsList']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),

@@ -22,10 +22,10 @@
         v-model="recipeView"
       >
         <v-tab class="text-none">
-          {{ $t('headers.list') }}
+          {{ $t('list') }}
         </v-tab>
         <v-tab class="text-none">
-          {{ $t('headers.changeover') }}
+          {{ $t('Changeover') }}
         </v-tab>
       </v-tabs>
     </portal>

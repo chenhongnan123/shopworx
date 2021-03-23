@@ -13,7 +13,7 @@
       <v-btn icon @click="$router.push({ name: 'recipeManagement' })">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Recipe name:</span>
+      <span>{{ this.$t('Recipe name')}}</span>
       <span>{{recipename}}</span>
       <v-row justify="center">
         <v-col cols="12" xl="10" class="py-0">
@@ -22,13 +22,15 @@
              <v-btn small color="primary" outlined class="text-none ml-2"
               :disabled="!saveBtnEnable"
               @click="saveVersion">
-              Save
+              {{ $t('Save') }}
             </v-btn>
             <v-btn small color="primary" outlined class="text-none ml-2" @click="RefreshUI">
-              <v-icon small left>mdi-refresh</v-icon>Refresh
+              <v-icon small left>mdi-refresh</v-icon>
+               {{ $t('Refresh') }}
             </v-btn>
             <v-btn small color="primary" outlined class="text-none ml-2" @click="btnUploadToPLC">
-              <v-icon small left>mdi-upload</v-icon>Upload to PLC
+              <v-icon small left>mdi-upload</v-icon>
+                {{ $t('Upload to PLC') }}
             </v-btn>
             <v-btn
               small
@@ -37,27 +39,32 @@
               class="text-none ml-2"
               @click="btnDownloadFromPLC"
             >
-              <v-icon small left>mdi-download</v-icon>Download from PLC
+              <v-icon small left>mdi-download</v-icon>
+              {{ $t('Download from PLC') }}
             </v-btn>
           </v-toolbar>
           <v-row justify="left">
             <v-col cols="12" md="2" class="py-2">
-              <v-text-field :disabled="!toggleDisable" label="Line" v-model="line"></v-text-field>
+              <v-text-field :disabled="!toggleDisable"
+               :label="this.$t('Line')"
+                v-model="line"></v-text-field>
             </v-col>
             <v-col cols="12" md="2" class="py-2">
-              <v-text-field :disabled="!toggleDisable" label="Subline"
+              <v-text-field :disabled="!toggleDisable"
+              :label="this.$t('Subline')"
                v-model="subline"></v-text-field>
             </v-col>
             <v-col cols="12" md="2" class="py-2">
               <v-text-field
                 :disabled="!toggleDisable"
-                label="Sub-Station name"
+                :label="this.$t('Sub-Station name')"
                 v-model="substationname"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2"
              class="py-2">
-              <v-text-field :disabled="!toggleDisable" label="Recipe Name"
+              <v-text-field :disabled="!toggleDisable"
+              :label="this.$t('Recipe Name')"
                v-model="recipename"></v-text-field>
             </v-col>
             <v-col cols="12" md="2" class="py-2">
@@ -75,11 +82,12 @@
               ></v-select>
             </v-col>
           </v-row>
-          <v-data-table :headers="headers" :items="recipeListDetails" item-key="tagname">
+          <v-data-table :headers="selectedHeader" :items="recipeListDetails" item-key="tagname">
             <template v-slot:item="{ item, index }">
               <tr>
                 <td>{{ index+1 }}</td>
-                <td>{{ item.tagname }}</td>
+                <td v-if="language === 'en'">{{ item.tagname }}</td>
+                <td v-else>{{ item.chinesedescription }}</td>
                 <td
                   v-if="datatypeList
                     .filter((d) => Number(d.id) === Number(item.datatype)).length > 0"
@@ -188,34 +196,61 @@ export default {
       filters: {
         name: 'Recipe Parameters',
         id: 1,
+        selectedHeader: [],
+        totalRecipeDetails: [],
+        caliberVal: [],
+        recipeParamVal: [],
       },
       recipeFilters: [
         {
-          name: 'Recipe Parameters',
+          name: this.$t('Recipe Parameters'),
           id: 1,
         },
         {
-          name: 'Calibration',
+          name: this.$t('Calibration'),
           id: 2,
+          parametercategory: 58,
         },
       ],
-      headers: [
+      headersEn: [
         {
-          text: 'No.',
+          text: this.$t('No.'),
           value: 'number',
         },
         {
-          text: 'Parameter',
+          text: this.$t('Parameter.'),
           value: 'tagname',
         },
         {
-          text: 'Data type',
+          text: this.$t('Data type'),
           value: 'datatype',
         },
-        { text: 'Recipe value', value: 'parametervalue' },
-        { text: 'Monitor value', value: 'monitorvalue' },
+        { text: this.$t('Recipe value'), value: 'parametervalue' },
+        { text: this.$t('Monitor value'), value: 'monitorvalue' },
         {
-          text: 'Actions',
+          text: this.$t('Actions'),
+          align: 'center',
+          sortable: false,
+          value: 'actions',
+        },
+      ],
+      headersCn: [
+        {
+          text: this.$t('No.'),
+          value: 'number',
+        },
+        {
+          text: this.$t('Parameter'),
+          value: 'chinesedescription',
+        },
+        {
+          text: this.$t('Data type'),
+          value: 'datatype',
+        },
+        { text: this.$t('Recipe value'), value: 'parametervalue' },
+        { text: this.$t('Monitor value'), value: 'monitorvalue' },
+        {
+          text: this.$t('Actions'),
           align: 'center',
           sortable: false,
           value: 'actions',
@@ -257,10 +292,17 @@ export default {
     },
   },
   async created() {
-    console.log(this.$route.params);
-    await this.getRecipeDetailListRecords(
-      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
+    this.language = this.currentLocale;
+    if (this.language === 'zhHans') {
+      this.selectedHeader = this.headersCn;
+    } else {
+      this.selectedHeader = this.headersEn;
+    }
+    const totalRecords = await this.getRecipeDetailListRecords(
+      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
     );
+    this.totalRecipeDetails = totalRecords;
+    this.recipeParamVal = totalRecords;
     await this.getDataTypes('');
     // this.substationname = this.$route.params.id.substationname;
     // this.recipename = this.$route.params.id.recipename;
@@ -277,6 +319,7 @@ export default {
         if (element.datatype === 11) {
           payload.push({
             tagname: element.name,
+            chinesedescription: element.chinesedescription,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
             parametercategory: element.parametercategory,
@@ -291,6 +334,7 @@ export default {
         } else {
           payload.push({
             tagname: element.name,
+            chinesedescription: element.chinesedescription,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
             parametercategory: element.parametercategory,
@@ -316,12 +360,18 @@ export default {
   },
   beforeDestroy() {
     this.socket.close();
+    this.totalRecipeDetails = [];
   },
   computed: {
     ...mapState('recipeManagement', [
       'recipeListDetails', 'parametersList', 'datatypeList', 'recipeList',
     ]),
     ...mapState('user', ['me']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
     userName: {
       get() {
         return this.me.user.firstname;
@@ -350,11 +400,12 @@ export default {
     async changeRecipeList() {
       const filterSelected = this.filters;
       if (filterSelected === 1) {
-        await this.getRecipeDetailListRecords(
+        this.recipeParamVal = await this.getRecipeDetailListRecords(
           `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
         );
       } else {
-        await this.getRecipeDetailListRecords(
+        this.recipeParamVal = [];
+        this.caliberVal = await this.getRecipeDetailListRecords(
           `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26parametercategory=="58"`,
         );
       }
@@ -581,7 +632,20 @@ export default {
       this.dialog = false;
     },
     async saveVersion() {
-      const list = this.recipeListDetails;
+      if (this.recipeParamVal.length > 0) {
+        this.totalRecipeDetails.forEach((item) => {
+          if (item.tagname === this.recipeParamVal[0].tagname) {
+            item.parametervalue = this.recipeParamVal[0].parametervalue;
+          }
+        });
+      } else {
+        this.totalRecipeDetails.forEach((item) => {
+          if (item.tagname === this.caliberVal[0].tagname) {
+            item.parametervalue = this.caliberVal[0].parametervalue;
+          }
+        });
+      }
+      const list = this.totalRecipeDetails;
       const currentRecipeId = this.$route.params.id;
       const currentVersion = this.$route.params.versionnumber;
       const payload = [];
@@ -590,6 +654,7 @@ export default {
           assetid: 4,
           versionnumber: currentVersion + 1,
           tagname: ls.tagname,
+          chinesedescription: ls.chinesedescription,
           datatype: ls.datatype,
           recipeid: ls.recipeid,
           parametercategory: ls.parametercategory,
@@ -630,6 +695,7 @@ export default {
           message: 'VERSIONNUM_NOT_UPDATED',
         });
       }
+      this.totalRecipeDetails = [];
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;

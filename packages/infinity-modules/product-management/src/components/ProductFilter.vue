@@ -64,7 +64,7 @@
             hide-details
             v-model="selectedProduct"
             name="productname"
-            label="Product Type name"
+            :label="this.$t('Product Type name')"
             item-text="productname"
             clearable="true"
           >

@@ -737,21 +737,21 @@ export default {
         await this.$refs.process.btnSearchProcessParameters();
         await this.$refs.quality.btnSearchProcessParameters();
         // this.$refs.partstatus.handleSubLineClick();
-        if (this.recipeView === 0) {
-          this.$refs.overall.btnSearchCheckOut();
-          this.$refs.overall.handleSubLineClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
-        }
-        if (this.recipeView === 1) {
-          this.$refs.process.btnSearchProcessParameters();
-          // this.$refs.process.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
-        }
-        if (this.recipeView === 2) {
-          this.$refs.quality.btnSearchProcessParameters();
-          this.$refs.quality.handleStationClick();
-          // this.$refs.partstatus.btnSearchCheckOut();
-        }
+        // if (this.recipeView === 0) {
+        //   this.$refs.overall.btnSearchCheckOut();
+        //   this.$refs.overall.handleSubLineClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
+        // if (this.recipeView === 1) {
+        //   this.$refs.process.btnSearchProcessParameters();
+        //   // this.$refs.process.handleStationClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
+        // if (this.recipeView === 2) {
+        //   this.$refs.quality.btnSearchProcessParameters();
+        //   this.$refs.quality.handleStationClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
       }
     },
     async nextSearch() {
