@@ -17,12 +17,20 @@ class IndustryService {
     return this.request.get(`/server/asset`);
   }
 
+  getSolutions() {
+    return this.request.get(`/server/solution/all`);
+  }
+
   getModules() {
     return this.request.get(`/server/module/all`);
   }
 
   getReportCategories() {
     return this.request.get(`/server/reportscategory/all`);
+  }
+
+  getInsightCategories() {
+    return this.request.get(`/server/insightcategory/all`);
   }
 }
 

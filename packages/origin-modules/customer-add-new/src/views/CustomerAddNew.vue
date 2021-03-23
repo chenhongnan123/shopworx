@@ -55,7 +55,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('newCustomer', ['setCustomerData']),
+    ...mapMutations('newCustomer', ['setCustomerData', 'setOnboardingSteps']),
     async exit() {
       if (await this.$root.$confirm.open(
         'Exit on-boarding',
@@ -76,8 +76,39 @@ export default {
             isComplete: false,
           },
         };
+        const onboardingSteps = [{
+          name: 'SMS settings',
+          component: 'sms',
+          isComplete: false,
+          isLoading: false,
+        }, {
+          name: 'Web apps',
+          component: 'apps',
+          isComplete: false,
+          isLoading: false,
+        }, {
+          name: 'Reports',
+          component: 'reports',
+          isComplete: false,
+          isLoading: false,
+        }, {
+          name: 'Report views',
+          component: 'report-views',
+          isComplete: false,
+          isLoading: false,
+        }, {
+          name: 'Insights',
+          component: 'insight-views',
+          isComplete: false,
+          isLoading: false,
+        }, {
+          name: 'Roles & access',
+          component: 'roles',
+          isComplete: false,
+          isLoading: false,
+        }];
         this.setCustomerData(customerData);
-        localStorage.removeItem('new-customer-data');
+        this.setOnboardingSteps(onboardingSteps);
         localStorage.removeItem('onboarding-steps');
         this.$router.push({ name: 'customerAssets' });
       }

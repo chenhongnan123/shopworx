@@ -70,6 +70,7 @@
         </v-card-actions>
       </v-card>
     </perfect-scrollbar>
+    <invite-admin v-model="showInvite" />
   </v-form>
 </template>
 
@@ -79,9 +80,9 @@ import Sms from './review/Sms.vue';
 import Apps from './review/Apps.vue';
 import Reports from './review/Reports.vue';
 import ReportViews from './review/ReportViews.vue';
-import InsightCategories from './review/InsightCategories.vue';
 import InsightViews from './review/InsightViews.vue';
 import Roles from './review/Roles.vue';
+import InviteAdmin from './InviteAdmin.vue';
 
 export default {
   name: 'ReviewAndOnboard',
@@ -90,15 +91,16 @@ export default {
     Apps,
     Reports,
     ReportViews,
-    InsightCategories,
     InsightViews,
     Roles,
+    InviteAdmin,
   },
   data() {
     return {
       saving: false,
       loading: false,
       isValid: false,
+      showInvite: false,
       customer: '',
       isMe: false,
       requiredRule: [
@@ -119,6 +121,10 @@ export default {
     }
     localStorage.setItem('onboarding-steps', JSON.stringify(this.onboardingSteps));
     this.isMe = await this.getMe();
+    const isComplete = this.onboardingSteps.every((step) => step.isComplete);
+    if (isComplete) {
+      this.showInvite = true;
+    }
     this.loading = false;
   },
   computed: {
@@ -173,7 +179,7 @@ export default {
         this.updateCustomerData(data);
         localStorage.setItem('new-customer-data', JSON.stringify(this.customerData));
         this.saving = false;
-        console.log('success');
+        this.showInvite = true;
         // show user dialog
       }
     },

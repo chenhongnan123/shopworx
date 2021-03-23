@@ -81,7 +81,6 @@ export default {
                 const { id } = reports.find((r) => r.reportName === reportName);
                 reportIds = [...reportIds, id];
               }
-              console.log(reportIds);
               // eslint-disable-next-line
               const addedReportViewMapping = await this.addReportViewMapping({
                 reportViewId: addedReportView,

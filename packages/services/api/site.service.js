@@ -29,6 +29,10 @@ class SiteService {
     return this.request.post('/server/reportviewmapping', payload);
   }
 
+  addInsightView(payload) {
+    return this.request.post('/server/insightview', payload);
+  }
+
   addLicense(payload) {
     return this.request.post('/server/customerlicense', payload);
   }
@@ -55,6 +59,14 @@ class SiteService {
 
   getReports() {
     return this.request.get('/server/reports?withFilters=false');
+  }
+
+  getWebApps() {
+    return this.request.get('/server/webapp');
+  }
+
+  getInsights() {
+    return this.request.get('/server/insightview');
   }
 }
 

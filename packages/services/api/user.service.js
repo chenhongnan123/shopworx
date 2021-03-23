@@ -104,6 +104,14 @@ class UserService {
   createReportViewAccess(payload) {
     return this.request.post('/server/reportviewaccess', payload);
   }
+
+  createInsightViewAccess(payload) {
+    return this.request.post('/server/insightviewaccess', payload);
+  }
+
+  createInsightCategoryAccess(payload) {
+    return this.request.post('/server/insightcategoryaccess', payload);
+  }
 }
 
 export default new UserService();
