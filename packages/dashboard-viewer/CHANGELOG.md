@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+
+
+### Features
+
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 

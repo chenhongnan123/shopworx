@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+* **live-shopfloor:** fix dashbaord display on hour change ([7e17175](https://bitbucket.org/entrib/shopworx/commits/7e17175f81cc6873bec7a06cde9c98b5919b794e))
+* **live-shopfloor:** fixed downtime reason display ([200fb23](https://bitbucket.org/entrib/shopworx/commits/200fb23ad179c0e671a00ce5340db48fba326f70))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 
