@@ -145,7 +145,7 @@
                   <v-col cols="12" sm="4">
                     <validation-provider
                       name="activecavity"
-                      :rules="`required|numeric|max_value:${plan.cavity}|min_value:1`"
+                      :rules="`required|max_value:${plan.cavity}|min_value:0.1`"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -290,7 +290,7 @@
                           <validation-provider
                             name="familyactivecavity"
                             :vid="`cavity-${item._id}`"
-                            :rules="`required|numeric|max_value:${item.cavity}|min_value:1`"
+                            :rules="`required|max_value:${item.cavity}|min_value:0.1`"
                             #default="{ errors }"
                           >
                             <v-text-field
