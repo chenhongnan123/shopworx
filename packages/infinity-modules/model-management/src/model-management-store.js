@@ -18,6 +18,7 @@ const ELEMENTS = {
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
   MODEL_TYPE: 'modeltype',
   MODEL_TRIGGER: 'modeltrigger',
+  MODEL_TRAINING: 'modeltraining',
 };
 const ASSETID = 4;
 const OPERATION_NAME = 'Deploy Model';
@@ -32,6 +33,7 @@ export default ({
   namespaced: true,
   state: {
     lines: [],
+    showModelUI: true,
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,
@@ -60,6 +62,11 @@ export default ({
     customizeMode: false,
     modelTypeList: [],
     nonRealElementInfo: null,
+    selectedModelObject: {},
+    traningData: [],
+    trainingLogs: [],
+    elementInformation: null,
+    fileRecords: [],
     allWidgets: [
       {
         component: 'model-info',
@@ -188,8 +195,69 @@ export default ({
     setNonRealElementInfo: set('nonRealElementInfo'),
     setFullParameterList: set('fullParameterList'),
     setSubLineInfo: set('subLineInfo'),
+    setShowModelUI: set('showModelUI'),
+    setSelectedModelObject: set('selectedModelObject'),
+    setTrainingData: set('traningData'),
+    setElementInformation: set('elementInformation'),
+    setRecords: set('fileRecords'),
+    setTrainingLogs: set('trainingLogs'),
   },
   actions: {
+    updateModelDates: async ({ dispatch }, request) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: ELEMENTS.MODELS,
+          queryParam: request.query,
+          payload: request.payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    getInProgressTrainingData: async ({ dispatch }) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: '?query=status=="In Progress"',
+        },
+        { root: true },
+      );
+      return training;
+    },
+
+    getTrainingLogs: async ({ dispatch, commit }, jobId) => {
+      const log = await dispatch(
+        'element/getTrainingLogsRecords',
+        {
+          jobId,
+        },
+        { root: true },
+      );
+      commit('setTrainingLogs', log.logs);
+    },
+    getRecordsByTagData: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/getRecordsByTags',
+        { payload },
+        { root: true },
+      );
+      if (data) {
+        commit('setRecords', data.results);
+      }
+      return data;
+    },
+    getTagsForSelectedElement: async ({ dispatch, commit }, eleName) => {
+      const info = await dispatch(
+        'element/getElement',
+        eleName,
+        { root: true },
+      );
+      commit('setElementInformation', info);
+    },
+
     getLines: async ({ dispatch, commit }) => {
       const lines = await dispatch(
         'element/getRecords',
@@ -314,7 +382,7 @@ export default ({
         .map(async ({
           _id,
           // eslint-disable-next-line
-          model_id,
+          modelid,
           modelname,
           modeldescription,
           modifiedtimestamp,
@@ -323,14 +391,14 @@ export default ({
           let model = {
             id: _id,
             // eslint-disable-next-line
-            model_id,
+            modelid,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
             status: 'N.A',
             modelUpdateStatus: modelupdatestatus,
           };
-          const deployment = await dispatch('getLastDeploymentStatus', model_id);
+          const deployment = await dispatch('getLastDeploymentStatus', modelid);
           if (deployment) {
             model = {
               ...model,
@@ -541,10 +609,7 @@ export default ({
       return { modelInputs: inputs };
     },
 
-    getModelCriticals: async ({ dispatch, state }, query) => {
-      const {
-        fullParameterList,
-      } = state;
+    getModelCriticals: async ({ dispatch }, query) => {
       const modelCriticals = await dispatch(
         'element/getRecords',
         {
@@ -555,12 +620,13 @@ export default ({
       );
       const criticals = modelCriticals.map(({
         parameterid,
+        parametername,
         _id,
         maxlimit,
         minlimit,
       }) => ({
         parameterId: parameterid,
-        parametername: fullParameterList.find((f) => f.id === parameterid).name,
+        parameterName: parametername,
         id: _id,
         maxLimit: maxlimit,
         minLimit: minlimit,
@@ -630,7 +696,7 @@ export default ({
 
     createInputParameter: async (
       { state, commit, dispatch },
-      { modelId, parameterId },
+      { modelId, parameterId, selectedElement },
     ) => {
       const {
         selectedLine,
@@ -646,6 +712,7 @@ export default ({
         assetid: ASSETID,
         modelid: modelId,
         parameterid: parameterId,
+        selectedelementname: selectedElement,
       };
       const created = await dispatch(
         'element/postRecord',
@@ -672,6 +739,65 @@ export default ({
             show: true,
             type: 'error',
             message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    fetchTrainingData: async ({ dispatch, commit }, modelid) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      commit('setTrainingData', training);
+    },
+
+    addModelTraningData: async ({ dispatch, state, commit }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        ...request,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+      };
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRAINING_SAVED',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRAINING_SAVED',
           },
           { root: true },
         );
@@ -785,6 +911,7 @@ export default ({
         parameterId,
         maxLimit,
         minLimit,
+        parameterName,
       },
     ) => {
       const {
@@ -801,6 +928,7 @@ export default ({
         assetid: ASSETID,
         modelid: modelId,
         parameterid: parameterId,
+        parametername: parameterName,
         maxlimit: maxLimit,
         minlimit: minLimit,
       };
@@ -1047,6 +1175,7 @@ export default ({
     createNewModel: async ({ state, commit, dispatch }, payload) => {
       const {
         selectedLine,
+        selectedSubline,
         selectedStation,
         selectedSubstation,
         selectedProcess,
@@ -1058,6 +1187,7 @@ export default ({
           payload: {
             ...payload,
             lineid: selectedLine,
+            sublineid: selectedSubline,
             stationid: selectedStation,
             substationid: selectedSubstation,
             subprocessid: selectedProcess,
@@ -1107,7 +1237,7 @@ export default ({
         return {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -1132,7 +1262,7 @@ export default ({
         const payload = {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -1173,6 +1303,8 @@ export default ({
               operationname: OPERATION_NAME,
               modelid: modelId,
               assetid: ASSETID,
+              deploymode: 1,
+              outputpath: '',
             },
           },
           { root: true },
@@ -1216,6 +1348,68 @@ export default ({
         { root: true },
       );
       return false;
+    },
+
+    createTrainingNewDeploymentOrder: async ({
+      state,
+      commit,
+      dispatch,
+    }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      await dispatch('fetchModelDetails', request.modelid);
+      const status = DEPLOYMENT_STATUS;
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          payload: {
+            lineid: selectedLine,
+            stationid: selectedStation,
+            substationid: selectedSubstation,
+            subprocessid: selectedProcess,
+            status,
+            operationname: OPERATION_NAME,
+            modelid: request.modelid,
+            assetid: ASSETID,
+            deploymode: 2,
+            outputpath: request.outputfolder,
+          },
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        const eventData = {
+          key: request.modelid,
+          lastModified: new Date(),
+          status,
+        };
+        commit('setLastStatusUpdate', eventData);
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
     },
 
     deleteModel: async ({ state, commit, dispatch }, { modelId, id }) => {

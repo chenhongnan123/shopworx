@@ -338,6 +338,18 @@ export default ({
       }
     },
 
+    getTrainingLogsRecords: async (_, { jobId }) => {
+      try {
+        const { data } = await ElementService.getTrainingLogsRecords(jobId);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecordById: async (_, { elementName, id }) => {
       try {
         const { data } = await ElementService.getRecordById(elementName, id);

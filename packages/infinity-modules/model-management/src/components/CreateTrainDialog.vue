@@ -2,29 +2,25 @@
   <v-dialog
     persistent
     v-model="dialog"
-    max-width="650px"
+    max-width="600px"
     transition="dialog-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ attrs }">
       <v-btn
         small
-        v-on="on"
         v-bind="attrs"
         color="primary"
         class="text-none ml-5"
         :disabled="fetchingMaster"
+        @click="OpenDialog"
       >
         <v-icon left small>mdi-plus</v-icon>
-        Create new model
+        Start new Training
       </v-btn>
     </template>
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
-        <span>{{ currentTitle }}</span>
-        <span>
-          Step {{ step }} of {{ items.length }}
-          <v-progress-linear :value="progress"></v-progress-linear>
-        </span>
+        <span>New Traning</span>
       </v-card-title>
       <v-window v-model="step">
         <v-window-item
@@ -32,13 +28,7 @@
           :key="item.id"
           :value="item.id"
         >
-          <model-info
-            @on-cancel="dialog = false"
-            @on-save="step += 1"
-            v-if="item.id === 1"
-          />
-          <model-config
-            v-else
+          <training-data
             @on-cancel="onCancel"
           />
         </v-window-item>
@@ -48,25 +38,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import ModelInfo from './create-model/ModelInfo.vue';
-import ModelConfig from './create-model/ModelConfig.vue';
+import { mapState, mapActions, mapMutations } from 'vuex';
+import TrainingData from './training-details/TrainingData.vue';
 
 export default {
   name: 'CreateModelDialog',
   components: {
-    ModelInfo,
-    ModelConfig,
+    TrainingData,
   },
   data() {
     return {
       dialog: false,
       step: 1,
       items: [
-        {
-          id: 1,
-          title: 'Create new model',
-        },
         {
           id: 2,
           title: 'Configure model',
@@ -84,9 +68,23 @@ export default {
     },
   },
   methods: {
+    ...mapActions('modelManagement', ['getInProgressTrainingData']),
+    ...mapMutations('helper', ['setAlert']),
     onCancel() {
       this.dialog = false;
       this.step = 1;
+    },
+    async OpenDialog() {
+      const data = await this.getInProgressTrainingData();
+      if (data.length > 0) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TRAINING_IN_PROGRESS',
+        });
+      } else {
+        this.dialog = true;
+      }
     },
   },
 };
