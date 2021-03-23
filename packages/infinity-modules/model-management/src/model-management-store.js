@@ -204,7 +204,6 @@ export default ({
   },
   actions: {
     updateModelDates: async ({ dispatch }, request) => {
-      console.log(request);
       const created = await dispatch(
         'element/updateRecordByQuery',
         {
@@ -251,7 +250,6 @@ export default ({
       return data;
     },
     getTagsForSelectedElement: async ({ dispatch, commit }, eleName) => {
-      console.log(eleName);
       const info = await dispatch(
         'element/getElement',
         eleName,
@@ -716,7 +714,6 @@ export default ({
         parameterid: parameterId,
         selectedelementname: selectedElement,
       };
-      console.log(payload);
       const created = await dispatch(
         'element/postRecord',
         {
@@ -776,7 +773,6 @@ export default ({
         subprocessid: selectedProcess,
         assetid: ASSETID,
       };
-      console.log(payload);
       const created = await dispatch(
         'element/postRecord',
         {

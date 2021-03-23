@@ -100,7 +100,6 @@ export default {
     ]),
     async onElementSelect(val) {
       // add data to new element and add entry to webhook table
-      console.log(this.modelTriggers);
       if (this.modelTriggers.length > 0
         && this.modelTriggers[0].triggerName === val[0].triggerName) {
         this.setAlert({
@@ -117,7 +116,6 @@ export default {
         const result = await this.addTriggerData(object);
         if (result) {
           await this.getNonRealElementInfo(val[0].triggerName);
-          console.log(this.nonRealElementInfo);
           // add entry to webhook table
           const webhookObject = {
             webhookURL: `http://localhost:10190/update/${val[0].triggerName}`,

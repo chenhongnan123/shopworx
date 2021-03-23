@@ -52,7 +52,6 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', ['createTrainingNewDeploymentOrder']),
     async deployModel() {
-      console.log(this.training);
       if (this.model.modelUpdateStatus) {
         if (await this.$root.$confirm.open(
           'Deploy training',

@@ -160,7 +160,6 @@ export default {
       this.fileList.push(val.modelFiles);
     },
     async uploadFiles() {
-      console.log('file click');
       // update start date and end date to Model element
       const startTime = new Date(this.trainStartTime);
       const endTime = new Date(this.trainEndTime);

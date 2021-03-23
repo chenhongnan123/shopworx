@@ -314,7 +314,6 @@ export default {
         status: 'In Progress',
         trainingmode: 'Manual',
       };
-      console.log(object);
       await this.addModelTraningData(object);
       await this.fetchTrainingData(this.selectedModelObject.modelid);
       this.elementList = [];
@@ -338,7 +337,6 @@ export default {
     },
     async onElementSelect(val) {
       // get tags for selected element
-      console.log(val);
       this.selectedElementName = val.elementName;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;

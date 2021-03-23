@@ -172,7 +172,6 @@ export default {
       this.saveInputParam(this.parameterList);
     },
     async saveInputParam(param) {
-      console.log(param);
       await Promise.all(this.modelCriticals.map(async (element) => {
         if (element.parameterId === param) {
           await this.deleteCriticalParameter(element.id);
@@ -186,8 +185,6 @@ export default {
         });
       } else {
         const object = param;
-        console.log(this.criticalParameters);
-        console.log(object);
         if (object) {
           await this.createCriticalParameter({
             modelId: this.model.modelid,

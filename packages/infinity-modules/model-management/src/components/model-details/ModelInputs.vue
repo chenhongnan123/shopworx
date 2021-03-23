@@ -164,7 +164,6 @@ export default {
       } else {
         const object = param[param.length - 1];
         if (object) {
-          console.log(this.realElement.elementName);
           await this.createInputParameter({
             modelId: this.model.modelid,
             parameterId: object,
