@@ -72,7 +72,6 @@ export default {
         'updateComponentById',
         'deletePartStatus',
         'createOrUpdateManidStore',
-        'deleteRecord',
       ]),
     async checkMainId() {
       if (this.rework.enterManinId) {
@@ -123,21 +122,13 @@ export default {
         await this.updateOverAllResultPartStatus(payload);
       }
       this.componantList.forEach(async (element) => {
-        if (element.qualitystatus === 5) {
-          const payload = {
-            id: element._id,
-            name: 'component',
-          };
-          await this.deleteRecord(payload);
-        } else {
-          const payloadComponent = {
-            query: element._id,
-            payload: {
-              qualitystatus: element.qualitystatus,
-            },
-          };
-          await this.updateComponentById(payloadComponent);
-        }
+        const payloadComponent = {
+          query: element._id,
+          payload: {
+            qualitystatus: element.qualitystatus,
+          },
+        };
+        await this.updateComponentById(payloadComponent);
       });
       this.dialog = false;
       // eslint-disable-next-line vue/no-mutating-props

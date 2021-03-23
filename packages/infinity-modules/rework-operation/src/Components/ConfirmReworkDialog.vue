@@ -74,7 +74,6 @@ export default {
       'getRunningOrder',
       'updateOverAllResult',
       'getReworkList',
-      'deleteRecord',
       'updateComponentById']),
     async checkMainId() {
       if (this.rework.enterManinId) {
@@ -160,20 +159,13 @@ export default {
         //   await this.updateComponentById(payloadComponent);
         // });
         this.componantList.forEach(async (element) => {
-          if (element.qualitystatus === 5) {
-            await this.deleteRecord({
-              id: element._id,
-              name: 'component',
-            });
-          } else {
-            const payloadComponent = {
-              query: element._id,
-              payload: {
-                qualitystatus: element.qualitystatus,
-              },
-            };
-            await this.updateComponentById(payloadComponent);
-          }
+          const payloadComponent = {
+            query: element._id,
+            payload: {
+              qualitystatus: element.qualitystatus,
+            },
+          };
+          await this.updateComponentById(payloadComponent);
         });
         await this.getReworkList('?query=overallresult!="1"');
         this.dialog = false;
