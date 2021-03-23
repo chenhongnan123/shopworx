@@ -239,6 +239,14 @@
                           item-text="name"
                           v-model="item.qualitystatus"/>
                       </template>
+                      <template v-slot:item.isbind="{ item }">
+                        <v-select
+                          hide-details
+                          :items="bindStatus"
+                          item-value="value"
+                          item-text="name"
+                          v-model="item.isbind"/>
+                      </template>
                       <template v-slot:item.bound>
                         <span>1</span>
                       </template>
@@ -273,6 +281,16 @@ export default {
   },
   data() {
     return {
+      bindStatus: [
+        {
+          name: this.$t('Bind'),
+          value: 1,
+        },
+        {
+          name: this.$t('Unbind'),
+          value: 2,
+        },
+      ],
       qualityStatusList: [
         {
           name: 'Default',
@@ -320,6 +338,7 @@ export default {
         },
         { text: this.$t('Current Quality'), value: 'checkquality' },
         { text: this.$t('Set Quality'), value: 'qualitystatus' },
+        { text: this.$t('Set Bind'), value: 'isbind' },
         // { text: 'Bound?', value: 'boundstatus' },
         // { text: 'Keep?', value: 'rework' },
         // { text: 'Good?', value: 'quality' },

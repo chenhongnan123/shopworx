@@ -210,12 +210,14 @@ export default ({
         if (c.qualitystatus === 0) {
           c.qualitystatus = 4;
         }
+        if (!c.isbind) {
+          c.isbind = 1;
+        }
         return {
           ...c,
           checkquality,
         };
       });
-      console.log(component);
       commit('setComponentList', component);
       return true;
     },
