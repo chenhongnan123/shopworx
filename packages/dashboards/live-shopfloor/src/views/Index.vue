@@ -81,6 +81,7 @@ export default {
       'machines',
       'currentDate',
       'currentShift',
+      'currentHour',
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
@@ -141,9 +142,16 @@ export default {
         shift,
         shiftName,
         date,
+        hour,
       } = data;
-      if ((this.currentShift === shift || this.currentShift === shiftName)
-        && this.currentDate === date) {
+      let canSetData = false;
+      if (this.selectedView.value === 'shift') {
+        canSetData = (this.currentShift === shift || this.currentShift === shiftName)
+        && this.currentDate === date;
+      } else if (this.selectedView.value === 'hourly') {
+        canSetData = this.currentHour === hour && this.currentDate === date;
+      }
+      if (canSetData) {
         const workingTime = await this.getAvailableTime();
         const payload = {
           ...data,
