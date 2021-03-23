@@ -294,6 +294,10 @@ export default {
           name: 'Reworked',
           value: 4,
         },
+        {
+          name: 'Separated',
+          value: 5,
+        },
       ],
       setQualityStatusList: [
         {
@@ -303,6 +307,10 @@ export default {
         {
           name: 'Reworked',
           value: 4,
+        },
+        {
+          name: 'Separated',
+          value: 5,
         },
       ],
       headers: [
