@@ -61,7 +61,7 @@ export default {
         )) {
           this.deploying = true;
           const object = {
-            modelid: this.model.model_id,
+            modelid: this.model.modelid,
             outputfolder: this.training.outputfolder,
           };
           await this.createTrainingNewDeploymentOrder(object);

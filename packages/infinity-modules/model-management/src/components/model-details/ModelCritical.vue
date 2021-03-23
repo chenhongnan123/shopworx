@@ -165,7 +165,7 @@ export default {
     async remove(item) {
       const deleted = await this.deleteCriticalParameter(item.id);
       if (deleted) {
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
       }
     },
     AddCriticalParameter() {
@@ -190,7 +190,7 @@ export default {
         console.log(object);
         if (object) {
           await this.createCriticalParameter({
-            modelId: this.model.model_id,
+            modelId: this.model.modelid,
             maxLimit: this.maxlimit,
             minLimit: this.minlimit,
             parameterId: object,
@@ -198,12 +198,12 @@ export default {
           });
         }
       }
-      await this.fetchModelDetails(this.model.model_id);
+      await this.fetchModelDetails(this.model.modelid);
     },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createCriticalParameter({
-          modelId: this.model.model_id,
+          modelId: this.model.modelid,
           maxLimit: this.maxlimit,
           minLimit: this.minlimit,
           parameterId: param.id,

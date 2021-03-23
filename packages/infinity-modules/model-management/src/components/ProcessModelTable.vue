@@ -72,7 +72,7 @@
                 </div>
               </td>
               <td>
-                {{ item.model_id }}
+                {{ item.modelid }}
               </td>
               <td>
                 <model-last-modified :model="item" />
@@ -264,7 +264,7 @@ export default {
       },
       headers: [
         { text: 'Model name', value: 'name' },
-        { text: 'Model Id', value: 'model_id' },
+        { text: 'Model Id', value: 'modelid' },
         { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
@@ -336,13 +336,13 @@ export default {
     ]),
     ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI', 'setSelectedModelObject']),
     testModelClick(item) {
-      this.testModelId = item.model_id;
+      this.testModelId = item.modelid;
       this.dialog = true;
     },
     async trainModelClick(item) {
       this.setSelectedModelObject(item);
       this.setShowModelUI(false);
-      await this.fetchTrainingData(item.model_id);
+      await this.fetchTrainingData(item.modelid);
     },
     async testModel() {
       const object = {

@@ -16,6 +16,7 @@
     "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Inactivate now!"
   },
   "error": {
+    "TRIGGER_ADDED": "Model Trigger is already added!",
     "FIELDS_EMPTY": "Input fields cannot be empty!",
     "TRAINING_SAVED": "Error in Training Data, Please retry!",
     "TRAINING_IN_PROGRESS": "Training already In Progress",

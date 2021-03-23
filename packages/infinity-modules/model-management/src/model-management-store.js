@@ -384,7 +384,7 @@ export default ({
         .map(async ({
           _id,
           // eslint-disable-next-line
-          model_id,
+          modelid,
           modelname,
           modeldescription,
           modifiedtimestamp,
@@ -393,14 +393,14 @@ export default ({
           let model = {
             id: _id,
             // eslint-disable-next-line
-            model_id,
+            modelid,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
             status: 'N.A',
             modelUpdateStatus: modelupdatestatus,
           };
-          const deployment = await dispatch('getLastDeploymentStatus', model_id);
+          const deployment = await dispatch('getLastDeploymentStatus', modelid);
           if (deployment) {
             model = {
               ...model,
@@ -716,6 +716,7 @@ export default ({
         parameterid: parameterId,
         selectedelementname: selectedElement,
       };
+      console.log(payload);
       const created = await dispatch(
         'element/postRecord',
         {
@@ -1240,7 +1241,7 @@ export default ({
         return {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -1265,7 +1266,7 @@ export default ({
         const payload = {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),

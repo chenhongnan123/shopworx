@@ -49,7 +49,7 @@
       </v-data-table>
       <model-files-input
         ref="dropzone"
-        :modelId="model.model_id"
+        :modelId="model.modelid"
       />
       <v-row
         class="mt-2"
@@ -169,7 +169,7 @@ export default {
           trainstarttime: `${startTime.getDay()}-${startTime.getMonth() + 1}-${startTime.getFullYear()}:${startTime.getHours()}:${startTime.getMinutes()}:${startTime.getSeconds()}`,
           trainendtime: `${endTime.getDay()}-${endTime.getMonth() + 1}-${endTime.getFullYear()}:${endTime.getHours()}:${endTime.getMinutes()}:${endTime.getSeconds()}`,
         },
-        query: `?query=model_id=="${this.model.model_id}"`,
+        query: `?query=modelid=="${this.model.modelid}"`,
       };
       await this.updateModelDates(request);
       let flag = false;
@@ -211,7 +211,7 @@ export default {
           id: file.id,
         });
         if (deleted) {
-          await this.fetchModelDetails(this.model.model_id);
+          await this.fetchModelDetails(this.model.modelid);
           this.fileList = this.modelFiles;
           this.setAlert({
             show: true,

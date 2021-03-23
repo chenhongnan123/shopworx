@@ -310,13 +310,13 @@ export default {
         inputfolder: `/home/emgda/shopworx/data/${this.selectedModelObject.name}-${timestamp}`,
         outputfolder: `/home/emgda/shopworx/model-output/${this.selectedModelObject.name}-${timestamp}`,
         inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
-        modelid: this.selectedModelObject.model_id,
+        modelid: this.selectedModelObject.modelid,
         status: 'In Progress',
         trainingmode: 'Manual',
       };
       console.log(object);
       await this.addModelTraningData(object);
-      await this.fetchTrainingData(this.selectedModelObject.model_id);
+      await this.fetchTrainingData(this.selectedModelObject.modelid);
       this.elementList = [];
       this.elementList.push({
         header: 'Real ELement',
@@ -346,7 +346,7 @@ export default {
     async remove(param) {
       const deleted = await this.deleteTriggerName(param.triggerName);
       if (deleted) {
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
         const index = this.realElement.findIndex((f) => f.triggerName === param.triggerName);
         if (index >= 0) this.realElement.splice(index, 1);
       }
@@ -364,19 +364,19 @@ export default {
         const object = param[param.length - 1];
         if (object) {
           await this.createCriticalParameter({
-            modelId: this.model.model_id,
+            modelId: this.model.modelid,
             maxLimit: this.maxlimit,
             minLimit: this.minlimit,
             parameterId: object,
           });
         }
       }
-      await this.fetchModelDetails(this.model.model_id);
+      await this.fetchModelDetails(this.model.modelid);
     },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createCriticalParameter({
-          modelId: this.model.model_id,
+          modelId: this.model.modelid,
           maxLimit: this.maxlimit,
           minLimit: this.minlimit,
           parameterId: param.id,

@@ -93,7 +93,7 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
         this.loading = false;
       }
     },

@@ -243,7 +243,7 @@ export default {
       this.setShowModelUI(true);
     },
     async getTrainingData() {
-      await this.fetchTrainingData(this.selectedModelObject.model_id);
+      await this.fetchTrainingData(this.selectedModelObject.modelid);
     },
     onClickCheckBox() {
       if (!this.isAdmin) {

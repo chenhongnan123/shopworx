@@ -147,7 +147,7 @@ export default {
         .id;
       const deleted = await this.deleteInputParameter(modelInputId);
       if (deleted) {
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
         const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
         if (index >= 0) this.parameterList.splice(index, 1);
       }
@@ -164,19 +164,20 @@ export default {
       } else {
         const object = param[param.length - 1];
         if (object) {
+          console.log(this.realElement.elementName);
           await this.createInputParameter({
-            modelId: this.model.model_id,
+            modelId: this.model.modelid,
             parameterId: object,
-            elementName: this.realElement.elementName,
+            selectedElement: this.realElement.elementName,
           });
         }
       }
-      await this.fetchModelDetails(this.model.model_id);
+      await this.fetchModelDetails(this.model.modelid);
     },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createInputParameter({
-          modelId: this.model.model_id,
+          modelId: this.model.modelid,
           parameterId: param.id,
           elementName: this.realElement.elementName,
         });
