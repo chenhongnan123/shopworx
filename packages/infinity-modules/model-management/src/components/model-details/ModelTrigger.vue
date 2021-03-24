@@ -21,9 +21,7 @@
             v-bind="data.attrs"
             :input-value="data.selected"
             color="primary"
-            close
             @click="data.select"
-            @click:close="remove(data.item)"
           >
             {{ data.item.triggerName }}
           </v-chip>
@@ -46,7 +44,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'modelTrigger',
@@ -86,11 +84,12 @@ export default {
       header: 'Non Real ELement',
     });
     const object = {
-      triggerName: `process_${this.selectedSubstation}`,
+      triggerName: `production_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'createCriticalParameter',
       'deleteTriggerName',
@@ -101,27 +100,36 @@ export default {
     ]),
     async onElementSelect(val) {
       // add data to new element and add entry to webhook table
-      const object = {
-        modelid: this.model.model_id,
-        triggername: val[0].triggerName,
-        eventname: `event_${val[0].triggerName}`,
-      };
-      const result = await this.addTriggerData(object);
-      if (result) {
-        await this.getNonRealElementInfo(val[0].triggerName);
-        // add entry to webhook table
-        const webhookObject = {
-          webhookURL: `http://localhost:10190/update/${val[0].triggerName}`,
-          elementId: this.nonRealElementInfo.element.id,
-          callbackType: 'WRITE',
+      if (this.modelTriggers.length > 0
+        && this.modelTriggers[0].triggerName === val[0].triggerName) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TRIGGER_ADDED',
+        });
+      } else {
+        const object = {
+          modelid: this.model.modelid,
+          triggername: val[0].triggerName,
+          eventname: `event_${val[0].triggerName}`,
         };
-        await this.createWebhook(webhookObject);
+        const result = await this.addTriggerData(object);
+        if (result) {
+          await this.getNonRealElementInfo(val[0].triggerName);
+          // add entry to webhook table
+          const webhookObject = {
+            webhookURL: `http://localhost:10190/update/${val[0].triggerName}`,
+            elementId: this.nonRealElementInfo.element.id,
+            callbackType: 'WRITE',
+          };
+          await this.createWebhook(webhookObject);
+        }
       }
     },
     async remove(param) {
       const deleted = await this.deleteTriggerName(param.triggerName);
       if (deleted) {
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
         const index = this.nonRealElement.findIndex((f) => f.triggerName === param.triggerName);
         if (index >= 0) this.nonRealElement.splice(index, 1);
       }
@@ -139,19 +147,19 @@ export default {
         const object = param[param.length - 1];
         if (object) {
           await this.createCriticalParameter({
-            modelId: this.model.model_id,
+            modelId: this.model.modelid,
             maxLimit: this.maxlimit,
             minLimit: this.minlimit,
             parameterId: object,
           });
         }
       }
-      await this.fetchModelDetails(this.model.model_id);
+      await this.fetchModelDetails(this.model.modelid);
     },
     async updateInputParameter(param) {
       if (param.selected) {
         await this.createCriticalParameter({
-          modelId: this.model.model_id,
+          modelId: this.model.modelid,
           maxLimit: this.maxlimit,
           minLimit: this.minlimit,
           parameterId: param.id,

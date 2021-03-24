@@ -70,7 +70,7 @@ export default {
           this.loading = true;
           this.model = null;
           this.model = await this.getModelById(this.createdModelId);
-          await this.fetchModelDetails(this.model.model_id);
+          await this.fetchModelDetails(this.model.modelid);
           this.loading = false;
         }
       },
@@ -90,7 +90,7 @@ export default {
     },
     async deployModel() {
       this.deploying = true;
-      const created = await this.createNewDeploymentOrder(this.model.model_id);
+      const created = await this.createNewDeploymentOrder(this.model.modelid);
       if (created) {
         this.cancel();
       }

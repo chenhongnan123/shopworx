@@ -72,7 +72,7 @@
                 </div>
               </td>
               <td>
-                {{ item.model_id }}
+                {{ item.modelid }}
               </td>
               <td>
                 <model-last-modified :model="item" />
@@ -147,6 +147,26 @@
                 </v-tooltip>
                 </v-btn>
                 </div>
+                <div class="d-inline ma-0 pa-0">
+                <v-btn
+                @click="trainModelClick(item)"
+                  icon
+                >
+                 <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      v-on="on"
+                      v-bind="attrs"
+                      color="success"
+                    >
+                      <v-icon v-text="'$maintenance'"></v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Train model</span>
+                </v-tooltip>
+                </v-btn>
+                </div>
               </td>
             </tr>
           </template>
@@ -194,7 +214,7 @@
           class="text-none"
           @click="testModel"
         >
-          {{ $t('displayTags.buttons.save') }}
+          Test Model
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -244,7 +264,7 @@ export default {
       },
       headers: [
         { text: 'Model name', value: 'name' },
-        { text: 'Model Id', value: 'model_id' },
+        { text: 'Model Id', value: 'modelid' },
         { text: 'Last modified', value: 'lastModified' },
         {
           text: 'Last update status',
@@ -312,11 +332,17 @@ export default {
       'updateStatusOfModel',
       'getSubLineInfo',
       'sendTestModel',
+      'fetchTrainingData',
     ]),
-    ...mapMutations('modelManagement', ['setFetchingMaster']),
+    ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI', 'setSelectedModelObject']),
     testModelClick(item) {
-      this.testModelId = item.model_id;
+      this.testModelId = item.modelid;
       this.dialog = true;
+    },
+    async trainModelClick(item) {
+      this.setSelectedModelObject(item);
+      this.setShowModelUI(false);
+      await this.fetchTrainingData(item.modelid);
     },
     async testModel() {
       const object = {

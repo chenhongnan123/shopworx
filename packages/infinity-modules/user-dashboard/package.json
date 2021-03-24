@@ -1,13 +1,13 @@
 {
   "name": "@shopworx/user-dashboard",
-  "version": "4.2.6",
+  "version": "4.2.7",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.2.6",
-    "@shopworx/ui-components": "^4.2.6",
+    "@shopworx/services": "^4.2.7",
+    "@shopworx/ui-components": "^4.2.7",
     "vue-grid-layout": "^2.3.11",
     "vuex": "^3.5.1"
   },

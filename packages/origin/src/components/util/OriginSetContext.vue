@@ -19,10 +19,15 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title class="title font-weight-regular justify-space-between">
-        Set customer
-        <v-btn icon small @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
+      <v-card-title class="title font-weight-regular">
+        Select customer
+        <v-btn
+          small
+          color="secondary"
+          @click="goToAddNew"
+          class="text-none mb-1 ml-4"
+        >
+          ...or add new customer
         </v-btn>
       </v-card-title>
       <v-card-text>
@@ -46,6 +51,14 @@
         ></v-combobox>
       </v-card-text>
       <v-card-actions>
+        <v-btn
+          text
+          class="text-none"
+          @click="dialog = false"
+          :disabled="saving"
+        >
+          Exit
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           class="text-none"
@@ -123,7 +136,7 @@ export default {
       if (this.isContextSet) {
         return `${this.currentCustomer}, ${this.currentSite}`;
       }
-      return 'Set customer';
+      return 'Select customer';
     },
   },
   methods: {
@@ -139,6 +152,10 @@ export default {
       'setActiveCustomer',
       'setActiveSite',
     ]),
+    goToAddNew() {
+      this.dialog = false;
+      this.$router.replace({ name: 'customerAddNew' });
+    },
     async save() {
       this.saving = true;
       await this.setActiveCustomer(this.customer);

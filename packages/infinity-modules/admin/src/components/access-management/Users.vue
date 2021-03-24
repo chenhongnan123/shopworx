@@ -1,7 +1,7 @@
 <template>
   <div>
     <portal to="settings-header">
-      <span>
+      <span class="d-flex align-center">
         <invite-users @invited="onInvited" />
         <v-btn
           small
@@ -48,8 +48,8 @@
                 outlined
                 color="primary"
                 class="text-none"
-                @click="resendInvite(item)"
-                :loading="inviteLoading"
+                @click="resendInvite(item, pendingUsers.indexOf(item))"
+                :loading="inviteLoading && pendingUsers.indexOf(item) == indexClicked"
               >
                 Resend
               </v-btn>
@@ -126,6 +126,7 @@ export default {
       search: null,
       loading: false,
       inviteLoading: false,
+      indexClicked: undefined,
       headers: [
         {
           text: 'Name',
@@ -232,7 +233,8 @@ export default {
     async onInvited() {
       await this.fetchUsers();
     },
-    async resendInvite(user) {
+    async resendInvite(user, index) {
+      this.indexClicked = index;
       this.inviteLoading = true;
       let payload = null;
       if (user.email) {

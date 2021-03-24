@@ -149,6 +149,15 @@ export default ({
         const payload = {
           element,
           tags,
+          webhooks: [{
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'WRITE',
+          }, {
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'UPDATE',
+          }],
         };
         const success = await dispatch(
           'element/createElementAndTags',
