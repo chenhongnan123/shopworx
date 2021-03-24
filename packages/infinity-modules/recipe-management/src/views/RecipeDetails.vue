@@ -82,7 +82,7 @@
               ></v-select>
             </v-col>
           </v-row>
-          <v-data-table :headers="selectedHeader" :items="recipeListDetails" item-key="tagname">
+          <v-data-table :headers="selectedHeader" :items="selectedList" item-key="tagname">
             <template v-slot:item="{ item, index }">
               <tr>
                 <td>{{ index+1 }}</td>
@@ -200,6 +200,9 @@ export default {
         totalRecipeDetails: [],
         caliberVal: [],
         recipeParamVal: [],
+        selectedList: [],
+        first: [],
+        second: [],
       },
       recipeFilters: [
         {
@@ -302,7 +305,15 @@ export default {
       `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
     );
     this.totalRecipeDetails = totalRecords;
-    this.recipeParamVal = totalRecords;
+    // this.recipeParamVal = totalRecords;
+    const first = this.totalRecipeDetails
+      .filter((f) => f.parametercategory === '35' || f.parametercategory === '7');
+    this.first = first;
+    const second = this.totalRecipeDetails
+      .filter((f) => f.parametercategory === '58');
+    this.second = second;
+    this.selectedList = first;
+    // this.selectedList = this.recipeParamVal;
     await this.getDataTypes('');
     // this.substationname = this.$route.params.id.substationname;
     // this.recipename = this.$route.params.id.recipename;
@@ -400,14 +411,10 @@ export default {
     async changeRecipeList() {
       const filterSelected = this.filters;
       if (filterSelected === 1) {
-        this.recipeParamVal = await this.getRecipeDetailListRecords(
-          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
-        );
+        this.selectedList = this.first;
       } else {
-        this.recipeParamVal = [];
-        this.caliberVal = await this.getRecipeDetailListRecords(
-          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26parametercategory=="58"`,
-        );
+        this.selectedList = [];
+        this.selectedList = this.second;
       }
     },
     checkDatatype(item) {
@@ -623,25 +630,30 @@ export default {
     },
     async fnUpdateRecipeValue() {
       console.log(this.itemToUpdate);
-      this.recipeListDetails.forEach((f) => {
+      this.selectedList.forEach((f) => {
         if (f.tagname === this.itemToUpdate.tagname) {
           f.parametervalue = this.recipeValue;
         }
       });
+      this.itemToUpdate = [];
       this.saveBtnEnable = true;
       this.dialog = false;
     },
     async saveVersion() {
-      if (this.recipeParamVal.length > 0) {
+      if (this.selectedList.length > 0) {
         this.totalRecipeDetails.forEach((item) => {
-          if (item.tagname === this.recipeParamVal[0].tagname) {
-            item.parametervalue = this.recipeParamVal[0].parametervalue;
+          if (item.tagname === this.itemToUpdate.tagname) {
+            item.parametervalue = this.itemToUpdate.parametervalue;
           }
         });
       } else {
+        console.log('else block');
+        console.log(this.caliberVal[0].tagname);
         this.totalRecipeDetails.forEach((item) => {
-          if (item.tagname === this.caliberVal[0].tagname) {
-            item.parametervalue = this.caliberVal[0].parametervalue;
+          if (item.tagname === this.itemToUpdate.tagname) {
+            console.log(this.caliberVal[0].tagname);
+            console.log(item.tagname);
+            item.parametervalue = this.itemToUpdate.parametervalue;
           }
         });
       }
@@ -695,7 +707,7 @@ export default {
           message: 'VERSIONNUM_NOT_UPDATED',
         });
       }
-      this.totalRecipeDetails = [];
+      // this.totalRecipeDetails = [];
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;

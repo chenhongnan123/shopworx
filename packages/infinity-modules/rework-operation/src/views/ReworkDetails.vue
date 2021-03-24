@@ -213,15 +213,47 @@
                       item-key="_id"
                       :single-select="true"
                       >
-                      <template v-slot:item="{ item }">
-                        <tr>
-                          <td v-if="language === 'en'">{{ item.componentname }}</td>
-                          <td v-else>{{ item.chinesedescription }}</td>
-                          <td>{{ item.componentvalue }}</td>
-                          <td>{{ item.substationname }}</td>
-                          <td>{{ item.checkquality }}</td>
-                          <td>{{ item.qualitystatus }}</td>
-                        </tr>
+                      <template v-slot:item.rework="{ item }">
+                        <v-checkbox
+                            v-if="item.boundstatus === 1"
+                            primary
+                            hide-details
+                            v-model="item.rework"
+                            @change="checkBoxRework($event, item)"
+                            ></v-checkbox>
+                      </template>
+                      <template v-slot:item.quality="{ item }">
+                        <v-checkbox
+                            v-if="item.boundstatus === 1 && item.reworkstatus !== 1"
+                            primary
+                            hide-details
+                            v-model="item.quality"
+                            @change="checkBoxQuality($event, item)"
+                            ></v-checkbox>
+                      </template>
+                      <template v-slot:item.qualitystatus="{ item }">
+                        <v-select
+                          hide-details
+                          :items="setQualityStatusList"
+                          item-value="value"
+                          item-text="name"
+                          v-model="item.qualitystatus"/>
+                      </template>
+                      <template v-slot:item.isbind="{ item }">
+                        <v-select
+                          hide-details
+                          :items="bindStatus"
+                          item-value="value"
+                          item-text="name"
+                          v-model="item.isbind"/>
+                      </template>
+                      <template v-slot:item.bound>
+                        <span>1</span>
+                      </template>
+                      <template v-slot:item.checkquality="{ item }">
+                        <span v-if="item.checkquality">{{ qualityStatusList
+                          .find((f) => f.value === item.checkquality).name }}</span>
+                        <span v-else> Default </span>
                       </template>
                     </v-data-table>
                 </v-card-text>
@@ -281,6 +313,10 @@ export default {
           name: this.$t('Reworked'),
           value: 4,
         },
+        {
+          name: this.$t('Unbind'),
+          value: 5,
+        },
       ],
       setQualityStatusList: [
         {
@@ -319,7 +355,7 @@ export default {
       headersCn: [
         {
           text: this.$t('Component'),
-          value: 'chinesedescription',
+          value: 'componentname',
         },
         {
           text: this.$t('Component Value'),
@@ -331,7 +367,7 @@ export default {
         },
         { text: this.$t('Current Quality'), value: 'checkquality' },
         { text: this.$t('Set Quality'), value: 'qualitystatus' },
-        // { text: 'Bound?', value: 'boundstatus' },
+        { text: this.$t('Set Bind'), value: 'isbind' },
         // { text: 'Keep?', value: 'rework' },
         // { text: 'Good?', value: 'quality' },
       ],
@@ -378,6 +414,7 @@ export default {
       'reworkRoadMapDetails',
       'partStatusList',
       'roadmapList',
+      'parameterList',
       'roadmapDetailsList']),
     currentLocale: {
       get() {
@@ -403,6 +440,7 @@ export default {
       'getReworkRoadmapDetails',
       'getPartStatusLastEntry',
       'updateRecordById',
+      'getParametersList',
       'getRoadmapList']),
     async onReworkRoadmapSelected() {
       await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
@@ -491,6 +529,16 @@ export default {
       if (this.checkMainId.length > 0) {
         // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
         await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26qualitystatus!=3`);
+        const sublineid = this.componantList
+          .map((sb) => sb.sublineid);
+        const pList = await this.getParametersList(`?query=sublineid=="${sublineid[0]}"`);
+        await Promise.all(this.componantList.map((com) => {
+          const data = pList.filter((f) => f.name === `q_${com.componentname}`);
+          if (data.length > 0 && this.currentLocale === 'zhHans') {
+            com.componentname = data[0].chinesedescription;
+          }
+          return com;
+        }));
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
         // console.log(singlengcodeconfig);

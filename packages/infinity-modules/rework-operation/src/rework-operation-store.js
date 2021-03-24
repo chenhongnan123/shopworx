@@ -20,6 +20,7 @@ export default ({
     roadmapList: [],
     roadmapDetailsList: [],
     selectedReworkRoadmap: {},
+    parameterList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -40,8 +41,21 @@ export default ({
     setRoadmapList: set('roadmapList'),
     setRoadmapDetailsList: set('roadmapDetailsList'),
     setSelectedReworkRoadmap: set('selectedReworkRoadmap'),
+    setParametersList: set('parameterList'),
   },
   actions: {
+    getParametersList: async ({ dispatch, commit }, query) => {
+      const part = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      commit('setParametersList', part);
+      return part;
+    },
     getReworkRoadmapDetails: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
