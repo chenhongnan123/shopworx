@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **production-log:** fixed hourly production fetch ([3b60d38](https://bitbucket.org/entrib/shopworx/commits/3b60d384e424978f223c8e0ffd161d6d2c310592))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 

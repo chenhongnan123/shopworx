@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I149 fix button loading all users ([02eb9e3](https://bitbucket.org/entrib/shopworx/commits/02eb9e344f6fa40f9266bfaf16996a456f47c302))
+* **admin:** QA0-I151 fixed alert when sent invite ([5c6760e](https://bitbucket.org/entrib/shopworx/commits/5c6760ecb3196351e1c1112f129783911388e2ee))
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **customer-onboarding:** fixed reports and report views provisioning ([7c2cd1e](https://bitbucket.org/entrib/shopworx/commits/7c2cd1e61b63b615d05e42d92203da7da7c93537))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+* **live-shopfloor:** fix dashbaord display on hour change ([7e17175](https://bitbucket.org/entrib/shopworx/commits/7e17175f81cc6873bec7a06cde9c98b5919b794e))
+* **live-shopfloor:** fixed downtime reason display ([200fb23](https://bitbucket.org/entrib/shopworx/commits/200fb23ad179c0e671a00ce5340db48fba326f70))
+* **production-log:** fixed hourly production fetch ([3b60d38](https://bitbucket.org/entrib/shopworx/commits/3b60d384e424978f223c8e0ffd161d6d2c310592))
+* **user-roles:** fixed role access for report views ([6a5be2f](https://bitbucket.org/entrib/shopworx/commits/6a5be2fe82f90663f52f7bb8fa8ab35387eae042))
+
+
+### Features
+
+* **customer-onboarding:** origin user can now on-board a new customer ([033355c](https://bitbucket.org/entrib/shopworx/commits/033355c9f02cdf1e48424c625fb5fe16dae93840))
+* **downtime-log:** disable multiple assignment on mobile ([6e327a8](https://bitbucket.org/entrib/shopworx/commits/6e327a81eaca5afab1f93d049b4f2962074c68af))
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+* **users:** user cannot delete himself ([9c990e8](https://bitbucket.org/entrib/shopworx/commits/9c990e8360a166849ab82abbc97b62dad72dad57))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 
