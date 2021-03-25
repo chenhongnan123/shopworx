@@ -679,12 +679,12 @@ export default {
           internalcode,
           pkginfo,
           remark,
-          modifiedtimestamp,
         } = labelrule;
         const {
           barcode,
           qrcode,
           qty,
+          modifiedtimestamp,
         } = this.packageLabelRecord;
         const labelprn = this.labelprn.replace(/description/g, description)
           .replace(/partnumber/g, productnumber)
