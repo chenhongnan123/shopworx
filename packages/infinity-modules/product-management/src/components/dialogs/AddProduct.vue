@@ -158,7 +158,6 @@ export default {
     },
     dialog: {
       get() {
-        this.getProductListRecords('');
         return this.addProductDialog;
       },
       set(val) {
@@ -172,7 +171,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productManagement', ['setAddProductDialog']),
-    ...mapActions('productManagement', ['createProduct', 'getProductListRecords']),
+    ...mapActions('productManagement', ['createProduct']),
     async saveProduct() {
       this.$refs.form.validate();
       if (!this.product.productname) {

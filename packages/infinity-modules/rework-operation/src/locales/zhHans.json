@@ -20,7 +20,7 @@
       "btnSearch" : "搜索",
       "confirmrework" : "确认返工",
       "confirmok": "确认OK",
-      "confirmng": "确认NG",
+      "confirmng": "条码报废",
       "cancel": "Cancel",
       "save": "Save"
     }
@@ -74,7 +74,7 @@
   "Set Quality":	"设置状态",
   "Comfirm Rework":	"确认返工",
   "Comfirm OK":	"确认OK",
-  "Comfirm NG":	"确认NG",
+  "Comfirm NG":	"条码报废",
   "Rework Roadmap": "返工路线图",
   "Scraped": "已报废",
   "Reworked": "再使用",

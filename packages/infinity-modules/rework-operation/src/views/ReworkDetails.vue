@@ -156,7 +156,8 @@
                   :items="roadmapList"
                   return-object
                   item-text="name"
-                  v-model="selectedReworkRoadmap"
+                  v-model="reworkRoadmap"
+                  ref="reworkRoadmap"
                   @change="onReworkRoadmapSelected()"/>
             </div>
             <div class="title" v-else>
@@ -165,8 +166,8 @@
             <div>
                 {{ $t('Rework Description') }}
               </div>
-              <div class="title" v-if="selectedReworkRoadmap">
-                {{selectedReworkRoadmap.reworkdescription}}
+              <div class="title" v-if="reworkRoadmap">
+                {{reworkRoadmap.reworkdescription}}
               </div>
               <div class="title" v-else>
                 {{'-'}}
@@ -313,10 +314,6 @@ export default {
           name: this.$t('Reworked'),
           value: 4,
         },
-        {
-          name: this.$t('Unbind'),
-          value: 5,
-        },
       ],
       setQualityStatusList: [
         {
@@ -326,10 +323,6 @@ export default {
         {
           name: this.$t('Reworked'),
           value: 4,
-        },
-        {
-          name: this.$t('Unbind'),
-          value: 5,
         },
       ],
       headersEn: [
@@ -379,7 +372,7 @@ export default {
       reworkable: null,
       rework: {},
       checkMainId: null,
-      selectedReworkRoadmap: null,
+      reworkRoadmap: null,
     };
   },
   async created() {
@@ -415,6 +408,7 @@ export default {
       'partStatusList',
       'roadmapList',
       'parameterList',
+      'selectedReworkRoadmap',
       'roadmapDetailsList']),
     currentLocale: {
       get() {
@@ -443,9 +437,9 @@ export default {
       'getParametersList',
       'getRoadmapList']),
     async onReworkRoadmapSelected() {
-      await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
-      this.setSelectedReworkRoadmap(this.selectedReworkRoadmap);
-      // await this.getReworkRoadMapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
+      await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.reworkRoadmap.id}"`);
+      this.setSelectedReworkRoadmap(this.reworkRoadmap);
+      // await this.getReworkRoadMapDetails(`?query=roadmapid=="${this.reworkRoadmap.id}"`);
       // console.log(this.normalRoadMapDetails);
       // const item = this.normalRoadMapDetails.find((i) => i.substationid
       // === this.reworkRoadMapDetails[this.reworkRoadMapDetails.length - 1].substationid);
@@ -459,7 +453,6 @@ export default {
       // }
     },
     async updateQualityStatus(item) {
-      console.log(item);
       const payload = {
         id: item._id,
         payload: {
@@ -528,7 +521,7 @@ export default {
         .filter((i) => i.mainid === this.rework.enterManinId);
       if (this.checkMainId.length > 0) {
         // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
-        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26qualitystatus!=3`);
+        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26isbind!=2`);
         const sublineid = this.componantList
           .map((sb) => sb.sublineid);
         const pList = await this.getParametersList(`?query=sublineid=="${sublineid[0]}"`);
@@ -551,7 +544,7 @@ export default {
           this.setDisableSave(false);
           this.setSingleNgCodeConfig([]);
           this.setComponentList([]);
-          this.selectedReworkRoadmap = null;
+          this.reworkRoadmap = null;
         } else {
           this.rework.ngcodedata = singlengcodeconfig;
           this.rework.reworkinfo = this.checkMainId;
@@ -566,6 +559,14 @@ export default {
         this.setDisableSave(false);
         this.setSingleNgCodeConfig([]);
         this.setComponentList([]);
+      }
+    },
+  },
+  watch: {
+    selectedReworkRoadmap(val) {
+      if (!val) {
+        this.reworkRoadmap = null;
+        this.$refs.reworkRoadmap.reset();
       }
     },
   },

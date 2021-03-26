@@ -163,6 +163,7 @@ export default {
             query: element._id,
             payload: {
               qualitystatus: element.qualitystatus,
+              isbind: element.isbind,
             },
           };
           await this.updateComponentById(payloadComponent);
@@ -175,7 +176,7 @@ export default {
         this.setComponentList([]);
         this.setRoadmapDetailsList([]);
         this.setPartStatusList([]);
-        this.setSelectedReworkRoadmap({});
+        this.setSelectedReworkRoadmap(null);
       } else {
         this.setAlert({
           show: true,
