@@ -185,6 +185,7 @@ export default {
       this.$refs.form.reset();
     },
     async validName() {
+      await this.getRecords();
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
