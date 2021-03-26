@@ -219,7 +219,7 @@ export default ({
           c.qualitystatus = 4;
         }
         if (c.qualitystatus === 2) {
-          c.qualitystatus = 3;
+          c.qualitystatus = 4;
         }
         if (c.qualitystatus === 0) {
           c.qualitystatus = 4;

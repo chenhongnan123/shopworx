@@ -107,12 +107,14 @@
             flat
             solo
             hide-details
+            item-text="text"
+            item-value="value"
             :items="orderStatusToChangeFromNew"
             v-model="item.orderstatus"
             @change="onChangeStatus(item)"
           >
           <template v-slot:selection="{ item }">
-            <span :class="orderC(item)">{{ item }}</span>
+            <span :class="orderC(item.value)">{{ item.text }}</span>
               </template></v-select>
               <v-select
                 v-if='item.orderstatus == "Released"'
@@ -120,11 +122,13 @@
                 flat
                 solo
                 hide-details
+                item-text="text"
+                item-value="value"
                 :items="orderStatusToChangeFromReleased"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
-                <span :class="orderC(item)">{{ item }}</span>
+                <span :class="orderC(item.value)">{{ item.text }}</span>
               </template></v-select>
             <v-select
                 v-if='item.orderstatus == "Running"'
@@ -132,11 +136,13 @@
                 flat
                 solo
                 hide-details
+                item-text="text"
+                item-value="value"
                 :items="orderStatusToChangeFromRunning"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
-                <span :class="orderC(item)">{{ item }}</span>
+                 <span :class="orderC(item.value)">{{ item.text }}</span>
               </template></v-select>
             <v-select
                 v-if='item.orderstatus == "Interrupted"'
@@ -144,16 +150,18 @@
                 flat
                 solo
                 hide-details
+                item-text="text"
+                item-value="value"
                 :items="orderStatusToChangeFromInterrupted"
                 v-model="item.orderstatus"
                 @change="onChangeStatus(item)"
             ><template v-slot:selection="{ item }">
-                <span :class="orderC(item)">{{ item }}</span>
+                 <span :class="orderC(item.value)">{{ item.text }}</span>
               </template></v-select>
             <span :class="orderC(item.orderstatus)"
               v-if='item.orderstatus == "Completed"'>
               <span style='color:red;margin-right:1.00em; display:inline-block;'></span>
-              {{ item.orderstatus }}
+              {{ $t(`${item.orderstatus}`)  }}
             </span>
         </template>
       </v-data-table>
@@ -191,10 +199,62 @@ export default {
           name: 'Completed',
         },
       ],
-      orderStatusToChangeFromNew: ['New', 'Released', 'Interrupted'],
-      orderStatusToChangeFromReleased: ['Released', 'Running', 'Interrupted', 'Completed'],
-      orderStatusToChangeFromInterrupted: ['Interrupted', 'Running'],
-      orderStatusToChangeFromRunning: ['Running', 'Interrupted', 'Completed'],
+      orderStatusToChangeFromNew: [
+        {
+          text: this.$t('New'),
+          value: 'New',
+        },
+        {
+          text: this.$t('Released'),
+          value: 'Released',
+        },
+        {
+          text: this.$t('Interrupted'),
+          value: 'Interrupted',
+        },
+      ],
+      orderStatusToChangeFromReleased: [
+        {
+          text: this.$t('Released'),
+          value: 'Released',
+        },
+        {
+          text: this.$t('Running'),
+          value: 'Running',
+        },
+        {
+          text: this.$t('Interrupted'),
+          value: 'Interrupted',
+        },
+        {
+          text: this.$t('Completed'),
+          value: 'Completed',
+        },
+      ],
+      orderStatusToChangeFromInterrupted: [
+        {
+          text: this.$t('Running'),
+          value: 'Running',
+        },
+        {
+          text: this.$t('Interrupted'),
+          value: 'Interrupted',
+        },
+      ],
+      orderStatusToChangeFromRunning: [
+        {
+          text: this.$t('Running'),
+          value: 'Running',
+        },
+        {
+          text: this.$t('Interrupted'),
+          value: 'Interrupted',
+        },
+        {
+          text: this.$t('Completed'),
+          value: 'Completed',
+        },
+      ],
       headers: [
         {
           text: this.$t('Line'),
