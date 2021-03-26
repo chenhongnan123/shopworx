@@ -305,7 +305,6 @@ export default {
       `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
     );
     this.totalRecipeDetails = totalRecords;
-    // this.recipeParamVal = totalRecords;
     const first = this.totalRecipeDetails
       .filter((f) => f.parametercategory === '35' || f.parametercategory === '7');
     this.first = first;
@@ -313,7 +312,6 @@ export default {
       .filter((f) => f.parametercategory === '58');
     this.second = second;
     this.selectedList = first;
-    // this.selectedList = this.recipeParamVal;
     await this.getDataTypes('');
     // this.substationname = this.$route.params.id.substationname;
     // this.recipename = this.$route.params.id.recipename;
@@ -403,6 +401,8 @@ export default {
       'downloadFromPLC',
       'getRecipeListRecords',
       'updateProductDetails',
+      'getOrderRecords',
+      'getProductDetails',
       'getDataTypes']),
     ...mapMutations('helper', ['setAlert']),
     addNewRecipe() {
@@ -640,74 +640,74 @@ export default {
       this.dialog = false;
     },
     async saveVersion() {
-      if (this.selectedList.length > 0) {
-        this.totalRecipeDetails.forEach((item) => {
-          if (item.tagname === this.itemToUpdate.tagname) {
-            item.parametervalue = this.itemToUpdate.parametervalue;
-          }
-        });
-      } else {
-        console.log('else block');
-        console.log(this.caliberVal[0].tagname);
-        this.totalRecipeDetails.forEach((item) => {
-          if (item.tagname === this.itemToUpdate.tagname) {
-            console.log(this.caliberVal[0].tagname);
-            console.log(item.tagname);
-            item.parametervalue = this.itemToUpdate.parametervalue;
-          }
-        });
-      }
-      const list = this.totalRecipeDetails;
-      const currentRecipeId = this.$route.params.id;
-      const currentVersion = this.$route.params.versionnumber;
-      const payload = [];
-      list.forEach((ls) => {
-        const updatedlist = {
-          assetid: 4,
-          versionnumber: currentVersion + 1,
-          tagname: ls.tagname,
-          chinesedescription: ls.chinesedescription,
-          datatype: ls.datatype,
-          recipeid: ls.recipeid,
-          parametercategory: ls.parametercategory,
-          parametervalue: ls.parametervalue,
-          lineid: ls.lineid,
-          linename: ls.linename,
-          sublineid: ls.sublineid,
-          sublinename: ls.sublinename,
-        };
-        payload.push(updatedlist);
-      });
-      await this.createRecipeDetails(payload);
-      const recipe = {
-        versionnumber: currentVersion + 1,
-        recipeversion: currentVersion + 1,
-      };
-      const object = {
-        payload: recipe,
-        query: `?query=recipenumber=="${currentRecipeId}"`,
-      };
-      const productDetailUpdate = {
-        payload: recipe,
-        id: currentRecipeId,
-      };
-      const updated = this.updateRecipe(object);
-      await this.updateProductDetails(productDetailUpdate);
-      this.saveBtnEnable = false;
-      if (updated) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'VERSIONNUM_UPDATED',
-        });
-      } else {
+      const runningorder = await this.getOrderRecords('?query=orderstatus=="Running"');
+      const productNumber = await this.getProductDetails(`?query=productnumber=="${runningorder[0].productid}"`);
+      if (productNumber[0].recipenumber === this.$route.params.id) {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'VERSIONNUM_NOT_UPDATED',
+          message: 'RUNNING_ORDER',
         });
+      } else {
+        if (this.selectedList.length > 0) {
+          this.totalRecipeDetails.forEach((item) => {
+            if (item.tagname === this.itemToUpdate.tagname) {
+              item.parametervalue = this.itemToUpdate.parametervalue;
+            }
+          });
+        }
+        const list = this.totalRecipeDetails;
+        const currentRecipeId = this.$route.params.id;
+        const currentVersion = this.$route.params.versionnumber;
+        const payload = [];
+        list.forEach((ls) => {
+          const updatedlist = {
+            assetid: 4,
+            versionnumber: currentVersion + 1,
+            tagname: ls.tagname,
+            chinesedescription: ls.chinesedescription,
+            datatype: ls.datatype,
+            recipeid: ls.recipeid,
+            parametercategory: ls.parametercategory,
+            parametervalue: ls.parametervalue,
+            lineid: ls.lineid,
+            linename: ls.linename,
+            sublineid: ls.sublineid,
+            sublinename: ls.sublinename,
+          };
+          payload.push(updatedlist);
+        });
+        await this.createRecipeDetails(payload);
+        const recipe = {
+          versionnumber: currentVersion + 1,
+          recipeversion: currentVersion + 1,
+        };
+        const object = {
+          payload: recipe,
+          query: `?query=recipenumber=="${currentRecipeId}"`,
+        };
+        const productDetailUpdate = {
+          payload: recipe,
+          id: currentRecipeId,
+        };
+        const updated = this.updateRecipe(object);
+        await this.updateProductDetails(productDetailUpdate);
+        this.saveBtnEnable = false;
+        if (updated) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'VERSIONNUM_UPDATED',
+          });
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'VERSIONNUM_NOT_UPDATED',
+          });
+        }
+        // this.totalRecipeDetails = [];
       }
-      // this.totalRecipeDetails = [];
     },
     fnUpdateRecipeDetails(item) {
       this.dialog = true;
