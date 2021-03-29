@@ -127,7 +127,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-else>
+    <v-card-text v-else-if="loading">
       <v-container fill-height>
         <v-row
           align="center"
@@ -144,6 +144,27 @@
           <v-col cols="12" align="center">
             <span class="headline">
               Fetching shift summary...
+            </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-text v-else>
+      <v-container fill-height>
+        <v-row
+          align="center"
+          justify="center"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="5" align="center">
+            <v-img
+              :src="require(`@shopworx/assets/illustrations/${notFoundIllustration}.svg`)"
+              contain
+            />
+          </v-col>
+          <v-col cols="12" align="center">
+            <span class="headline">
+              No records for selected date and shift.
             </span>
           </v-col>
         </v-row>
@@ -179,6 +200,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('userDashboard', [
+      'loading',
       'thisShiftSummary',
       'previousShiftSummary',
       'downtimeByMachine',
@@ -188,6 +210,11 @@ export default {
       'rejectionByMachine',
       'rejectionByReason',
     ]),
+    notFoundIllustration() {
+      return this.$vuetify.theme.dark
+        ? 'not-found-dark'
+        : 'not-found-light';
+    },
     thisShiftA() {
       return (this.thisShiftSummary && this.thisShiftSummary.a) || 0;
     },
