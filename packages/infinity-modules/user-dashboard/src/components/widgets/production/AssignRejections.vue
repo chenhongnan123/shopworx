@@ -309,7 +309,9 @@ export default {
         this.updateHourlyStats(payload, qty, data, id);
         this.updateShiftStats(qty);
         this.$nextTick(() => {
-          this.$refs.form[0].reset();
+          this.$refs.form.forEach((f) => {
+            f.reset();
+          });
         });
       }
       this.saving = false;
