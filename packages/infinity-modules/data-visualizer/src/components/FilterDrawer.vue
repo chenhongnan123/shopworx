@@ -197,6 +197,7 @@ export default {
         this.station = null;
         this.subStation = null;
         this.dataType = null;
+        this.selectedParameters = [];
         this.sublines = [];
         this.stations = [];
         this.subStations = [];
@@ -215,6 +216,7 @@ export default {
         this.station = null;
         this.subStation = null;
         this.dataType = null;
+        this.selectedParameters = [];
         this.stations = [];
         this.subStations = [];
         this.dataTypes = [];
@@ -231,6 +233,7 @@ export default {
       if (val) {
         this.subStation = null;
         this.dataType = null;
+        this.selectedParameters = [];
         this.subStations = [];
         this.dataTypes = [];
         this.parameters = [];
@@ -244,6 +247,7 @@ export default {
     subStation(val) {
       if (val) {
         this.dataType = null;
+        this.selectedParameters = [];
         this.dataTypes = [];
         this.parameters = [];
         const filteredElems = this.elements
@@ -258,6 +262,7 @@ export default {
     },
     dataType(val) {
       if (val) {
+        this.selectedParameters = [];
         this.parameters = [];
         this.parameters = this.getTags(`${val}_${this.subStation}`);
       }
