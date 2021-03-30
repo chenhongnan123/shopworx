@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+
+### Bug Fixes
+
+* **production-log:** fixed form reset after rejection entry ([2f9fbb5](https://bitbucket.org/entrib/shopworx/commits/2f9fbb5c484fe7ecf9f655a87ab0dc4bd7170f05))
+
+
+
+
+
 ## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
 
 
