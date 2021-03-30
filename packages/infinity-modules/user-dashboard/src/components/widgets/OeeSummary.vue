@@ -219,25 +219,25 @@ export default {
       return (this.thisShiftSummary && this.thisShiftSummary.a) || 0;
     },
     thisShiftAText() {
-      return `${this.roundOff(this.thisShiftA).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftA)}%`;
     },
     thisShiftP() {
       return (this.thisShiftSummary && this.thisShiftSummary.p) || 0;
     },
     thisShiftPText() {
-      return `${this.roundOff(this.thisShiftP).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftP)}%`;
     },
     thisShiftQ() {
       return (this.thisShiftSummary && this.thisShiftSummary.q) || 0;
     },
     thisShiftQText() {
-      return `${this.roundOff(this.thisShiftQ).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftQ)}%`;
     },
     thisShiftOee() {
       return (this.thisShiftSummary && this.thisShiftSummary.oee) || 0;
     },
     thisShiftOeeText() {
-      return `${this.roundOff(this.thisShiftOee).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftOee)}%`;
     },
     previousShiftA() {
       return (this.previousShiftSummary && this.previousShiftSummary.a) || 0;
@@ -255,25 +255,25 @@ export default {
       return this.thisShiftA - this.previousShiftA;
     },
     aDiffText() {
-      return `${this.roundOff(Math.abs(this.aDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.aDiff))}%`;
     },
     pDiff() {
       return this.thisShiftP - this.previousShiftP;
     },
     pDiffText() {
-      return `${this.roundOff(Math.abs(this.pDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.pDiff))}%`;
     },
     qDiff() {
       return this.thisShiftQ - this.previousShiftQ;
     },
     qDiffText() {
-      return `${this.roundOff(Math.abs(this.qDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.qDiff))}%`;
     },
     oeeDiff() {
       return this.thisShiftOee - this.previousShiftOee;
     },
     oeeDiffText() {
-      return `${this.roundOff(Math.abs(this.oeeDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.oeeDiff))}%`;
     },
   },
   methods: {
