@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'ModelInputs',
@@ -130,6 +130,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'createInputParameter',
       'deleteInputParameter',
@@ -142,14 +143,23 @@ export default {
       // this.parameterList = this.modelInputs;
     },
     async remove(param) {
-      const modelInputId = this.modelInputs
-        .find((input) => input.parameterId === param.parameterId)
-        .id;
-      const deleted = await this.deleteInputParameter(modelInputId);
-      if (deleted) {
-        await this.fetchModelDetails(this.model.modelid);
-        const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
-        if (index >= 0) this.parameterList.splice(index, 1);
+      const dataMainid = this.parameterList.find((f) => f.parameterId === param.parameterId);
+      if (dataMainid.name === 'mainid' || dataMainid.name === 'timestamp') {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NOT_DELETE_MAINID',
+        });
+      } else {
+        const modelInputId = this.modelInputs
+          .find((input) => input.parameterId === param.parameterId)
+          .id;
+        const deleted = await this.deleteInputParameter(modelInputId);
+        if (deleted) {
+          await this.fetchModelDetails(this.model.modelid);
+          const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
+          if (index >= 0) this.parameterList.splice(index, 1);
+        }
       }
     },
     async saveInputParam(param) {

@@ -129,14 +129,14 @@ export default {
             modeldescription: this.description,
             modeltype: this.selectedModelType.name,
           };
+          flag = this.createNewModel(payload);
         } else {
-          payload = {
-            modelname: this.name,
-            modeldescription: this.description,
-            modeltype: '',
-          };
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'MODEL_TYPE_REQUIRED',
+          });
         }
-        flag = this.createNewModel(payload);
       } else {
         flag = false;
         this.setAlert({

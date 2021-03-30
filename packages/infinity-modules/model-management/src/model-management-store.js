@@ -203,6 +203,52 @@ export default ({
     setTrainingLogs: set('trainingLogs'),
   },
   actions: {
+    getTriggerForModelId: async ({ dispatch }, modelid) => {
+      const modelTriggers = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      if (modelTriggers.length === 0) {
+        return false;
+      }
+      return true;
+    },
+
+    getInputParametersForModelId: async ({ state, dispatch }, modelid) => {
+      const { inputParameters } = state;
+      const modelInputs = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      const mainid = inputParameters.find((f) => f.name === 'mainid');
+      if (mainid) {
+        const checkMainid = modelInputs.filter((f) => f.parameterid === mainid.parameterId);
+        if (checkMainid.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      const timestamp = inputParameters.find((f) => f.name === 'timestamp');
+      if (timestamp) {
+        const checkTimestamp = modelInputs.filter((f) => f.parameterid === timestamp.parameterId);
+        if (checkTimestamp.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      return true;
+    },
+
     updateModelDates: async ({ dispatch }, request) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
@@ -451,6 +497,19 @@ export default ({
         { root: true },
       );
       commit('setFullParameterList', parameters);
+      parameters.push({
+        id: '0',
+        name: 'timestamp',
+        description: 'TimeStamp',
+        parametercategory: '45',
+      });
+      parameters.push({
+        id: '1',
+        name: 'productionstatus',
+        description: 'productionstatus',
+        parametercategory: '45',
+      });
+      console.log(parameters);
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'

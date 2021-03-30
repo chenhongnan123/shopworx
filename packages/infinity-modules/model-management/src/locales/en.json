@@ -16,6 +16,12 @@
     "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Inactivate now!"
   },
   "error": {
+    "TRAINING_TAGS_REQUIRED": "mainid, timestamp and productionstatus are required tags, please add.",
+    "NOT_DELETE_MAINID": "Cannot delete mainid or timestamp, as both are required parameters.",
+    "INPUT_PARAM_REQUIRED": "Input parameters are required, Please add mainid and timestamp if not added!",
+    "TRIGGER_REQUIRED": "Trigger is required, Please add.",
+    "MODEL_TYPE_REQUIRED": "Model type is required!",
+    "MAX_VALIDATION": "Max Limit cannot be less than Min Limit",
     "TRIGGER_ADDED": "Model Trigger is already added!",
     "FIELDS_EMPTY": "Input fields cannot be empty!",
     "TRAINING_SAVED": "Error in Training Data, Please retry!",
