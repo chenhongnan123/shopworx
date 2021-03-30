@@ -81,19 +81,19 @@
           dense
           single-line
           v-model="search"
+          autocomplete="off"
+          clearable
           prepend-inner-icon="mdi-magnify"
         ></v-text-field>
         <perfect-scrollbar style="height: 150px">
           <v-checkbox
             hide-details
             class="ma-0 pa-0"
-            :key="n"
-            v-model="parameter.selected"
-            :label="parameter.name"
-            v-for="(parameter, n) in [
-              {name: 'OP219TEXT', selected: false},
-              {name: 'OP229TEXT', selected: false}
-            ]"
+            :key="parameter.name"
+            v-model="selectedParameters"
+            :label="parameter.description"
+            :value="parameter.name"
+            v-for="parameter in filteredParameters"
           ></v-checkbox>
         </perfect-scrollbar>
       </v-card-text>
@@ -123,7 +123,7 @@ export default {
   },
   data() {
     return {
-      search: null,
+      search: '',
       line: null,
       subline: null,
       station: null,
@@ -131,6 +131,7 @@ export default {
       dataType: null,
       dateFrom: null,
       dateTo: null,
+      selectedParameters: [],
       sublines: [],
       stations: [],
       subStations: [],
@@ -152,7 +153,25 @@ export default {
         || !this.dataType
         || !this.dateFrom
         || !this.dateTo
-        || !this.parameters.length;
+        || !this.selectedParameters.length;
+    },
+    filteredParameters() {
+      if (this.search) {
+        return this.parameters
+          .filter((param) => param.tagDescription
+            .trim()
+            .toUpperCase()
+            .includes(this.search.trim().toUpperCase()))
+          .map(({ tagName, tagDescription }) => ({
+            name: tagName,
+            description: tagDescription,
+          }));
+      }
+      return this.parameters
+        .map(({ tagName, tagDescription }) => ({
+          name: tagName,
+          description: tagDescription,
+        }));
     },
   },
   methods: {
@@ -161,6 +180,14 @@ export default {
       'getStations',
       'getSubStations',
     ]),
+    getTags(element) {
+      let tags = [];
+      const elem = this.elements.find((e) => e.element.elementDescription === element);
+      if (elem) {
+        ({ tags } = elem);
+      }
+      return tags;
+    },
   },
   watch: {
     async line(val) {
@@ -174,6 +201,7 @@ export default {
         this.stations = [];
         this.subStations = [];
         this.dataTypes = [];
+        this.parameters = [];
         this.sublines = await this.getSublines(this.line);
         if (this.sublines.length === 1) {
           this.subline = this.sublines[0].id;
@@ -190,6 +218,7 @@ export default {
         this.stations = [];
         this.subStations = [];
         this.dataTypes = [];
+        this.parameters = [];
         this.stations = await this.getStations(this.subline);
         if (this.stations.length === 1) {
           this.station = this.stations[0].id;
@@ -204,6 +233,7 @@ export default {
         this.dataType = null;
         this.subStations = [];
         this.dataTypes = [];
+        this.parameters = [];
         this.subStations = await this.getSubStations(this.station);
         if (this.subStations.length === 1) {
           this.subStation = this.subStations[0].id;
@@ -215,13 +245,21 @@ export default {
       if (val) {
         this.dataType = null;
         this.dataTypes = [];
+        this.parameters = [];
         const filteredElems = this.elements
           .map((elem) => elem.element)
           .filter((elem) => elem.elementName.includes(val));
         this.dataTypes = filteredElems.map((e) => e.elementDescription.replace(`_${val}`, ''));
         if (this.dataTypes.length === 1) {
           [this.dataType] = this.dataTypes;
+          this.parameters = this.getTags(`${this.dataType}_${val}`);
         }
+      }
+    },
+    dataType(val) {
+      if (val) {
+        this.parameters = [];
+        this.parameters = this.getTags(`${val}_${this.subStation}`);
       }
     },
   },
