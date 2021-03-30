@@ -127,7 +127,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-else>
+    <v-card-text v-else-if="loading">
       <v-container fill-height>
         <v-row
           align="center"
@@ -144,6 +144,27 @@
           <v-col cols="12" align="center">
             <span class="headline">
               Fetching shift summary...
+            </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-text v-else>
+      <v-container fill-height>
+        <v-row
+          align="center"
+          justify="center"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="5" align="center">
+            <v-img
+              :src="require(`@shopworx/assets/illustrations/${notFoundIllustration}.svg`)"
+              contain
+            />
+          </v-col>
+          <v-col cols="12" align="center">
+            <span class="headline">
+              No records for selected date and shift.
             </span>
           </v-col>
         </v-row>
@@ -179,6 +200,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('userDashboard', [
+      'loading',
       'thisShiftSummary',
       'previousShiftSummary',
       'downtimeByMachine',
@@ -188,29 +210,34 @@ export default {
       'rejectionByMachine',
       'rejectionByReason',
     ]),
+    notFoundIllustration() {
+      return this.$vuetify.theme.dark
+        ? 'not-found-dark'
+        : 'not-found-light';
+    },
     thisShiftA() {
       return (this.thisShiftSummary && this.thisShiftSummary.a) || 0;
     },
     thisShiftAText() {
-      return `${this.roundOff(this.thisShiftA).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftA)}%`;
     },
     thisShiftP() {
       return (this.thisShiftSummary && this.thisShiftSummary.p) || 0;
     },
     thisShiftPText() {
-      return `${this.roundOff(this.thisShiftP).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftP)}%`;
     },
     thisShiftQ() {
       return (this.thisShiftSummary && this.thisShiftSummary.q) || 0;
     },
     thisShiftQText() {
-      return `${this.roundOff(this.thisShiftQ).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftQ)}%`;
     },
     thisShiftOee() {
       return (this.thisShiftSummary && this.thisShiftSummary.oee) || 0;
     },
     thisShiftOeeText() {
-      return `${this.roundOff(this.thisShiftOee).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftOee)}%`;
     },
     previousShiftA() {
       return (this.previousShiftSummary && this.previousShiftSummary.a) || 0;
@@ -228,25 +255,25 @@ export default {
       return this.thisShiftA - this.previousShiftA;
     },
     aDiffText() {
-      return `${this.roundOff(Math.abs(this.aDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.aDiff))}%`;
     },
     pDiff() {
       return this.thisShiftP - this.previousShiftP;
     },
     pDiffText() {
-      return `${this.roundOff(Math.abs(this.pDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.pDiff))}%`;
     },
     qDiff() {
       return this.thisShiftQ - this.previousShiftQ;
     },
     qDiffText() {
-      return `${this.roundOff(Math.abs(this.qDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.qDiff))}%`;
     },
     oeeDiff() {
       return this.thisShiftOee - this.previousShiftOee;
     },
     oeeDiffText() {
-      return `${this.roundOff(Math.abs(this.oeeDiff)).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.oeeDiff))}%`;
     },
   },
   methods: {
