@@ -27,7 +27,7 @@
     "@shopworx/production-layout-mes": "^4.2.8",
     "@shopworx/production-log": "^4.2.8",
     "@shopworx/production-planning": "^4.2.8",
-    "@shopworx/rawdata": "^4.2.8",
+    "@shopworx/data-visualizer": "^4.2.8",
     "@shopworx/recipe-management": "^4.2.8",
     "@shopworx/report-viewer": "^4.2.8",
     "@shopworx/rework-operation": "^4.2.8",
