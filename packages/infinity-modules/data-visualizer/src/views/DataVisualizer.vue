@@ -5,7 +5,10 @@
     </portal>
     <v-row style="height:100%" no-gutters>
       <v-col cols="12" sm="4" lg="3" xl="2">
-        <filter-drawer :loading="loading" />
+        <filter-drawer
+          :loading="loading"
+          @on-fetch="fetchRecords"
+        />
       </v-col>
       <v-col>
         <v-tabs v-model="tab">
@@ -24,7 +27,7 @@
           >
             <v-card flat style="height:100%">
               <v-card-text style="height:100%" class="px-0">
-                <component :is="item.component" />
+                <component ref="grid" :is="item.component" />
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -66,6 +69,9 @@ export default {
       'getLines',
       // 'getDefaultParameters',
     ]),
+    fetchRecords(e) {
+      this.$refs.grid[0].setRowData(e);
+    },
   },
   async created() {
     this.loading = true;

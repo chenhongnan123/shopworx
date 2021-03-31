@@ -150,7 +150,6 @@ export default {
       dataTypes: [],
       parameters: [],
       // allParameters: [],
-      fetching: false,
       sublineLoading: false,
       stationLoading: false,
       subStationLoading: false,
@@ -158,7 +157,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('dataVisualizer', ['lines', 'elements']),
+    ...mapState('dataVisualizer', [
+      'lines',
+      'elements',
+      'fetching',
+    ]),
     disableApply() {
       return this.loading
         || !this.line
@@ -195,7 +198,6 @@ export default {
       'getStations',
       'getSubStations',
       // 'getParameters',
-      'fetchRecords',
     ]),
     getTags(element) {
       let tags = [];
@@ -212,11 +214,10 @@ export default {
       }
       return tags;
     },
-    async fetchData() {
-      this.fetching = true;
+    fetchData() {
       const columns = this.parameters
         .filter((p) => this.selectedParameters.includes(p.name));
-      await this.fetchRecords({
+      const payload = {
         elementName: `${this.dataType}_${this.subStation}`,
         tags: [
           ...REQUIRED_TAGS,
@@ -229,8 +230,8 @@ export default {
         ],
         dateFrom: new Date(this.dateFrom).getTime(),
         dateTo: new Date(this.dateTo).getTime(),
-      });
-      this.fetching = false;
+      };
+      this.$emit('on-fetch', payload);
     },
   },
   watch: {

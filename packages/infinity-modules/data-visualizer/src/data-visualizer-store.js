@@ -1,5 +1,6 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import { formatDate } from '@shopworx/services/util/date.service';
 
 const ELEMENTS = {
   LINE: 'line',
@@ -19,7 +20,7 @@ export default ({
     records: null,
     columns: [],
     totalCount: 0,
-    fetchingRecords: false,
+    fetching: false,
   },
   mutations: {
     setElements: set('elements'),
@@ -28,7 +29,7 @@ export default ({
     setRecords: set('records'),
     setColumns: set('columns'),
     setTotalCount: set('totalCount'),
-    setFetchingRecords: set('fetchingRecords'),
+    setFetching: set('fetching'),
   },
   actions: {
     getElements: async ({ commit, rootState, dispatch }) => {
@@ -114,14 +115,16 @@ export default ({
       return sortArray(parameters, 'name');
     },
 
-    fetchRecords: async ({ dispatch, commit }, {
+    getRecords: async ({ dispatch, commit }, {
       elementName,
       tags,
       columns,
       dateFrom,
       dateTo,
+      pageNumber,
+      pageSize,
     }) => {
-      commit('setFetchingRecords', true);
+      commit('setFetching', true);
       commit('setRecords', null);
       commit('setTotalCount', 0);
       commit('setColumns', columns);
@@ -129,18 +132,28 @@ export default ({
         'element/getRecordsByTags',
         {
           elementName,
-          queryParam: `?datefrom=${dateFrom}&dateto=${dateTo}&pagenumber=1&pagesize=100`,
+          queryParam: `?datefrom=${dateFrom}&dateto=${dateTo}&pagenumber=${pageNumber}&pagesize=${pageSize}`,
           request: { tags },
         },
         { root: true },
       );
       if (data && data.results) {
+        const records = data.results.map(({ _id, timestamp, ...d }) => ({
+          id: _id,
+          timestamp: formatDate(timestamp, 'yyyy-MM-dd HH:mm:ss.SSS'),
+          ...d,
+        }));
         commit('setRecords', data.results);
         commit('setTotalCount', data.totalCount);
-      } else {
-        commit('setRecords', []);
+        commit('setFetching', false);
+        return {
+          results: records,
+          totalCount: data.totalCount,
+        };
       }
-      commit('setFetchingRecords', false);
+      commit('setRecords', []);
+      commit('setFetching', false);
+      return false;
     },
   },
 });

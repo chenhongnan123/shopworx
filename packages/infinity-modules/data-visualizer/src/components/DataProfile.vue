@@ -3,22 +3,24 @@
     :sideBar="sideBar"
     :animateRows="true"
     :enableCharts="true"
-    :statusBar="statusBar"
-    pivotPanelShow="always"
     class="ag-theme-balham"
     :columnDefs="columnDefs"
-    rowGroupPanelShow="always"
     :gridOptions="gridOptions"
     :enableRangeSelection="true"
     :defaultColDef="defaultColDef"
     :suppressDragLeaveHidesColumns="true"
     style="width: 100%; height: 100%;"
+    :pagination="true"
+    rowModelType="serverSide"
+    serverSideStoreType="partial"
+    :paginationPageSize="pageSize"
+    :cacheBlockSize="pageSize"
   />
 </template>
 
 <script>
 /* eslint-disable */
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
@@ -37,6 +39,9 @@ export default {
       defaultColDef: null,
       sideBar: null,
       statusBar: null,
+      pageNumber: 0,
+      pageSize: 100,
+      payload: null,
     };
   },
   beforeMount() {
@@ -45,15 +50,6 @@ export default {
       filter: true,
       sortable: true,
       resizable: true,
-    };
-    this.statusBar = {
-      statusPanels: [
-        {
-          statusPanel: 'agTotalAndFilteredRowCountComponent',
-          align: 'left',
-        },
-        { statusPanel: 'agAggregationComponent' },
-      ],
     };
     this.sideBar = {
       toolPanels: [
@@ -83,16 +79,12 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    this.gridApi.setRowData([]);
   },
   computed: {
-    ...mapState('dataVisualizer', [
-      'records',
-      'columns',
-      'totalCount',
-    ]),
+    ...mapState('dataVisualizer', ['columns']),
   },
   methods: {
+    ...mapActions('dataVisualizer', ['getRecords']),
     getColumnFilter(dataType) {
       const type = dataType.toLowerCase();
       switch (type) {
@@ -123,12 +115,19 @@ export default {
           return false;
       }
     },
-    setRowData() {
-      this.gridApi.setRowData(null);
-      this.gridApi.showLoadingOverlay();
-      if (this.records) {
-        this.gridApi.setRowData(this.records);
-      }
+    fetchRecords() {
+      this.pageNumber += 1;
+      const { pageNumber, pageSize } = this;
+      return this.getRecords({
+        ...this.payload,
+        pageNumber,
+        pageSize,
+      });
+    },
+    setRowData(payload) {
+      this.payload = payload;
+      const datasource = new window.ServerSideDatasource(this.fetchRecords);
+      this.gridApi.setServerSideDatasource(datasource);
     },
     setColumnDefs() {
       this.columnDefs = this.columns.map((c) => ({
@@ -137,7 +136,6 @@ export default {
         colId: c.name,
         filter: this.getColumnFilter(c.dataType),
         enableValue: this.enableColumnValue(c.dataType),
-        enableRowGroup: c.name === 'mainid',
       }));
     },
   },
@@ -145,9 +143,24 @@ export default {
     columns() {
       this.setColumnDefs();
     },
-    records() {
-      this.setRowData();
-    },
   },
 };
+
+window.ServerSideDatasource = (fetchRecords) => ({
+  getRows: async (params) => {
+    const { startRow, endRow } = params.request;
+    const data = await fetchRecords();
+    if (data) {
+      const currentLastRow = startRow + data.results.length;
+      const lastRow = currentLastRow < endRow ? currentLastRow : undefined;
+      const response = {
+        rowData: data.results,
+        rowCount: lastRow,
+      };
+      params.success(response);
+    } else {
+      params.fail();
+    }
+  },
+});
 </script>
