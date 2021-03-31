@@ -13,8 +13,8 @@ class ElementService {
     return this.request.get(`/server/elements/site/${id}`);
   }
 
-  getRecordsByTags(payload) {
-    return this.request.post(`/server/elements/${payload.elementName}/getrecords${payload.queryParam}`, payload.request);
+  getRecordsByTags(elementName, queryParam, request) {
+    return this.request.post(`/server/elements/${elementName}/getrecords${queryParam}`, request);
   }
 
   createElement(payload) {
