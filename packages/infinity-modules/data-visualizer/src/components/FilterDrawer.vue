@@ -15,6 +15,7 @@
           item-value="id"
           item-text="name"
           :loading="loading"
+          :disabled="fetching"
         ></v-select>
         <v-select
           dense
@@ -24,7 +25,7 @@
           item-value="id"
           item-text="name"
           v-model="subline"
-          :disabled="!line"
+          :disabled="!line || fetching"
           :loading="sublineLoading"
         ></v-select>
         <v-select
@@ -36,7 +37,7 @@
           item-text="name"
           v-model="station"
           :loading="stationLoading"
-          :disabled="!line || !subline"
+          :disabled="!line || !subline || fetching"
         ></v-select>
         <v-select
           dense
@@ -47,7 +48,7 @@
           item-text="name"
           v-model="subStation"
           :loading="subStationLoading"
-          :disabled="!line || !subline || !station"
+          :disabled="!line || !subline || !station || fetching"
         ></v-select>
         <v-select
           dense
@@ -57,13 +58,14 @@
           item-value="name"
           item-text="description"
           v-model="dataType"
-          :disabled="!line || !subline || !station || !subStation"
+          :disabled="!line || !subline || !station || !subStation || fetching"
         ></v-select>
         <v-text-field
           label="Date from"
           dense
           v-model="dateFrom"
           type="datetime-local"
+          :disabled="fetching"
           outlined
         ></v-text-field>
         <v-text-field
@@ -71,6 +73,7 @@
           dense
           v-model="dateTo"
           type="datetime-local"
+          :disabled="fetching"
           outlined
         ></v-text-field>
         <div class="font-weight-medium">
@@ -84,6 +87,7 @@
           autocomplete="off"
           clearable
           :loading="parametersLoading"
+          :disabled="fetching"
           prepend-inner-icon="mdi-magnify"
         ></v-text-field>
         <perfect-scrollbar style="height: 150px">
@@ -94,6 +98,7 @@
             v-model="selectedParameters"
             :label="parameter.description"
             :value="parameter.name"
+            :disabled="fetching"
             v-for="parameter in filteredParameters"
           ></v-checkbox>
         </perfect-scrollbar>
@@ -105,6 +110,7 @@
         color="primary"
         @click="fetchData"
         :disabled="disableApply"
+        :loading="fetching"
       >
         Apply
       </v-btn>
@@ -144,6 +150,7 @@ export default {
       dataTypes: [],
       parameters: [],
       // allParameters: [],
+      fetching: false,
       sublineLoading: false,
       stationLoading: false,
       subStationLoading: false,
@@ -187,7 +194,8 @@ export default {
       'getSublines',
       'getStations',
       'getSubStations',
-      'getParameters',
+      // 'getParameters',
+      'fetchRecords',
     ]),
     getTags(element) {
       let tags = [];
@@ -204,16 +212,25 @@ export default {
       }
       return tags;
     },
-    fetchData() {
-      console.log({
+    async fetchData() {
+      this.fetching = true;
+      const columns = this.parameters
+        .filter((p) => this.selectedParameters.includes(p.name));
+      await this.fetchRecords({
         elementName: `${this.dataType}_${this.subStation}`,
         tags: [
           ...REQUIRED_TAGS,
           ...this.selectedParameters,
         ],
+        columns: [
+          { name: 'mainid', description: 'Main ID', dataType: 'String' },
+          { name: 'timestamp', description: 'Timestamp', dataType: 'Datetime' },
+          ...columns,
+        ],
         dateFrom: new Date(this.dateFrom).getTime(),
         dateTo: new Date(this.dateTo).getTime(),
       });
+      this.fetching = false;
     },
   },
   watch: {

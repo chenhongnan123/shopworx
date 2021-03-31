@@ -16,11 +16,19 @@ export default ({
     elements: [],
     lines: [],
     defaultParameters: [],
+    records: null,
+    columns: [],
+    totalCount: 0,
+    fetchingRecords: false,
   },
   mutations: {
     setElements: set('elements'),
     setLines: set('lines'),
     setDefaultParameters: set('defaultParameters'),
+    setRecords: set('records'),
+    setColumns: set('columns'),
+    setTotalCount: set('totalCount'),
+    setFetchingRecords: set('fetchingRecords'),
   },
   actions: {
     getElements: async ({ commit, rootState, dispatch }) => {
@@ -105,6 +113,34 @@ export default ({
       );
       return sortArray(parameters, 'name');
     },
+
+    fetchRecords: async ({ dispatch, commit }, {
+      elementName,
+      tags,
+      columns,
+      dateFrom,
+      dateTo,
+    }) => {
+      commit('setFetchingRecords', true);
+      commit('setRecords', null);
+      commit('setTotalCount', 0);
+      commit('setColumns', columns);
+      const data = await dispatch(
+        'element/getRecordsByTags',
+        {
+          elementName,
+          queryParam: `?datefrom=${dateFrom}&dateto=${dateTo}&pagenumber=1&pagesize=100`,
+          request: { tags },
+        },
+        { root: true },
+      );
+      if (data && data.results) {
+        commit('setRecords', data.results);
+        commit('setTotalCount', data.totalCount);
+      } else {
+        commit('setRecords', []);
+      }
+      commit('setFetchingRecords', false);
+    },
   },
-  getters: {},
 });
