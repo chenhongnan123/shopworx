@@ -64,6 +64,7 @@ export default {
     ...mapActions('dataVisualizer', [
       'getElements',
       'getLines',
+      // 'getDefaultParameters',
     ]),
   },
   async created() {
@@ -71,6 +72,7 @@ export default {
     await Promise.all([
       this.getElements(),
       this.getLines(),
+      // this.getDefaultParameters(),
     ]);
     this.loading = false;
   },

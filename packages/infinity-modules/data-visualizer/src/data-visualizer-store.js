@@ -7,6 +7,7 @@ const ELEMENTS = {
   STATION: 'station',
   SUBSTATION: 'substation',
   PARAMETERS: 'parameters',
+  PARAMETER_CATEGORY: 'category',
 };
 
 export default ({
@@ -14,10 +15,12 @@ export default ({
   state: {
     elements: [],
     lines: [],
+    defaultParameters: [],
   },
   mutations: {
     setElements: set('elements'),
     setLines: set('lines'),
+    setDefaultParameters: set('defaultParameters'),
   },
   actions: {
     getElements: async ({ commit, rootState, dispatch }) => {
@@ -30,6 +33,18 @@ export default ({
       if (elements && elements.length) {
         commit('setElements', elements);
       }
+    },
+
+    getDefaultParameters: async ({ dispatch, commit }) => {
+      const params = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.PARAMETER_CATEGORY,
+          query: '?query=flagforrawdata==true',
+        },
+        { root: true },
+      );
+      commit('setDefaultParameters', sortArray(params, 'name'));
     },
 
     getLines: async ({ dispatch, commit }) => {
