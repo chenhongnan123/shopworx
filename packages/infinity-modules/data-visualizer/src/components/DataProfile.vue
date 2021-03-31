@@ -1,21 +1,33 @@
 <template>
-  <ag-grid-vue
-    :sideBar="sideBar"
-    :animateRows="true"
-    :enableCharts="true"
-    class="ag-theme-balham"
-    :columnDefs="columnDefs"
-    :gridOptions="gridOptions"
-    :enableRangeSelection="true"
-    :defaultColDef="defaultColDef"
-    :suppressDragLeaveHidesColumns="true"
-    style="width: 100%; height: 100%;"
-    :pagination="true"
-    rowModelType="serverSide"
-    serverSideStoreType="partial"
-    :paginationAutoPageSize="true"
-    :cacheBlockSize="pageSize"
-  />
+  <div style="height:100%">
+    <v-btn
+      small
+      color="primary"
+      class="text-none"
+      @click="visualizeData"
+      :disabled="!totalCount"
+    >
+      Visualize data
+    </v-btn>
+    <ag-grid-vue
+      :sideBar="sideBar"
+      :animateRows="true"
+      :enableCharts="true"
+      class="ag-theme-balham mt-2"
+      :columnDefs="columnDefs"
+      :gridOptions="gridOptions"
+      :enableRangeSelection="true"
+      :defaultColDef="defaultColDef"
+      :suppressDragLeaveHidesColumns="true"
+      style="width: 100%; height: calc(100% - 38px);"
+      :pagination="true"
+      rowModelType="serverSide"
+      serverSideStoreType="partial"
+      :paginationAutoPageSize="true"
+      :cacheBlockSize="pageSize"
+      :popupParent="popupParent"
+    />
+  </div>
 </template>
 
 <script>
@@ -42,6 +54,7 @@ export default {
       pageNumber: 0,
       pageSize: 100,
       payload: null,
+      popupParent: null,
     };
   },
   beforeMount() {
@@ -69,9 +82,11 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
+    console.log(document.getElementById('app-container'));
+    this.popupParent = document.getElementById('app-container');
   },
   computed: {
-    ...mapState('dataVisualizer', ['columns']),
+    ...mapState('dataVisualizer', ['columns', 'totalCount']),
   },
   methods: {
     ...mapActions('dataVisualizer', ['getRecords']),
@@ -128,6 +143,25 @@ export default {
         filter: this.getColumnFilter(c.dataType),
         enableValue: this.enableColumnValue(c.dataType),
       }));
+    },
+    visualizeData() {
+      var params = {
+        cellRange: {
+          columns: this.payload.tags,
+        },
+        chartType: 'line',
+        chartThemeOverrides: {
+          common: {
+            title: {
+              enabled: false,
+            },
+            legend: { enabled: false },
+            navigator: { enabled: true },
+          },
+        },
+        unlinkChart: true,
+      };
+      this.gridApi.createRangeChart(params);
     },
   },
   watch: {

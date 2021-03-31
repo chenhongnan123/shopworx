@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="height:100%">
+  <v-container fluid style="height:100%" id="app-container">
     <portal to="app-header">
       Data Visualizer
     </portal>
@@ -41,14 +41,14 @@
 import { mapActions } from 'vuex';
 import FilterDrawer from '../components/FilterDrawer.vue';
 import DataProfile from '../components/DataProfile.vue';
-import Visualization from '../components/Visualization.vue';
+import DownloadLog from '../components/DownloadLog.vue';
 
 export default {
   name: 'DataVisualizer',
   components: {
     FilterDrawer,
     DataProfile,
-    Visualization,
+    DownloadLog,
   },
   data() {
     return {
@@ -58,8 +58,8 @@ export default {
         name: 'Data profile',
         component: 'data-profile',
       }, {
-        name: 'visualization',
-        component: 'visualization',
+        name: 'Download log',
+        component: 'download-log',
       }],
     };
   },
@@ -67,6 +67,7 @@ export default {
     ...mapActions('dataVisualizer', [
       'getElements',
       'getLines',
+      'initElement',
       // 'getDefaultParameters',
     ]),
     fetchRecords(e) {
@@ -75,6 +76,7 @@ export default {
   },
   async created() {
     this.loading = true;
+    await this.initElement();
     await Promise.all([
       this.getElements(),
       this.getLines(),

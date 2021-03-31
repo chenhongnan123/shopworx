@@ -1,6 +1,7 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import { formatDate } from '@shopworx/services/util/date.service';
+import dataDownloadElement from './data/dataDownloadElement';
 
 const ELEMENTS = {
   LINE: 'line',
@@ -32,6 +33,26 @@ export default ({
     setFetching: set('fetching'),
   },
   actions: {
+    initElement: async ({ dispatch }) => {
+      const { element, tags } = dataDownloadElement;
+      const e = await dispatch(
+        'element/getElement',
+        element.elementName,
+        { root: true },
+      );
+      if (!e) {
+        const payload = {
+          element,
+          tags,
+        };
+        await dispatch(
+          'element/createElementAndTags',
+          payload,
+          { root: true },
+        );
+      }
+    },
+
     getElements: async ({ commit, rootState, dispatch }) => {
       const { activeSite } = rootState.user;
       const elements = await dispatch(
@@ -121,6 +142,7 @@ export default ({
       columns,
       dateFrom,
       dateTo,
+      // mainId,
       pageNumber,
       pageSize,
     }) => {
@@ -128,11 +150,15 @@ export default ({
       commit('setRecords', null);
       commit('setTotalCount', 0);
       commit('setColumns', columns);
+      const queryParam = `?datefrom=${dateFrom}&dateto=${dateTo}&pagenumber=${pageNumber}&pagesize=${pageSize}`;
+      /* if (mainId) {
+        queryParam += `&query=mainid==%22${mainId}%22`;
+      } */
       const data = await dispatch(
         'element/getRecordsByTags',
         {
           elementName,
-          queryParam: `?datefrom=${dateFrom}&dateto=${dateTo}&pagenumber=${pageNumber}&pagesize=${pageSize}`,
+          queryParam,
           request: { tags },
         },
         { root: true },

@@ -76,6 +76,14 @@
           :disabled="fetching"
           outlined
         ></v-text-field>
+        <!-- <v-text-field
+          label="Main ID (optional)"
+          dense
+          v-model="mainId"
+          type="text"
+          :disabled="fetching"
+          outlined
+        ></v-text-field> -->
         <div class="font-weight-medium">
           Parameters
         </div>
@@ -106,13 +114,21 @@
     </perfect-scrollbar>
     <v-card-actions class="pl-0 pr-4">
       <v-btn
-        block
+        text
+        color="primary"
+        class="text-none"
+        :disabled="disableApply || fetching"
+      >
+        Export
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn
         color="primary"
         @click="fetchData"
         :disabled="disableApply"
         :loading="fetching"
       >
-        Apply
+        Apply filters
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -143,6 +159,7 @@ export default {
       dataType: null,
       dateFrom: null,
       dateTo: null,
+      mainId: null,
       selectedParameters: [],
       sublines: [],
       stations: [],
@@ -228,6 +245,7 @@ export default {
           { name: 'timestamp', description: 'Timestamp', dataType: 'Datetime' },
           ...columns,
         ],
+        mainId: this.mainId,
         dateFrom: new Date(this.dateFrom).getTime(),
         dateTo: new Date(this.dateTo).getTime(),
       };
