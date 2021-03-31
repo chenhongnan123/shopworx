@@ -13,7 +13,7 @@
     :pagination="true"
     rowModelType="serverSide"
     serverSideStoreType="partial"
-    :paginationPageSize="pageSize"
+    :paginationAutoPageSize="true"
     :cacheBlockSize="pageSize"
   />
 </template>
@@ -125,6 +125,7 @@ export default {
       });
     },
     setRowData(payload) {
+      this.pageNumber = 0;
       this.payload = payload;
       const datasource = new window.ServerSideDatasource(this.fetchRecords);
       this.gridApi.setServerSideDatasource(datasource);
