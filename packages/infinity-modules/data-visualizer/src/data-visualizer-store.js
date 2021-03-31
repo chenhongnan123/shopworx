@@ -6,6 +6,7 @@ const ELEMENTS = {
   SUBLINE: 'subline',
   STATION: 'station',
   SUBSTATION: 'substation',
+  PARAMETERS: 'parameters',
 };
 
 export default ({
@@ -76,6 +77,18 @@ export default ({
         { root: true },
       );
       return sortArray(subStations, 'name');
+    },
+
+    getParameters: async ({ dispatch }, subStationId) => {
+      const parameters = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.PARAMETERS,
+          query: `?query=substationid=="${subStationId}"`,
+        },
+        { root: true },
+      );
+      return sortArray(parameters, 'name');
     },
   },
   getters: {},

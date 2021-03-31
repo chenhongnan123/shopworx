@@ -83,6 +83,7 @@
           v-model="search"
           autocomplete="off"
           clearable
+          :loading="parametersLoading"
           prepend-inner-icon="mdi-magnify"
         ></v-text-field>
         <perfect-scrollbar style="height: 150px">
@@ -113,6 +114,9 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
+const PROCESS_TYPES = ['11', '38', '42', '45'];
+const PRODUCTION_TYPES = ['15', '17', '18'];
+
 export default {
   name: 'FilterDrawer',
   props: {
@@ -137,9 +141,11 @@ export default {
       subStations: [],
       dataTypes: [],
       parameters: [],
+      allParameters: [],
       sublineLoading: false,
       stationLoading: false,
       subStationLoading: false,
+      parametersLoading: false,
     };
   },
   computed: {
@@ -162,15 +168,15 @@ export default {
             .trim()
             .toUpperCase()
             .includes(this.search.trim().toUpperCase()))
-          .map(({ tagName, tagDescription }) => ({
-            name: tagName,
-            description: tagDescription,
+          .map(({ name, description }) => ({
+            name,
+            description,
           }));
       }
       return this.parameters
-        .map(({ tagName, tagDescription }) => ({
-          name: tagName,
-          description: tagDescription,
+        .map(({ name, description }) => ({
+          name,
+          description,
         }));
     },
   },
@@ -179,6 +185,7 @@ export default {
       'getSublines',
       'getStations',
       'getSubStations',
+      'getParameters',
     ]),
     getTags(element) {
       let tags = [];
@@ -244,7 +251,8 @@ export default {
       }
       this.subStationLoading = false;
     },
-    subStation(val) {
+    async subStation(val) {
+      this.parametersLoading = true;
       if (val) {
         this.dataType = null;
         this.selectedParameters = [];
@@ -256,15 +264,24 @@ export default {
         this.dataTypes = filteredElems.map((e) => e.elementDescription.replace(`_${val}`, ''));
         if (this.dataTypes.length === 1) {
           [this.dataType] = this.dataTypes;
-          this.parameters = this.getTags(`${this.dataType}_${val}`);
         }
+        this.allParameters = await this.getParameters(this.subStation);
+        this.parametersLoading = false;
       }
     },
     dataType(val) {
       if (val) {
         this.selectedParameters = [];
         this.parameters = [];
-        this.parameters = this.getTags(`${val}_${this.subStation}`);
+        this.parameters = this.allParameters.filter((p) => {
+          if (val.toUpperCase() === 'PROCESS') {
+            return PROCESS_TYPES.includes(p.parametercategory);
+          }
+          if (val.toUpperCase() === 'PRODUCTION') {
+            return PRODUCTION_TYPES.includes(p.parametercategory);
+          }
+          return false;
+        });
       }
     },
   },
