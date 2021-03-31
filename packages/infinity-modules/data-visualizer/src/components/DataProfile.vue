@@ -47,8 +47,8 @@ export default {
   beforeMount() {
     this.gridOptions = {};
     this.defaultColDef = {
-      filter: true,
-      sortable: true,
+      filter: false,
+      sortable: false,
       resizable: true,
     };
     this.sideBar = {
@@ -59,16 +59,6 @@ export default {
           labelKey: 'columns',
           iconKey: 'columns',
           toolPanel: 'agColumnsToolPanel',
-          toolPanelParams: {
-            syncLayoutWithGrid: true,
-          },
-        },
-        {
-          id: 'filters',
-          labelDefault: 'Filters',
-          labelKey: 'filters',
-          iconKey: 'filter',
-          toolPanel: 'agFiltersToolPanel',
           toolPanelParams: {
             syncLayoutWithGrid: true,
           },
