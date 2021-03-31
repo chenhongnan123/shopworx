@@ -684,12 +684,14 @@ export default {
           barcode,
           qrcode,
           qty,
-          modifiedtimestamp,
         } = this.packageLabelRecord;
+        const {
+          createdTimestamp,
+        } = this.currentOrder;
         const labelprn = this.labelprn.replace(/description/g, description)
           .replace(/partnumber/g, productnumber)
           .replace(/quality/g, qty)
-          .replace(/mfgdata/g, `${modifiedtimestamp.substr(6, 4)}/${modifiedtimestamp.substr(3, 2)}/${modifiedtimestamp.substr(0, 2)}`)
+          .replace(/mfgdata/g, `${createdTimestamp.substr(6, 4)}/${createdTimestamp.substr(3, 2)}/${createdTimestamp.substr(0, 2)}`)
           .replace(/internalcode/g, internalcode)
           .replace(/supplier/g, supplier)
           .replace(/pkginfo/g, pkginfo)
@@ -712,6 +714,7 @@ export default {
             this.isPrintAble = false;
             console.log('printer second success');
             this.reset();
+            this.init();
           }, () => {
             console.log('printer second error');
           });
