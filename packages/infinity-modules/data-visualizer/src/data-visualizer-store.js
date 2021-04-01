@@ -17,7 +17,6 @@ export default ({
   state: {
     elements: [],
     lines: [],
-    defaultParameters: [],
     records: null,
     columns: [],
     totalCount: 0,
@@ -26,7 +25,6 @@ export default ({
   mutations: {
     setElements: set('elements'),
     setLines: set('lines'),
-    setDefaultParameters: set('defaultParameters'),
     setRecords: set('records'),
     setColumns: set('columns'),
     setTotalCount: set('totalCount'),
@@ -65,7 +63,7 @@ export default ({
       }
     },
 
-    getDefaultParameters: async ({ dispatch, commit }) => {
+    getDefaultParameters: async ({ dispatch }, subStationId) => {
       const params = await dispatch(
         'element/getRecords',
         {
@@ -74,7 +72,17 @@ export default ({
         },
         { root: true },
       );
-      commit('setDefaultParameters', sortArray(params, 'name'));
+      if (params && params.length) {
+        const result = await Promise.all(params.map(async (param) => dispatch('getParameters', {
+          subStationId,
+          categoryId: param.id,
+        })));
+        const parameters = result.flat();
+        if (parameters && parameters.length) {
+          return parameters.map((p) => p.name);
+        }
+      }
+      return [];
     },
 
     getLines: async ({ dispatch, commit }) => {
@@ -124,16 +132,16 @@ export default ({
       return sortArray(subStations, 'name');
     },
 
-    getParameters: async ({ dispatch }, subStationId) => {
+    getParameters: async ({ dispatch }, { subStationId, categoryId }) => {
       const parameters = await dispatch(
         'element/getRecords',
         {
           elementName: ELEMENTS.PARAMETERS,
-          query: `?query=substationid=="${subStationId}"`,
+          query: `?query=substationid=="${subStationId}"%26%26parametercategory=="${categoryId}"`,
         },
         { root: true },
       );
-      return sortArray(parameters, 'name');
+      return parameters;
     },
 
     getRecords: async ({ dispatch, commit }, {

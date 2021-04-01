@@ -82,7 +82,6 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
-    console.log(document.getElementById('app-container'));
     this.popupParent = document.getElementById('app-container');
   },
   computed: {
@@ -90,36 +89,6 @@ export default {
   },
   methods: {
     ...mapActions('dataVisualizer', ['getRecords']),
-    getColumnFilter(dataType) {
-      const type = dataType.toLowerCase();
-      switch (type) {
-        case 'long':
-          return 'agNumberColumnFilter';
-        case 'double':
-          return 'agNumberColumnFilter';
-        case 'number':
-          return 'agNumberColumnFilter';
-        case 'integer':
-          return 'agNumberColumnFilter';
-        default:
-          return 'agTextColumnFilter';
-      }
-    },
-    enableColumnValue(dataType) {
-      const type = dataType.toLowerCase();
-      switch (type) {
-        case 'long':
-          return true;
-        case 'double':
-          return true;
-        case 'number':
-          return true;
-        case 'integer':
-          return true;
-        default:
-          return false;
-      }
-    },
     fetchRecords() {
       this.pageNumber += 1;
       const { pageNumber, pageSize } = this;
@@ -140,8 +109,6 @@ export default {
         headerName: c.description,
         field: c.name,
         colId: c.name,
-        filter: this.getColumnFilter(c.dataType),
-        enableValue: this.enableColumnValue(c.dataType),
       }));
     },
     visualizeData() {

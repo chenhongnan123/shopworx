@@ -68,7 +68,6 @@ export default {
       'getElements',
       'getLines',
       'initElement',
-      // 'getDefaultParameters',
     ]),
     fetchRecords(e) {
       this.$refs.grid[0].setRowData(e);
@@ -80,7 +79,6 @@ export default {
     await Promise.all([
       this.getElements(),
       this.getLines(),
-      // this.getDefaultParameters(),
     ]);
     this.loading = false;
   },

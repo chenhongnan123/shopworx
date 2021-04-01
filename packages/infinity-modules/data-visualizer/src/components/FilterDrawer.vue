@@ -137,8 +137,6 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
-// const PROCESS_TYPES = ['11', '38', '42', '45'];
-// const PRODUCTION_TYPES = ['15', '17', '18'];
 const REQUIRED_TAGS = ['mainid', 'timestamp'];
 
 export default {
@@ -166,7 +164,8 @@ export default {
       subStations: [],
       dataTypes: [],
       parameters: [],
-      // allParameters: [],
+      requiredParameters: [],
+      requiredColumns: [],
       sublineLoading: false,
       stationLoading: false,
       subStationLoading: false,
@@ -214,20 +213,20 @@ export default {
       'getSublines',
       'getStations',
       'getSubStations',
-      // 'getParameters',
+      'getDefaultParameters',
     ]),
     getTags(element) {
       let tags = [];
       const elem = this.elements.find((e) => e.element.elementName === element);
       if (elem) {
-        tags = elem.tags
+        const mappedTags = elem.tags
           .sort((a, b) => a.tagOrder - b.tagOrder)
           .map((t) => ({
             name: t.tagName,
             description: t.tagDescription,
-            dataType: t.emgTagType,
-          }))
-          .filter((t) => !REQUIRED_TAGS.includes(t.name));
+          }));
+        tags = mappedTags.filter((t) => !this.requiredParameters.includes(t.name));
+        this.requiredColumns = mappedTags.filter((t) => this.requiredParameters.includes(t.name));
       }
       return tags;
     },
@@ -237,12 +236,11 @@ export default {
       const payload = {
         elementName: `${this.dataType}_${this.subStation}`,
         tags: [
-          ...REQUIRED_TAGS,
+          ...this.requiredParameters,
           ...this.selectedParameters,
         ],
         columns: [
-          { name: 'mainid', description: 'Main ID', dataType: 'String' },
-          { name: 'timestamp', description: 'Timestamp', dataType: 'Datetime' },
+          ...this.requiredColumns,
           ...columns,
         ],
         mainId: this.mainId,
@@ -261,6 +259,8 @@ export default {
         this.subStation = null;
         this.dataType = null;
         this.selectedParameters = [];
+        this.requiredParameters = [];
+        this.requiredColumns = [];
         this.sublines = [];
         this.stations = [];
         this.subStations = [];
@@ -280,6 +280,8 @@ export default {
         this.subStation = null;
         this.dataType = null;
         this.selectedParameters = [];
+        this.requiredParameters = [];
+        this.requiredColumns = [];
         this.stations = [];
         this.subStations = [];
         this.dataTypes = [];
@@ -297,6 +299,8 @@ export default {
         this.subStation = null;
         this.dataType = null;
         this.selectedParameters = [];
+        this.requiredParameters = [];
+        this.requiredColumns = [];
         this.subStations = [];
         this.dataTypes = [];
         this.parameters = [];
@@ -307,11 +311,13 @@ export default {
       }
       this.subStationLoading = false;
     },
-    subStation(val) {
-      // this.parametersLoading = true;
+    async subStation(val) {
+      this.parametersLoading = true;
       if (val) {
         this.dataType = null;
         this.selectedParameters = [];
+        this.requiredParameters = [];
+        this.requiredColumns = [];
         this.dataTypes = [];
         this.parameters = [];
         const filteredElems = this.elements
@@ -324,23 +330,19 @@ export default {
         if (this.dataTypes.length === 1) {
           [this.dataType] = this.dataTypes;
         }
-        /* this.allParameters = await this.getParameters(this.subStation);
-        this.parametersLoading = false; */
+        this.requiredParameters = await this.getDefaultParameters(this.subStation);
+        this.requiredParameters = [
+          ...REQUIRED_TAGS,
+          ...this.requiredParameters,
+        ];
+        this.parametersLoading = false;
       }
     },
     dataType(val) {
       if (val) {
         this.selectedParameters = [];
+        this.requiredColumns = [];
         this.parameters = [];
-        /* this.parameters = this.allParameters.filter((p) => {
-          if (val.toUpperCase() === 'PROCESS') {
-            return PROCESS_TYPES.includes(p.parametercategory);
-          }
-          if (val.toUpperCase() === 'PRODUCTION') {
-            return PRODUCTION_TYPES.includes(p.parametercategory);
-          }
-          return false;
-        }); */
         this.parameters = this.getTags(`${val}_${this.subStation}`);
       }
     },
