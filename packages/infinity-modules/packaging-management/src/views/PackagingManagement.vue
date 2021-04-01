@@ -21,7 +21,7 @@
           rounded
           clearable
           label="请扫描条码信息。"
-          :disabled="loading || inputDisabled"
+          :disabled="inputDisabled"
           prepend-inner-icon="mdi-barcode-scan"
           @change="handlePackageRecord"
           class="textfield"
@@ -158,15 +158,21 @@
           <div class="parts-status-group">
             <v-row class="px-10">
               <v-col>
-                <div :class="['parts-status-group-item', !packagerecord.point1 ? 'completed' : '']">
+                <div
+                :class="['parts-status-group-item',
+                !Number(packagerecord.point1) ? 'completed' : '']"
+                >
                   <p>物料1</p>
-                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
+                  <p>{{Number(packagerecord.point1) ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
               <v-col>
-                <div :class="['parts-status-group-item', !packagerecord.point2 ? 'completed' : '']">
+                <div
+                :class="['parts-status-group-item',
+                !Number(packagerecord.point2) ? 'completed' : '']"
+                >
                   <p>物料2</p>
-                  <p>{{packagerecord.point1 ? '已完成' : '请拿取'}}</p>
+                  <p>{{Number(packagerecord.point2) ? '已完成' : '请拿取'}}</p>
                 </div>
               </v-col>
             </v-row>
@@ -174,7 +180,7 @@
           <v-btn
             x-large
             color="primary"
-            class="mt-10"
+            class="mt-5"
             style="width:400px;"
             :loading="loading"
             :disabled="!isPrintAble"
@@ -183,17 +189,19 @@
             <v-icon>mdi-plus</v-icon>
             打印标签
           </v-btn>
-          <!-- <v-btn
+          <br/>
+          <v-btn
             x-large
             color="warning"
             class="mt-5"
             style="width:400px;"
-            :disabled="!packagerecord.mainid"
+            :loading="loading"
+            :disabled="!mainid||!partStatus._id"
             @click="scrapDialog=true"
           >
-            <v-icon>mdi-delete-empty</v-icon>
-            报废
-          </v-btn> -->
+            <!-- <v-icon>mdi-delete-empty</v-icon> -->
+            人工判定NG
+          </v-btn>
         </v-card>
         <v-card>
           <v-row class="package-number mt-10" no-gutters>
@@ -280,7 +288,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          确认报废吗?
+          是否确认判定NG?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -325,7 +333,7 @@ export default {
       detailMessege: '',
       packagerecord: {},
       loading: false,
-      show: false,
+      show: true,
       packageDialog: false,
       scrapDialog: false,
       totalNumber: null,
@@ -340,6 +348,7 @@ export default {
       inputDisabled: false,
       currentOrder: {},
       orderCount: 0,
+      partStatus: {},
     };
   },
   components: {
@@ -351,7 +360,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getOrderList', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getNgConfig']),
+    ...mapActions('packagingManagement', ['getLabelFile', 'getPackageRecord', 'getLabelRule', 'getOrderList', 'getPackageLabelRecord', 'updatePackageRecord', 'updatePackageLabelRecord', 'updateLabelRule', 'getSubstationList', 'getCheckout', 'getPartStatus', 'getNgConfig', 'updatePartStatus', 'addRework']),
     async handleChangeTotalNUmber() {
       if (this.inputTotalNumber > 0) {
         // this.totalNumber = this.inputTotalNumber;
@@ -433,7 +442,7 @@ export default {
       this.orderCount = orderList.length;
     },
     initSoket() {
-      // const socket = socketioclient.connect('192.168.8.116:10190');
+      // const socket = socketioclient.connect('192.168.8.158:10190');
       const socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
@@ -534,18 +543,50 @@ export default {
       this.ngConfigList = await this.getNgConfig();
     },
     async handlePackageRecord(mainid) {
-      // this.stations.forEach(element => {
-      //   let query = 'query=mainid="xxx"%26%26substationid=="xxxx"%26sortquery=createTimestamp=-1'
-      //   let responese = await getRecord()
-      // });
       this.loading = true;
+      if (!mainid) return false;
+      this.mainidstatus = 0;
+      this.detailMessege = '';
+      this.packagerecord = {};
+      this.partStatus = {};
+      // this.packageLabelRecord = {};
+      this.stationinfolist = [];
       const packagerecordlist = await this.getPackageRecord();
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
+      console.log(packagerecordObj, 'packagerecordObj');
+      this.getNGInfo(mainid);
+      const partStatusList = await this.getPartStatus(`?query=mainid==%22${mainid}%22`);
+      if (partStatusList.length > 0) {
+        [this.partStatus] = partStatusList;
+        if (partStatusList[0].overallresult !== 7) {
+          this.mainidstatus = 2;
+          this.detailMessege = '';
+          if (packagerecordObj && packagerecordObj._id) {
+            const postData = {
+              id: packagerecordObj._id,
+              payload: {
+                status: 5,
+              },
+            };
+            await this.updatePackageRecord(postData);
+          }
+          this.loading = false;
+          console.log(partStatusList, 'partStatusList');
+          return false;
+        }
+      } else {
+        this.partStatus = {};
+        this.mainidstatus = 2;
+        this.detailMessege = '当前条码记录中不存在';
+        this.loading = false;
+        return false;
+      }
+      console.log(packagerecordObj, 'packagerecordObj');
       if (packagerecordObj) {
         // this.barcode = packagerecordObj.barcode;
         this.packagerecord = packagerecordObj;
-        if (packagerecordObj.status === 3) {
+        if (Number(packagerecordObj.status) === 3) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已包装完成';
           const packageLabelRecordList = await this.getPackageLabelRecord(
@@ -556,13 +597,13 @@ export default {
           } else {
             this.packageLabelRecord = {};
           }
-        } else if (packagerecordObj.status === 4) {
+        } else if (Number(packagerecordObj.status) === 4) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已报废';
-        } else if (packagerecordObj.status === 0 || packagerecordObj.status === 1) {
-          if (packagerecordObj.status === 0) {
+        } else if (Number(packagerecordObj.status) === 0 || Number(packagerecordObj.status) === 1) {
+          if (Number(packagerecordObj.status) === 0) {
             const packagerecordlistnotstart = packagerecordlist
-              .filter((packagerecord) => packagerecord.status === 0);
+              .filter((packagerecord) => Number(packagerecord.status) === 0);
             const packagerecordfirst = packagerecordlistnotstart[
               packagerecordlistnotstart.length - 1
             ];
@@ -601,10 +642,11 @@ export default {
         }
       } else {
         this.mainidstatus = 2;
-        this.detailMessege = '当前条码记录中不存在';
+        this.detailMessege = '当前条码未流经视频检测站';
       }
-      this.getNGInfo(mainid);
+      // this.getNGInfo(mainid);
       this.loading = false;
+      return true;
     },
     async completePackage() {
       const postData = {
@@ -626,20 +668,57 @@ export default {
       this.loading = false;
     },
     async scrapPackage() {
-      const postData = {
-        id: this.packagerecord._id || this.packagerecord.id,
+      console.log(this.packagerecord, 'this.packagerecord');
+      this.loading = true;
+      if (this.packagerecord && this.packagerecord._id) {
+        const postData1 = {
+          id: this.packagerecord._id,
+          payload: {
+            status: 5,
+          },
+        };
+        await this.updatePackageRecord(postData1);
+      }
+      const postData2 = {
+        id: this.partStatus._id,
         payload: {
-          status: 4,
+          overallresult: 2,
         },
       };
-      this.loading = true;
-      const result = await this.updatePackageRecord(postData);
-      if (result) {
+      const {
+        customername,
+        ordername,
+        ordernumber,
+        ordertype,
+        productid,
+        productname,
+        producttypename,
+      } = this.currentOrder;
+      const postData3 = {
+        customername,
+        ordername,
+        ordernumber,
+        ordertype,
+        productid,
+        productname,
+        producttypename,
+        checkoutngcode: 10,
+        lineid: 1,
+        sublineid: 'subline-295',
+        substationid: 'substation-19',
+        mainid: this.mainid,
+        substationresult: 2,
+        assetid: 4,
+      };
+      const result2 = await this.updatePartStatus(postData2);
+      const result3 = await this.addRework(postData3);
+      if (result2 && result3) {
         this.setAlert({
           show: true,
           type: 'success',
-          message: '报废成功',
+          message: '操作成功',
         });
+        this.scrapDialog = false;
         this.reset();
       }
       this.loading = false;
@@ -728,6 +807,8 @@ export default {
       this.mainidstatus = 0;
       this.detailMessege = '';
       this.packagerecord = {};
+      this.partStatus = {};
+      this.inputDisabled = false;
       // this.packageLabelRecord = {};
       this.stationinfolist = [];
       document.querySelector('.textfield input').focus();
