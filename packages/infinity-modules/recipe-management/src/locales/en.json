@@ -40,7 +40,9 @@
     "INPUT_LENGTH_BOOLEAN": "Please Enter Minimum:1 to Maximum:1 boolean digits!",
     "NOT_FLOAT": "Only Float allowed!",
     "ONLY_BOOLEAN": "Please Enter Boolean 0 as{false} or 1 as {true}",
-    "RUNNING_ORDER": "Recipe details bind with Running order, Hence can't update!"
+    "RUNNING_ORDER": "Recipe details bind with Running order, Hence can't update!",
+    "LOWERBIGER": "Lower can not bigger than Upper!",
+    "ERROR_VALUE": "Value over the limit"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
@@ -87,6 +89,8 @@
   "Parameter": "Parameter",
   "Data type": "Data type",
   "Recipe value": "Recipe value",
+  "Upper": "Upper",
+  "Lower": "Lower",
   "Monitor value": "Monitor value",
   "Recipe Parameters": "Recipe Parameters",
   "Calibration": "Calibration",

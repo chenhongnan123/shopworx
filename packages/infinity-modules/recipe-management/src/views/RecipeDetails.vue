@@ -95,6 +95,56 @@
                   .filter((d) => Number(d.id) === Number(item.datatype))[0].name }}</td>
                 <td v-else>{{ item.datatype }}</td>
                 <td>{{ item.parametervalue }}</td>
+                <td>
+                  <v-edit-dialog
+                      :return-value.sync="item.upper"
+                      @save="saveTableParameter(item, 'upper')"
+                    >
+                      {{ item.upper }}
+                      <v-icon
+                        small
+                        color="primary"
+                        :disabled="false"
+                        v-if="Number(item.datatype) != 11 &&
+                        Number(item.datatype) != 12"
+                      > mdi-pencil </v-icon>
+                      <template v-slot:input>
+                        <v-text-field
+                          :disabled="false"
+                          v-model="item.upper"
+                          label="Edit"
+                          single-line
+                          type="number"
+                          @input="checkDatatype2(item.datatype, item, 'upper')"
+                        ></v-text-field>
+                      </template>
+                    </v-edit-dialog>
+                </td>
+                <td>
+                  <v-edit-dialog
+                      :return-value.sync="item.lower"
+                      @save="saveTableParameter(item, 'lower')"
+                    >
+                      {{ item.lower }}
+                      <v-icon
+                        small
+                        color="primary"
+                        v-if="Number(item.datatype) != 11 &&
+                        Number(item.datatype) != 12"
+                        :disabled="false"
+                      > mdi-pencil </v-icon>
+                      <template v-slot:input>
+                        <v-text-field
+                          :disabled="false"
+                          v-model="item.lower"
+                          label="Edit"
+                          single-line
+                          type="number"
+                          @input="checkDatatype2(item.datatype, item, 'lower')"
+                        ></v-text-field>
+                      </template>
+                    </v-edit-dialog>
+                </td>
                 <td>{{ item.monitorvalue }}</td>
                 <td>
                   <v-row justify="center">
@@ -229,6 +279,8 @@ export default {
           value: 'datatype',
         },
         { text: this.$t('Recipe value'), value: 'parametervalue' },
+        { text: this.$t('Upper'), value: 'upper' },
+        { text: this.$t('Lower'), value: 'lower' },
         { text: this.$t('Monitor value'), value: 'monitorvalue' },
         {
           text: this.$t('Actions'),
@@ -251,6 +303,8 @@ export default {
           value: 'datatype',
         },
         { text: this.$t('Recipe value'), value: 'parametervalue' },
+        { text: this.$t('Upper'), value: 'upper' },
+        { text: this.$t('Lower'), value: 'lower' },
         { text: this.$t('Monitor value'), value: 'monitorvalue' },
         {
           text: this.$t('Actions'),
@@ -403,7 +457,8 @@ export default {
       'updateProductDetails',
       'getOrderRecords',
       'getProductDetails',
-      'getDataTypes']),
+      'getDataTypes',
+      'updateRecipeDetailById']),
     ...mapMutations('helper', ['setAlert']),
     addNewRecipe() {
       this.dialog = true;
@@ -419,7 +474,17 @@ export default {
     },
     checkDatatype(item) {
       if (item === '9') {
+        const { lower, upper } = this.itemToUpdate;
         const n = this.recipeValue;
+        if (n < lower || n > upper) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_VALUE',
+          });
+          this.btnDisable = true;
+          return;
+        }
         const t = function retStr() {
           const reg = /^[+-]?\d+(\.\d+)?$/;
           return reg.test(n);
@@ -444,7 +509,17 @@ export default {
           this.btnDisable = false;
         }
       } else if (item === '3' || item === '5' || item === '7' || item === '2' || item === '4' || item === '8') {
+        const { lower, upper } = this.itemToUpdate;
         const n = this.recipeValue;
+        if (n < lower || n > upper) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_VALUE',
+          });
+          this.btnDisable = true;
+          return;
+        }
         const t = function retStr() {
           return n % 1 !== 0;
         };
@@ -502,7 +577,17 @@ export default {
           this.btnDisable = false;
         }
       } else if (item === '10') {
+        const { lower, upper } = this.itemToUpdate;
         const n = this.recipeValue;
+        if (n < lower || n > upper) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_VALUE',
+          });
+          this.btnDisable = true;
+          return;
+        }
         const t = function retStr() {
           return n % 1 !== 0;
         };
@@ -527,6 +612,129 @@ export default {
         }
       } else if (item === '11') {
         const n = this.recipeValue;
+        if (n.length === 0 || n.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_STRING',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      }
+    },
+    checkDatatype2(item, data, type) {
+      const value = data[type];
+      if (item === '9') {
+        const n = value;
+        const t = function retStr() {
+          const reg = /^[+-]?\d+(\.\d+)?$/;
+          return reg.test(n);
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (!val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_FLOAT',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.length > 8 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '3' || item === '5' || item === '7' || item === '2' || item === '4' || item === '8') {
+        const n = value;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_INTEGER',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_INTEGER',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '12') {
+        const n = value;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        const val3 = n;
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'BOOLEAN_NUMBER',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.length > 1 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_BOOLEAN',
+          });
+        } else if (val3.charCodeAt(0) === 48) {
+          this.btnDisable = false;
+        } else if (val3.charCodeAt(0) >= 50 && val3.charCodeAt(0) <= 57) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ONLY_BOOLEAN',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '10') {
+        const n = value;
+        const t = function retStr() {
+          return n % 1 !== 0;
+        };
+        const val = t();
+        const val2 = n.toString();
+        if (val) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'NOT_DOUBLE',
+          });
+          this.btnDisable = true;
+        } else if (val2.length === 0 || val2.charCodeAt(0) <= 32) {
+          this.btnDisable = true;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'INPUT_LENGTH_DOUBLE',
+          });
+        } else {
+          this.btnDisable = false;
+        }
+      } else if (item === '11') {
+        const n = value;
         if (n.length === 0 || n.charCodeAt(0) <= 32) {
           this.btnDisable = true;
           this.setAlert({
@@ -674,6 +882,8 @@ export default {
             linename: ls.linename,
             sublineid: ls.sublineid,
             sublinename: ls.sublinename,
+            upper: ls.upper,
+            lower: ls.lower,
           };
           payload.push(updatedlist);
         });
@@ -733,6 +943,69 @@ export default {
       await this.updateRecipe(object);
       this.dialogConfirm = false;
       await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`);
+    },
+    async saveTableParameter(item, type) {
+      if (this.btnDisable) return;
+      if (type === 'lower') {
+        if (item.upper) {
+          if (Number(item.upper) < Number(item.lower)) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'LOWERBIGER',
+            });
+            const totalRecords = await this.getRecipeDetailListRecords(
+              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+            );
+            this.totalRecipeDetails = totalRecords;
+            const first = this.totalRecipeDetails
+              .filter((f) => f.parametercategory === '35' || f.parametercategory === '7');
+            this.first = first;
+            const second = this.totalRecipeDetails
+              .filter((f) => f.parametercategory === '58');
+            this.second = second;
+            this.changeRecipeList();
+            return;
+          }
+        }
+      } else if (type === 'upper') {
+        if (item.lower) {
+          if (Number(item.upper) < Number(item.lower)) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'LOWERBIGER',
+            });
+            const totalRecords = await this.getRecipeDetailListRecords(
+              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+            );
+            this.totalRecipeDetails = totalRecords;
+            const first = this.totalRecipeDetails
+              .filter((f) => f.parametercategory === '35' || f.parametercategory === '7');
+            this.first = first;
+            const second = this.totalRecipeDetails
+              .filter((f) => f.parametercategory === '58');
+            this.second = second;
+            this.changeRecipeList();
+            return;
+          }
+        }
+      }
+      const payload = {
+        assetid: 4,
+        lower: item.lower,
+        upper: item.upper,
+      };
+      this.saving = true;
+      const updateResult = await this.updateRecipeDetailById({ id: item._id, payload });
+      this.saving = false;
+      if (updateResult) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'RECIPE_UPDATED',
+        });
+      }
     },
   },
 };

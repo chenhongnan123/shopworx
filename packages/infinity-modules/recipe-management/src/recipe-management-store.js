@@ -336,5 +336,21 @@ export default ({
       }
       return created;
     },
+    updateRecipeDetailById: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'recipedetails',
+          id: payload.id,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        dispatch('getRecipeDetailListRecords');
+        return true;
+      }
+      return created;
+    },
   },
 });
