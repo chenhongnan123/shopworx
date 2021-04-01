@@ -76,6 +76,17 @@ export default ({
       }
       return [];
     },
+    getPartStatus: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'partstatus', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
     getNgConfig: async ({ dispatch }, query) => {
       const list = await dispatch(
         'element/getRecords',
@@ -99,6 +110,19 @@ export default ({
         { root: true },
       );
       return putPackageRecord;
+    },
+    updatePartStatus: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
+      const putPartstatus = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'partstatus',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return putPartstatus;
     },
     updatePackageLabelRecord: async ({ dispatch }, postData) => {
       const { id, payload } = postData;
@@ -136,6 +160,20 @@ export default ({
         return list;
       }
       return [];
+    },
+    addRework: async ({ dispatch }, payload) => {
+      const result = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rework',
+          payload,
+        },
+        { root: true },
+      );
+      if (result) {
+        return true;
+      }
+      return false;
     },
   },
 });
