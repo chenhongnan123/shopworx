@@ -44,9 +44,17 @@ class ElementService {
   uploadFiles(elementName, payload) {
     return this.request.post(`/server/uploadfile/${payload.filecontent}/${payload.filename}?elementName=${elementName}&extension=${payload.fileextension}&assetId=${payload.assetid}`, '');
   }
+
+  downloadData(queryParam, payload) {
+    return this.request.post(`/server/data/download${queryParam}`, payload);
+  }
   
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
+  }
+  
+  getCollectionRecords(collectionName, queryParam) {
+    return this.request.get(`/server/collection/${collectionName}${queryParam}`);
   }
 
   getTrainingLogsRecords(jobId) {

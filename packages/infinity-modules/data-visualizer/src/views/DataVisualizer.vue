@@ -3,11 +3,16 @@
     <portal to="app-header">
       Data Visualizer
     </portal>
+    <export-dialog
+      v-model="dialog"
+      :exportPayload="exportPayload"
+    />
     <v-row style="height:100%" no-gutters>
       <v-col cols="12" sm="4" lg="3" xl="2">
         <filter-drawer
           :loading="loading"
           @on-fetch="fetchRecords"
+          @on-export="exportRecords"
         />
       </v-col>
       <v-col>
@@ -27,7 +32,10 @@
           >
             <v-card flat style="height:100%">
               <v-card-text style="height:100%" class="px-0">
-                <component ref="grid" :is="item.component" />
+                <component
+                  ref="grid"
+                  :is="item.component"
+                />
               </v-card-text>
             </v-card>
           </v-tab-item>
@@ -41,25 +49,29 @@
 import { mapActions } from 'vuex';
 import FilterDrawer from '../components/FilterDrawer.vue';
 import DataProfile from '../components/DataProfile.vue';
-import DownloadLog from '../components/DownloadLog.vue';
+import ExportLog from '../components/ExportLog.vue';
+import ExportDialog from '../components/ExportDialog.vue';
 
 export default {
   name: 'DataVisualizer',
   components: {
     FilterDrawer,
     DataProfile,
-    DownloadLog,
+    ExportLog,
+    ExportDialog,
   },
   data() {
     return {
       tab: 0,
+      dialog: false,
       loading: false,
+      exportPayload: null,
       items: [{
         name: 'Data profile',
         component: 'data-profile',
       }, {
-        name: 'Download log',
-        component: 'download-log',
+        name: 'Export log',
+        component: 'export-log',
       }],
     };
   },
@@ -67,15 +79,17 @@ export default {
     ...mapActions('dataVisualizer', [
       'getElements',
       'getLines',
-      'initElement',
     ]),
     fetchRecords(e) {
       this.$refs.grid[0].setRowData(e);
     },
+    exportRecords(e) {
+      this.dialog = true;
+      this.exportPayload = e;
+    },
   },
   async created() {
     this.loading = true;
-    await this.initElement();
     await Promise.all([
       this.getElements(),
       this.getLines(),

@@ -117,6 +117,7 @@
         text
         color="primary"
         class="text-none"
+        @click="exportData"
         :disabled="disableApply || fetching"
       >
         Export
@@ -248,6 +249,18 @@ export default {
         dateTo: new Date(this.dateTo).getTime(),
       };
       this.$emit('on-fetch', payload);
+    },
+    exportData() {
+      const payload = {
+        elementName: `${this.dataType}_${this.subStation}`,
+        fields: [
+          ...this.requiredParameters,
+          ...this.selectedParameters,
+        ].join(', '),
+        dateFrom: new Date(this.dateFrom).getTime(),
+        dateTo: new Date(this.dateTo).getTime(),
+      };
+      this.$emit('on-export', payload);
     },
   },
   watch: {

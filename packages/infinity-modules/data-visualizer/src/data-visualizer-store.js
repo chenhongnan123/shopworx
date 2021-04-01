@@ -1,7 +1,7 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import { formatDate } from '@shopworx/services/util/date.service';
-import dataDownloadElement from './data/dataDownloadElement';
+import ElementService from '@shopworx/services/api/element.service';
 
 const ELEMENTS = {
   LINE: 'line',
@@ -21,6 +21,8 @@ export default ({
     columns: [],
     totalCount: 0,
     fetching: false,
+    downloadLogs: [],
+    fetchingLogs: false,
   },
   mutations: {
     setElements: set('elements'),
@@ -29,28 +31,10 @@ export default ({
     setColumns: set('columns'),
     setTotalCount: set('totalCount'),
     setFetching: set('fetching'),
+    setDownloadLogs: set('downloadLogs'),
+    setFetchingLogs: set('fetchingLogs'),
   },
   actions: {
-    initElement: async ({ dispatch }) => {
-      const { element, tags } = dataDownloadElement;
-      const e = await dispatch(
-        'element/getElement',
-        element.elementName,
-        { root: true },
-      );
-      if (!e) {
-        const payload = {
-          element,
-          tags,
-        };
-        await dispatch(
-          'element/createElementAndTags',
-          payload,
-          { root: true },
-        );
-      }
-    },
-
     getElements: async ({ commit, rootState, dispatch }) => {
       const { activeSite } = rootState.user;
       const elements = await dispatch(
@@ -142,6 +126,46 @@ export default ({
         { root: true },
       );
       return parameters;
+    },
+
+    getDownloadLog: async ({ rootState, commit }) => {
+      commit('setFetchingLogs', true);
+      const { activeSite } = rootState.user;
+      const { data } = await ElementService.getCollectionRecords(
+        'datadownload',
+        `?query=siteId==${activeSite}`,
+      );
+      if (data && data.results) {
+        commit('setDownloadLogs', data.results);
+      } else {
+        commit('setDownloadLogs', []);
+      }
+      commit('setFetchingLogs', false);
+    },
+
+    createDownloadRequest: async ({ dispatch }, {
+      dateFrom,
+      dateTo,
+      emailIds,
+      elementName,
+      fields,
+    }) => {
+      const queryParam = `?datefrom=${dateFrom}&dateto=${dateTo}`;
+      const payload = {
+        emailIds,
+        elementName,
+        fields,
+      };
+      try {
+        const { data } = await ElementService.downloadData(queryParam, payload);
+        if (data && data.id) {
+          await dispatch('getDownloadLog');
+          return true;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
     },
 
     getRecords: async ({ dispatch, commit }, {
