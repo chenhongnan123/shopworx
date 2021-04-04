@@ -22,7 +22,11 @@
     "DUPLICATE_DB_ADDRESS_ERROR": "Duplicate value in DB Address column",
     "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length(20)",
     "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
+    "DUPLICATE_COMBINATION_ERROR": "Below are the row no. of Duplicate Combination",
     "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
-    "ROW_LIMIT": "Row limit exceeded! (max 1000)"
+    "ROW_LIMIT": "Row limit exceeded! (max 1000)",
+    "DUPLICATE_COMBINATION": "Duplicate combination of{ bitNumber, startAddress, dbAddress } found!",
+    "DUPLICATE_PARAMETER_FOR_SUBSTATION": "Dulicate parameter found for another substation for this subline!",
+    "DUPLICATE_PARAM_FOR_SIBLING_SUBSTATION_ERROR": "Below are the already used parameters for another substation for this line"
   }
 }

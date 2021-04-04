@@ -56,6 +56,22 @@
           <div v-for="(data, n) in dupDbAddress" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel v-if="dummyCombo.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_COMBINATION_ERROR', dummyCombo.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in dummyCombo" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="duplicateParam.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_PARAM_FOR_SIBLING_SUBSTATION_ERROR', duplicateParam.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in duplicateParam" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
       <v-expansion-panel v-if="paramLength.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
           {{ $t('error.PARAMETER_MAX_LENGTH', paramLength.length) }}
@@ -139,6 +155,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    dummyCombo: {
+      type: Array,
+      default: () => [],
+    },
+    duplicateParam: {
+      type: Array,
+      default: () => [],
+    },
     dupDbAddress: {
       type: Array,
       default: () => [],
@@ -163,6 +187,24 @@ export default {
       },
     },
     dupDbAddress: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    dummyCombo: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    duplicateParam: {
       handler(val) {
         if (val.length > 0) {
           this.yesBtnDisable = true;
@@ -214,6 +256,8 @@ export default {
     this.dupDbAddress = [];
     this.paramLength = [];
     this.dummyNames = [];
+    this.dummyCombo = [];
+    this.duplicateParam = [];
   },
   mounted() {
     this.$root.$on('parameterCreation', (data) => {
@@ -239,6 +283,8 @@ export default {
     this.dupDbAddress = [];
     this.paramLength = [];
     this.dummyNames = [];
+    this.dummyCombo = [];
+    this.duplicateParam = [];
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -278,6 +324,8 @@ export default {
       this.dupDbAddress = [];
       this.paramLength = [];
       this.dummyNames = [];
+      this.dummyCombo = [];
+      this.duplicateParam = [];
       this.$root.$emit('clearResponce', true);
     },
   },

@@ -69,7 +69,9 @@
             :duplicateStartnum="duplicateStartnum"
             :dupDbAddress="dupDbAddress"
             :paramLength="paramLength"
-            :dummyNames="dummyNames"/>
+            :dummyNames="dummyNames"
+            :dummyCombo="dummyCombo"
+            :duplicateParam="duplicateParam"/>
           <div style="float:right;">
             <v-btn
             small
@@ -403,8 +405,11 @@ export default {
       duplicateBnum: [],
       duplicateStartnum: [],
       dupDbAddress: [],
+      dummyCombo: [],
       dummyNames: [],
+      subStaparList: [],
       validateFlag: true,
+      duplicateParam: [],
       masterTags: [{
         tagName: 'name',
         tagDescription: 'Parameter Name',
@@ -438,7 +443,7 @@ export default {
       }, {
         tagName: 'size',
         tagDescription: 'Size',
-        required: true,
+        required: false,
         emgTagType: 'int',
       }, {
         tagName: 'multiplicationfactor',
@@ -511,6 +516,8 @@ export default {
         this.dupDbAddress = [];
         this.paramLength = [];
         this.dummyNames = [];
+        this.dummyCombo = [];
+        this.duplicateParam = [];
       }
     });
     this.$root.$on('getListofParams', (data) => {
@@ -593,7 +600,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setCreateParam']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
-      'getSubStationIdElement', 'createTagElement', 'updateTagStatus']),
+      'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParametersList']),
     async executeCreateFunction(val) {
       if (val) {
         this.responce = [];
@@ -1496,77 +1503,56 @@ export default {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
-          const listDbaddress = dataList.map((item) => item.dbaddress);
-          const duplicatedbAddress = listDbaddress.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicatedbAddress.length > 0) {
+          const masterList = await this.getParametersList();
+          const finalParam = masterList.filter((f) => f.substationid !== this.substationValue);
+          if (finalParam) {
+            const list = [];
+            list.push(finalParam);
+            list[0].forEach((l) => {
+              dataList.forEach((d) => {
+                if (l.name === d.name) {
+                  this.duplicateParam.push(l.name);
+                }
+              });
+            });
+            if (this.duplicateParam.length > 0) {
+              this.validateFlag = false;
+              this.savingImport = false;
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'DUPLICATE_PARAMETER_FOR_SUBSTATION',
+              });
+              this.$root.$emit('parameterCreation', true);
+            }
+          }
+          const combination = dataList.map((item, index) => (
+            {
+              dbaddress: item.dbaddress,
+              startaddress: item.startaddress,
+              bitnumber: item.bitnumber,
+              index,
+            }
+          ));
+          const dummyCombination = combination.filter((v, i, a) => a.findIndex((t) => (t.bitnumber
+             === v.bitnumber && t.dbaddress === v.dbaddress
+              && t.startaddress === v.startaddress)) !== i);
+          if (dummyCombination.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'DUPLICATE_DBADDRESS',
+              message: 'DUPLICATE_COMBINATION',
             });
             document.getElementById('uploadFiles').value = null;
-            // return;
           }
-          if (duplicatedbAddress) {
-            const dbresponce = [];
-            duplicatedbAddress.forEach((p) => {
-              if (p.length > 0) {
-                dbresponce.push(` value( dbaddress ): ${p} `);
-                this.dupDbAddress = dbresponce;
-                this.$root.$emit('parameterCreation', true);
-              }
-            });
-          }
-          const listStartAdd = dataList.map((item) => item.startaddress);
-          const duplicatestartAddress = listStartAdd.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicatestartAddress.length > 0) {
-            this.$root.$emit('parameterCreation', true);
-            this.validateFlag = false;
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_START_ADDRESS',
-            });
-            document.getElementById('uploadFiles').value = null;
-            // return;
-          }
-          if (duplicatestartAddress) {
-            const resStartNum = [];
-            duplicatestartAddress.forEach((p) => {
-              if (p.length > 0) {
-                resStartNum.push(` value( startaddress ): ${p} `);
-                this.duplicateStartnum = resStartNum;
-                this.$root.$emit('parameterCreation', true);
-              }
-            });
-          }
-          const listBitNum = dataList.map((item) => item.bitnumber);
-          const duplicateBitnumber = listBitNum.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicateBitnumber.length > 0) {
-            this.validateFlag = false;
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_BIT_NUMBER',
-            });
-            document.getElementById('uploadFiles').value = null;
-            // return;
-          }
-          if (duplicateBitnumber) {
-            const resBitNum = [];
-            duplicateBitnumber.forEach((p) => {
-              if (p.length > 0) {
-                resBitNum.push(` value( bitnumber ): ${p} `);
-                this.duplicateBnum = resBitNum;
-                this.$root.$emit('parameterCreation', true);
-              }
+          if (dummyCombination.length > 0) {
+            const combo = [];
+            dummyCombination.forEach((p) => {
+              combo.push(` (Duplicate combination) row : ${p.index + 2} `);
+              this.dummyCombo = combo;
+              this.$root.$emit('parameterCreation', true);
             });
           }
           if (duplicateNames.length > 0) {
@@ -1628,11 +1614,11 @@ export default {
           if (this.responce.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'EMPTY_FIELDS',
-            });
+            // this.setAlert({
+            //   show: true,
+            //   type: 'error',
+            //   message: 'EMPTY_FIELDS',
+            // });
             this.$root.$emit('parameterCreation', true);
           }
           if (this.validateFlag === true) {
@@ -1655,77 +1641,33 @@ export default {
           }
         }
         if (noBooleanList.length) {
-          const listDbaddress = dataList.map((item) => item.dbaddress);
-          const duplicatedbAddress = listDbaddress.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicatedbAddress.length > 0) {
+          const combination = dataList.map((item, index) => (
+            {
+              dbaddress: item.dbaddress,
+              startaddress: item.startaddress,
+              bitnumber: item.bitnumber,
+              index,
+            }
+          ));
+          const dummyCombination = combination.filter((v, i, a) => a.findIndex((t) => (t.bitnumber
+             === v.bitnumber && t.dbaddress === v.dbaddress
+              && t.startaddress === v.startaddress)) !== i);
+          if (dummyCombination.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'DUPLICATE_DBADDRESS',
+              message: 'DUPLICATE_COMBINATION',
             });
             document.getElementById('uploadFiles').value = null;
-            // return;
           }
-          if (duplicatedbAddress) {
-            const dbresponce = [];
-            duplicatedbAddress.forEach((p) => {
-              if (p.length > 0) {
-                dbresponce.push(` value( dbaddress ): ${p} `);
-                this.dupDbAddress = dbresponce;
-                this.$root.$emit('parameterCreation', true);
-              }
-            });
-          }
-          const listStartAdd = dataList.map((item) => item.startaddress);
-          const duplicatestartAddress = listStartAdd.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicatestartAddress.length > 0) {
-            this.$root.$emit('parameterCreation', true);
-            this.validateFlag = false;
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_START_ADDRESS',
-            });
-            document.getElementById('uploadFiles').value = null;
-            // return;
-          }
-          if (duplicatestartAddress) {
-            const resStartNum = [];
-            duplicatestartAddress.forEach((p) => {
-              if (p.length > 0) {
-                resStartNum.push(` value( startaddress ): ${p} `);
-                this.duplicateStartnum = resStartNum;
-                this.$root.$emit('parameterCreation', true);
-              }
-            });
-          }
-          const listBitNum = dataList.map((item) => item.bitnumber);
-          const duplicateBitnumber = listBitNum.map((item) => item)
-            .filter((value, index, self) => self.indexOf(value) !== index);
-          if (duplicateBitnumber.length > 0) {
-            this.validateFlag = false;
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_BIT_NUMBER',
-            });
-            document.getElementById('uploadFiles').value = null;
-            // return;
-          }
-          if (duplicateBitnumber) {
-            const resBitNum = [];
-            duplicateBitnumber.forEach((p) => {
-              if (p.length > 0) {
-                resBitNum.push(` value( bitnumber ): ${p} `);
-                this.duplicateBnum = resBitNum;
-                this.$root.$emit('parameterCreation', true);
-              }
+          if (dummyCombination.length > 0) {
+            const combo = [];
+            dummyCombination.forEach((p) => {
+              combo.push(` (Duplicate combination) row : ${p.index + 2} `);
+              this.dummyCombo = combo;
+              this.$root.$emit('parameterCreation', true);
             });
           }
           if (duplicateNames.length > 0) {
@@ -1786,11 +1728,11 @@ export default {
           if (this.responce.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'EMPTY_FIELDS',
-            });
+            // this.setAlert({
+            //   show: true,
+            //   type: 'error',
+            //   message: 'EMPTY_FIELDS',
+            // });
             this.$root.$emit('parameterCreation', true);
           }
           if (this.validateFlag === true) {
