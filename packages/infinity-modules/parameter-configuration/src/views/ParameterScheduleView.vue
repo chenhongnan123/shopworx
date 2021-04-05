@@ -1504,7 +1504,8 @@ export default {
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
           const masterList = await this.getParametersList();
-          const finalParam = masterList.filter((f) => f.substationid !== this.substationValue);
+          const finalStation = masterList.filter((f) => f.stationid === this.stationValue);
+          const finalParam = finalStation.filter((f) => f.substationid !== this.substationValue);
           if (finalParam) {
             const list = [];
             list.push(finalParam);
