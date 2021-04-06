@@ -26,9 +26,13 @@ export default ({
       return false;
     },
 
-    getRecordsByTags: async (_, { payload }) => {
+    getRecordsByTags: async (_, { elementName, queryParam, request }) => {
       try {
-        const { data } = await ElementService.getRecordsByTags(payload);
+        const { data } = await ElementService.getRecordsByTags(
+          elementName,
+          queryParam,
+          request,
+        );
         if (data && data.results) {
           return data;
         }

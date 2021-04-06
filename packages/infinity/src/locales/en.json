@@ -95,7 +95,8 @@
     "SCRAP_UPDATE": "Scrap updated!",
     "PERMISSION_UPDATE": "Role permission updated!",
     "MATRIX_UPDATE": "Part matrix updated!",
-    "ROLE_CREATED": "Role created successfully!"
+    "ROLE_CREATED": "Role created successfully!",
+    "EXPORT_REQUEST": "Data export request created. You will recieve an email with the download link shortly."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -127,7 +128,8 @@
     "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
     "MATRIX_UPDATE": "Error while updating the part matrix. Please retry.",
     "ROLE_CREATED": "Error while creating the role. Please retry.",
-    "ROLE_CREATE_RETRY": "Role created successfully but we couldn't define role access. Please update the permissions from the table."
+    "ROLE_CREATE_RETRY": "Role created successfully but we couldn't define role access. Please update the permissions from the table.",
+    "EXPORT_REQUEST": "You are not authorized to export data."
   },
   "fields": {
     "email": "Email",

@@ -241,7 +241,7 @@ export default ({
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
       const data = await dispatch(
         'element/getRecordsByTags',
-        { payload },
+        payload,
         { root: true },
       );
       if (data) {
