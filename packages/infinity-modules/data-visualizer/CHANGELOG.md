@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added data fetch query ([9c16dd6](https://bitbucket.org/entrib/shopworx/commits/9c16dd692056c78329825d9ce44c0c704dbdad9e))
+* **data-visualizer:** added download link to the export log ([37be1c4](https://bitbucket.org/entrib/shopworx/commits/37be1c4ccfc4862f2259da12d590bfc9b7c9029a))
+* **data-visualizer:** fetch default parameters from the server ([63a691e](https://bitbucket.org/entrib/shopworx/commits/63a691e9c9d197791e311dc966ecd9eb83b32ff2))
+* **data-visualizer:** remove sort and filter ([e5335e3](https://bitbucket.org/entrib/shopworx/commits/e5335e301460fe628eaf54b7ec38631e31083c6b))
+
+
+### Features
+
+* **data-visualizer:** added auto page size ([75b3b33](https://bitbucket.org/entrib/shopworx/commits/75b3b3332b6aa84b04c9c52206feafb38ab26a68))
+* **data-visualizer:** added data export dialog ([dc8de14](https://bitbucket.org/entrib/shopworx/commits/dc8de146c2509a73ae1fb308c209190c09c776d4))
+* **data-visualizer:** added date query in the export logs ([304b4bd](https://bitbucket.org/entrib/shopworx/commits/304b4bda22d857fe88d43c8fbee0a3685db5ad15))
+* **data-visualizer:** added server side pagination ([50881a3](https://bitbucket.org/entrib/shopworx/commits/50881a311bd90534a71b0c22e3ff16491175a191))
+* **data-visualizer:** auto fetch export logs every 2 minutes ([e21e8c3](https://bitbucket.org/entrib/shopworx/commits/e21e8c3931248f1315e593d088ae840d58978cc3))
+* **data-visualizer:** integrated grid visualizations ([83b6211](https://bitbucket.org/entrib/shopworx/commits/83b6211db842467ee816f8815261650007c8624a))
+
+
+
+
+
 ## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
 
 **Note:** Version bump only for package @shopworx/data-visualizer
