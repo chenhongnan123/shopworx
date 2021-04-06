@@ -352,6 +352,7 @@ export default [
         reportObjectDesc: 'performance',
         reportObjectParameters: [
           'siteid',
+          'dateVal',
           'shiftVal',
         ],
       },
