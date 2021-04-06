@@ -358,83 +358,46 @@ export default [
     ],
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftoee" Description="Shift Oee" Database="emgda" Host="localhost" Port="27017"><DataObject Name="machine" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;machine&quot;"/></Pipeline><Pipeline><Group><Key Name="machinecode" Field="machinecode" /><Key Name="machinename" Field="machinename" /><Key Name="machinecell" Field="machinecell" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="performance" Collection="machinewise-oee-shift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="produced" Field="produced" /><Key Name="target" Field="target" /><Key Name="rejected" Field="rejected" /><Key Name="runtime" Field="runtime" /></Group></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
-      *#"name" : "Shift downtime by reason",#*
-      *#"type" : "CHART",#*
-      *##set($downtime = $resultmap.downtime)#*
-      *#"chartOptions": {#*
-        *#"title": {#*
-         *#"text": "Downtime by reason"#*
-        *#},#*
-        *#"chart": {#*
-          *#"type": "column"#*
-        *#},#*
-        *#"tooltip": {#*
-          *#"shared": true#*
-        *#},#*
-        *#"yAxis": [{#*
-          *#"title": {#*
-            *#"text": ""#*
-          *#}#*
-        *#}, {#*
-          *#"title": {#*
-            *#"text": ""#*
-          *#},#*
-          *#"minPadding": 0,#*
-          *#"maxPadding": 0,#*
-          *#"max": 100,#*
-          *#"min": 0,#*
-          *#"opposite": true,#*
-          *#"labels": {#*
-            *#"format": "{value}%"#*
-          *#}#*
-        *#}],#*
-        *#"xAxis": {#*
-          *#"categories": [#*
-          *##set($count = 0)#*
-          *##foreach($down in $downtime)#*
-          *##set($reasonname = '"No reason"')#*
-          *##set($reasonname = $down.get("_id").reasonname)#*
-          *##if($count > 0)#* 
-            *#,#* 
-          *##end#*
-            *#$reasonname#*
+      *##set($count = 0)#*
+      *##set($machines = $resultmap.machine)#*
+      *##set($production = $resultmap.cycletime)#*
+      *##set($performance = $resultmap.performance)#*
+      *##set($downtimes = $resultmap.inProgressDowntime)#*
+      *#"machines": [#*
+          *##foreach($machine in $machines)#*
+            *##set($plancount = 0)#*
+            *##if($count > 0)#* 
+              *#,#* 
+            *##end#*
+            *#{#*
+              *##set($machinecode = $machine.get("_id").machinecode)#*
+              *##set($machinename = $machine.get("_id").machinename)#*
+              *##set($machinecell = $machine.get("_id").machinecell)#*
+              *#"machinecode": $machinecode,#*
+              *#"machinename": $machinename,#*
+              *#"machinecell": $machinecell,#*
+              *##set($runtime = 0)#*
+              *##set($produced = 0)#*
+              *##set($target = 0)#*
+              *##set($rejected = 0)#*
+              *##set($updatedAt = 0)#*
+              *##foreach($perf in $performance)#*
+                *##if($machinename == $perf.get("_id").machinename)#*
+                  *##set($runtime = $perf.get("_id").runtime)#*
+                  *##set($produced = $perf.get("_id").produced)#*
+                  *##set($target = $perf.get("_id").target)#*
+                  *##set($rejected = $perf.get("_id").rejected)#*
+                *##end#*
+              *##end#*
+              *#"runtime": $runtime,#*
+              *#"produced": $produced,#*
+              *#"target": $target,#*
+              *#"rejected": $rejected#*
+            *#}#*
             *##set($count=$count+1)#*
           *##end#*
-            *#],#*
-            *#"crosshair": true#*
-        *#},#*
-        *#"series" : [{#*
-          *#"type": "pareto",#*
-          *#"showInLegend" : false,#*
-          *#"name": "Pareto",#*
-          *#"yAxis": 1,#*
-          *#"zIndex": 10,#*
-          *#"baseSeries": 1,#*
-          *#"tooltip": {#*
-            *#"valueDecimals": 2,#*
-            *#"valueSuffix": "%"#*
-          *#}#*
-        *#}, {#*
-          *#"name" : "Downtime (in mins)",#*
-          *#"type" : "column",#*
-          *#"showInLegend" : false,#*
-          *#"zIndex" : 2,#*
-          *#"data" : [#*
-          *##set($count = 0)#*
-          *##foreach($down in $downtime)#*
-          *##set($totaldowntimeinms = $down.get("totaldowntime"))#*
-          *##set($totaldowntimeinsec = $math.div($totaldowntimeinms, 1000))#*
-          *##set($totaldowntimeinmins = $math.div($totaldowntimeinsec, 60))#*
-          *##set($totaldowntimeinmins = $math.roundTo(2, $totaldowntimeinmins))#*
-          *##if($count > 0)#* 
-            *#,#* 
-          *##end#*
-          *#$totaldowntimeinmins#*
-          *##set($count=$count+1)#*
-          *##end#*
-          *#]#*
-        *#}]#*
-      *#}#*
+      *#],#*
+      *#"records" : $count#*
     *#}`,
   },
   {
