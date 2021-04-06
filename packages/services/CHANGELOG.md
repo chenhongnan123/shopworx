@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Features
+
+* **data-visualizer:** added data export dialog ([dc8de14](https://bitbucket.org/entrib/shopworx/commits/dc8de146c2509a73ae1fb308c209190c09c776d4))
+
+
+
+
+
 ## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
 
 **Note:** Version bump only for package @shopworx/services

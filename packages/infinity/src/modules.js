@@ -14,7 +14,7 @@ import ProductionLayout from '@shopworx/production-layout';
 import ProductionLayoutMes from '@shopworx/production-layout-mes';
 import ProductManagement from '@shopworx/product-management';
 import ReworkOperation from '@shopworx/rework-operation';
-import RawData from '@shopworx/rawdata';
+import DataVisualizer from '@shopworx/data-visualizer';
 import TraceabilityApp from '@shopworx/traceability-app';
 import NgCodeConfiguration from '@shopworx/ng-code-configuration';
 import ProductionImage from '@shopworx/production-image';
@@ -38,7 +38,7 @@ Vue.use(ParameterConfigurationMes, {
   store,
   i18n,
 });
-Vue.use(RawData, {
+Vue.use(DataVisualizer, {
   router,
   store,
   i18n,
