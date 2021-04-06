@@ -4,7 +4,7 @@
       small
       color="primary"
       class="text-none ml-4"
-      @click="getDownloadLog"
+      @click="getLog"
       :disabled="fetchingLogs"
     >
       Refresh
@@ -49,6 +49,7 @@ export default {
   name: 'ExportLog',
   data() {
     return {
+      timeout: null,
       headers: [
         { text: 'Requested at', value: 'createdTimestamp' },
         { text: 'Requested by', value: 'createdBy' },
@@ -63,13 +64,23 @@ export default {
     };
   },
   created() {
+    this.getLog();
     this.getDownloadLog();
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeout);
   },
   computed: {
     ...mapState('dataVisualizer', ['downloadLogs', 'fetchingLogs']),
   },
   methods: {
     ...mapActions('dataVisualizer', ['getDownloadLog']),
+    async getLog() {
+      await this.getDownloadLog();
+      this.timeout = setTimeout(() => {
+        this.getLog();
+      }, 120 * 1000);
+    },
     parseDateRange(query) {
       const condition = JSON.parse(query);
       return condition.$and[1].createdTimestamp;
