@@ -1503,41 +1503,62 @@ export default {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
-          const masterList = await this.getParametersList();
-          const finalStation = masterList.filter((f) => f.stationid === this.stationValue);
-          const finalParam = finalStation.filter((f) => f.substationid !== this.substationValue);
-          if (finalParam) {
-            const list = [];
-            list.push(finalParam);
-            list[0].forEach((l) => {
-              dataList.forEach((d) => {
-                if (l.name === d.name) {
-                  this.duplicateParam.push(l.name);
-                }
-              });
-            });
-            if (this.duplicateParam.length > 0) {
-              this.validateFlag = false;
-              this.savingImport = false;
-              this.setAlert({
-                show: true,
-                type: 'error',
-                message: 'DUPLICATE_PARAMETER_FOR_SUBSTATION',
-              });
-              this.$root.$emit('parameterCreation', true);
-            }
-          }
+          this.currentImport.push(data);
+          // const masterList = await this.getParametersList();
+          // const finalStation = masterList.filter((f) => f.stationid === this.stationValue);
+          // const finalParam = finalStation.filter((f) => f.substationid !== this.substationValue);
+          // if (this.parameterList) {
+          //   const list = [];
+          //   list.push(this.parameterList);
+          //   list[0].forEach((l) => {
+          //     data.forEach((d) => {
+          //       if (l.bitnumber === d.bitnumber && l.dbaddress === d.dbaddress
+          //         && l.datatype === d.datatype
+          //         && l.startaddress === d.startaddress) {
+          //         this.duplicateParam.push(l.name);
+          //         console.log(this.duplicateParam);
+          //       }
+          //     });
+          //   });
+          //   if (this.duplicateParam.length > 0) {
+          //     this.validateFlag = false;
+          //     this.savingImport = false;
+          //     this.setAlert({
+          //       show: true,
+          //       type: 'error',
+          //       message: 'DUPLICATE_PARAMETER_FOR_SUBSTATION',
+          //     });
+          //     this.$root.$emit('parameterCreation', true);
+          //   }
+          // }
+          // const ItemIndex = data
+          //   .filter((v, i, data) => data.findIndex((b) => (b.bitnumber === v.bitnumber
+          //     && b.dbaddress === v.dbaddress && b.startaddress === v.startaddress
+          //     && b.datatype === v.datatype)) !== i);
+          //   // const remove = this.parameterList.splice(ItemIndex, 1);
+          // console.log(ItemIndex);
+          // for (let i = 0, len = this.parameterList.length; i < len; i += 1) {
+          //   debugger;
+          //   const ItemIndex = data
+          // .findIndex((b) => (b.bitnumber === this.parameterList[i].bitnumber
+          //     && b.dbaddress === this.parameterList[i].dbaddress
+          //     && b.startaddress === this.parameterList[i].startaddress
+          //     && b.datatype === this.parameterList[i].datatype));
+          //   const remove = this.parameterList.splice(ItemIndex, 1);
+          //   console.log(remove);
+          // }
           const combination = dataList.map((item, index) => (
             {
               dbaddress: item.dbaddress,
               startaddress: item.startaddress,
               bitnumber: item.bitnumber,
+              datatype: item.datatype,
               index,
             }
           ));
           const dummyCombination = combination.filter((v, i, a) => a.findIndex((t) => (t.bitnumber
              === v.bitnumber && t.dbaddress === v.dbaddress
-              && t.startaddress === v.startaddress)) !== i);
+              && t.startaddress === v.startaddress && t.datatype === v.datatype)) !== i);
           if (dummyCombination.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
@@ -1598,7 +1619,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'PARAMETER_NAME_LENGTH',
+              message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
             });
             // this.paramLength = [];
             // return;
@@ -1712,7 +1733,7 @@ export default {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'PARAMETER_NAME_LENGTH',
+              message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
             });
             // this.paramLength = [];
             // return;

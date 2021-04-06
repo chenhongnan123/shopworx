@@ -18,7 +18,7 @@
     >
       <v-expansion-panel v-if="responce.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.EMPTY_COLUMN_ERROR', responce.length) }}
+          {{ $t('error.EMPTY_COLUMN_ERROR_REQUIRED_FIELD', responce.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
@@ -26,7 +26,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="optionalRes.length > 0">
       <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL', optionalRes.length) }}
+          {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL_FIELD', optionalRes.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in optionalRes" :key="n">{{ data }}</div>
@@ -74,7 +74,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="paramLength.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.PARAMETER_MAX_LENGTH', paramLength.length) }}
+          {{ $t('error.PARAMETER_NAME_LENGTH_EXCEEDED', paramLength.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in paramLength" :key="n">{{ data }}</div>
@@ -82,7 +82,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="dummyNames.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.DUPLICATE_PARAMETER_NAME', dummyNames.length) }}
+          {{ $t('error.DUPLICATE_PARAMETER_FOUND', dummyNames.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in dummyNames" :key="n">{{ data }}</div>
