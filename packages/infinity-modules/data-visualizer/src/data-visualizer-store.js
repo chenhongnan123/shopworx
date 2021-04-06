@@ -133,7 +133,7 @@ export default ({
       const { activeSite } = rootState.user;
       const { data } = await ElementService.getCollectionRecords(
         'datadownload',
-        `?query=siteId==${activeSite}`,
+        `?query=siteId==${activeSite}&pagenumber=1&pagesize=100`,
       );
       if (data && data.results) {
         commit('setDownloadLogs', data.results);

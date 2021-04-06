@@ -23,6 +23,20 @@
       <template #item.dateTo="{ item }">
         <div>{{ getDateTo(item.query) }}</div>
       </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.isEmailSent="{ item }">
+        <div>{{ item.status === false ? 'NO' : 'YES' }}</div>
+      </template>
+      <!-- eslint-disable-next-line -->
+      <template #item.link="{ item }">
+        <a
+          v-if="item.status === 'COMPLETED' || item.status === 'END'"
+          :href="`${item.downloadPath}${item.filename}`"
+          target="_blank"
+        >
+          Download
+        </a>
+      </template>
     </v-data-table>
   </div>
 </template>
