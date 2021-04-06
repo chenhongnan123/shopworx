@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Bug Fixes
+
+* **origin:** fixed object parameter for shift oee report ([1207910](https://bitbucket.org/entrib/shopworx/commits/1207910b941a64fcce2cb35a3364619b98f1f8d5))
+* **origin:** fixed payload (vm) for shift oee report ([ddff4a4](https://bitbucket.org/entrib/shopworx/commits/ddff4a43852220bddf98aee6bca8f9ee5bb903cb))
+
+
+
+
+
 ## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
 
 **Note:** Version bump only for package @shopworx/customer-add-new
