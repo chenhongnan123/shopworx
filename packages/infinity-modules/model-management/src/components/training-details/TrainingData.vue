@@ -259,7 +259,7 @@ export default {
         const oldDataEndTime = new Date(this.oldEndTime).getTime();
         await this.getRecordsByTagData({
           elementName: this.selectedElementName,
-          queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}&pagenumber=1&pagesize=10000`,
+          queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}&pagenumber=1&pagesize=100`,
           request: {
             tags: tagsList,
           },
@@ -281,7 +281,7 @@ export default {
         const newDataEndTime = new Date(this.newEndTime).getTime();
         await this.getRecordsByTagData({
           elementName: this.selectedElementName,
-          queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}&pagenumber=1&pagesize=10000`,
+          queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}&pagenumber=1&pagesize=100`,
           request: {
             tags: tagsList,
           },
@@ -309,8 +309,8 @@ export default {
           newtraindatastarttime: `${newStartTime.getDay()}-${newStartTime.getMonth() + 1}-${newStartTime.getFullYear()}:${newStartTime.getHours()}:${newStartTime.getMinutes()}:${newStartTime.getSeconds()}`,
           newtraindataendtime: `${newEndTime.getDay()}-${newEndTime.getMonth() + 1}-${newEndTime.getFullYear()}:${newEndTime.getHours()}:${newEndTime.getMinutes()}:${newEndTime.getSeconds()}`,
           configjson: this.configJson,
-          inputfolder: '/home/emgda/shopworx/data/overheating105mobile-1616755099467',
-          outputfolder: '/home/emgda/shopworx/model-output/overheating105mobile-1616755099467',
+          inputfolder: `/home/emgda/shopworx/data/${this.selectedModelObject.name}-${timestamp}`,
+          outputfolder: `/home/emgda/shopworx/model-output/${this.selectedModelObject.name}-${timestamp}`,
           inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
           modelid: this.selectedModelObject.modelid,
           status: 'In Progress',
