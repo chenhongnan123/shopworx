@@ -330,7 +330,7 @@ export default {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
             && Number(startaddress) === parameter.startaddress
-            && Number(datatype) === parameter.datatype
+            && Number(datatype.id) === parameter.datatype
             && Number(bitnumber) === Number(parameter.bitnumber))) {
             this.setAlert({
               show: true,
@@ -343,7 +343,7 @@ export default {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
             && Number(startaddress) === parameter.startaddress
-            && Number(datatype) === parameter.datatype
+            && Number(datatype.id) === parameter.datatype
             && Number(bitnumber) === parameter.bitnumber)) {
             this.setAlert({
               show: true,

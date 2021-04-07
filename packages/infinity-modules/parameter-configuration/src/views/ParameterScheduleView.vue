@@ -71,7 +71,7 @@
             :paramLength="paramLength"
             :dummyNames="dummyNames"
             :dummyCombo="dummyCombo"
-            :duplicateParam="duplicateParam"/>
+            :duplicateCombination="duplicateCombination"/>
           <div style="float:right;">
             <v-btn
             small
@@ -408,8 +408,9 @@ export default {
       dummyCombo: [],
       dummyNames: [],
       validateFlag: true,
-      duplicateParam: [],
+      duplicateCombination: [],
       importArray: [],
+      emptyDataList: [],
       masterTags: [{
         tagName: 'name',
         tagDescription: 'Parameter Name',
@@ -511,13 +512,14 @@ export default {
       if (clear) {
         document.getElementById('uploadFiles').value = null;
         this.responce = [];
+        this.optionalRes = [];
         this.duplicateBnum = [];
         this.duplicateStartnum = [];
         this.dupDbAddress = [];
         this.paramLength = [];
         this.dummyNames = [];
         this.dummyCombo = [];
-        this.duplicateParam = [];
+        this.duplicateCombination = [];
         this.importArray = [];
       }
     });
@@ -1466,6 +1468,7 @@ export default {
         delete item.status;
       });
       const dataList = data.concat(this.parameterList);
+      const importedDataList = data;
       const floatOrDoubles = dataList.filter((fd) => fd.maxdecimal === '' || fd.maxdecimal === undefined);
       floatOrDoubles.forEach((md) => {
         if (md.datatype === '9' || md.datatype === '10' || Number(md.datatype) === 9 || Number(md.datatype) === 10) {
@@ -1478,7 +1481,7 @@ export default {
       const duplicateNames = nameList.map((item) => item)
         .filter((value, index, self) => self.indexOf(value) !== index);
       const res = [];
-      dataList.forEach((d, r) => {
+      importedDataList.forEach((d, r) => {
         this.masterTags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
@@ -1514,17 +1517,17 @@ export default {
                 if (l.bitnumber === Number(d.bitnumber) && l.dbaddress === Number(d.dbaddress)
                   && l.datatype === Number(d.datatype)
                   && l.startaddress === Number(d.startaddress)) {
-                  this.duplicateParam.push(d.name);
+                  this.duplicateCombination.push(d.name);
                 }
               });
             });
-            if (this.duplicateParam.length > 0) {
+            if (this.duplicateCombination.length > 0) {
               this.validateFlag = false;
               this.savingImport = false;
               this.$root.$emit('parameterCreation', true);
             }
           }
-          const combination = dataList.map((item, index) => (
+          const combination = importedDataList.map((item, index) => (
             {
               dbaddress: item.dbaddress,
               startaddress: item.startaddress,
@@ -1539,11 +1542,12 @@ export default {
           if (dummyCombination.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_COMBINATION',
-            });
+            // this.setAlert({
+            //   show: true,
+            //   type: 'error',
+            //   message: 'DUPLICATE_COMBINATION',
+            // });
+            dataList.push(this.emptyDataList);
             document.getElementById('uploadFiles').value = null;
           }
           if (dummyCombination.length > 0) {
@@ -1562,6 +1566,7 @@ export default {
               type: 'error',
               message: 'DUPLICATE_PARAMETER_NAME',
             });
+            dataList.push(this.emptyDataList);
             document.getElementById('uploadFiles').value = null;
             // return;
           }
@@ -1584,6 +1589,7 @@ export default {
                 this.savingImport = false;
                 this.validateFlag = false;
                 this.$root.$emit('parameterCreation', true);
+                dataList.push(this.emptyDataList);
                 document.getElementById('uploadFiles').value = null;
                 // return;
               }
@@ -1598,6 +1604,7 @@ export default {
               type: 'error',
               message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
             });
+            dataList.push(this.emptyDataList);
             // this.paramLength = [];
             // return;
           }
@@ -1609,6 +1616,7 @@ export default {
               type: 'error',
               message: 'ROW_LIMIT',
             });
+            dataList.push(this.emptyDataList);
           }
           if (this.responce.length > 0) {
             this.validateFlag = false;
@@ -1619,6 +1627,7 @@ export default {
             //   message: 'EMPTY_FIELDS',
             // });
             this.$root.$emit('parameterCreation', true);
+            dataList.push(this.emptyDataList);
           }
           if (this.validateFlag === true) {
             if (this.optionalRes.length > 0) {
@@ -1636,58 +1645,42 @@ export default {
             } else {
               this.$root.$emit('payload', data);
               this.$root.$emit('successPayload', true);
+              dataList.push(this.emptyDataList);
             }
           }
         }
         if (noBooleanList.length) {
-          if (this.parameterList.length > 0) {
-            Object.values(data).forEach((m) => {
-              this.importArray.push(m);
-            });
-            this.parameterList.forEach((l) => {
-              this.importArray.forEach((d) => {
-                if (l.bitnumber === Number(d.bitnumber) && l.dbaddress === Number(d.dbaddress)
-                  && l.datatype === Number(d.datatype)
-                  && l.startaddress === Number(d.startaddress)) {
-                  this.duplicateParam.push(d.name);
-                }
-              });
-            });
-            if (this.duplicateParam.length > 0) {
-              this.validateFlag = false;
-              this.savingImport = false;
-              this.$root.$emit('parameterCreation', true);
-            }
-          }
-          const combination = dataList.map((item, index) => (
-            {
-              dbaddress: item.dbaddress,
-              startaddress: item.startaddress,
-              bitnumber: item.bitnumber,
-              index,
-            }
-          ));
-          const dummyCombination = combination.filter((v, i, a) => a.findIndex((t) => (t.bitnumber
-             === v.bitnumber && t.dbaddress === v.dbaddress
-              && t.startaddress === v.startaddress)) !== i);
-          if (dummyCombination.length > 0) {
-            this.validateFlag = false;
-            this.savingImport = false;
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'DUPLICATE_COMBINATION',
-            });
-            document.getElementById('uploadFiles').value = null;
-          }
-          if (dummyCombination.length > 0) {
-            const combo = [];
-            dummyCombination.forEach((p) => {
-              combo.push(` (Duplicate combination) row : ${p.index + 2} `);
-              this.dummyCombo = combo;
-              this.$root.$emit('parameterCreation', true);
-            });
-          }
+          // const combination = importedDataList.map((item, index) => (
+          //   {
+          //     dbaddress: item.dbaddress,
+          //     startaddress: item.startaddress,
+          //     bitnumber: item.bitnumber,
+          //     index,
+          //   }
+          // ));
+          // const dummyCombination = combination
+          // .filter((v, i, a) => a.findIndex((t) => (t.bitnumber
+          //    === v.bitnumber && t.dbaddress === v.dbaddress
+          //     && t.startaddress === v.startaddress)) !== i);
+          // if (dummyCombination.length > 0) {
+          //   this.validateFlag = false;
+          //   this.savingImport = false;
+          //   // this.setAlert({
+          //   //   show: true,
+          //   //   type: 'error',
+          //   //   message: 'DUPLICATE_COMBINATION',
+          //   // });
+          //   dataList.push(this.emptyDataList);
+          //   document.getElementById('uploadFiles').value = null;
+          // }
+          // if (dummyCombination.length > 0) {
+          //   const combo = [];
+          //   dummyCombination.forEach((p) => {
+          //     combo.push(` (Duplicate combination) row : ${p.index + 2} `);
+          //     this.dummyCombo = combo;
+          //     this.$root.$emit('parameterCreation', true);
+          //   });
+          // }
           if (duplicateNames.length > 0) {
             this.validateFlag = false;
             this.savingImport = false;
@@ -1696,6 +1689,7 @@ export default {
               type: 'error',
               message: 'DUPLICATE_PARAMETER_NAME',
             });
+            dataList.push(this.emptyDataList);
             document.getElementById('uploadFiles').value = null;
             // return;
           }
@@ -1719,6 +1713,7 @@ export default {
                 this.validateFlag = false;
                 this.$root.$emit('parameterCreation', true);
                 document.getElementById('uploadFiles').value = null;
+                dataList.push(this.emptyDataList);
                 // return;
               }
             });
@@ -1731,6 +1726,7 @@ export default {
               type: 'error',
               message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
             });
+            dataList.push(this.emptyDataList);
             // this.paramLength = [];
             // return;
           }
@@ -1742,6 +1738,7 @@ export default {
               type: 'error',
               message: 'ROW_LIMIT',
             });
+            dataList.push(this.emptyDataList);
           }
           if (this.responce.length > 0) {
             this.validateFlag = false;
@@ -1752,6 +1749,7 @@ export default {
             //   message: 'EMPTY_FIELDS',
             // });
             this.$root.$emit('parameterCreation', true);
+            dataList.push(this.emptyDataList);
           }
           if (this.validateFlag === true) {
             if (this.optionalRes.length > 0) {
@@ -1764,6 +1762,7 @@ export default {
               //   type: 'error',
               //   message: 'OPTIONAL_EMPTY_FIELDS',
               // });
+              dataList.push(this.emptyDataList);
             }
           }
         }

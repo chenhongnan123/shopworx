@@ -64,12 +64,12 @@
           <div v-for="(data, n) in dummyCombo" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel v-if="duplicateParam.length > 0">
+      <v-expansion-panel v-if="duplicateCombination.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.DUPLICATE_COMBINATION_FROM_DB', duplicateParam.length) }}
+          {{ $t('error.DUPLICATE_COMBINATION_FROM_DB', duplicateCombination.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div v-for="(data, n) in duplicateParam" :key="n">{{ data }}</div>
+          <div v-for="(data, n) in duplicateCombination" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="paramLength.length > 0">
@@ -159,7 +159,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    duplicateParam: {
+    duplicateCombination: {
       type: Array,
       default: () => [],
     },
@@ -204,7 +204,7 @@ export default {
         }
       },
     },
-    duplicateParam: {
+    duplicateCombination: {
       handler(val) {
         if (val.length > 0) {
           this.yesBtnDisable = true;
@@ -257,7 +257,7 @@ export default {
     this.paramLength = [];
     this.dummyNames = [];
     this.dummyCombo = [];
-    this.duplicateParam = [];
+    this.duplicateCombination = [];
   },
   mounted() {
     this.$root.$on('parameterCreation', (data) => {
@@ -284,7 +284,7 @@ export default {
     this.paramLength = [];
     this.dummyNames = [];
     this.dummyCombo = [];
-    this.duplicateParam = [];
+    this.duplicateCombination = [];
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -325,7 +325,7 @@ export default {
       this.paramLength = [];
       this.dummyNames = [];
       this.dummyCombo = [];
-      this.duplicateParam = [];
+      this.duplicateCombination = [];
       this.$root.$emit('clearResponce', true);
     },
   },
