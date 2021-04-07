@@ -66,7 +66,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="duplicateParam.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.DUPLICATE_PARAM_FOR_SIBLING_SUBSTATION_ERROR', duplicateParam.length) }}
+          {{ $t('error.DUPLICATE_COMBINATION_FROM_DB', duplicateParam.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in duplicateParam" :key="n">{{ data }}</div>

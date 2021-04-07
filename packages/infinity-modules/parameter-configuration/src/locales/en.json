@@ -16,6 +16,7 @@
     "EMPTY_COLUMN_ERROR_REQUIRED_FIELD": "Validation failed for required field",
     "EMPTY_COLUMN_ERROR_OPTIONAL_FIELD": "Validation failed for optional field",
     "DUPLICATE_COMBINATION_ERROR": "Duplicate combination of datatype, DB number, startaddress & bitnumber in substation",
+    "DUPLICATE_COMBINATION_FROM_DB": "Duplicate combination of datatype, DB number, startaddress & bitnumber in database",
     "OPTIONAL_EMPTY_FIELDS": "Found empty optional fields or columns in the file",
     "ROW_LIMIT": "Number of parameters inside the file exceeded limit of 1000"
   }

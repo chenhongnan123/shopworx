@@ -407,9 +407,9 @@ export default {
       dupDbAddress: [],
       dummyCombo: [],
       dummyNames: [],
-      subStaparList: [],
       validateFlag: true,
       duplicateParam: [],
+      importArray: [],
       masterTags: [{
         tagName: 'name',
         tagDescription: 'Parameter Name',
@@ -518,6 +518,7 @@ export default {
         this.dummyNames = [];
         this.dummyCombo = [];
         this.duplicateParam = [];
+        this.importArray = [];
       }
     });
     this.$root.$on('getListofParams', (data) => {
@@ -1049,6 +1050,7 @@ export default {
         });
         this.savingImport = false;
         this.setCreateParam(false);
+        this.importArray = [];
         document.getElementById('uploadFiles').value = null;
       }
     },
@@ -1503,50 +1505,25 @@ export default {
         const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
         const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
         if (isBooleanList.length) {
-          this.currentImport.push(data);
-          // const masterList = await this.getParametersList();
-          // const finalStation = masterList.filter((f) => f.stationid === this.stationValue);
-          // const finalParam = finalStation.filter((f) => f.substationid !== this.substationValue);
-          // if (this.parameterList) {
-          //   const list = [];
-          //   list.push(this.parameterList);
-          //   list[0].forEach((l) => {
-          //     data.forEach((d) => {
-          //       if (l.bitnumber === d.bitnumber && l.dbaddress === d.dbaddress
-          //         && l.datatype === d.datatype
-          //         && l.startaddress === d.startaddress) {
-          //         this.duplicateParam.push(l.name);
-          //         console.log(this.duplicateParam);
-          //       }
-          //     });
-          //   });
-          //   if (this.duplicateParam.length > 0) {
-          //     this.validateFlag = false;
-          //     this.savingImport = false;
-          //     this.setAlert({
-          //       show: true,
-          //       type: 'error',
-          //       message: 'DUPLICATE_PARAMETER_FOR_SUBSTATION',
-          //     });
-          //     this.$root.$emit('parameterCreation', true);
-          //   }
-          // }
-          // const ItemIndex = data
-          //   .filter((v, i, data) => data.findIndex((b) => (b.bitnumber === v.bitnumber
-          //     && b.dbaddress === v.dbaddress && b.startaddress === v.startaddress
-          //     && b.datatype === v.datatype)) !== i);
-          //   // const remove = this.parameterList.splice(ItemIndex, 1);
-          // console.log(ItemIndex);
-          // for (let i = 0, len = this.parameterList.length; i < len; i += 1) {
-          //   debugger;
-          //   const ItemIndex = data
-          // .findIndex((b) => (b.bitnumber === this.parameterList[i].bitnumber
-          //     && b.dbaddress === this.parameterList[i].dbaddress
-          //     && b.startaddress === this.parameterList[i].startaddress
-          //     && b.datatype === this.parameterList[i].datatype));
-          //   const remove = this.parameterList.splice(ItemIndex, 1);
-          //   console.log(remove);
-          // }
+          if (this.parameterList.length > 0) {
+            Object.values(data).forEach((m) => {
+              this.importArray.push(m);
+            });
+            this.parameterList.forEach((l) => {
+              this.importArray.forEach((d) => {
+                if (l.bitnumber === Number(d.bitnumber) && l.dbaddress === Number(d.dbaddress)
+                  && l.datatype === Number(d.datatype)
+                  && l.startaddress === Number(d.startaddress)) {
+                  this.duplicateParam.push(d.name);
+                }
+              });
+            });
+            if (this.duplicateParam.length > 0) {
+              this.validateFlag = false;
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+            }
+          }
           const combination = dataList.map((item, index) => (
             {
               dbaddress: item.dbaddress,
@@ -1663,6 +1640,25 @@ export default {
           }
         }
         if (noBooleanList.length) {
+          if (this.parameterList.length > 0) {
+            Object.values(data).forEach((m) => {
+              this.importArray.push(m);
+            });
+            this.parameterList.forEach((l) => {
+              this.importArray.forEach((d) => {
+                if (l.bitnumber === Number(d.bitnumber) && l.dbaddress === Number(d.dbaddress)
+                  && l.datatype === Number(d.datatype)
+                  && l.startaddress === Number(d.startaddress)) {
+                  this.duplicateParam.push(d.name);
+                }
+              });
+            });
+            if (this.duplicateParam.length > 0) {
+              this.validateFlag = false;
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+            }
+          }
           const combination = dataList.map((item, index) => (
             {
               dbaddress: item.dbaddress,
@@ -1763,11 +1759,11 @@ export default {
               this.$root.$emit('parameterCreation', true);
               this.$root.$emit('payload', data);
               this.dialog = true;
-              this.setAlert({
-                show: true,
-                type: 'error',
-                message: 'OPTIONAL_EMPTY_FIELDS',
-              });
+              // this.setAlert({
+              //   show: true,
+              //   type: 'error',
+              //   message: 'OPTIONAL_EMPTY_FIELDS',
+              // });
             }
           }
         }
