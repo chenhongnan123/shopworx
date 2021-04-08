@@ -25,8 +25,9 @@
     @column-visible="onStateChange"
     @column-resized="onStateChange"
     @column-moved="onStateChange"
-    @column-row-group-changed="onStateChange"
+    @column-pivot-mode-changed="onPivotModeChange"
     @column-pivot-changed="onStateChange"
+    @column-row-group-changed="onStateChange"
     @column-value-changed="onStateChange"
     @first-data-rendered="visualizeData"
   ></ag-grid-vue>
@@ -114,6 +115,14 @@ export default {
       const chartContainer = document.getElementById('chart');
       chartContainer.innerHTML = '';
       chartContainer.style.height = 0;
+      if (this.gridColumnApi.isPivotMode()) {
+        this.createPivotChart(chartContainer);
+      } else {
+        this.createRangeChart(chartContainer);
+      }
+      chartContainer.style.height = '350px';
+    },
+    createRangeChart(chartContainer) {
       const param = {
         chartType: 'column',
         chartThemeName: 'ag-default-dark',
@@ -133,7 +142,23 @@ export default {
         chartContainer,
       };
       this.gridApi.createRangeChart(param);
-      chartContainer.style.height = '350px';
+    },
+    createPivotChart(chartContainer) {
+      const param = {
+        chartType: 'column',
+        chartThemeName: 'ag-default-dark',
+        chartThemeOverrides: {
+          common: {
+            title: {
+              enabled: false,
+            },
+            legend: { enabled: true },
+            navigator: { enabled: true },
+          },
+        },
+        chartContainer,
+      };
+      this.gridApi.createPivotChart(param);
     },
     getColumnFilter(col) {
       const type = col && col.type.toLowerCase();
@@ -153,15 +178,18 @@ export default {
     onStateChange() {
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
-      const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
+      const isPivotMode = this.gridColumnApi.isPivotMode();
       const state = {
         colState,
         groupState,
-        sortState,
         filterState,
+        isPivotMode,
       };
       this.setGridState(JSON.stringify(state));
+    },
+    onPivotModeChange() {
+      this.visualizeData();
     },
     restoreState() {
       if (!this.isBaseReport) {
@@ -174,14 +202,14 @@ export default {
     setState(state) {
       this.gridColumnApi.setColumnState(state.colState);
       this.gridColumnApi.setColumnGroupState(state.groupState);
-      this.gridApi.setSortModel(state.sortState);
       this.gridApi.setFilterModel(state.filterState);
+      this.gridColumnApi.setPivotMode(state.isPivotMode);
     },
     resetState() {
       this.gridColumnApi.resetColumnState();
       this.gridColumnApi.resetColumnGroupState();
-      this.gridApi.setSortModel(null);
       this.gridApi.setFilterModel(null);
+      this.gridColumnApi.setPivotMode(false);
     },
     exportGridCSV() {
       const params = {

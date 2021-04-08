@@ -33,7 +33,7 @@ export default {
       }
     },
     dateRange() {
-      this.runReport();
+      this.executeReport();
     },
   },
   methods: {
