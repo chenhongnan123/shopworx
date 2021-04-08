@@ -15,7 +15,7 @@
           @on-export="exportRecords"
         />
       </v-col>
-      <v-col>
+      <v-col cols="12" sm="8" lg="9" xl="10">
         <v-tabs v-model="tab">
           <v-tab
             v-for="item in items"

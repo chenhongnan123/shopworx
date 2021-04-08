@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%">
+  <div v-resize="setHeight">
     <v-btn
       small
       color="primary"
@@ -13,6 +13,8 @@
       :headers="headers"
       :items="downloadLogs"
       item-key="_id"
+      fixed-header
+      :height="height"
       :loading="fetchingLogs"
     >
       <!-- eslint-disable-next-line -->
@@ -25,7 +27,7 @@
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.isEmailSent="{ item }">
-        <div>{{ item.status === false ? 'NO' : 'YES' }}</div>
+        <div>{{ item.isEmailSent === false ? 'NO' : 'YES' }}</div>
       </template>
       <!-- eslint-disable-next-line -->
       <template #item.link="{ item }">
@@ -61,11 +63,15 @@ export default {
         { text: 'Email sent?', value: 'isEmailSent' },
         { text: 'Download link', value: 'link' },
       ],
+      height: window.innerHeight,
     };
   },
   created() {
     this.getLog();
     this.getDownloadLog();
+  },
+  mounted() {
+    this.setHeight();
   },
   beforeDestroy() {
     clearTimeout(this.timeout);
@@ -75,6 +81,9 @@ export default {
   },
   methods: {
     ...mapActions('dataVisualizer', ['getDownloadLog']),
+    setHeight() {
+      this.height = window.innerHeight - 248;
+    },
     async getLog() {
       await this.getDownloadLog();
       this.timeout = setTimeout(() => {
