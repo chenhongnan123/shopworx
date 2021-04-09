@@ -12,10 +12,8 @@
           color="primary"
           label="Select element"
           item-text="elementName"
-          return-object
+          item-value="elemenName"
           hide-details
-          @input="searchInput=null"
-          :search-input.sync="searchInput"
         >
         <template v-slot:selection="data">
           <v-chip
@@ -166,9 +164,40 @@ export default {
       type: Object,
       required: true,
     },
+    dialog: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  watch: {
+    dialog(val) {
+      console.log(val);
+      if (val) {
+        // set real Element
+        this.elementList.push({
+          header: 'Real ELement',
+        });
+        const object = {
+          elementName: `process_${this.selectedSubstation}`,
+        };
+        this.elementList.push(object);
+        const firstVal = object.elementName;
+        console.log(firstVal);
+        this.realElement = firstVal;
+        this.realElementField = [];
+        this.selectedElementName = '';
+        this.elementTags = [];
+        this.oldStartTime = '';
+        this.oldEndTime = '';
+        this.newStartTime = '';
+        this.newEndTime = '';
+        this.configJson = '';
+      }
+    },
   },
   data() {
     return {
+      realElement: null,
       elementTags: null,
       configJson: '',
       oldStartTime: '',
@@ -192,33 +221,17 @@ export default {
     modelTriggers() {
       return this.modelDetails && this.modelDetails.modelTriggers;
     },
-    realElement: {
-      get() {
-        return this.modelTriggers;
-      },
-      set(val) {
-        this.onElementSelect(val);
-      },
-    },
+    // realElement: {
+    //   get() {
+    //     console.log(this.modelTriggers);
+    //     return this.modelTriggers;
+    //   },
+    //   set(val) {
+    //     console.log(val);
+    //     this.onElementSelect(val);
+    //   },
+    // },
   },
-  created() {
-    this.elementList.push({
-      header: 'Real ELement',
-    });
-    const object = {
-      elementName: `process_${this.selectedSubstation}`,
-    };
-    this.elementList.push(object);
-    this.realElementField = [];
-    this.selectedElementName = '';
-    this.elementTags = [];
-    this.oldStartTime = '';
-    this.oldEndTime = '';
-    this.newStartTime = '';
-    this.newEndTime = '';
-    this.configJson = '';
-  },
-  // 5,
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
@@ -341,7 +354,7 @@ export default {
     },
     async onElementSelect(val) {
       // get tags for selected element
-      this.selectedElementName = val.elementName;
+      this.selectedElementName = val;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
       console.log(this.tagsList);
