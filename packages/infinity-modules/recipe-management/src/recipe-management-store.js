@@ -146,11 +146,19 @@ export default ({
       return parameters;
     },
     createRecipeDetails: async ({ dispatch }, payload) => {
+      await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'recipedetails',
+          queryParam: `?query=recipeid=="${payload.recipeid}"%26%26versionnumber==${payload.versionnumber}`,
+        },
+        { root: true },
+      );
       const created = await dispatch(
         'element/postBulkRecords',
         {
           elementName: 'recipedetails',
-          payload,
+          payload: payload.list,
         },
         { root: true },
       );
