@@ -27,7 +27,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -209,7 +209,7 @@ export default {
       elementName: `process_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
-    this.realElement = [];
+    this.realElementField = [];
     this.selectedElementName = '';
     this.elementTags = [];
     this.oldStartTime = '';
@@ -233,6 +233,9 @@ export default {
       'getTagsForSelectedElement',
       'getRecordsByTagData',
     ]),
+    isObjectType(item) {
+      return typeof item !== 'object';
+    },
     cancel() {
       this.$emit('on-cancel');
     },

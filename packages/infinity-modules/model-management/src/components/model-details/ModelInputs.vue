@@ -26,7 +26,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -37,6 +37,7 @@
           </template>
         </template>
       </v-autocomplete>
+      <div class="caption">*Required field</div>
       <v-autocomplete
           v-model="parameterList"
           :items="inputParametersList"
@@ -66,7 +67,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -77,6 +78,7 @@
           </template>
         </template>
       </v-autocomplete>
+      <div class="caption">*Required field</div>
       <span>Please add timestamp and mainid as default parameters</span>
     </v-card-text>
   </v-card>
@@ -136,6 +138,9 @@ export default {
       'deleteInputParameter',
       'fetchModelDetails',
     ]),
+    isObjectType(item) {
+      return typeof item !== 'object';
+    },
     onElementSelect() {
       this.inputParametersList = this.inputParameters;
     },
