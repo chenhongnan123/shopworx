@@ -168,6 +168,7 @@ export default {
       }
     },
     async saveInputParam(param) {
+      console.log(this.inputParametersList);
       await Promise.all(this.modelInputs.map(async (element) => {
         const checkData = param.filter((f) => f === element.parameterId);
         if (checkData.length === 0) {
@@ -178,11 +179,13 @@ export default {
         // duplicate entry
       } else {
         const object = param[param.length - 1];
+        console.log(this.inputParametersList.find((f) => f.parameterId === object));
         if (object) {
           await this.createInputParameter({
             modelId: this.model.modelid,
             parameterId: object,
             selectedElement: this.realElement.elementName,
+            parameterName: this.inputParametersList.find((f) => f.parameterId === object).name,
           });
         }
       }
