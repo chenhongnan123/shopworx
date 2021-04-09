@@ -283,18 +283,19 @@ export default {
     this.substationid = this.recipeList[0].substationid;
     this.recipename = this.recipeList[0].recipename;
   },
-  watch: {
-    recipeListDetails: {
-      handler(val) {
-        if (val.length > 0) {
-          this.saveBtnEnable = true;
-        } else {
-          this.saveBtnEnable = false;
-        }
-      },
-    },
-  },
+  // watch: {
+  //   recipeListDetails: {
+  //     handler(val) {
+  //       if (val.length > 0) {
+  //         this.saveBtnEnable = true;
+  //       } else {
+  //         this.saveBtnEnable = false;
+  //       }
+  //     },
+  //   },
+  // },
   async created() {
+    this.saveBtnEnable = false;
     this.language = this.currentLocale;
     if (this.language === 'zhHans') {
       this.selectedHeader = this.headersCn;
@@ -359,7 +360,12 @@ export default {
           });
         }
       });
-      await this.createRecipeDetails(payload);
+      const object = {
+        list: payload,
+        recipeid: this.$route.params.id,
+        versionnumber: 1,
+      };
+      await this.createRecipeDetails(object);
       await this.getRecipeDetailListRecords(
         `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
       );
@@ -678,7 +684,12 @@ export default {
         };
         payload.push(updatedlist);
       });
-      await this.createRecipeDetails(payload);
+      const request = {
+        list: payload,
+        recipeid: this.$route.params.id,
+        versionnumber: currentVersion + 1,
+      };
+      await this.createRecipeDetails(request);
       const recipe = {
         versionnumber: currentVersion + 1,
         recipeversion: currentVersion + 1,

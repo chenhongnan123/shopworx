@@ -119,23 +119,23 @@ export default {
   },
   async created() {
     await this.getSubStations();
-    const {
-      substationid,
-      mainid,
-      fromdate,
-      todate,
-    } = this.subStationInfo;
-    const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
-    this.selectedSubStation = subStation;
-    this.searchMainID = mainid;
-    this.fromdate = fromdate;
-    this.todate = todate;
-    if (substationid || mainid || fromdate || todate) {
-      this.btnSearchProcessParameters();
-    } else {
-      await this.btnSearchProcessParameters();
-      // await this.fetchRecords();
-    }
+    // const {
+    //   substationid,
+    //   mainid,
+    //   fromdate,
+    //   todate,
+    // } = this.subStationInfo;
+    // const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
+    // this.selectedSubStation = subStation;
+    // this.searchMainID = mainid;
+    // this.fromdate = fromdate;
+    // this.todate = todate;
+    // if (substationid || mainid || fromdate || todate) {
+    //   this.btnSearchProcessParameters();
+    // } else {
+    //   await this.btnSearchProcessParameters();
+    //   // await this.fetchRecords();
+    // }
   },
   beforeMount() {
     this.gridOptionsCheckOut = {};

@@ -300,7 +300,7 @@ export default {
               item.stationcolor = 1;
             }
           });
-        await this.downloadToPLC(ObJ);
+        // await this.downloadToPLC(ObJ);
       });
     },
     setStation(station) {

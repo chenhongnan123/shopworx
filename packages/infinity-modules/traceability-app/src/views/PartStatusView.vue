@@ -142,7 +142,7 @@ export default {
       'trecibilityState']),
   },
   async created() {
-    await this.fetchRecords();
+    // await this.fetchRecords();
   },
   beforeMount() {
     this.componentList = null;
