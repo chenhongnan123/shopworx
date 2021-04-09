@@ -153,7 +153,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
-import CSVParser from '@shopworx/services/util/csv.service';
+// import CSVParser from '@shopworx/services/util/csv.service';
 
 export default {
   name: 'modelTrigger',
@@ -232,6 +232,8 @@ export default {
       'fetchTrainingData',
       'getTagsForSelectedElement',
       'getRecordsByTagData',
+      'postStreamRecords',
+      'getModelInputs',
     ]),
     cancel() {
       this.$emit('on-cancel');
@@ -257,20 +259,15 @@ export default {
         this.loading = true;
         const oldDataStartTime = new Date(this.oldStartTime).getTime();
         const oldDataEndTime = new Date(this.oldEndTime).getTime();
-        await this.getRecordsByTagData({
+        let downloadData = await this.postStreamRecords({
           elementName: this.selectedElementName,
-          queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}&pagenumber=1&pagesize=100`,
+          queryParam: `?assetId=4&datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}`,
           request: {
             tags: tagsList,
           },
         });
         // download file for old data
-        let csvParser = new CSVParser();
-        let content = csvParser.unparse({
-          fields: tagsList,
-          data: this.fileRecords,
-        });
-        let csvData = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        let csvData = new Blob([downloadData], { type: 'text/csv;charset=utf-8;' });
         let csvURL = window.URL.createObjectURL(csvData);
         let testLink = document.createElement('a');
         testLink.href = csvURL;
@@ -279,20 +276,15 @@ export default {
         // new data
         const newDataStartTime = new Date(this.newStartTime).getTime();
         const newDataEndTime = new Date(this.newEndTime).getTime();
-        await this.getRecordsByTagData({
+        downloadData = await this.postStreamRecords({
           elementName: this.selectedElementName,
-          queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}&pagenumber=1&pagesize=100`,
+          queryParam: `?assetId=4&datefrom=${newDataStartTime}&dateto=${newDataEndTime}`,
           request: {
             tags: tagsList,
           },
         });
         // download file for new data
-        csvParser = new CSVParser();
-        content = csvParser.unparse({
-          fields: tagsList,
-          data: this.fileRecords,
-        });
-        csvData = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        csvData = new Blob([downloadData], { type: 'text/csv;charset=utf-8;' });
         csvURL = window.URL.createObjectURL(csvData);
         testLink = document.createElement('a');
         testLink.href = csvURL;
@@ -349,6 +341,14 @@ export default {
       this.selectedElementName = val.elementName;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
+      console.log(this.tagsList);
+      const list = await this.getModelInputs(`?query=modelid=="${this.selectedModelObject.modelid}"`);
+      console.log(list.modelInputs);
+      list.modelInputs.forEach((f) => {
+        const tagData = this.tagsList.find((tag) => tag.tagName === f.tagName);
+        this.elementTags.push(tagData);
+      });
+      // this.elementTags = modelInputs;
     },
     async remove(param) {
       console.log(param);

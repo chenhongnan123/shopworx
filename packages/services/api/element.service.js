@@ -17,6 +17,10 @@ class ElementService {
     return this.request.post(`/server/elements/${payload.elementName}/getrecords${payload.queryParam}`, payload.request);
   }
 
+  postStreamRecords(payload) {
+    return this.request.post(`/server/streamrecords/${payload.elementName}${payload.queryParam}`, payload.request);
+  }
+
   createElement(payload) {
     return this.request.post('/server/elements', payload);
   }

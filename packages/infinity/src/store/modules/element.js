@@ -38,6 +38,18 @@ export default ({
       return false;
     },
 
+    postStreamRecords: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postStreamRecords(payload);
+        if (data) {
+          return data;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, element) => {
       try {
         const { data } = await ElementService.createElement(element);

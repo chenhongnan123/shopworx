@@ -67,6 +67,7 @@ export default ({
     trainingLogs: [],
     elementInformation: null,
     fileRecords: [],
+    csvRecords: '',
     allWidgets: [
       {
         component: 'model-info',
@@ -201,8 +202,20 @@ export default ({
     setElementInformation: set('elementInformation'),
     setRecords: set('fileRecords'),
     setTrainingLogs: set('trainingLogs'),
+    setCsvRecords: set('csvRecords'),
   },
   actions: {
+    postStreamRecords: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/postStreamRecords',
+        { payload },
+        { root: true },
+      );
+      if (data) {
+        commit('setCsvRecords', data);
+      }
+      return data;
+    },
     getTriggerForModelId: async ({ dispatch }, modelid) => {
       const modelTriggers = await dispatch(
         'element/getRecords',
@@ -661,9 +674,10 @@ export default ({
         },
         { root: true },
       );
-      const inputs = modelInputs.map(({ parameterid, _id }) => ({
+      const inputs = modelInputs.map(({ parameterid, _id, parametername }) => ({
         parameterId: parameterid,
         id: _id,
+        tagName: parametername,
       }));
       return { modelInputs: inputs };
     },
@@ -755,7 +769,12 @@ export default ({
 
     createInputParameter: async (
       { state, commit, dispatch },
-      { modelId, parameterId, selectedElement },
+      {
+        modelId,
+        parameterId,
+        selectedElement,
+        parameterName,
+      },
     ) => {
       const {
         selectedLine,
@@ -772,6 +791,7 @@ export default ({
         modelid: modelId,
         parameterid: parameterId,
         selectedelementname: selectedElement,
+        parametername: parameterName,
       };
       const created = await dispatch(
         'element/postRecord',
