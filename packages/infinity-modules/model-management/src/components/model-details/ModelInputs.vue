@@ -50,6 +50,7 @@
           item-value="parameterId"
           hide-details
           multiple
+          menu-props="closeOnContentClick"
           @change="onChange()"
           @input="searchInput=null"
           :search-input.sync="searchInput"
@@ -116,6 +117,11 @@ export default {
       elementName: `process_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
+    const firstVal = object.elementName;
+    if (firstVal.length > 0) {
+      this.realElement = firstVal;
+      this.onElementSelect();
+    }
   },
   computed: {
     ...mapState('modelManagement', ['inputParameters', 'selectedSubstation']),
@@ -149,7 +155,9 @@ export default {
     },
     async remove(param) {
       const dataMainid = this.parameterList.find((f) => f.parameterId === param.parameterId);
-      if (dataMainid.name === 'mainid' || dataMainid.name === 'timestamp') {
+      if (dataMainid.tagName === 'mainid'
+         || dataMainid.tagName === 'timestamp'
+         || dataMainid.tagName === 'productionstatus') {
         this.setAlert({
           show: true,
           type: 'error',

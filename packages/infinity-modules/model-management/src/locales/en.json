@@ -17,7 +17,7 @@
   },
   "error": {
     "TRAINING_TAGS_REQUIRED": "mainid, timestamp and productionstatus are required tags, please add.",
-    "NOT_DELETE_MAINID": "Cannot delete mainid or timestamp, as both are required parameters.",
+    "NOT_DELETE_MAINID": "Cannot delete mainid, timestamp & productionstatus, as those are required parameters.",
     "INPUT_PARAM_REQUIRED": "Input parameters are required, Please add mainid and timestamp if not added!",
     "TRIGGER_REQUIRED": "Trigger is required, Please add.",
     "MODEL_TYPE_REQUIRED": "Model type is required!",

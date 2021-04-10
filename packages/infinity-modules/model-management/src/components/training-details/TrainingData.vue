@@ -14,6 +14,7 @@
           item-text="elementName"
           item-value="elemenName"
           hide-details
+          @change="onElementSelect"
         >
         <template v-slot:selection="data">
           <v-chip
@@ -48,6 +49,7 @@
           return-object
           hide-details
           multiple
+          menu-props="closeOnContentClick"
           @change="onChange()"
           @input="searchInput=null"
           :search-input.sync="searchInput"
@@ -156,14 +158,14 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 export default {
   name: 'modelTrigger',
   props: {
-    modelDetails: {
-      type: Object,
-      required: true,
-    },
-    model: {
-      type: Object,
-      required: true,
-    },
+    // modelDetails: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // model: {
+    //   type: Object,
+    //   required: true,
+    // },
     dialog: {
       type: Boolean,
       default: false,
@@ -171,9 +173,9 @@ export default {
   },
   watch: {
     dialog(val) {
-      console.log(val);
       if (val) {
         // set real Element
+        this.elementList = [];
         this.elementList.push({
           header: 'Real ELement',
         });
@@ -182,7 +184,7 @@ export default {
         };
         this.elementList.push(object);
         const firstVal = object.elementName;
-        console.log(firstVal);
+        this.onElementSelect(object.elementName);
         this.realElement = firstVal;
         this.realElementField = [];
         this.selectedElementName = '';
@@ -194,6 +196,30 @@ export default {
         this.configJson = '';
       }
     },
+  },
+  created() {
+    if (this.dialog) {
+      // set real Element
+      this.elementList = [];
+      this.elementList.push({
+        header: 'Real ELement',
+      });
+      const object = {
+        elementName: `process_${this.selectedSubstation}`,
+      };
+      this.elementList.push(object);
+      const firstVal = object.elementName;
+      this.onElementSelect(object.elementName);
+      this.realElement = firstVal;
+      this.realElementField = [];
+      this.selectedElementName = '';
+      this.elementTags = [];
+      this.oldStartTime = '';
+      this.oldEndTime = '';
+      this.newStartTime = '';
+      this.newEndTime = '';
+      this.configJson = '';
+    }
   },
   data() {
     return {
@@ -353,6 +379,7 @@ export default {
       }
     },
     async onElementSelect(val) {
+      this.elementTags = [];
       // get tags for selected element
       this.selectedElementName = val;
       await this.getTagsForSelectedElement(this.selectedElementName);
@@ -367,9 +394,19 @@ export default {
       // this.elementTags = modelInputs;
     },
     async remove(param) {
-      console.log(param);
-      const index = this.elementTags.findIndex((f) => f.tagName === param.tagName);
-      if (index >= 0) this.elementTags.splice(index, 1);
+      const dataMainid = this.elementTags.find((f) => f.id === param.id);
+      if (dataMainid.tagName === 'mainid'
+         || dataMainid.tagName === 'timestamp'
+         || dataMainid.tagName === 'productionstatus') {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NOT_DELETE_MAINID',
+        });
+      } else {
+        const index = this.elementTags.findIndex((f) => f.tagName === param.tagName);
+        if (index >= 0) this.elementTags.splice(index, 1);
+      }
     },
     async saveInputParam(param) {
       await Promise.all(this.modelTriggers.map(async (element) => {
