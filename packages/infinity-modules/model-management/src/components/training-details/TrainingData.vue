@@ -370,6 +370,13 @@ export default {
         this.configJson = '';
         this.loading = false;
         this.cancel();
+      } else if (!this.oldStartTime || !this.oldEndTime
+        || !this.newStartTime || !this.newEndTime) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MANDATORY_DATE&TIME_FIELDS',
+        });
       } else {
         this.setAlert({
           show: true,
