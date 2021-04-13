@@ -139,9 +139,9 @@ export default {
     },
   },
   async created() {
-    if (this.trecibilityState.selectedSubLine) {
-      await this.btnSearchCheckOut();
-    }
+    // if (this.trecibilityState.selectedSubLine) {
+    //   await this.btnSearchCheckOut();
+    // }
     // await this.fetchRecords();
   },
   beforeMount() {
@@ -287,7 +287,6 @@ export default {
       await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
       await Promise.all(this.componentList.map((com) => {
         const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
-        console.log(data);
         if (data.length > 0 && this.currentLocale === 'zhHans') {
           com.componentname = data[0].chinesedescription;
         }
