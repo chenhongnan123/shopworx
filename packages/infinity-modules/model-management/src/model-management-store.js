@@ -852,10 +852,10 @@ export default ({
         subprocessid: selectedProcess,
         assetid: ASSETID,
       };
+      console.log(payload);
       const created = await dispatch(
-        'element/postRecord',
+        'element/postMmsStartModelTraining',
         {
-          elementName: ELEMENTS.MODEL_TRAINING,
           payload,
         },
         { root: true },
@@ -961,11 +961,24 @@ export default ({
       }
     },
 
-    sendTestModel: async ({ dispatch }, payload) => {
+    sendTestModel: async ({ dispatch, state }, payload) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const request = {
+        ...payload,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+      };
       const created = await dispatch(
-        'element/sendTestModel',
+        'element/postMmsTestModel',
         {
-          payload,
+          request,
         },
         { root: true },
       );

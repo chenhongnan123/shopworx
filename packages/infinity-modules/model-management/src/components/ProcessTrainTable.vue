@@ -143,6 +143,7 @@ export default {
       allowedCheckBox: false,
       testMainId: '',
       dialogLogs: false,
+      interval: null,
       options: {
         descending: true,
         page: 1,
@@ -189,6 +190,12 @@ export default {
     };
   },
   created() {
+    this.interval = setInterval(() => {
+      this.fetchTrainingData(this.selectedModelObject.modelid);
+    }, 10000);
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
   watch: {
     models: {

@@ -54,7 +54,15 @@ class ElementService {
   }
 
   getTrainingLogsRecords(jobId) {
-    return this.request.get(`/logs/${jobId}`);
+    return this.request.get(`/swx/mms/getmodeltraininglogs/${jobId}`);
+  }
+
+  postMmsStartModelTraining(payload) {
+    return this.request.post('/swx/mms/startmodeltraining', payload);
+  }
+
+  postMmsTestModel(payload) {
+    return this.request.post('/swx/mms/testmodel', payload);
   }
   
   getRecordById(elementName, id) {

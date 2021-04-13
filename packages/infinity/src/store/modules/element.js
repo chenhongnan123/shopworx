@@ -362,6 +362,30 @@ export default ({
       }
     },
 
+    postMmsStartModelTraining: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postMmsStartModelTraining(payload);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    postMmsTestModel: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postMmsTestModel(payload);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecordById: async (_, { elementName, id }) => {
       try {
         const { data } = await ElementService.getRecordById(elementName, id);
