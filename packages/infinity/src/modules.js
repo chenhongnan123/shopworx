@@ -11,6 +11,7 @@ import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import PackagingManagement from '@shopworx/packaging-management';
+import ProductionProcess from '@shopworx/production-process';
 import ProductionLayout from '@shopworx/production-layout';
 import ProductionLayoutMes from '@shopworx/production-layout-mes';
 import ProductManagement from '@shopworx/product-management';
@@ -66,6 +67,12 @@ Vue.use(RoadmapManagement, {
 });
 
 Vue.use(PackagingManagement, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ProductionProcess, {
   router,
   store,
   i18n,
