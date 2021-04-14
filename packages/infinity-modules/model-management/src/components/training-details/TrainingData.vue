@@ -278,7 +278,6 @@ export default {
     async addData() {
       const timestamp = new Date().getTime();
       const tagsList = [];
-      console.log(this.elementTags);
       this.elementTags.forEach((t) => {
         tagsList.push(t.tagName);
       });
@@ -287,7 +286,6 @@ export default {
         const oldEndTime = new Date(this.oldEndTime);
         const newStartTime = new Date(this.newStartTime);
         const newEndTime = new Date(this.newEndTime);
-        console.log(oldStartTime);
         const payload = {
           realelement: this.selectedElementName,
           tagslist: tagsList,
@@ -346,14 +344,10 @@ export default {
     async onElementSelect(val) {
       this.elementTags = [];
       // get tags for selected element
-      console.log(val);
       this.selectedElementName = val;
-      console.log(this.selectedElementName);
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
-      console.log(this.tagsList);
       const list = await this.getModelInputs(`?query=modelid=="${this.selectedModelObject.modelid}"`);
-      console.log(list.modelInputs);
       list.modelInputs.forEach((f) => {
         const tagData = this.tagsList.find((tag) => tag.tagName === f.tagName);
         if (tagData) {

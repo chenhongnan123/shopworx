@@ -522,7 +522,6 @@ export default ({
         description: 'productionstatus',
         parametercategory: '45',
       });
-      console.log(parameters);
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'
@@ -852,7 +851,6 @@ export default ({
         subprocessid: selectedProcess,
         assetid: ASSETID,
       };
-      console.log(payload);
       const created = await dispatch(
         'element/postMmsStartModelTraining',
         {
