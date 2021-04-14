@@ -26,7 +26,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -37,6 +37,7 @@
           </template>
         </template>
       </v-autocomplete>
+      <div class="caption">*Required field</div>
       <v-autocomplete
           v-model="parameterList"
           :items="inputParametersList"
@@ -49,6 +50,7 @@
           item-value="parameterId"
           hide-details
           multiple
+          menu-props="closeOnContentClick"
           @change="onChange()"
           @input="searchInput=null"
           :search-input.sync="searchInput"
@@ -66,7 +68,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -77,13 +79,14 @@
           </template>
         </template>
       </v-autocomplete>
+      <div class="caption">*Required field</div>
       <span>Please add timestamp and mainid as default parameters</span>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'ModelInputs',
@@ -114,6 +117,11 @@ export default {
       elementName: `process_${this.selectedSubstation}`,
     };
     this.elementList.push(object);
+    const firstVal = object.elementName;
+    if (firstVal.length > 0) {
+      this.realElement = firstVal;
+      this.onElementSelect();
+    }
   },
   computed: {
     ...mapState('modelManagement', ['inputParameters', 'selectedSubstation']),
@@ -130,11 +138,15 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'createInputParameter',
       'deleteInputParameter',
       'fetchModelDetails',
     ]),
+    isObjectType(item) {
+      return typeof item !== 'object';
+    },
     onElementSelect() {
       this.inputParametersList = this.inputParameters;
     },
@@ -142,14 +154,25 @@ export default {
       // this.parameterList = this.modelInputs;
     },
     async remove(param) {
-      const modelInputId = this.modelInputs
-        .find((input) => input.parameterId === param.parameterId)
-        .id;
-      const deleted = await this.deleteInputParameter(modelInputId);
-      if (deleted) {
-        await this.fetchModelDetails(this.model.modelid);
-        const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
-        if (index >= 0) this.parameterList.splice(index, 1);
+      const dataMainid = this.parameterList.find((f) => f.parameterId === param.parameterId);
+      if (dataMainid.tagName === 'mainid'
+         || dataMainid.tagName === 'timestamp'
+         || dataMainid.tagName === 'productionstatus') {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NOT_DELETE_MAINID',
+        });
+      } else {
+        const modelInputId = this.modelInputs
+          .find((input) => input.parameterId === param.parameterId)
+          .id;
+        const deleted = await this.deleteInputParameter(modelInputId);
+        if (deleted) {
+          await this.fetchModelDetails(this.model.modelid);
+          const index = this.parameterList.findIndex((f) => f.parameterId === param.parameterId);
+          if (index >= 0) this.parameterList.splice(index, 1);
+        }
       }
     },
     async saveInputParam(param) {
@@ -168,6 +191,7 @@ export default {
             modelId: this.model.modelid,
             parameterId: object,
             selectedElement: this.realElement.elementName,
+            parameterName: this.inputParametersList.find((f) => f.parameterId === object).name,
           });
         }
       }

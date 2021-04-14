@@ -114,8 +114,8 @@ export default {
     return {
       search: '',
       searchInput: null,
-      maxlimit: 0,
-      minlimit: 0,
+      maxlimit: '',
+      minlimit: '',
       headers: [
         {
           text: 'Parameter name',
@@ -177,11 +177,17 @@ export default {
           await this.deleteCriticalParameter(element.id);
         }
       }));
-      if (this.maxlimit === 0 || this.minlimit === 0) {
+      if (this.maxlimit === '' || this.minlimit === '') {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'FIELDS_EMPTY',
+        });
+      } else if (Number(this.minlimit) > Number(this.maxlimit)) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MAX_VALIDATION',
         });
       } else {
         const object = param;

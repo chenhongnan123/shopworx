@@ -17,6 +17,10 @@ class ElementService {
     return this.request.post(`/server/elements/${elementName}/getrecords${queryParam}`, request);
   }
 
+  postStreamRecords(payload) {
+    return this.request.post(`/server/streamrecords/${payload.elementName}${payload.queryParam}`, payload.request);
+  }
+
   createElement(payload) {
     return this.request.post('/server/elements', payload);
   }
@@ -58,7 +62,15 @@ class ElementService {
   }
 
   getTrainingLogsRecords(jobId) {
-    return this.request.get(`/logs/${jobId}`);
+    return this.request.get(`/swx/mms/getmodeltraininglogs/${jobId}`);
+  }
+
+  postMmsStartModelTraining(payload) {
+    return this.request.post('/swx/mms/startmodeltraining', payload);
+  }
+
+  postMmsTestModel(payload) {
+    return this.request.post('/swx/mms/testmodel', payload);
   }
   
   getRecordById(elementName, id) {

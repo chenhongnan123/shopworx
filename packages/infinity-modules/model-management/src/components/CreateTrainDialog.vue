@@ -30,6 +30,7 @@
         >
           <training-data
             @on-cancel="onCancel"
+            :dialog="dialog"
           />
         </v-window-item>
       </v-window>

@@ -1,3 +1,10 @@
 {
-  "masters": "主数据（仅查看）"
+  "masters": "主数据",
+  "success": {
+    "DOWNLOADED": "数据已经保存为CSV格式文件",
+    "DATA_SAVED": "数据保存成功！"
+  },
+  "error": {
+    "ERROR_CREATING_RECORD": "出现了一些问题(保存按钮只用于创建新记录!)"
+  }
 }

@@ -67,6 +67,7 @@ export default ({
     trainingLogs: [],
     elementInformation: null,
     fileRecords: [],
+    csvRecords: '',
     allWidgets: [
       {
         component: 'model-info',
@@ -201,8 +202,66 @@ export default ({
     setElementInformation: set('elementInformation'),
     setRecords: set('fileRecords'),
     setTrainingLogs: set('trainingLogs'),
+    setCsvRecords: set('csvRecords'),
   },
   actions: {
+    postStreamRecords: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/postStreamRecords',
+        { payload },
+        { root: true },
+      );
+      if (data) {
+        commit('setCsvRecords', data);
+      }
+      return data;
+    },
+    getTriggerForModelId: async ({ dispatch }, modelid) => {
+      const modelTriggers = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      if (modelTriggers.length === 0) {
+        return false;
+      }
+      return true;
+    },
+
+    getInputParametersForModelId: async ({ state, dispatch }, modelid) => {
+      const { inputParameters } = state;
+      const modelInputs = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      const mainid = inputParameters.find((f) => f.name === 'mainid');
+      if (mainid) {
+        const checkMainid = modelInputs.filter((f) => f.parameterid === mainid.parameterId);
+        if (checkMainid.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      const timestamp = inputParameters.find((f) => f.name === 'timestamp');
+      if (timestamp) {
+        const checkTimestamp = modelInputs.filter((f) => f.parameterid === timestamp.parameterId);
+        if (checkTimestamp.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      return true;
+    },
+
     updateModelDates: async ({ dispatch }, request) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
@@ -451,6 +510,18 @@ export default ({
         { root: true },
       );
       commit('setFullParameterList', parameters);
+      parameters.push({
+        id: '0',
+        name: 'timestamp',
+        description: 'TimeStamp',
+        parametercategory: '45',
+      });
+      parameters.push({
+        id: '1',
+        name: 'productionstatus',
+        description: 'productionstatus',
+        parametercategory: '45',
+      });
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'
@@ -602,9 +673,10 @@ export default ({
         },
         { root: true },
       );
-      const inputs = modelInputs.map(({ parameterid, _id }) => ({
+      const inputs = modelInputs.map(({ parameterid, _id, parametername }) => ({
         parameterId: parameterid,
         id: _id,
+        tagName: parametername,
       }));
       return { modelInputs: inputs };
     },
@@ -696,7 +768,12 @@ export default ({
 
     createInputParameter: async (
       { state, commit, dispatch },
-      { modelId, parameterId, selectedElement },
+      {
+        modelId,
+        parameterId,
+        selectedElement,
+        parameterName,
+      },
     ) => {
       const {
         selectedLine,
@@ -713,6 +790,7 @@ export default ({
         modelid: modelId,
         parameterid: parameterId,
         selectedelementname: selectedElement,
+        parametername: parameterName,
       };
       const created = await dispatch(
         'element/postRecord',
@@ -774,9 +852,8 @@ export default ({
         assetid: ASSETID,
       };
       const created = await dispatch(
-        'element/postRecord',
+        'element/postMmsStartModelTraining',
         {
-          elementName: ELEMENTS.MODEL_TRAINING,
           payload,
         },
         { root: true },
@@ -882,11 +959,24 @@ export default ({
       }
     },
 
-    sendTestModel: async ({ dispatch }, payload) => {
+    sendTestModel: async ({ dispatch, state }, payload) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const request = {
+        ...payload,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+      };
       const created = await dispatch(
-        'element/sendTestModel',
+        'element/postMmsTestModel',
         {
-          payload,
+          request,
         },
         { root: true },
       );

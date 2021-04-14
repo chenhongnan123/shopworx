@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **ml-management:** RA-I549 cant delete mandetory tags whle creating new dialog as well as in input parameter from configuration dialog of model ([caa58c9](https://bitbucket.org/entrib/shopworx/commits/caa58c9fba044cb2c05f4cca09af45d602e8c1f9))
+* **ml-management:** RA-I554 | alert for mandatory date & time fields while creating new Training ([849af26](https://bitbucket.org/entrib/shopworx/commits/849af26168971b42f8f1879c9082fdacfa5352fb))
+
+
+### Features
+
+* **ml-management:** RA-I549 show the element selected on create training dialog open ([46ceb6d](https://bitbucket.org/entrib/shopworx/commits/46ceb6d241dd322654192003e7d14a64528fcd3e))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 **Note:** Version bump only for package @shopworx/model-management

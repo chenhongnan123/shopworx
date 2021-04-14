@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **report-viewer:** fixed pivot mode state on report run ([c057fe0](https://bitbucket.org/entrib/shopworx/commits/c057fe0781c0c7ef1418c378e58eb0d32ef35c9b))
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+* **report-viewer:** added aggregation support to charts ([cc2a83b](https://bitbucket.org/entrib/shopworx/commits/cc2a83b36ffe4e5cde397984c52a4e64b6e9578c))
+* **report-viewer:** integrate charts with the grid ([8eee74a](https://bitbucket.org/entrib/shopworx/commits/8eee74a2f99a3f84e091959f7ee5281dfb0ada8a))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 **Note:** Version bump only for package @shopworx/report-viewer

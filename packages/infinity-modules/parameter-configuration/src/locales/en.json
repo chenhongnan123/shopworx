@@ -8,21 +8,16 @@
   "error": {
     "delete_parameter": "Error in deleteing parameter.",
     "CREATE_PARAMETER": "Error in creating parameter",
-    "DUPLICATE_PARAMETER_NAME": "Found the duplicate parameter name",
+    "DUPLICATE_PARAMETER_FOUND": "Found duplicate parameter name",
     "UPLOAD_ONLY_CSV": "Please upload file with (.csv) extension",
-    "DUPLICATE_DBADDRESS": "Found duplicate DB Address in file!",
-    "DUPLICATE_START_ADDRESS": "Found duplicate Start Address in file!",
-    "DUPLICATE_BIT_NUMBER": "Found duplicate Bit Number in file!",
-    "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
-    "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
-    "PARAMETER_NAME_LENGTH": "Parameter name length exceeded (15 char max)",
-    "EMPTY_COLUMN_ERROR": "Below location Special character, Space or Empty Value Found(required field)",
-    "DUPLICATE_BIT_NUM_ERROR": "Duplicate value in Bit Number column",
-    "DUPLICATE_START_NUM_ERROR": "Duplicate value in Start Address column",
-    "DUPLICATE_DB_ADDRESS_ERROR": "Duplicate value in DB Address column",
-    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length(20)",
-    "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
-    "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
-    "ROW_LIMIT": "Row limit exceeded! (max 1000)"
+    "EMPTY_FIELDS": "Found empty required fields or columns in the file",
+    "SOMETHING_WRONG_UPLOADING": "Unknown error while uploading",
+    "PARAMETER_NAME_LENGTH_EXCEEDED": "Parameter name length exceeded character limit of 20",
+    "EMPTY_COLUMN_ERROR_REQUIRED_FIELD": "Validation failed for required field",
+    "EMPTY_COLUMN_ERROR_OPTIONAL_FIELD": "Validation failed for optional field",
+    "DUPLICATE_COMBINATION_ERROR": "Duplicate combination of datatype, DB number, startaddress & bitnumber in substation",
+    "DUPLICATE_COMBINATION_FROM_DB": "Duplicate combination of datatype, DB number, startaddress & bitnumber in database",
+    "OPTIONAL_EMPTY_FIELDS": "Found empty optional fields or columns in the file",
+    "ROW_LIMIT": "Number of parameters inside the file exceeded limit of 1000"
   }
 }

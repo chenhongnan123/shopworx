@@ -20,17 +20,12 @@
             label="Input email IDs (comma seperated)"
             prepend-icon="mdi-rocket-outline"
             :disabled="saving"
-            :rules="[(v) => !!v || 'Required']"
+            :rules="emailRules"
           ></v-text-field>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn
-            text
-            :disabled="saving"
-            class="text-none"
-            @click="cancel"
-          >
+          <v-btn text :disabled="saving" class="text-none" @click="cancel">
             Exit
           </v-btn>
           <v-spacer></v-spacer>
@@ -68,6 +63,10 @@ export default {
       isValid: false,
       saving: false,
       emailIds: '',
+      emailRules: [
+        (v) => !!v || 'Atleast one email is required',
+        (v) => this.validateEmails(v) || 'Please input valid email',
+      ],
     };
   },
   computed: {
@@ -84,6 +83,20 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('dataVisualizer', ['createDownloadRequest']),
+    validateEmails(values) {
+      if (values) {
+        const emails = values.replace(/\s/g, '').split(',');
+        let valid = true;
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        for (let i = 0; i < emails.length; i += 1) {
+          if (emails[i] === '' || !regex.test(emails[i])) {
+            valid = false;
+          }
+        }
+        return valid;
+      }
+      return true;
+    },
     cancel() {
       this.dialog = false;
       this.emailIds = '';

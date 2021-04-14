@@ -1,5 +1,5 @@
 {
-  "parameterConfiguration": "Parameter Configuration",
+  "parameterConfiguration": "Packaging Management",
   "success": {
     "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created",
@@ -14,7 +14,6 @@
     "DUPLICATE_START_ADDRESS": "Found duplicate Start Address in file!",
     "DUPLICATE_BIT_NUMBER": "Found duplicate Bit Number in file!",
     "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
-    "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
-    "PARAMETER_NAME_LENGTH": "Parameter name length should be less than 15 character log to check Press(CTRL + SHIFT + I)"
+    "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading"
   }
 }

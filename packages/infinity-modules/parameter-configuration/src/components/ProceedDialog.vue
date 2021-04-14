@@ -18,7 +18,7 @@
     >
       <v-expansion-panel v-if="responce.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.EMPTY_COLUMN_ERROR', responce.length) }}
+          {{ $t('error.EMPTY_COLUMN_ERROR_REQUIRED_FIELD', responce.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in responce" :key="n">{{ data }}</div>
@@ -26,7 +26,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="optionalRes.length > 0">
       <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL', optionalRes.length) }}
+          {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL_FIELD', optionalRes.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in optionalRes" :key="n">{{ data }}</div>
@@ -56,9 +56,25 @@
           <div v-for="(data, n) in dupDbAddress" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel v-if="dummyCombo.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_COMBINATION_ERROR', dummyCombo.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in dummyCombo" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel v-if="duplicateCombination.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_COMBINATION_FROM_DB', duplicateCombination.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in duplicateCombination" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
       <v-expansion-panel v-if="paramLength.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.PARAMETER_MAX_LENGTH', paramLength.length) }}
+          {{ $t('error.PARAMETER_NAME_LENGTH_EXCEEDED', paramLength.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in paramLength" :key="n">{{ data }}</div>
@@ -66,7 +82,7 @@
       </v-expansion-panel>
       <v-expansion-panel v-if="dummyNames.length > 0">
         <v-expansion-panel-header class="pa-0 ma-0 error--text">
-          {{ $t('error.DUPLICATE_PARAMETER_NAME', dummyNames.length) }}
+          {{ $t('error.DUPLICATE_PARAMETER_FOUND', dummyNames.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="(data, n) in dummyNames" :key="n">{{ data }}</div>
@@ -139,6 +155,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    dummyCombo: {
+      type: Array,
+      default: () => [],
+    },
+    duplicateCombination: {
+      type: Array,
+      default: () => [],
+    },
     dupDbAddress: {
       type: Array,
       default: () => [],
@@ -163,6 +187,24 @@ export default {
       },
     },
     dupDbAddress: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    dummyCombo: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
+    duplicateCombination: {
       handler(val) {
         if (val.length > 0) {
           this.yesBtnDisable = true;
@@ -214,6 +256,8 @@ export default {
     this.dupDbAddress = [];
     this.paramLength = [];
     this.dummyNames = [];
+    this.dummyCombo = [];
+    this.duplicateCombination = [];
   },
   mounted() {
     this.$root.$on('parameterCreation', (data) => {
@@ -239,6 +283,8 @@ export default {
     this.dupDbAddress = [];
     this.paramLength = [];
     this.dummyNames = [];
+    this.dummyCombo = [];
+    this.duplicateCombination = [];
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -278,6 +324,8 @@ export default {
       this.dupDbAddress = [];
       this.paramLength = [];
       this.dummyNames = [];
+      this.dummyCombo = [];
+      this.duplicateCombination = [];
       this.$root.$emit('clearResponce', true);
     },
   },

@@ -1,138 +1,142 @@
 <template>
-  <v-card flat>
-    <v-card-title primary-title class="pl-2">
-      Filters
-    </v-card-title>
-    <perfect-scrollbar style="height: calc(100vh - 196px)">
-      <v-card-text class="pl-0 py-0">
-        <v-select
-          dense
-          outlined
-          class="mt-1"
-          label="Line"
-          v-model="line"
-          :items="lines"
-          item-value="id"
-          item-text="name"
-          :loading="loading"
-          :disabled="fetching"
-        ></v-select>
-        <v-select
-          dense
-          outlined
-          label="Subline"
-          :items="sublines"
-          item-value="id"
-          item-text="name"
-          v-model="subline"
-          :disabled="!line || fetching"
-          :loading="sublineLoading"
-        ></v-select>
-        <v-select
-          dense
-          outlined
-          label="Station"
-          :items="stations"
-          item-value="id"
-          item-text="name"
-          v-model="station"
-          :loading="stationLoading"
-          :disabled="!line || !subline || fetching"
-        ></v-select>
-        <v-select
-          dense
-          outlined
-          label="Sub station"
-          :items="subStations"
-          item-value="id"
-          item-text="name"
-          v-model="subStation"
-          :loading="subStationLoading"
-          :disabled="!line || !subline || !station || fetching"
-        ></v-select>
-        <v-select
-          dense
-          outlined
-          label="Data type"
-          :items="dataTypes"
-          item-value="name"
-          item-text="description"
-          v-model="dataType"
-          :disabled="!line || !subline || !station || !subStation || fetching"
-        ></v-select>
-        <v-text-field
-          label="Date from"
-          dense
-          v-model="dateFrom"
-          type="datetime-local"
-          :disabled="fetching"
-          outlined
-        ></v-text-field>
-        <v-text-field
-          label="Date to"
-          dense
-          v-model="dateTo"
-          type="datetime-local"
-          :disabled="fetching"
-          outlined
-        ></v-text-field>
-        <!-- <v-text-field
-          label="Main ID (optional)"
-          dense
-          v-model="mainId"
-          type="text"
-          :disabled="fetching"
-          outlined
-        ></v-text-field> -->
-        <div class="font-weight-medium">
-          Parameters
-        </div>
-        <v-text-field
-          label="Search"
-          dense
-          single-line
-          v-model="search"
-          autocomplete="off"
-          clearable
-          :loading="parametersLoading"
-          :disabled="fetching"
-          prepend-inner-icon="mdi-magnify"
-        ></v-text-field>
-        <perfect-scrollbar style="height: 150px">
-          <v-checkbox
-            hide-details
-            class="ma-0 pa-0"
-            :key="parameter.name"
-            v-model="selectedParameters"
-            :label="parameter.description"
-            :value="parameter.name"
+  <v-form ref="form" v-model="isValid" @submit.prevent="fetchData">
+    <v-card flat>
+      <v-card-title primary-title class="pl-2">
+        Filters
+      </v-card-title>
+      <perfect-scrollbar style="height: calc(100vh - 196px)">
+        <v-card-text class="pl-0 py-0">
+          <v-select
+            dense
+            outlined
+            class="mt-1"
+            label="Line"
+            v-model="line"
+            :items="lines"
+            item-value="id"
+            item-text="name"
+            :loading="loading"
             :disabled="fetching"
-            v-for="parameter in filteredParameters"
-          ></v-checkbox>
-        </perfect-scrollbar>
-      </v-card-text>
-    </perfect-scrollbar>
-    <v-card-actions class="pl-0 pr-4">
-      <v-btn
-        text
-        color="primary"
-        class="text-none"
-        @click="exportData"
-        :disabled="disableApply || fetching"
-      >
-        Export
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        @click="fetchData"
-        :disabled="disableApply"
-        :loading="fetching"
-      >
-        Apply filters
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+          ></v-select>
+          <v-select
+            dense
+            outlined
+            label="Subline"
+            :items="sublines"
+            item-value="id"
+            item-text="name"
+            v-model="subline"
+            :disabled="!line || fetching"
+            :loading="sublineLoading"
+          ></v-select>
+          <v-select
+            dense
+            outlined
+            label="Station"
+            :items="stations"
+            item-value="id"
+            item-text="name"
+            v-model="station"
+            :loading="stationLoading"
+            :disabled="!line || !subline || fetching"
+          ></v-select>
+          <v-select
+            dense
+            outlined
+            label="Sub station"
+            :items="subStations"
+            item-value="id"
+            item-text="name"
+            v-model="subStation"
+            :loading="subStationLoading"
+            :disabled="!line || !subline || !station || fetching"
+          ></v-select>
+          <v-select
+            dense
+            outlined
+            label="Data type"
+            :items="dataTypes"
+            item-value="name"
+            item-text="description"
+            v-model="dataType"
+            :disabled="!line || !subline || !station || !subStation || fetching"
+          ></v-select>
+          <v-text-field
+            label="Date from"
+            dense
+            v-model="dateFrom"
+            type="datetime-local"
+            :disabled="fetching"
+            outlined
+            :rules="dateFromRules"
+          ></v-text-field>
+          <v-text-field
+            label="Date to"
+            dense
+            v-model="dateTo"
+            type="datetime-local"
+            :disabled="fetching"
+            outlined
+            :rules="dateToRules"
+          ></v-text-field>
+          <!-- <v-text-field
+            label="Main ID (optional)"
+            dense
+            v-model="mainId"
+            type="text"
+            :disabled="fetching"
+            outlined
+          ></v-text-field> -->
+          <div class="font-weight-medium">
+            Parameters
+          </div>
+          <v-text-field
+            label="Search"
+            dense
+            single-line
+            v-model="search"
+            autocomplete="off"
+            clearable
+            :loading="parametersLoading"
+            :disabled="fetching"
+            prepend-inner-icon="mdi-magnify"
+          ></v-text-field>
+          <perfect-scrollbar style="height: 150px">
+            <v-checkbox
+              hide-details
+              class="ma-0 pa-0"
+              :key="parameter.name"
+              v-model="selectedParameters"
+              :label="parameter.description"
+              :value="parameter.name"
+              :disabled="fetching"
+              v-for="parameter in filteredParameters"
+            ></v-checkbox>
+          </perfect-scrollbar>
+        </v-card-text>
+      </perfect-scrollbar>
+      <v-card-actions class="pl-0 pr-4">
+        <v-btn
+          text
+          color="primary"
+          class="text-none"
+          @click="exportData"
+          :disabled="disableApply || fetching || !isValid"
+        >
+          Export
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          type="submit"
+          :disabled="disableApply || !isValid"
+          :loading="fetching"
+        >
+          Apply filters
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
@@ -150,6 +154,7 @@ export default {
   },
   data() {
     return {
+      isValid: false,
       search: '',
       line: null,
       subline: null,
@@ -171,6 +176,8 @@ export default {
       stationLoading: false,
       subStationLoading: false,
       parametersLoading: false,
+      dateFromRules: [() => this.isValidDate() || `Should be before ${this.dateTo}`],
+      dateToRules: [() => this.isValidDate() || `Should be after ${this.dateFrom}`],
     };
   },
   computed: {
@@ -216,6 +223,15 @@ export default {
       'getSubStations',
       'getDefaultParameters',
     ]),
+    isValidDate() {
+      let result = true;
+      if (this.dateTo && this.dateFrom) {
+        const start = new Date(this.dateFrom).getTime();
+        const end = new Date(this.dateTo).getTime();
+        result = end > start;
+      }
+      return result;
+    },
     getTags(element) {
       let tags = [];
       const elem = this.elements.find((e) => e.element.elementName === element);

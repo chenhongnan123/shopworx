@@ -2,7 +2,7 @@
   "success": {
     "PARAMETER_CREATE": "Input parameter added!",
     "TRIGGER_CREATE": "Trigger created!",
-    "TRAINING_SAVED": "Training data save successfully.",
+    "TRAINING_SAVED": "Training data save successfully, list will be updated after files are downloaded.",
     "TRIGGER_DELETE": "Trigger removed!",
     "PARAMETER_DELETE": "Input parameter removed!",
     "TRANSFORMATION_CREATE": "Output transformation added!",
@@ -16,6 +16,12 @@
     "STATUS_UPDATED_AS_NOT_ACTIVE": "Model Status is Inactivate now!"
   },
   "error": {
+    "TRAINING_TAGS_REQUIRED": "mainid, timestamp and productionstatus are required tags, please add.",
+    "NOT_DELETE_MAINID": "Cannot delete mainid, timestamp & productionstatus, as those are required parameters.",
+    "INPUT_PARAM_REQUIRED": "Input parameters are required, Please add mainid and timestamp if not added!",
+    "TRIGGER_REQUIRED": "Trigger is required, Please add.",
+    "MODEL_TYPE_REQUIRED": "Model type is required!",
+    "MAX_VALIDATION": "Max Limit cannot be less than Min Limit",
     "TRIGGER_ADDED": "Model Trigger is already added!",
     "FIELDS_EMPTY": "Input fields cannot be empty!",
     "TRAINING_SAVED": "Error in Training Data, Please retry!",
@@ -37,6 +43,7 @@
     "FILE_DELETE": "Cannot remove model file. Please retry!",
     "MODEL_DELETE": "Cannot delete the model. Please retry!",
     "STATUS_NOT_UPDATED": "Model Status is not updated!",
-    "FILE_SIZE_EXCEEDED": "File size with greater than 7 mb is not allowed!"
+    "FILE_SIZE_EXCEEDED": "File size with greater than 7 mb is not allowed!",
+    "MANDATORY_DATE&TIME_FIELDS": "Date & Time fields can not be empty"
   }
 }
