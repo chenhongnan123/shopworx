@@ -13,11 +13,12 @@
       :sideBar="sideBar"
       :animateRows="true"
       :enableCharts="true"
-      class="ag-theme-balham mt-2"
+      :class="`${agGridTheme} mt-2`"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
       :enableRangeSelection="true"
       :defaultColDef="defaultColDef"
+      :localeText="agGridLocaleText"
       :suppressDragLeaveHidesColumns="true"
       style="width: 100%; height: calc(100% - 38px);"
       :pagination="true"
@@ -32,10 +33,11 @@
 
 <script>
 /* eslint-disable */
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 export default {
   name: 'DataProfile',
@@ -85,6 +87,7 @@ export default {
     this.popupParent = document.getElementById('app-container');
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     ...mapState('dataVisualizer', ['columns', 'totalCount']),
   },
   methods: {

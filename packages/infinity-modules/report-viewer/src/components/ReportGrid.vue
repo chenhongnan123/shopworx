@@ -16,7 +16,8 @@
     rowGroupPanelShow="always"
     :gridOptions="gridOptions"
     :enableRangeSelection="true"
-    :class="`${theme} mt-2`"
+    :class="`${agGridTheme} mt-2`"
+    :localeText="agGridLocaleText"
     :defaultColDef="defaultColDef"
     style="width: 100%; height: 450px;"
     @sort-changed="onStateChange"
@@ -59,9 +60,6 @@ export default {
     };
   },
   created() {
-    this.theme = this.isDark
-      ? 'ag-theme-balham-dark'
-      : 'ag-theme-balham';
     this.gridOptions = {
       groupDefaultExpanded: -1,
     };
@@ -81,6 +79,7 @@ export default {
   },
   computed: {
     ...mapState('helper', ['isDark']),
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     ...mapState('reports', ['report', 'reportMapping']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
@@ -99,15 +98,6 @@ export default {
         this.visualizeData();
       }
     },
-    isDark(val) {
-      if (val) {
-        this.theme = 'ag-theme-balham-dark';
-      } else {
-        this.theme = 'ag-theme-balham';
-      }
-      const self = this;
-      this.$nextTick(() => self.visualizeData());
-    },
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
@@ -125,7 +115,6 @@ export default {
     createRangeChart(chartContainer) {
       const param = {
         chartType: 'column',
-        chartThemeName: 'ag-default-dark',
         cellRange: {
           columns: this.columnDefs.map((c) => c.field),
         },
@@ -146,7 +135,6 @@ export default {
     createPivotChart(chartContainer) {
       const param = {
         chartType: 'column',
-        chartThemeName: 'ag-default-dark',
         chartThemeOverrides: {
           common: {
             title: {
