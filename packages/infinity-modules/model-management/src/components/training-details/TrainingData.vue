@@ -12,10 +12,9 @@
           color="primary"
           label="Select element"
           item-text="elementName"
-          return-object
+          item-value="elemenName"
           hide-details
-          @input="searchInput=null"
-          :search-input.sync="searchInput"
+          @change="onElementSelect"
         >
         <template v-slot:selection="data">
           <v-chip
@@ -27,7 +26,7 @@
           </v-chip>
           </template>
             <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
+              <template v-if="isObjectType(data.item)">
                 <v-list-item-content v-text="data.item"></v-list-item-content>
               </template>
               <template v-else>
@@ -50,6 +49,7 @@
           return-object
           hide-details
           multiple
+          menu-props="closeOnContentClick"
           @change="onChange()"
           @input="searchInput=null"
           :search-input.sync="searchInput"
@@ -152,23 +152,62 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import CSVParser from '@shopworx/services/util/csv.service';
+import { mapState, mapActions, mapMutations } from 'vuex';
+// import CSVParser from '@shopworx/services/util/csv.service';
 
 export default {
   name: 'modelTrigger',
   props: {
-    modelDetails: {
-      type: Object,
-      required: true,
+    // modelDetails: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // model: {
+    //   type: Object,
+    //   required: true,
+    // },
+    dialog: {
+      type: Boolean,
+      default: false,
     },
-    model: {
-      type: Object,
-      required: true,
+  },
+  watch: {
+    dialog(val) {
+      if (val) {
+        // set real Element
+        this.elementList = [];
+        this.elementList.push({
+          header: 'Real ELement',
+        });
+        const object = {
+          elementName: `process_${this.selectedSubstation}`,
+        };
+        this.elementList.push(object);
+        const firstVal = object.elementName;
+        this.onElementSelect(object.elementName);
+        this.realElement = firstVal;
+      }
     },
+  },
+  created() {
+    if (this.dialog) {
+      // set real Element
+      this.elementList = [];
+      this.elementList.push({
+        header: 'Real ELement',
+      });
+      const object = {
+        elementName: `process_${this.selectedSubstation}`,
+      };
+      this.elementList.push(object);
+      const firstVal = object.elementName;
+      this.onElementSelect(object.elementName);
+      this.realElement = firstVal;
+    }
   },
   data() {
     return {
+      realElement: null,
       elementTags: null,
       configJson: '',
       oldStartTime: '',
@@ -192,34 +231,19 @@ export default {
     modelTriggers() {
       return this.modelDetails && this.modelDetails.modelTriggers;
     },
-    realElement: {
-      get() {
-        return this.modelTriggers;
-      },
-      set(val) {
-        this.onElementSelect(val);
-      },
-    },
+    // realElement: {
+    //   get() {
+    //     console.log(this.modelTriggers);
+    //     return this.modelTriggers;
+    //   },
+    //   set(val) {
+    //     console.log(val);
+    //     this.onElementSelect(val);
+    //   },
+    // },
   },
-  created() {
-    this.elementList.push({
-      header: 'Real ELement',
-    });
-    const object = {
-      elementName: `process_${this.selectedSubstation}`,
-    };
-    this.elementList.push(object);
-    this.realElement = [];
-    this.selectedElementName = '';
-    this.elementTags = [];
-    this.oldStartTime = '';
-    this.oldEndTime = '';
-    this.newStartTime = '';
-    this.newEndTime = '';
-    this.configJson = '';
-  },
-  // 5,
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapActions('modelManagement', [
       'createCriticalParameter',
       'deleteTriggerName',
@@ -231,7 +255,12 @@ export default {
       'fetchTrainingData',
       'getTagsForSelectedElement',
       'getRecordsByTagData',
+      'postStreamRecords',
+      'getModelInputs',
     ]),
+    isObjectType(item) {
+      return typeof item !== 'object';
+    },
     cancel() {
       this.$emit('on-cancel');
     },
@@ -247,106 +276,99 @@ export default {
       }
     },
     async addData() {
-      this.loading = true;
       const timestamp = new Date().getTime();
       const tagsList = [];
       this.elementTags.forEach((t) => {
         tagsList.push(t.tagName);
       });
-      const oldDataStartTime = new Date(this.oldStartTime).getTime();
-      const oldDataEndTime = new Date(this.oldEndTime).getTime();
-      await this.getRecordsByTagData({
-        elementName: this.selectedElementName,
-        queryParam: `?datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}&pagenumber=1&pagesize=500`,
-        request: {
-          tags: tagsList,
-        },
-      });
-      // download file for old data
-      let csvParser = new CSVParser();
-      let content = csvParser.unparse({
-        fields: tagsList,
-        data: this.fileRecords,
-      });
-      let csvData = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-      let csvURL = window.URL.createObjectURL(csvData);
-      let testLink = document.createElement('a');
-      testLink.href = csvURL;
-      testLink.setAttribute('download', `${this.selectedElementName}-${timestamp}-old.csv`);
-      testLink.click();
-      // new data
-      const newDataStartTime = new Date(this.newStartTime).getTime();
-      const newDataEndTime = new Date(this.newEndTime).getTime();
-      await this.getRecordsByTagData({
-        elementName: this.selectedElementName,
-        queryParam: `?datefrom=${newDataStartTime}&dateto=${newDataEndTime}&pagenumber=1&pagesize=500`,
-        request: {
-          tags: tagsList,
-        },
-      });
-      // download file for new data
-      csvParser = new CSVParser();
-      content = csvParser.unparse({
-        fields: tagsList,
-        data: this.fileRecords,
-      });
-      csvData = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-      csvURL = window.URL.createObjectURL(csvData);
-      testLink = document.createElement('a');
-      testLink.href = csvURL;
-      testLink.setAttribute('download', `${this.selectedElementName}-${timestamp}.csv`);
-      testLink.click();
-      const oldStartTime = new Date(this.oldStartTime);
-      const oldEndTime = new Date(this.oldEndTime);
-      const newStartTime = new Date(this.newStartTime);
-      const newEndTime = new Date(this.newEndTime);
-      const object = {
-        realelement: this.selectedElementName,
-        oldtraindatastarttime: `${oldStartTime.getDay()}-${oldStartTime.getMonth() + 1}-${oldStartTime.getFullYear()}:${oldStartTime.getHours()}:${oldStartTime.getMinutes()}:${oldStartTime.getSeconds()}`,
-        oldtraindataendtime: `${oldEndTime.getDay()}-${oldEndTime.getMonth() + 1}-${oldEndTime.getFullYear()}:${oldEndTime.getHours()}:${oldEndTime.getMinutes()}:${oldEndTime.getSeconds()}`,
-        newtraindatastarttime: `${newStartTime.getDay()}-${newStartTime.getMonth() + 1}-${newStartTime.getFullYear()}:${newStartTime.getHours()}:${newStartTime.getMinutes()}:${newStartTime.getSeconds()}`,
-        newtraindataendtime: `${newEndTime.getDay()}-${newEndTime.getMonth() + 1}-${newEndTime.getFullYear()}:${newEndTime.getHours()}:${newEndTime.getMinutes()}:${newEndTime.getSeconds()}`,
-        configjson: this.configJson,
-        inputfolder: `/home/emgda/shopworx/data/${this.selectedModelObject.name}-${timestamp}`,
-        outputfolder: `/home/emgda/shopworx/model-output/${this.selectedModelObject.name}-${timestamp}`,
-        inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
-        modelid: this.selectedModelObject.modelid,
-        status: 'In Progress',
-        trainingmode: 'Manual',
-      };
-      await this.addModelTraningData(object);
-      await this.fetchTrainingData(this.selectedModelObject.modelid);
-      this.elementList = [];
-      this.elementList.push({
-        header: 'Real ELement',
-      });
-      const object1 = {
-        elementName: `process_${this.selectedSubstation}`,
-      };
-      this.elementList.push(object1);
-      this.realElement = [];
-      this.selectedElementName = '';
-      this.elementTags = [];
-      this.oldStartTime = '';
-      this.oldEndTime = '';
-      this.newStartTime = '';
-      this.newEndTime = '';
-      this.configJson = '';
-      this.loading = false;
-      this.cancel();
+      if (tagsList.includes('mainid') && tagsList.includes('timestamp') && tagsList.includes('productionstatus')) {
+        const oldStartTime = new Date(this.oldStartTime);
+        const oldEndTime = new Date(this.oldEndTime);
+        const newStartTime = new Date(this.newStartTime);
+        const newEndTime = new Date(this.newEndTime);
+        const payload = {
+          realelement: this.selectedElementName,
+          tagslist: tagsList,
+          olddatastarttimestamp: new Date(this.oldStartTime).getTime(),
+          olddataendtimestamp: new Date(this.oldEndTime).getTime(),
+          olddatafilename: `${this.selectedElementName}-${timestamp}-old.csv`,
+          newdatastarttimestamp: new Date(this.newStartTime).getTime(),
+          newdataendtimestamp: new Date(this.newEndTime).getTime(),
+          newdatafilename: `${this.selectedElementName}-${timestamp}.csv`,
+          oldtraindatastarttime: `${oldStartTime.getDay()}-${oldStartTime.getMonth() + 1}-${oldStartTime.getFullYear()}:${oldStartTime.getHours()}:${oldStartTime.getMinutes()}:${oldStartTime.getSeconds()}`,
+          oldtraindataendtime: `${oldEndTime.getDay()}-${oldEndTime.getMonth() + 1}-${oldEndTime.getFullYear()}:${oldEndTime.getHours()}:${oldEndTime.getMinutes()}:${oldEndTime.getSeconds()}`,
+          newtraindatastarttime: `${newStartTime.getDay()}-${newStartTime.getMonth() + 1}-${newStartTime.getFullYear()}:${newStartTime.getHours()}:${newStartTime.getMinutes()}:${newStartTime.getSeconds()}`,
+          newtraindataendtime: `${newEndTime.getDay()}-${newEndTime.getMonth() + 1}-${newEndTime.getFullYear()}:${newEndTime.getHours()}:${newEndTime.getMinutes()}:${newEndTime.getSeconds()}`,
+          configjson: this.configJson,
+          inputfolder: `/home/emgda/shopworx/data/${this.selectedModelObject.name}-${timestamp}`,
+          outputfolder: `/home/emgda/shopworx/model-output/${this.selectedModelObject.name}-${timestamp}`,
+          inputfiles: [`${this.selectedElementName}-${timestamp}-old.csv`, `${this.selectedElementName}-${timestamp}.csv`],
+          modelid: this.selectedModelObject.modelid,
+          status: 'In Progress',
+          trainingmode: 'Manual',
+        };
+        this.addModelTraningData(payload);
+        this.elementList = [];
+        this.elementList.push({
+          header: 'Real ELement',
+        });
+        const object1 = {
+          elementName: `process_${this.selectedSubstation}`,
+        };
+        this.elementList.push(object1);
+        this.realElement = [];
+        this.selectedElementName = '';
+        this.elementTags = [];
+        this.oldStartTime = '';
+        this.oldEndTime = '';
+        this.newStartTime = '';
+        this.newEndTime = '';
+        this.configJson = '';
+        this.loading = false;
+        this.cancel();
+      } else if (!this.oldStartTime || !this.oldEndTime
+        || !this.newStartTime || !this.newEndTime) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'MANDATORY_DATE&TIME_FIELDS',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TRAINING_TAGS_REQUIRED',
+        });
+      }
     },
     async onElementSelect(val) {
+      this.elementTags = [];
       // get tags for selected element
-      this.selectedElementName = val.elementName;
+      this.selectedElementName = val;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
+      const list = await this.getModelInputs(`?query=modelid=="${this.selectedModelObject.modelid}"`);
+      list.modelInputs.forEach((f) => {
+        const tagData = this.tagsList.find((tag) => tag.tagName === f.tagName);
+        if (tagData) {
+          this.elementTags.push(tagData);
+        }
+      });
+      // this.elementTags = modelInputs;
     },
     async remove(param) {
-      const deleted = await this.deleteTriggerName(param.triggerName);
-      if (deleted) {
-        await this.fetchModelDetails(this.model.modelid);
-        const index = this.realElement.findIndex((f) => f.triggerName === param.triggerName);
-        if (index >= 0) this.realElement.splice(index, 1);
+      const dataMainid = this.elementTags.find((f) => f.id === param.id);
+      if (dataMainid.tagName === 'mainid'
+         || dataMainid.tagName === 'timestamp'
+         || dataMainid.tagName === 'productionstatus') {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'NOT_DELETE_MAINID',
+        });
+      } else {
+        const index = this.elementTags.findIndex((f) => f.tagName === param.tagName);
+        if (index >= 0) this.elementTags.splice(index, 1);
       }
     },
     async saveInputParam(param) {

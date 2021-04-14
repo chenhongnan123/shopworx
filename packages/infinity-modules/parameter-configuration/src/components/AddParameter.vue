@@ -94,6 +94,13 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
+              label="bitnumber*"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.bitnumber"
+              :rules="rules.bitnumber"
+          ></v-text-field>
+          <v-text-field
+              :disabled="saving"
               label="DB Address*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.dbaddress"
@@ -183,6 +190,7 @@ export default {
         datatype: null,
         booleanbit: null,
         size: null,
+        bitnumber: null,
         dbaddress: null,
         startaddress: null,
         protocol: null,
@@ -306,7 +314,8 @@ export default {
           name,
           dbaddress,
           startaddress,
-          booleanbit,
+          bitnumber,
+          datatype,
         } = parameterObj;
         if (this.parameterList.some((parameter) => name.toLowerCase()
            === parameter.name.toLowerCase())) {
@@ -321,22 +330,25 @@ export default {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
             && Number(startaddress) === parameter.startaddress
-            && Number(booleanbit) === Number(parameter.booleanbit))) {
+            && Number(datatype.id) === parameter.datatype
+            && Number(bitnumber) === Number(parameter.bitnumber))) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'Boolean Bit is present',
+              message: 'DUPLICATE_COMBINATION_ERROR',
             });
             return;
           }
         } else if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean') {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
-            && Number(startaddress) === parameter.startaddress)) {
+            && Number(startaddress) === parameter.startaddress
+            && Number(datatype.id) === parameter.datatype
+            && Number(bitnumber) === parameter.bitnumber)) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'parameter startaddress is present',
+              message: 'DUPLICATE_COMBINATION_ERROR',
             });
             return;
           }

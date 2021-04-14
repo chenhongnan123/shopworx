@@ -1,5 +1,5 @@
 {
-  "parameterConfiguration": "Parameter Configuration",
+  "ParameterConfigurationMes": "Parameter Configuration",
   "success": {
     "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created",
@@ -25,6 +25,6 @@
     "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)",
     "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
     "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
-    "ROW_LIMIT": "Row limit exceeded! (max 1000)"
+    "ROW_LIMIT": "Number of parameters inside the file exceeded limit of 1000"
   }
 }

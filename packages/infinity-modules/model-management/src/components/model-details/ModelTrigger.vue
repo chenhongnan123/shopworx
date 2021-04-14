@@ -38,6 +38,7 @@
           </template>
         </template>
       </v-autocomplete>
+      <div class="caption">*Required field</div>
       <span></span>
     </v-card-text>
   </v-card>

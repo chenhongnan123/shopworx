@@ -128,6 +128,7 @@ export default {
       'setSelectedProcess',
       'setSelectedProcessName',
       'setFetchingMaster',
+      'setShowModelUI',
     ]),
     ...mapActions('modelManagement', [
       'fetchLineDetails',
@@ -150,6 +151,7 @@ export default {
       this.setSelectedProcess(process.id);
       this.setSelectedProcessName(process.name);
       this.setFetchingMaster(true);
+      this.setShowModelUI(true);
       await this.getModels();
       await Promise.all([
         this.getInputParameters(),

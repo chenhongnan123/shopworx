@@ -42,6 +42,18 @@ export default ({
       return false;
     },
 
+    postStreamRecords: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postStreamRecords(payload);
+        if (data) {
+          return data;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
     createElement: async ({ dispatch }, {
       element,
       webhooks = [],
@@ -369,6 +381,30 @@ export default ({
     getTrainingLogsRecords: async (_, { jobId }) => {
       try {
         const { data } = await ElementService.getTrainingLogsRecords(jobId);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    postMmsStartModelTraining: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postMmsStartModelTraining(payload);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    postMmsTestModel: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postMmsTestModel(payload);
         if (data) {
           return data;
         }

@@ -330,15 +330,6 @@ export default {
     closeFilter() {
       this.getParameterListRecords('?pagenumber=1&pagesize=10');
       this.toggleFilter();
-      this.selectedParameterName = '';
-      this.selectedParameterCategory = '';
-      this.selectedParameterDatatype = '';
-      this.selectedParameterStartAdress = '';
-      this.line = '';
-      this.subline = '';
-      this.station = '';
-      this.substation = '';
-      this.parameterName = '';
     },
   },
 };
