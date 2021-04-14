@@ -49,8 +49,8 @@ export default {
   },
   data() {
     return {
-      theme: '',
       rowData: [],
+      aggFunc: null,
       gridApi: null,
       columnDefs: [],
       gridOptions: null,
@@ -85,9 +85,12 @@ export default {
   },
   watch: {
     report(val) {
+      if (val) {
+        this.aggFunc = val.aggFunc || null;
+      }
       if (val && val.cols) {
         this.columnDefs = val.cols.map((col) => ({
-          headerName: col.description,
+          headerName: this.getHeaderName(col),
           field: col.name,
           colId: col.name,
           filter: this.getColumnFilter(col),
@@ -101,6 +104,20 @@ export default {
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
+    getHeaderName(col) {
+      switch (this.$i18n.locale) {
+        case 'zhHans':
+          return col.description_cn || col.description;
+        case 'hi':
+          return col.description_hi || col.description;
+        case 'th':
+          return col.description_th || col.description;
+        case 'de':
+          return col.description_de || col.description;
+        default:
+          return col.description;
+      }
+    },
     visualizeData() {
       const chartContainer = document.getElementById('chart');
       chartContainer.innerHTML = '';
@@ -118,7 +135,7 @@ export default {
         cellRange: {
           columns: this.columnDefs.map((c) => c.field),
         },
-        aggFunc: 'sum',
+        aggFunc: this.aggFunc,
         chartThemeOverrides: {
           common: {
             title: {
