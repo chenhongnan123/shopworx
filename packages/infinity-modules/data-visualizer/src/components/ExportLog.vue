@@ -16,6 +16,12 @@
       fixed-header
       :height="height"
       :loading="fetchingLogs"
+      :options.sync="options"
+      :itemsPerPage="10"
+      :footer-props="{
+        disableItemsPerPage: true,
+      }"
+      :server-items-length="logCount"
     >
       <!-- eslint-disable-next-line -->
       <template #item.dateFrom="{ item }">
@@ -52,6 +58,7 @@ export default {
   data() {
     return {
       timeout: null,
+      options: {},
       headers: [
         { text: 'Requested at', value: 'createdTimestamp' },
         { text: 'Requested by', value: 'createdBy' },
@@ -66,10 +73,6 @@ export default {
       height: window.innerHeight,
     };
   },
-  created() {
-    this.getLog();
-    this.getDownloadLog();
-  },
   mounted() {
     this.setHeight();
   },
@@ -77,7 +80,7 @@ export default {
     clearTimeout(this.timeout);
   },
   computed: {
-    ...mapState('dataVisualizer', ['downloadLogs', 'fetchingLogs']),
+    ...mapState('dataVisualizer', ['downloadLogs', 'fetchingLogs', 'logCount']),
   },
   methods: {
     ...mapActions('dataVisualizer', ['getDownloadLog']),
@@ -85,7 +88,11 @@ export default {
       this.height = window.innerHeight - 248;
     },
     async getLog() {
-      await this.getDownloadLog();
+      const { page, itemsPerPage } = this.options;
+      await this.getDownloadLog({
+        pageSize: itemsPerPage,
+        pageNumber: page,
+      });
       this.timeout = setTimeout(() => {
         this.getLog();
       }, 120 * 1000);
@@ -101,6 +108,14 @@ export default {
     getDateTo(query) {
       const timestamps = this.parseDateRange(query);
       return formatDate(new Date(timestamps.$lte.$date), 'yyyy-MM-dd HH:mm:ss');
+    },
+  },
+  watch: {
+    options: {
+      deep: true,
+      handler() {
+        this.getLog();
+      },
     },
   },
 };

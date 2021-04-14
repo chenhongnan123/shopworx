@@ -22,6 +22,7 @@ export default ({
     totalCount: 0,
     fetching: false,
     downloadLogs: [],
+    logCount: 0,
     fetchingLogs: false,
   },
   mutations: {
@@ -32,6 +33,7 @@ export default ({
     setTotalCount: set('totalCount'),
     setFetching: set('fetching'),
     setDownloadLogs: set('downloadLogs'),
+    setLogCount: set('logCount'),
     setFetchingLogs: set('fetchingLogs'),
   },
   actions: {
@@ -128,17 +130,19 @@ export default ({
       return parameters;
     },
 
-    getDownloadLog: async ({ rootState, commit }) => {
+    getDownloadLog: async ({ rootState, commit }, { pageSize, pageNumber }) => {
       commit('setFetchingLogs', true);
       const { activeSite } = rootState.user;
       const { data } = await ElementService.getCollectionRecords(
         'datadownload',
-        `?query=siteId==${activeSite}&pagenumber=1&pagesize=100`,
+        `?query=siteId==${activeSite}&pagenumber=${pageNumber}&pagesize=${pageSize}`,
       );
       if (data && data.results) {
         commit('setDownloadLogs', data.results);
+        commit('setLogCount', data.totalCount);
       } else {
         commit('setDownloadLogs', []);
+        commit('setLogCount', 0);
       }
       commit('setFetchingLogs', false);
     },

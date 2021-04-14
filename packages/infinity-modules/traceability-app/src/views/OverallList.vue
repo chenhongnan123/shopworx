@@ -14,8 +14,9 @@
           rowGroupPanelShow="always"
           :gridOptions="gridOptions"
           :enableRangeSelection="false"
-          class="ag-theme-balham mt-2"
+          :class="`${agGridTheme} mt-2`"
           :defaultColDef="defaultColDef"
+          :localeText="agGridLocaleText"
           style="width: 100%; height: 350px;"
           @sort-changed="onStateChange"
           @filter-changed="onStateChange"
@@ -36,9 +37,15 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -117,6 +124,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     dateRangeText() {
       return this.dates.join(' to ');
     },

@@ -16,7 +16,8 @@
     rowGroupPanelShow="always"
     :gridOptions="gridOptions"
     :enableRangeSelection="true"
-    :class="`${theme} mt-2`"
+    :class="`${agGridTheme} mt-2`"
+    :localeText="agGridLocaleText"
     :defaultColDef="defaultColDef"
     style="width: 100%; height: 450px;"
     @sort-changed="onStateChange"
@@ -48,8 +49,8 @@ export default {
   },
   data() {
     return {
-      theme: '',
       rowData: [],
+      aggFunc: null,
       gridApi: null,
       columnDefs: [],
       gridOptions: null,
@@ -59,9 +60,6 @@ export default {
     };
   },
   created() {
-    this.theme = this.isDark
-      ? 'ag-theme-balham-dark'
-      : 'ag-theme-balham';
     this.gridOptions = {
       groupDefaultExpanded: -1,
     };
@@ -81,14 +79,18 @@ export default {
   },
   computed: {
     ...mapState('helper', ['isDark']),
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     ...mapState('reports', ['report', 'reportMapping']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
   watch: {
     report(val) {
+      if (val) {
+        this.aggFunc = val.aggFunc || null;
+      }
       if (val && val.cols) {
         this.columnDefs = val.cols.map((col) => ({
-          headerName: col.description,
+          headerName: this.getHeaderName(col),
           field: col.name,
           colId: col.name,
           filter: this.getColumnFilter(col),
@@ -99,18 +101,23 @@ export default {
         this.visualizeData();
       }
     },
-    isDark(val) {
-      if (val) {
-        this.theme = 'ag-theme-balham-dark';
-      } else {
-        this.theme = 'ag-theme-balham';
-      }
-      const self = this;
-      this.$nextTick(() => self.visualizeData());
-    },
   },
   methods: {
     ...mapMutations('reports', ['setGridState']),
+    getHeaderName(col) {
+      switch (this.$i18n.locale) {
+        case 'zhHans':
+          return col.description_cn || col.description;
+        case 'hi':
+          return col.description_hi || col.description;
+        case 'th':
+          return col.description_th || col.description;
+        case 'de':
+          return col.description_de || col.description;
+        default:
+          return col.description;
+      }
+    },
     visualizeData() {
       const chartContainer = document.getElementById('chart');
       chartContainer.innerHTML = '';
@@ -125,11 +132,10 @@ export default {
     createRangeChart(chartContainer) {
       const param = {
         chartType: 'column',
-        chartThemeName: 'ag-default-dark',
         cellRange: {
           columns: this.columnDefs.map((c) => c.field),
         },
-        aggFunc: 'sum',
+        aggFunc: this.aggFunc,
         chartThemeOverrides: {
           common: {
             title: {
@@ -146,7 +152,6 @@ export default {
     createPivotChart(chartContainer) {
       const param = {
         chartType: 'column',
-        chartThemeName: 'ag-default-dark',
         chartThemeOverrides: {
           common: {
             title: {
