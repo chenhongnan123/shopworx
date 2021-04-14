@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added date range validation to filters ([f19ffc5](https://bitbucket.org/entrib/shopworx/commits/f19ffc59a089a0814308a65da5309f0a939ea39b))
+* **data-visualizer:** fixed email validations and log table height width ([ab37c33](https://bitbucket.org/entrib/shopworx/commits/ab37c33e93831839e63c781581b63e2d8bfc0977))
+* **ml-management:** RA-I549 cant delete mandetory tags whle creating new dialog as well as in input parameter from configuration dialog of model ([caa58c9](https://bitbucket.org/entrib/shopworx/commits/caa58c9fba044cb2c05f4cca09af45d602e8c1f9))
+* **ml-management:** RA-I554 | alert for mandatory date & time fields while creating new Training ([849af26](https://bitbucket.org/entrib/shopworx/commits/849af26168971b42f8f1879c9082fdacfa5352fb))
+* **parameter-configuration:** RA-I408 ([857b43c](https://bitbucket.org/entrib/shopworx/commits/857b43ca59f07070c9a0b3229ac5b2e7ae7d2cec))
+* **parameter-configuration:** RA-I556 ([a732f67](https://bitbucket.org/entrib/shopworx/commits/a732f673d1da5d6630cc165738c9cceaf45ca2d0))
+* **parameter-configuration:** RA-I556 ([d9178cb](https://bitbucket.org/entrib/shopworx/commits/d9178cb928c8fffe5b68ea328d72dbd859ffdcf9))
+* **report-viewer:** fixed pivot mode state on report run ([c057fe0](https://bitbucket.org/entrib/shopworx/commits/c057fe0781c0c7ef1418c378e58eb0d32ef35c9b))
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+* **data-visualizer:** added server side pagination to export logs ([48d4c28](https://bitbucket.org/entrib/shopworx/commits/48d4c28e25e90f83762b1be81b2a3258262d38c1))
+* **ml-management:** RA-I549 show the element selected on create training dialog open ([46ceb6d](https://bitbucket.org/entrib/shopworx/commits/46ceb6d241dd322654192003e7d14a64528fcd3e))
+* **parameter-configuration:** RA-I408 | changes required by Lukas with one new point ([cecbf24](https://bitbucket.org/entrib/shopworx/commits/cecbf24929488d459f89dbd73197915fbf4e32c8))
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+* **report-viewer:** added aggregation support to charts ([cc2a83b](https://bitbucket.org/entrib/shopworx/commits/cc2a83b36ffe4e5cde397984c52a4e64b6e9578c))
+* **report-viewer:** integrate charts with the grid ([8eee74a](https://bitbucket.org/entrib/shopworx/commits/8eee74a2f99a3f84e091959f7ee5281dfb0ada8a))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 

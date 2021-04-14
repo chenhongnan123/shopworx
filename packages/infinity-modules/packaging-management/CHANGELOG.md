@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Features
+
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 **Note:** Version bump only for package @shopworx/packaging-management

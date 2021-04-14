@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I408 ([857b43c](https://bitbucket.org/entrib/shopworx/commits/857b43ca59f07070c9a0b3229ac5b2e7ae7d2cec))
+* **parameter-configuration:** RA-I556 ([a732f67](https://bitbucket.org/entrib/shopworx/commits/a732f673d1da5d6630cc165738c9cceaf45ca2d0))
+* **parameter-configuration:** RA-I556 ([d9178cb](https://bitbucket.org/entrib/shopworx/commits/d9178cb928c8fffe5b68ea328d72dbd859ffdcf9))
+
+
+### Features
+
+* **parameter-configuration:** RA-I408 | changes required by Lukas with one new point ([cecbf24](https://bitbucket.org/entrib/shopworx/commits/cecbf24929488d459f89dbd73197915fbf4e32c8))
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration
