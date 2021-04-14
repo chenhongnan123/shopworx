@@ -42,8 +42,22 @@
             To the customer, you are the company.
           </div>
         </v-col>
-        <v-col cols="12" align="center">
+        <v-col cols="6" md="4" align="center">
           <origin-set-context />
+          <v-row align="center" class="my-4">
+            <v-divider class="mx-4"></v-divider>
+            <span class="title">or</span>
+            <v-divider class="mx-4"></v-divider>
+          </v-row>
+          <v-btn
+            rounded
+            class="text-none"
+            color="secondary"
+            @click="goToAddNew"
+          >
+            <v-icon left small>mdi-plus</v-icon>
+            Add new customer
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -99,6 +113,9 @@ export default {
     ...mapMutations('customer', ['setContextDialog']),
     ...mapActions('user', ['getMe']),
     ...mapActions('customer', ['getContextDetails']),
+    goToAddNew() {
+      this.$router.replace({ name: 'customerAddNew' });
+    },
   },
 };
 </script>

@@ -29,7 +29,7 @@ class ReportService {
     return this.request.get(`/server/insightcategory`);
   }
   
-  getInsightViews(insightCategoryId, parentId) {
+  getInsightViews(insightCategoryId, parentId = 0) {
     return this.request.get(`/server/insightview/${insightCategoryId}/${parentId}`);
   }
 }

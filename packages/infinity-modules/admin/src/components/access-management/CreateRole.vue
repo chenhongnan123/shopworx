@@ -94,6 +94,7 @@ export default {
       roleDescription: '',
       isAdmin: false,
       permissions: [],
+      masterReportCategoryIds: [],
       descriptionRules: [
         (v) => !!(v && v.trim()) || 'Role is required',
         (v) => /^[A-Za-z0-9-_ ]+$/.test(v)
@@ -160,6 +161,8 @@ export default {
               })),
             });
           } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+            this.masterReportCategoryIds = this.removeDuplicates(module.details, 'id')
+              .map((detail) => detail.id);
             modules.push({
               id: module.id,
               name: this.$i18n.t(`modules.${module.moduleName}`),
@@ -208,7 +211,6 @@ export default {
           return result;
         }, {},
       );
-      let reportCategoryIds = [];
       const payload = {
         roleId,
         moduleAndReportsCategoryIds: Object.keys(permissionsByModule).map(
@@ -230,17 +232,13 @@ export default {
             } else if (
               modules[0].moduleName.toUpperCase().trim() === 'REPORTS'
             ) {
-              reportCategoryIds = modules.map((m) => m.id);
-              mod.reportsCategoryIds = reportCategoryIds;
+              mod.reportsCategoryIds = modules.map((m) => m.id);
             }
             return mod;
           },
         ),
       };
-      return {
-        modulePayload: payload,
-        reportCategoryIds,
-      };
+      return payload;
     },
     async createRole() {
       this.saving = true;
@@ -251,14 +249,14 @@ export default {
       };
       const createdRoleId = await this.createNewRole(payload);
       if (createdRoleId) {
-        const { modulePayload, reportCategoryIds } = this.getPermissions(createdRoleId);
+        const modulePayload = this.getPermissions(createdRoleId);
         const results = await Promise.all([
           this.createElementAccess(createdRoleId),
           this.createSolutionAccess(createdRoleId),
           this.createModuleAccess(modulePayload),
           this.createReportAccess(createdRoleId),
           this.createReportViewAccess({
-            reportCategoryIds,
+            reportCategoryIds: this.masterReportCategoryIds,
             roleId: createdRoleId,
           }),
         ]);

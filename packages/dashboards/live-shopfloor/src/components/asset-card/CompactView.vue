@@ -68,7 +68,7 @@
       <div v-if="machine.machinestatus === 'DOWN'" class="mx-n2">
         <div
           :class="`${color}--text text--lighten-4 d-flex justify-space-between pt-2`"
-          style="border-top: 1px solid #beffba"
+          style="border-top: 1px solid #ffc6b9"
         >
           <span>Down since</span>
           {{ getStrictDistance(machine.downsince) }}
@@ -76,10 +76,9 @@
         <div
           class="d-flex justify-space-between mt-1"
           :class="`${color}--text text--lighten-4`"
-          style="font-size: 1.2rem"
         >
           <span>Down reason</span>
-          -
+          {{ machine.downreason || '-' }}
         </div>
       </div>
       <div v-if="machine.machinestatus === 'NOPLAN'" class="mx-n2">

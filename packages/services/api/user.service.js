@@ -97,8 +97,20 @@ class UserService {
     return this.request.post('/server/reportaccess', payload);
   }
 
+  createReportsCategoryAccess(payload) {
+    return this.request.post('/server/reportscategoryaccess', payload);
+  }
+
   createReportViewAccess(payload) {
     return this.request.post('/server/reportviewaccess', payload);
+  }
+
+  createInsightViewAccess(payload) {
+    return this.request.post('/server/insightviewaccess', payload);
+  }
+
+  createInsightCategoryAccess(payload) {
+    return this.request.post('/server/insightcategoryaccess', payload);
   }
 }
 

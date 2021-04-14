@@ -34,7 +34,8 @@
       rowSelection="multiple"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
-      class="ag-theme-balham mt-2"
+      :localeText="agGridLocaleText"
+      :class="`${agGridTheme} mt-2`"
       :defaultColDef="defaultColDef"
       :suppressRowClickSelection="true"
       style="width: 100%; height: 70%;"
@@ -44,8 +45,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -111,6 +114,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     requiredData() {
       if (this.missingData.length) {
         const dataByRows = this.missingData.reduce((acc, cur) => {
