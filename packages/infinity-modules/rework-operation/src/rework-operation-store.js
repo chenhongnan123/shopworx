@@ -286,7 +286,7 @@ export default ({
         }
         if (ngconfig.length) {
           const ngcodedesc = ngconfig
-            .filter((ng) => ng.id === item.checkoutngcode);
+            .filter((ng) => ng.ngcode === item.checkoutngcode);
           item.ngcodematch = ngcodedesc[0].ngdescription;
         }
       });
