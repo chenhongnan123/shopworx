@@ -78,6 +78,7 @@
   "dashboards": {
     "liveShopfloor": "Live Shopfloor",
     "utilityDashboard": "Utility",
-    "processDashboard": "Live Process"
+    "processDashboard": "Live Process",
+    "poProductionDashboard": "Overall Production Information"
   }
 }

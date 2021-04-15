@@ -13,6 +13,7 @@
     "@shopworx/assets": "^4.2.10",
     "@shopworx/live-shopfloor": "^4.2.10",
     "@shopworx/machine-dashboard": "^4.2.10",
+    "@shopworx/po-production-dashboard": "^4.2.10",
     "@shopworx/process-dashboard": "^4.2.10",
     "@shopworx/services": "^4.2.10",
     "@shopworx/utility-dashboard": "^4.2.10",
