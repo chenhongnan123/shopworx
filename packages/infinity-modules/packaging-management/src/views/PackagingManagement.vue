@@ -755,8 +755,8 @@ export default {
           productnumber,
           supplier,
           description,
-          internalcode,
-          pkginfo,
+          // internalcode,
+          // pkginfo,
           remark,
         } = labelrule;
         const {
@@ -767,6 +767,8 @@ export default {
         const {
           createdTimestamp,
         } = this.currentOrder;
+        const pkginfo = '48';
+        const internalcode = '1118100XEB07';
         const labelprn = this.labelprn.replace(/description/g, description)
           .replace(/partnumber/g, productnumber)
           .replace(/quality/g, qty)
