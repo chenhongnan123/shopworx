@@ -42,7 +42,6 @@ export default ({
       return false;
     },
 
-<<<<<<< HEAD
     postStreamRecords: async (_, { payload }) => {
       try {
         const { data } = await ElementService.postStreamRecords(payload);
@@ -55,13 +54,10 @@ export default ({
       return false;
     },
 
-    createElement: async ({ dispatch }, element) => {
-=======
     createElement: async ({ dispatch }, {
       element,
       webhooks = [],
     }) => {
->>>>>>> dev
       try {
         const { data } = await ElementService.createElement(element);
         if (data && data.results) {
@@ -406,9 +402,9 @@ export default ({
       }
     },
 
-    postMmsTestModel: async (_, { payload }) => {
+    postMmsTestModel: async (_, { payload, queryParam }) => {
       try {
-        const { data } = await ElementService.postMmsTestModel(payload);
+        const { data } = await ElementService.postMmsTestModel(payload, queryParam);
         if (data) {
           return data;
         }
