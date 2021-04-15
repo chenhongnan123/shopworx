@@ -20,6 +20,7 @@
     "@shopworx/ng-code-configuration": "^4.2.4",
     "@shopworx/order-management": "^4.2.4",
     "@shopworx/packaging-management": "^4.2.4",
+    "@shopworx/production-process": "^4.2.4",
     "@shopworx/parameter-configuration": "^4.2.4",
     "@shopworx/parameter-configuration-mes": "^4.2.4",
     "@shopworx/product-management": "^4.2.4",

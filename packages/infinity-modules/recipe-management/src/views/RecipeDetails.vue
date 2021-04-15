@@ -709,7 +709,10 @@ export default {
       await this.updateProductDetails(productDetailUpdate);
       this.saveBtnEnable = false;
       if (updated) {
+<<<<<<< HEAD
 >>>>>>> 1ca0839cf808d17a519ef60ced4c492fe4e00b5a
+=======
+>>>>>>> c46931703836af92851c7a640a8176ec7af14dc3
         this.setAlert({
           show: true,
           type: 'error',
