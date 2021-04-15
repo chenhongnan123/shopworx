@@ -308,7 +308,9 @@ export default ({
           const created = await Promise.all(reportCategoryIds.map(async (reportCategoryId) => {
             const { data } = await ReportService.getReportViews(reportCategoryId);
             if (data && data.results) {
-              const reportViewIds = data.results.map((r) => r.id);
+              const reportViewIds = data.results
+                .filter((r) => !r.gridObject)
+                .map((r) => r.id);
               const res = await Promise.all(reportViewIds.map(async (id) => {
                 const { data: result } = await UserService.createReportViewAccess({
                   reportViewId: id,

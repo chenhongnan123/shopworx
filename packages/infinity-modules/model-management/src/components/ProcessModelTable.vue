@@ -346,10 +346,9 @@ export default {
     },
     async testModel() {
       const object = {
-        url: `http://${this.subLineInfo[0].ipaddress}:5000/executemodel?modelid=${this.testModelId}`,
-        payload: {
-          mainid: this.testMainId,
-        },
+        modelid: this.testModelId,
+        mainid: this.testMainId,
+        edgeipaddress: this.subLineInfo[0].ipaddress,
       };
       const data = await this.sendTestModel(object);
       if (data) {

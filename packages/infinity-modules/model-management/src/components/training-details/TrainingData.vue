@@ -186,14 +186,6 @@ export default {
         const firstVal = object.elementName;
         this.onElementSelect(object.elementName);
         this.realElement = firstVal;
-        this.realElementField = [];
-        this.selectedElementName = '';
-        this.elementTags = [];
-        this.oldStartTime = '';
-        this.oldEndTime = '';
-        this.newStartTime = '';
-        this.newEndTime = '';
-        this.configJson = '';
       }
     },
   },
@@ -211,14 +203,6 @@ export default {
       const firstVal = object.elementName;
       this.onElementSelect(object.elementName);
       this.realElement = firstVal;
-      this.realElementField = [];
-      this.selectedElementName = '';
-      this.elementTags = [];
-      this.oldStartTime = '';
-      this.oldEndTime = '';
-      this.newStartTime = '';
-      this.newEndTime = '';
-      this.configJson = '';
     }
   },
   data() {
@@ -298,46 +282,19 @@ export default {
         tagsList.push(t.tagName);
       });
       if (tagsList.includes('mainid') && tagsList.includes('timestamp') && tagsList.includes('productionstatus')) {
-        this.loading = true;
-        const oldDataStartTime = new Date(this.oldStartTime).getTime();
-        const oldDataEndTime = new Date(this.oldEndTime).getTime();
-        let downloadData = await this.postStreamRecords({
-          elementName: this.selectedElementName,
-          queryParam: `?assetId=4&datefrom=${oldDataStartTime}&dateto=${oldDataEndTime}`,
-          request: {
-            tags: tagsList,
-          },
-        });
-        // download file for old data
-        let csvData = new Blob([downloadData], { type: 'text/csv;charset=utf-8;' });
-        let csvURL = window.URL.createObjectURL(csvData);
-        let testLink = document.createElement('a');
-        testLink.href = csvURL;
-        testLink.setAttribute('download', `${this.selectedElementName}-${timestamp}-old.csv`);
-        testLink.click();
-        // new data
-        const newDataStartTime = new Date(this.newStartTime).getTime();
-        const newDataEndTime = new Date(this.newEndTime).getTime();
-        downloadData = await this.postStreamRecords({
-          elementName: this.selectedElementName,
-          queryParam: `?assetId=4&datefrom=${newDataStartTime}&dateto=${newDataEndTime}`,
-          request: {
-            tags: tagsList,
-          },
-        });
-        // download file for new data
-        csvData = new Blob([downloadData], { type: 'text/csv;charset=utf-8;' });
-        csvURL = window.URL.createObjectURL(csvData);
-        testLink = document.createElement('a');
-        testLink.href = csvURL;
-        testLink.setAttribute('download', `${this.selectedElementName}-${timestamp}.csv`);
-        testLink.click();
         const oldStartTime = new Date(this.oldStartTime);
         const oldEndTime = new Date(this.oldEndTime);
         const newStartTime = new Date(this.newStartTime);
         const newEndTime = new Date(this.newEndTime);
-        const object = {
+        const payload = {
           realelement: this.selectedElementName,
+          tagslist: tagsList,
+          olddatastarttimestamp: new Date(this.oldStartTime).getTime(),
+          olddataendtimestamp: new Date(this.oldEndTime).getTime(),
+          olddatafilename: `${this.selectedElementName}-${timestamp}-old.csv`,
+          newdatastarttimestamp: new Date(this.newStartTime).getTime(),
+          newdataendtimestamp: new Date(this.newEndTime).getTime(),
+          newdatafilename: `${this.selectedElementName}-${timestamp}.csv`,
           oldtraindatastarttime: `${oldStartTime.getDay()}-${oldStartTime.getMonth() + 1}-${oldStartTime.getFullYear()}:${oldStartTime.getHours()}:${oldStartTime.getMinutes()}:${oldStartTime.getSeconds()}`,
           oldtraindataendtime: `${oldEndTime.getDay()}-${oldEndTime.getMonth() + 1}-${oldEndTime.getFullYear()}:${oldEndTime.getHours()}:${oldEndTime.getMinutes()}:${oldEndTime.getSeconds()}`,
           newtraindatastarttime: `${newStartTime.getDay()}-${newStartTime.getMonth() + 1}-${newStartTime.getFullYear()}:${newStartTime.getHours()}:${newStartTime.getMinutes()}:${newStartTime.getSeconds()}`,
@@ -350,8 +307,7 @@ export default {
           status: 'In Progress',
           trainingmode: 'Manual',
         };
-        await this.addModelTraningData(object);
-        await this.fetchTrainingData(this.selectedModelObject.modelid);
+        this.addModelTraningData(payload);
         this.elementList = [];
         this.elementList.push({
           header: 'Real ELement',
@@ -391,12 +347,12 @@ export default {
       this.selectedElementName = val;
       await this.getTagsForSelectedElement(this.selectedElementName);
       this.tagsList = this.elementInformation.tags;
-      console.log(this.tagsList);
       const list = await this.getModelInputs(`?query=modelid=="${this.selectedModelObject.modelid}"`);
-      console.log(list.modelInputs);
       list.modelInputs.forEach((f) => {
         const tagData = this.tagsList.find((tag) => tag.tagName === f.tagName);
-        this.elementTags.push(tagData);
+        if (tagData) {
+          this.elementTags.push(tagData);
+        }
       });
       // this.elementTags = modelInputs;
     },

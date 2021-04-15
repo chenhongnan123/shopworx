@@ -300,7 +300,7 @@ export default ({
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
       const data = await dispatch(
         'element/getRecordsByTags',
-        { payload },
+        payload,
         { root: true },
       );
       if (data) {
@@ -522,7 +522,6 @@ export default ({
         description: 'productionstatus',
         parametercategory: '45',
       });
-      console.log(parameters);
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'
@@ -853,9 +852,8 @@ export default ({
         assetid: ASSETID,
       };
       const created = await dispatch(
-        'element/postRecord',
+        'element/postMmsStartModelTraining',
         {
-          elementName: ELEMENTS.MODEL_TRAINING,
           payload,
         },
         { root: true },
@@ -961,11 +959,25 @@ export default ({
       }
     },
 
-    sendTestModel: async ({ dispatch }, payload) => {
+    sendTestModel: async ({ dispatch, state }, payload) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const request = {
+        ...payload,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+      };
       const created = await dispatch(
-        'element/sendTestModel',
+        'element/postMmsTestModel',
         {
-          payload,
+          payload: request,
+          queryParam: `?modelid=${request.modelid}`,
         },
         { root: true },
       );

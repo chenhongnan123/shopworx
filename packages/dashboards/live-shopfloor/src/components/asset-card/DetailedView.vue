@@ -70,14 +70,14 @@
           <div :class="`${color}--text text--lighten-4 mt-2`">
             Down since
           </div>
-          <div class="display-1">
+          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
             {{ getStrictDistance(machine.downsince) }}
           </div>
           <div :class="`${color}--text text--lighten-4 mt-2`">
             Down reason
           </div>
-          <div class="display-1">
-            -
+          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
+            {{ machine.downreason || '-' }}
           </div>
         </div>
         <div v-if="machine.machinestatus === 'NOPLAN'" class="px-4 mt-2">

@@ -309,7 +309,7 @@ export default ({
     createElement: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/createElement',
-        payload,
+        { element: payload },
         { root: true },
       );
       return created;

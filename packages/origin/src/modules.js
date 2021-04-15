@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import CustomerAddNew from '@shopworx/customer-add-new';
 import CustomerAssets from '@shopworx/customer-assets';
 import CustomerData from '@shopworx/customer-data';
 import CustomerDeployment from '@shopworx/customer-deployment';
@@ -9,6 +10,12 @@ import CustomerWebhooks from '@shopworx/customer-webhooks';
 import store from './store';
 import router from './router';
 import i18n from './i18n';
+
+Vue.use(CustomerAddNew, {
+  router,
+  store,
+  i18n,
+});
 
 Vue.use(CustomerAssets, {
   router,

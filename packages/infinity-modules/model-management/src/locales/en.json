@@ -2,7 +2,7 @@
   "success": {
     "PARAMETER_CREATE": "Input parameter added!",
     "TRIGGER_CREATE": "Trigger created!",
-    "TRAINING_SAVED": "Training data save successfully.",
+    "TRAINING_SAVED": "Training data save successfully, list will be updated after files are downloaded.",
     "TRIGGER_DELETE": "Trigger removed!",
     "PARAMETER_DELETE": "Input parameter removed!",
     "TRANSFORMATION_CREATE": "Output transformation added!",

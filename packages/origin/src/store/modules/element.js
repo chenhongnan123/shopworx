@@ -26,10 +26,22 @@ export default ({
       return false;
     },
 
-    createElement: async ({ dispatch }, element) => {
+    createElement: async ({ dispatch }, {
+      element,
+      webhooks = [],
+    }) => {
       try {
         const { data } = await ElementService.createElement(element);
         if (data && data.results) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId: data.elementId,
+              },
+            });
+          }
           return data.elementId;
         }
         const elem = await dispatch('getElement', element.elementName);
@@ -54,10 +66,11 @@ export default ({
     createElementAndTags: async ({ dispatch }, {
       element,
       tags,
+      webhooks = [],
     }) => {
       let tagsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -76,10 +89,11 @@ export default ({
       tags,
       records,
       assetId,
+      webhooks = [],
     }) => {
       let recordsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -111,7 +125,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -149,10 +163,11 @@ export default ({
       tags,
       records,
       assetId = 0,
+      webhooks = [],
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -281,6 +296,18 @@ export default ({
     postRecord: async (_, { elementName, payload }) => {
       try {
         const { data } = await ElementService.postRecord(elementName, payload);
+        if (data && data.errors) {
+          return false;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    createWebhook: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.createWebhook(payload);
         if (data && data.errors) {
           return false;
         }

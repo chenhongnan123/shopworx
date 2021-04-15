@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added data fetch query ([9c16dd6](https://bitbucket.org/entrib/shopworx/commits/9c16dd692056c78329825d9ce44c0c704dbdad9e))
+* **data-visualizer:** added download link to the export log ([37be1c4](https://bitbucket.org/entrib/shopworx/commits/37be1c4ccfc4862f2259da12d590bfc9b7c9029a))
+* **data-visualizer:** fetch default parameters from the server ([63a691e](https://bitbucket.org/entrib/shopworx/commits/63a691e9c9d197791e311dc966ecd9eb83b32ff2))
+* **data-visualizer:** remove sort and filter ([e5335e3](https://bitbucket.org/entrib/shopworx/commits/e5335e301460fe628eaf54b7ec38631e31083c6b))
+* **origin:** fixed object parameter for shift oee report ([1207910](https://bitbucket.org/entrib/shopworx/commits/1207910b941a64fcce2cb35a3364619b98f1f8d5))
+* **origin:** fixed payload (vm) for shift oee report ([ddff4a4](https://bitbucket.org/entrib/shopworx/commits/ddff4a43852220bddf98aee6bca8f9ee5bb903cb))
+
+
+### Features
+
+* **data-visualizer:** added auto page size ([75b3b33](https://bitbucket.org/entrib/shopworx/commits/75b3b3332b6aa84b04c9c52206feafb38ab26a68))
+* **data-visualizer:** added data export dialog ([dc8de14](https://bitbucket.org/entrib/shopworx/commits/dc8de146c2509a73ae1fb308c209190c09c776d4))
+* **data-visualizer:** added date query in the export logs ([304b4bd](https://bitbucket.org/entrib/shopworx/commits/304b4bda22d857fe88d43c8fbee0a3685db5ad15))
+* **data-visualizer:** added server side pagination ([50881a3](https://bitbucket.org/entrib/shopworx/commits/50881a311bd90534a71b0c22e3ff16491175a191))
+* **data-visualizer:** auto fetch export logs every 2 minutes ([e21e8c3](https://bitbucket.org/entrib/shopworx/commits/e21e8c3931248f1315e593d088ae840d58978cc3))
+* **data-visualizer:** integrated grid visualizations ([83b6211](https://bitbucket.org/entrib/shopworx/commits/83b6211db842467ee816f8815261650007c8624a))
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+
+### Bug Fixes
+
+* **production-log:** fixed form reset after rejection entry ([2f9fbb5](https://bitbucket.org/entrib/shopworx/commits/2f9fbb5c484fe7ecf9f655a87ab0dc4bd7170f05))
+* **user-dashboard:** display oee values to 2 decimal places ([25ecde2](https://bitbucket.org/entrib/shopworx/commits/25ecde2c3351de246b18d3c2685a4d393b766684))
+* **user-dashboard:** show blank state for oee widget if no data ([a4ec2c4](https://bitbucket.org/entrib/shopworx/commits/a4ec2c4a68213cb041d41b259c408e6764e88bac))
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I149 fix button loading all users ([02eb9e3](https://bitbucket.org/entrib/shopworx/commits/02eb9e344f6fa40f9266bfaf16996a456f47c302))
+* **admin:** QA0-I151 fixed alert when sent invite ([5c6760e](https://bitbucket.org/entrib/shopworx/commits/5c6760ecb3196351e1c1112f129783911388e2ee))
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **customer-onboarding:** fixed reports and report views provisioning ([7c2cd1e](https://bitbucket.org/entrib/shopworx/commits/7c2cd1e61b63b615d05e42d92203da7da7c93537))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+* **live-shopfloor:** fix dashbaord display on hour change ([7e17175](https://bitbucket.org/entrib/shopworx/commits/7e17175f81cc6873bec7a06cde9c98b5919b794e))
+* **live-shopfloor:** fixed downtime reason display ([200fb23](https://bitbucket.org/entrib/shopworx/commits/200fb23ad179c0e671a00ce5340db48fba326f70))
+* **production-log:** fixed hourly production fetch ([3b60d38](https://bitbucket.org/entrib/shopworx/commits/3b60d384e424978f223c8e0ffd161d6d2c310592))
+* **user-roles:** fixed role access for report views ([6a5be2f](https://bitbucket.org/entrib/shopworx/commits/6a5be2fe82f90663f52f7bb8fa8ab35387eae042))
+
+
+### Features
+
+* **customer-onboarding:** origin user can now on-board a new customer ([033355c](https://bitbucket.org/entrib/shopworx/commits/033355c9f02cdf1e48424c625fb5fe16dae93840))
+* **downtime-log:** disable multiple assignment on mobile ([6e327a8](https://bitbucket.org/entrib/shopworx/commits/6e327a81eaca5afab1f93d049b4f2962074c68af))
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+* **users:** user cannot delete himself ([9c990e8](https://bitbucket.org/entrib/shopworx/commits/9c990e8360a166849ab82abbc97b62dad72dad57))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 

@@ -208,7 +208,7 @@ export default {
       if (this.drawerAdminItems && this.drawerAdminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.drawerAdminItems.length + 16 + 16);
+        totalHeight += (40 * this.drawerAdminItems.length + 16 + 16 + 1);
       }
       return totalHeight;
     },

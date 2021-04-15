@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+
+
+### Features
+
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 

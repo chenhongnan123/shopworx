@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/admin
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I149 fix button loading all users ([02eb9e3](https://bitbucket.org/entrib/shopworx/commits/02eb9e344f6fa40f9266bfaf16996a456f47c302))
+* **admin:** QA0-I151 fixed alert when sent invite ([5c6760e](https://bitbucket.org/entrib/shopworx/commits/5c6760ecb3196351e1c1112f129783911388e2ee))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+* **user-roles:** fixed role access for report views ([6a5be2f](https://bitbucket.org/entrib/shopworx/commits/6a5be2fe82f90663f52f7bb8fa8ab35387eae042))
+
+
+### Features
+
+* **users:** user cannot delete himself ([9c990e8](https://bitbucket.org/entrib/shopworx/commits/9c990e8360a166849ab82abbc97b62dad72dad57))
+
+
+
+
+
 ## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
 
 **Note:** Version bump only for package @shopworx/admin
