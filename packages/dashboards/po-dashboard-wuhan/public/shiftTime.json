@@ -1,0 +1,27 @@
+{
+    "results": [
+        {
+            "id": 1,
+            "shiftname": "shift1",
+            "shiftdescription": "Shift 1",
+            "starttime": "08:00:00",
+            "endtime": "19:59:59",
+            "dateCreated": null,
+            "dateModified": null,
+            "effectivefrom": 1585688400000,
+            "effectiveto": 1743454800000,
+            "noofhours": 12.0,
+            "durationinmilliseconds": 43200000,
+            "type": "DAY",
+            "sortindex": 1,
+            "shiftnumber": 1,
+            "siteId": 1,
+            "starttimestamp": 1588032000000,
+            "endtimestamp": 1588075200000,
+            "shiftdate": "28-04-2020",
+            "shifthour": 4,
+            "iscurrentrecord": true,
+            "customerid": 1
+        }
+    ]
+}
