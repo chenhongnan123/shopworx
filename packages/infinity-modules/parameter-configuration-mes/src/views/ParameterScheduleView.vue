@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid class="py-0" v-resize="setHeight">
     <portal to="app-extension">
       <v-row>
         <v-col cols="12" md="3">
@@ -194,7 +194,7 @@
       :options="{ itemsPerPage: 5 }"
       show-select
       fixed-header
-      :height="tableHeight - 168"
+      :height="height"
     >
       <template v-slot:item.name="props">
         <v-edit-dialog
@@ -495,6 +495,7 @@ export default {
       confirmDialog: false,
       socket: null,
       saving: false,
+      height: window.innerHeight,
     };
   },
   async created() {
@@ -503,6 +504,9 @@ export default {
     await this.getPageDataList();
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {});
+  },
+  mounted() {
+    this.setHeight();
   },
   destroyed() {
     this.setLineValue('');
@@ -625,6 +629,9 @@ export default {
       'createTagElement',
       'updateTagStatus',
     ]),
+    setHeight() {
+      this.height = window.innerHeight - 212;
+    },
     onSelectProtocol(value) {
       this.setProtocol(value);
       if (this.protocol) {
