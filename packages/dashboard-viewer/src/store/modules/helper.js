@@ -50,9 +50,11 @@ export default ({
     setShowHeaderButtons: set('showHeaderButtons'),
   },
   getters: {
-    isTV: ({ userAgent }, _, rootState) => {
+    isAndroid: ({ userAgent }) => userAgent.includes('wv'),
+
+    isTV: (_, { isAndroid }, rootState) => {
       const { deviceId } = rootState.dashboard;
-      return userAgent.includes('wv') && deviceId;
+      return isAndroid && !!deviceId;
     },
   },
 });

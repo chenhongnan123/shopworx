@@ -44,16 +44,23 @@ export default {
     this.timeInterval = setInterval(async () => {
       await self.getBusinessTime();
     }, 60000);
-    if (this.isLoaded) {
-      await this.getMachines();
+    if (!this.isLoaded) {
+      this.setSelectedView({
+        label: 'Shift',
+        value: 'shift',
+        reportName: 'shiftliveshopfloor',
+      });
     }
+    await this.getMachines();
     this.setLoading(false);
   },
   beforeMount() {
     this.sseInit();
   },
   beforeDestroy() {
-    this.sseClient.close();
+    if (this.sseClient) {
+      this.sseClient.close();
+    }
     clearTimeout(this.timeout);
     clearInterval(this.timeInterval);
   },
@@ -93,6 +100,7 @@ export default {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
+      'setSelectedView',
     ]),
     ...mapMutations('helper', [
       'setShowHeaderButtons',
