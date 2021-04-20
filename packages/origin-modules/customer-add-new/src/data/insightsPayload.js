@@ -12,7 +12,7 @@ export default [
     categoryName: 'basicperformance',
     parentId: 0,
   }, {
-    insightViewName: 'What is the summary of yesterday\'s production?',
+    insightViewName: 'What is the summary of yesterdays production?',
     inputMap: '{"siteId": true,"time":{"date":-1}}',
     reportName: 'yesterdaysproductionsummary',
     categoryName: 'basicperformance',
