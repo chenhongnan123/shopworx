@@ -1,10 +1,6 @@
 <template>
 <div>
-  <v-card
-    flat
-    class="transparent"
-    id="chart"
-  ></v-card>
+  <div id="chart" :class="agGridTheme"></div>
   <ag-grid-vue
     :sideBar="true"
     :rowData="rowData"
@@ -31,6 +27,8 @@
     @column-row-group-changed="onStateChange"
     @column-value-changed="onStateChange"
     @first-data-rendered="visualizeData"
+    :customChartThemes="customChartThemes"
+    :chartThemes="chartThemes"
   ></ag-grid-vue>
 </div>
 </template>
@@ -57,6 +55,8 @@ export default {
       gridColumnApi: null,
       defaultColDef: null,
       rowGroupPanelShow: null,
+      chartThemes: null,
+      customChartThemes: null,
     };
   },
   created() {
@@ -72,6 +72,34 @@ export default {
       enableRowGroup: true,
       floatingFilter: true,
     };
+  },
+  beforeMount() {
+    this.customChartThemes = {
+      shopworxTheme: {
+        baseTheme: 'ag-pastel',
+        palette: {
+          fills: [
+            '#354493',
+            '#21C77C',
+            '#2A2F36',
+            '#01C1E2',
+            '#0172CA',
+            '#5C68A8',
+            '#4CD195',
+            '#3E4249',
+          ],
+          strokes: ['black'],
+        },
+      },
+    };
+    this.chartThemes = [
+      'shopworxTheme',
+      'ag-default',
+      'ag-material',
+      'ag-pastel',
+      'ag-vivid',
+      'ag-solar',
+    ];
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
@@ -131,18 +159,24 @@ export default {
     },
     createRangeChart(chartContainer) {
       const param = {
-        chartType: 'column',
+        chartType: 'groupedColumn',
         cellRange: {
           columns: this.columnDefs.map((c) => c.field),
         },
         aggFunc: this.aggFunc,
         chartThemeOverrides: {
           common: {
+            background: {
+              visible: false,
+            },
             title: {
               enabled: false,
             },
             legend: { enabled: true },
-            navigator: { enabled: true },
+            navigator: {
+              enabled: true,
+              height: 15,
+            },
           },
         },
         chartContainer,
@@ -151,14 +185,20 @@ export default {
     },
     createPivotChart(chartContainer) {
       const param = {
-        chartType: 'column',
+        chartType: 'groupedColumn',
         chartThemeOverrides: {
           common: {
+            background: {
+              visible: false,
+            },
             title: {
               enabled: false,
             },
             legend: { enabled: true },
-            navigator: { enabled: true },
+            navigator: {
+              enabled: true,
+              height: 15,
+            },
           },
         },
         chartContainer,
