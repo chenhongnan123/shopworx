@@ -25,7 +25,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="optionalRes.length > 0">
-      <v-expansion-panel-header class="pa-0 ma-0 error--text">
+      <v-expansion-panel-header class="pa-0 ma-0 warning--text">
           {{ $t('error.EMPTY_COLUMN_ERROR_OPTIONAL_FIELD', optionalRes.length) }}
           </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -89,11 +89,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-        <span
-         v-if="yesBtnDisable === false"
-         >
-          Still you want to proceed then click on YES button
-        </span>
         </v-card-text>
 
         <v-card-actions>
@@ -105,7 +100,7 @@
             :loading="deleting"
             :disabled="yesBtnDisable"
           >
-            Yes
+            Continue
           </v-btn>
           <!-- <v-btn
             color="error"
@@ -331,3 +326,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .v-expansion-panel__header {
+     color:yellow
+  }
+</style>

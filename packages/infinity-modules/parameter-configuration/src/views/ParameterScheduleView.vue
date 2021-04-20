@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid class="py-0" v-resize="setHeight">
     <div justify="center" class="planScheduleView">
       <div class="py-0">
         <div class="stick">
@@ -156,6 +156,8 @@
         'items-per-page-options': [100, 300, 500, 1000]}"
         :items-per-page="100"
         show-select
+        fixed-header
+        :height="height"
         >
           <template #item.name="props">
             <v-edit-dialog
@@ -500,9 +502,11 @@ export default {
       socket: null,
       saving: false,
       savingImport: false,
+      height: window.innerHeight,
     };
   },
   async mounted() {
+    this.setHeight();
     this.ProceedDialog = this.$refs.ProceedDialog;
     this.$root.$on('confirmationSignal', (data) => {
       this.dialog = data;
@@ -604,6 +608,9 @@ export default {
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setCreateParam']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
       'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParametersList']),
+    setHeight() {
+      this.height = window.innerHeight - 212;
+    },
     async executeCreateFunction(val) {
       if (val) {
         this.responce = [];
@@ -1436,37 +1443,47 @@ export default {
       }
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      data.forEach((item) => {
-        item.lineid = this.lineValue;
-        item.sublineid = this.sublineValue;
-        item.stationid = this.stationValue;
-        item.substationid = this.substationValue;
-        if (this.stationList.length > 0) {
-          item.plcaddress = this.stationList
-            .filter((station) => this.stationValue === station.id)[0].plcipaddress;
-        }
-        if (this.datatypeList.length > 0) {
-          item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
-            .isbigendian === 1;
-          item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
-            .isswapped === 1;
-          // if (Number(item.datatypeList) === 11) {
-          //   item.size = this.datatypeList
-          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
-          // }
-          if (Number(item.datatype) !== 11) {
-            item.size = this.datatypeList
-              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+      if (data.length > 0) {
+        data.forEach((item) => {
+          item.lineid = this.lineValue;
+          item.sublineid = this.sublineValue;
+          item.stationid = this.stationValue;
+          item.substationid = this.substationValue;
+          if (this.stationList.length > 0) {
+            item.plcaddress = this.stationList
+              .filter((station) => this.stationValue === station.id)[0].plcipaddress;
           }
-        }
-        item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().replace(/\W/g, '');
-        item.assetid = 4;
-        delete item.monitorvalue;
-        delete item.status;
-      });
+          if (this.datatypeList.length > 0) {
+            item.isbigendian = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
+              .isbigendian === 1;
+            item.isswapped = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0]
+              .isswapped === 1;
+            // if (Number(item.datatypeList) === 11) {
+            //   item.size = this.datatypeList
+            //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            // }
+            if (Number(item.datatype) !== 11) {
+              item.size = this.datatypeList
+                .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            }
+          }
+          item.protocol = item.protocol.toUpperCase();
+          item.name = item.name.toLowerCase().replace(/\W/g, '');
+          item.assetid = 4;
+          delete item.monitorvalue;
+          delete item.status;
+        });
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
       const dataList = data.concat(this.parameterList);
       const importedDataList = data;
       const floatOrDoubles = dataList.filter((fd) => fd.maxdecimal === '' || fd.maxdecimal === undefined);

@@ -976,7 +976,8 @@ export default ({
       const created = await dispatch(
         'element/postMmsTestModel',
         {
-          request,
+          payload: request,
+          queryParam: `?modelid=${request.modelid}`,
         },
         { root: true },
       );

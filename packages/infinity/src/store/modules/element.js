@@ -402,9 +402,9 @@ export default ({
       }
     },
 
-    postMmsTestModel: async (_, { payload }) => {
+    postMmsTestModel: async (_, { payload, queryParam }) => {
       try {
-        const { data } = await ElementService.postMmsTestModel(payload);
+        const { data } = await ElementService.postMmsTestModel(payload, queryParam);
         if (data) {
           return data;
         }
