@@ -69,8 +69,8 @@ class ElementService {
     return this.request.post('/swx/mms/startmodeltraining', payload);
   }
 
-  postMmsTestModel(payload) {
-    return this.request.post('/swx/mms/testmodel', payload);
+  postMmsTestModel(payload, queryParam) {
+    return this.request.post(`/swx/mms/testmodel${queryParam}`, payload);
   }
   
   getRecordById(elementName, id) {

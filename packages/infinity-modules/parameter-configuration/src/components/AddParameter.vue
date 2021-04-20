@@ -94,7 +94,7 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
-              label="bitnumber*"
+              label="Bit Number*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.bitnumber"
               :rules="rules.bitnumber"
@@ -216,10 +216,17 @@ export default {
         ],
         dbaddress: [
           (v) => !!v || 'DB ADdress is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'DB ADdress is an Integer( number )',
+        ],
+        bitnumber: [
+          (v) => !!v || 'Bit Number is required',
+          (v) => /^[0-7]*$/.test(v)
+            || 'Bit Number is an Integer( between 0 - 7 )',
         ],
         startaddress: [
-          (v) => !!v || 'Start Adress is required',
-          (v) => v % 1 === 0 || 'Start ADdress is Integer',
+          (v) => !!v || 'Start Address is required',
+          (v) => v % 1 === 0 || 'Start Address is an Integer',
         ],
         protocol: [
           (v) => !!v || 'Protocol is required',
@@ -246,9 +253,13 @@ export default {
         ],
         parameterunit: [
           (v) => !!v || 'Parameter Unit is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'Only integers( number ) allowed',
         ],
         paid: [
           (v) => !!v || 'PAID is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'Only integers( number ) allowed',
         ],
       },
       boolList: [
@@ -308,16 +319,16 @@ export default {
       return query;
     },
     async saveParameter() {
+      const paramname = this.parameterObj.name.toLowerCase().replace(/\W/g, '');
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
         const {
-          name,
           dbaddress,
           startaddress,
           bitnumber,
           datatype,
         } = parameterObj;
-        if (this.parameterList.some((parameter) => name.toLowerCase()
+        if (this.parameterList.some((parameter) => paramname.toLowerCase()
            === parameter.name.toLowerCase())) {
           this.setAlert({
             show: true,
@@ -357,6 +368,7 @@ export default {
           ...parameterObj,
           assetid: 4,
           parametercategory: parameterObj.parametercategory.id,
+          name: paramname,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Features
+
+* **report-viewer:** added otion to show/hide chart ([4d6d239](https://bitbucket.org/entrib/shopworx/commits/4d6d23933728d6c0b2c8220608569483f9ead241))
+* **report-viewer:** added shopworx theme to the chart ([076d658](https://bitbucket.org/entrib/shopworx/commits/076d6580f4ce57438a48735145812406f2ca7e77))
+
+
+
+
+
 ## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
 
 
