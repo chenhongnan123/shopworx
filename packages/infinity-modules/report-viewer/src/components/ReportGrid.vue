@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div id="chart" :class="agGridTheme"></div>
+  <div id="chart" :class="agGridTheme" v-show="showChart"></div>
   <ag-grid-vue
     :sideBar="true"
     :rowData="rowData"
@@ -15,7 +15,7 @@
     :class="`${agGridTheme} mt-2`"
     :localeText="agGridLocaleText"
     :defaultColDef="defaultColDef"
-    style="width: 100%; height: 450px;"
+    :style="`width: 100%; height: ${showChart ? '450' : '600'}px;`"
     @sort-changed="onStateChange"
     @filter-changed="onStateChange"
     @column-pinned="onStateChange"
@@ -108,7 +108,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
-    ...mapState('reports', ['report', 'reportMapping']),
+    ...mapState('reports', ['report', 'reportMapping', 'showChart']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
   watch: {
