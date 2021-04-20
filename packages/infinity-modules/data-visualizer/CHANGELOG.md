@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added date range validation to filters ([f19ffc5](https://bitbucket.org/entrib/shopworx/commits/f19ffc59a089a0814308a65da5309f0a939ea39b))
+* **data-visualizer:** fixed email validations and log table height width ([ab37c33](https://bitbucket.org/entrib/shopworx/commits/ab37c33e93831839e63c781581b63e2d8bfc0977))
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+* **data-visualizer:** added server side pagination to export logs ([48d4c28](https://bitbucket.org/entrib/shopworx/commits/48d4c28e25e90f83762b1be81b2a3258262d38c1))
+
+
+
+
+
 ## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
 
 
