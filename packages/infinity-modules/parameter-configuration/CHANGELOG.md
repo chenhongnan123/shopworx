@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I500 ([2c7915c](https://bitbucket.org/entrib/shopworx/commits/2c7915c339dc8799b09cf8a7a18711f2d881287c))
+* **parameter-configuration:** RA-I530, RA-I568 ([6aaa17c](https://bitbucket.org/entrib/shopworx/commits/6aaa17c5d9cae269c5c4f39fe483b485e996eb5b))
+* **parameter-configuration:** RA-I570 ([54664fd](https://bitbucket.org/entrib/shopworx/commits/54664fd91346f12d7e92ed17ee0b8b5e9da3d09d))
+
+
+
+
+
 ## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
 
 
