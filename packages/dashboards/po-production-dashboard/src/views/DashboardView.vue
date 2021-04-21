@@ -13,7 +13,22 @@
       v-resize="onResize"
     >
       <v-responsive :max-height="cHeight" :min-height="cHeight">
-        Dashboard
+        <div class="main pa-4">
+          <v-row class="pb-2" style="height:3.5rem">
+            <v-col cols="4" class="pr-2">
+              <Confidence v-if="dashboardData" :confidenceData="dashboardData.reportdatacols[0]"/>
+            </v-col>
+            <v-col cols="8">
+              <ConfidenceTrend v-if="dashboardData"
+                :confidenceData="dashboardData.reportdatacols[0]"/>
+            </v-col>
+          </v-row>
+          <v-row  style="height:5.5rem">
+            <v-col cols="12">
+              <OpCharts v-if="dashboardData" :confidenceData="dashboardData.reportdatacols[0]"/>
+            </v-col>
+          </v-row>
+        </div>
       </v-responsive>
     </v-container>
     <v-app-bar
@@ -45,6 +60,9 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
+import Confidence from '../components/Confidence.vue';
+import ConfidenceTrend from '../components/ConfidenceTrend.vue';
+import OpCharts from '../components/OpCharts.vue';
 
 export default {
   name: 'DashboardView',
@@ -55,6 +73,11 @@ export default {
       timeInterval: null,
       cHeight: window.innerHeight,
     };
+  },
+  components: {
+    Confidence,
+    ConfidenceTrend,
+    OpCharts,
   },
   created() {
     const self = this;
