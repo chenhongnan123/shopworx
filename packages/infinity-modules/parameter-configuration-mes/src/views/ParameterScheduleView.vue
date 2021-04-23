@@ -626,6 +626,7 @@ export default {
       'downloadToPLC',
       'getSubStationIdElement',
       'getSubStationIdElement',
+      'getElementDetails',
       'createTagElement',
       'updateTagStatus',
     ]),
@@ -805,11 +806,26 @@ export default {
       await this.getSubStationIdElement(selectedSubStaionlist[0]);
       const listT = this.subStationElementDeatils;
       // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
-      const FilteredTags = listT.tags.map((obj) => ({
+      let FilteredTags = listT.tags.map((obj) => ({
         id: obj.id,
         elementId: obj.elementId,
       }));
-      const payloadData = [];
+      let payloadData = [];
+      FilteredTags.forEach(async (tag) => {
+        payloadData.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
+          status: 'INACTIVE',
+        });
+      });
+      // on delete update the tags of traceability element
+      const listTags = await this.getElementDetails('traceability');
+      // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
+      FilteredTags = listTags.tags.map((obj) => ({
+        id: obj.id,
+        elementId: obj.elementId,
+      }));
+      payloadData = [];
       FilteredTags.forEach(async (tag) => {
         payloadData.push({
           tagId: tag.id,
@@ -1216,6 +1232,9 @@ export default {
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
           const tagList = [];
+          const traceabilityTagList = [];
+          // get information of traceability element
+          const traceabilityElementDetails = await this.getElementDetails('traceability');
           await this.getSubStationIdElement(this.substationValue);
           // add by default mainid
           tagList.push({
@@ -1295,11 +1314,58 @@ export default {
                 filterFromTagName: '',
                 filterQuery: '',
               });
+              // Add tags to Traceability element
+              traceabilityTagList.push({
+                assetId: 4,
+                tagName: `${this.substationValue}_${tagname.toLowerCase().trim()}`,
+                tagDescription: `${this.substationValue}_${item.name}`,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: traceabilityElementDetails.element.id,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
+              });
             }
           });
           await this.createTagElement(tagList);
-          const payloadData = [];
+          let payloadData = [];
           tagList.forEach((l) => {
+            const tag = this.createElementResponse
+              .filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+          // updates tags of traceability elements
+          await this.createTagElement(traceabilityTagList);
+          payloadData = [];
+          traceabilityTagList.forEach((l) => {
             const tag = this.createElementResponse
               .filter((f) => f.tagName === l.tagName);
             if (!tag[0].created) {
