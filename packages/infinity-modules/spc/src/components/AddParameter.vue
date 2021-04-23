@@ -4,28 +4,33 @@
     <v-card>
       <v-card-title primary-title>
         <span>
-          Create Parameter Configuration
+          Create Parameter Analysis
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-text style="height: 800px;">
+      <v-card-text style="height: 350px;">
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-autocomplete clearable label="Parameter*" :items="processParameter" return-object :disabled="saving" item-text="name" prepend-icon="$production" @change="handleParameterClick" :rules="rules.parameter">
+           <v-autocomplete class="mt-5" :items="elementList" :rules="rules.element" outlined  hide-details v-model="element" name="name" label="Select Element" item-text="elementDescription" return-object clearable>
             <template v-slot:item="{ item }">
               <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.id"></v-list-item-subtitle>
+                <v-list-item-title v-text="item.elementName"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.elementDescription"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </v-autocomplete>
-          <v-text-field :disabled="saving" :rules="rules.usl" label="USL*" prepend-icon="mdi-tray-plus" v-model="parameterConfigObj.usl"></v-text-field>
-          <v-text-field :disabled="saving" :rules="rules.lsl" label="LSL*" prepend-icon="mdi-tray-plus" v-model="parameterConfigObj.lsl"></v-text-field>
-          <v-text-field :disabled="saving" :rules="rules.max" label="Max*" prepend-icon="mdi-tray-plus" v-model="parameterConfigObj.max"></v-text-field>
-          <v-text-field :disabled="saving" :rules="rules.min" label="Min*" prepend-icon="mdi-tray-plus" v-model="parameterConfigObj.min"></v-text-field>
-          <v-text-field :disabled="saving" :rules="rules.target" label="Target*" prepend-icon="mdi-tray-plus" v-model="parameterConfigObj.target"></v-text-field>
+          <v-autocomplete class="mt-5" v-if="element" :items="tags" :rules="rules.element" outlined  hide-details v-model="tag" name="name" label="Select Tag" item-text="tagDescription" return-object  clearable>
+            <template v-slot:item="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-text="item.tagName"></v-list-item-title>
+                <v-list-item-subtitle v-text="item.tagDescription"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
+          <v-text-field class="mt-5" :disabled="saving" :rules="rules.ucl" outlined hide-details label="UCL*" type="number" v-model="parameterConfigObj.ucl"></v-text-field>
+          <v-text-field class="mt-5" :disabled="saving" :rules="rules.lcl" outlined hide-details label="LCL*" type="number" v-model="parameterConfigObj.lcl"></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -49,41 +54,29 @@ import {
 export default {
   data() {
     return {
+      element: null,
+      tag: null,
       saving: false,
       parameterConfigObj: {
-        lineid: null,
-        sublineid: null,
-        stationid: null,
-        substationid: null,
-        parameterid: null,
-        parametername: null,
-        parameterdescription: null,
-        target: null,
-        usl: null,
-        lsl: null,
-        max: null,
-        min: null,
+        ucl: null,
+        lcl: null,
       },
       valid: true,
       isSaveValid: false,
       rules: {
-        parameter: [(v) => !!v || 'Parameter is required'],
-        target: [(v) => !!v || 'Target is required', (v) => v > 0 || 'Target is greater than zero'],
-        usl: [(v) => !!v || 'USL is required', (v) => v > 0 || 'USL is greater than zero'],
-        lsl: [(v) => !!v || 'LSL is required', (v) => v > 0 || 'LSL is greater than zero'],
-        max: [(v) => !!v || 'Max is required', (v) => v > 0 || 'Max is greater than zero'],
-        min: [(v) => !!v || 'Min is required', (v) => v > 0 || 'Min is greater than zero'],
+        element: [(v) => !!v || 'Parameter is required'],
+        ucl: [(v) => !!v || 'USL is required'],
+        lcl: [(v) => !!v || 'LCL is required'],
       },
       boolList: [
         { name: 'Yes', id: 1 },
         { name: 'No', id: 0 },
       ],
-      protocolList: [{ name: 'SNAP7', id: 'SNAP7' }],
     };
   },
-  props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('spc', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'parameteranalysisList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
+    ...mapState('masters', ['elements']),
+    ...mapState('spc', ['addParameterDialog', 'spcconfigurationList']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -92,31 +85,40 @@ export default {
         this.setAddParameterDialog(val);
       },
     },
-    processParameter: {
-      get() {
-        return this.parameterList.filter((item) => item.parametercategory === '15');
-      },
+    elementList() {
+      // eslint-disable-next-line
+      return this.elements.map((element) => {
+        return {
+          ...element.element,
+          tags: element.tags,
+        };
+      });
+    },
+    tags() {
+      if (this.element) {
+        return this.element.tags.filter((tag) => tag.emgTagType === 'Int' || tag.emgTagType === 'Double' || tag.emgTagType === 'Float');
+      }
+      return [];
     },
   },
   watch: {},
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('spc', ['setAddParameterDialog']),
-    ...mapActions('spc', ['getPageDataList', 'createParameter', 'createParameteranalysis', 'getParameteranalysisListRecords', 'getSubStationIdElement', 'createTagElement']),
+    ...mapActions('spc', ['getPageDataList', 'createParameter', 'createSpcconfiguration', 'getSpcconfigurationListRecords', 'getSubStationIdElement', 'createTagElement']),
     getQuery() {
       let query = '?query=';
-      if (this.selectedParameterName) {
-        query += `parametername=="${this.selectedParameterName}"%26%26`;
+      if (this.elementValue) {
+        query += `elementName=="${this.elementValue}"`;
       }
-      query += `substationid=="${this.substation || null}"`;
       return query;
     },
     async saveParameter() {
-      const { parameterConfigObj } = this;
+      const { parameterConfigObj, tag, element } = this;
       if (this.$refs.form.validate()) {
         // prettier-ignore
         // eslint-disable-next-line max-len
-        if (this.parameteranalysisList.some((parameter) => parameterConfigObj.parametername === parameter.parametername)) {
+        if (this.spcconfigurationList.some((parameter) => parameterConfigObj.elementname === parameter.elementname)) {
           this.setAlert({
             show: true,
             type: 'error',
@@ -127,14 +129,18 @@ export default {
 
         const payload = {
           ...parameterConfigObj,
+          tagname: tag.tagName,
+          tagdescription: tag.tagDescription,
+          elementname: element.elementName,
+          elementdescription: element.elementDescription,
           assetid: 4,
         };
         this.saving = true;
-        const parameterList = await this.createParameteranalysis(payload);
+        const parameterList = await this.createSpcconfiguration(payload);
         this.saving = false;
         // eslint-disable-next-line max-len
         if (parameterList) {
-          this.getParameteranalysisListRecords(this.getQuery());
+          this.getSpcconfigurationListRecords(this.getQuery());
           Object.keys(this.parameterConfigObj).forEach((k) => {
             this.parameterConfigObj[k] = '';
           });
