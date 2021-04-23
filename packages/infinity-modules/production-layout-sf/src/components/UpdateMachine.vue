@@ -32,6 +32,14 @@
                 @keyup="nameValid"
               ></v-text-field>
               <v-text-field
+                label="Cell *"
+                v-model="newMachine.machinecell"
+                counter="15"
+                :rules="nameRules"
+                required
+                type="text"
+              ></v-text-field>
+              <v-text-field
                 label="Description"
                 type="Description"
                 hint="For example, Updated by Manager"
@@ -222,6 +230,7 @@ export default {
       this.saving = true;
       this.newMachine = {
         machinename: this.newMachine.machinename,
+        machinecell: this.newMachine.machinecell,
         description: this.newMachine.description,
         numbers: this.newMachine.numbers,
         expectedoee: this.newMachine.expectedoee,

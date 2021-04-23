@@ -49,6 +49,14 @@
                 type="text"
               ></v-text-field>
               <v-text-field
+                label="Cell *"
+                v-model="newMachine.machinecell"
+                counter="15"
+                :rules="nameRules"
+                required
+                type="text"
+              ></v-text-field>
+              <v-text-field
                 label="Description"
                 type="text"
                 hint="For example, Machine added by Manager"
