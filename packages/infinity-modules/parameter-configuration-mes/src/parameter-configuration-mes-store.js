@@ -1,5 +1,4 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
-
 export default ({
   namespaced: true,
   state: {
@@ -65,6 +64,14 @@ export default ({
       if (element) {
         commit('setCreateElementResponse', element);
       }
+    },
+    getElementDetails: async ({ dispatch }, elementName) => {
+      const element = await dispatch(
+        'element/getElement',
+        elementName,
+        { root: true },
+      );
+      return element;
     },
     getSubStationIdElement: async ({ commit, dispatch }, elementName) => {
       const element = await dispatch(
