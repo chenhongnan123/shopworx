@@ -70,7 +70,7 @@
     <v-row id="" style="height: calc(100% - 80px);">
       <v-col cols="9" style="height: 100%;">
         <v-row style="height: calc(50% - 20px);">
-           <v-card outlined style="height: 100%;width: 100%;">
+          <v-card outlined style="height: 100%;width: 100%;">
             <v-card-title class="primary white--text">
               {{ title1 }}
             </v-card-title>
@@ -115,43 +115,43 @@
               ></highcharts>
             </div>
             <v-list>
-            <v-list-item class="mt-2">
-              <v-list-item-title>Upper Tolerance</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ selectedParameter ? selectedParameter.ucl : '' }}
-              </v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item class="mt-2">
-              <v-list-item-title>Lower Tolerance</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ selectedParameter ? selectedParameter.lcl : '' }}
-              </v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item class="mt-2">
-              <v-list-item-title>Pp</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ xp.pp }}
-              </v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item class="mt-2">
-              <v-list-item-title>PpK</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ xp.ppk }}
-              </v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item class="mt-2">
-              <v-list-item-title>Cp</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ xp.cp }}
-              </v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item class="mt-2">
-              <v-list-item-title>CpK</v-list-item-title>
-              <v-list-item-subtitle class="text-right">
-                {{ xp.cpk }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
+              <v-list-item class="mt-2">
+                <v-list-item-title>Upper Tolerance</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ selectedParameter ? selectedParameter.ucl : '' }}
+                </v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item class="mt-2">
+                <v-list-item-title>Lower Tolerance</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ selectedParameter ? selectedParameter.lcl : '' }}
+                </v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item class="mt-2">
+                <v-list-item-title>Pp</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ xp.pp }}
+                </v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item class="mt-2">
+                <v-list-item-title>PpK</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ xp.ppk }}
+                </v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item class="mt-2">
+                <v-list-item-title>Cp</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ xp.cp }}
+                </v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item class="mt-2">
+                <v-list-item-title>CpK</v-list-item-title>
+                <v-list-item-subtitle class="text-right">
+                  {{ xp.cpk }}
+                </v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
           </v-card-text>
         </v-card>
       </v-col>
@@ -279,13 +279,8 @@ export default {
       this.loading2 = true;
       this.loading3 = true;
       this.loading4 = true;
-
-      const {
-        elementname,
-        tagname,
-        ucl,
-        lcl,
-      } = this.selectedParameter;
+      // eslint-disable-next-line
+      const { elementname, tagname, ucl, lcl } = this.selectedParameter;
       const { fromdate, todate } = this;
       const {
         // refresh,
@@ -545,48 +540,42 @@ export default {
       };
     },
     async getIChart(data) {
-      const response = await ApiService.post('/spc', { type: 1, data });
+      const response = await ApiService.post('http://localhost:7005/spc', {
+        type: 1,
+        data,
+      });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          const {
-            iCL,
-            iLCL,
-            iUCL,
-          } = response.data;
+          const { iCL, iLCL, iUCL } = response.data;
           this.chart1 = this.getChartConfig(iLCL, iCL, iUCL, data);
         }
       }
       this.loading1 = false;
     },
     async getMRChart(data) {
-      const response = await ApiService.post('http://localhost:7005/spc', { type: 2, data });
+      const response = await ApiService.post('http://localhost:7005/spc', {
+        type: 2,
+        data,
+      });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          const {
-            mr,
-            mrCL,
-            mrUCL,
-            mrLCL,
-          } = response.data;
+          // eslint-disable-next-line
+          const { mr, mrCL, mrUCL, mrLCL } = response.data;
           this.chart2 = this.getChartConfig(mrLCL, mrCL, mrUCL, mr);
         }
       }
       this.loading2 = false;
     },
     async getXbarSChart(data, groupSize) {
-      const response = await ApiService.post('http://localhost:7005/spc', { type: 4, data, groupSize });
+      const response = await ApiService.post('http://localhost:7005/spc', {
+        type: 4,
+        data,
+        groupSize,
+      });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          const {
-            s,
-            sbar,
-            sUCL,
-            sLCL,
-            x2bar,
-            xbar,
-            xUCL,
-            xLCL,
-          } = response.data;
+          // eslint-disable-next-line
+          const { s, sbar, sUCL, sLCL, x2bar, xbar, xUCL, xLCL } = response.data;
           this.chart1 = this.getChartConfig(sLCL, sbar, sUCL, s);
           this.chart2 = this.getChartConfig(xLCL, x2bar, xUCL, xbar);
         }
@@ -595,19 +584,15 @@ export default {
       this.loading2 = false;
     },
     async getXbarRChart(data, groupSize) {
-      const response = await ApiService.post('http://localhost:7005/spc', { type: 3, data, groupSize });
+      const response = await ApiService.post('http://localhost:7005/spc', {
+        type: 3,
+        data,
+        groupSize,
+      });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          const {
-            r,
-            rbar,
-            rUCL,
-            rLCL,
-            x2bar,
-            xbar,
-            xUCL,
-            xLCL,
-          } = response.data;
+          // eslint-disable-next-line
+          const { r, rbar, rUCL, rLCL, x2bar, xbar, xUCL, xLCL } = response.data;
           this.chart1 = this.getChartConfig(rLCL, rbar, rUCL, r);
           this.chart2 = this.getChartConfig(xLCL, x2bar, xUCL, xbar);
         }
