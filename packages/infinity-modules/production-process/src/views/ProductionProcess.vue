@@ -36,7 +36,7 @@
           :headers="headers"
           :items="recordlist"
           hide-default-footer
-          height="calc(100vh - 300px)"
+          height="calc(100vh - 200px)"
           >
           <template #item.status="props">
           <!-- {{props.item.status}} -->
@@ -74,7 +74,7 @@
             <div style="color:#999;font-size:14px;line-height:30px;">详细信息</div>
             <v-card
              class="pa-5 ng-information"
-             min-height="310"
+             min-height="410"
              style="background-color:rgba(245, 247, 247, 1);color:#333;">
               <p>
                 <span>查询结果:</span>
@@ -169,7 +169,7 @@ export default {
   },
   methods: {
     // ...mapMutations('helper', ['setAlert']),
-    ...mapActions('productionProcess', ['getPartStatus', 'getSubstationList', 'getCheckin']),
+    ...mapActions('productionProcess', ['getPartStatus', 'getSubstationList', 'getCheckin', 'getCheckout', 'getNgConfig']),
     async handleChangeSubstation(id) {
       console.log(id, 'id');
       localStorage.setItem('substationid', id);
@@ -229,16 +229,12 @@ export default {
               });
               this.stationinfolist = stationinfolist;
               this.ngstation = currentpartstatus.substationname;
-              const checkinlist = await this.getCheckin(`?query=substationname=="${substationlistall[currentkey + 1].name}"%26%26mainid=="${data.mainid}"`);
-              console.log(checkinlist, 'checkinlist');
-              if (checkinlist.length > 0) {
-                const ngcode = checkinlist[0].checkinresult;
-                let ngreason = '';
-                if (ngcode === -1) {
-                  ngreason = '保存数据缺失';
-                } else {
-                  ngreason = ngreasonlist[ngcode - 1];
-                }
+              const checkoutlist = await this.getCheckout(`?query=substationname=="${substationlistall[currentkey].name}"%26%26mainid=="${data.mainid}"`);
+              console.log(checkoutlist, 'checkoutlist');
+              if (checkoutlist.length > 0) {
+                const ngcode = checkoutlist[0].checkoutngcode;
+                const ngConfigList = await this.getNgConfig();
+                const ngreason = ngConfigList.find((item) => item.ngcode === ngcode).ngdescription;
                 this.ngcode = ngcode;
                 this.ngreason = ngreason;
               }
