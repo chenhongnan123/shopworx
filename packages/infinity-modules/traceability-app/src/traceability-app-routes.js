@@ -2,7 +2,7 @@ const routes = [
   {
     path: 'traceability-app',
     name: 'traceabilityApp',
-    component: () => import(/* webpackChunkName: "planning" */ './views/TraceabilityUI.vue'),
+    component: () => import(/* webpackChunkName: "planning" */ './views/TraceabilityMain.vue'),
     meta: {
       permissionRequired: true,
     },

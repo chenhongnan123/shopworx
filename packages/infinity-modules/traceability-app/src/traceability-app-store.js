@@ -1,4 +1,5 @@
 import { set } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
@@ -20,6 +21,7 @@ export default ({
     runningOrder: [],
     bomDetailsList: [],
     subStationListData: [],
+    elements: [],
   },
   mutations: {
     setLineList: set('lineList'),
@@ -39,8 +41,31 @@ export default ({
     setRunningOrderList: set('runningOrder'),
     setBOMDetailsList: set('bomDetailsList'),
     setSubStationListData: set('subStationListData'),
+    setElements: set('elements'),
   },
   actions: {
+    getElements: async ({ commit, rootState, dispatch }) => {
+      const { activeSite } = rootState.user;
+      const elements = await dispatch(
+        'element/getElementsBySite',
+        activeSite,
+        { root: true },
+      );
+      if (elements && elements.length) {
+        commit('setElements', elements);
+      }
+    },
+    getRecordsData: async ({ dispatch }, payload) => {
+      const data = await dispatch(
+        'element/getRecords',
+        {
+          elementName: payload.elementname,
+          query: payload.query,
+        },
+        { root: true },
+      );
+      return data;
+    },
     getRunningOrder: async ({ dispatch, commit }, query) => {
       const runningOrderList = await dispatch(
         'element/getRecords',
@@ -253,5 +278,51 @@ export default ({
     },
   },
   getters: {
+    masterItems: ({ elements }) => {
+      let list = [];
+      if (elements && elements.length) {
+        const provisioningElements = elements
+          .map((elem) => elem.element)
+          .filter((elem) => (
+            elem.elementType.toUpperCase().trim() !== 'PROVISIONING'
+            && elem.categoryType.toUpperCase().trim() !== 'CALENDAR'
+          ));
+        const groupedElements = provisioningElements
+          .reduce((acc, cur) => {
+            acc[cur.categoryType] = [...acc[cur.categoryType] || [], cur];
+            return acc;
+          }, {});
+        const groups = Object.keys(groupedElements);
+        list = groups
+          .map((group) => {
+            const header = { header: group.toLowerCase() };
+            const items = sortArray(provisioningElements, 'elementDescription')
+              .map((elem) => {
+                if (elem.categoryType === group) {
+                  return {
+                    title: elem.elementDescription,
+                    to: elem.elementName,
+                    icon: `$${elem.elementName}`,
+                  };
+                }
+                return null;
+              })
+              .filter((e) => e !== null);
+            return [header, ...items];
+          })
+          .flat();
+      }
+      return list;
+    },
+    getTags: ({ elements }) => (element) => {
+      let tags = [];
+      if (elements && elements.length) {
+        const elem = elements.find((e) => e.element.elementName === element);
+        if (elem) {
+          ({ tags } = elem);
+        }
+      }
+      return tags;
+    },
   },
 });

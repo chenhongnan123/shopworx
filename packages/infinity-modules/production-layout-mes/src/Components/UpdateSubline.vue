@@ -40,6 +40,10 @@
          type="number" v-model="sublineNew.expectedoee"></v-text-field>
         <v-text-field label="Expected Cycletime"
          type="number" v-model="sublineNew.expectedcycletime"></v-text-field>
+         <!-- <v-text-field label="Edge Ip Address"
+              :rules ="plcRules" required class="mb-3"
+              hint="Hint: 127.168.1.1"
+              v-model="sublineNew.ipaddress"  dense></v-text-field> -->
         <v-checkbox v-model="sublineNew.ismainline" class="mx-2"
         v-bind:label="this.sublineNew.ismainline ? 'This is MainSubline' : 'Not  MainSubline'"
          @change="changeInMainline"></v-checkbox>
@@ -87,6 +91,7 @@ export default {
       nameRules: [(value) => !!value || 'Name required',
         (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
       ],
+      plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
   created() {
@@ -151,6 +156,7 @@ export default {
         expectedoee: this.sublineNew.expectedoee,
         expectedcycletime: this.sublineNew.expectedcycletime,
         ismainline: this.sublineNew.ismainline,
+        // ipaddress: this.sublineNew.ipaddress,
         assetid: this.assetId,
       };
       let created = false;

@@ -1,21 +1,8 @@
 <template>
 <div style="height:100%">
-    <portal to="app-header">
-      <span v-text="$t('appTitleTraceability')"></span>
-      <v-btn icon small class="ml-4 mb-1">
-        <v-icon
-          v-text="'$info'"
-        ></v-icon>
-      </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
-        <v-icon
-          v-text="'$settings'"
-        ></v-icon>
-      </v-btn>
-    </portal>
-    <portal
+    <!-- <portal
       to="app-extension"
-    >
+    > -->
         <v-toolbar
           flat
           dense
@@ -92,7 +79,7 @@
             Export Demo
           </v-btn> -->
         </v-toolbar>
-    </portal>
+    <!-- </portal> -->
     <!-- <v-toolbar
           flat
           dense
