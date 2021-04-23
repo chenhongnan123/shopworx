@@ -1,0 +1,120 @@
+{
+  "maintenancetask": {
+    "name" : "Maintenance Task",
+    "list": "Task List",
+    "calendar": "Task Calendar",
+    "taskheader": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "machinename": "Machine Name",
+      "solutionname": "Solution Name",
+      "planname": "Plan Name",
+      "status": "Status",
+      "planstarttime": "Plan Start Time",
+      "planendtime": "Plan End Time",
+      "actualstarttime": "Actual Start Time",
+      "actualendtime": "Actual End Time",
+      "editedby": "Edited by",
+      "editedtime": "Edit Date",
+      "createdby": "Created by",
+      "createdtime": "Created Date",
+      "plandate": "plan Date"
+    },
+    "addtitle": "Create Maintenance Task",
+    "bindtitle": "Machine Bind Operator",
+    "operatorheader": {
+      "id": "ID",
+      "name": "Name",
+      "code": "Code"
+    },
+    "filter": {
+      "title": "Task Filters",
+      "month": "Month",
+      "type": "Type",
+      "status": "Status",
+      "today": "Today",
+      "day": "Day",
+      "startdate": "Start Date",
+      "enddate": "End Date"
+    },
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "machine": "Machine",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "confirmcompletemessage": "Are you sure to complete this task ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close",
+      "enable": "Enable",
+      "unable": "Unable",
+      "more": "LEARN MORE",
+      "complete": "Complete",
+      "start": "Start"
+    },
+    "detailtitle": "Maintenance Task Details", 
+    "basic": {
+      "title": "Maintenance Task Basic Infomation"
+    },
+    "steps": {
+      "title": "Maintenance Task Steps",
+      "assign": "Assign Operators",
+      "report": "Report",
+      "datetime": "Date & Time",
+      "operator": "Operators",
+      "tasklist": "Task List",
+      "sparepart": "Spareparts"
+    },
+    "tasklistheader": {
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "upper": "Upper",
+      "lower": "Lower",
+      "value": "Value",
+      "result": "Result"
+    },
+    "sparepartheader": {
+      "sparepart": "Sparepart",
+      "position":"Machine Position",
+      "upper": "Upper",
+      "lower": "Lower",
+      "quantity": "Quantity"
+    },
+    "reportsparepart": {
+      "title": "Report Sparepart Replacement",
+      "position": "Machine Position",
+      "quantity": "Quantity",
+      "sparepart": "Sparepart",
+      "deleteheader": "Delete Sparepart",
+      "deletemessage": "Are you sure to delete the sparepart selected ?"
+    },
+    "confirmreport": "Confirm Report"
+  }
+}

@@ -5,6 +5,7 @@
     "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
+    "packages/maintenance-app",
     "packages/origin",
     "packages/origin-modules/*",
     "packages/services",

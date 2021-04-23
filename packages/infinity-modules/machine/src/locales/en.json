@@ -1,0 +1,93 @@
+{
+  "machine": {
+    "name": "Machine",
+    "main": {
+      "header": {
+        "id": "Machine ID",
+        "name": "Machine Name",
+        "description": "Machine Description",
+        "editedby": "Edited by",
+        "editedtime": "Edit Date",
+        "createdby": "Created by",
+        "createdtime": "Created Date",
+        "photo": "Photo"
+      }
+    },
+    "filter": {
+      "title": "Machine filters"
+    },
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close"
+    },
+    "machinedetail": "Machine Details",
+    "basic": {
+      "title": "Machine Basic Infomation",
+      "id":"Machine ID",
+      "name": "Machine Name",
+      "description": "Machine Description",
+      "owner": "Owner",
+      "manufacturingdate": "Manufacturing Date",
+      "supplier": "Supplier",
+      "weight": "Weight",
+      "size": "Size",
+      "voltage": "Voltage",
+      "starttime": "Start Time",
+      "oee": "Expected Oee",
+      "cycletime": "Expected Cycletime"
+    },
+    "position": {
+      "title": "Position of Spareparts",
+      "dialogtitle": "Create Machine Position",
+      "image": "Image*",
+      "id": "Position ID",
+      "name": "Position Name",
+      "description": "Position Description"
+    },
+    "sparepart": {
+      "title": "Sparepart",
+      "id": "Sparepart ID",
+      "name": "Sparepart Name",
+      "desciption": "Sparepart Description",
+      "bindtitle": "Position Bind Sparepart"
+    },
+    "operator": {
+      "title": "Operator",
+      "bindtitle": "Machine Bind Operator"
+    },
+    "document": {
+      "title": "Document",
+      "addtitle": "Upload Machine Document",
+      "file": "File*",
+      "name": "Name*"
+    }
+  }
+}

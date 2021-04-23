@@ -1,0 +1,75 @@
+{
+  "solution": {
+    "name": "Solution",
+    "main": {
+      "header": {
+        "id": "Solution ID",
+        "name": "Solution Name",
+        "type": "Solution Type",
+        "version": "Version",
+        "editedby": "Edited by",
+        "editedtime": "Edit Date",
+        "createdby": "Created by",
+        "createdtime": "Created Date"
+      },
+      "dialogtitle": " Create Maintenance Solution"
+    },
+    "filter": {
+      "title": "Solution filters"
+    },
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close",
+      "value": "Value",
+      "attr": "Attr"
+    },
+    "solutiondetail": "Solution Details",
+    "basic": {
+      "title": "Solution Basic Infomation",
+      "name": "Solution Name",
+      "type": "Type",
+      "version": "Version"
+    },
+    "detaillist": {
+      "title": "Solution Detail List",
+      "dialogtitle": "Create Solution Detail",
+      "name": "Name*",
+      "group": "Group*",
+      "type": "Type*",
+      "lower": "Lower*",
+      "upper": "Upper*",
+      "description": "Description",
+      "image": "Image",
+      "limited": "Limited"
+    }
+  }
+}

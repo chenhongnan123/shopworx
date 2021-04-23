@@ -3,6 +3,7 @@ import ParameterConfiguration from '@shopworx/parameter-configuration';
 import ParameterConfigurationMes from '@shopworx/parameter-configuration-mes';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
+import Cron from '@shopworx/cron';
 import Masters from '@shopworx/masters';
 import ProductionPlanning from '@shopworx/production-planning';
 import ProductionLog from '@shopworx/production-log';
@@ -24,6 +25,15 @@ import Spc from '@shopworx/spc';
 import UserDashboard from '@shopworx/user-dashboard';
 import OrderManagement from '@shopworx/order-management';
 import ModelManagement from '@shopworx/model-management';
+import ManualInbound from '@shopworx/manual-inbound';
+import ManualOutbound from '@shopworx/manual-outbound';
+import StockTaking from '@shopworx/stock-taking';
+import Solution from '@shopworx/solution';
+import Operator from '@shopworx/operator';
+import MaintenancePlan from '@shopworx/maintenance-plan';
+import MaintenanceTask from '@shopworx/maintenance-task';
+import ProductionLayoutSF from '@shopworx/production-layout-sf';
+import Machine from '../../infinity-modules/machine';
 import store from './store';
 import router from './router';
 import i18n from './i18n';
@@ -157,7 +167,68 @@ Vue.use(ProductionLayout, {
   store,
   i18n,
 });
+
 Vue.use(ProductionLayoutMes, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(Solution, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(Operator, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(Machine, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(MaintenancePlan, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(MaintenanceTask, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(Cron, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ProductionLayoutSF, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ManualInbound, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ManualOutbound, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(StockTaking, {
   router,
   store,
   i18n,
