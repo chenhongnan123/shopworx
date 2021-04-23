@@ -180,13 +180,17 @@ export default {
       }
     },
     initSoket(socketelement) {
-      const socket = socketioclient.connect('192.168.8.158:10190');
-      // const socket = socketioclient.connect(`${window.location.host}:10190`);
+      // const socket = socketioclient.connect('192.168.8.158:10190');
+      const socket = socketioclient.connect(`${window.location.host}:10190`);
       socket.on('connect', () => {
         console.log('socket connected successfully');
       });
       socket.on(socketelement, async (data) => {
         console.log(data, 'data');
+        this.ngcode = '';
+        this.ngreason = '';
+        this.ngstation = '';
+        this.stationinfolist = [];
         const {
           substationlistall,
           recordlist,
