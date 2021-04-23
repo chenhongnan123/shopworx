@@ -17,7 +17,8 @@
       <v-col cols="2" class="text-h5" style="line-height:50px;">选择工站:</v-col>
       <v-col cols="3">
         <v-select
-          :items="substationList"
+          :disabled="!!substationid"
+          :items="substationlist"
           v-model="substationid"
           label="选择工站"
           item-text="name"
@@ -33,9 +34,15 @@
         <v-card style="background-color: rgb(245, 247, 247);" class="pa-3">
           <v-data-table
           :headers="headers"
-          :items="recordList"
+          :items="recordlist"
+          hide-default-footer
           height="calc(100vh - 300px)"
           >
+          <template #item.status="props">
+          <!-- {{props.item.status}} -->
+          <v-icon v-if="props.item.status" color="success">mdi-check-bold</v-icon>
+          <v-icon v-else color="error">mdi-close-thick</v-icon>
+        </template>
           </v-data-table>
         </v-card>
       </v-col>
@@ -43,10 +50,15 @@
         <v-card style="background-color: rgb(245, 247, 247);" class="pa-3">
           <v-stepper>
               <v-stepper-header class="px-2">
+                <!-- <v-stepper-step
+                  step=""
+                  :rules="[() => false]"
+                >
+                </v-stepper-step> -->
                 <v-stepper-step
                   step=""
-                  complete
-                  :rules="stationinfo.status === 2 ? [() => false] :  [() => true]"
+                  :complete="stationinfo.status === 1"
+                  :rules="stationinfo.status ? [() => true] :  [() => false]"
                   v-for="(stationinfo, k) in stationinfolist"
                   :key="k"
                 >
@@ -56,36 +68,36 @@
             <v-toolbar-title
             class="ng-station-title"
             >
-              站存在问题
+            {{ngstation||'-'}}站存在问题
             </v-toolbar-title>
             <v-divider></v-divider>
             <div style="color:#999;font-size:14px;line-height:30px;">详细信息</div>
             <v-card
              class="pa-5 ng-information"
-             min-height="585"
+             min-height="310"
              style="background-color:rgba(245, 247, 247, 1);color:#333;">
               <p>
                 <span>查询结果:</span>
                 <span>
-                  {{}}
+                  {{ngstation ? '产品NG' : (stationinfolist.length > 0 ? '产品OK' : '')}}
                 </span>
               </p>
               <p>
                 <span>问题站点:</span>
                 <span>
-                  {{}}
+                  {{ngstation||''}}
                 </span>
               </p>
               <p>
                 <span>问题代码:</span>
                 <span>
-                  {{}}
+                  {{ngcode}}
                 </span>
               </p>
               <p>
                 <span>问题原因:</span>
                 <span>
-                  {{}}
+                  {{ngreason}}
                 </span>
               </p>
             </v-card>
@@ -96,70 +108,182 @@
 </template>
 
 <script>
-// import { mapMutations, mapActions } from 'vuex';
-
+import { mapActions } from 'vuex';
+import socketioclient from 'socket.io-client';
+// import moment from 'moment';
 export default {
   name: 'ParameterConfiguration',
   data() {
     return {
-      substationList: [
-        { name: 'OP40', id: 'op40' },
-        { name: 'OP60', id: 'op60' },
+      substationlist: [
+        { name: 'OP80-1', id: 'OP80-1' },
+        { name: 'OP110', id: 'OP110' },
       ],
+      substationlistall: [],
       substationid: localStorage.getItem('substationid') || '',
       headers: [
         { text: '条码', value: 'mainid' },
         { text: '扫描时间', value: 'scantime' },
         { text: '状态', value: 'status' },
       ],
-      recordList: [
-        {
-          mainid: '3243432ewrewr',
-          scantime: '2021-03-18',
-          status: 'ok',
-        },
-        {
-          mainid: '3243432ewrewr',
-          scantime: '2021-03-18',
-          status: 'ok',
-        },
-      ],
-      stationinfolist: [
-        {
-          id: 'id1',
-          name: 'op01',
-          status: 2,
-          ngcode: 0,
-        },
-        {
-          id: 'id1',
-          name: 'op01',
-          status: 2,
-          ngcode: 0,
-        },
-        {
-          id: 'id1',
-          name: 'op01',
-          status: 2,
-          ngcode: 0,
-        },
-        {
-          id: 'id1',
-          name: 'op01',
-          status: 2,
-          ngcode: 0,
-        },
+      recordlist: localStorage.getItem('processrecord') ? JSON.parse(localStorage.getItem('processrecord')) : [],
+      stationinfolist: [],
+      ngstation: '',
+      ngcode: '',
+      ngreason: '',
+      ngreasonlist: [
+        '本站可做',
+        'NG件',
+        '配方不正确',
+        '产品类型不正确',
+        '物料不正确',
+        '本站已完成(放行)',
+        '已完成件',
+        '没有订单',
+        '订单不匹配',
+        '订单数量已满',
+        '本站已有NG记录',
+        '此托盘未绑定产品',
+        '本站不是目标站',
       ],
     };
   },
-  created() {
+  async created() {
+    const substationlistall = await this.getSubstationList();
+    let op801k = 0;
+    substationlistall.forEach((item, k) => {
+      if (item.name === 'OP80-1') {
+        op801k = k;
+      }
+    });
+    substationlistall.splice(op801k, 1);
+    this.substationlistall = substationlistall.reverse();
+    console.log(this.substationlistall, 'this.substationlistall');
+    if (this.substationid) {
+      if (this.substationid === 'OP80-1') {
+        this.initSoket('update_checkin');
+      } else {
+        this.initSoket('update_autocheck');
+      }
+    }
   },
   methods: {
     // ...mapMutations('helper', ['setAlert']),
-    // ...mapActions('packagingManagement', []),
-    handleChangeSubstation(id) {
+    ...mapActions('productionProcess', ['getPartStatus', 'getSubstationList', 'getCheckin']),
+    async handleChangeSubstation(id) {
       console.log(id, 'id');
       localStorage.setItem('substationid', id);
+      if (id === 'OP80-1') {
+        this.initSoket('update_checkin');
+      } else {
+        this.initSoket('update_autocheck');
+      }
+    },
+    initSoket(socketelement) {
+      const socket = socketioclient.connect('192.168.8.158:10190');
+      // const socket = socketioclient.connect(`${window.location.host}:10190`);
+      socket.on('connect', () => {
+        console.log('socket connected successfully');
+      });
+      socket.on(socketelement, async (data) => {
+        console.log(data, 'data');
+        const {
+          substationlistall,
+          recordlist,
+          substationid,
+          ngreasonlist,
+        } = this;
+        if (data.substationname === substationid) {
+          const partStatuslist = await this.getPartStatus(`?query=mainid=="${data.mainid}"`);
+          if (partStatuslist.length > 0) {
+            const [currentpartstatus] = partStatuslist;
+            recordlist.unshift({
+              mainid: currentpartstatus.mainid,
+              scantime: currentpartstatus.createdTimestamp,
+              status: currentpartstatus.overallresult === 2 ? 0 : 1,
+            });
+            if (recordlist.length > 10) {
+              recordlist.pop();
+            }
+            this.recordlist = recordlist;
+            localStorage.setItem('processrecord', JSON.stringify(recordlist));
+            let currentkey = 0;
+            substationlistall.forEach(async (item, k) => {
+              if (item.name === currentpartstatus.substationname) {
+                currentkey = k;
+              }
+            });
+            if (currentpartstatus.overallresult === 2) {
+              const stationinfolist = substationlistall.map((item, k) => {
+                const obj = {
+                  id: item.id,
+                  name: item.name,
+                  status: 0,
+                };
+                if (currentkey > k) {
+                  obj.status = 1;
+                } else if (currentkey < k) {
+                  obj.status = 2;
+                }
+                return obj;
+              });
+              this.stationinfolist = stationinfolist;
+              this.ngstation = currentpartstatus.substationname;
+              const checkinlist = await this.getCheckin(`?query=substationname=="${substationlistall[currentkey + 1].name}"%26%26mainid=="${data.mainid}"`);
+              console.log(checkinlist, 'checkinlist');
+              if (checkinlist.length > 0) {
+                const ngcode = checkinlist[0].checkinresult;
+                let ngreason = '';
+                if (ngcode === -1) {
+                  ngreason = '保存数据缺失';
+                } else {
+                  ngreason = ngreasonlist[ngcode - 1];
+                }
+                this.ngcode = ngcode;
+                this.ngreason = ngreason;
+              }
+              // console.log(stationinfolist, 'stationinfolist');
+            } else {
+              const stationinfolist = substationlistall.map((item, k) => {
+                const obj = {
+                  id: item.id,
+                  name: item.name,
+                  status: 1,
+                };
+                if (currentkey < k) {
+                  obj.status = 2;
+                }
+                return obj;
+              });
+              this.stationinfolist = stationinfolist;
+            }
+          } else {
+            const stationinfolist = substationlistall.map((item) => {
+              const obj = {
+                id: item.id,
+                name: item.name,
+                status: 0,
+              };
+              return obj;
+            });
+            this.stationinfolist = stationinfolist;
+            this.ngstation = substationid;
+            const checkinlist = await this.getCheckin(`?query=substationname=="${substationid}"%26%26mainid=="${data.mainid}"`);
+            console.log(checkinlist, 'checkinlist');
+            if (checkinlist.length > 0) {
+              const ngcode = checkinlist[0].checkinresult;
+              let ngreason = '';
+              if (ngcode === -1) {
+                ngreason = '保存数据缺失';
+              } else {
+                ngreason = ngreasonlist[ngcode - 1];
+              }
+              this.ngcode = ngcode;
+              this.ngreason = ngreason;
+            }
+          }
+        }
+      });
     },
   },
 };

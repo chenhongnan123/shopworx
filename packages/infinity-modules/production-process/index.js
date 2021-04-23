@@ -17,7 +17,7 @@ export default {
     const routerData = options.router.options.routes.find((r) => r.path === '/');
     routerData.children = routes;
     options.router.addRoutes([routerData]);
-    options.store.registerModule('packagingManagement1', store);
+    options.store.registerModule('productionProcess', store);
     loadLocaleMessages(options.i18n);
   },
 };

@@ -476,6 +476,15 @@ export default {
     async getNGInfo(mainid) {
       let substationList = await this.getSubstationList();
       if (substationList.length) {
+        let op801k = 0;
+        substationList.forEach((item, k) => {
+          console.log(k);
+          if (item.name === 'OP80-1') {
+            op801k = k;
+          }
+        });
+        substationList.splice(op801k, 1);
+        console.log(substationList, 'substationList');
         const checkoutList = await Promise.all(substationList.map((substation) => this.getCheckout(
           `?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
           + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1',
