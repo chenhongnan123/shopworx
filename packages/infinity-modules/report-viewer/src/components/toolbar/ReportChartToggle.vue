@@ -6,7 +6,7 @@
     @click="setShowChart(!showChart)"
     class="text-none ml-2"
   >
-    {{ showChart ? 'Hide chart' : 'Show chart' }}
+    {{ showChart ? $t('hideChart') : $t('showChart') }}
   </v-btn>
 </template>
 
