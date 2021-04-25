@@ -34,6 +34,8 @@
   "qty": "QTY.",
   "remark": "评论",
   "modifiedAt": "修改过",
+  "date": "日期",
+  "shift": "转移",
   "remarksOptional": "备注（可选）",
   "addRejection": "添加拒绝",
   "editRejection": "编辑拒绝",
@@ -42,5 +44,13 @@
   "validations": {
     "reasonRequired": "原因是必需的",
     "rejected": "应该少于接受数量"
-  }
+  },
+  "cancel": "取消",
+  "apply": "申请",
+  "Downtime by machine": "机器停机",
+  "Downtime by reason": "被原因停机",
+  "Production by machine": "机器生产",
+  "Target by machine": "通过机器进行目标",
+  "Rejection by machine": "拒绝机器",
+  "Rejection by reason": "拒绝原因"
 }

@@ -32,7 +32,7 @@
             <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="date"
-                label="Date"
+                :label="$t('date')"
                 outlined
                 required
                 prepend-icon="mdi-calendar"
@@ -52,7 +52,7 @@
           <v-select
             :items="shifts"
             v-model="shift"
-            label="Shift"
+            :label="$t('shift')"
             outlined
             class="ml-8"
           ></v-select>
@@ -65,7 +65,7 @@
             class="text-none"
             @click="dialog = false"
           >
-            Cancel
+            {{ $t('cancel') }}
           </v-btn>
           <v-btn
             type="submit"
@@ -73,7 +73,7 @@
             :disabled="!isValid || disableApply"
             class="text-none"
           >
-            Apply
+            {{ $t('apply') }}
           </v-btn>
         </v-card-actions>
       </v-card>

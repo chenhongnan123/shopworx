@@ -34,6 +34,8 @@
   "qty": "Qty",
   "remark": "Remark",
   "modifiedAt": "Modified at",
+  "date": "Date",
+  "shift": "Shift",
   "remarksOptional": "Remarks (Optional)",
   "addRejection": "Add rejection",
   "editRejection": "Edit rejection",
@@ -42,5 +44,13 @@
   "validations": {
     "reasonRequired": "Reason is required",
     "rejected": "Should be less than accepted qty"
-  }
+  },
+  "cancel": "Cancel",
+  "apply": "Apply",
+  "Downtime by machine": "Downtime by machine",
+  "Downtime by reason": "Downtime by reason",
+  "Production by machine": "Production by machine",
+  "Target by machine": "Target by machine",
+  "Rejection by machine": "Rejection by machine",
+  "Rejection by reason": "Rejection by reason"
 }

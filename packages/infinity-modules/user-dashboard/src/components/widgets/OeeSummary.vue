@@ -301,9 +301,10 @@ export default {
       }
       return icon;
     },
-    setColors(options) {
+    setOptions(options) {
       const opt = { ...options };
       opt.title.style = {};
+      opt.title.text = this.$t(`${options.title.text}`);
       opt.title.style.color = this.isDark ? '#FFFFFF' : '#333333';
       opt.yAxis = options.yAxis.map((axis) => {
         const labels = {
@@ -325,30 +326,30 @@ export default {
   },
   watch: {
     downtimeByMachine(val) {
-      this.downtimeByMachineOptions = this.setColors(val);
+      this.downtimeByMachineOptions = this.setOptions(val);
     },
     downtimeByReason(val) {
-      this.downtimeByReasonOptions = this.setColors(val);
+      this.downtimeByReasonOptions = this.setOptions(val);
     },
     productionByMachine(val) {
-      this.productionByMachineOptions = this.setColors(val);
+      this.productionByMachineOptions = this.setOptions(val);
     },
     targetByMachine(val) {
-      this.targetByMachineOptions = this.setColors(val);
+      this.targetByMachineOptions = this.setOptions(val);
     },
     rejectionByMachine(val) {
-      this.rejectionByMachineOptions = this.setColors(val);
+      this.rejectionByMachineOptions = this.setOptions(val);
     },
     rejectionByReason(val) {
-      this.rejectionByReasonOptions = this.setColors(val);
+      this.rejectionByReasonOptions = this.setOptions(val);
     },
     isDark() {
-      this.downtimeByMachineOptions = this.setColors(this.downtimeByMachine);
-      this.downtimeByReasonOptions = this.setColors(this.downtimeByReason);
-      this.productionByMachineOptions = this.setColors(this.productionByMachine);
-      this.targetByMachineOptions = this.setColors(this.targetByMachine);
-      this.rejectionByMachineOptions = this.setColors(this.rejectionByMachine);
-      this.rejectionByReasonOptions = this.setColors(this.rejectionByReason);
+      this.downtimeByMachineOptions = this.setOptions(this.downtimeByMachine);
+      this.downtimeByReasonOptions = this.setOptions(this.downtimeByReason);
+      this.productionByMachineOptions = this.setOptions(this.productionByMachine);
+      this.targetByMachineOptions = this.setOptions(this.targetByMachine);
+      this.rejectionByMachineOptions = this.setOptions(this.rejectionByMachine);
+      this.rejectionByReasonOptions = this.setOptions(this.rejectionByReason);
     },
   },
 };
