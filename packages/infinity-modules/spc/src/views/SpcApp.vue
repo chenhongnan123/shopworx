@@ -254,7 +254,7 @@ export default {
       if (val) {
         this.autotimer = setInterval(() => {
           this.search();
-        }, this.spcSetting.refresh);
+        }, this.spcSetting.refresh * 1000);
       } else {
         clearInterval(this.autotimer);
         this.autotimer = null;
@@ -315,21 +315,33 @@ export default {
       });
       if (response && response.length) {
         const data = response;
-        const cpksample = data.slice(0, cpksamplesize).map((item) => item[tagname]);
-        const ppksample = data.slice(0, ppksamplesize).map((item) => item[tagname]);
+        const cpksample = data
+          .slice(0, cpksamplesize)
+          .map((item) => Number(item[tagname].toFixed(3)));
+        const ppksample = data
+          .slice(0, ppksamplesize)
+          .map((item) => Number(item[tagname].toFixed(3)));
         this.histogram = this.setHistogram(lcl, ucl, ppksample);
         if (this.selectedChart === 'Xbar-S') {
-          const xbarssample = data.slice(0, xbarssamplesize).map((item) => item[tagname]);
+          const xbarssample = data
+            .slice(0, xbarssamplesize)
+            .map((item) => Number(item[tagname].toFixed(3)));
           this.getXbarSChart(xbarssample, xbarsgroupsize);
           // xbar-s
         } else if (this.selectedChart === 'Xbar-R') {
-          const xbarrsample = data.slice(0, xbarrsamplesize).map((item) => item[tagname]);
+          const xbarrsample = data
+            .slice(0, xbarrsamplesize)
+            .map((item) => Number(item[tagname].toFixed(3)));
           this.getXbarRChart(xbarrsample, xbarrgroupsize);
           // xbar-r
         } else if (this.selectedChart === 'I-MR') {
           // i-mr
-          const isample = data.slice(0, isamplesize).map((item) => item[tagname]);
-          const mrsample = data.slice(0, mrsamplesize).map((item) => item[tagname]);
+          const isample = data
+            .slice(0, isamplesize)
+            .map((item) => Number(item[tagname].toFixed(3)));
+          const mrsample = data
+            .slice(0, mrsamplesize)
+            .map((item) => Number(item[tagname].toFixed(3)));
           this.getIChart(isample);
           this.getMRChart(mrsample);
         }
@@ -462,7 +474,7 @@ export default {
           type: 'line',
           // width: '100% wide',
           marginBottom: 20,
-          marginRight: 200,
+          marginRight: 100,
         },
         xAxis: {
           categories: [],
@@ -547,7 +559,12 @@ export default {
       if (response.status === 200) {
         if (response.data.status === 1) {
           const { iCL, iLCL, iUCL } = response.data;
-          this.chart1 = this.getChartConfig(iLCL, iCL, iUCL, data);
+          this.chart1 = this.getChartConfig(
+            Number(iLCL.toFixed(3)),
+            Number(iCL.toFixed(3)),
+            Number(iUCL.toFixed(3)),
+            data,
+          );
         }
       }
       this.loading1 = false;
@@ -561,7 +578,12 @@ export default {
         if (response.data.status === 1) {
           // eslint-disable-next-line
           const { mr, mrCL, mrUCL, mrLCL } = response.data;
-          this.chart2 = this.getChartConfig(mrLCL, mrCL, mrUCL, mr);
+          this.chart2 = this.getChartConfig(
+            Number(mrLCL.toFixed(3)),
+            Number(mrCL.toFixed(3)),
+            Number(mrUCL.toFixed(3)),
+            mr,
+          );
         }
       }
       this.loading2 = false;
@@ -576,8 +598,18 @@ export default {
         if (response.data.status === 1) {
           // eslint-disable-next-line
           const { s, sbar, sUCL, sLCL, x2bar, xbar, xUCL, xLCL } = response.data;
-          this.chart1 = this.getChartConfig(sLCL, sbar, sUCL, s);
-          this.chart2 = this.getChartConfig(xLCL, x2bar, xUCL, xbar);
+          this.chart1 = this.getChartConfig(
+            Number(sLCL.toFixed(3)),
+            Number(sbar.toFixed(3)),
+            Number(sUCL.toFixed(3)),
+            s,
+          );
+          this.chart2 = this.getChartConfig(
+            Number(xLCL.toFixed(3)),
+            Number(x2bar.toFixed(3)),
+            Number(xUCL.toFixed(3)),
+            xbar,
+          );
         }
       }
       this.loading1 = false;
@@ -593,8 +625,18 @@ export default {
         if (response.data.status === 1) {
           // eslint-disable-next-line
           const { r, rbar, rUCL, rLCL, x2bar, xbar, xUCL, xLCL } = response.data;
-          this.chart1 = this.getChartConfig(rLCL, rbar, rUCL, r);
-          this.chart2 = this.getChartConfig(xLCL, x2bar, xUCL, xbar);
+          this.chart1 = this.getChartConfig(
+            Number(rLCL.toFixed(3)),
+            Number(rbar.toFixed(3)),
+            Number(rUCL.toFixed(3)),
+            r,
+          );
+          this.chart2 = this.getChartConfig(
+            Number(xLCL.toFixed(3)),
+            Number(x2bar.toFixed(3)),
+            Number(xUCL.toFixed(3)),
+            xbar,
+          );
         }
       }
       this.loading1 = false;
@@ -609,8 +651,8 @@ export default {
       });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          this.xp.cp = response.data.Xp;
-          this.xp.cpk = response.data.Xpk;
+          this.xp.cp = Number(response.data.Xp.toFixed(3));
+          this.xp.cpk = Number(response.data.Xpk.toFixed(3));
         }
       }
       this.loading3 = false;
@@ -624,8 +666,8 @@ export default {
       });
       if (response.status === 200) {
         if (response.data.status === 1) {
-          this.xp.pp = response.data.Xp;
-          this.xp.ppk = response.data.Xpk;
+          this.xp.pp = Number(response.data.Xp.toFixed(3));
+          this.xp.ppk = Number(response.data.Xpk.toFixed(3));
         }
       }
       this.loading4 = false;
