@@ -50,13 +50,13 @@ export default {
       }
       this.timeout = setTimeout(() => {
         this.getConnectionStatus();
-      }, 3000);
+      }, 5000);
     },
   },
   created() {
     this.timeout = setTimeout(() => {
       this.getConnectionStatus();
-    }, 3000);
+    }, 5000);
   },
   beforeDestroy() {
     clearTimeout(this.timeout);
