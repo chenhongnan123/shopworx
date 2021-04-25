@@ -1,3 +1,39 @@
 {
-  "adminTitle": "管理控制台"
+  "adminTitle": "管理控制台",
+  "admin": {
+    "general": "一般的",
+    "management": "访问管理",
+    "calendar": "日历",
+    "billing": "计划和结算",
+    "account": {
+      "title": "帐户"
+    },
+    "alerts": {
+      "title": "警报"
+    },
+    "userRoles": {
+      "title": "用户角色"
+    },
+    "users": {
+      "title": "用户"
+    },
+    "fiscalYearStart": {
+      "title": "财政年度开始"
+    },
+    "workingDays": {
+      "title": "工作日"
+    },
+    "shiftHours": {
+      "title": "转移时间"
+    },
+    "holidays": {
+      "title": "假期"
+    },
+    "planDetails": {
+      "title": "计划细节"
+    },
+    "assets": {
+      "title": "计划的资产"
+    }
+  }
 }
