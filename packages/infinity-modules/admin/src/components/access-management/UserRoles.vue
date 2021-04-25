@@ -14,7 +14,7 @@
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('admin.userRoles.refresh') }}
         </v-btn>
       </span>
     </portal>
@@ -28,7 +28,7 @@
           <v-col cols="6">
             <v-card outlined class="text-center">
               <div class="title">
-                Admin roles
+                {{ $t('admin.userRoles.adminRoles') }}
               </div>
               <div class="headline">
                 {{ adminCount }}
@@ -38,7 +38,7 @@
           <v-col cols="6">
             <v-card outlined class="text-center">
               <div class="title">
-                Other roles
+                {{ $t('admin.userRoles.otherRoles') }}
               </div>
               <div class="headline">
                 {{ nonAdminCount }}
@@ -106,7 +106,7 @@
                   @click="updatePermission(item)"
                   :disabled="!item.permissions.length"
                 >
-                  Update permissions
+                  {{ $t('admin.userRoles.update') }}
                 </v-btn>
               </v-card-actions>
             </td>
@@ -140,13 +140,13 @@ export default {
       deleting: false,
       headers: [
         {
-          text: 'Name',
+          text: this.$t('admin.userRoles.name'),
           align: 'start',
           sortable: false,
           value: 'roleDescription',
         },
         {
-          text: 'Is admin?',
+          text: this.$t('admin.userRoles.isAdmin'),
           align: 'start',
           sortable: false,
           value: 'roleType',

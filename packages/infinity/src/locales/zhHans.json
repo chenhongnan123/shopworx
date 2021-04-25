@@ -171,6 +171,12 @@
       "close": "关闭",
       "redirectToLogin": "将在{time}后转到登录界面"
     },
+    "auth": {
+      "phoneRequired": "电话是必需的",
+      "phoneInvalid": "手机必须有效",
+      "emailRequired": "电子邮件是必需的",
+      "emailInvalid": "电子邮件必须有效"
+    },
     "helper": {
       "or": "或者",
       "help": "帮助",

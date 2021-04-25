@@ -12,10 +12,36 @@
       "title": "警报"
     },
     "userRoles": {
-      "title": "用户角色"
+      "title": "用户角色",
+      "createNew": "创造新角色",
+      "role": "角色",
+      "isAdminCheck": "是管理员的角色吗？",
+      "roleAccess": "定义角色访问权限",
+      "exit": "出口",
+      "create": "创造",
+      "refresh": "刷新",
+      "adminRoles": "管理员角色",
+      "otherRoles": "其他角色",
+      "update": "更新权限",
+      "name": "名称",
+      "isAdmin": "是管理员吗？",
+      "roleRequired": "角色是必需的",
+      "roleInvalid": "角色不应包含除 - 和_",
+      "roleExists": "此角色已创建"
     },
     "users": {
-      "title": "用户"
+      "title": "用户",
+      "invite": "邀请",
+      "inviteUsers": "邀请用户",
+      "pendingInvites": "待决邀请",
+      "refresh": "刷新",
+      "filterTitle": "按名称过滤用户",
+      "emailPhone": "邮件或者电话",
+      "name": "名称",
+      "role": "角色",
+      "actions": "行动",
+      "resend": "重发",
+      "roleRequired": "角色是必需的"
     },
     "fiscalYearStart": {
       "title": "财政年度开始"
