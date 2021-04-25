@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Shift downtime
+      {{ $t('shiftDowntime') }}
     </v-card-title>
     <v-card-text v-if="downtimeLoading">
       <downtime-loading />
@@ -79,17 +79,17 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Machine', value: 'machinename' },
-        { text: 'Downtime start', value: 'downtimestart' },
-        { text: 'Downtime end', value: 'downtimeend' },
+        { text: this.$t('machine'), value: 'machinename' },
+        { text: this.$t('downtimeStart'), value: 'downtimestart' },
+        { text: this.$t('downtimeEnd'), value: 'downtimeend' },
         {
-          text: 'Reason',
+          text: this.$t('reason'),
           value: 'reasonname',
           sortable: false,
           width: '30%',
         },
         {
-          text: 'Is planned',
+          text: this.$t('isPlanned'),
           value: 'isPlanned',
           sortable: false,
         },

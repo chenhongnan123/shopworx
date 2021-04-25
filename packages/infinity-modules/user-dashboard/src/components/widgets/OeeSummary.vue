@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      Shift OEE
+      {{ $t('shiftOee') }}
     </v-card-title>
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
@@ -28,7 +28,7 @@
         </div>
       </v-progress-circular>
       <div class="headline mt-2">
-        OEE
+        {{ $t('oee') }}
       </div>
       <v-tabs
         grow
@@ -39,7 +39,7 @@
         icons-and-text
       >
         <v-tab class="text-none">
-          Availability
+          {{ $t('availability') }}
           <span class="headline font-weight-medium">
             {{ thisShiftAText }}
             <v-icon :color="getColor(aDiff)" class="mt-1">
@@ -54,7 +54,7 @@
           </span>
         </v-tab>
         <v-tab class="text-none">
-          Performance
+          {{ $t('performance') }}
           <span class="headline font-weight-medium">
             {{ thisShiftPText }}
             <v-icon :color="getColor(pDiff)" class="mt-1">
@@ -69,7 +69,7 @@
           </span>
         </v-tab>
         <v-tab class="text-none">
-          Quality
+          {{ $t('quality') }}
           <span class="headline font-weight-medium">
             {{ thisShiftQText }}
             <v-icon :color="getColor(qDiff)" class="mt-1">
@@ -143,7 +143,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <span class="headline">
-              Fetching shift summary...
+              {{ $t('fetchingOee') }}
             </span>
           </v-col>
         </v-row>
@@ -164,7 +164,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <span class="headline">
-              No records for selected date and shift.
+              {{ $t('noRecordsOee') }}
             </span>
           </v-col>
         </v-row>

@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      Shift summary
+      {{ $t('shiftSummary') }}
       <shift-selector v-if="currentDate" />
       <v-tooltip bottom v-if="!isMobile">
         <template #activator="{ on, attrs }">
@@ -17,7 +17,7 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+        {{ $t('lastRefreshed') }} <strong>{{ lastRefreshedAt }}</strong>
       </v-tooltip>
     </portal>
     <v-row v-if="currentDate">

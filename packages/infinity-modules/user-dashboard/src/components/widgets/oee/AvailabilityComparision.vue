@@ -33,7 +33,7 @@ export default {
           type: 'column',
         },
         title: {
-          text: 'Availability comparision',
+          text: this.$t('availabilityComparision'),
           style: {
             color: '',
           },
