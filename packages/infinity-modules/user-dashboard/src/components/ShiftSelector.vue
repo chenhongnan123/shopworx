@@ -46,6 +46,7 @@
               :max="today"
               no-title
               scrollable
+              :locale="locale"
               @input="menu = false"
             ></v-date-picker>
           </v-menu>
@@ -118,6 +119,7 @@ export default {
       'currentDate',
     ]),
     ...mapGetters('userDashboard', ['shiftList']),
+    ...mapGetters('helper', ['locale']),
     shifts() {
       let shifts = [...this.shiftList];
       const currentDate = this.formattedDate(this.currentDate.toString());
