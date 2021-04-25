@@ -14,7 +14,7 @@
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          {{ $t('admin.userRoles.refresh') }}
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>

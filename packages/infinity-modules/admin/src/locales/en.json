@@ -1,6 +1,8 @@
 {
   "adminTitle": "Admin Console",
   "admin": {
+    "save": "Save",
+    "refresh": "Refresh",
     "general": "General",
     "management": "Access management",
     "calendar": "Calendar",
@@ -19,7 +21,6 @@
       "roleAccess": "Define role access",
       "exit": "Exit",
       "create": "Create",
-      "refresh": "Refresh",
       "adminRoles": "Admin roles",
       "otherRoles": "Other roles",
       "update": "Update permissions",
@@ -35,7 +36,6 @@
       "invite": "Invite",
       "inviteUsers": "Invite users",
       "pendingInvites": "Pending invitations",
-      "refresh": "Refresh",
       "filterTitle": "Filter users by name",
       "emailPhone": "Email or phone",
       "name": "Name",

@@ -1,6 +1,8 @@
 {
   "adminTitle": "管理控制台",
   "admin": {
+    "save": "保存",
+    "refresh": "刷新",
     "general": "一般的",
     "management": "访问管理",
     "calendar": "日历",
@@ -19,7 +21,6 @@
       "roleAccess": "定义角色访问权限",
       "exit": "出口",
       "create": "创造",
-      "refresh": "刷新",
       "adminRoles": "管理员角色",
       "otherRoles": "其他角色",
       "update": "更新权限",
@@ -34,7 +35,6 @@
       "invite": "邀请",
       "inviteUsers": "邀请用户",
       "pendingInvites": "待决邀请",
-      "refresh": "刷新",
       "filterTitle": "按名称过滤用户",
       "emailPhone": "邮件或者电话",
       "name": "名称",

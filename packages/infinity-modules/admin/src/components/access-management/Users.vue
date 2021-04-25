@@ -11,7 +11,7 @@
           @click="fetchUsers"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          {{ $t('admin.users.refresh') }}
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>
