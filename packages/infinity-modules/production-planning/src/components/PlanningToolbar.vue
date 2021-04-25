@@ -135,6 +135,7 @@ export default {
       return this.$vuetify.breakpoint.xsOnly;
     },
     ...mapGetters('webApp', ['filters']),
+    ...mapGetters('helper', ['locale']),
     ...mapGetters('productionPlanning', ['isCalendarView']),
     viewType: {
       get() {
@@ -160,11 +161,19 @@ export default {
     date() {
       let dateText = '';
       if (this.filters && this.filters.date && this.filters.date.value) {
-        const start = formatDate(new Date(this.filters.date.value[0]), 'PP');
+        const start = formatDate(
+          new Date(this.filters.date.value[0]),
+          'PP',
+          { locale: this.locale },
+        );
         dateText = start;
         let end = '';
         if (this.filters.date.value.length === 2) {
-          end = formatDate(new Date(this.filters.date.value[1]), 'PP');
+          end = formatDate(
+            new Date(this.filters.date.value[1]),
+            'PP',
+            { locale: this.locale },
+          );
         }
         dateText = `${start} - ${end}`;
       }

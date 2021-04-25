@@ -387,6 +387,7 @@ export default {
   computed: {
     ...mapState('productionPlanning', ['parts', 'partMatrix']),
     ...mapGetters('productionPlanning', ['selectedAsset', 'partMatrixTags']),
+    ...mapGetters('helper', ['locale']),
     isInjectionMolding() {
       let result = false;
       if (this.plan && this.plan.assetid) {
@@ -443,7 +444,8 @@ export default {
       if (this.plan.scheduledend) {
         res = formatDate(
           new Date(this.plan.scheduledend),
-          'dd-MM-yyyy\' \'HH:mm',
+          'PPpp',
+          { locale: this.locale },
         );
       }
       return res;

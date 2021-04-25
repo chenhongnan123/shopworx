@@ -59,6 +59,7 @@ export default {
       'downtimeCount',
     ]),
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
+    ...mapGetters('helper', ['locale']),
     machine() {
       return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
@@ -66,7 +67,12 @@ export default {
       return this.filters && this.filters.shiftName ? this.filters.shiftName.value : '';
     },
     date() {
-      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
+      return this.filters && this.filters.date
+        ? formatDate(
+          new Date(this.filters.date.value),
+          'PP',
+          { locale: this.locale },
+        ) : '';
     },
     filterCount() {
       const downtime = this.filteredRecords(this.downtimeList);

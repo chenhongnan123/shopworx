@@ -49,6 +49,7 @@ export default {
       'productionCount',
     ]),
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
+    ...mapGetters('helper', ['locale']),
     machine() {
       return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
     },
@@ -56,7 +57,12 @@ export default {
       return this.filters && this.filters.shift ? this.filters.shift.value : '';
     },
     date() {
-      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
+      return this.filters && this.filters.date
+        ? formatDate(
+          new Date(this.filters.date.value),
+          'PP',
+          { locale: this.locale },
+        ) : '';
     },
     filterCount() {
       const production = this.filteredRecords(this.productionList);

@@ -143,6 +143,7 @@ export default {
   computed: {
     ...mapState('productionPlanning', ['selectedPlan']),
     ...mapGetters('productionPlanning', ['planStatus']),
+    ...mapGetters('helper', ['locale']),
     isDark() {
       return this.theme.isDark;
     },
@@ -224,7 +225,11 @@ export default {
       return this.planStatus(status);
     },
     getFormattedDate(datetime) {
-      return formatDate(new Date(datetime), 'MMM d, HH:mm');
+      return formatDate(
+        new Date(datetime),
+        'MMM d, HH:mm',
+        { locale: this.locale },
+      );
     },
   },
 };
