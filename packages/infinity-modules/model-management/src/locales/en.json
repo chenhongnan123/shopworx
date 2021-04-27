@@ -25,7 +25,7 @@
     "TRIGGER_ADDED": "Model Trigger is already added!",
     "FIELDS_EMPTY": "Input fields cannot be empty!",
     "TRAINING_SAVED": "Error in Training Data, Please retry!",
-    "TRAINING_IN_PROGRESS": "Training is Completed",
+    "TRAINING_IS_COMPLETED": "Training is Completed!",
     "ONLY_ADMIN_OPERATION": "Only Admin user can perform this Operation.",
     "MODEL_NOT_ACTIVE": "Model is not Active",
     "FILES_DEPLICATE": "Duplicate files, please check again",

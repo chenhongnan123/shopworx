@@ -295,7 +295,6 @@ export default ({
         },
         { root: true },
       );
-      console.log(log);
       commit('setTrainingLogs', log.message);
     },
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
