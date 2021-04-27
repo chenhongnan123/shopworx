@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+
+### Bug Fixes
+
+* **connection-status:** updated connection status polling time to 5 sec ([1b90961](https://bitbucket.org/entrib/shopworx/commits/1b909615064c1d6d63e5b36e4052771c8ef268bd))
+
+
+
+
+
 ## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
 
 **Note:** Version bump only for package @shopworx/infinity
