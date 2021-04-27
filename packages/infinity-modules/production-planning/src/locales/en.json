@@ -97,6 +97,22 @@
     "trialPlans": "Trial plans",
     "executionOrder": "Execution order",
     "allParts": "All Parts",
-    "allMachines": "All Machines"
+    "allMachines": "All Machines",
+    "filterPartMatrix": "Filter by mchine or equipment",
+    "fetchingMatrix": "Fetching matrix...",
+    "noMatrix": "No matrix available",
+    "noMatrixResult": "No matching matrix found for '{search}'",
+    "update": "Update",
+    "filterAssets": "Filter assets",
+    "asset": "Asset",
+    "autoPlanStart": "Auto plan start",
+    "autoPlanComplete": "Auto plan complete",
+    "fetchingAsset": "Fetching assets...",
+    "noAsset": "No asset available",
+    "noAssetResult": "No matching asset found for '{search}'",
+    "downloadCsvTemplate": "Download CSV template",
+    "selectFile": "Select file from your computer",
+    "importHint": "You can import plans in CSV format",
+    "import": "Import"
   }
 }

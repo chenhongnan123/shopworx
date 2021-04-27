@@ -31,7 +31,7 @@
             class="text-none"
             color="primary"
           >
-            Update
+            {{ $t('planning.update') }}
           </v-btn>
         </v-card-actions>
       </v-card>
