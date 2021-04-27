@@ -1,7 +1,7 @@
 import {
   set, toggle, reactiveSetArray, reactiveRemoveArray,
 } from '@shopworx/services/util/store.helper';
-import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
+import { sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
 export default ({
@@ -739,10 +739,10 @@ export default ({
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
-        machineList = machines
-          .map((mac) => mac.machinename)
-          .sort(sortAlphaNum);
-        machineList = ['All Machines', ...machineList];
+        machineList = sortArray(machines, 'machinename').map(({ machinename }) => ({
+          name: machinename,
+          value: machinename,
+        }));
       }
       return machineList;
     },
@@ -750,10 +750,10 @@ export default ({
     partList: ({ parts }) => {
       let partList = [];
       if (parts && parts.length) {
-        partList = parts
-          .map((mac) => mac.partname)
-          .sort(sortAlphaNum);
-        partList = ['All Parts', ...partList];
+        partList = sortArray(parts, 'partname').map(({ partname }) => ({
+          name: partname,
+          value: partname,
+        }));
       }
       return partList;
     },

@@ -37,16 +37,16 @@ export default {
   data() {
     return {
       statusList: [{
-        name: 'Operational',
+        name: this.$t('planning.inProgress'),
         value: 'inProgress',
       }, {
-        name: 'New',
+        name: this.$t('planning.notStarted'),
         value: 'notStarted',
       }, {
-        name: 'Complete',
+        name: this.$t('planning.complete'),
         value: 'complete',
       }, {
-        name: 'Aborted',
+        name: this.$t('planning.abort'),
         value: 'abort',
       }],
     };

@@ -95,6 +95,8 @@
     "groupBy": "通过...分组",
     "starredPlans": "主演计划",
     "trialPlans": "审判计划",
-    "executionOrder": "执行订单"
+    "executionOrder": "执行订单",
+    "allParts": "所有部分",
+    "allMachines": "所有机器"
   }
 }

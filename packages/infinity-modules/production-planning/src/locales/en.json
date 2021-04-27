@@ -95,6 +95,8 @@
     "groupBy": "Group by",
     "starredPlans": "Starred plans",
     "trialPlans": "Trial plans",
-    "executionOrder": "Execution order"
+    "executionOrder": "Execution order",
+    "allParts": "All Parts",
+    "allMachines": "All Machines"
   }
 }
