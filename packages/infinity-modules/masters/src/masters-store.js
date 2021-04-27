@@ -141,12 +141,12 @@ export default ({
         const groups = Object.keys(groupedElements);
         list = groups
           .map((group) => {
-            const header = { header: `masterItems.${group.toLowerCase()}` };
+            const header = { header: group.toLowerCase() };
             const items = sortArray(provisioningElements, 'elementDescription')
               .map((elem) => {
                 if (elem.categoryType === group) {
                   return {
-                    title: `masterItems.${elem.elementName}`,
+                    title: elem.elementDescription,
                     to: elem.elementName,
                     icon: `$${elem.elementName}`,
                   };

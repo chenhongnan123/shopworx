@@ -12,7 +12,10 @@
       <div class="mt-1">
         <span class="title">
           <span v-if="filterCount">
-            {{ filterCount }} of {{ downtimeCount }} records
+            {{ $t('downtime.records', {
+              current: filterCount,
+              total: downtimeCount
+            }) }}
             <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
           <span v-if="$vuetify.breakpoint.smAndUp">
@@ -61,10 +64,26 @@ export default {
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
     ...mapGetters('helper', ['locale']),
     machine() {
-      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
+      let machine = '';
+      if (this.filters && this.filters.machinename) {
+        if (this.filters.machinename.value === 'All') {
+          machine = this.$t('downtime.allMachines');
+        } else {
+          machine = this.filters.machinename.value;
+        }
+      }
+      return machine;
     },
     shift() {
-      return this.filters && this.filters.shiftName ? this.filters.shiftName.value : '';
+      let machine = '';
+      if (this.filters && this.filters.shiftName) {
+        if (this.filters.shiftName.value === 'All') {
+          machine = this.$t('downtime.allShifts');
+        } else {
+          machine = this.filters.shiftName.value;
+        }
+      }
+      return machine;
     },
     date() {
       return this.filters && this.filters.date

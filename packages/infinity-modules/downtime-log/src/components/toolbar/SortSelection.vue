@@ -6,7 +6,7 @@
     item-text="name"
     v-model="timeSort"
     :items="sortList"
-    label="Order by"
+    :label="$t('downtime.orderBy')"
     prepend-inner-icon="mdi-sort-variant"
   ></v-select>
 </template>
@@ -24,10 +24,10 @@ export default {
   data() {
     return {
       sortList: [{
-        name: 'Newest first',
+        name: this.$t('downtime.newest'),
         value: 'DESC',
       }, {
-        name: 'Oldest first',
+        name: this.$t('downtime.oldest'),
         value: 'ASC',
       }],
     };

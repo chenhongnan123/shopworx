@@ -1,0 +1,60 @@
+{
+  "planning": {
+    "setup": {
+      "counter": "步骤{current} {total}",
+      "importMaster": {
+        "title": "导入部分矩阵",
+        "title1": "将零件矩阵上传到shopworx更好",
+        "title2": "计划",
+        "title3": "你在商店的生产。",
+        "import": "导入部分矩阵",
+        "downloading": "生成模板......",
+        "downloadError": "无法下载零件矩阵模板。",
+        "retryDownload": "重试下载。",
+        "download": "您可以下载零件矩阵模板",
+        "downloadLink": "这里。",
+        "fetchMaster": "从ShopWorx服务器获取零件矩阵......",
+        "fetchError": "我们无法从shopworx服务器获取零件矩阵。",
+        "retryFetch": "请重试。",
+        "importFile": "导入文件",
+        "recordsExist": "1记录已经存在！|{count}已存在的记录！",
+        "starting": "开始...",
+        "parsing": "解析......",
+        "mapping": "映射......",
+        "importing": "输入...",
+        "recordsImported": "1导入记录！|{count}导入的记录！",
+        "recordsNotCreated": "无法到达ShopWorx服务器！",
+        "missingHeaders": "请在第一行包含标题！",
+        "missingData": "请至少有一个数据行！",
+        "fileUnparsable": "无法解析文件！",
+        "fileNotFound": "文件{文件}未找到！",
+        "review": "审查",
+        "updateColumns": "更新列",
+        "reimport": "重新进口",
+        "reviewTitle": "审查{title}",
+        "save": "保存更改",
+        "cancel": "取消",
+        "delete": "删除所选行",
+        "missingMapping": "一列缺少必需的映射|缺少{count}列的必需映射",
+        "requiredData": "缺少一个记录所需数据|缺少所需数据{count}记录",
+        "duplicateData": "一列的重复数据|{count}列的重复数据",
+        "invalidDataType": "一个列的数据类型无效|{count}列的数据类型无效",
+        "invalidPartMatrix": "一个记录的部分矩阵无效|{count}记录的部分矩阵无效"
+      },
+      "complete": {
+        "title": "完整设置",
+        "title1": "伟大的！你们都设置了。欢迎来到",
+        "title2": "规划",
+        "title3": "应用程序。应用程序中提供其他设置，供您更改。",
+        "next": "我们走吧"
+      }
+    },
+    "settings": {
+      "general": "一般的",
+      "partMaster": "零件硕士",
+      "assetConfig": "资产配置",
+      "importExport": "进出口",
+      "importPlans": "进口计划"
+    }
+  }
+}

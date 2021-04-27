@@ -47,6 +47,32 @@
         "title3": "app. Other settings are available in the app for you to change.",
         "next": "Let's go"
       }
-    }
+    },
+    "loadingTitle": "In God we trust. All others must bring data.",
+    "loadingSubtitle": "Loading app configurations",
+    "fetching": "Fetching production records...",
+    "noRecords": "No production record for selected filters",
+    "errorFetching": "Error while fetching production records",
+    "retry": "Retry",
+    "resetFilters": "Reset filters",
+    "title": "Production Log",
+    "records": "{current} of {total} records",
+    "machine": "Machine",
+    "plan": "Plan",
+    "part": "Part",
+    "start": "Production start",
+    "end": "Production end",
+    "produced": "Produced",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "rework": "Rework",
+    "scrap": "Scrap (In Kg)",
+    "lastRefreshed": "Last refreshed at:",
+    "shift": "Shift",
+    "allMachines": "All Machines",
+    "allShifts": "All Shifts",
+    "orderBy": "Order by",
+    "newest": "Newest first",
+    "oldest": "Oldest first"
   }
 }
