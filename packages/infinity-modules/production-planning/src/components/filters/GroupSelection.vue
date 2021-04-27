@@ -6,7 +6,7 @@
     item-text="name"
     v-model="model"
     :items="groupList"
-    label="Group by"
+    :label="$t('planning.groupBy')"
     prepend-inner-icon="mdi-select-group"
   ></v-select>
 </template>
@@ -22,13 +22,13 @@ export default {
   data() {
     return {
       groupList: [{
-        name: 'Machine',
+        name: this.$t('planning.machine'),
         value: 'machinename',
       }, {
-        name: 'Part',
+        name: this.$t('planning.part'),
         value: 'partname',
       }, {
-        name: 'Status',
+        name: this.$t('planning.status'),
         value: 'status',
       }],
     };

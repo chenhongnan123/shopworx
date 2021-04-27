@@ -12,7 +12,7 @@
         <v-icon v-text="'$delete'"></v-icon>
       </v-btn>
     </template>
-    Delete plan
+    {{ $t('planning.deletePlan') }}
   </v-tooltip>
 </template>
 

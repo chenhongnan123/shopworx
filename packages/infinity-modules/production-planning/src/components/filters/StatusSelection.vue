@@ -7,7 +7,7 @@
     item-text="name"
     v-model="status"
     :items="statusList"
-    label="Status"
+    :label="$t('planning.status')"
     prepend-inner-icon="mdi-list-status"
   >
     <template #selection="{ item, attrs, selected }">
@@ -18,7 +18,7 @@
         :input-value="selected"
         :color="planStatus(item.value).color"
       >
-        {{ item.name }}
+        {{ $t(`planning.${item.value}`) }}
       </v-chip>
     </template>
   </v-select>

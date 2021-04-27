@@ -13,7 +13,7 @@
           small
           @click="setToday"
         >
-          Today
+          {{ $t('planning.today') }}
         </v-btn>
         <v-btn
           icon
@@ -44,7 +44,7 @@
         :to="{ name: 'addProductionPlan' }"
       >
         <v-icon left small>mdi-plus</v-icon>
-        Add new plan
+        {{ $t('planning.addPlan') }}
       </v-btn>
       <v-btn
         small
@@ -55,7 +55,7 @@
         class="text-none mr-2"
       >
         <v-icon left small>mdi-swap-vertical</v-icon>
-        Re-order plans
+        {{ $t('planning.reorderPlans') }}
       </v-btn>
       <v-menu bottom right>
         <template #activator="{ on, attrs }">
@@ -67,22 +67,22 @@
             v-bind="attrs"
             v-on="on"
           >
-            <span>{{ typeToLabel[viewType] }}</span>
+            <span>{{ $t(`planning.${typeToLabel[viewType]}`) }}</span>
             <v-icon right v-text="'mdi-menu-down'"></v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item @click="viewType = 'default'">
-            <v-list-item-title>List</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.list') }}</v-list-item-title>
           </v-list-item>
           <v-list-item v-if="!isMobile" @click="viewType = 'month'">
-            <v-list-item-title>Month</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.month') }}</v-list-item-title>
           </v-list-item>
           <v-list-item v-if="!isMobile" @click="viewType = 'week'">
-            <v-list-item-title>Week</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.week') }}</v-list-item-title>
           </v-list-item>
           <v-list-item @click="viewType = 'day'">
-            <v-list-item-title>Day</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.day') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -101,7 +101,7 @@
           @click="toggleDrawer(true)"
         >
           <v-icon small left>mdi-filter-variant</v-icon>
-          Filters
+          {{ $t('planning.filters') }}
         </v-btn>
       </v-badge>
     </v-toolbar>
@@ -117,10 +117,10 @@ export default {
   data() {
     return {
       typeToLabel: {
-        default: 'List',
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
+        default: 'list',
+        month: 'month',
+        week: 'week',
+        day: 'day',
       },
     };
   },

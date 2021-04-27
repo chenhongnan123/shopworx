@@ -14,10 +14,10 @@
       </v-col>
       <v-col cols="12" align="center">
         <div class="headline">
-          Plan your work and work your plan.
+          {{ $t('planning.loadingTitle') }}
         </div>
         <div class="title">
-          Loading app configurations
+          {{ $t('planning.loadingSubtitle') }}
         </div>
       </v-col>
     </v-row>

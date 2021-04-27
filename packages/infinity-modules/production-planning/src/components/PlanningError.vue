@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          Error while fetching production plans
+          {{ $t('planning.fetchingError') }}
         </span>
       </v-col>
       <v-col cols="12" align="center">
@@ -22,7 +22,7 @@
           class="text-none"
           @click="getPlanning"
         >
-          Retry
+          {{ $t('planning.retry') }}
         </v-btn>
       </v-col>
     </v-row>

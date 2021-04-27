@@ -759,13 +759,13 @@ export default ({
     },
 
     planStatus: () => (status) => {
-      let result = { text: 'New', color: 'info' };
+      let result = { text: 'notStarted', color: 'info' };
       if (status === 'inProgress') {
-        result = { text: 'Operational', color: 'success' };
+        result = { text: 'inProgress', color: 'success' };
       } else if (status === 'complete') {
-        result = { text: 'Complete', color: 'accent' };
+        result = { text: 'complete', color: 'accent' };
       } else if (status === 'abort') {
-        result = { text: 'Aborted', color: 'error' };
+        result = { text: 'abort', color: 'error' };
       }
       return result;
     },

@@ -12,7 +12,7 @@
         <v-icon>mdi-close-octagon-outline</v-icon>
       </v-btn>
     </template>
-    Abort plan
+    {{ $t('planning.abortPlan') }}
   </v-tooltip>
 </template>
 

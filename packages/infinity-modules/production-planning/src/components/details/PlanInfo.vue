@@ -12,7 +12,7 @@
         label
         :color="getPlanStatus(status).color"
       >
-        {{ getPlanStatus(status).text }}
+        {{ $t(`planning.${getPlanStatus(status).text}`) }}
       </v-chip>
     </v-card-title>
     <v-card-text>
