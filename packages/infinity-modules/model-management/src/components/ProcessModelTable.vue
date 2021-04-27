@@ -255,6 +255,7 @@ export default {
       dialog: false,
       allowedCheckBox: false,
       testModelId: '',
+      testModelName: '',
       testMainId: '',
       options: {
         descending: true,
@@ -337,6 +338,7 @@ export default {
     ...mapMutations('modelManagement', ['setFetchingMaster', 'setShowModelUI', 'setSelectedModelObject']),
     testModelClick(item) {
       this.testModelId = item.modelid;
+      this.testModelName = item.name;
       this.dialog = true;
     },
     async trainModelClick(item) {
@@ -347,6 +349,7 @@ export default {
     async testModel() {
       const object = {
         modelid: this.testModelId,
+        modelname: this.testModelName,
         mainid: this.testMainId,
         edgeipaddress: this.subLineInfo[0].ipaddress,
       };
