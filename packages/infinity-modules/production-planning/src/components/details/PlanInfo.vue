@@ -17,20 +17,20 @@
     </v-card-title>
     <v-card-text>
       <div>
-        Equipment
+        {{ $t('planning.equipment') }}
       </div>
       <div class="title white--text">
         {{ equipment }}
       </div>
       <template v-if="status === 'notStarted'">
         <div class="mt-4">
-          Scheduled start
+        {{ $t('planning.scheduledStart') }}
         </div>
         <div class="title white--text">
           {{ scheduledstart }}
         </div>
         <div class="mt-4">
-          Scheduled end
+        {{ $t('planning.scheduledEnd') }}
         </div>
         <div class="title white--text">
           {{ scheduledend }}
@@ -38,13 +38,13 @@
       </template>
       <template v-else-if="status === 'inProgress'">
         <div class="mt-4">
-          Actual start
+        {{ $t('planning.actualStart') }}
         </div>
         <div class="title white--text">
           {{ actualstart }}
         </div>
         <div class="mt-4">
-          Scheduled end
+        {{ $t('planning.scheduledEnd') }}
         </div>
         <div class="title white--text">
           {{ scheduledend }}
@@ -52,13 +52,13 @@
       </template>
       <template v-else>
         <div class="mt-4">
-          Actual start
+        {{ $t('planning.actualStart') }}
         </div>
         <div class="title white--text">
           {{ actualstart }}
         </div>
         <div class="mt-4">
-          Actual end
+        {{ $t('planning.actualEnd') }}
         </div>
         <div class="title white--text">
           {{ actualend }}
@@ -67,38 +67,39 @@
       <v-row class="mt-4">
         <v-col cols="4" class="py-0">
           <div>
-            Plan CT
+        {{ $t('planning.planCt') }}
           </div>
           <div class="title white--text">
-            {{ planCt }} secs
+            {{ planCt }} {{ $t('planning.secs') }}
           </div>
         </v-col>
         <v-col cols="4" class="py-0">
           <div>
-            Standard CT
+        {{ $t('planning.standardCt') }}
           </div>
           <div class="title white--text">
-            {{ standardCt }} secs
+            {{ standardCt }} {{ $t('planning.secs') }}
           </div>
         </v-col>
         <v-col cols="4" class="py-0">
           <div>
-            Average CT
+        {{ $t('planning.averageCt') }}
           </div>
           <div class="title white--text">
-            {{ averageCt }} secs
+            {{ averageCt }} {{ $t('planning.secs') }}
           </div>
         </v-col>
       </v-row>
       <div class="mt-4">
-        Runtime
+        {{ $t('planning.runtime') }}
       </div>
       <div class="title white--text">
         {{ runtime }}
       </div>
       <div v-for="(p, n) in selectedPlan" :key="n" class="mt-4">
         <div>
-          CAVITY: <span class="title white--text">{{ p.activecavity}}</span>/{{p.cavity }}
+          {{ $t('planning.cavity') }}
+          <span class="title white--text">{{ p.activecavity}}</span>/{{p.cavity }}
         </div>
         <v-progress-linear
           :height="25"

@@ -182,7 +182,9 @@
       "help": "帮助",
       "next": "下一个",
       "skip": "跳到当前",
-      "loading": "加载中..."
+      "loading": "加载中...",
+      "cancel": "取消",
+      "agree": "同意"
     },
     "notFound": {
       "title": "这是一个错误!",

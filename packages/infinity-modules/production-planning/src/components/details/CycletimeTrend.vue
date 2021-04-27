@@ -37,10 +37,10 @@ export default {
       loading: false,
       options: null,
       reports: [{
-        text: 'HOURLY',
+        text: this.$t('planning.HOURLY'),
         value: 'hourlyplancycletimetrend',
       }, {
-        text: 'SHIFTWISE',
+        text: this.$t('planning.SHIFTWISE'),
         value: 'shiftplancycletimetrend',
       }],
       reportName: null,
@@ -57,8 +57,8 @@ export default {
   computed: {
     title() {
       return this.reportName === 'shiftplancycletimetrend'
-        ? 'Shiftwise average cycletime trend'
-        : 'Hourly average cycletime trend';
+        ? this.$t('planning.shiftwiseCtTrend')
+        : this.$t('planning.hourlyCtTrend');
     },
   },
   watch: {

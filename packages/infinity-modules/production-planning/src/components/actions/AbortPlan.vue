@@ -39,8 +39,8 @@ export default {
     ...mapActions('productionPlanning', ['updatePlanByPlanId']),
     async updatePlan() {
       if (await this.$root.$confirm.open(
-        'Abort plan',
-        `Are you you want to abort ${this.planId}?`,
+        this.$t('planning.confirmAbortTitle'),
+        this.$t('planning.confirmAbortSubtitle', { id: this.planid }),
       )) {
         await this.updatePlanByPlanId({
           planId: this.planId,

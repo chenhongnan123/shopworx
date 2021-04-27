@@ -182,7 +182,9 @@
     "help": "Help",
     "next": "Next",
     "skip": "Skip for now",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "agree": "Agree"
   },
   "notFound": {
     "title": "That's an error!",

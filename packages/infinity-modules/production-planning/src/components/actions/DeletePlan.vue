@@ -39,8 +39,8 @@ export default {
     ...mapActions('productionPlanning', ['deletePlanByPlanId']),
     async deletePlan() {
       if (await this.$root.$confirm.open(
-        'Delete plan',
-        `Are you you want to delete ${this.planId}?`,
+        this.$t('planning.confirmDeleteTitle'),
+        this.$t('planning.confirmDeleteSubtitle', { id: this.planid }),
       )) {
         const deleted = await this.deletePlanByPlanId({
           planId: this.planId,
