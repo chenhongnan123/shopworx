@@ -5,6 +5,7 @@
     full-width
     :max="today"
     v-model="date"
+    :locale="locale"
   ></v-date-picker>
 </template>
 
@@ -27,6 +28,7 @@ export default {
   },
   computed: {
     ...mapGetters('webApp', ['filters']),
+    ...mapGetters('helper', ['locale']),
     isDateFilterInactive() {
       return !Object
         .keys(this.filters)

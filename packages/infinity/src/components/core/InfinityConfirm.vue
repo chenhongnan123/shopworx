@@ -23,14 +23,14 @@
           class="text-none"
           @click.native="cancel"
         >
-          Cancel
+          {{ $t('helper.cancel') }}
         </v-btn>
         <v-btn
           color="primary"
           class="text-none"
           @click.native="agree"
         >
-          Agree
+          {{ $t('helper.agree') }}
         </v-btn>
       </v-card-actions>
     </v-card>

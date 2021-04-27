@@ -1,5 +1,27 @@
 {
   "masters": "主数据",
+  "addNew": "添新",
+  "save": "保存",
+  "delete": "删除",
+  "refresh": "刷新",
+  "export": "出口",
+  "press": "按",
+  "injectionmolding": "注塑成型",
+  "masterItems": {
+    "asset": "资产",
+    "reason": "原因",
+    "other": "其他",
+    "meters": "米",
+    "mold": "模子",
+    "tool": "工具",
+    "part": "部分",
+    "partmatrix": "零件矩阵",
+    "downtimereasons": "停机原因",
+    "rejectionreasons": "拒绝原因",
+    "reworkreasons": "返工原因",
+    "scrapreasons": "废料原因",
+    "operator": "操作员"
+  },
   "success": {
     "DOWNLOADED": "数据已经保存为CSV格式文件",
     "DATA_SAVED": "数据保存成功！"

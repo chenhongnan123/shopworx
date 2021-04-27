@@ -6,7 +6,7 @@
     item-text="name"
     v-model="timeSort"
     :items="sortList"
-    label="Order by"
+    :label="$t('production.orderBy')"
     prepend-inner-icon="mdi-sort-variant"
   ></v-select>
 </template>
@@ -24,10 +24,10 @@ export default {
   data() {
     return {
       sortList: [{
-        name: 'Newest first',
+        name: this.$t('production.newest'),
         value: 'DESC',
       }, {
-        name: 'Oldest first',
+        name: this.$t('production.oldest'),
         value: 'ASC',
       }],
     };

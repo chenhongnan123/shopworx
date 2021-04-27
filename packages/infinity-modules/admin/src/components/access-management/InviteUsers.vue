@@ -20,14 +20,14 @@
           small
           v-text="'$invite'"
         ></v-icon>
-        Invite users
+        {{ $t('admin.users.inviteUsers') }}
       </v-btn>
     </template>
     <v-form @submit.prevent="onSubmit" ref="form" v-model="isValid">
     <v-card>
       <v-card-title primary-title>
         <span>
-          Invite users
+          {{ $t('admin.users.inviteUsers') }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon @click="closeDialog">
@@ -66,7 +66,7 @@
             <v-col cols="3" class="py-0">
               <v-select
                 :items="roles"
-                :rules="[v => !!v || 'Role is required']"
+                :rules="[v => !!v || $t('admin.users.roleRequired')]"
                 item-value="roleId"
                 hide-details="auto"
                 :disabled="loading"
@@ -110,7 +110,7 @@
           :loading="loading"
           :disabled="!isValid"
         >
-            Invite
+          {{ $t('admin.users.invite') }}
         </v-btn>
       </v-card-actions>
     </v-card>

@@ -13,13 +13,13 @@
         color="primary"
         class="text-none ml-2"
       >
-        Save as...
+        {{ $t('saveAs') }}
       </v-btn>
     </template>
     <v-card>
       <v-card-title primary-title>
         <span>
-          Save as new report
+          {{ $t('saveAsTitle') }}
         </span>
         <v-spacer></v-spacer>
         <v-btn icon small @click="dialog = false">
@@ -32,7 +32,7 @@
           hide-details
           single-line
           v-model="title"
-          label="Enter a title for your report"
+          :label="$t('reportTitleInput')"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -44,7 +44,7 @@
           :disabled="!title || title === reportTitle"
           @click="saveReport"
         >
-          Save
+          {{ $t('save') }}
         </v-btn>
       </v-card-actions>
     </v-card>

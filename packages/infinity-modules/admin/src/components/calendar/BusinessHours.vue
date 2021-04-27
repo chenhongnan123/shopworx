@@ -10,7 +10,7 @@
           @click="save"
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
         >
-          Save
+          {{ $t('admin.save') }}
         </v-btn>
         <v-btn
           small
@@ -20,7 +20,7 @@
           @click="fetchRecords"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>

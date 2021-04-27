@@ -2,21 +2,25 @@
   <v-select
     dense
     outlined
+    item-value="value"
+    item-text="name"
     v-if="isMobile"
-    label="Part"
+    :label="$t('planning.part')"
     v-model="part"
-    :items="partList"
+    :items="parts"
     prepend-inner-icon="$production"
   ></v-select>
-  <v-combobox
+  <v-autocomplete
     dense
     v-else
     outlined
-    label="Part"
+    item-value="value"
+    item-text="name"
+    :label="$t('planning.part')"
     v-model="part"
-    :items="partList"
+    :items="parts"
     prepend-inner-icon="$production"
-  ></v-combobox>
+  ></v-autocomplete>
 </template>
 
 <script>
@@ -33,13 +37,23 @@ export default {
   computed: {
     ...mapGetters('webApp', ['filters']),
     ...mapGetters('productionPlanning', ['partList']),
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
-    },
     isPartFilterInactive() {
       return !Object
         .keys(this.filters)
         .includes(FIELD_NAME);
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
+    parts() {
+      let parts = [];
+      if (this.partList && this.partList.length) {
+        parts = [{
+          name: this.$t('planning.allParts'),
+          value: 'All',
+        }, ...this.partList];
+      }
+      return parts;
     },
     part: {
       get() {
@@ -47,7 +61,7 @@ export default {
         if (partFilter) {
           return partFilter.value;
         }
-        return this.partList[0];
+        return this.parts && this.parts.length && this.parts[0].value;
       },
       set(partVal) {
         this.setPartFilter(partVal);
@@ -55,9 +69,9 @@ export default {
     },
   },
   created() {
-    if (this.partList && this.partList.length) {
+    if (this.parts && this.parts.length) {
       if (this.isPartFilterInactive) {
-        this.setPartFilter(this.partList[0]);
+        this.setPartFilter(this.parts[0].value);
       }
     } else {
       this.fetchParts();
@@ -77,10 +91,10 @@ export default {
     },
   },
   watch: {
-    partList(val) {
+    parts(val) {
       if (val && val.length) {
         if (this.isPartFilterInactive) {
-          this.setPartFilter(val[0]);
+          this.setPartFilter(val[0].value);
         }
       }
     },

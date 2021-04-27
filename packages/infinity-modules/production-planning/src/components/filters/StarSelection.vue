@@ -1,7 +1,7 @@
 <template>
   <v-checkbox
     class="ma-0 pa-0"
-    label="Starred plans"
+    :label="$t('planning.starredPlans')"
     v-model="starred"
   ></v-checkbox>
 </template>

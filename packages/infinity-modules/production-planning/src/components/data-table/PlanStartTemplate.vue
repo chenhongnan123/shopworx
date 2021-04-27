@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
@@ -16,8 +17,13 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['locale']),
     date() {
-      return formatDate(new Date(this.datetime), 'MMM d, HH:mm');
+      return formatDate(
+        new Date(this.datetime),
+        'MMM d, HH:mm',
+        { locale: this.locale },
+      );
     },
   },
 };

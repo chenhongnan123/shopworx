@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      Shift OEE
+      {{ $t('shiftOee') }}
     </v-card-title>
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
@@ -28,7 +28,7 @@
         </div>
       </v-progress-circular>
       <div class="headline mt-2">
-        OEE
+        {{ $t('oee') }}
       </div>
       <v-tabs
         grow
@@ -39,7 +39,7 @@
         icons-and-text
       >
         <v-tab class="text-none">
-          Availability
+          {{ $t('availability') }}
           <span class="headline font-weight-medium">
             {{ thisShiftAText }}
             <v-icon :color="getColor(aDiff)" class="mt-1">
@@ -54,7 +54,7 @@
           </span>
         </v-tab>
         <v-tab class="text-none">
-          Performance
+          {{ $t('performance') }}
           <span class="headline font-weight-medium">
             {{ thisShiftPText }}
             <v-icon :color="getColor(pDiff)" class="mt-1">
@@ -69,7 +69,7 @@
           </span>
         </v-tab>
         <v-tab class="text-none">
-          Quality
+          {{ $t('quality') }}
           <span class="headline font-weight-medium">
             {{ thisShiftQText }}
             <v-icon :color="getColor(qDiff)" class="mt-1">
@@ -143,7 +143,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <span class="headline">
-              Fetching shift summary...
+              {{ $t('fetchingOee') }}
             </span>
           </v-col>
         </v-row>
@@ -164,7 +164,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <span class="headline">
-              No records for selected date and shift.
+              {{ $t('noRecordsOee') }}
             </span>
           </v-col>
         </v-row>
@@ -301,9 +301,10 @@ export default {
       }
       return icon;
     },
-    setColors(options) {
+    setOptions(options) {
       const opt = { ...options };
       opt.title.style = {};
+      opt.title.text = this.$t(`${options.title.text}`);
       opt.title.style.color = this.isDark ? '#FFFFFF' : '#333333';
       opt.yAxis = options.yAxis.map((axis) => {
         const labels = {
@@ -325,30 +326,30 @@ export default {
   },
   watch: {
     downtimeByMachine(val) {
-      this.downtimeByMachineOptions = this.setColors(val);
+      this.downtimeByMachineOptions = this.setOptions(val);
     },
     downtimeByReason(val) {
-      this.downtimeByReasonOptions = this.setColors(val);
+      this.downtimeByReasonOptions = this.setOptions(val);
     },
     productionByMachine(val) {
-      this.productionByMachineOptions = this.setColors(val);
+      this.productionByMachineOptions = this.setOptions(val);
     },
     targetByMachine(val) {
-      this.targetByMachineOptions = this.setColors(val);
+      this.targetByMachineOptions = this.setOptions(val);
     },
     rejectionByMachine(val) {
-      this.rejectionByMachineOptions = this.setColors(val);
+      this.rejectionByMachineOptions = this.setOptions(val);
     },
     rejectionByReason(val) {
-      this.rejectionByReasonOptions = this.setColors(val);
+      this.rejectionByReasonOptions = this.setOptions(val);
     },
     isDark() {
-      this.downtimeByMachineOptions = this.setColors(this.downtimeByMachine);
-      this.downtimeByReasonOptions = this.setColors(this.downtimeByReason);
-      this.productionByMachineOptions = this.setColors(this.productionByMachine);
-      this.targetByMachineOptions = this.setColors(this.targetByMachine);
-      this.rejectionByMachineOptions = this.setColors(this.rejectionByMachine);
-      this.rejectionByReasonOptions = this.setColors(this.rejectionByReason);
+      this.downtimeByMachineOptions = this.setOptions(this.downtimeByMachine);
+      this.downtimeByReasonOptions = this.setOptions(this.downtimeByReason);
+      this.productionByMachineOptions = this.setOptions(this.productionByMachine);
+      this.targetByMachineOptions = this.setOptions(this.targetByMachine);
+      this.rejectionByMachineOptions = this.setOptions(this.rejectionByMachine);
+      this.rejectionByReasonOptions = this.setOptions(this.rejectionByReason);
     },
   },
 };

@@ -77,32 +77,32 @@ export default {
       if (this.isMobileNumber) {
         if (this.countryCode === '+91') {
           return [
-            v => !!v || 'Phone is required',
-            v => /^[7-9][0-9]{9}$/.test(v) || 'Phone must be valid',
+            v => !!v || this.$t('auth.phoneRequired'),
+            v => /^[7-9][0-9]{9}$/.test(v) || this.$t('auth.phoneInvalid'),
           ];
         }
         if (this.countryCode === '+86') {
           return [
-            v => !!v || 'Phone is required',
-            v => /^1[0-9]{10}$/.test(v) || 'Phone must be valid',
+            v => !!v || this.$t('auth.phoneRequired'),
+            v => /^1[0-9]{10}$/.test(v) || this.$t('auth.phoneInvalid'),
           ];
         }
         if (this.countryCode === '+66') {
           return [
-            v => !!v || 'Phone is required',
-            v => /^[6,8,9][0-9]{8}$/.test(v) || 'Phone must be valid',
+            v => !!v || this.$t('auth.phoneRequired'),
+            v => /^[6,8,9][0-9]{8}$/.test(v) || this.$t('auth.phoneInvalid'),
           ];
         }
         if (this.countryCode === '+49') {
           return [
-            v => !!v || 'Phone is required',
-            v => /^1[0-9]{9,10}$/.test(v) || 'Phone must be valid',
+            v => !!v || this.$t('auth.phoneRequired'),
+            v => /^1[0-9]{9,10}$/.test(v) || this.$t('auth.phoneInvalid'),
           ];
         }
       } else {
         return [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+          v => !!v || this.$t('auth.emailRequired'),
+          v => /.+@.+\..+/.test(v) || this.$t('auth.emailInvalid'),
         ];
       }
     },

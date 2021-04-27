@@ -12,7 +12,7 @@
         class="text-none ml-2"
       >
         <v-icon small left>mdi-cloud-download-outline</v-icon>
-        Export
+        {{ $t('export') }}
         <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
       </v-btn>
     </template>

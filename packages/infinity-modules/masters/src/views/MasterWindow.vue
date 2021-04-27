@@ -14,7 +14,7 @@
             small
             v-text="'mdi-plus'"
           ></v-icon>
-          Add new
+          {{ $t('addNew') }}
         </v-btn>
         <v-btn
           small
@@ -25,7 +25,7 @@
           :class="'ml-2'"
           v-if="showSaveBtn"
         >
-          Save
+          {{ $t('save') }}
         </v-btn>
         <v-btn
           small
@@ -36,7 +36,7 @@
           :class="'ml-2'"
           v-if="showDeleteBtn"
         >
-          Delete
+          {{ $t('delete') }}
         </v-btn>
         <v-btn
           small
@@ -46,7 +46,7 @@
           @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('refresh') }}
         </v-btn>
         <v-btn
           small
@@ -56,7 +56,7 @@
           @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
-          Export
+          {{ $t('export') }}
         </v-btn>
       </span>
     </portal>
@@ -70,7 +70,7 @@
         class="text-none"
         v-for="asset in getAssets(id)"
       >
-      <span v-text="asset.assetDescription"></span>
+      <span v-text="$t(asset.assetName)"></span>
     </v-tab>
     </v-tabs>
      <base-master
