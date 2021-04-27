@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          If you torture the data long enough, it will confess.
+          {{ $t('reportsLoading') }}
         </span>
       </v-col>
     </v-row>

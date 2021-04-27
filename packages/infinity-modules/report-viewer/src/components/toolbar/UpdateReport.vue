@@ -8,7 +8,7 @@
     v-if="!isBaseReport"
     :disabled="!saveEnabled"
   >
-    {{ saveEnabled ? 'Save' : 'Saved' }}
+    {{ saveEnabled ? $t('save') : $t('saved') }}
   </v-btn>
 </template>
 

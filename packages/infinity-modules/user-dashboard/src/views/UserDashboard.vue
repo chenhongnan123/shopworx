@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <portal to="app-header">
-      Home
+      {{ $t('userDashboard') }}
     </portal>
     <component :is="component" />
   </v-container>

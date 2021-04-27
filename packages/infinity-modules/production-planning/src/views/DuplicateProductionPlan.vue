@@ -4,7 +4,7 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Duplicate {{ id }}</span>
+      <span>{{ $t('planning.duplicate', { id }) }}</span>
     </portal>
     <v-container fill-height v-if="loading">
       <v-row
@@ -21,10 +21,10 @@
         </v-col>
         <v-col cols="12" align="center">
           <div class="headline">
-            Plan your work and work your plan.
+            {{ $t('planning.loadingTitle') }}
           </div>
           <div class="title">
-            Fetching seed data...
+            {{ $t('planning.fetchingPlan') }}
           </div>
         </v-col>
       </v-row>

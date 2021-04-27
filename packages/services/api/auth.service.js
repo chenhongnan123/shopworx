@@ -29,7 +29,7 @@ class AuthService {
     // eslint-disable-next-line
     const id = setTimeout(() => {
       source.cancel('timeout');
-    }, 2000);
+    }, 3000);
     return axios
       .get('/server/servertime', {
         headers: {

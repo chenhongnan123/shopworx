@@ -19,7 +19,7 @@
     </template>
     <v-card>
       <v-card-title primary-title>
-        Rejection - {{ production.shift }} | {{ production.machinename }} |
+        {{ $t('rejection') }} - {{ production.shift }} | {{ production.machinename }} |
         {{ production.partname }}
         <v-spacer></v-spacer>
         <v-btn
@@ -33,7 +33,7 @@
       <v-card-text class="ma-0 pa-0">
         <template v-if="loading">
           <div class="text-center my-4">
-            Loading...
+            {{ $t('helper.loading') }}
           </div>
         </template>
         <v-expansion-panels
@@ -63,7 +63,7 @@
               <v-row no-gutters class="text-center">
                 <v-col cols="4">
                   <div class="body-2">
-                    Produced
+                    {{ $t('produced') }}
                   </div>
                   <div class="text-uppercase title font-weight-regular mb-2 info--text">
                     {{ data.produced }}
@@ -71,7 +71,7 @@
                 </v-col>
                 <v-col cols="4">
                   <div class="body-2">
-                    Accepted
+                    {{ $t('accepted') }}
                   </div>
                   <div class="text-uppercase title font-weight-regular mb-2 success--text">
                     {{ data.accepted }}
@@ -79,7 +79,7 @@
                 </v-col>
                 <v-col cols="4">
                   <div class="body-2">
-                    Rejected
+                    {{ $t('rejected') }}
                   </div>
                   <div class="text-uppercase title font-weight-regular mb-2 error--text">
                     {{ parseInt(data.rejected, 10) }}
@@ -124,8 +124,8 @@
                           dense
                           outlined
                           type="number"
-                          suffix="pcs"
-                          label="Quantity"
+                          :suffix="$t('pieces')"
+                          :label="$t('quantity')"
                           :disabled="saving"
                           hide-details="auto"
                           v-model="data.newRejection.qty"
@@ -143,7 +143,7 @@
                           outlined
                           dense
                           return-object
-                          label="Reason"
+                          :label="$t('reason')"
                           :disabled="saving"
                           hide-details="auto"
                           item-text="reasonname"
@@ -181,7 +181,7 @@
                         outlined
                         hide-details
                         :disabled="saving"
-                        label="Remarks (Optional)"
+                        :label="$t('remarksOptional')"
                         v-model="data.newRejection.remark"
                       ></v-textarea>
                     </v-col>
@@ -195,7 +195,7 @@
                         :loading="saving"
                         class="text-none"
                       >
-                        Add rejection
+                        {{ $t('addRejection') }}
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -233,10 +233,10 @@ export default {
     return {
       hourlyData: [],
       headers: [
-        { text: 'Qty', value: 'quantity' },
-        { text: 'Reason', value: 'reasonname' },
-        { text: 'Remark', value: 'remark' },
-        { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: this.$t('qty'), value: 'quantity' },
+        { text: this.$t('reason'), value: 'reasonname' },
+        { text: this.$t('remark'), value: 'remark' },
+        { text: this.$t('modifiedAt'), value: 'modifiedtimestamp' },
         { text: '', value: 'action', sortable: false },
       ],
       saving: false,
@@ -326,7 +326,7 @@ export default {
       const { rejections, rejected, produced } = this.hourlyData[index];
       const newRejectionValue = parseInt(rejected, 10) + parseInt(qty, 10);
       const rejectionsArray = [
-        { ...payload, _id: id, modifiedtimestamp: 'now' },
+        { ...payload, _id: id, modifiedtimestamp: this.$t('now') },
         ...rejections,
       ];
       const newData = {
@@ -376,7 +376,7 @@ export default {
         const updatedIndex = rejections.findIndex((s) => s._id === id);
         this.$set(rejections, updatedIndex, {
           ...rejections[updatedIndex],
-          modifiedtimestamp: 'now',
+          modifiedtimestamp: this.$t('now'),
           ...payload,
         });
         const hIndex = this.hourlyData.findIndex((d) => d.hour === hour);

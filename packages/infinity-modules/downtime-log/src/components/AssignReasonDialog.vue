@@ -13,13 +13,13 @@
         color="primary"
       >
         <v-icon small left>mdi-playlist-check</v-icon>
-        Assign Reason
+        {{ $t('downtime.assignReason') }}
       </v-btn>
     </template>
     <v-form ref="form" lazy-validation>
       <v-card>
         <v-card-title>
-          <span class="headline">Assign downtime reason</span>
+          <span class="headline">{{ $t('downtime.assignReasonTitle') }}</span>
           <v-spacer></v-spacer>
           <v-btn icon small @click="dialog = false">
             <v-icon>mdi-close</v-icon>
@@ -44,13 +44,13 @@
                   {{ new Date(item.downtimeend).toLocaleTimeString() }}
                 </td>
                 <td v-else>
-                  N.A
+                  {{ $t('downtime.na') }}
                 </td>
                 <td v-if="item.status !== 'inProgress'">
                   {{ duration(item.downtimeduration) }}
                 </td>
                 <td v-else>
-                  Ongoing
+                  {{ $t('downtime.ongoing') }}
                 </td>
               </tr>
             </template>
@@ -60,7 +60,7 @@
             outlined
             hide-details
             return-object
-            label="Reason"
+            :label="$t('downtime.reason')"
             class="mt-4"
             :items="downtimeReasons"
             item-text="reasonname"
@@ -95,7 +95,7 @@
             :disabled="btnDisable"
             :loading="saving"
           >
-            Save
+            {{ $t('downtime.save') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -117,23 +117,23 @@ export default {
       downtimes: [],
       headers: [
         {
-          text: 'Machine',
+          text: this.$t('downtime.machine'),
           value: 'machinename',
         },
         {
-          text: 'Shift',
+          text: this.$t('downtime.shift'),
           value: 'shiftName',
         },
         {
-          text: 'From',
+          text: this.$t('downtime.from'),
           value: 'downtimestart',
         },
         {
-          text: 'To',
+          text: this.$t('downtime.to'),
           value: 'downtimeend',
         },
         {
-          text: 'Duration',
+          text: this.$t('downtime.duration'),
           value: 'downtimeduration',
         },
       ],

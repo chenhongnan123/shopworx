@@ -105,23 +105,23 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Machine', value: 'machinename' },
-        { text: 'Downtime start', value: 'downtimestart' },
-        { text: 'Downtime end', value: 'downtimeend' },
-        { text: 'Duration', value: 'downtimeduration' },
+        { text: this.$t('downtime.machine'), value: 'machinename' },
+        { text: this.$t('downtime.downtimeStart'), value: 'downtimestart' },
+        { text: this.$t('downtime.downtimeEnd'), value: 'downtimeend' },
+        { text: this.$t('downtime.duration'), value: 'downtimeduration' },
         {
-          text: 'Reason',
+          text: this.$t('downtime.reason'),
           value: 'reasonname',
           sortable: false,
           width: '30%',
         },
         {
-          text: 'Is planned',
+          text: this.$t('downtime.isPlanned'),
           value: 'isPlanned',
           sortable: false,
         },
         {
-          text: 'Action',
+          text: this.$t('downtime.action'),
           value: 'action',
           sortable: false,
         },

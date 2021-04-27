@@ -4,7 +4,7 @@
     rounded="lg"
   >
     <v-card-title primary-title>
-      Total rejections: {{ totalRejections }} pcs
+      {{ $t('planning.totalRejections', { qty: totalRejections }) }}
     </v-card-title>
     <v-card-text>
       <highcharts

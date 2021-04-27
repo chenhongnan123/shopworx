@@ -4,7 +4,7 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Add new plan</span>
+      <span>{{ $t('planning.addPlan') }}</span>
       <v-btn
         small
         outlined
@@ -13,7 +13,7 @@
         v-if="!isMobile"
         class="text-none ml-2"
       >
-        ...or import instead
+        {{ $t('planning.importPlan') }}
       </v-btn>
     </portal>
     <v-container fill-height v-if="loading">
@@ -31,10 +31,10 @@
         </v-col>
         <v-col cols="12" align="center">
           <div class="headline">
-            Plan your work and work your plan.
+            {{ $t('planning.loadingTitle') }}
           </div>
           <div class="title">
-            Fetching seed data...
+            {{ $t('planning.fetchingPlan') }}
           </div>
         </v-col>
       </v-row>

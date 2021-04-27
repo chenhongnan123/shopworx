@@ -1,4 +1,5 @@
 import AuthService from '@shopworx/services/api/auth.service';
+import LocaleService from '@shopworx/services/util/locale.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 import i18n from '../../i18n';
 import AG_GRID_LOCALE_EN from '../../plugins/ag-grid-locale/locale.en';
@@ -71,6 +72,7 @@ export default ({
   },
   getters: {
     isWebView: ({ userAgent }) => userAgent.includes('wv'),
+
     agGridLocaleText: () => {
       const { locale } = i18n;
       switch (locale) {
@@ -80,8 +82,17 @@ export default ({
           return AG_GRID_LOCALE_EN;
       }
     },
+
     agGridTheme: ({ isDark }) => (isDark
       ? 'ag-theme-balham-dark'
       : 'ag-theme-balham'),
+
+    locale: () => {
+      const locale = LocaleService.getLocale();
+      if (locale === 'zhHans') {
+        return 'zh';
+      }
+      return locale;
+    },
   },
 });

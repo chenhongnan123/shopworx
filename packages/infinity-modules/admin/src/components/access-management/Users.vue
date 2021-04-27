@@ -11,7 +11,7 @@
           @click="fetchUsers"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>
@@ -22,7 +22,7 @@
     <v-card flat class="transparent" v-else>
       <template v-if="pendingUsers && pendingUsers.length">
         <v-card-title class="px-0">
-          Pending invitations
+          {{ $t('admin.users.pendingInvites') }}
         </v-card-title>
         <v-card-text class="pa-0 mb-4">
           <v-data-table
@@ -51,7 +51,7 @@
                 @click="resendInvite(item, pendingUsers.indexOf(item))"
                 :loading="inviteLoading && pendingUsers.indexOf(item) == indexClicked"
               >
-                Resend
+                {{ $t('admin.users.resend') }}
               </v-btn>
               <delete-user :user="item" />
             </template>
@@ -68,7 +68,7 @@
           id="searchUsers"
           v-model="search"
           prepend-inner-icon="$search"
-          label="Filter users by name"
+          :label="$t('admin.users.filterTitle')"
         ></v-text-field>
         <v-data-table
           item-key="id"
@@ -129,19 +129,19 @@ export default {
       indexClicked: undefined,
       headers: [
         {
-          text: 'Name',
+          text: this.$t('admin.users.name'),
           align: 'start',
           sortable: true,
           value: 'fullName',
         },
         {
-          text: 'Role',
+          text: this.$t('admin.users.role'),
           align: 'start',
           sortable: true,
           value: 'role',
         },
         {
-          text: 'Actions',
+          text: this.$t('admin.users.actions'),
           align: 'start',
           sortable: false,
           value: 'actions',
@@ -149,19 +149,19 @@ export default {
       ],
       pendingHeaders: [
         {
-          text: 'Email or phone',
+          text: this.$t('admin.users.emailPhone'),
           align: 'start',
           sortable: false,
           value: 'email',
         },
         {
-          text: 'Role',
+          text: this.$t('admin.users.role'),
           align: 'start',
           sortable: false,
           value: 'role',
         },
         {
-          text: 'Actions',
+          text: this.$t('admin.users.actions'),
           align: 'start',
           sortable: false,
           value: 'actions',
