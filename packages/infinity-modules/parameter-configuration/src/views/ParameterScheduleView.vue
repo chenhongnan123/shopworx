@@ -96,7 +96,10 @@
               :disabled="isAddButtonOK"
               @click="confirmDialog = true">
               <v-icon small left>mdi-delete</v-icon>
+              <span v-if="parameterSelected.length > 0">
               Delete
+              </span>
+              <span v-else>Delete all</span>
             </v-btn>
             <v-btn
             small
@@ -353,7 +356,12 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          Are you sure to delete all the Parameters ?
+          <span v-if="parameterSelected.length > 0">
+            Are you sure to delete selected Parameters ?
+          </span>
+          <span v-else>
+            Are you sure to delete all the Parameters ?
+          </span>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
