@@ -67,12 +67,30 @@
     "rejected": "Rejected",
     "rework": "Rework",
     "scrap": "Scrap (In Kg)",
+    "reason": "Reason",
     "lastRefreshed": "Last refreshed at:",
     "shift": "Shift",
     "allMachines": "All Machines",
     "allShifts": "All Shifts",
     "orderBy": "Order by",
     "newest": "Newest first",
-    "oldest": "Oldest first"
+    "oldest": "Oldest first",
+    "rejectionTitle": "Rejection",
+    "scrapTitle": "Scrap",
+    "quantity": "Quantity",
+    "pieces": "pcs",
+    "qty": "Qty",
+    "remark": "Remark",
+    "modifiedAt": "Modified at",
+    "date": "Date",
+    "remarksOptional": "Remarks (Optional)",
+    "addRejection": "Add rejection",
+    "editRejection": "Edit rejection",
+    "updateRejection": "Update rejection",
+    "now": "now",
+    "validations": {
+      "reasonRequired": "Reason is required",
+      "rejected": "Should be less than accepted qty"
+    }
   }
 }

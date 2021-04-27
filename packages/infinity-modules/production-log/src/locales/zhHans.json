@@ -67,12 +67,30 @@
     "rejected": "拒绝了",
     "rework": "重工",
     "scrap": "废料（以kg）",
+    "reason": "原因",
     "lastRefreshed": "最后刷新在：",
     "shift": "转移",
     "allMachines": "所有机器",
     "allShifts": "所有班次",
     "orderBy": "订购",
     "newest": "新的先来",
-    "oldest": "最古老的第一名"
+    "oldest": "最古老的第一名",
+    "rejectionTitle": "拒绝",
+    "scrapTitle": "废料",
+    "quantity": "数量",
+    "pieces": "件",
+    "qty": "QTY.",
+    "remark": "评论",
+    "modifiedAt": "修改过",
+    "date": "日期",
+    "remarksOptional": "备注（可选）",
+    "addRejection": "添加拒绝",
+    "editRejection": "编辑拒绝",
+    "updateRejection": "更新拒绝",
+    "now": "现在",
+    "validations": {
+      "reasonRequired": "原因是必需的",
+      "rejected": "应该少于接受数量"
+    }
   }
 }
