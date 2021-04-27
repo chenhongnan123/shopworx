@@ -318,6 +318,7 @@
       "general": "一般",
       "security": "安全",
       "profile": {
+        "heading": "我的个人资料设置",
         "title": "个人资料",
         "firstName": "名字",
         "lastName": "姓氏",

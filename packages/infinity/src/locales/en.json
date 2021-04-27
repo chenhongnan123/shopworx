@@ -318,6 +318,7 @@
     "general": "General",
     "security": "Security",
     "profile": {
+      "heading": "My Profile Settings",
       "title": "Profile",
       "firstName": "First name",
       "lastName": "Last name",
