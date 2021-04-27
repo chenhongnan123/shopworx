@@ -40,7 +40,7 @@
             outlined
             dense
             class="mt-1"
-            suffix="pcs"
+            :suffix="$t('production.pieces')"
             :rules="[(v) => (
               Number.isInteger(Number(v)) > 0
               && parseInt(v, 10) <= acceptedQty

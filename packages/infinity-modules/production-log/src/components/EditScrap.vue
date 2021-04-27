@@ -35,26 +35,26 @@
           <v-text-field
             v-model.number="item.scrapweight"
             type="number"
-            label="Weight"
+            :label="$t('production.weight')"
             outlined
             dense
             class="mt-1"
-            suffix="kg"
+            :suffix="$t('production.kilogram')"
             :rules="[
               (v) => Number(v) > 0
-              || 'Should be less than accepted qty'
+              || $t('production.validations.quantity')
             ]"
           ></v-text-field>
           <v-autocomplete
             outlined
             dense
-            label="Reason"
+            :label="$t('production.reason')"
             :disabled="updating"
             item-text="reasonname"
             item-value="reasonname"
             :items="scrapReasons"
             v-model="item.reasonname"
-            :rules="[(v) => !!v || 'Reason is required']"
+            :rules="[(v) => !!v || $t('production.validations.reasonRequired')]"
           >
             <template #selection="data">
               {{ data.item.reasoncode }} | {{ data.item.reasonname }}
@@ -72,7 +72,7 @@
           </v-autocomplete>
           <v-textarea
             v-model="item.remark"
-            label="Remark"
+            :label="$t('production.remark')"
             rows="2"
             outlined
             dense
@@ -87,7 +87,7 @@
             :loading="updating"
             class="text-none"
           >
-            Update scrap
+            {{ $t('production.updateScrap') }}
           </v-btn>
         </v-card-actions>
       </v-card>

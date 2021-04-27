@@ -66,7 +66,7 @@
     "accepted": "公认",
     "rejected": "拒绝了",
     "rework": "重工",
-    "scrap": "废料（以kg）",
+    "scrap": "废料（以千克）",
     "reason": "原因",
     "lastRefreshed": "最后刷新在：",
     "shift": "转移",
@@ -78,7 +78,10 @@
     "rejectionTitle": "拒绝",
     "scrapTitle": "废料",
     "quantity": "数量",
+    "weight": "重量",
+    "weightInKg": "重量（以千克）",
     "pieces": "件",
+    "kilogram": "公斤",
     "qty": "QTY.",
     "remark": "评论",
     "modifiedAt": "修改过",
@@ -87,10 +90,16 @@
     "addRejection": "添加拒绝",
     "editRejection": "编辑拒绝",
     "updateRejection": "更新拒绝",
+    "addRework": "添加返工",
+    "editRework": "编辑返工",
+    "updateRework": "更新返工",
+    "addScrap": "添加废料",
+    "editScrap": "编辑废料",
+    "updateScrap": "更新废料",
     "now": "现在",
     "validations": {
       "reasonRequired": "原因是必需的",
-      "rejected": "应该少于接受数量"
+      "quantity": "应该少于接受数量"
     }
   }
 }

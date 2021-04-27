@@ -78,7 +78,10 @@
     "rejectionTitle": "Rejection",
     "scrapTitle": "Scrap",
     "quantity": "Quantity",
+    "weight": "Weight",
+    "weightInKg": "Weight (In Kg)",
     "pieces": "pcs",
+    "kilogram": "kg",
     "qty": "Qty",
     "remark": "Remark",
     "modifiedAt": "Modified at",
@@ -87,10 +90,16 @@
     "addRejection": "Add rejection",
     "editRejection": "Edit rejection",
     "updateRejection": "Update rejection",
+    "addRework": "Add rework",
+    "editRework": "Edit rework",
+    "updateRework": "Update rework",
+    "addScrap": "Add scrap",
+    "editScrap": "Edit scrap",
+    "updateScrap": "Update scrap",
     "now": "now",
     "validations": {
       "reasonRequired": "Reason is required",
-      "rejected": "Should be less than accepted qty"
+      "quantity": "Should be less than accepted qty"
     }
   }
 }
