@@ -40,10 +40,10 @@
          type="number" v-model="newSubLine.expectedoee"></v-text-field>
         <v-text-field label="Expected Cycletime"
          type="number" v-model="newSubLine.expectedcycletime"></v-text-field>
-         <!-- <v-text-field label="Edge Ip Address"
+         <v-text-field label="Edge Ip Address"
               :rules ="plcRules" required class="mb-3"
               hint="Hint: 127.168.1.1"
-              v-model="newSubLine.ipaddress"  dense></v-text-field> -->
+              v-model="newSubLine.ipaddress"  dense></v-text-field>
          <div>
          <v-checkbox v-model="checked" class="mx-2"
          label="Make this subline as MainLine"
