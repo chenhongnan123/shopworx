@@ -154,6 +154,17 @@ export default ({
       commit('setComponentList', list);
       return list;
     },
+    getTraceabilityData: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'traceability',
+          query,
+        },
+        { root: true },
+      );
+      return list;
+    },
     getCheckOutLists: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
