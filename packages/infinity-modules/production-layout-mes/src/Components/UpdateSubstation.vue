@@ -40,7 +40,7 @@
         <v-text-field label="Description" type="Description"
         hint="For example, Updated by Manager"
          v-model="newSubstation.description"></v-text-field>
-        <!-- <v-textarea
+        <v-textarea
         dense
         rows="3"
         outlined
@@ -48,11 +48,11 @@
         v-model="newSubstation.jsondata"
         label="Paste JSON here"
         :rules="configRules"
-      ></v-textarea> -->
-        <!-- <v-switch
+      ></v-textarea>
+        <v-switch
          v-model="newSubstation.serverlive"
          label="Server Live value"
-        ></v-switch> -->
+        ></v-switch>
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
@@ -292,12 +292,12 @@ export default {
       if (this.newSubstation.description) {
         this.payload.description = this.newSubstation.description;
       }
-      // if (this.newSubstation.jsondata) {
-      //   this.payload.jsondata = this.newSubstation.jsondata;
-      // }
-      // if (this.newSubstation.serverlive) {
-      //   this.payload.serverlive = this.newSubstation.serverlive;
-      // }
+      if (this.newSubstation.jsondata) {
+        this.payload.jsondata = this.newSubstation.jsondata;
+      }
+      if (this.newSubstation.serverlive) {
+        this.payload.serverlive = this.newSubstation.serverlive;
+      }
       const payload = {
         query: `?query=id=="${this.substation.id}"`,
         payload: this.payload,
