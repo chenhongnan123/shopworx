@@ -1147,37 +1147,47 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      data.forEach((item) => {
-        item.lineid = this.lineValue;
-        item.sublineid = this.sublineValue;
-        item.stationid = this.stationValue;
-        item.substationid = this.substationValue;
-        if (this.stationList.length > 0) {
-          item.plcaddress = this.stationList
-            .filter((station) => this.stationValue === station.id)[0].plcipaddress;
-        }
-        if (this.datatypeList.length > 0) {
-          item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
-             === 1;
-          item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
-             === 1;
-          // if (Number(item.datatypeList) === 11) {
-          //   item.size = this.datatypeList
-          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
-          // }
-          if (Number(item.datatype) !== 11) {
-            item.size = this.datatypeList
-              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+      if (data.length > 0) {
+        data.forEach((item) => {
+          item.lineid = this.lineValue;
+          item.sublineid = this.sublineValue;
+          item.stationid = this.stationValue;
+          item.substationid = this.substationValue;
+          if (this.stationList.length > 0) {
+            item.plcaddress = this.stationList
+              .filter((station) => this.stationValue === station.id)[0].plcipaddress;
           }
-        }
-        item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().trim();
-        item.assetid = 4;
-        delete item.monitorvalue;
-        delete item.status;
-      });
+          if (this.datatypeList.length > 0) {
+            item.isbigendian = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
+              === 1;
+            item.isswapped = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
+              === 1;
+            // if (Number(item.datatypeList) === 11) {
+            //   item.size = this.datatypeList
+            //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            // }
+            if (Number(item.datatype) !== 11) {
+              item.size = this.datatypeList
+                .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            }
+          }
+          item.protocol = item.protocol.toUpperCase();
+          item.name = item.name.toLowerCase().trim();
+          item.assetid = 4;
+          delete item.monitorvalue;
+          delete item.status;
+        });
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
