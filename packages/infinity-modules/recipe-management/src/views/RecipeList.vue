@@ -339,7 +339,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset', 'btnApply']),
+    /* ...mapActions('recipeManagement', ['getRecipeListRecords',
+    'createRecipe',
+    'updateRecipe',
+    'deleteRecipeByRecipeNumber',
+    'btnReset',
+    'btnApply']), */
     ...mapActions('recipeManagement',
       ['getRecipeListRecords',
         'createRecipe',
@@ -347,7 +352,11 @@ export default {
         'deleteRecipeByRecipeNumber',
         'getSubLines',
         'getStations',
-        'getSubStations']),
+        'getSubStations',
+        'btnReset',
+        'btnApply',
+        'getRecipeInUse',
+      ]),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
     async handleLineClick(item) {
@@ -486,23 +495,35 @@ export default {
       this.itemForDelete = item;
       this.recipes = [];
     },
-    fnDeleteOnYes() {
+    async fnDeleteOnYes() {
       let deleted = false;
-      deleted = this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
-      if (deleted) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'RECIPE_RECORD_DELETED',
-        });
-        this.dialogConfirm = false;
-        this.recipes = {};
-      } else {
+      const query = `?query=recipenumber=="${this.itemForDelete.recipenumber}"`;
+      const recipeInUse = await this.getRecipeInUse(query);
+      if (recipeInUse) {
+        // TODO - enhancement - pass product name in message
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_DELETING_RECIPE',
+          message: 'RECIPE_IN_USE',
         });
+        this.dialogConfirm = false;
+      } else {
+        deleted = await this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'RECIPE_RECORD_DELETED',
+          });
+          this.dialogConfirm = false;
+          this.recipes = {};
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETING_RECIPE',
+          });
+        }
       }
       this.dialogConfirm = false;
     },
