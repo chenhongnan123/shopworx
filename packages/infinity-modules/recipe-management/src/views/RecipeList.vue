@@ -323,9 +323,19 @@ export default {
       this.recipesfilter = data;
     });
   },
+  updated() {
+    this.$root.$on('closeThechips', (data) => {
+      const success = data;
+      if (success) {
+        this.chipforSubline = false;
+        this.chipforStation = false;
+      }
+    });
+  },
   async beforeDestroy() {
     await this.btnReset();
     this.chipforSubline = false;
+    this.closeThechips = false;
   },
   computed: {
     ...mapState('recipeManagement', ['recipeList', 'stationList',
