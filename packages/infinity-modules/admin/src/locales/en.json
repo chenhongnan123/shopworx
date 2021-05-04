@@ -1,6 +1,8 @@
 {
   "adminTitle": "Admin Console",
   "admin": {
+    "save": "Save",
+    "refresh": "Refresh",
     "general": "General",
     "management": "Access management",
     "calendar": "Calendar",
@@ -12,10 +14,35 @@
       "title": "Alerts"
     },
     "userRoles": {
-      "title": "User roles"
+      "title": "User roles",
+      "createNew": "Create new role",
+      "role": "Role",
+      "isAdminCheck": "Is role an Administrator?",
+      "roleAccess": "Define role access",
+      "exit": "Exit",
+      "create": "Create",
+      "adminRoles": "Admin roles",
+      "otherRoles": "Other roles",
+      "update": "Update permissions",
+      "name": "Name",
+      "isAdmin": "Is admin?",
+      "roleRequired": "Role is required",
+      "roleInvalid": "Role should not contain special characters except - and _",
+      "roleExists": "This role is already created"
+
     },
     "users": {
-      "title": "Users"
+      "title": "Users",
+      "invite": "Invite",
+      "inviteUsers": "Invite users",
+      "pendingInvites": "Pending invitations",
+      "filterTitle": "Filter users by name",
+      "emailPhone": "Email or phone",
+      "name": "Name",
+      "role": "Role",
+      "actions": "Actions",
+      "resend": "Resend",
+      "roleRequired": "Role is required"
     },
     "fiscalYearStart": {
       "title": "Fiscal year start"

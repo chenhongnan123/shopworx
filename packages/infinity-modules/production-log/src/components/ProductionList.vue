@@ -119,19 +119,19 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Plan', value: 'planid' },
+        { text: this.$t('production.plan'), value: 'planid' },
         {
-          text: 'Part',
+          text: this.$t('production.part'),
           value: 'partname',
           width: '25%',
         },
-        { text: 'Production start', value: 'firstcycle' },
-        { text: 'Production end', value: 'lastcycle' },
-        { text: 'Produced', value: 'produced' },
-        { text: 'Accepted', value: 'accepted' },
-        { text: 'Rejected', value: 'rejected' },
-        { text: 'Rework', value: 'rework' },
-        { text: 'Scrap (in Kg)', value: 'scrap' },
+        { text: this.$t('production.start'), value: 'firstcycle' },
+        { text: this.$t('production.end'), value: 'lastcycle' },
+        { text: this.$t('production.produced'), value: 'produced' },
+        { text: this.$t('production.accepted'), value: 'accepted' },
+        { text: this.$t('production.rejected'), value: 'rejected' },
+        { text: this.$t('production.rework'), value: 'rework' },
+        { text: this.$t('production.scrap'), value: 'scrap' },
       ],
     };
   },

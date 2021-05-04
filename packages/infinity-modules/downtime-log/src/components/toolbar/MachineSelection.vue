@@ -2,21 +2,25 @@
   <v-select
     dense
     outlined
+    item-value="value"
+    item-text="name"
     v-if="isMobile"
-    label="Machine"
+    :label="$t('downtime.machine')"
     v-model="machine"
-    :items="machineList"
+    :items="machines"
     prepend-inner-icon="mdi-crosshairs"
   ></v-select>
-  <v-combobox
+  <v-autocomplete
     dense
     v-else
     outlined
-    label="Machine"
+    item-value="value"
+    item-text="name"
+    :label="$t('downtime.machine')"
     v-model="machine"
-    :items="machineList"
+    :items="machines"
     prepend-inner-icon="mdi-crosshairs"
-  ></v-combobox>
+  ></v-autocomplete>
 </template>
 
 <script>
@@ -41,13 +45,23 @@ export default {
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },
+    machines() {
+      let machines = [];
+      if (this.machineList && this.machineList.length) {
+        machines = [{
+          name: this.$t('downtime.allMachines'),
+          value: 'All',
+        }, ...this.machineList];
+      }
+      return machines;
+    },
     machine: {
       get() {
         const machineFilter = this.filters && this.filters[FIELD_NAME];
         if (machineFilter) {
           return machineFilter.value;
         }
-        return this.machineList[0];
+        return this.machines && this.machines.length && this.machines[0].value;
       },
       set(machineVal) {
         this.setMachineFilter(machineVal);
@@ -55,9 +69,9 @@ export default {
     },
   },
   created() {
-    if (this.machineList && this.machineList.length) {
+    if (this.machines && this.machines.length) {
       if (this.isMachineFilterInactive) {
-        this.setMachineFilter(this.machineList[0]);
+        this.setMachineFilter(this.machines[0].value);
       }
     } else {
       this.fetchMachines();
@@ -77,10 +91,10 @@ export default {
     },
   },
   watch: {
-    machineList(val) {
+    machines(val) {
       if (val && val.length) {
         if (this.isMachineFilterInactive) {
-          this.setMachineFilter(val[0]);
+          this.setMachineFilter(val[0].value);
         }
       }
     },

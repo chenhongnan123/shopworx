@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          Error while fetching downtimes
+          {{ $t('downtime.errorFetching') }}
         </span>
       </v-col>
       <v-col cols="12" align="center">
@@ -22,7 +22,7 @@
           class="text-none"
           @click="getDowntimes"
         >
-          Retry
+          {{ $t('downtime.retry') }}
         </v-btn>
       </v-col>
     </v-row>

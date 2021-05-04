@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          Fetching downtimes...
+          {{ $t('fetchingDowntime') }}
         </span>
       </v-col>
     </v-row>

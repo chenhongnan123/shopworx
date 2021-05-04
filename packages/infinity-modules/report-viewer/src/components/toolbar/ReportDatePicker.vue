@@ -25,6 +25,7 @@
     </template>
     <v-date-picker
       range
+      :locale="locale"
       :max="today"
       v-model="dates"
       no-title scrollable
@@ -37,14 +38,14 @@
         :disabled="dates.length != 2"
         @click="saveDateRange"
       >
-        OK
+        {{ $t('ok') }}
       </v-btn>
     </v-date-picker>
   </v-menu>
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'ReportDatePicker',
@@ -60,8 +61,9 @@ export default {
   },
   computed: {
     ...mapState('reports', ['dateRange']),
+    ...mapGetters('helper', ['locale']),
     dateRangeText() {
-      return this.dates.join(' to ');
+      return this.dates.join(` ${this.$t('to')} `);
     },
   },
   methods: {

@@ -159,12 +159,20 @@
     "close": "Close",
     "redirectToLogin": "Redirecting in {time}"
   },
+  "auth": {
+    "phoneRequired": "Phone is required",
+    "phoneInvalid": "Phone must be valid",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Email must be valid"
+  },
   "helper": {
     "or": "or",
     "help": "Help",
     "next": "Next",
     "skip": "Skip for now",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "agree": "Agree"
   },
   "notFound": {
     "title": "That's an error!",
@@ -314,6 +322,7 @@
     "general": "General",
     "security": "Security",
     "profile": {
+      "heading": "My Profile Settings",
       "title": "Profile",
       "firstName": "First name",
       "lastName": "Last name",

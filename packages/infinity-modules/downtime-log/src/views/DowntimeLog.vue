@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Downtime Log</span>
+      <span>{{ $t('downtime.title') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -25,7 +25,7 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+        {{ $t('downtime.lastRefreshed') }} <strong>{{ lastRefreshedAt }}</strong>
       </v-tooltip>
     </portal>
     <downtime-log-loading v-if="loading" />

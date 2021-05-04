@@ -47,7 +47,7 @@
     },
     "fileInput": {
       "counter": "{0} 文件",
-      "counterSize": "{0} 文件 ({1} 总计)"
+      "counterSize": "{0} 文件 ({1} 总计)"    
     },
     "timePicker": {
       "am": "上午",
@@ -62,6 +62,12 @@
         "currentPage": "当前页, 页 {0}"
       }
     }
+  },
+  "auth": {
+    "phoneRequired": "电话是必需的",
+    "phoneInvalid": "手机必须有效",
+    "emailRequired": "电子邮件是必需的",
+    "emailInvalid": "电子邮件必须有效"
   },
   "success": {
     "OTP_SENT": "一次性密码已发送到注册的电子邮件/电话。",
@@ -164,7 +170,9 @@
     "help": "帮助",
     "next": "下一个",
     "skip": "跳到当前",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "cancel": "取消",
+    "agree": "同意"
   },
   "notFound": {
     "title": "这是一个错误!",
@@ -374,6 +382,35 @@
       "every": "每月",
       "rangewithstep": "间隔指定月",
       "assign": "指定月份"
+    },
+    "user": {
+      "general": "一般",
+      "security": "安全",
+      "profile": {
+        "heading": "我的个人资料设置",
+        "title": "个人资料",
+        "firstName": "名字",
+        "lastName": "姓氏",
+        "email": "邮箱",
+        "phone": "手机",
+        "reset": "重置",
+        "update": "更新"
+      },
+      "preferences": {
+        "title": "偏好",
+        "display": "显示设置",
+        "language": "语言",
+        "darkMode": "深色模式"
+      },
+      "password": {
+        "title": "密码",
+        "newPassword": "新密码",
+        "confirmPassword": "确认密码",
+        "update": "更新密码"
+      },
+      "auditLog": {
+        "title": "日志"
+      }
     }
   }
 }

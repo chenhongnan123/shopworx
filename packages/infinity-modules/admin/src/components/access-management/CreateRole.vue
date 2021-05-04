@@ -15,13 +15,13 @@
         :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
       >
         <v-icon left small v-text="'$addRole'"></v-icon>
-        Create new role
+        {{ $t('admin.userRoles.createNew') }}
       </v-btn>
     </template>
     <v-form ref="form" v-model="isValid" @submit.prevent="createRole">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Create new role
+          {{ $t('admin.userRoles.createNew') }}
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -29,7 +29,7 @@
             outlined
             class="mt-1"
             v-model="roleDescription"
-            label="Role"
+            :label="$t('admin.userRoles.role')"
             prepend-icon="$addRole"
             :disabled="saving"
             :rules="descriptionRules"
@@ -37,9 +37,11 @@
           <v-checkbox
             v-model="isAdmin"
             class="my-0"
-            label="Is role an Administrator?"
+            :label="$t('admin.userRoles.isAdminCheck')"
           ></v-checkbox>
-          <div class="mb-2 font-weight-medium">Define role access</div>
+          <div class="mb-2 font-weight-medium">
+            {{ $t('admin.userRoles.roleAccess') }}
+          </div>
           <v-treeview
             dense
             rounded
@@ -56,7 +58,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn text :disabled="saving" class="text-none" @click="cancel">
-            Exit
+            {{ $t('admin.userRoles.exit') }}
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
@@ -66,7 +68,7 @@
             :loading="saving"
             :disabled="!isValid || noPermission"
           >
-            Create
+            {{ $t('admin.userRoles.create') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -96,11 +98,11 @@ export default {
       permissions: [],
       masterReportCategoryIds: [],
       descriptionRules: [
-        (v) => !!(v && v.trim()) || 'Role is required',
+        (v) => !!(v && v.trim()) || this.$t('admin.userRoles.roleRequired'),
         (v) => /^[A-Za-z0-9-_ ]+$/.test(v)
-          || 'Role should not contain special characters except - and _',
+          || this.$t('admin.userRoles.roleInvalid'),
         (v) => !this.roleNames.includes(this.getRoleName(v))
-          || 'This role is already created',
+          || this.$t('admin.userRoles.roleExists'),
       ],
     };
   },

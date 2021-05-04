@@ -4,7 +4,7 @@
     rounded="lg"
   >
     <v-card-title primary-title>
-      Total downtime: {{ totalDowntime }}
+      {{ $t('planning.totalDowntime', { qty: totalDowntime }) }}
     </v-card-title>
     <v-card-text>
       <highcharts

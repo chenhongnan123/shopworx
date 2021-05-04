@@ -14,6 +14,22 @@ import {
   isBefore,
 } from 'date-fns';
 
+import {
+  enIN,
+  zhCN,
+  hi,
+  de,
+  th,
+} from 'date-fns/locale';
+
+const locales = {
+  'en': enIN,
+  'zh': zhCN,
+  'hi': hi,
+  'de': de,
+  'th': th,
+}
+
 export const now = () => new Date().getTime();
 
 /**
@@ -22,7 +38,11 @@ export const now = () => new Date().getTime();
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(date, baseDate, optoins);
+export const distanceInWords = (date, baseDate, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  return formatDistance(date, baseDate, { locale });
+};
 
 /**
  * 
@@ -30,7 +50,11 @@ export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const timeDistance = (date, baseDate, optoins = {}) => formatDistanceStrict(date, baseDate, optoins);
+export const timeDistance = (date, baseDate, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  return formatDistanceStrict(date, baseDate, { locale });
+};
 
 /**
  * 
@@ -38,13 +62,21 @@ export const timeDistance = (date, baseDate, optoins = {}) => formatDistanceStri
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const distanceInWordsToNow = (date, optoins = {}) => formatDistanceToNow(date, optoins);
+export const distanceInWordsToNow = (date, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  return formatDistanceToNow(date, { locale });
+};
 
 /**
  * 
  * @param {Date} date
  */
-export const formatDate = (date, form) => format(date, form);
+export const formatDate = (date, form, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  return format(date, form, { locale });
+};
 
 /**
  * 

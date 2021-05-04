@@ -6,7 +6,7 @@
     item-text="name"
     v-model="duration"
     :items="durationList"
-    label="Downtime duration"
+    :label="$t('downtime.downtimeDuration')"
     prepend-inner-icon="$downtimeLog"
   ></v-select>
 </template>
@@ -24,13 +24,13 @@ export default {
   data() {
     return {
       durationList: [{
-        name: 'All durations',
+        name: this.$t('downtime.allDurations'),
         value: 0,
       }, {
-        name: '> 2 mins',
+        name: this.$t('downtime.mins', { min: 2 }),
         value: 120,
       }, {
-        name: '> 30 mins',
+        name: this.$t('downtime.mins', { min: 30 }),
         value: 1800,
       }],
     };

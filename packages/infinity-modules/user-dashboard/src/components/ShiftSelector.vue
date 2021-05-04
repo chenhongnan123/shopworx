@@ -32,7 +32,7 @@
             <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="date"
-                label="Date"
+                :label="$t('date')"
                 outlined
                 required
                 prepend-icon="mdi-calendar"
@@ -46,13 +46,14 @@
               :max="today"
               no-title
               scrollable
+              :locale="locale"
               @input="menu = false"
             ></v-date-picker>
           </v-menu>
           <v-select
             :items="shifts"
             v-model="shift"
-            label="Shift"
+            :label="$t('shift')"
             outlined
             class="ml-8"
           ></v-select>
@@ -65,7 +66,7 @@
             class="text-none"
             @click="dialog = false"
           >
-            Cancel
+            {{ $t('cancel') }}
           </v-btn>
           <v-btn
             type="submit"
@@ -73,7 +74,7 @@
             :disabled="!isValid || disableApply"
             class="text-none"
           >
-            Apply
+            {{ $t('apply') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -118,6 +119,7 @@ export default {
       'currentDate',
     ]),
     ...mapGetters('userDashboard', ['shiftList']),
+    ...mapGetters('helper', ['locale']),
     shifts() {
       let shifts = [...this.shiftList];
       const currentDate = this.formattedDate(this.currentDate.toString());
