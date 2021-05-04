@@ -9,6 +9,7 @@ export default ({
     orderTypeList: [],
     assets: [],
     filter: false,
+    archiveValue: true,
     onboarded: false,
     addPlanDialog: false,
     planningMaster: null,
@@ -35,6 +36,7 @@ export default ({
     subStationWiseOrderCount: [],
   },
   mutations: {
+    setArchive: set('archiveValue'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
     setParts: set('parts'),
@@ -360,7 +362,9 @@ export default ({
         if (orderCount.length) {
           const actualUpdatecount = orderCount
             .filter((oc) => oc.ordernumber === item.ordernumber);
-          item.actualcount = actualUpdatecount[0].ordercount;
+          if (actualUpdatecount[0].ordercount) {
+            item.actualcount = actualUpdatecount[0].ordercount;
+          }
         }
       });
       let orderUpdate = [];
@@ -580,8 +584,10 @@ export default ({
       });
 
       const object = orders.find((f) => f.orderstatus === 'Running');
-      orders.splice(orders.indexOf(object), 1);
-      orders.splice(0, 0, object);
+      if (object) {
+        orders.splice(orders.indexOf(object), 1);
+        orders.splice(0, 0, object);
+      }
       let orderUpdate = [];
       if (orders && orders.length) {
         orderUpdate = orders.map((l) => ({

@@ -360,7 +360,6 @@ export default {
       `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
     );
     this.totalRecipeDetails = totalRecords;
-    console.log(typeof this.totalRecipeDetails);
     const first = this.totalRecipeDetails
       .filter((f) => f.parametercategory === '35' || f.parametercategory === '7');
     this.first = first;
@@ -798,7 +797,6 @@ export default {
         // tagname, parametervalue
         recipeparameter: parameterList,
       };
-      console.log(object);
       this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
       });
       await this.uploadToPLC(object);
@@ -844,7 +842,6 @@ export default {
       await this.downloadFromPLC(object);
     },
     async fnUpdateRecipeValue() {
-      console.log(this.itemToUpdate);
       this.selectedList.forEach((f) => {
         if (f.tagname === this.itemToUpdate.tagname) {
           f.parametervalue = this.recipeValue;

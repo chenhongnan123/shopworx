@@ -158,7 +158,6 @@ export default {
     });
     substationlistall.splice(op801k, 1);
     this.substationlistall = substationlistall.reverse();
-    console.log(this.substationlistall, 'this.substationlistall');
     if (this.substationid) {
       if (this.substationid === 'OP80-1') {
         this.initSoket('update_checkin');

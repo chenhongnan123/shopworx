@@ -8,6 +8,7 @@
     "ERROR_CREATING_ROADMAP_DETAILS": "Error creating Roadmap details",
     "SELECT_ROADMAP_FIRST": "Please select Roadmap first",
     "ROADMAP_TYPE_NOT_SELECTED": "Please Select Roadmap Type",
+    "LINE_NOT_SELECTED_ROADMAPDETAILS": "Please Select Line",
     "SUBLINE_NOT_SELECTED_ROADMAPDETAILS": "Please Select Subline",
     "STATION_NOT_SELECTED_ROADMAPDETAILS": "Please Select Station",
     "SUBSTATION_NOT_SELECTED_ROADMAPDETAILS": "Please Select Sub-Station",
@@ -19,6 +20,7 @@
     "ROADMAP_CREATED": "Roadmap created.",
     "ROADMAP_UPDATED": "Roadmap updated.",
     "ROADMAP_DETAILS_CREATED" : "Roadmap details created.",
+    "ROADMAP_ENTRY_DELETED": "Roadmap entry deleted",
     "ROADMAP_RECORD_DELETED": "Roadmap Record Deleted"
   }
 }
