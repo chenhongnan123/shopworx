@@ -26,9 +26,13 @@ export default ({
       return false;
     },
 
-    getRecordsByTags: async (_, { payload }) => {
+    getRecordsByTags: async (_, { elementName, queryParam, request }) => {
       try {
-        const { data } = await ElementService.getRecordsByTags(payload);
+        const { data } = await ElementService.getRecordsByTags(
+          elementName,
+          queryParam,
+          request,
+        );
         if (data && data.results) {
           return data;
         }
@@ -38,10 +42,34 @@ export default ({
       return false;
     },
 
-    createElement: async ({ dispatch }, element) => {
+    postStreamRecords: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postStreamRecords(payload);
+        if (data) {
+          return data;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
+
+    createElement: async ({ dispatch }, {
+      element,
+      webhooks = [],
+    }) => {
       try {
         const { data } = await ElementService.createElement(element);
         if (data && data.results) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId: data.elementId,
+              },
+            });
+          }
           return data.elementId;
         }
         const elem = await dispatch('getElement', element.elementName);
@@ -66,10 +94,11 @@ export default ({
     createElementAndTags: async ({ dispatch }, {
       element,
       tags,
+      webhooks = [],
     }) => {
       let tagsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -88,11 +117,21 @@ export default ({
       tags,
       records,
       assetId,
+      webhooks = [],
     }) => {
       let recordsCreated = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
+          for (let i = 0; i < webhooks.length; i += 1) {
+            // eslint-disable-next-line
+            await dispatch('createWebhook', {
+              payload: {
+                ...webhooks[i],
+                elementId,
+              },
+            });
+          }
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
             elementId,
@@ -123,7 +162,7 @@ export default ({
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -161,10 +200,11 @@ export default ({
       tags,
       records,
       assetId = 0,
+      webhooks = [],
     }) => {
       let upsert = false;
       try {
-        const elementId = await dispatch('createElement', element);
+        const elementId = await dispatch('createElement', { element, webhooks });
         if (elementId) {
           const tagsToProvision = tags.map((tag) => ({
             ...tag,
@@ -302,11 +342,71 @@ export default ({
       }
     },
 
+    createWebhook: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.createWebhook(payload);
+        if (data && data.errors) {
+          return false;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    sendTestModel: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.sendTestModel(payload);
+        if (data && data.errors) {
+          return data;
+        }
+        return data;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getRecords: async (_, { elementName, query = '' }) => {
       try {
         const { data } = await ElementService.getRecords(elementName, query);
         if (data && data.results) {
           return data.results;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    getTrainingLogsRecords: async (_, { jobId }) => {
+      try {
+        const { data } = await ElementService.getTrainingLogsRecords(jobId);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    postMmsStartModelTraining: async (_, { payload }) => {
+      try {
+        const { data } = await ElementService.postMmsStartModelTraining(payload);
+        if (data) {
+          return data;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    postMmsTestModel: async (_, { payload, queryParam }) => {
+      try {
+        const { data } = await ElementService.postMmsTestModel(payload, queryParam);
+        if (data) {
+          return data;
         }
         return false;
       } catch (e) {

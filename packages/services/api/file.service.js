@@ -21,6 +21,12 @@ class FileService {
     });
   }
 
+  getImageFile(filename) {
+    return this.request.get(`/server/media/image/${filename}`, {
+      responseType: 'blob',
+    });
+  }
+
   deleteFile(elementName, id) {
     return this.request.delete(`/server/deletefile/${id}?elementName=${elementName}`);
   }

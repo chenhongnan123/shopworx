@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+
+### Bug Fixes
+
+* **connection-status:** updated connection status polling time to 5 sec ([1b90961](https://bitbucket.org/entrib/shopworx/commits/1b909615064c1d6d63e5b36e4052771c8ef268bd))
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/infinity
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+
+
+### Features
+
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **charts:** fixed charts to work in dark mode ([1e9fb62](https://bitbucket.org/entrib/shopworx/commits/1e9fb625f8e8cdcad0956325cf22faca47d147d4))
+* **infinity-drawer:** display dashbaords on mobile view ([ce1a765](https://bitbucket.org/entrib/shopworx/commits/ce1a7658ec96ea9c9dac8f8d217d8be1fa609a54))
+* **mobile:** fixed login & logout for webview ([0c689e9](https://bitbucket.org/entrib/shopworx/commits/0c689e96ea4dac99103c3343efc31448fe8be745))
+* **settings-layout:** fixed settings layout to stretch for desktops ([2abad19](https://bitbucket.org/entrib/shopworx/commits/2abad1975532933b5067d33b3fd0b3cc14c60fb8))
+* **web-view:** fixed login and logout in webview ([8373598](https://bitbucket.org/entrib/shopworx/commits/83735986eac20fe7420bfb84e3694ea8d295e685))
+
+
+### Features
+
+* **infinity-drawer:** disabled dashbaords and reports on mobile ([8fd06b6](https://bitbucket.org/entrib/shopworx/commits/8fd06b614dbd398b293be4c230c1c639ed7652df))
+* **insights:** updated insights to be fullscreen on mobile ([0959b4e](https://bitbucket.org/entrib/shopworx/commits/0959b4ef908571ae24a6118a5f2314bc5f631f0b))
+* **web-view:** integrated APIs for login and logout on web view ([815854e](https://bitbucket.org/entrib/shopworx/commits/815854ebb7347fdb8e3dd79030e7bcce83424c82))
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Features
+
+* **admin-console:** user can now create a new role ([91b2f11](https://bitbucket.org/entrib/shopworx/commits/91b2f111dbf9753f6e34a8fdb15fc8a7ac8bec3d))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

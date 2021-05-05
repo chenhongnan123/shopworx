@@ -7,6 +7,7 @@
     :now="today"
     color="accent"
     :events="events"
+    :locale="locale"
     :event-color="getEventColor"
     @click:event="showEvent"
     @click:more="viewDay"
@@ -46,6 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters('productionPlanning', ['planStatus', 'planning']),
+    ...mapGetters('helper', ['locale']),
     ...mapState('productionPlanning', [
       'today',
       'view',

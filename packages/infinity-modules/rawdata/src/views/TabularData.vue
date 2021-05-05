@@ -51,7 +51,6 @@
       <v-btn
         small
         outlined
-        v-on="on"
         color="primary"
         class="text-none ml-2 mr-2"
         @click="btnRefresh"
@@ -177,7 +176,7 @@ export default {
     ...mapState('rawdata', ['records', 'dateRange', 'report', 'paramList', 'categoryList']),
     ...mapGetters('rawdata', ['masterItems', 'getTags']),
     tags() {
-      return this.getTags(this.id, 4);
+      return this.getTags(this.id);
     },
   },
   async created() {
@@ -296,33 +295,48 @@ export default {
       const yesterday = new Date(this.dateRange[0]).getTime();
       if (this.parametersChanged === false) {
         const element = this.id.split('_');
-        await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
-        const changeTags = this.tags;
-        await changeTags.forEach((f) => {
-          const checkTag = this.paramList.filter((p) => p === f.tagName);
-          f.hide = true;
-          if (checkTag.length > 0) {
-            f.hide = false;
+        if (element[1]) {
+          await this.getParameterCatgory({ payload: '?query=flagforrawdata==true', substation: element[1] });
+          const changeTags = this.tags;
+          await changeTags.forEach((f) => {
+            const checkTag = this.paramList.filter((p) => p === f.tagName);
+            f.hide = true;
+            if (checkTag.length > 0) {
+              f.hide = false;
+            }
+          });
+          this.columnDefs = [];
+          this.columnDefs = changeTags.map((tag) => ({
+            headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
+            field: tag.tagName,
+            hide: tag.hide,
+          }));
+          this.columnDefs.push({
+            headerName: 'Created Timestamp',
+            field: 'createdTimestamp',
+            hide: false,
+          });
+          this.rowData = await this.getRecordsByTagData({
+            elementName: this.id,
+            queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
+            request: {
+              tags: this.paramList,
+            },
+          });
+        } else {
+          const t = this.columnDefs.find((f) => f.field === 'createdTimestamp');
+          if (!t) {
+            this.columnDefs.push({
+              headerName: 'Created Timestamp',
+              field: 'createdTimestamp',
+              hide: false,
+            });
           }
-        });
-        this.columnDefs = [];
-        this.columnDefs = changeTags.map((tag) => ({
-          headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
-          field: tag.tagName,
-          hide: tag.hide,
-        }));
-        this.columnDefs.push({
-          headerName: 'Created Timestamp',
-          field: 'createdTimestamp',
-          hide: false,
-        });
-        this.rowData = await this.getRecordsByTagData({
-          elementName: this.id,
-          queryParam: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
-          request: {
-            tags: this.paramList,
-          },
-        });
+          this.rowData = await this.getRecords({
+            elementName: this.id,
+            request: `?datefrom=${yesterday}&dateto=${today}&pagenumber=${this.pagenumber}&pagesize=${this.pagesize}`,
+          });
+        }
       } else if (this.parametersChanged === true) {
         const colState = this.gridColumnApi.getColumnState();
         const tagList = [];

@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+
 import ConfigDrawer from '../components/ConfigDrawer.vue';
 import ShopfloorLoading from '../components/ShopfloorLoading.vue';
 
@@ -35,6 +36,7 @@ export default {
     };
   },
   async created() {
+    this.setShowHeaderButtons(true);
     const self = this;
     this.setLoading(true);
     await this.getShifts();
@@ -42,16 +44,23 @@ export default {
     this.timeInterval = setInterval(async () => {
       await self.getBusinessTime();
     }, 60000);
-    if (this.isLoaded) {
-      await this.getMachines();
+    if (!this.isLoaded) {
+      this.setSelectedView({
+        label: 'Shift',
+        value: 'shift',
+        reportName: 'shiftliveshopfloor',
+      });
     }
+    await this.getMachines();
     this.setLoading(false);
   },
   beforeMount() {
     this.sseInit();
   },
   beforeDestroy() {
-    this.sseClient.close();
+    if (this.sseClient) {
+      this.sseClient.close();
+    }
     clearTimeout(this.timeout);
     clearInterval(this.timeInterval);
   },
@@ -79,6 +88,7 @@ export default {
       'machines',
       'currentDate',
       'currentShift',
+      'currentHour',
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
@@ -90,6 +100,10 @@ export default {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
+      'setSelectedView',
+    ]),
+    ...mapMutations('helper', [
+      'setShowHeaderButtons',
     ]),
     ...mapActions('shopfloor', [
       'getBusinessTime',
@@ -136,9 +150,16 @@ export default {
         shift,
         shiftName,
         date,
+        hour,
       } = data;
-      if ((this.currentShift === shift || this.currentShift === shiftName)
-        && this.currentDate === date) {
+      let canSetData = false;
+      if (this.selectedView.value === 'shift') {
+        canSetData = (this.currentShift === shift || this.currentShift === shiftName)
+        && this.currentDate === date;
+      } else if (this.selectedView.value === 'hourly') {
+        canSetData = this.currentHour === hour && this.currentDate === date;
+      }
+      if (canSetData) {
         const workingTime = await this.getAvailableTime();
         const payload = {
           ...data,

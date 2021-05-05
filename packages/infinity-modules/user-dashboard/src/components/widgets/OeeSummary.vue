@@ -6,19 +6,26 @@
     <v-card-text class="text-center" v-if="thisShiftSummary && previousShiftSummary">
       <v-progress-circular
         size="180"
-        :value="88"
+        :value="thisShiftOee"
         button
         width="15"
         color="primary"
         rotate="-90"
       >
-        <span class="display-1">
+        <div class="display-1">
           {{ thisShiftOeeText }}
-          <v-icon small :color="getColor(oeeDiff)" class="mt-1">
+        </div>
+        <div>
+          <v-icon :color="getColor(oeeDiff)">
             {{ getIcon(oeeDiff) }}
           </v-icon>
-          <span class="caption">{{ oeeDiffText }}</span>
-        </span>
+          <span
+            :class="`caption ${getColor(oeeDiff)}--text`"
+            style="margin-left: -8px;"
+          >
+            {{ oeeDiffText }}
+          </span>
+        </div>
       </v-progress-circular>
       <div class="headline mt-2">
         OEE
@@ -26,6 +33,7 @@
       <v-tabs
         grow
         center-active
+        show-arrows
         class="mt-4"
         v-model="tab"
         icons-and-text
@@ -34,30 +42,45 @@
           Availability
           <span class="headline font-weight-medium">
             {{ thisShiftAText }}
-            <v-icon small :color="getColor(aDiff)" class="mt-1">
+            <v-icon :color="getColor(aDiff)" class="mt-1">
               {{ getIcon(aDiff) }}
             </v-icon>
-            <span class="caption">{{ aDiffText }}</span>
+            <span
+              :class="`caption ${getColor(aDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ aDiffText }}
+            </span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Performance
           <span class="headline font-weight-medium">
             {{ thisShiftPText }}
-            <v-icon small :color="getColor(pDiff)" class="mt-1">
+            <v-icon :color="getColor(pDiff)" class="mt-1">
               {{ getIcon(pDiff) }}
             </v-icon>
-            <span class="caption">{{ pDiffText }}</span>
+            <span
+              :class="`caption ${getColor(pDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ pDiffText }}
+            </span>
           </span>
         </v-tab>
         <v-tab class="text-none">
           Quality
           <span class="headline font-weight-medium">
             {{ thisShiftQText }}
-            <v-icon small :color="getColor(qDiff)" class="mt-1">
+            <v-icon :color="getColor(qDiff)" class="mt-1">
               {{ getIcon(qDiff) }}
             </v-icon>
-            <span class="caption">{{ qDiffText }}</span>
+            <span
+              :class="`caption ${getColor(qDiff)}--text`"
+              style="margin-left: -8px;"
+            >
+              {{ qDiffText }}
+            </span>
           </span>
         </v-tab>
       </v-tabs>
@@ -69,10 +92,10 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="downtimeByMachine">
-          <highcharts class="mt-4" :options="downtimeByMachine"></highcharts>
+          <highcharts class="mt-4" :options="downtimeByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="downtimeByReason">
-          <highcharts class="mt-4" :options="downtimeByReason"></highcharts>
+          <highcharts class="mt-4" :options="downtimeByReasonOptions"></highcharts>
         </v-col>
       </v-row>
       <v-row v-else-if="tab === 1">
@@ -83,10 +106,10 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="productionByMachine">
-          <highcharts class="mt-4" :options="productionByMachine"></highcharts>
+          <highcharts class="mt-4" :options="productionByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="targetByMachine">
-          <highcharts class="mt-4" :options="targetByMachine"></highcharts>
+          <highcharts class="mt-4" :options="targetByMachineOptions"></highcharts>
         </v-col>
       </v-row>
       <v-row v-if="tab === 2">
@@ -97,14 +120,14 @@
           />
         </v-col>
         <v-col cols="12" xl="6" v-if="rejectionByMachine">
-          <highcharts class="mt-4" :options="rejectionByMachine"></highcharts>
+          <highcharts class="mt-4" :options="rejectionByMachineOptions"></highcharts>
         </v-col>
         <v-col cols="12" xl="6" v-if="rejectionByReason">
-          <highcharts class="mt-4" :options="rejectionByReason"></highcharts>
+          <highcharts class="mt-4" :options="rejectionByReasonOptions"></highcharts>
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-text v-else>
+    <v-card-text v-else-if="loading">
       <v-container fill-height>
         <v-row
           align="center"
@@ -121,6 +144,27 @@
           <v-col cols="12" align="center">
             <span class="headline">
               Fetching shift summary...
+            </span>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-text v-else>
+      <v-container fill-height>
+        <v-row
+          align="center"
+          justify="center"
+          :no-gutters="$vuetify.breakpoint.smAndDown"
+        >
+          <v-col cols="5" align="center">
+            <v-img
+              :src="require(`@shopworx/assets/illustrations/${notFoundIllustration}.svg`)"
+              contain
+            />
+          </v-col>
+          <v-col cols="12" align="center">
+            <span class="headline">
+              No records for selected date and shift.
             </span>
           </v-col>
         </v-row>
@@ -145,10 +189,18 @@ export default {
   data() {
     return {
       tab: 0,
+      downtimeByMachineOptions: {},
+      downtimeByReasonOptions: {},
+      productionByMachineOptions: {},
+      targetByMachineOptions: {},
+      rejectionByMachineOptions: {},
+      rejectionByReasonOptions: {},
     };
   },
   computed: {
+    ...mapState('helper', ['isDark']),
     ...mapState('userDashboard', [
+      'loading',
       'thisShiftSummary',
       'previousShiftSummary',
       'downtimeByMachine',
@@ -158,29 +210,34 @@ export default {
       'rejectionByMachine',
       'rejectionByReason',
     ]),
+    notFoundIllustration() {
+      return this.$vuetify.theme.dark
+        ? 'not-found-dark'
+        : 'not-found-light';
+    },
     thisShiftA() {
       return (this.thisShiftSummary && this.thisShiftSummary.a) || 0;
     },
     thisShiftAText() {
-      return `${this.roundOff(this.thisShiftA).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftA)}%`;
     },
     thisShiftP() {
       return (this.thisShiftSummary && this.thisShiftSummary.p) || 0;
     },
     thisShiftPText() {
-      return `${this.roundOff(this.thisShiftP).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftP)}%`;
     },
     thisShiftQ() {
       return (this.thisShiftSummary && this.thisShiftSummary.q) || 0;
     },
     thisShiftQText() {
-      return `${this.roundOff(this.thisShiftQ).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftQ)}%`;
     },
     thisShiftOee() {
       return (this.thisShiftSummary && this.thisShiftSummary.oee) || 0;
     },
     thisShiftOeeText() {
-      return `${this.roundOff(this.thisShiftOee).toFixed(1)}%`;
+      return `${this.roundOff(this.thisShiftOee)}%`;
     },
     previousShiftA() {
       return (this.previousShiftSummary && this.previousShiftSummary.a) || 0;
@@ -195,28 +252,28 @@ export default {
       return (this.previousShiftSummary && this.previousShiftSummary.oee) || 0;
     },
     aDiff() {
-      return ((this.thisShiftA - this.previousShiftA) / this.previousShiftA) * 100;
+      return this.thisShiftA - this.previousShiftA;
     },
     aDiffText() {
-      return `${this.roundOff(this.aDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.aDiff))}%`;
     },
     pDiff() {
-      return ((this.thisShiftP - this.previousShiftP) / this.previousShiftP) * 100;
+      return this.thisShiftP - this.previousShiftP;
     },
     pDiffText() {
-      return `${this.roundOff(this.pDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.pDiff))}%`;
     },
     qDiff() {
-      return ((this.thisShiftQ - this.previousShiftQ) / this.previousShiftQ) * 100;
+      return this.thisShiftQ - this.previousShiftQ;
     },
     qDiffText() {
-      return `${this.roundOff(this.qDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.qDiff))}%`;
     },
     oeeDiff() {
-      return ((this.thisShiftOee - this.previousShiftOee) / this.previousShiftOee) * 100;
+      return this.thisShiftOee - this.previousShiftOee;
     },
     oeeDiffText() {
-      return `${this.roundOff(this.oeeDiff).toFixed(2)}%`;
+      return `${this.roundOff(Math.abs(this.oeeDiff))}%`;
     },
   },
   methods: {
@@ -238,12 +295,67 @@ export default {
     getIcon(number) {
       let icon = 'mdi-minus';
       if (number > 0) {
-        icon = 'mdi-arrow-up';
+        icon = 'mdi-menu-up';
       } else if (number < 0) {
-        icon = 'mdi-arrow-down';
+        icon = 'mdi-menu-down';
       }
       return icon;
+    },
+    setColors(options) {
+      const opt = { ...options };
+      opt.title.style = {};
+      opt.title.style.color = this.isDark ? '#FFFFFF' : '#333333';
+      opt.yAxis = options.yAxis.map((axis) => {
+        const labels = {
+          style: { color: this.isDark ? '#FFFFFF' : '#666666' },
+        };
+        if (axis.labels) {
+          return { ...axis, labels: { ...axis.labels, ...labels } };
+        }
+        return {
+          ...axis,
+          labels,
+        };
+      });
+      opt.xAxis.labels = {};
+      opt.xAxis.labels.style = {};
+      opt.xAxis.labels.style.color = this.isDark ? '#FFFFFF' : '#666666';
+      return opt;
+    },
+  },
+  watch: {
+    downtimeByMachine(val) {
+      this.downtimeByMachineOptions = this.setColors(val);
+    },
+    downtimeByReason(val) {
+      this.downtimeByReasonOptions = this.setColors(val);
+    },
+    productionByMachine(val) {
+      this.productionByMachineOptions = this.setColors(val);
+    },
+    targetByMachine(val) {
+      this.targetByMachineOptions = this.setColors(val);
+    },
+    rejectionByMachine(val) {
+      this.rejectionByMachineOptions = this.setColors(val);
+    },
+    rejectionByReason(val) {
+      this.rejectionByReasonOptions = this.setColors(val);
+    },
+    isDark() {
+      this.downtimeByMachineOptions = this.setColors(this.downtimeByMachine);
+      this.downtimeByReasonOptions = this.setColors(this.downtimeByReason);
+      this.productionByMachineOptions = this.setColors(this.productionByMachine);
+      this.targetByMachineOptions = this.setColors(this.targetByMachine);
+      this.rejectionByMachineOptions = this.setColors(this.rejectionByMachine);
+      this.rejectionByReasonOptions = this.setColors(this.rejectionByReason);
     },
   },
 };
 </script>
+
+<style>
+.v-progress-circular .v-progress-circular__info {
+  display: block;
+}
+</style>

@@ -3,6 +3,7 @@
     app
     right
     clipped
+    v-if="!isMobile"
     width="290"
     v-model="drawerInput"
   >
@@ -19,6 +20,28 @@
       </v-window>
     </perfect-scrollbar>
   </v-navigation-drawer>
+  <v-dialog
+    v-model="drawerInput"
+    fullscreen
+    v-else
+    hide-overlay
+    transition="dialog-bottom-transition"
+  >
+    <v-card>
+      <insights-toolbar></insights-toolbar>
+      <perfect-scrollbar style="height: calc(100% - 48px)">
+        <v-window v-model="currentWindow">
+          <v-window-item :value="0">
+            <daily-insights></daily-insights>
+            <insights-on-demand></insights-on-demand>
+          </v-window-item>
+          <v-window-item :value="1">
+            <insight-details></insight-details>
+          </v-window-item>
+        </v-window>
+      </perfect-scrollbar>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -39,6 +62,9 @@ export default {
   computed: {
     ...mapState('helper', ['insightsDrawer']),
     ...mapState('insight', ['window']),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     drawerInput: {
       get() {
         return this.insightsDrawer;

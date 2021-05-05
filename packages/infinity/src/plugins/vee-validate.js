@@ -39,7 +39,7 @@ extend('min_value', min_value);
 
 extend('multiple_of', {
   validate(value, { multiple }) {
-    return value % multiple === 0;
+    return (((value * 100) % (multiple * 100)) / 100) === 0;
   },
   params: ['multiple'],
 });

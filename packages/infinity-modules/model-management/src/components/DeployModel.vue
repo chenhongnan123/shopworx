@@ -55,7 +55,7 @@ export default {
           You cannot stop the deployment once it is started.`,
         )) {
           this.deploying = true;
-          await this.createNewDeploymentOrder(this.model.model_id);
+          await this.createNewDeploymentOrder(this.model.modelid);
           this.deploying = false;
         }
       } else {

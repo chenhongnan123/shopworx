@@ -16,13 +16,13 @@
         :disabled="inProgress"
       >
         <v-icon left>mdi-call-split</v-icon>
-        Split
+        {{ $t('downtime.split') }}
       </v-btn>
     </template>
     <v-form ref="form" v-model="isValid" @submit.prevent="splitDowntime">
       <v-card>
         <v-card-title primary-title>
-          Split downtime
+          {{ $t('downtime.splitDowntime') }}
           <v-spacer></v-spacer>
           <v-btn
             icon
@@ -36,7 +36,7 @@
           <v-row>
             <v-col cols="4">
               <div class="body-2">
-                Machine
+                {{ $t('downtime.machine') }}
               </div>
               <div class="text-uppercase title font-weight-regular mb-2">
                 {{ downtime.machinename }}
@@ -44,7 +44,7 @@
             </v-col>
             <v-col cols="4">
               <div class="body-2">
-                Shift
+                {{ $t('downtime.shift') }}
               </div>
               <div class="text-uppercase title font-weight-regular mb-2">
                 {{ downtime.shiftName }}
@@ -52,7 +52,7 @@
             </v-col>
             <v-col cols="4">
               <div class="body-2">
-                Duration
+                {{ $t('downtime.duration') }}
               </div>
               <div class="text-uppercase title font-weight-regular mb-2">
                 {{ duration }}
@@ -65,8 +65,8 @@
                 dense
                 outlined
                 return-object
-                label="Reason"
-                :rules="[v => !!v || 'Reason is required']"
+                :label="$t('downtime.reason')"
+                :rules="[v => !!v || $t('downtime.validations.reasonRequired')]"
                 :items="downtimeReasons"
                 item-text="reasonname"
                 item-value="reasonname"
@@ -100,12 +100,12 @@
                     outlined
                     dense
                     step="1"
-                    :rules="[v => !!v || 'Start time is required']"
+                    :rules="[v => !!v || $t('downtime.validations.startTimeRequired')]"
                     :disabled="index === 0"
                     hide-details="auto"
                     v-model="dt.downtimestart"
                     :id="`downtimestart-${index}`"
-                    label="Start time"
+                    :label="$t('downtime.startTime')"
                     @input="onStartChange(index)"
                   ></v-text-field>
                 </v-col>
@@ -115,12 +115,12 @@
                     outlined
                     dense
                     step="1"
-                    :rules="[v => !!v || 'End time is required']"
+                    :rules="[v => !!v || $t('downtime.validations.endTimeRequired')]"
                     :disabled="index === downtimes.length - 1"
                     hide-details="auto"
                     v-model="dt.downtimeend"
                     :id="`downtimeend-${index}`"
-                    label="End time"
+                    :label="$t('downtime.endTime')"
                     @input="onEndChange(index)"
                   ></v-text-field>
                 </v-col>
@@ -158,7 +158,7 @@
             :disabled="loading"
             @click="setDowntimes"
           >
-            Reset
+            {{ $t('downtime.reset') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -167,7 +167,7 @@
             type="submit"
             :disabled="!isValid"
           >
-            Split
+            {{ $t('downtime.split') }}
           </v-btn>
         </v-card-actions>
       </v-card>

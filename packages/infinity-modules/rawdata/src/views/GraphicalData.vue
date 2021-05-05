@@ -34,6 +34,7 @@
         <v-autocomplete
           :items="tags"
           class="ml-2"
+          filled
           multiple
           hide-details
           label="Select Parameters"
@@ -44,9 +45,17 @@
           :disabled="buttonDisable"
         >
         <template v-slot:selection="{ item, index }">
-        <v-chip v-if="index === 0">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-chip v-if="index === 0"
+                class="short"
+                v-bind="attrs"
+                v-on="on">
+                <span>{{ item.tagName }}</span>
+           </v-chip>
+         </template>
           <span>{{ item.tagName }}</span>
-        </v-chip>
+        </v-tooltip>
         <span
           v-if="index === 1"
           class="grey--text caption"
@@ -143,7 +152,7 @@ export default {
     ...mapState('rawdata', ['records', 'dateRange', 'report', 'paramList', 'categoryList']),
     ...mapGetters('rawdata', ['masterItems', 'getTags']),
     tags() {
-      return this.getTags(this.id, 4);
+      return this.getTags(this.id);
     },
   },
   async created() {
@@ -331,3 +340,14 @@ window.ServerSideDatasource = (fetchRecords) => ({
 });
 
 </script>
+
+<style scoped>
+.short{
+  width:120px;
+}
+.short span{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

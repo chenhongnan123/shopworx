@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          Fetching production plans...
+          {{ $t('planning.fetching') }}
         </span>
       </v-col>
     </v-row>

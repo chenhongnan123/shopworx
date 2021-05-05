@@ -17,7 +17,7 @@
         v-for="(groupData, groupKey, i) in planning"
       >
         <div class="primary--text" v-if="component === 'status-view'">
-          {{ getPlanStatus(groupKey).text }}
+          {{ $t(`planning.${getPlanStatus(groupKey).text}`) }}
         </div>
         <div class="primary--text" v-else>
           {{ groupKey }}

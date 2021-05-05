@@ -1,7 +1,7 @@
 import {
   set, toggle, reactiveSetArray, reactiveRemoveArray,
 } from '@shopworx/services/util/store.helper';
-import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
+import { sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
 export default ({
@@ -148,6 +148,15 @@ export default ({
         const payload = {
           element,
           tags,
+          webhooks: [{
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'WRITE',
+          }, {
+            webhookURL: `http://localhost:10190/update/${element.elementName}`,
+            elementId: '',
+            callbackType: 'UPDATE',
+          }],
         };
         const success = await dispatch(
           'element/createElementAndTags',
@@ -730,10 +739,10 @@ export default ({
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
-        machineList = machines
-          .map((mac) => mac.machinename)
-          .sort(sortAlphaNum);
-        machineList = ['All Machines', ...machineList];
+        machineList = sortArray(machines, 'machinename').map(({ machinename }) => ({
+          name: machinename,
+          value: machinename,
+        }));
       }
       return machineList;
     },
@@ -741,22 +750,22 @@ export default ({
     partList: ({ parts }) => {
       let partList = [];
       if (parts && parts.length) {
-        partList = parts
-          .map((mac) => mac.partname)
-          .sort(sortAlphaNum);
-        partList = ['All Parts', ...partList];
+        partList = sortArray(parts, 'partname').map(({ partname }) => ({
+          name: partname,
+          value: partname,
+        }));
       }
       return partList;
     },
 
     planStatus: () => (status) => {
-      let result = { text: 'New', color: 'info' };
+      let result = { text: 'notStarted', color: 'info' };
       if (status === 'inProgress') {
-        result = { text: 'Operational', color: 'success' };
+        result = { text: 'inProgress', color: 'success' };
       } else if (status === 'complete') {
-        result = { text: 'Complete', color: 'accent' };
+        result = { text: 'complete', color: 'accent' };
       } else if (status === 'abort') {
-        result = { text: 'Aborted', color: 'error' };
+        result = { text: 'abort', color: 'error' };
       }
       return result;
     },

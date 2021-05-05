@@ -8,7 +8,7 @@
       hide-details
       v-model="search"
       prepend-inner-icon="$search"
-      label="Filter assets"
+      :label="$t('planning.filterAssets')"
     ></v-text-field>
     <v-data-table
       dense
@@ -23,13 +23,13 @@
       :custom-filter="filterAssets"
     >
       <template #loading>
-        Fetching assets...
+        {{ $t('planning.fetchingAsset') }}
       </template>
       <template #no-data>
-        No asset available
+        {{ $t('planning.noAsset') }}
       </template>
       <template #no-results>
-        No matching asset found for '{{ search }}'
+        {{ $t('planning.noAssetResult', { search }) }}
       </template>
     <!-- eslint-disable-next-line -->
       <template #item.machinename="{ item }">
@@ -78,17 +78,17 @@ export default {
       loading: false,
       headers: [
         {
-          text: 'Asset',
+          text: this.$t('planning.asset'),
           value: 'machinename',
           width: '60%',
         },
         {
-          text: 'Auto plan start',
+          text: this.$t('planning.autoPlanStart'),
           value: 'manualplanstart',
           sortable: false,
         },
         {
-          text: 'Auto plan complete',
+          text: this.$t('planning.autoPlanComplete'),
           value: 'manualplanstop',
           sortable: false,
         },

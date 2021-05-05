@@ -15,7 +15,7 @@
             small
             v-text="'mdi-download-outline'"
           ></v-icon>
-        Download CSV template
+        {{ $t('planning.downloadCsvTemplate') }}
         </v-btn>
       </span>
     </portal>
@@ -25,14 +25,14 @@
         hide-details
         single-line
         ref="fileupload"
-        label="Select file from your computer"
+        :label="$t('planning.selectFile')"
         prepend-inner-icon="mdi-upload-outline"
         prepend-icon=""
         @change="onFileChanged"
       ></v-file-input>
     </v-responsive>
     <div class="caption">
-      You can import plans in CSV format.
+      {{ $t('planning.importHint') }}
     </div>
     <div v-if="fileImported" class="mt-4">
       <div class="mb-2">
@@ -59,7 +59,7 @@
       :disabled="loading || error || !file"
       @click="importRecords"
     >
-      Import
+      {{ $t('planning.import') }}
     </v-btn>
   </div>
 </template>

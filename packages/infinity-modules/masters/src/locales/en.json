@@ -1,5 +1,27 @@
 {
   "masters": "Master Data",
+  "addNew": "Add new",
+  "save": "Save",
+  "delete": "Delete",
+  "refresh": "Refresh",
+  "export": "Export",
+  "press": "Press",
+  "injectionmolding": "Injection molding",
+  "masterItems": {
+    "asset": "Asset",
+    "reason": "Reason",
+    "other": "Other",
+    "meters": "Meters",
+    "mold": "Mold",
+    "tool": "Tool",
+    "part": "Part",
+    "partmatrix": "Part matrix",
+    "downtimereasons": "Downtime reasons",
+    "rejectionreasons": "Rejection reasons",
+    "reworkreasons": "Rework reasons",
+    "scrapreasons": "Scrap reasons",
+    "operator": "Operator"
+  },
   "success": {
     "DOWNLOADED": "Downloaded the Data in CSV format",
     "DATA_SAVED": "Data Saved Successfully!"

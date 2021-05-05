@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No reports found
+          {{ $t('noReports') }}
         </span>
       </v-col>
     </v-row>

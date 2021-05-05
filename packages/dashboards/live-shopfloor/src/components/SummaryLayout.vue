@@ -1,9 +1,10 @@
 <template>
-  <v-row>
+  <div class="row px-2 px-md-0">
     <v-col
       v-for="(option, n) in options"
       :key="n"
       cols="3"
+      class="pa-1 pa-md-3"
     >
       <v-responsive max-height="80" min-height="80">
         <v-card
@@ -15,7 +16,7 @@
           dark
           :color="`${option.color} darken-2`"
         >
-          <div class="display-1 mt-2 font-weight-medium">
+          <div class="text-h5 text-sm-h4 mt-2 font-weight-medium">
             <span v-if="option.value === 'totalMachines'">
               {{ totalMachines }}
             </span>
@@ -29,13 +30,13 @@
               {{ idleMachines }}
             </span>
           </div>
-          <div class="title">
+          <div class="text-sm-h6">
             {{ option.text }}
           </div>
         </v-card>
       </v-responsive>
     </v-col>
-  </v-row>
+  </div>
 </template>
 
 <script>

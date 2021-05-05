@@ -54,7 +54,7 @@ export default ({
         list = await Promise.all(param.map(async (f) => {
           const paramList = await dispatch(
             'element/getRecords',
-            { elementName: 'parameters', query: `?query=parametercategory=="${f.id}"%26%26substationid=="${request.substation}"` },
+            { elementName: 'parameters', query: `?query=parametercategory=="${f.id}"&&substationid=="${request.substation}"` },
             { root: true },
           );
           return paramList.map((p) => p.name);
@@ -67,7 +67,7 @@ export default ({
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
       let data = await dispatch(
         'element/getRecordsByTags',
-        { payload },
+        payload,
         { root: true },
       );
       if (data) {
@@ -257,18 +257,13 @@ export default ({
       return result;
     },
 
-    getTags: ({ elements }) => (element, assetId) => {
+    getTags: ({ elements }) => (element) => {
       let tags = [];
       if (elements && elements.length) {
         const elem = elements.find((e) => e.element.elementName === element);
         if (elem) {
           ({ tags } = elem);
-          tags = tags.filter((tag) => {
-            if (assetId) {
-              return tag.assetId === assetId;
-            }
-            return !tag.hide;
-          });
+          return tags;
         }
       }
       return tags;

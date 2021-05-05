@@ -26,7 +26,7 @@
     })">
       <v-card>
         <v-card-title class="title font-weight-regular justify-space-between">
-          Edit rework
+          {{ $t('production.editRework') }}
           <v-btn icon small @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -35,27 +35,27 @@
           <v-text-field
             v-model.number="item.reworkquantity"
             type="number"
-            label="Qty"
+            :label="$t('production.qty')"
             outlined
             dense
             class="mt-1"
-            suffix="pcs"
+            :suffix="$t('production.pieces')"
             :rules="[(v) => (
               Number.isInteger(Number(v)) > 0
               && parseInt(v, 10) <= acceptedQty
             )
-              || 'Should be less than accepted qty']"
+              || $t('production.validations.quantity')]"
           ></v-text-field>
           <v-autocomplete
             outlined
             dense
-            label="Reason"
+            :label="$t('production.reason')"
             :disabled="updating"
             item-text="reasonname"
             item-value="reasonname"
             :items="reworkReasons"
             v-model="item.reasonname"
-            :rules="[(v) => !!v || 'Reason is required']"
+            :rules="[(v) => !!v || $t('production.validations.reasonRequired')]"
           >
             <template #selection="data">
               {{ data.item.reasoncode }} | {{ data.item.reasonname }}
@@ -73,7 +73,7 @@
           </v-autocomplete>
           <v-textarea
             v-model="item.remark"
-            label="Remark"
+            :label="$t('production.remark')"
             rows="2"
             outlined
             dense
@@ -88,7 +88,7 @@
             :loading="updating"
             class="text-none"
           >
-            Update rework
+            {{ $t('production.updateRework') }}
           </v-btn>
         </v-card-actions>
       </v-card>

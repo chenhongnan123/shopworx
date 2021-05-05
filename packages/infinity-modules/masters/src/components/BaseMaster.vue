@@ -10,11 +10,12 @@
       v-show="!loading"
       :rowData="rowData"
       rowSelection="multiple"
-      class="ag-theme-balham"
+      :class="agGridTheme"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
       :defaultColDef="defaultColDef"
       :rowClassRules="rowClassRules"
+      :localeText="agGridLocaleText"
       :suppressRowClickSelection="true"
       :suppressDragLeaveHidesColumns="true"
       style="width: 100%; height: 400px;"
@@ -35,8 +36,7 @@ import {
 import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import CSVParser from '@shopworx/services/util/csv.service';
-import ZipService from '@shopworx/services/util/zip.service';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 export default {
   name: 'BaseMaster',
@@ -77,6 +77,7 @@ export default {
   computed: {
     ...mapState('masters', ['records']),
     ...mapGetters('masters', ['getTags']),
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     tags() {
       return this.getTags(this.id, this.assetId);
     },
@@ -115,7 +116,6 @@ export default {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
     this.fetchRecords();
-    this.zipService = ZipService;
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
@@ -124,6 +124,7 @@ export default {
     async fetchRecords() {
       this.loading = true;
       this.$emit('savebtnshow', false);
+      this.$emit('deletebtnshow', false);
       await this.getRecords({
         elementName: this.id,
         assetId: this.assetId,

@@ -385,8 +385,6 @@ export default {
     // await this.getComponentRecords(`?query=mainid=="${this.reworkItem.mainid}"`);
     // await this.getNgCodeRecords(`?query=ngcode==${this.reworkItem.checkoutngcode}`);
     await this.getNgCodeRecords('');
-    // this.getSingleNgCodeDetail('');
-    // this.getComponentRecords('');
     await this.getRoadmapList('?query=roadmaptype=="Rework"');
     await this.getReworkList('?query=overallresult!="1"');
     await this.getRunningOrder('?query=orderstatus=="Running"');
