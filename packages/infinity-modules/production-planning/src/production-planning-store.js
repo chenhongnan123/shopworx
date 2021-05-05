@@ -66,8 +66,8 @@ export default ({
   actions: {
     getOnboardingState: async ({ commit, dispatch, rootGetters }) => {
       const partMatrix = await dispatch('getPartMatrixElement');
+      const licensedAssets = rootGetters['user/licensedAssets'];
       if (partMatrix) {
-        const licensedAssets = rootGetters['user/licensedAssets'];
         const sortedLicense = licensedAssets.sort().toString();
         const { tags: matrixTags } = partMatrix;
         const matrixAssets = matrixTags.map((t) => t.assetId);
@@ -94,6 +94,7 @@ export default ({
           }
         }
       } else {
+        commit('setUnavailableAssets', licensedAssets);
         commit('setOnboarded', false);
       }
     },
@@ -708,9 +709,8 @@ export default ({
 
     partMatrixComposition: (_, { planningSchema }) => (assetId) => {
       if (planningSchema && planningSchema.length) {
-        return planningSchema
-          .find((schema) => schema.assetId === assetId)
-          .partMatrixComposition;
+        const schema = planningSchema.find((s) => s.assetId === assetId);
+        return schema ? schema.partMatrixComposition : [];
       }
       return [];
     },
