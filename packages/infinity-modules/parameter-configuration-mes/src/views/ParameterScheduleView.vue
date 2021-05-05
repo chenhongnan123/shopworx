@@ -1349,39 +1349,48 @@ export default {
             }
           });
           await this.createTagElement(tagList);
-          let payloadData = [];
-          tagList.forEach((l) => {
-            const tag = this.createElementResponse
-              .filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
-              });
-            }
-          });
-          await this.updateTagStatus(payloadData);
-          // updates tags of traceability elements
-          await this.createTagElement(traceabilityTagList);
-          payloadData = [];
-          traceabilityTagList.forEach((l) => {
-            const tag = this.createElementResponse
-              .filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
-              });
-            }
-          });
-          await this.updateTagStatus(payloadData);
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'IMPORT_PARAMETER_LIST',
-          });
+          // TODO - Check response "this.createElementResponse"
+          if (this.createElementResponse && this.createElementResponse.length) {
+            let payloadData = [];
+            tagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            // updates tags of traceability elements
+            await this.createTagElement(traceabilityTagList);
+            payloadData = [];
+            traceabilityTagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'IMPORT_PARAMETER_LIST',
+            });
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ELEMENT_NOT_CREATED',
+            });
+          }
         }
         document.getElementById('uploadFiles').value = null;
       } else {

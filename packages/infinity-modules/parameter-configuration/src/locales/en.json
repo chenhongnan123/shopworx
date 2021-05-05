@@ -20,6 +20,7 @@
     "DUPLICATE_BIT_NUM_ERROR": "Duplicate value in Bit Number column",
     "DUPLICATE_START_NUM_ERROR": "Duplicate value in Start Address column",
     "DUPLICATE_DB_ADDRESS_ERROR": "Duplicate value in DB Address column",
-    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length"
+    "PARAMETER_MAX_LENGTH": "Parameters names that exceeded max length",
+    "ELEMENT_NOT_CREATED": "Error while creating tags for element."
   }
 }

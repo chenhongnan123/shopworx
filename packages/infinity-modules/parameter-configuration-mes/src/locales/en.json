@@ -22,6 +22,7 @@
     "DUPLICATE_BIT_NUM_ERROR": "Below Location have Duplicate Bit Number",
     "DUPLICATE_START_NUM_ERROR": "Below Location have Duplicate Start Address",
     "DUPLICATE_DB_ADDRESS_ERROR": "Below Location have Duplicate DB Address",
-    "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)"
+    "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)",
+    "ELEMENT_NOT_CREATED": "Error while creating tags for element."
   }
 }
