@@ -9,6 +9,7 @@
   >
     <span
       id="app_msg"
+      style="white-space: pre;"
       v-text="message"
     ></span>
     <template #action="{ attrs }">
