@@ -1,4 +1,4 @@
-import { set } from '@shopworx/services/util/store.helper';
+import { set, toggle } from '@shopworx/services/util/store.helper';
 /* eslint-disable */
 export default ({
   namespaced: true,
@@ -27,6 +27,10 @@ export default ({
     parametersList: [],
     subStationsForIP: [],
     assets: {},
+    filter: false,
+    sublineByline: [],
+    stationBySubline: [],
+    subStationByStation: [],
   },
   mutations: {
     setSelectedLine: set('selectedLine'),
@@ -45,6 +49,9 @@ export default ({
     setUpdateProcessDialog: set('updateProcessDialog'),
     setAllSublines: set('allSublines'),
     setAllStations: set('allStations'),
+    setSublinesbyline: set('sublineByline'),
+    setStationbySubLines: set('stationBySubline'),
+    setSubStationbyStation: set('subStationByStation'),
     setStationsbyline: set('stationsbylines'),
     setSubStationsbyline: set('substationsbylines'),
     setSubStationName: set('subStationName'),
@@ -52,6 +59,8 @@ export default ({
     setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
     setParametersList: set('parametersList'),
     setAssets: set('assets'),
+    toggleFilter: toggle('filter'),
+    setFilter: set('filter'),
   },
   actions: {
     getAssets: async ({ commit, dispatch }) => {
@@ -165,8 +174,8 @@ export default ({
       // // return true;
     },
     getStations: async ({ dispatch, commit, state }, query) => {
-      const { stations } = state;
-      const localStations = await dispatch(
+      // const { stations } = state;
+      const stations = await dispatch(
         'element/getRecords',
         {
           elementName: 'station',
@@ -179,8 +188,44 @@ export default ({
       //     dispatch('getSubStations', `?query=stationid=="${station.id}"`);
       //   });
       // }
-      stations.push(...localStations);
+      // stations.push(...localStations);
       commit('setStations', stations);
+      return true;
+    },
+    getfilteredSubline: async ({ dispatch, commit }, query) => {
+      const sublinebyLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'subline',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSublinesbyline', sublinebyLines);
+      return true;
+    },
+    getfilteredStation: async ({ dispatch, commit }, query) => {
+      const stationbySubLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationbySubLines', stationbySubLines);
+      return true;
+    },
+    getfilteredSubStation: async ({ dispatch, commit }, query) => {
+      const subStationbyStation = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationbyStation', subStationbyStation);
       return true;
     },
     getStationbyline: async ({ dispatch, commit }, query) => {
@@ -399,6 +444,30 @@ export default ({
           commit('setProcesses', list);
           return processes;
         }
+      }
+      return created;
+    },
+    createLine: async ({ dispatch, commit }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'line',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        const query = '';
+        const processes = await dispatch(
+          'element/getRecords',
+          {
+            elementName: 'line',
+            query,
+          },
+          { root: true },
+        );
+        commit('setLines', processes);
+        return processes;
       }
       return created;
     },
@@ -740,6 +809,9 @@ export default ({
       return deleted;
     },
     deleteSubstation: async ({ dispatch, commit }, object) => {
+      // TODO - check parameter data
+      // if data - display message ()deletion not allowed
+      // if no parameter data disable element then delete substation
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
@@ -794,6 +866,28 @@ export default ({
         }
       }
       return deleted;
+    },
+    inactiveRealElement: async ({ dispatch }, payload) => {
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
+    },
+    inactiveProcessElement: async ({ dispatch }, payload) => {
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
     },
   },
 });

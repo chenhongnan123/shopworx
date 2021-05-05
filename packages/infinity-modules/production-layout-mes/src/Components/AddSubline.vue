@@ -79,6 +79,7 @@ export default {
       nameRules: [(v) => !!v || 'Name required',
         (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
       plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
+      checked: false,
     };
   },
   props: {
