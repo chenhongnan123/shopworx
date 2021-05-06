@@ -63,6 +63,7 @@
           color="primary"
           class="text-none"
           @click="saveRoadmap"
+          :loading="createLoading"
           :disabled="!valid || !validNamePattern"
         >
           Save
@@ -99,6 +100,7 @@ export default {
       validNamePattern: true,
       name: '',
       roadmaptype: '',
+      createLoading: false,
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
@@ -131,20 +133,25 @@ export default {
     },
     async saveRoadmap() {
       this.$refs.form.validate();
+      this.createLoading = true;
       if (!this.roadmap.name) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ROADMAP_NAME_EMPTY',
         });
+        this.createLoading = false;
       } else if (!this.roadmap.roadmaptype) {
+        this.createLoading = true;
         this.roadmap.roadmaptype = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ROADMAP_TYPE_NOT_SELECTED',
         });
+        this.createLoading = false;
       } else {
+        this.createLoading = true;
         this.saving = true;
         this.roadmap = {
           ...this.roadmap,
@@ -173,6 +180,7 @@ export default {
           });
         }
         this.saving = false;
+        this.createLoading = false;
       }
     },
     onChangeRoadmapType() {

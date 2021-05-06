@@ -202,6 +202,7 @@
               color="primary"
               class="text-none"
               @click="updatesaveRoadmap"
+              :loading="updateLoading"
               :disabled="!validUpdate || !validNamePattern"
             >
               Save
@@ -357,6 +358,7 @@ export default {
       editedVersionNumber: 0,
       validUpdate: true,
       validNamePattern: true,
+      updateLoading: false,
       valid: true,
       validupdate: true,
       validDuplicate: true,
@@ -596,6 +598,7 @@ export default {
           message: 'ROADMAP_TYPE_NOT_SELECTED',
         });
       } else {
+        this.updateLoading = true;
         if (this.flagNewUpdate) {
           this.saving = true;
           this.roadmap = {
@@ -629,6 +632,7 @@ export default {
           }
         }
         this.saving = false;
+        this.updateLoading = false;
       }
     },
     async updateDialogReset() {
