@@ -86,18 +86,20 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('roadmapManagement', ['setRoadmapList', 'setFilter', 'toggleFilter']),
+    ...mapMutations('roadmapManagement', ['setRoadmapList', 'setFilter', 'toggleFilter', 'setSelectedRoadmapType']),
     ...mapActions('roadmapManagement', ['getRecords']),
     btnApply() {
       let query = '?query=';
       query += `roadmaptype=="${this.selectedRoadType}"`;
       this.getRecords(query);
       this.toggleFilter();
+      this.setSelectedRoadmapType(this.selectedRoadType);
     },
     async btnReset() {
       this.selectedRoadType = '';
       await this.getRecords('');
       this.toggleFilter();
+      this.setSelectedRoadmapType(null);
     },
   },
 };
