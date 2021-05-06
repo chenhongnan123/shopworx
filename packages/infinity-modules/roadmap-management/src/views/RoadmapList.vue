@@ -202,7 +202,7 @@
               color="primary"
               class="text-none"
               @click="updatesaveRoadmap"
-              :disabled="!validUpdate"
+              :disabled="!validUpdate || !validNamePattern"
             >
               Save
             </v-btn>
@@ -356,6 +356,7 @@ export default {
       updateRoadmapId: 0,
       editedVersionNumber: 0,
       validUpdate: true,
+      validNamePattern: true,
       valid: true,
       validupdate: true,
       validDuplicate: true,
@@ -642,7 +643,7 @@ export default {
          === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
         // this.roadmap.name = '';
-        this.validUpdate = false;
+        this.validNamePattern = false;
         this.setAlert({
           show: true,
           type: 'error',
@@ -650,7 +651,7 @@ export default {
         });
       } else {
         // this.valid = true;
-        this.validUpdate = true;
+        this.validNamePattern = true;
       }
     },
   },
