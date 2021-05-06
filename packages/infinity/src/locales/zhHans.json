@@ -297,7 +297,9 @@
     "reworkOperation": "返工",
     "packagingManagement": "包装",
     "formBuilder": "表单生成器",
-    "eLogbook": "电子表单"
+    "eLogbook": "电子表单",
+    "calibrationApp": "标定",
+    "productionProcess": "产品状态面板"
   },
   "account": {
     "account": "账户",
