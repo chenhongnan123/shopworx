@@ -11,7 +11,7 @@
         item-text="text"
         item-value="value"
         autocomplete="language"
-        v-model="currentLocale"
+        v-model="locale"
         prepend-icon="$locale"
         :label="$t('user.preferences.language')"
       ></v-select>
@@ -40,14 +40,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('helper', ['locales', 'isDark']),
-    currentLocale: {
+    ...mapState('helper', ['locales', 'isDark', 'currentLocale']),
+    locale: {
       get() {
-        return this.$i18n.locale;
+        this.setCurrentLocale(this.$i18n.locale);
+        return this.currentLocale;
       },
       set(val) {
         this.$i18n.locale = val;
         LocaleService.setLocale(val);
+        this.setCurrentLocale(val);
       },
     },
     darkMode: {
@@ -60,7 +62,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('helper', ['toggleIsDark']),
+    ...mapMutations('helper', ['toggleIsDark', 'setCurrentLocale']),
   },
 };
 </script>

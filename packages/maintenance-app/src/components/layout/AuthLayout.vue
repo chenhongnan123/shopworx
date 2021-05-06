@@ -36,7 +36,7 @@
                     item-text="text"
                     item-value="value"
                     autocomplete="language"
-                    v-model="currentLocale"
+                    v-model="locale"
                   ></v-select>
                 </v-col>
               </v-row>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import LocaleService from '@shopworx/services/util/locale.service';
 import AuthHeader from '@/components/auth/AuthHeader.vue';
 
@@ -73,16 +73,21 @@ export default {
     AuthHeader,
   },
   computed: {
-    ...mapState('helper', ['locales']),
-    currentLocale: {
+    ...mapState('helper', ['locales', 'currentLocale']),
+    locale: {
       get() {
-        return this.$i18n.locale;
+        this.setCurrentLocale(this.$i18n.locale);
+        return this.currentLocale;
       },
       set(val) {
         this.$i18n.locale = val;
         LocaleService.setLocale(val);
+        this.setCurrentLocale(val);
       },
     },
+  },
+  methods: {
+    ...mapMutations('helper', ['setCurrentLocale']),
   },
 };
 </script>
