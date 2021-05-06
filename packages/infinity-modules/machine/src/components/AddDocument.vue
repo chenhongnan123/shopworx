@@ -69,18 +69,18 @@ import {
   // mapGetters,
   mapMutations,
   mapActions,
-} from "vuex";
-import FileService from "@shopworx/services/api/file.service";
+} from 'vuex';
+import FileService from '@shopworx/services/api/file.service';
 
 const contentEnum = Object.freeze({
-  image: "image",
-  audio: "audio",
-  video: "video",
-  application: "file",
+  image: 'image',
+  audio: 'audio',
+  video: 'video',
+  application: 'file',
 });
 
 export default {
-  name: "AddDocumentDialog",
+  name: 'AddDocumentDialog',
   data() {
     return {
       documentObj: {
@@ -91,18 +91,18 @@ export default {
         files: [],
       },
       rules: {
-        name: [(v) => !!v || "Name is required"],
-        file: [(v) => !!v || "File is required"],
+        name: [(v) => !!v || 'Name is required'],
+        file: [(v) => !!v || 'File is required'],
       },
       saving: false,
       valid: false,
     };
   },
   computed: {
-    ...mapState("machine", ["addDocumentDialog"]),
-    ...mapState("user", ["me"]),
-    ...mapState("machine", ["machineList"]),
-    ...mapState("auth", ["sessionId"]),
+    ...mapState('machine', ['addDocumentDialog']),
+    ...mapState('user', ['me']),
+    ...mapState('machine', ['machineList']),
+    ...mapState('auth', ['sessionId']),
     machineInfo: {
       get() {
         return this.machineList.filter((item) => item.id === this.machineid)[0];
@@ -126,15 +126,15 @@ export default {
     this.machineid = this.$route.params.id;
   },
   methods: {
-    ...mapMutations("helper", ["setAlert"]),
-    ...mapMutations("machine", ["setAddDocumentDialog"]),
-    ...mapActions("machine", [
-      "createMachineDocument",
-      "getDocumentRecords",
-      "getDownloadLink",
+    ...mapMutations('helper', ['setAlert']),
+    ...mapMutations('machine', ['setAddDocumentDialog']),
+    ...mapActions('machine', [
+      'createMachineDocument',
+      'getDocumentRecords',
+      'getDownloadLink',
     ]),
     getQuery() {
-      let query = "?query=";
+      let query = '?query=';
       if (this.position) {
         query += `positionid=="${this.position}"%26%26`;
       }
@@ -161,15 +161,15 @@ export default {
         // eslint-disable-next-line max-len
         if (operator) {
           await this.getDocumentRecords(
-            `?query=machineid=="${this.machineInfo.id}"`
+            `?query=machineid=="${this.machineInfo.id}"`,
           );
           Object.keys(this.documentObj).forEach((k) => {
-            this.documentObj[k] = "";
+            this.documentObj[k] = '';
           });
           this.setAlert({
             show: true,
-            type: "success",
-            message: "CREATE_STATION_DOCUMENT",
+            type: 'success',
+            message: 'CREATE_STATION_DOCUMENT',
           });
         }
         this.dialog = false;
@@ -182,10 +182,10 @@ export default {
         const { content, nameWithoutExt, extension } = this.getFileDetails(e);
         const url = `/server/uploadfile/${content}/${nameWithoutExt}?elementName=files&extension=${extension}`;
         const form = new FormData();
-        form.append("file", new Blob([event.target.result]), {
-          contentType: "multipart/form-data",
+        form.append('file', new Blob([event.target.result]), {
+          contentType: 'multipart/form-data',
         });
-        form.append("assetid", 0);
+        form.append('assetid', 0);
         const config = {
           headers: {
             sessionId: this.sessionId,
@@ -194,7 +194,7 @@ export default {
         const response = await FileService.uploadFile(url, form, config);
         if (response.status === 200) {
           const link = await this.getDownloadLink(
-            `?query=originalFilename=="${nameWithoutExt}"&sortquery=sortindex==-1&pagenumber=1&pagesize=1`
+            `?query=originalFilename=="${nameWithoutExt}"&sortquery=sortindex==-1&pagenumber=1&pagesize=1`,
           );
           if (link) {
             const { downloadlink } = link[0];
@@ -204,19 +204,19 @@ export default {
         } else {
           this.setAlert({
             show: true,
-            type: "error",
-            message: "FILE_UPLOAD_FAILED",
+            type: 'error',
+            message: 'FILE_UPLOAD_FAILED',
           });
         }
       };
     },
     getFileDetails(file) {
       const { name, type } = file;
-      const lastIndex = name.lastIndexOf(".");
+      const lastIndex = name.lastIndexOf('.');
       const nameWithoutExt = name.substring(0, lastIndex);
       const extension = name.substring(lastIndex + 1);
-      const temp = type.split("/");
-      const content = contentEnum[temp[0]] || "file";
+      const temp = type.split('/');
+      const content = contentEnum[temp[0]] || 'file';
       return { content, nameWithoutExt, extension };
     },
   },
