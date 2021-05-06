@@ -63,7 +63,7 @@
           color="primary"
           class="text-none"
           @click="saveRoadmap"
-          :disabled="!valid"
+          :disabled="!valid || !validNamePattern"
         >
           Save
         </v-btn>
@@ -96,6 +96,7 @@ export default {
       updateRoadmapId: 0,
       editedVersionNumber: 0,
       valid: true,
+      validNamePattern: true,
       name: '',
       roadmaptype: '',
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
@@ -189,7 +190,7 @@ export default {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        this.valid = false;
+        this.validNamePattern = false;
         this.validupdate = false;
         this.setAlert({
           show: true,
@@ -197,7 +198,7 @@ export default {
           message: 'ALREADY_EXSIST',
         });
       } else {
-        this.valid = true;
+        this.validNamePattern = true;
         this.saving = false;
       }
     },
