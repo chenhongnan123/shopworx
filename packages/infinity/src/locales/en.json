@@ -296,7 +296,8 @@
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
     "packagingManagement": "Packaging",
-    "calibrationApp": "Calibration"
+    "calibrationApp": "Calibration",
+    "productionProcess": "Production Process"
   },
   "account": {
     "account": "Account",
