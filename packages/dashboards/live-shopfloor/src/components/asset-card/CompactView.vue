@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { timeDistance, distanceInWordsToNow } from '@shopworx/services/util/date.service';
 
 export default {
@@ -116,6 +117,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('shopfloor', ['currentTime']),
     color() {
       let color = '';
       if (this.machine) {
@@ -177,7 +179,7 @@ export default {
   },
   methods: {
     getStrictDistance(datetime) {
-      return timeDistance(datetime, new Date().getTime());
+      return timeDistance(datetime, this.currentTime);
     },
     getDistance(datetime) {
       return distanceInWordsToNow(datetime, { addSuffix: true });
