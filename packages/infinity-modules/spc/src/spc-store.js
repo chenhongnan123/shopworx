@@ -4,64 +4,54 @@ export default {
   namespaced: true,
   state: {
     addParameterDialog: false,
-    parameterList: [],
-    directionList: [],
-    categoryList: [],
-    datatypeList: [],
-    lineList: [],
-    sublineList: [],
-    stationList: [],
-    substationList: [],
-    lineValue: '',
-    sublineValue: '',
-    stationValue: '',
-    substationValue: '',
+    settingDialog: false,
+    elementList: [],
+    elementValue: '',
     filter: false,
     isApply: false,
-    dataTypeList: [],
-    categoryDataList: [],
-    selectedParameterName: '',
-    selectedParameterDirection: '',
-    selectedParameterCategory: '',
-    selectedParameterDatatype: '',
     subStationElementDeatils: [],
-    parameteranalysisList: [],
+    spcconfigurationList: [],
+    spcSetting: null,
   },
   mutations: {
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
     setApply: set('isApply'),
-    setAddParameterDialog: set('addParameterDialog'),
-    setDirectionList: set('directionList'),
-    setCategoryList: set('categoryList'),
-    setDatatypeList: set('datatypeList'),
-    setLineList: set('lineList'),
-    setSubLineList: set('sublineList'),
-    setSublineList: set('sublineList'),
-    setStationList: set('stationList'),
-    setSubStationList: set('substationList'),
-    setSubstationList: set('substationList'),
+    setElementList: set('elementList'),
     setParameterList: set('parameterList'),
-    setLineValue: set('lineValue'),
-    setSublineValue: set('sublineValue'),
-    setStationValue: set('stationValue'),
-    setSubstationValue: set('substationValue'),
-    setDatatypes: set('dataTypeList'),
-    setCategoryData: set('categoryDataList'),
-    setSelectedParameterName: set('selectedParameterName'),
-    setSelectedParameterDirection: set('selectedParameterDirection'),
-    setSelectedParameterCategory: set('selectedParameterCategory'),
-    setSelectedParameterDatatype: set('selectedParameterDatatype'),
+    setElementValue: set('elementValue'),
     setSubStationIdDeatils: set('subStationElementDeatils'),
-    setParameteranalysisList: set('parameteranalysisList'),
+    setSpcconfigurationList: set('spcconfigurationList'),
+    setAddParameterDialog: set('addParameterDialog'),
+    setSettingDialog: set('settingDialog'),
+    setSpcSetting: set('spcSetting'),
   },
   actions: {
-    updateParameteranalysis: async ({ dispatch }, postData) => {
+    initSetting: async ({ commit }) => {
+      const setting = localStorage.getItem('spcSetting');
+      if (setting) {
+        commit('setSpcSetting', JSON.parse(setting));
+      } else {
+        commit('setSettingDialog', true);
+      }
+    },
+    getRecords: async ({ dispatch }, { query, element }) => {
+      const record = await dispatch(
+        'element/getRecords',
+        {
+          elementName: element,
+          query,
+        },
+        { root: true },
+      );
+      return record;
+    },
+    updateSpcconfiguration: async ({ dispatch }, postData) => {
       const { id, payload } = postData;
       const putParameter = await dispatch(
         'element/updateRecordById',
         {
-          elementName: 'parameteranalysis',
+          elementName: 'spcconfiguration',
           id,
           payload,
         },
@@ -69,33 +59,33 @@ export default {
       );
       return putParameter;
     },
-    deleteParameteranalysis: async ({ dispatch }, id) => {
+    deleteSpcconfiguration: async ({ dispatch }, _id) => {
       const deleteParameter = await dispatch(
-        'element/deleteRecordByQuery',
+        'element/deleteRecordById',
         {
-          elementName: 'parameteranalysis',
-          queryParam: `?query=parameterid=="${id}"`,
+          elementName: 'spcconfiguration',
+          id: _id,
         },
         { root: true },
       );
       return deleteParameter;
     },
-    createParameteranalysis: async ({ dispatch }, payload) => {
+    createSpcconfiguration: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postRecord',
         {
-          elementName: 'parameteranalysis',
+          elementName: 'spcconfiguration',
           payload,
         },
         { root: true },
       );
       return created;
     },
-    createParameteranalysisList: async ({ dispatch }, payload) => {
+    createSpcconfigurationList: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postBulkRecords',
         {
-          elementName: 'parameteranalysis',
+          elementName: 'spcconfiguration',
           payload,
         },
         { root: true },
@@ -321,42 +311,20 @@ export default {
       commit('setParameterList', parameterList);
       return parameterList;
     },
-    getParameteranalysisListRecords: async ({ dispatch, commit }, query, socketData) => {
-      const lineList = await dispatch('element/getRecords', { elementName: 'line' }, { root: true });
-      const subLineList = await dispatch('element/getRecords', { elementName: 'subline' }, { root: true });
-      const stationList = await dispatch('element/getRecords', { elementName: 'station' }, { root: true });
-      const sunStationList = await dispatch('element/getRecords', { elementName: 'substation' }, { root: true });
-      const parameteranalysisList = await dispatch(
+    getSpcconfigurationListRecords: async ({ dispatch, commit }, query) => {
+      const spcconfigurationList = await dispatch(
         'element/getRecords',
         {
-          elementName: 'parameteranalysis',
+          elementName: 'spcconfiguration',
           query,
         },
         { root: true },
       );
-      parameteranalysisList.forEach(async (item, key) => {
+      spcconfigurationList.forEach(async (item, key) => {
         item.number = key + 1;
-        item.datatype = Number(item.datatype);
-        if (lineList.length) {
-          item.line = lineList.filter((line) => Number(line.id) === item.lineid)[0].name;
-        }
-        if (subLineList.length) {
-          item.subline = subLineList.filter((subline) => subline.id === item.sublineid)[0].name;
-        }
-        if (stationList.length) {
-          item.station = stationList.filter((station) => station.id === item.stationid)[0].name;
-        }
-        if (sunStationList.length) {
-          // eslint-disable-next-line max-len
-          item.substation = sunStationList.filter((substation) => substation.id === item.substationid)[0].name;
-        }
-        // item.parametercategory = Number(item.parametercategory);
-        if (socketData && item.name === socketData[item.name]) {
-          item.monitorvalue = socketData.monitorvalue;
-        }
       });
-      commit('setParameteranalysisList', parameteranalysisList);
-      return parameteranalysisList;
+      commit('setSpcconfigurationList', spcconfigurationList);
+      return spcconfigurationList;
     },
   },
   getters: {},

@@ -73,6 +73,23 @@
               </template>
             </v-autocomplete>
         </v-col>
+        <!-- <v-col cols="2">
+            <v-autocomplete
+              class="ml-2"
+              clearable
+              label="Component Type"
+              :items="compTypeList"
+              return-object
+              item-text="name"
+              v-model="selectedComType"
+            >
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
+        </v-col> -->
         <v-col class="d-flex flex-row-reverse">
             <v-btn small color="primary" class="text-none ml-2 mt-2" @click="searchData">
             Search
@@ -242,6 +259,19 @@ export default {
         );
       }
     });
+    // await this.handleGetDetails();
+    // await this.getSubStationListForConfigScreen('');
+    // this.subStationListForConfig.forEach(async (element) => {
+    //   const clist = [{
+    //     name: '-',
+    //   }];
+    //   clist.push(...await this.getParameterList
+    // (`?query=substationid=="${element.id}"%26%26parametercategory=="46"`));
+    //   element.componentStatusList = clist;
+    // });
+    // console.log(this.subStationListForConfig);
+    // await this.getSubStationListForConfigScreen('');
+    // console.log(this.substationList);
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -290,6 +320,18 @@ export default {
     async handleGetDetails() {
       const bomdetailList = await this.getBomDetailsListRecords(`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
       this.bomDetailList = bomdetailList;
+      // const parametersList =
+      // this.bomDetailList.forEach(async (bom) => {
+      //   // set component status list to everystation
+      //   // bom.componentStatusList = await this.getParameterList
+      //   // (`?query=substationid=="${bom.substationid}"%26%26parametercategory=="32"`);
+      //   const list = [{
+      //     name: '-',
+      //   }];
+      //   list.push(...await this.getParameterList(`?query=substationid=="${bom.substationid}
+      // "%26%26parametercategory=="46"`));
+      //   bom.componentStatusList = list;
+      // });
       bomdetailList.forEach((element) => {
         if (!this.headers.find((f) => f.text === element.parametername)) {
           this.headers.push(
@@ -305,11 +347,18 @@ export default {
         element.configstatus.forEach((status) => {
           if (status.name === 'componentstatus') {
             detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
-          } else if (element[status.name]) {
-            detail[`${status.name}_component_${element.parametername}`] = element[status.name];
           } else {
-            detail[`${status.name}_component_${element.parametername}`] = false;
+            if (element[status.name]) {
+              detail[`${status.name}_component_${element.parametername}`] = element[status.name];
+            } else {
+              detail[`${status.name}_component_${element.parametername}`] = false;
+            }
           }
+          // console.log({
+          //   config: status.name,
+          //   component: element.parametername,
+          //   value: element[status.name],
+          // });
         });
       });
       const newList = [];
@@ -351,6 +400,8 @@ export default {
       await this.getBomDetailsConfigList(param);
     },
     async checkSaveDataQualityStatus(event, item, key) {
+      // key = "qualitystatus_component_pcbaid"
+      // const data = key.split('_component_');
       const payload = {
         id: item._id,
         payload: {
@@ -397,6 +448,8 @@ export default {
           message: 'ERROR_UPDATING_COMPONENTSTATUS',
         });
       }
+      // this.bomDetailList = await this.getBomDetailsListRecords
+      // (`?query=bomid==${this.query.id}%26%26lineid==${this.query.lineid || null}`);
     },
     async checkQualityStatus(event, item) {
       const payload = {
@@ -423,9 +476,11 @@ export default {
       }
     },
     async btnExport() {
+      // const selectedLine = this.query.line;
       const selectedBomName = this.query.name;
       const fileName = `${selectedBomName}-BomConfiguration`;
       const currentContext = this.bomDetailsConfigList;
+      // const selectedBomNum = this.query.number;
       const csvContent = [];
       const column = [
         'lineid',

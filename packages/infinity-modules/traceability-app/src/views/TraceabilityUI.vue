@@ -1,21 +1,8 @@
 <template>
 <div style="height:100%">
-    <portal to="app-header">
-      <span v-text="$t('appTitleTraceability')"></span>
-      <v-btn icon small class="ml-4 mb-1">
-        <v-icon
-          v-text="'$info'"
-        ></v-icon>
-      </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
-        <v-icon
-          v-text="'$settings'"
-        ></v-icon>
-      </v-btn>
-    </portal>
-    <portal
+    <!-- <portal
       to="app-extension"
-    >
+    > -->
         <v-toolbar
           flat
           dense
@@ -74,14 +61,48 @@
           v-model="newTrecibility.todate"
           :label="$t('To date')"
         ></v-text-field>
-        <v-btn small color="primary" class="text-none ml-2" @click="btnSearch">
+        <v-btn small color="primary" class="text-none ml-2"
+           :loading="searchBtnLoading"
+           @click="btnSearch">
             {{ $t('displayTags.buttons.btnSearch') }}
           </v-btn>
-        <v-btn small :loading="saving" color="primary" class="text-none ml-2" @click="btnExport">
+        <!-- <v-btn small :loading="saving" color="primary"
+           class="text-none ml-2" @click="btnExport">
             {{ $t('Export') }}
-          </v-btn>
+        </v-btn> -->
+          <export-reports
+          :label="this.$t('Export')"
+          @on-export="onExport"/>
+          <!-- <v-btn small
+            :loading="saving"
+            color="primary" class="text-none ml-2" @click="btnExportDemo">
+            Export Demo
+          </v-btn> -->
         </v-toolbar>
-    </portal>
+    <!-- </portal> -->
+    <!-- <v-toolbar
+          flat
+          dense
+          class="stick"
+          :color="$vuetify.theme.dark ? '#121212': ''"
+        >
+        <v-spacer></v-spacer>
+         <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            :disabled="prevDisabled"
+            @click="prevSearch((pageNumber-=1))">Prev
+            </v-btn>
+            <v-btn
+            small
+            color="normal"
+            outlined
+            class="text-none ml-2"
+            @click="nextSearch(pageNumber+=1)">Next
+            </v-btn>
+        </v-toolbar> -->
     <PartStatusView ref="partstatus" :pageNumber="pageNumber"/>
     <v-tabs
         dense
@@ -98,15 +119,18 @@
           {{ $t('Quality History') }}
         </v-tab>
       </v-tabs>
+    <!-- <recipe-filter></recipe-filter> -->
     <template>
       <v-fade-transition mode="out-in">
-          <overall-list v-if="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
+          <overall-list v-show="recipeView === 0"  ref="overall" :pageNumber="pageNumber"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <process-parameters v-if="recipeView === 1" ref="process" :pageNumber="pageNumber"/>
+          <process-parameters v-show="recipeView === 1" ref="process"
+           :pageNumber="pageNumber"/>
       </v-fade-transition>
       <v-fade-transition mode="out-in">
-          <quality-history-view v-if="recipeView === 2" ref="quality" :pageNumber="pageNumber" />
+          <quality-history-view v-show="recipeView === 2" ref="quality"
+           :pageNumber="pageNumber"/>
       </v-fade-transition>
     </template>
   </div>
@@ -120,6 +144,7 @@ import OverallList from './OverallList.vue';
 import ProcessParameters from './ProcessParameters.vue';
 import PartStatusView from './PartStatusView.vue';
 import QualityHistoryView from './QualityHistoryView.vue';
+import ExportReports from './ExportReports.vue';
 
 export default {
   name: 'Trecibility',
@@ -128,11 +153,13 @@ export default {
     ProcessParameters,
     PartStatusView,
     QualityHistoryView,
+    ExportReports
   },
   async updated() {
     this.backAndfourth();
   },
   async created() {
+    this.language = this.currentLocale;
     this.zipService = ZipService;
     const view = localStorage.getItem('planView');
     this.recipeView = view ? JSON.parse(view) : 0;
@@ -141,6 +168,18 @@ export default {
     // await this.getSubStations();
     // await this.fetchRecords();
     await this.showInput();
+    this.$root.$on('dataLoded', (data) => {
+      const getList = data;
+      if (getList) {
+        this.searchBtnLoading = false;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'PROCESS_PARAMETERS_NOT_LOADED_YET',
+        });
+      }
+    });
   },
   data() {
     return {
@@ -150,6 +189,8 @@ export default {
       processParametersheader: [],
       processParametersList: [],
       saving: false,
+      language: null,
+      searchBtnLoading: false,
     };
   },
   computed: {
@@ -166,6 +207,11 @@ export default {
       'runningOrder',
       'bomDetailsList',
     ]),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
     recipeView: {
       get() {
         return this.recipeViewState;
@@ -215,16 +261,54 @@ export default {
       const subline = this.subLineList;
       const firstSubline = subline[0];
       this.newTrecibility.selectedSubLine = firstSubline;
+      // this.newTrecibility.fromdate = '2020-09-21T13:59';
+      // const tDate = (new Date()).toISOString().slice(0, 16).replace(/-/g, '-');
+      // const cDate = new Date(tDate).getTime();
+      // alert(tDate);
+      // this.newTrecibility.todate = tDate;
+      // this.setAlert({
+      //   show: true,
+      //   type: 'success',
+      //   message: 'FETCH_RECORD',
+      // });
+    },
+    onExport(e) {
+      this.exportReport(e);
+    },
+    async exportReport(type) {
+      if (type === 'gridCSV') {
+        this.exportGridCSV();
+      } else if (type === 'gridExcel') {
+        await this.exportGridExcel();
+      }
+    },
+    async exportGridCSV() {
+      this.$refs.partstatus.exportGridCSV();
+      this.$refs.overall.exportGridCSV();
+      this.$refs.process.exportGridCSV();
+      this.$refs.quality.exportGridCSV();
+    },
+    exportGridExcel() {
+      this.$refs.partstatus.exportGridExcel();
+      this.$refs.overall.exportGridExcel();
+      this.$refs.process.exportGridExcel();
+      this.$refs.quality.exportGridExcel();
     },
     async btnExport() {
+      // const nameEement = this.id;
+      // partstatus table
       this.saving = true;
       let fileName = 'partstatus_data';
       let parameterSelected = this.$refs.partstatus.partStatusList.map((item) => ({ ...item }));
+      let headerKeys = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
       let column = ['createdTimestamp', 'modifiedtimestamp', 'completedproductid', 'mainid', 'substationname', 'overallresult', 'ordername', 'packagebatchid', 'producttypename'];
+      if (this.language === 'zhHans') {
+        column = ['创建日期', '修改日期', '成品码', '主条码', '工位结果', '产品总结果', '订单名称', '包装码', '产品名称'];
+      }
       let csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        headerKeys.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -242,11 +326,15 @@ export default {
       await this.btnComponentLogic();
       fileName = 'component_data';
       parameterSelected = this.componentList.map((item) => ({ ...item }));
+      headerKeys = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
       column = ['createdTimestamp', 'completedproductid', 'mainid', 'substationname', 'componentname', 'componentvalue', 'boundstatus', 'reworkstatus', 'qualitystatus'];
+      if (this.language === 'zhHans') {
+        column = ['创建日期', '成品码', '主条码', '工位结果', '零件名', '零件码', '绑定状态', '返工状态', '质量状态'];
+      }
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        headerKeys.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -263,13 +351,19 @@ export default {
       // process table
       // await this.btnProcessParametersLogic();
       fileName = 'process_parameter_data';
+      // await this.getProcessParameters();
       parameterSelected = this.$refs.process
         .processParametersList.map((item) => ({ ...item }));
+      let columnHeader = this.$refs.process.headerForCSV;
       column = this.$refs.process.headerForCSV;
+      if (this.currentLocale === 'zhHans') {
+        column = this.$refs.process.headerForCSVChinese;
+      }
+      console.log(column.length);
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];
-        column.forEach((key) => {
+        columnHeader.forEach((key) => {
           arr.push(parameter[key]);
         });
         csvContent.push(arr);
@@ -311,7 +405,10 @@ export default {
       }
       const componenetData = await this.getComponentList(param);
       const processSendDataArray = [];
+      // const duplicateMainIdCheck = [];
       componenetData.forEach((component) => {
+        // if (!duplicateMainIdCheck.includes(component.mainid)) {
+        //  duplicateMainIdCheck.push(component.mainid);
         const dataPresentFlag = processSendDataArray.filter((f) => f.componentvalue
           === component.componentvalue);
         if (dataPresentFlag.length === 0) {
@@ -374,6 +471,7 @@ export default {
         const subStationDataList = this.subStationListData
           .filter((sub) => sub.sublineid === bomData[0].boundsublineid);
         await Promise.all(subStationDataList.map(async (s) => {
+          // const elementDetails = await this.getProcessElement(s.id);
           if (s[`headers_${s.id}`]) {
             s[`headers_${s.id}`].tags.forEach(async (element) => {
               if (element.tagName !== 'mainid') {
@@ -388,6 +486,10 @@ export default {
             if (processData.length > 0) {
               processData = processData.filter((a) => a.mainid === request[subAssemblyIdFieldName]);
             }
+            // await this.getProcessParameters({
+            //   elementname: s.id,
+            //   payload: `?query=mainid=="${request[subAssemblyIdFieldName]}"`,
+            // });
             if (this.$refs.process.processParametersList.find((pro) => pro
               .mainid === request.mainid)) {
               const object = this.$refs.process.processParametersList.find((pp) => pp
@@ -457,7 +559,17 @@ export default {
         param += `dateto=${toDate}&`;
       }
       param += 'sortquery=modifiedtimestamp==-1';
+      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
+      await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all(this.componentList.map((com) => {
+        const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
+        console.log(data);
+        if (data.length > 0 && this.currentLocale === 'zhHans') {
+          com.componentname = data[0].chinesedescription;
+        }
+        return com;
+      }));
     },
     async btnProcessParametersLogic() {
       this.processParametersList = [];
@@ -465,6 +577,7 @@ export default {
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.processParametersheader = [];
       this.processParametersheader.push('createdTimestamp', 'mainid');
+      // let param = `?${(fromDate || toDate) ? '' : 'query='}`;
       let param = '';
       if (!this.trecibilityState.searchMainID && !this.trecibilityState.selectedSubStation
          && (fromDate || toDate)) {
@@ -489,6 +602,9 @@ export default {
         param += `dateto=${toDate}&`;
       }
       param += 'sortquery=modifiedtimestamp==-1';
+      console.log(param);
+      // param += 'pagenumber=1&pagesize=20';
+      // await this.getPartStatus(param);
       await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
       await Promise.all(this.subStationList.map(async (s) => {
         const elementDetails = await this.getProcessElement(s.id);
@@ -542,11 +658,44 @@ export default {
           });
         }
       }));
+      // await Promise.all(this.subStationList.map(async (s) => {
+      //   const elementDetails = await this.getProcessElement(s.id);
+      //   if (elementDetails) {
+      //     elementDetails.tags.forEach((element) => {
+      //       if (element.tagName !== 'mainid') {
+      //         const data = this.processParametersheader
+      //           .filter((p) => p === element.tagName);
+      //         if (data.length === 0) {
+      //           console.log(element.tagName);
+      //           this.processParametersheader.push(element.tagName);
+      //         }
+      //       }
+      //     });
+      //     const processData = await this.getProcessParameters({
+      //       elementname: s.id,
+      //       payload: param,
+      //     });
+      //     if (processData) {
+      //       const finalData = processData.map((l) => ({
+      //         ...l,
+      //         substationname: s.name,
+      //       }));
+      //       if (this.processParametersList.length === 0) {
+      //         this.processParametersList = finalData;
+      //       } else {
+      //         finalData.forEach((f) => {
+      //           this.processParametersList.push(f);
+      //         });
+      //       }
+      //     }
+      //   }
+      // }));
     },
     addToZip(file) {
       this.zipService.addFile(file);
     },
     async btnSearch() {
+      this.searchBtnLoading = true;
       if (this.newTrecibility.fromdate && this.newTrecibility.todate
          && !this.newTrecibility.selectedSubLine) {
         this.setAlert({
@@ -569,18 +718,27 @@ export default {
           message: 'SELECT_SUBLINE',
         });
       } else {
+        this.searchBtnLoading = true;
         await this.$refs.partstatus.btnSearchCheckOut();
-        if (this.recipeView === 0) {
-          this.$refs.overall.btnSearchCheckOut();
-          this.$refs.overall.handleSubLineClick();
-        }
-        if (this.recipeView === 1) {
-          this.$refs.process.btnSearchProcessParameters();
-        }
-        if (this.recipeView === 2) {
-          this.$refs.quality.btnSearchProcessParameters();
-          this.$refs.quality.handleStationClick();
-        }
+        await this.$refs.overall.btnSearchCheckOut();
+        await this.$refs.process.btnSearchProcessParameters();
+        await this.$refs.quality.btnSearchProcessParameters();
+        // this.$refs.partstatus.handleSubLineClick();
+        // if (this.recipeView === 0) {
+        //   this.$refs.overall.btnSearchCheckOut();
+        //   this.$refs.overall.handleSubLineClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
+        // if (this.recipeView === 1) {
+        //   this.$refs.process.btnSearchProcessParameters();
+        //   // this.$refs.process.handleStationClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
+        // if (this.recipeView === 2) {
+        //   this.$refs.quality.btnSearchProcessParameters();
+        //   this.$refs.quality.handleStationClick();
+        //   // this.$refs.partstatus.btnSearchCheckOut();
+        // }
       }
     },
     async nextSearch() {
@@ -607,6 +765,9 @@ export default {
         this.$refs.quality.prevSearch();
       }
     },
+    // async clearInput() {
+    //   this.newTrecibility.selectedSubLine = '';
+    // },
   },
 };
 </script>

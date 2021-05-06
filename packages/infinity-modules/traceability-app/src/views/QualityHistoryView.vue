@@ -73,7 +73,7 @@ export default {
         {
           headerName: this.$t('Main Id'),
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
@@ -127,22 +127,23 @@ export default {
   },
   async created() {
     await this.getSubStations();
-    const {
-      substationid,
-      mainid,
-      fromdate,
-      todate,
-    } = this.subStationInfo;
-    const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
-    this.selectedSubStation = subStation;
-    this.searchMainID = mainid;
-    this.fromdate = fromdate;
-    this.todate = todate;
-    if (substationid || mainid || fromdate || todate) {
-      this.btnSearchProcessParameters();
-    } else {
-      await this.btnSearchProcessParameters();
-    }
+    // const {
+    //   substationid,
+    //   mainid,
+    //   fromdate,
+    //   todate,
+    // } = this.subStationInfo;
+    // const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
+    // this.selectedSubStation = subStation;
+    // this.searchMainID = mainid;
+    // this.fromdate = fromdate;
+    // this.todate = todate;
+    // if (substationid || mainid || fromdate || todate) {
+    //   this.btnSearchProcessParameters();
+    // } else {
+    //   await this.btnSearchProcessParameters();
+    //   // await this.fetchRecords();
+    // }
   },
   beforeMount() {
     this.gridOptionsCheckOut = {};
@@ -157,8 +158,12 @@ export default {
     };
   },
   mounted() {
+    // this.restoreState();
     this.gridApi = this.gridOptionsCheckOut.api;
     this.gridColumnApi = this.gridOptionsCheckOut.columnApi;
+    this.gridApi = this.gridOptions.api;
+    this.gridColumnApi = this.gridOptions.columnApi;
+    // this.btnSearchProcessParameters();
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -185,17 +190,22 @@ export default {
         this.gridColumnApi.setColumnGroupState(state.groupState);
         this.gridApi.setSortModel(state.sortState);
         this.gridApi.setFilterModel(state.filterState);
+      } else {
+        // this.resetState();
       }
     },
     async fetchRecords() {
       const records = await this.getRecords({
         elementName: 'businesshours',
       });
+      // console.log(records);
       const time = records[0].starttime;
       const splitTime = time.slice(0, 2);
       const day = new Date();
       const now = day.setHours(splitTime);
       const toDate = new Date().getTime();
+      // console.log(now);
+      // console.log(toDate);
       this.fromdate = now;
       this.todate = toDate;
       this.btnSearchProcessParameters();
@@ -205,6 +215,12 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
+      /* console.log('***********************');
+      console.log('colState: ', colState);
+      console.log('groupState: ', groupState);
+      console.log('sortState: ', sortState);
+      console.log('filterState: ', filterState);
+      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -222,12 +238,18 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
+        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
       await this.getStations(query);
+    },
+    async handleStationClick(item) {
+      console.log(item);
+      // const query = `?query=stationid=="${item.id}"`;
+      // await this.getSubStations(query);
     },
     async btnSearchProcessParameters() {
       this.processParametersList = [];
@@ -260,6 +282,7 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
+      // param += 'pagenumber=1&pagesize=20';
       await this.getCheckOutLists(param);
       this.gridApi = this.gridOptionsCheckOut.api;
       this.gridApi.expandAll();
@@ -294,6 +317,20 @@ export default {
           message: 'GET_RECORDS',
         });
       }
+    },
+    async exportGridCSV() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

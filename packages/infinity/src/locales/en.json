@@ -296,8 +296,7 @@
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
     "packagingManagement": "Packaging",
-    "formBuilder": "Form Builder",
-    "eLogbook": "e-logbook"
+    "calibrationApp": "Calibration"
   },
   "account": {
     "account": "Account",

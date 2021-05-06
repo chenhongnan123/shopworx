@@ -4,7 +4,7 @@ const routes = [
     name: 'spc',
     component: () => import(/* webpackChunkName: "spc-app" */ './views/Main.vue'),
     meta: {
-      permissionRequired: true,
+      permissionRequired: false,
     },
   },
 ];

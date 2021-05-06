@@ -57,6 +57,7 @@ export default {
           type: 'success',
           message: 'LINE_UPDATED',
         });
+        this.saveEnabled = false;
         this.dialog = false;
         this.assetId = 4;
       } else {

@@ -33,7 +33,7 @@
       <v-card-text>
         <v-autocomplete
           clearable
-          label="Select Line name"
+          :label="this.$t('Select Line name')"
           :items="lineList"
           return-object
           :disabled="saving"
@@ -59,7 +59,7 @@
           :rules="sublineSelect"
           required
           prepend-icon="$production"
-          label="Select Sub-Line name"
+          :label="this.$t('Select Sub-Line name')"
           @change="handleSubLineClick">
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -94,7 +94,7 @@
           :rules="stationSelect"
           required
           prepend-icon="$production"
-          label="Select Station name"
+          :label="this.$t('Select Station name')"
           @change="handleStationClick"/>
         <v-select
           clearable
@@ -104,13 +104,13 @@
           return-object
           item-text="name"
           prepend-icon="$production"
-          label="Select Sub-Station name"/>
+          :label="this.$t('Select Sub-Station name')"/>
         <v-text-field
-            label="Recipe Name"
+            :label="this.$t('Recipe Name')"
             prepend-icon="mdi-tray-plus"
             v-model="recipe.recipename"
             :rules="nameRules"
-            :counter="10"
+            :counter="20"
         ></v-text-field>
         <!-- <v-autocomplete
           clearable
@@ -138,7 +138,7 @@
           :disabled="!valid"
           @click="saveRecipe"
         >
-          {{ $t('displayTags.buttons.save') }}
+          {{ $t('Save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -173,9 +173,8 @@ export default {
       valid: true,
       sublinename: '',
       recipename: '',
-      nameRules: [(v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters not Allowed',
-        (v) => !!v || 'Name required',
-        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters'],
+      nameRules: [(v) => !!v || 'Name required',
+        (v) => (v && v.length <= 20) || 'Name must be less than 20 characters'],
       sublineSelect: [(v) => !!v || 'required'],
       stationSelect: [(v) => !!v || 'required'],
       input: {
@@ -237,7 +236,8 @@ export default {
     async saveRecipe() {
       this.$refs.form.validate();
       const recipeNameFlag = this.recipeList
-        .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join(''));
+        .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join('')
+          && rn.substationid === this.input.substationname.id);
       if (!this.recipe.recipename) {
         this.setAlert({
           show: true,
@@ -265,7 +265,7 @@ export default {
         });
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
-        && o.stationname === this.input.stationname);
+        && o.substationid === this.input.substationid);
         //  && !this.flagNewUpdate
         if (recipeFlag.length > 0) {
           this.recipe.recipename = '';
@@ -279,28 +279,29 @@ export default {
           this.saving = true;
           this.recipe = {
             ...this.recipe,
-            line: 'Line1',
+            line: this.input.linename,
             subline: this.input.sublinename,
             stationname: this.input.stationname,
             editedby: this.userName,
             editedtime: new Date().getTime(),
             versionnumber: this.editedVersionNumber + 1,
           };
-          let created = false;
+          let updated = false;
           const request = this.recipe;
           const object = {
             payload: request,
             query: `?query=recipenumber=="${this.updateRecipeNumber}"`,
           };
-          created = await this.updateRecipe(object);
-          if (created) {
+          updated = await this.updateRecipe(object);
+          if (updated) {
             this.setAlert({
               show: true,
               type: 'success',
               message: 'RECIPE_UPDATED',
             });
-            this.dialog = false;
             this.recipe = {};
+            this.$refs.form.reset();
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,
@@ -308,7 +309,11 @@ export default {
               message: 'ERROR_UPDATING_RECIPE',
             });
           }
+          this.flagNewUpdate = false;
           this.saving = false;
+          this.recipe = {};
+          this.$refs.form.reset();
+          this.dialog = false;
         } else {
           // add new recipe
           this.saving = true;
@@ -338,6 +343,7 @@ export default {
             this.dialog = false;
             this.recipe = {};
             this.$refs.form.reset();
+            this.$root.$emit('closeThechips', true);
           } else {
             this.setAlert({
               show: true,
@@ -345,12 +351,14 @@ export default {
               message: 'ERROR_CREATING_RECIPE',
             });
           }
+          this.$refs.form.reset();
           this.saving = false;
         }
       }
     },
     async dialogReset() {
       this.saving = false;
+      this.flagNewUpdate = false;
       this.$refs.form.reset();
     },
     async getfilteredStationNames(item) {
