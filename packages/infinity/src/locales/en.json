@@ -94,7 +94,10 @@
     "REWORK_UPDATE": "Rework updated!",
     "SCRAP_UPDATE": "Scrap updated!",
     "PERMISSION_UPDATE": "Role permission updated!",
-    "MATRIX_UPDATE": "Part matrix updated!",   
+    "MATRIX_UPDATE": "Part matrix updated!",  
+    "ERROR_CREATING_ORDER": "Error while creating order.",
+    "ERROR_CREATING_ORDER_PRODUCT": "Error while creating bulk records for 'Order Product'.",
+    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'.", 
     "ORDER_CREATED": "Order created successfully.",
     "ORDER_PRODUCT_CREATED": "Bulk record created for 'Order Product' successfully.",
     "ORDER_ROADMAP_CREATED": "Bulk record created for 'Order Roadmap' successfully."
@@ -130,7 +133,10 @@
     "MATRIX_UPDATE": "Error while updating the part matrix. Please retry.",
     "ERROR_CREATING_ORDER": "Error while creating order.",
     "ERROR_CREATING_ORDER_PRODUCT": "Error while creating bulk records for 'Order Product'.",
-    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'."
+    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'.",
+    "ORDER_CREATED": "Order created successfully.",
+    "ORDER_PRODUCT_CREATED": "Bulk record created for 'Order Product' successfully.",
+    "ORDER_ROADMAP_CREATED": "Bulk record created for 'Order Roadmap' successfully."
   },
   "fields": {
     "email": "Email",

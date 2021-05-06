@@ -349,10 +349,10 @@ export default {
           let created = false;
           const payload = this.plan;
           created = await this.createOrder(payload);
-          let errorMessage = '';
+          const errorMessage = [];
           let isError = false;
           if (created) {
-            errorMessage = this.$i18n.t('success_ORDER_CREATED');
+            errorMessage.push('ORDER_CREATED');
             this.selectedPart = null;
             this.assetId = null;
             this.partMatrix = {};
@@ -378,12 +378,11 @@ export default {
               });
             });
             const orderProduct = await this.createBulkOrderProduct(payloadDetails);
-            debugger;
             if (orderProduct) {
-              errorMessage += this.$i18n.t('success_ORDER_PRODUCT_CREATED');
+              errorMessage.push('ORDER_PRODUCT_CREATED');
             } else {
               isError = true;
-              errorMessage += this.$i18n.t('error_ERROR_CREATING_ORDER_PRODUCT');
+              errorMessage.push('ERROR_CREATING_ORDER_PRODUCT');
             }
             // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
@@ -415,10 +414,10 @@ export default {
             });
             const orderRoadmap = await this.createBulkOrderRoadmap(payloadRoadDetails);
             if (orderRoadmap) {
-              errorMessage += this.$i18n.t('success_ORDER_ROADMAP_CREATED');
+              errorMessage.push('ORDER_ROADMAP_CREATED');
             } else {
               isError = true;
-              errorMessage += this.$i18n.t('error_ERROR_CREATING_ORDER_ROADMAP');
+              errorMessage.push('ERROR_CREATING_ORDER_ROADMAP');
             }
             let messageType = 'success';
             if (isError) {

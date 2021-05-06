@@ -7,11 +7,12 @@
     id="app_snackbar"
     :timeout="timeout"
   >
-    <span
+    <div
       id="app_msg"
-      style="white-space: pre;"
-      v-text="message"
-    ></span>
+      v-text="msg"
+      v-for="(msg, n) in message"
+      :key="n"
+    ></div>
     <template #action="{ attrs }">
       <v-btn
         text
@@ -52,14 +53,19 @@ export default {
       return this.alert ? this.alert.type : null;
     },
     message() {
-      let msg = null;
+      const msg = [];
       if (this.type) {
-        const { message } = this.alert;
-        if (this.type && this.type.toUpperCase().trim() === 'SUCCESS') {
-          msg = this.$t(`success.${message}`);
-        } else if (this.type && this.type.toUpperCase().trim() === 'ERROR') {
-          msg = this.$t(`error.${message}`);
+        let { message } = this.alert;
+        if (typeof message === 'string') {
+          message = [message];
         }
+        message.forEach((m) => {
+          if (this.type && this.type.toUpperCase().trim() === 'SUCCESS') {
+            msg.push(this.$t(`success.${m}`));
+          } else if (this.type && this.type.toUpperCase().trim() === 'ERROR') {
+            msg.push(this.$t(`error.${m}`));
+          }
+        });
       }
       return msg;
     },
