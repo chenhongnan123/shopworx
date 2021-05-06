@@ -299,7 +299,8 @@
     "manualInbound": "Manual Inbound",
     "manualOutbound": "Manual Outbound",
     "stockTaking": "Stock-Taking",
-    "andon": "Andon"
+    "andon": "Andon",
+    "calibrationApp": "Calibration"
   },
   "account": {
     "account": "Account",

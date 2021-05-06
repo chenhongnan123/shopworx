@@ -4,6 +4,7 @@ import ParameterConfigurationMes from '@shopworx/parameter-configuration-mes';
 import MaterialManagement from '@shopworx/material-management';
 import Admin from '@shopworx/admin';
 import Cron from '@shopworx/cron';
+import calibrationApp from '@shopworx/calibration-app';
 import Masters from '@shopworx/masters';
 import ProductionPlanning from '@shopworx/production-planning';
 import ProductionLog from '@shopworx/production-log';
@@ -11,6 +12,7 @@ import DowntimeLog from '@shopworx/downtime-log';
 import RecipeManagement from '@shopworx/recipe-management';
 import RoadmapManagement from '@shopworx/roadmap-management';
 import PackagingManagement from '@shopworx/packaging-management';
+import ProductionProcess from '@shopworx/production-process';
 import ProductionLayout from '@shopworx/production-layout';
 import ProductionLayoutMes from '@shopworx/production-layout-mes';
 import ProductManagement from '@shopworx/product-management';
@@ -75,6 +77,12 @@ Vue.use(RoadmapManagement, {
 });
 
 Vue.use(PackagingManagement, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(ProductionProcess, {
   router,
   store,
   i18n,
@@ -229,6 +237,12 @@ Vue.use(ManualOutbound, {
 });
 
 Vue.use(StockTaking, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(calibrationApp, {
   router,
   store,
   i18n,

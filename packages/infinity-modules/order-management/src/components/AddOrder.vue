@@ -264,6 +264,7 @@ export default {
         const { assetid } = this.selectedPart;
         const { productname } = this.selectedPart;
         const { productnumber } = this.selectedPart;
+        const { description } = this.selectedPart;
         this.assetId = assetid;
         this.fetchingPartMatrix = true;
         await this.getPorductRecords(this.selectedPart);
@@ -271,6 +272,7 @@ export default {
         this.fetchingPartMatrix = false;
         this.plan.productname = productname;
         this.plan.productid = productnumber;
+        this.plan.productiondescription = description;
         this.plan.roadmapname = this.partMatrixRecords[0].roadmapname;
         this.plan.roadmapid = this.partMatrixRecords[0].roadmapid;
         this.plan.roadmaptype = this.partMatrixRecords[0].roadmaptype;
@@ -353,7 +355,6 @@ export default {
               type: 'success',
               message: 'ORDER_CREATED',
             });
-            this.dialog = false;
             this.selectedPart = null;
             this.assetId = null;
             this.partMatrix = {};
@@ -408,6 +409,8 @@ export default {
               });
             });
             await this.createBulkOrderRoadmap(payloadRoadDetails);
+            this.saving = false;
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,
@@ -415,7 +418,6 @@ export default {
               message: 'ERROR_CREATING_PLAN',
             });
           }
-          this.saving = false;
         }
       }
     },

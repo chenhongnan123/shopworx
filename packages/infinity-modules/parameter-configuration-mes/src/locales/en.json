@@ -23,6 +23,7 @@
     "DUPLICATE_START_NUM_ERROR": "Below Location have Duplicate Start Address",
     "DUPLICATE_DB_ADDRESS_ERROR": "Below Location have Duplicate DB Address",
     "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)",
+    "IMPORT_EMPTY_FILE": "File you choose to import is an empty",
     "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
     "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
     "ROW_LIMIT": "Number of parameters inside the file exceeded limit of 1000"

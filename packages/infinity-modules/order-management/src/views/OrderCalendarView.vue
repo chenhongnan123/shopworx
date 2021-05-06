@@ -52,10 +52,10 @@
             </v-list>
           </v-menu>
           <v-spacer></v-spacer>
-          <v-btn small color="primary" outlined class="text-none" @click="drawer = true">
+          <!-- <v-btn small color="primary" outlined class="text-none" @click="filterClick">
             <v-icon small left>mdi-filter-variant</v-icon>
             {{ $t('Filters') }}
-          </v-btn>
+          </v-btn> -->
         </v-toolbar>
         <v-calendar
           ref="calendar"
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'OrderCalendarView',
@@ -124,6 +124,7 @@ export default {
           return '';
       }
     },
+    ...mapState('orderManagement', ['orderList']),
     monthFormatter() {
       return this.$refs.calendar.getFormatter({
         timeZone: 'UTC', month: 'long',
@@ -133,12 +134,27 @@ export default {
   mounted() {
     this.$refs.calendar.checkChange();
   },
+  // watch: {
+  //   orderList: {
+  //     handler(val) {
+  //       if (val) {
+  //         const end = this.end;
+  //         const start = this.start;
+  //         this.updateRange({ start, end });
+  //       }
+  //     },
+  //   },
+  // },
   methods: {
-    ...mapMutations('orderManagement', ['setAddPlanDialog']),
-    ...mapActions('orderManagement', ['getOrderRecords']),
+    ...mapMutations('orderManagement', ['setAddPlanDialog', 'toggleFilter', 'setArchive']),
+    ...mapActions('orderManagement', ['getOrderRecords', 'getOrderListRecords']),
     viewDay({ date }) {
       this.focus = date;
       this.type = 'day';
+    },
+    filterClick() {
+      this.setArchive(true);
+      this.toggleFilter();
     },
     getEventColor(event) {
       return event.color;
@@ -154,25 +170,33 @@ export default {
     },
     async updateRange({ start, end }) {
       const events = [];
-      const plans = await this.getOrderRecords('');
-      if (plans && plans.length) {
-        for (let i = 0; i < plans.length; i += 1) {
+      await this.getOrderListRecords('?query=visible==true');
+      if (this.orderList && this.orderList.length) {
+        for (let i = 0; i < this.orderList.length; i += 1) {
           const object = {};
-          object.name = plans[i].ordername;
-          object.color = this.planStatusClass(plans[i].orderstatus);
-          if (plans[i].orderstatus === 'Interrupted') {
-            object.start = this.formatDate(plans[i].orderinttime);
+          object.name = this.orderList[i].ordername;
+          object.color = this.planStatusClass(this.orderList[i].orderstatus);
+          if (this.orderList[i].orderstatus === 'Interrupted') {
+            object.start = this.formatDate(new Date(this.orderList[i].orderinttime).getTime());
             const expCycleTime = 23456;
-            const targetCount = plans[i].targetcount * expCycleTime;
-            object.end = this.formatDate(new Date(plans[i].orderinttime).getTime() + targetCount);
-          } else if (plans[i].orderstatus === 'Completed') {
-            object.start = this.formatDate(plans[i].ordercomptime);
-            const expCycleTime = 23456;
-            const targetCount = plans[i].targetcount * expCycleTime;
-            object.end = this.formatDate(new Date(plans[i].ordercomptime).getTime() + targetCount);
+            const targetCount = this.orderList[i].targetcount * expCycleTime;
+            object.end = this.formatDate(new Date(this.orderList[i].orderinttime)
+              .getTime() + targetCount);
+          } else if (this.orderList[i].orderstatus === 'Completed') {
+            if (this.orderList[i].ordercompletetime) {
+              object.start = this.formatDate(new Date(this.orderList[i].ordercompletetime)
+                .getTime());
+              const expCycleTime = 23456;
+              const targetCount = this.orderList[i].targetcount * expCycleTime;
+              object.end = this.formatDate(new Date(this.orderList[i].ordercompletetime).getTime()
+                + targetCount);
+            } else {
+              object.start = this.formatDate(this.orderList[i].scheduledstart);
+              object.end = this.formatDate(this.orderList[i].scheduledend);
+            }
           } else {
-            object.start = this.formatDate(plans[i].scheduledstart);
-            object.end = this.formatDate(plans[i].scheduledend);
+            object.start = this.formatDate(this.orderList[i].scheduledstart);
+            object.end = this.formatDate(this.orderList[i].scheduledend);
           }
           events.push(object);
         }

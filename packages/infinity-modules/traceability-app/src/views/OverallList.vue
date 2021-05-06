@@ -58,6 +58,8 @@ export default {
       fromdate: null,
       todate: null,
       rowData: [],
+      // gridOptions: null,
+      // gridOptionsPart: null,
       searchMainID: null,
       selectedSubLine: null,
       dates: [new Date().toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
@@ -75,12 +77,12 @@ export default {
         {
           headerName: this.$t('Main Id'),
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
           headerName: this.$t('Sub station'),
-          field: 'substationid',
+          field: 'substationname',
           resizable: true,
         },
         {
@@ -136,12 +138,18 @@ export default {
       'componentList',
       'partStatusList',
       'componentData',
-      'trecibilityState']),
+      'trecibilityState',
+      'parametersList']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   async created() {
-    if (this.trecibilityState.selectedSubLine) {
-      await this.btnSearchCheckOut();
-    }
+    // if (this.trecibilityState.selectedSubLine) {
+    //   await this.btnSearchCheckOut();
+    // }
     // await this.fetchRecords();
   },
   beforeMount() {
@@ -182,7 +190,8 @@ export default {
         'getProcessElement',
         'getProcessParameters',
         'getPartStatus',
-        'getComponentData']),
+        'getComponentData',
+        'getParametersList']),
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
       await this.getSubStations(query);
@@ -219,6 +228,12 @@ export default {
       const groupState = this.gridColumnApi.getColumnGroupState();
       const sortState = this.gridApi.getSortModel();
       const filterState = this.gridApi.getFilterModel();
+      /* console.log('***********************');
+      console.log('colState: ', colState);
+      console.log('groupState: ', groupState);
+      console.log('sortState: ', sortState);
+      console.log('filterState: ', filterState);
+      console.log('***********************'); */
       const state = {
         colState,
         groupState,
@@ -236,6 +251,7 @@ export default {
           end = temp;
           this.dates = [start, end];
         }
+        // this.setDateRange([start, end]);
       }
       this.$refs.menu.save(this.dates);
     },
@@ -263,6 +279,7 @@ export default {
         param += `substationid=="${this.trecibilityState.selectedSubStation.id}"&`;
         cFlag = 4;
       }
+      // console.log(this.selectedSubLine);
       if (this.trecibilityState.selectedSubLine) {
         param += `sublineid=="${this.trecibilityState.selectedSubLine.id}"&`;
         cFlag = 2;
@@ -273,7 +290,16 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}`;
       }
+      // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
+      await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all(this.componentList.map((com) => {
+        const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
+        if (data.length > 0 && this.currentLocale === 'zhHans') {
+          com.componentname = data[0].chinesedescription;
+        }
+        return com;
+      }));
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -318,6 +344,20 @@ export default {
         this.setRecipeViewState(0);
         this.setSubStationInfo(data);
       }
+    },
+    async exportGridCSV() {
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

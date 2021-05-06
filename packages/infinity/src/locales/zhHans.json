@@ -18,7 +18,8 @@
       },
       "sortBy": "排序"
     },
-    "dataFooter": {
+    "dataFooter": 
+    {
       "itemsPerPageText": "每页项目:",
       "itemsPerPageAll": "所有",
       "nextPage": "下一页",
@@ -27,7 +28,8 @@
       "lastPage": "最后一页",
       "pageText": "{0}-{1} of {2}"
     },
-    "datePicker": {
+    "datePicker": 
+    {
       "itemsSelected": "{0} 已选择",
       "nextMonthAriaLabel": "下个月",
       "nextYearAriaLabel": "下一年",
@@ -35,26 +37,33 @@
       "prevYearAriaLabel": "上一年"
     },
     "noDataText": "无效数据",
-    "carousel": {
+    "carousel": 
+    {
       "prev": "上一页",
       "next": "下一页",
-      "ariaLabel": {
+      "ariaLabel": 
+      {
         "delimiter": "轮播至 {0} of {1}"
       }
     },
-    "calendar": {
+    "calendar": 
+    {
       "moreEvents": "{0} 更多"
     },
-    "fileInput": {
+    "fileInput": 
+    {
       "counter": "{0} 文件",
-      "counterSize": "{0} 文件 ({1} 总计)"    
+      "counterSize": "{0} 文件 ({1} 总计)"
     },
-    "timePicker": {
+    "timePicker": 
+    {
       "am": "上午",
       "pm": "下午"
     },
-    "pagination": {
-      "ariaLabel": {
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
         "wrapper": "分页导航",
         "next": "下一页",
         "previous": "上一页",
@@ -62,12 +71,6 @@
         "currentPage": "当前页, 页 {0}"
       }
     }
-  },
-  "auth": {
-    "phoneRequired": "电话是必需的",
-    "phoneInvalid": "手机必须有效",
-    "emailRequired": "电子邮件是必需的",
-    "emailInvalid": "电子邮件必须有效"
   },
   "success": {
     "OTP_SENT": "一次性密码已发送到注册的电子邮件/电话。",
@@ -164,6 +167,12 @@
   "snackbar": {
     "close": "关闭",
     "redirectToLogin": "将在{time}后转到登录界面"
+  },
+  "auth": {
+    "phoneRequired": "电话是必需的",
+    "phoneInvalid": "手机必须有效",
+    "emailRequired": "电子邮件是必需的",
+    "emailInvalid": "电子邮件必须有效"
   },
   "helper": {
     "or": "或者",
@@ -268,17 +277,16 @@
     "productManagement": "产品类型",
     "productionLayout": "生产布局",
     "productionLayoutMes": "生产布局",
-    "productionLayoutSF": "区域",
     "modelManagement": "机器学习模型管理",
     "materialManagement": "原料",
     "reports": "报告",
     "production": "生产",
     "maintenance": "维保",
-    "downtime": "停机",
+    "downtime": "停机时间",
     "quality": "质量",
-    "performance": "效率",
+    "performance": "绩效",
     "masters": "主数据",
-    "admin": "系统设置",
+    "admin": "管理控制台",
     "search": "搜索报表和分析",
     "searchMobile": "检索",
     "insights": "分析",
@@ -286,19 +294,7 @@
     "reworkOperation": "返工",
     "packagingManagement": "包装",
     "formBuilder": "表单生成器",
-    "eLogbook": "电子表单",
-    "operator": "人员",
-    "solution": "维保方案",
-    "maintenancePlan": "维保计划",
-    "maintenanceTask": "维保任务",
-    "cron": "定时方案",
-    "machine": "设备",
-    "tpm": "TPM",
-    "warehouse": "仓库",
-    "manualInbound": "手工入库",
-    "manualOutbound": "手工出库",
-    "stockTaking": "盘点",
-    "andon": "安灯类型"
+    "eLogbook": "电子表单"
   },
   "account": {
     "account": "账户",
@@ -318,9 +314,10 @@
     "privacy": "隐私政策"
   },
   "user": {
-    "general": "通用设置",
+    "general": "一般",
     "security": "安全",
     "profile": {
+      "heading": "我的个人资料设置",
       "title": "个人资料",
       "firstName": "名字",
       "lastName": "姓氏",
@@ -343,74 +340,6 @@
     },
     "auditLog": {
       "title": "日志"
-    }
-  },
-  "cron": {
-    "title": "新建 Cron",
-    "generate": "生成",
-    "express": "Cron 表达式",
-    "sample": "样例",
-    "from": "从",
-    "to": "到",
-    "step": "步长",
-    "分钟": {
-      "title": "分钟",
-      "every": "每分钟",
-      "rangewithstep": "间隔指定分钟",
-      "assign": "指定分钟"
-    },
-    "hour": {
-      "title": "小时",
-      "every": "每小时",
-      "rangewithstep": "间隔指定小时",
-      "assign": "指定小时"
-    },
-    "day": {
-      "title": "日",
-      "every": "每日",
-      "rangewithstep": "间隔指定日期",
-      "assign": "指定日期"
-    },
-    "week": {
-      "title": "周",
-      "every": "每周",
-      "rangewithstep": "间隔指定周数",
-      "assign": "指定星期几"
-    },
-    "month": {
-      "title": "月份",
-      "every": "每月",
-      "rangewithstep": "间隔指定月",
-      "assign": "指定月份"
-    },
-    "user": {
-      "general": "一般",
-      "security": "安全",
-      "profile": {
-        "heading": "我的个人资料设置",
-        "title": "个人资料",
-        "firstName": "名字",
-        "lastName": "姓氏",
-        "email": "邮箱",
-        "phone": "手机",
-        "reset": "重置",
-        "update": "更新"
-      },
-      "preferences": {
-        "title": "偏好",
-        "display": "显示设置",
-        "language": "语言",
-        "darkMode": "深色模式"
-      },
-      "password": {
-        "title": "密码",
-        "newPassword": "新密码",
-        "confirmPassword": "确认密码",
-        "update": "更新密码"
-      },
-      "auditLog": {
-        "title": "日志"
-      }
     }
   }
 }

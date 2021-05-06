@@ -18,7 +18,8 @@
     "GET_RECORDS_BY_MAINID": "Fetched the records by provided MainID",
     "GET_RECORDS_BY_SUBSTATION": "Fetched the records by Provided Substation",
     "GET_RECORDS": "Fetched the records!",
-    "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time"
+    "FETCH_RECORD": "Records Fetched by First Subline,from Today's Shift time to Current Time",
+    "PROCESS_PARAMETERS_NOT_LOADED_YET": "Process Parameters not loaded yet...!"
   },
   "Search ID":	"Search ID",
   "Select Sub-Line":	"Select Subline",

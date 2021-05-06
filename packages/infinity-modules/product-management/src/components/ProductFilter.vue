@@ -56,6 +56,24 @@
             </v-list-item-content>
           </template>
           </v-autocomplete>
+          <v-autocomplete
+            class="mt-2"
+            :items="productList"
+            outlined
+            dense
+            hide-details
+            v-model="selectedProduct"
+            name="productname"
+            :label="this.$t('Product Type name')"
+            item-text="productname"
+            clearable="true"
+          >
+          <template v-slot:item="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-text="item.productname"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+          </v-autocomplete>
         </v-card-text>
       </perfect-scrollbar>
       <v-card-actions>
@@ -89,6 +107,7 @@ export default {
   data() {
     return {
       orderStatusSelected: null,
+      selectedProduct: null,
       selectedBOM: null,
       selectedRoadmap: null,
       flag: false,
@@ -116,6 +135,9 @@ export default {
       if (this.selectedRoadmap) {
         query += `roadmapname=="${this.selectedRoadmap}"`;
       }
+      if (this.selectedProduct) {
+        query += `productname=="${this.selectedProduct}"`;
+      }
       this.getProductListRecords(query);
       this.toggleFilter();
     },
@@ -123,6 +145,7 @@ export default {
       await this.getProductListRecords('');
       this.selectedBOM = '';
       this.selectedRoadmap = '';
+      this.selectedProduct = '';
       this.toggleFilter();
     },
   },
