@@ -95,7 +95,7 @@
     "skip": "Skip"
   },
   "login": {
-    "title": "Log in to Infinity",
+    "title": "Log in to TPM",
     "subTitle": "Use your ShopWorx Account",
     "identifier": "Email or phone",
     "password": "Password",

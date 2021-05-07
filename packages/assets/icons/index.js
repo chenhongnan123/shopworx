@@ -95,5 +95,11 @@ export default {
     modelManagement: 'mdi-memory',
     formBuilder: 'mdi-form-select',
     eLogbook: 'mdi-book-open-outline',
+    solution: 'mdi-lightbulb-on-outline',
+    maintenancePlan: 'mdi-calendar-clock-outline',
+    maintenanceTask: 'mdi-calendar-check-outline',
+    cron: 'mdi-timer-outline',
+    andon: 'alert-plus-outline',
+    machine: 'mdi-cogs',
   },
 };

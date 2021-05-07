@@ -2,9 +2,33 @@
   <validation-observer #default="{ handleSubmit }">
     <v-form @submit.prevent="handleSubmit(onLogin)">
       <v-card-text>
+        <identifier-input
+          id="identifier_input"
+          :loading="loading"
+          v-model="identifier"
+          @on-update="setIdentifier"
+        />
+        <validation-provider
+          rules="required"
+          name="password"
+          #default="{ errors }"
+        >
+          <v-text-field
+            id="password_input_shopworx"
+            type="password"
+            v-model="shopWorxPassword"
+            :disabled="loading"
+            :error-messages="errors"
+            :label="$t('login.password')"
+            autocomplete="current-password"
+            prepend-icon="$password"
+          ></v-text-field>
+        </validation-provider>
+        <div class="title text-center mt-4 mb-0">
+          Operator details
+        </div>
         <validation-provider rules="required" name="code" #default="{ errors }">
           <v-text-field
-            autofocus
             id="code_input"
             v-model="code"
             :disabled="loading"
@@ -50,15 +74,20 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex';
+import IdentifierInput from '@/components/auth/IdentifierInput.vue';
 
 export default {
   name: 'LoginWithPassword',
-  components: {},
+  components: {
+    IdentifierInput,
+  },
   data() {
     return {
       prefix: '',
       password: '',
       code: '',
+      shopWorxPassword: '',
+      identifier: '',
       loading: false,
       isMobile: false,
     };
@@ -76,13 +105,11 @@ export default {
     },
     async onLogin() {
       this.loading = true;
-      // const payload = {
-      //   identifier: '8600000000000',
-      //   password: 'Entrib!23',
-      // };
       const payload = {
-        identifier: 'nebulas.gu@ruhlamat-st.com.cn',
-        password: 'entrib',
+        identifier: this.isMobile
+          ? `${this.prefix}${this.identifier}`
+          : this.identifier,
+        password: this.shopWorxPassword,
       };
       const authenticated = await this.authenticate(payload);
       if (authenticated) {

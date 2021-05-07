@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@breejs/later": "^4.0.2",
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^5.9.55",
     "@shopworx/admin": "^4.2.12",
     "@shopworx/assets": "^4.2.12",
     "@shopworx/calibration-app": "^4.2.12",
