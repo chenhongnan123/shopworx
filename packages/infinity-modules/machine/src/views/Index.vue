@@ -48,10 +48,10 @@
             <v-icon small left>mdi-refresh</v-icon>
             {{ $t('machine.general.refresh') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+          <!-- <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
             <v-icon small left>mdi-filter-variant</v-icon>
             {{ $t('machine.general.filter') }}
-          </v-btn>
+          </v-btn> -->
         </div>
       </div>
       <v-data-table
@@ -66,20 +66,20 @@
           >
         </template>
       </v-data-table>
-      <machine-filter />
+      <!-- <machine-filter /> -->
     </v-container>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
-import MachineFilter from '../components/MachineFilter.vue';
+// import MachineFilter from '../components/MachineFilter.vue';
 
 export default {
   name: 'Machine',
-  components: {
+  /* components: {
     MachineFilter,
-  },
+  }, */
   data() {
     return {
       headers: [

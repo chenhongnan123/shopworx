@@ -20,7 +20,7 @@
     <v-card flat>
       <perfect-scrollbar>
         <v-card-text style="height:calc(100vh - 220px)">
-          <v-autocomplete
+          <!-- <v-autocomplete
             class="mt-5"
             :items="lineList"
             outlined
@@ -57,7 +57,7 @@
                 <v-list-item-title v-text="item.name"></v-list-item-title>
               </v-list-item-content>
             </template>
-          </v-autocomplete>
+          </v-autocomplete> -->
           <v-autocomplete
             class="mt-5"
             :items="machineList"
