@@ -34,7 +34,7 @@ export default ({
       }
       return false;
     },
-    getReportData: async ({ dispatch, commit }) => {
+    getReportData: async ({ dispatch, commit }, isPrediction) => {
       const shifts = await dispatch('getShifts');
       const [shift] = shifts;
       const currentday = new Date().getDate();
@@ -46,7 +46,6 @@ export default ({
         startdate,
         enddate,
       };
-      console.log(payload, 'payload');
       let reportData = await dispatch(
         'report/executeReport',
         {
@@ -57,10 +56,12 @@ export default ({
       );
       reportData = JSON.parse(reportData);
       console.log(reportData, 'reportData');
-      const { tlabel } = reportData.reportdatacols[0];
       commit('setReportData', reportData);
-      await dispatch('getReportData258', { startdate, enddate, tlabel });
-      await dispatch('getReportData259', { startdate, enddate, tlabel });
+      if (!isPrediction) {
+        const { tlabel } = reportData.reportdatacols[0];
+        await dispatch('getReportData258', { startdate, enddate, tlabel });
+        await dispatch('getReportData259', { startdate, enddate, tlabel });
+      }
     },
     getReportData258: async ({ dispatch, commit }, payload) => {
       const { startdate, enddate, tlabel } = payload;

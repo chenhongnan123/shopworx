@@ -22,9 +22,9 @@ import {
   mapState,
   mapActions,
 } from 'vuex';
-import LeftTop from '../components/LeftTop.vue';
-import RightTop from '../components/RightTop.vue';
-import ViewBottom from '../components/ViewBottom.vue';
+import LeftTop from '../components/charts/LeftTop.vue';
+import RightTop from '../components/charts/RightTop.vue';
+import ViewBottom from '../components/charts/ViewBottom.vue';
 
 export default {
   name: 'DashboardView',

@@ -8,7 +8,8 @@
   "dependencies": {
     "@shopworx/services": "^4.2.10",
     "@shopworx/ui-components": "^4.2.10",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.4.1",
