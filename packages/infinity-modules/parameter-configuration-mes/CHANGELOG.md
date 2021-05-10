@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I254 basic validation while creating Paramater through UI ([522564a](https://bitbucket.org/entrib/shopworx/commits/522564a43818ec4ab7870a3958da3de66cb6b601))
+* **parameter-configuration:** RA-I254 validation for parameter name length ([f55d068](https://bitbucket.org/entrib/shopworx/commits/f55d068d207bafc033e876a0f5ab2f5cc9ddc729))
+* **paramwter-configuration:** Line MES | Parameter configuration | Data types for every field in popup should be defined | RA-I127 ([57648a9](https://bitbucket.org/entrib/shopworx/commits/57648a985c57a3ec1eabc508b99e897f0bbb8b7f))
+
+
+### Features
+
+* **parameter-configuration:** add new parameter named 'customized parameter' with id 57 ([38eb543](https://bitbucket.org/entrib/shopworx/commits/38eb5435a4152d21244eba11e2160a0e6920e67f))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration-mes

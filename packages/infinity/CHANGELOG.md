@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **locale:** fixed date time locale ([39175d5](https://bitbucket.org/entrib/shopworx/commits/39175d50cc898c7dcf2fed02f07496b32dcc61c0))
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+
+
+### Features
+
+* **tpm:** input shopworx account details on login ([33633e9](https://bitbucket.org/entrib/shopworx/commits/33633e9f45b30c28fd16e23d899d65985231808c))
+* lingzhong-packagement ([51c2952](https://bitbucket.org/entrib/shopworx/commits/51c2952c61d6901a25bf742e2e521b6212cc3e7a))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 
