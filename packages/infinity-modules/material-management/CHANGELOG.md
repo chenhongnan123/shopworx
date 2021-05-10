@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **material-management:** RA-I264 ([6a0c4b8](https://bitbucket.org/entrib/shopworx/commits/6a0c4b8d43a1a082c5f275aa5ef316419e1b23f1))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 **Note:** Version bump only for package @shopworx/material-management

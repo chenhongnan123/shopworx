@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **recipe-management:** RA-I547 ([2b2c331](https://bitbucket.org/entrib/shopworx/commits/2b2c331229972952dc3d1e2272e3384d65086584))
+
+
+### Features
+
+* **recipe-management:** chinease translation with calibration category ([cdb9bb0](https://bitbucket.org/entrib/shopworx/commits/cdb9bb0da0a6cc38dd0b76f9702291e45e7aabf8))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 **Note:** Version bump only for package @shopworx/rework-operation

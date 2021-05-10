@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **production-layout:** Line MES | Production Layout | Usg StartDate calendar should have date enbled after Manuf Date | RA-I106 ([cada629](https://bitbucket.org/entrib/shopworx/commits/cada629f59f727c9817a50eb6de0cd55f160f8fe))
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 **Note:** Version bump only for package @shopworx/production-layout-mes
