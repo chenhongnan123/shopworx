@@ -290,6 +290,7 @@ export default {
       return Date.now() < (new Date(expiryDate).getTime());
     },
     async saveOrder() {
+      this.$refs.form.validate();
       if (!this.plan.ordername) {
         this.setAlert({
           show: true,
@@ -365,50 +366,73 @@ export default {
             // order details in new table
             await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
             const payloadDetails = [];
-            this.productDetailsList.forEach((product) => {
-              payloadDetails.push({
-                orderid: this.orderList[0].ordernumber,
-                ordername: this.orderList[0].ordername,
-                productid: this.orderList[0].productid,
-                recipenumber: product.recipenumber,
-                recipename: product.recipename,
-                recipeversion: product.recipeversion,
-                substationid: product.substationid,
-                lineid: this.orderList[0].lineid,
-                sublineid: product.sublineid,
-                assetid: 4,
+            if (this.productDetailsList.length > 0) {
+              this.productDetailsList.forEach((product) => {
+                payloadDetails.push({
+                  orderid: this.orderList[0].ordernumber,
+                  ordername: this.orderList[0].ordername,
+                  productid: this.orderList[0].productid,
+                  recipenumber: product.recipenumber,
+                  recipename: product.recipename,
+                  recipeversion: product.recipeversion,
+                  substationid: product.substationid,
+                  lineid: this.orderList[0].lineid,
+                  sublineid: product.sublineid,
+                  assetid: 4,
+                });
               });
-            });
+            } else {
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'PRODUCT_DETAILS_NOT_FOUND',
+              });
+              this.$refs.form.reset();
+              this.saving = false;
+              this.dialog = false;
+            }
             await this.createBulkOrderProduct(payloadDetails);
             // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
             const payloadRoadDetails = [];
-            this.roadmapDetailsList.forEach((roadmap) => {
-              let processCode = 0;
-              if (roadmap.process === '') {
-                processCode = 0;
-              } else {
-                processCode = roadmap.process;
-              }
-              payloadRoadDetails.push({
-                orderid: this.orderList[0].ordernumber,
-                roadmapid: this.orderList[0].roadmapid,
-                sublineid: roadmap.sublineid,
-                sublinename: roadmap.sublinename,
-                substationid: roadmap.substationid,
-                substationname: roadmap.substationname,
-                presublineid: roadmap.presublineid,
-                amtpresubstation: roadmap.amtpresubstation,
-                processcode: processCode,
-                prestationname: roadmap.prestationname,
-                prestationid: roadmap.prestationid,
-                presubstationname: roadmap.presubstationname,
-                presubstationid: roadmap.presubstationid,
-                lineid: this.orderList[0].lineid,
-                assetid: 4,
+            if (this.roadmapDetailsList.length > 0) {
+              this.roadmapDetailsList.forEach((roadmap) => {
+                let processCode = 0;
+                if (roadmap.process === '') {
+                  processCode = 0;
+                } else {
+                  processCode = roadmap.process;
+                }
+                payloadRoadDetails.push({
+                  orderid: this.orderList[0].ordernumber,
+                  roadmapid: this.orderList[0].roadmapid,
+                  sublineid: roadmap.sublineid,
+                  sublinename: roadmap.sublinename,
+                  substationid: roadmap.substationid,
+                  substationname: roadmap.substationname,
+                  presublineid: roadmap.presublineid,
+                  amtpresubstation: roadmap.amtpresubstation,
+                  processcode: processCode,
+                  prestationname: roadmap.prestationname,
+                  prestationid: roadmap.prestationid,
+                  presubstationname: roadmap.presubstationname,
+                  presubstationid: roadmap.presubstationid,
+                  lineid: this.orderList[0].lineid,
+                  assetid: 4,
+                });
               });
-            });
+            } else {
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'ROADMAP_DETAILS_NOT_FOUND',
+              });
+              this.$refs.form.reset();
+              this.saving = false;
+              this.dialog = false;
+            }
             await this.createBulkOrderRoadmap(payloadRoadDetails);
+            this.$refs.form.reset();
             this.saving = false;
             this.dialog = false;
           } else {
