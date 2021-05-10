@@ -363,61 +363,71 @@ export default {
             // order details in new table
             await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
             const payloadDetails = [];
-            this.productDetailsList.forEach((product) => {
-              payloadDetails.push({
-                orderid: this.orderList[0].ordernumber,
-                ordername: this.orderList[0].ordername,
-                productid: this.orderList[0].productid,
-                recipenumber: product.recipenumber,
-                recipename: product.recipename,
-                recipeversion: product.recipeversion,
-                substationid: product.substationid,
-                lineid: this.orderList[0].lineid,
-                sublineid: product.sublineid,
-                assetid: 4,
+            if (this.productDetailsList && this.productDetailsList.length) {
+              this.productDetailsList.forEach((product) => {
+                payloadDetails.push({
+                  orderid: this.orderList[0].ordernumber,
+                  ordername: this.orderList[0].ordername,
+                  productid: this.orderList[0].productid,
+                  recipenumber: product.recipenumber,
+                  recipename: product.recipename,
+                  recipeversion: product.recipeversion,
+                  substationid: product.substationid,
+                  lineid: this.orderList[0].lineid,
+                  sublineid: product.sublineid,
+                  assetid: 4,
+                });
               });
-            });
-            const orderProduct = await this.createBulkOrderProduct(payloadDetails);
-            if (orderProduct) {
-              errorMessage.push('ORDER_PRODUCT_CREATED');
+              const orderProduct = await this.createBulkOrderProduct(payloadDetails);
+              if (orderProduct) {
+                errorMessage.push('ORDER_PRODUCT_CREATED');
+              } else {
+                isError = true;
+                errorMessage.push('ERROR_CREATING_ORDER_PRODUCT');
+              }
             } else {
               isError = true;
-              errorMessage.push('ERROR_CREATING_ORDER_PRODUCT');
+              errorMessage.push('ERROR_NO_PRODUCT_DETAILS');
             }
             // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
             const payloadRoadDetails = [];
-            this.roadmapDetailsList.forEach((roadmap) => {
-              let processCode = 0;
-              if (roadmap.process === '') {
-                processCode = 0;
-              } else {
-                processCode = roadmap.process;
-              }
-              payloadRoadDetails.push({
-                orderid: this.orderList[0].ordernumber,
-                roadmapid: this.orderList[0].roadmapid,
-                sublineid: roadmap.sublineid,
-                sublinename: roadmap.sublinename,
-                substationid: roadmap.substationid,
-                substationname: roadmap.substationname,
-                presublineid: roadmap.presublineid,
-                amtpresubstation: roadmap.amtpresubstation,
-                processcode: processCode,
-                prestationname: roadmap.prestationname,
-                prestationid: roadmap.prestationid,
-                presubstationname: roadmap.presubstationname,
-                presubstationid: roadmap.presubstationid,
-                lineid: this.orderList[0].lineid,
-                assetid: 4,
+            if (this.roadmapDetailsList && this.roadmapDetailsList.length) {
+              this.roadmapDetailsList.forEach((roadmap) => {
+                let processCode = 0;
+                if (roadmap.process === '') {
+                  processCode = 0;
+                } else {
+                  processCode = roadmap.process;
+                }
+                payloadRoadDetails.push({
+                  orderid: this.orderList[0].ordernumber,
+                  roadmapid: this.orderList[0].roadmapid,
+                  sublineid: roadmap.sublineid,
+                  sublinename: roadmap.sublinename,
+                  substationid: roadmap.substationid,
+                  substationname: roadmap.substationname,
+                  presublineid: roadmap.presublineid,
+                  amtpresubstation: roadmap.amtpresubstation,
+                  processcode: processCode,
+                  prestationname: roadmap.prestationname,
+                  prestationid: roadmap.prestationid,
+                  presubstationname: roadmap.presubstationname,
+                  presubstationid: roadmap.presubstationid,
+                  lineid: this.orderList[0].lineid,
+                  assetid: 4,
+                });
               });
-            });
-            const orderRoadmap = await this.createBulkOrderRoadmap(payloadRoadDetails);
-            if (orderRoadmap) {
-              errorMessage.push('ORDER_ROADMAP_CREATED');
+              const orderRoadmap = await this.createBulkOrderRoadmap(payloadRoadDetails);
+              if (orderRoadmap) {
+                errorMessage.push('ORDER_ROADMAP_CREATED');
+              } else {
+                isError = true;
+                errorMessage.push('ERROR_CREATING_ORDER_ROADMAP');
+              }
             } else {
               isError = true;
-              errorMessage.push('ERROR_CREATING_ORDER_ROADMAP');
+              errorMessage.push('ERROR_NO_ROADMAP_DETAILS');
             }
             let messageType = 'success';
             if (isError) {
