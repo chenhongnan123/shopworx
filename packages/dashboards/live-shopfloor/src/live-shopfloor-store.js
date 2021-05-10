@@ -19,6 +19,7 @@ export default ({
   namespaced: true,
   state: {
     loading: false,
+    currentTime: null,
     currentShift: null,
     currentHour: null,
     displayHour: null,
@@ -33,6 +34,7 @@ export default ({
   },
   mutations: {
     setLoading: set('loading'),
+    setCurrentTime: set('currentTime'),
     setCurrentShift: set('currentShift'),
     setCurrentHour: set('currentHour'),
     setDisplayHour: set('displayHour'),
@@ -64,25 +66,37 @@ export default ({
       return false;
     },
 
+    getServerTime: async ({ commit }) => {
+      const { data } = await HourService.getCurrentTime();
+      if (data && data.results) {
+        commit('setCurrentTime', data.results);
+        return data.results;
+      }
+      return null;
+    },
+
     getBusinessTime: async ({ commit, dispatch }) => {
-      const data = await dispatch(
-        'calendar/getBusinessTime',
-        null,
-        { root: true },
-      );
-      if (data) {
-        commit('setCurrentShift', data.shiftName);
-        commit('setCurrentHour', data.hour);
-        commit('setDisplayHour', data.displayHour);
-        commit('setCurrentDate', +data.date);
-        return true;
+      const serverTime = await dispatch('getServerTime');
+      if (serverTime) {
+        const data = await dispatch(
+          'calendar/getBusinessTime',
+          serverTime,
+          { root: true },
+        );
+        if (data) {
+          commit('setCurrentShift', data.shiftName);
+          commit('setCurrentHour', data.hour);
+          commit('setDisplayHour', data.displayHour);
+          commit('setCurrentDate', +data.date);
+          return true;
+        }
       }
       return false;
     },
 
     getAvailableTime: async ({ state, getters }) => {
-      const { selectedView } = state;
-      const now = new Date().getTime();
+      const { selectedView, currentTime } = state;
+      const now = currentTime;
       if (selectedView.value === 'shift') {
         const { shiftStartTime } = getters;
         const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
@@ -107,6 +121,7 @@ export default ({
         currentDate,
         currentShift,
         currentHour,
+        currentTime,
       } = state;
       const { activeSite } = rootState.user;
       let payload = {};
@@ -137,7 +152,7 @@ export default ({
         const mappedMachines = machines.map((m) => {
           const machinePayload = {
             planid: '',
-            updatedAt: m.updatedAt || new Date().getTime(),
+            updatedAt: m.updatedAt || currentTime,
           };
           if (m.production.length) {
             const { planid } = m.production[0];

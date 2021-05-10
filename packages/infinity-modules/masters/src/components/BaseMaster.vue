@@ -9,10 +9,11 @@
     <ag-grid-vue
       v-show="!loading"
       :rowData="rowData"
-      rowSelection="multiple"
       :class="agGridTheme"
+      rowSelection="multiple"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
+      :enableRangeSelection="true"
       :defaultColDef="defaultColDef"
       :rowClassRules="rowClassRules"
       :localeText="agGridLocaleText"
@@ -119,7 +120,12 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('masters', ['getRecords', 'postBulkRecords', 'updateRecord']),
+    ...mapActions('masters', [
+      'getRecords',
+      'getRecordsAfterUpdate',
+      'postBulkRecords',
+      'updateRecord'
+    ]),
     ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
       this.loading = true;
@@ -218,15 +224,16 @@ export default {
         const postData = await this.postBulkRecords({ payload, name });
         this.newData = [];
 
-        const multipleRows = this.updateData.forEach(async (item) => {
-          await this.updateRecord(
-            {
-              query: item._id, payload: item, name,
-            },
-          );
-        });
+        const multipleRows = await Promise.all(this.updateData.map(async (item) => {
+          const created = await this.updateRecord({
+            query: item._id,
+            payload: item,
+            name,
+          });
+          return created;
+        }));
 
-        const update = await Promise.all([multipleRows]);
+        const update = multipleRows.every((row) => row === true);
         this.updateData = [];
 
         if (postData && update) {
@@ -284,20 +291,25 @@ export default {
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
     async updateValue() {
-      const elementName = this.id;
+      const name = this.id;
       this.updateData.forEach((data) => {
         delete data.edited;
       });
-      const multipleRows = this.updateData.forEach(async (item) => {
-        await this.updateRecord(
-          {
-            query: item._id, payload: item, name: elementName,
-          },
-        );
-      });
-      let update = false;
-      update = await Promise.all([multipleRows]);
+      const multipleRows = await Promise.all(this.updateData.map(async (item) => {
+        const created = await this.updateRecord({
+          query: item._id,
+          payload: item,
+          name,
+        });
+        return created;
+      }));
+
+      const update = multipleRows.every((row) => row === true);
       if (update) {
+        await this.getRecordsAfterUpdate({
+          elementName: this.id,
+          assetId: this.assetId,
+        });
         this.setAlert({
           show: true,
           type: 'success',

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Features
+
+* **product-type:** add product description while creating new order ([adb277d](https://bitbucket.org/entrib/shopworx/commits/adb277d8e92ab357c4cb16a82cb46b815d347f89))
+
+
+
+
+
 ## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
 
 **Note:** Version bump only for package @shopworx/order-management

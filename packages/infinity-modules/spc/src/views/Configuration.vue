@@ -6,63 +6,36 @@
       <div class="py-0">
         <div class="stick">
           <div style="float: left; margin-bottom: 10px">
-            <span v-if="lineList.length && !!lineValue" class="ml-2">
-              line:
-              <v-btn small color="normal" outlined class="text-none ml-2 text-truncate" @click="setLineValue('')">
+            <span v-if="elementList.length && !!elementValue" class="ml-2">
+              Element:
+              <v-btn small color="normal" outlined class="text-none ml-2 text-truncate" @click="setElementValue('')">
                 <v-icon small left>mdi-close</v-icon>
                 <div class="text-truncate" style="max-width: 100px">
-                  {{ lineList.filter((item) => item.id === lineValue)[0].name }}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="sublineList.length && !!sublineValue" class="ml-2">
-              subline:
-              <v-btn small color="normal" outlined class="text-none ml-2" @click="setSublineValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px">
-                  {{ sublineList.filter((item) => item.id === sublineValue)[0].name }}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="stationList.length && !!stationValue" class="ml-2">
-              station:
-              <v-btn small color="normal" outlined class="text-none ml-2" @click="setStationValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px">
-                  {{ stationList.filter((item) => item.id === stationValue)[0].name }}
-                </div>
-              </v-btn>
-            </span>
-            <span v-if="substationList.length && !!substationValue" class="ml-2">
-              substation:
-              <v-btn small color="normal" outlined class="text-none ml-2" @click="setSubstationValue('')">
-                <v-icon small left>mdi-close</v-icon>
-                <div class="text-truncate" style="max-width: 100px">
-                  {{ substationList.filter((item) => item.id === substationValue)[0].name }}
+                  {{ elementList.filter((item) => item.elementName === elementValue)[0].elementName }}
                 </div>
               </v-btn>
             </span>
           </div>
           <div style="float: right">
-            <v-btn small color="primary" class="text-none" :disabled="isAddButtonOK" @click="setAddParameterDialog(true)">
+            <v-btn small color="primary" class="text-none"  @click="setAddParameterDialog(true)">
               <v-icon small left>mdi-plus</v-icon>
-              Add parameter configuration
+              Add parameter analysis
             </v-btn>
-            <v-btn small color="primary" outlined class="text-none ml-2" :disabled="!substationValue" @click="RefreshUI">
+            <v-btn small color="primary" outlined class="text-none ml-2"  @click="RefreshUI">
               <v-icon small left>mdi-refresh</v-icon>
               Refresh
             </v-btn>
-            <v-btn small color="error" outlined class="text-none ml-2" @click="confirmDialog = true" v-if="parameteranalysisList.length && parameterSelected.length">
+            <v-btn small color="error" outlined class="text-none ml-2" @click="confirmDialog = true" v-if="spcconfigurationList.length && parameterSelected.length">
               <v-icon small left>mdi-delete</v-icon>
               Delete
             </v-btn>
-            <v-btn small color="primary" v-if="substationValue && parameterSelected.length > 0" outlined class="text-none ml-2" @click="exportData">
+            <v-btn small color="primary" v-if="parameterSelected.length > 0" outlined class="text-none ml-2" @click="exportData">
               Export
             </v-btn>
-            <v-btn small color="primary" v-if="!(substationValue && parameterSelected.length > 0)" outlined class="text-none ml-2" @click="exportSampleData">
+            <v-btn small color="primary" v-if="!( parameterSelected.length > 0)" outlined class="text-none ml-2" @click="exportSampleData">
               Export Sample File
             </v-btn>
-            <v-btn small color="primary" outlined class="text-none ml-2" :disabled="isAddButtonOK" @click="importData">
+            <v-btn small color="primary" outlined class="text-none ml-2"  @click="importData">
               Import
             </v-btn>
             <input multiple type="file" accept=".csv" ref="uploader" class="d-none" id="uploadFiles" @change="onFilesChanged" />
@@ -72,59 +45,26 @@
             </v-btn>
           </div>
         </div>
-        <v-data-table v-model="parameterSelected" :headers="headers" item-key="_id" :items="parameteranalysisList" :options="{ itemsPerPage: 5 }" show-select>
-          <template v-slot:item.usl="props">
-            <v-edit-dialog :return-value.sync="props.item.usl" @save="saveTableParameter(props.item, 'usl')">
-              {{ props.item.usl }}
-              <v-icon small color="primary" :disabled="!substationValue">
+        <v-data-table v-model="parameterSelected" :headers="headers" item-key="_id" :items="spcconfigurationList" :options="{ itemsPerPage: 10 }" show-select>
+          <template v-slot:item.ucl="props">
+            <v-edit-dialog :return-value.sync="props.item.ucl" @save="saveTableParameter(props.item, 'ucl')">
+              {{ props.item.ucl }}
+              <v-icon small color="primary">
                 mdi-pencil
               </v-icon>
               <template v-slot:input>
-                <v-text-field :disabled="!substationValue" v-model="props.item.usl" label="Edit" single-line type="number"></v-text-field>
+                <v-text-field  v-model="props.item.ucl" label="Edit" single-line type="number"></v-text-field>
               </template>
             </v-edit-dialog>
           </template>
-          <template v-slot:item.lsl="props">
-            <v-edit-dialog :return-value.sync="props.item.lsl" @save="saveTableParameter(props.item, 'lsl')">
-              {{ props.item.lsl }}
-              <v-icon small color="primary" :disabled="!substationValue">
+          <template v-slot:item.lcl="props">
+            <v-edit-dialog :return-value.sync="props.item.lcl" @save="saveTableParameter(props.item, 'lcl')">
+              {{ props.item.lcl }}
+              <v-icon small color="primary" >
                 mdi-pencil
               </v-icon>
               <template v-slot:input>
-                <v-text-field :disabled="!substationValue" v-model="props.item.lsl" label="Edit" single-line type="number"></v-text-field>
-              </template>
-            </v-edit-dialog>
-          </template>
-          <template v-slot:item.target="props">
-            <v-edit-dialog :return-value.sync="props.item.target" @save="saveTableParameter(props.item, 'target')">
-              {{ props.item.target }}
-              <v-icon small color="primary" :disabled="substationValue ? false : true">
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field :disabled="substationValue ? false : true" v-model="props.item.target" label="Edit" single-line type="number"></v-text-field>
-              </template>
-            </v-edit-dialog>
-          </template>
-          <template v-slot:item.max="props">
-            <v-edit-dialog :return-value.sync="props.item.max" @save="saveTableParameter(props.item, 'max')">
-              {{ props.item.max }}
-              <v-icon small color="primary" :disabled="substationValue ? false : true">
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field :disabled="substationValue ? false : true" v-model="props.item.max" label="Edit" single-line type="number"></v-text-field>
-              </template>
-            </v-edit-dialog>
-          </template>
-          <template v-slot:item.min="props">
-            <v-edit-dialog :return-value.sync="props.item.min" @save="saveTableParameter(props.item, 'min')">
-              {{ props.item.min }}
-              <v-icon small color="primary" :disabled="substationValue ? false : true">
-                mdi-pencil
-              </v-icon>
-              <template v-slot:input>
-                <v-text-field :disabled="substationValue ? false : true" v-model="props.item.min" label="Edit" single-line type="number"></v-text-field>
+                <v-text-field  v-model="props.item.lcl" label="Edit" single-line type="number"></v-text-field>
               </template>
             </v-edit-dialog>
           </template>
@@ -149,8 +89,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <AddParameter :station="stationValue" :substation="substationValue" :line="lineValue" :subline="sublineValue" v-if="addParameterDialog" />
-    <ParameterFilter :station="stationValue" :substation="substationValue" />
+    <AddParameter  v-if="addParameterDialog" />
+    <ParameterFilter/>
   </v-container>
 </template>
 
@@ -163,23 +103,18 @@ import AddParameter from '../components/AddParameter.vue';
 import ParameterFilter from '../components/ParameterFilter.vue';
 
 export default {
-  name: 'PlanScheduleView',
+  name: 'Configuration',
   data() {
     return {
       parameterSelected: [],
       headers: [
-        { text: 'Number', value: 'number', width: 120 },
-        { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
-        { text: 'Parameter', value: 'parametername', width: 120 },
-        { text: 'Parameter Description', value: 'parameterdescription', width: 200 },
-        { text: 'USL', value: 'usl', width: 100 },
-        { text: 'LSL', value: 'lsl', width: 100 },
-        { text: 'Target', value: 'target', width: 100 },
-        { text: 'Max', value: 'max', width: 100 },
-        { text: 'Min', value: 'min', width: 100 },
+        { text: 'Number', value: 'number', width: 60 },
+        { text: 'Element', value: 'elementname', width: 120 },
+        { text: 'Element Description', value: 'elementdescription', width: 120 },
+        { text: 'Tag', value: 'tagname', width: 120 },
+        { text: 'Tag Description', value: 'tagdescription', width: 200 },
+        { text: 'UCL', value: 'ucl', width: 100 },
+        { text: 'LCL', value: 'lcl', width: 100 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -188,58 +123,41 @@ export default {
     };
   },
   async created() {
+    this.getElements();
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getParameteranalysisListRecords('?pagenumber=1&pagesize=10');
+    this.getSpcconfigurationListRecords('?pagenumber=1&pagesize=10');
     // this.socket = socketioclient.connect('http://:10190');
     // this.socket.on('connect', () => {});
   },
   computed: {
-    ...mapState('spc', ['addParameterDialog', 'parameterList', 'parameteranalysisList', 'isApply', 'lineList', 'sublineList', 'stationList', 'substationList', 'directionList', 'categoryList', 'datatypeList', 'lineValue', 'sublineValue', 'stationValue', 'substationValue', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'subStationElementDeatils', 'createElementResponse']),
+    ...mapState('masters', ['elements']),
+    ...mapState('spc', ['addParameterDialog', 'parameterList', 'spcconfigurationList', 'isApply', 'elementValue']),
     isAddButtonOK() {
-      // eslint-disable-next-line max-len
-      if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue && this.isApply) {
-        return false;
-      }
       return true;
+    },
+    elementList() {
+      // eslint-disable-next-line
+      return this.elements.map((element) => {
+        return element.element;
+      });
     },
   },
   watch: {
-    lineValue(val) {
+    elementValue(val) {
       if (!val) {
-        this.setSublineValue('');
-        this.setStationValue('');
-        this.setSubstationValue('');
-        this.getParameteranalysisListRecords('?query=substationid==null');
+        this.getSpcconfigurationListRecords('?pagenumber=1&pagesize=10');
       }
     },
-    sublineValue(val) {
-      if (!val) {
-        this.setStationValue('');
-        this.setSubstationValue('');
-        this.getParameteranalysisListRecords('?query=substationid==null');
-      }
-    },
-    stationValue(val) {
-      if (!val) {
-        this.setSubstationValue('');
-        this.getParameteranalysisListRecords('?query=substationid==null');
-      }
-    },
-    substationValue(val) {
-      if (!val) {
-        this.setSubstationValue('');
-        this.getParameteranalysisListRecords('?query=substationid==null');
-      }
-    },
-    parameteranalysisList(parameteranalysisList) {
-      this.parameterListSave = parameteranalysisList.map((item) => ({ ...item }));
+    spcconfigurationList(spcconfigurationList) {
+      this.parameterListSave = spcconfigurationList.map((item) => ({ ...item }));
     },
   },
   methods: {
+    ...mapActions('masters', ['getElements', 'getAssets']),
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('spc', ['setAddParameterDialog', 'toggleFilter', 'setApply', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype']),
-    ...mapActions('spc', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameteranalysis', 'deleteParameteranalysis', 'createParameter', 'createParameteranalysisList', 'downloadToPLC', 'getSubStationIdElement', 'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParameteranalysisListRecords']),
+    ...mapMutations('spc', ['setAddParameterDialog', 'toggleFilter', 'setApply', 'setElementValue']),
+    ...mapActions('spc', ['getPageDataList', 'updateSpcconfiguration', 'deleteSpcconfiguration', 'createParameter', 'createSpcconfigurationList', 'downloadToPLC', 'getSubStationIdElement', 'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getSpcconfigurationListRecords']),
     async saveTableParameter(item, type) {
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
@@ -249,7 +167,7 @@ export default {
           type: 'error',
           message: `${type}_can_not_be_empty`,
         });
-        await this.getParameteranalysisListRecords(this.getQuery());
+        await this.getSpcconfigurationListRecords(this.getQuery());
         return;
       }
       if (type === 'usl') {
@@ -259,7 +177,7 @@ export default {
             type: 'error',
             message: 'USL is is greater than zero',
           });
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           return;
         }
       }
@@ -270,7 +188,7 @@ export default {
             type: 'error',
             message: 'LSL is is greater than zero',
           });
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           return;
         }
       }
@@ -281,7 +199,7 @@ export default {
             type: 'error',
             message: 'Target is is greater than zero',
           });
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           return;
         }
       }
@@ -292,7 +210,7 @@ export default {
             type: 'error',
             message: 'Max is is greater than zero',
           });
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           return;
         }
       }
@@ -303,7 +221,7 @@ export default {
             type: 'error',
             message: 'Min is is greater than zero',
           });
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           return;
         }
       }
@@ -312,7 +230,7 @@ export default {
       const payload = {};
       payload[type] = value;
       this.saving = true;
-      const updateResult = await this.updateParameteranalysis({ id: parameterItem._id, payload });
+      const updateResult = await this.updateSpcconfiguration({ id: parameterItem._id, payload });
       this.saving = false;
       if (updateResult) {
         this.setAlert({
@@ -321,21 +239,15 @@ export default {
           message: `update_${type}`,
         });
       }
-      await this.getParameteranalysisListRecords(this.getQuery());
+      await this.getSpcconfigurationListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
       // eslint-disable-next-line max-len
-      const results = await Promise.all(this.parameterSelected.map((parameter) => this.deleteParameteranalysis(parameter.parameterid)));
+      const results = await Promise.all(this.parameterSelected.map((parameter) => this.deleteSpcconfiguration(parameter._id)));
       if (results.every((bool) => bool === true)) {
         this.saving = true;
-        const parameterList = await this.getParameteranalysisListRecords(this.getQuery());
-        if (parameterList.length === 0) {
-          this.setSelectedParameterName('');
-          this.setSelectedParameterDirection('');
-          this.setSelectedParameterCategory('');
-          this.setSelectedParameterDatatype('');
-          await this.getParameteranalysisListRecords(this.getQuery());
-        }
+        await this.getSpcconfigurationListRecords(this.getQuery());
+
         this.saving = false;
         this.confirmDialog = false;
         this.parameterSelected = [];
@@ -353,28 +265,20 @@ export default {
       }
     },
     async RefreshUI() {
-      await this.getParameteranalysisListRecords(this.getQuery());
-      // this.downloadFromPLC();
+      await this.getSpcconfigurationListRecords(this.getQuery());
     },
     getQuery() {
       let query = '?query=';
-      if (this.selectedParameterName) {
-        query += `parametername=="${this.selectedParameterName}"%26%26`;
-      }
-      if (this.substationValue) {
-        query += `substationid=="${this.substationValue || ''}"`;
+      if (this.elementValue) {
+        query += `elementname=="${this.elementValue}"`;
       }
       return query;
     },
     async exportData() {
-      const lineName = this.lineList.filter((item) => this.lineValue === item.id).length ? this.lineList.filter((item) => this.lineValue === item.id)[0].name : 'None';
-      const sublineName = this.sublineList.filter((item) => this.sublineValue === item.id).length ? this.sublineList.filter((item) => this.sublineValue === item.id)[0].name : 'None';
-      const stationName = this.stationList.filter((item) => this.stationValue === item.id).length ? this.stationList.filter((item) => this.stationValue === item.id)[0].name : 'None';
-      const substationName = this.substationList.filter((item) => this.substationValue === item.id).length ? this.substationList.filter((item) => this.substationValue === item.id)[0].name : 'None';
-      const fileName = `${lineName}-${sublineName}-${stationName}-${substationName}`;
+      const fileName = 'Parameter-Analyzer';
       const parameterSelected = this.parameterSelected.map((item) => ({ ...item }));
       const csvContent = [];
-      const column = ['lineid', 'sublineid', 'stationid', 'substationid', 'parameterid', 'parametername', 'parameterdescription', 'usl', 'lsl', 'target', 'max', 'min'];
+      const column = ['elementname', 'elementdescription', 'tagname', 'tagdescription', 'ucl', 'lcl'];
 
       parameterSelected.forEach((parameter) => {
         const arr = [];
@@ -407,10 +311,8 @@ export default {
     },
     async exportSampleData() {
       const fileName = 'sample-file';
-      const column = ['lineid', 'sublineid', 'stationid', 'substationid', 'parameterid', 'parametername', 'parameterdescription', 'usl', 'lsl', 'target', 'max', 'min'];
+      const column = ['elementname', 'elementdescription', 'tagname', 'tagdescription', 'ucl', 'lcl'];
       const csvContent = [];
-      const arr = [1, 'subline-277', 'station-226', 'substation-180', '5891', 'subprocessresult5', 'Result from SubProcess', 2, 2, 2, 2, 2];
-      csvContent.push(arr);
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,
@@ -439,27 +341,15 @@ export default {
       let bypass = true;
       let msg = '';
       data.forEach((item, index) => {
-        item.parametername = item.parametername.toLowerCase().trim();
+        item.key = item.elementname.toLowerCase().trim() + item.tagname.toLowerCase().trim();
         item.assetid = 4;
-        if (!(item.usl > 0)) {
+        if (Number.isNaN(Number(item.ucl))) {
           bypass = false;
           msg = `wrong_usl_value in Line ${index + 2}`;
         }
-        if (!(item.lsl > 0)) {
+        if (Number.isNaN(Number(item.lcl))) {
           bypass = false;
           msg = `wrong_lsl_value in Line ${index + 2}`;
-        }
-        if (!(item.target > 0)) {
-          bypass = false;
-          msg = `wrong_target_value in Line ${index + 2}`;
-        }
-        if (!(item.max > 0)) {
-          bypass = false;
-          msg = `wrong_max_value in Line ${index + 2}`;
-        }
-        if (!(item.min > 0)) {
-          bypass = false;
-          msg = `wrong_min_value in Line ${index + 2}`;
         }
       });
       if (!bypass) {
@@ -471,12 +361,12 @@ export default {
         document.getElementById('uploadFiles').value = null;
         return;
       }
-      const dataList = data.concat(this.parameteranalysisList);
-      const nameList = dataList.map((item) => item.parametername);
+      const dataList = data.concat(this.spcconfigurationList);
+      const nameList = dataList.map((item) => item.key);
       if (new Set(nameList).size === nameList.length) {
-        const createResult = await this.createParameteranalysisList(data);
+        const createResult = await this.createSpcconfigurationList(data);
         if (createResult) {
-          await this.getParameteranalysisListRecords(this.getQuery());
+          await this.getSpcconfigurationListRecords(this.getQuery());
           this.setAlert({
             show: true,
             type: 'success',

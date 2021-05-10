@@ -22,7 +22,7 @@ export default ({
     setElements: set('elements'),
   },
   actions: {
-    updateRecord: async ({ dispatch, commit }, payloadData) => {
+    updateRecord: async ({ dispatch }, payloadData) => {
       const created = await dispatch(
         'element/updateRecordById',
         {
@@ -33,20 +33,9 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const record = await dispatch(
-          'element/getRecords',
-          {
-            elementName: payloadData.name,
-            query,
-          },
-          { root: true },
-        );
-        if (record) {
-          commit('setRecords', record);
-          // return record;
-        }
+        return true;
       }
+      return false;
     },
     postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
@@ -104,6 +93,29 @@ export default ({
       assetId,
     }) => {
       commit('setRecords', null);
+      let payload = {
+        elementName,
+        query: `?query=assetid==${assetId}`,
+      };
+      if (!assetId) {
+        payload = {
+          elementName,
+        };
+      }
+      const records = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (records) {
+        commit('setRecords', records);
+      }
+    },
+
+    getRecordsAfterUpdate: async ({ commit, dispatch }, {
+      elementName,
+      assetId,
+    }) => {
       let payload = {
         elementName,
         query: `?query=assetid==${assetId}`,

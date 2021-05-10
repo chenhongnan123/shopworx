@@ -9,7 +9,11 @@
   "Filter":	"Filter",
   "Product filters":	"Product filters",
   "BOM name":	"BOM name",
-  "Roadmap name":	"oadmap name",
+  "Roadmap name":	"Roadmap name",
+  "Product Type name": "Product Type name",
+  "Subline":	"Subline",
+  "Station":	"Station",
+  "Sub-Station Name":	"Sub-Station Name",
   "Apply":	"Apply",
   "error": {
     "PRODUCT_NAME_EMPTY": "Product name is empty.",

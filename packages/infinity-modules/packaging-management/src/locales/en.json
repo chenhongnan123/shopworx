@@ -2,8 +2,7 @@
   "parameterConfiguration": "Packaging Management",
   "success": {
     "delete_parameter": "Parameters are deleted.",
-    "CREATE_PARAMETER": "Parameter created",
-    "IMPORT_PARAMETER_LIST": "File upload and Parameters created!"
+    "CREATE_PARAMETER": "Parameter created"
   },
   "error": {
     "delete_parameter": "Error in deleteing parameter.",

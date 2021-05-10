@@ -155,17 +155,20 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayoutMes', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
     async comapareDates(item) {
+      this.newStation.usagestartdate = '';
       const fromdate = this.newStation.manufacturingdate;
       const todate = item;
       const from = new Date(fromdate);
       const to = new Date(todate);
       if (to < from) {
-        this.newStation.usagestartdate = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'GREATER_DATE',
         });
+        this.valid = false;
+      } else {
+        this.valid = true;
       }
     },
     async saveStation() {

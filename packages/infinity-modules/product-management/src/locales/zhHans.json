@@ -1,6 +1,6 @@
 {
   "productManagement": "产品类型管理",
-  "productDetails": "Product Type Details",
+  "productDetails": "产品类型细节",
   "Product Type":	"产品类型",
   "No.":	"编号",
   "Line":	"产线",
@@ -10,6 +10,10 @@
   "Product filters":	"产品筛选",
   "BOM name":	"BOM名称",
   "Roadmap name":	"路线图名称",
+  "Product Type name": "产品类型",
+  "Subline":	"子线名称",
+  "Station":	"站名",
+  "Sub-Station Name":	"工位名",
   "Apply":	"应用",
   "error": {
     "PRODUCT_NAME_EMPTY": "产品名称为空.",

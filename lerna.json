@@ -5,10 +5,11 @@
     "packages/dashboards/*",
     "packages/infinity",
     "packages/infinity-modules/*",
+    "packages/maintenance-app",
     "packages/origin",
     "packages/origin-modules/*",
     "packages/services",
     "packages/ui-components"
   ],
-  "version": "4.2.12"
+  "version": "4.3.0"
 }
