@@ -454,7 +454,6 @@ export default {
     // configurationLogic() {
     // },
     async chanageStation(item) {
-      console.log(item);
       const { boundsublinename } = item;
       // const substationItem = this.substationList
       //   .filter((substation) => stationSelected === substation.name)[0];

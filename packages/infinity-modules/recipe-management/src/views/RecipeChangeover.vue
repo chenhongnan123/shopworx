@@ -178,12 +178,7 @@ export default {
       this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
         console.log('event received');
         if (data) {
-          console.log(data);
-          console.log(recipe.recipename);
-          console.log(data.substationid);
-          console.log(recipe.substationid);
           if (data.substationid === recipe.substationid) {
-            console.log('matched');
             this.recipeList[i].plcrecipename = data.recipename;
             this.recipeList[i].plcrecipeversion = data.recipeversion;
             if (recipe.recipename === data.recipename) {
@@ -198,37 +193,6 @@ export default {
       // eslint-disable-next-line
       await this.getMonitorValues(object);
     }
-    // this.recipeList = this.recipeList.map(async (recipe) => {
-    //   let { plcrecipename, plcrecipeversion } = recipe;
-    //   const object = {
-    //     lineid: Number(recipe.lineid),
-    //     sublineid: recipe.sublineid,
-    //     substationid: recipe.substationid,
-    //   };
-    //   this.socket.on(`update_parameter_${object.lineid}
-    // _${object.sublineid}_${object.substationid}`, (data) => {
-    //     console.log('event received');
-    //     if (data) {
-    //       console.log(data);
-    //       console.log(recipe.recipename);
-    //       if (data.substationid === recipe.substationid) {
-    //         console.log(data.substationid);
-    //         console.log(recipe.substationid);
-    //         plcrecipename = data.recipename;
-    //         plcrecipeversion = data.recipeversion;
-    //         this.$set(recipe, 'plcrecipename', data.recipename);
-    //         this.$set(recipe, 'plcrecipeversion', data.recipeversion);
-    //       }
-    //     }
-    //   });
-    //   await this.getMonitorValues(object);
-    //   return {
-    //     ...recipe,
-    //     plcrecipename,
-    //     // plcrecipenumber,
-    //     plcrecipeversion,
-    //   };
-    // })
   },
   beforeDestroy() {
     this.socket.close();
@@ -329,7 +293,6 @@ export default {
             // tagname, parametervalue
             recipeparameter: parameterList,
           };
-          console.log(object);
           this.socket.on(`update_upload_${object.lineid}_${object.sublineid}_${object.substationid}`, () => {
           });
           await this.uploadToPLC(object);
@@ -353,12 +316,7 @@ export default {
         this.socket.on(`update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`, (data) => {
           console.log('event received');
           if (data) {
-            console.log(data);
-            console.log(recipe.recipename);
-            console.log(data.substationid);
-            console.log(recipe.substationid);
             if (data.substationid === recipe.substationid) {
-              console.log('matched');
               this.recipeList[i].plcrecipename = data.recipename;
               this.recipeList[i].plcrecipeversion = data.recipeversion;
               if (recipe.recipename === data.recipename) {

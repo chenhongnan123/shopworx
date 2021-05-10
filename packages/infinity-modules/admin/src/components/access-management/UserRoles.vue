@@ -2,20 +2,10 @@
   <div>
     <portal to="settings-header">
       <span>
-        <v-btn
-          small
-          color="primary"
-          class="text-none"
-          disabled
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          <v-icon
-            left
-            small
-            v-text="'$addRole'"
-          ></v-icon>
-          Create new role
-        </v-btn>
+        <create-role
+          :roles="userRoles"
+          @on-success="refresh"
+        />
         <v-btn
           small
           outlined
@@ -24,7 +14,7 @@
           class="text-none ml-2"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>
@@ -38,7 +28,7 @@
           <v-col cols="6">
             <v-card outlined class="text-center">
               <div class="title">
-                Admin roles
+                {{ $t('admin.userRoles.adminRoles') }}
               </div>
               <div class="headline">
                 {{ adminCount }}
@@ -48,7 +38,7 @@
           <v-col cols="6">
             <v-card outlined class="text-center">
               <div class="title">
-                Other roles
+                {{ $t('admin.userRoles.otherRoles') }}
               </div>
               <div class="headline">
                 {{ nonAdminCount }}
@@ -68,6 +58,7 @@
           disable-pagination
           hide-default-footer
         >
+          <!-- eslint-disable-next-line -->
           <template #item.roleType="{ item }">
             <v-switch
               value
@@ -77,7 +68,8 @@
               @change="updateRoleType(item)"
             ></v-switch>
           </template>
-          <template #item.actions="{ item }">
+          <!-- eslint-disable-next-line -->
+          <!-- <template #item.actions="{ item }">
             <v-btn
               icon
               small
@@ -88,7 +80,7 @@
             >
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn>
-          </template>
+          </template> -->
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-card-text>
@@ -114,7 +106,7 @@
                   @click="updatePermission(item)"
                   :disabled="!item.permissions.length"
                 >
-                  Update permissions
+                  {{ $t('admin.userRoles.update') }}
                 </v-btn>
               </v-card-actions>
             </td>
@@ -128,9 +120,13 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import CreateRole from './CreateRole.vue';
 
 export default {
   name: 'UserRoles',
+  components: {
+    CreateRole,
+  },
   data() {
     return {
       expanded: [],
@@ -144,23 +140,23 @@ export default {
       deleting: false,
       headers: [
         {
-          text: 'Name',
+          text: this.$t('admin.userRoles.name'),
           align: 'start',
           sortable: false,
           value: 'roleDescription',
         },
         {
-          text: 'Is admin?',
+          text: this.$t('admin.userRoles.isAdmin'),
           align: 'start',
           sortable: false,
           value: 'roleType',
         },
-        {
+        /* {
           text: 'Actions',
           align: 'start',
           sortable: false,
           value: 'actions',
-        },
+        }, */
       ],
     };
   },
@@ -212,7 +208,7 @@ export default {
       'deleteModuleAccess',
       'deleteWebAppAccess',
       'deleteReportsCategoryAccess',
-      'createAccess',
+      'createModuleAccess',
     ]),
     async refresh() {
       this.loading = true;
@@ -447,7 +443,7 @@ export default {
             return mod;
           }),
         };
-        const created = await this.createAccess(payload);
+        const created = await this.createModuleAccess(payload);
         if (created) {
           this.setAlert({
             show: true,

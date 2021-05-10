@@ -13,8 +13,12 @@ class ElementService {
     return this.request.get(`/server/elements/site/${id}`);
   }
 
-  getRecordsByTags(payload) {
-    return this.request.post(`/server/elements/${payload.elementName}/getrecords${payload.queryParam}`, payload.request);
+  getRecordsByTags(elementName, queryParam, request) {
+    return this.request.post(`/server/elements/${elementName}/getrecords${queryParam}`, request);
+  }
+
+  postStreamRecords(payload) {
+    return this.request.post(`/server/streamrecords/${payload.elementName}${payload.queryParam}`, payload.request);
   }
 
   createElement(payload) {
@@ -33,12 +37,40 @@ class ElementService {
     return this.request.post(`/server/elements/${elementName}/records`, payload);
   }
 
+  createWebhook(payload) {
+    return this.request.post(`/server/webhook`, payload);
+  }
+
+  sendTestModel(payload) {
+    return this.request.post(payload.url, payload.payload);
+  }
+
   uploadFiles(elementName, payload) {
     return this.request.post(`/server/uploadfile/${payload.filecontent}/${payload.filename}?elementName=${elementName}&extension=${payload.fileextension}&assetId=${payload.assetid}`, '');
+  }
+
+  downloadData(queryParam, payload) {
+    return this.request.post(`/server/data/download${queryParam}`, payload);
   }
   
   getRecords(elementName, queryParam) {
     return this.request.get(`/server/elements/${elementName}/records${queryParam}`);
+  }
+  
+  getCollectionRecords(collectionName, queryParam) {
+    return this.request.get(`/server/collection/${collectionName}${queryParam}`);
+  }
+
+  getTrainingLogsRecords(jobId) {
+    return this.request.get(`/swx/mms/getmodeltraininglogs/${jobId}`);
+  }
+
+  postMmsStartModelTraining(payload) {
+    return this.request.post('/swx/mms/startmodeltraining', payload);
+  }
+
+  postMmsTestModel(payload, queryParam) {
+    return this.request.post(`/swx/mms/testmodel${queryParam}`, payload);
   }
   
   getRecordById(elementName, id) {

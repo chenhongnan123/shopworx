@@ -109,6 +109,15 @@ export default {
         element: this.masterDetails.element,
         tags: this.masterDetails.tags,
         records,
+        webhooks: [{
+          webhookURL: `http://localhost:10190/update/${this.masterDetails.element.elementName}`,
+          elementId: '',
+          callbackType: 'WRITE',
+        }, {
+          webhookURL: `http://localhost:10190/update/${this.masterDetails.element.elementName}`,
+          elementId: '',
+          callbackType: 'UPDATE',
+        }],
       };
       this.$emit('save', payload);
     },

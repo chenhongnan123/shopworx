@@ -2,10 +2,11 @@
   <v-switch
     v-model="multipleSelection"
     class="ma-0"
+    v-if="$vuetify.breakpoint.smAndUp"
     :label="
       this.multipleSelection
-        ? 'Disable multiple assignment'
-        : 'Enable multiple assignment'
+        ? $t('downtime.disableAssignment')
+        : $t('downtime.enableAssignment')
     "
   ></v-switch>
 </template>

@@ -1,12 +1,14 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
-    label="Shift"
+    item-value="value"
+    item-text="name"
+    :label="$t('production.shift')"
     v-model="shift"
-    :items="shiftList"
+    :items="shifts"
     prepend-inner-icon="$shiftHours"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
@@ -28,13 +30,23 @@ export default {
         .keys(this.filters)
         .includes(FIELD_NAME);
     },
+    shifts() {
+      let shifts = [];
+      if (this.shiftList && this.shiftList.length) {
+        shifts = [{
+          name: this.$t('production.allShifts'),
+          value: 'All',
+        }, ...this.shiftList];
+      }
+      return shifts;
+    },
     shift: {
       get() {
         const shiftFilter = this.filters && this.filters[FIELD_NAME];
         if (shiftFilter) {
           return shiftFilter.value;
         }
-        return this.shiftList[0];
+        return this.shifts && this.shifts.length && this.shifts[0].value;
       },
       set(shiftVal) {
         this.setShiftFilter(shiftVal);
@@ -42,9 +54,9 @@ export default {
     },
   },
   created() {
-    if (this.shiftList && this.shiftList.length) {
+    if (this.shifts && this.shifts.length) {
       if (this.isShiftFilterInactive) {
-        this.setShiftFilter(this.shiftList[0]);
+        this.setShiftFilter(this.shifts[0].value);
       }
     } else {
       this.fetchShifts();
@@ -64,10 +76,10 @@ export default {
     },
   },
   watch: {
-    shiftList(val) {
+    shifts(val) {
       if (val && val.length) {
         if (this.isShiftFilterInactive) {
-          this.setShiftFilter(val[0]);
+          this.setShiftFilter(val[0].value);
         }
       }
     },

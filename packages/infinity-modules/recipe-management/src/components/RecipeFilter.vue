@@ -111,7 +111,6 @@ export default {
       this.$root.$emit('filteredStation', val);
     },
     onChangeRecipe(val) {
-      console.log(val);
       this.$root.$emit('filteredRecipe', val);
     },
     btnApply() {
@@ -134,7 +133,6 @@ export default {
         this.setRecipeList(newStation);
       } else if (this.recipes != null) {
         this.setFilterRecipe(this.recipes);
-        console.log(this.filterBList);
         const newRecipe = this.filterBList.filter((o) => o.recipename === this.recipes.recipename);
         this.setRecipeList(newRecipe);
       }

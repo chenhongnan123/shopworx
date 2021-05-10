@@ -9,12 +9,14 @@
     <ag-grid-vue
       v-show="!loading"
       :rowData="rowData"
+      :class="agGridTheme"
       rowSelection="multiple"
-      class="ag-theme-balham"
       :columnDefs="columnDefs"
       :gridOptions="gridOptions"
+      :enableRangeSelection="true"
       :defaultColDef="defaultColDef"
       :rowClassRules="rowClassRules"
+      :localeText="agGridLocaleText"
       :suppressRowClickSelection="true"
       :suppressDragLeaveHidesColumns="true"
       style="width: 100%; height: 400px;"
@@ -35,8 +37,7 @@ import {
 import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import CSVParser from '@shopworx/services/util/csv.service';
-import ZipService from '@shopworx/services/util/zip.service';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 
 export default {
   name: 'BaseMaster',
@@ -77,6 +78,7 @@ export default {
   computed: {
     ...mapState('masters', ['records']),
     ...mapGetters('masters', ['getTags']),
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     tags() {
       return this.getTags(this.id, this.assetId);
     },
@@ -115,15 +117,20 @@ export default {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
     this.fetchRecords();
-    this.zipService = ZipService;
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('masters', ['getRecords', 'postBulkRecords', 'updateRecord']),
+    ...mapActions('masters', [
+      'getRecords',
+      'getRecordsAfterUpdate',
+      'postBulkRecords',
+      'updateRecord'
+    ]),
     ...mapMutations('helper', ['setAlert']),
     async fetchRecords() {
       this.loading = true;
       this.$emit('savebtnshow', false);
+      this.$emit('deletebtnshow', false);
       await this.getRecords({
         elementName: this.id,
         assetId: this.assetId,
@@ -217,15 +224,16 @@ export default {
         const postData = await this.postBulkRecords({ payload, name });
         this.newData = [];
 
-        const multipleRows = this.updateData.forEach(async (item) => {
-          await this.updateRecord(
-            {
-              query: item._id, payload: item, name,
-            },
-          );
-        });
+        const multipleRows = await Promise.all(this.updateData.map(async (item) => {
+          const created = await this.updateRecord({
+            query: item._id,
+            payload: item,
+            name,
+          });
+          return created;
+        }));
 
-        const update = await Promise.all([multipleRows]);
+        const update = multipleRows.every((row) => row === true);
         this.updateData = [];
 
         if (postData && update) {
@@ -283,20 +291,25 @@ export default {
       this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
     },
     async updateValue() {
-      const elementName = this.id;
+      const name = this.id;
       this.updateData.forEach((data) => {
         delete data.edited;
       });
-      const multipleRows = this.updateData.forEach(async (item) => {
-        await this.updateRecord(
-          {
-            query: item._id, payload: item, name: elementName,
-          },
-        );
-      });
-      let update = false;
-      update = await Promise.all([multipleRows]);
+      const multipleRows = await Promise.all(this.updateData.map(async (item) => {
+        const created = await this.updateRecord({
+          query: item._id,
+          payload: item,
+          name,
+        });
+        return created;
+      }));
+
+      const update = multipleRows.every((row) => row === true);
       if (update) {
+        await this.getRecordsAfterUpdate({
+          elementName: this.id,
+          assetId: this.assetId,
+        });
         this.setAlert({
           show: true,
           type: 'success',

@@ -1,17 +1,17 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Production Log</span>
+      <span>{{ $t('production.title') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-btn icon small class="ml-2 mb-1">
+      <!-- <v-btn icon small class="ml-2 mb-1">
         <v-icon
           v-text="'$settings'"
         ></v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn
@@ -25,7 +25,7 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+        {{ $t('production.lastRefreshed') }} <strong>{{ lastRefreshedAt }}</strong>
       </v-tooltip>
     </portal>
     <production-log-loading v-if="loading" />

@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Features
+
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Features
+
+* **app-filters:** updated filters to v-select on mobile device ([b97d54b](https://bitbucket.org/entrib/shopworx/commits/b97d54bb3caff6fd427c1fb0221e3b083c586414))
+* **production-planning:** updated app for mobile view ([5e6e778](https://bitbucket.org/entrib/shopworx/commits/5e6e778b05f1551d645320d55ff2e3cb5761c4ed))
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+**Note:** Version bump only for package @shopworx/production-planning
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

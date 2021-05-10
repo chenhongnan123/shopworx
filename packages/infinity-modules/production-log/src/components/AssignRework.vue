@@ -19,7 +19,7 @@
     </template>
     <v-card>
       <v-card-title primary-title>
-        Rework - {{ production.shift }} | {{ production.machinename }} |
+        {{ $t('production.rework') }} - {{ production.shift }} | {{ production.machinename }} |
         {{ production.partname }}
         <v-spacer></v-spacer>
         <v-btn
@@ -33,7 +33,7 @@
       <v-card-text>
         <template v-if="loading">
           <div class="text-center my-4">
-            Loading...
+            {{ $t('helper.loading') }}
           </div>
         </template>
         <template v-else>
@@ -64,7 +64,7 @@
           >
             <v-form @submit.prevent="handleSubmit(addNewRework)">
               <v-row>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                   <validation-provider
                     name="reworkQuantity"
                     :rules="`required|numeric|min_value:1|max_value:${production.accepted}`"
@@ -75,8 +75,8 @@
                       class="mt-1"
                       outlined
                       type="number"
-                      suffix="pcs"
-                      label="Quantity"
+                      :suffix="$t('production.pieces')"
+                      :label="$t('production.quantity')"
                       :disabled="saving"
                       hide-details="auto"
                       v-model="newRework.qty"
@@ -84,7 +84,7 @@
                     ></v-text-field>
                   </validation-provider>
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="12" sm="8">
                   <validation-provider
                     name="reworkReason"
                     rules="required"
@@ -95,7 +95,7 @@
                       dense
                       class="mt-1"
                       return-object
-                      label="Reason"
+                      :label="$t('production.reason')"
                       :disabled="saving"
                       hide-details="auto"
                       item-text="reasonname"
@@ -127,7 +127,7 @@
                     outlined
                     hide-details
                     :disabled="saving"
-                    label="Remarks (Optional)"
+                    :label="$t('production.remarksOptional')"
                     v-model="newRework.remark"
                   ></v-textarea>
                 </v-col>
@@ -141,7 +141,7 @@
                     :loading="saving"
                     class="text-none"
                   >
-                    Add rework
+                    {{ $t('production.addRework') }}
                   </v-btn>
                 </v-col>
               </v-row>
@@ -187,10 +187,10 @@ export default {
         remark: '',
       },
       headers: [
-        { text: 'Qty', value: 'reworkquantity' },
-        { text: 'Reason', value: 'reasonname' },
-        { text: 'Remark', value: 'remark' },
-        { text: 'Modified at', value: 'modifiedtimestamp' },
+        { text: this.$t('production.qty'), value: 'reworkquantity' },
+        { text: this.$t('production.reason'), value: 'reasonname' },
+        { text: this.$t('production.remark'), value: 'remark' },
+        { text: this.$t('production.modifiedAt'), value: 'modifiedtimestamp' },
         { text: '', value: 'action', sortable: false },
       ],
     };
@@ -260,7 +260,7 @@ export default {
           remark: '',
         };
         this.reworks = [
-          { ...payload, _id: id, modifiedtimestamp: 'now' },
+          { ...payload, _id: id, modifiedtimestamp: this.$t('production.now') },
           ...this.reworks,
         ];
         this.updateShiftStats(qty);
@@ -302,7 +302,7 @@ export default {
         const updatedIndex = this.reworks.findIndex((s) => s._id === id);
         this.$set(this.reworks, updatedIndex, {
           ...this.reworks[updatedIndex],
-          modifiedtimestamp: 'now',
+          modifiedtimestamp: this.$t('production.now'),
           ...payload,
         });
         this.setAlert({

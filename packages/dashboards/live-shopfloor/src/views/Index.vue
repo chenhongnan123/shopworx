@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
+
 import ConfigDrawer from '../components/ConfigDrawer.vue';
 import ShopfloorLoading from '../components/ShopfloorLoading.vue';
 
@@ -27,6 +28,8 @@ export default {
       timeout: null,
       timeInterval: null,
       readyState: 0,
+      serverTime: null,
+      workingTime: null,
       states: [
         { text: 'Connecting', color: 'warning' },
         { text: 'Open', color: 'success' },
@@ -35,23 +38,33 @@ export default {
     };
   },
   async created() {
+    this.setShowHeaderButtons(true);
     const self = this;
     this.setLoading(true);
     await this.getShifts();
     await this.getBusinessTime();
+    this.serverTime = this.currentTime;
     this.timeInterval = setInterval(async () => {
       await self.getBusinessTime();
     }, 60000);
-    if (this.isLoaded) {
-      await this.getMachines();
+    if (!this.isLoaded) {
+      this.setSelectedView({
+        label: 'Shift',
+        value: 'shift',
+        reportName: 'shiftliveshopfloor',
+      });
+      this.workingTime = await this.getAvailableTime();
     }
+    await this.getMachines();
     this.setLoading(false);
   },
   beforeMount() {
     this.sseInit();
   },
   beforeDestroy() {
-    this.sseClient.close();
+    if (this.sseClient) {
+      this.sseClient.close();
+    }
     clearTimeout(this.timeout);
     clearInterval(this.timeInterval);
   },
@@ -60,6 +73,7 @@ export default {
       if (loaded) {
         this.setLoading(true);
         await this.getMachines();
+        this.workingTime = await this.getAvailableTime();
         this.setLoading(false);
       }
     },
@@ -79,6 +93,8 @@ export default {
       'machines',
       'currentDate',
       'currentShift',
+      'currentHour',
+      'currentTime',
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
@@ -90,6 +106,10 @@ export default {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
+      'setSelectedView',
+    ]),
+    ...mapMutations('helper', [
+      'setShowHeaderButtons',
     ]),
     ...mapActions('shopfloor', [
       'getBusinessTime',
@@ -136,13 +156,23 @@ export default {
         shift,
         shiftName,
         date,
+        hour,
       } = data;
-      if ((this.currentShift === shift || this.currentShift === shiftName)
-        && this.currentDate === date) {
-        const workingTime = await this.getAvailableTime();
+      let canSetData = false;
+      if (this.selectedView.value === 'shift') {
+        canSetData = (this.currentShift === shift || this.currentShift === shiftName)
+        && this.currentDate === date;
+      } else if (this.selectedView.value === 'hourly') {
+        canSetData = this.currentHour === hour && this.currentDate === date;
+      }
+      if (canSetData) {
+        if (this.currentTime > this.serverTime) {
+          this.serverTime = this.currentTime;
+          this.workingTime = await this.getAvailableTime();
+        }
         const payload = {
           ...data,
-          workingTime,
+          workingTime: this.workingTime,
         };
         if (elementName === 'cycletime') {
           this.setProduction(payload);
@@ -228,7 +258,7 @@ export default {
             payload = {
               ...this.machines[i],
               machinestatus: 'DOWN',
-              updatedAt: new Date().getTime(),
+              updatedAt: this.currentTime,
               downsince: actualdowntimestart,
               downreason: reasonname || '',
             };
@@ -236,7 +266,7 @@ export default {
             payload = {
               ...this.machines[i],
               machinestatus: 'UP',
-              updatedAt: new Date().getTime(),
+              updatedAt: this.currentTime,
             };
           }
           this.setMachine({ index: i, payload });
@@ -252,7 +282,7 @@ export default {
         if (this.machines[i].machinename === machinename) {
           const payload = {
             ...this.machines[i],
-            updatedAt: new Date().getTime(),
+            updatedAt: this.currentTime,
             quality,
           };
           this.setMachine({ index: i, payload });

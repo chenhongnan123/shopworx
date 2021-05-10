@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container :fill-height="!isMobile">
     <v-row
       align="center"
       justify="center"
@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No production record for selected filters
+          {{ $t('production.noRecords') }}
         </span>
       </v-col>
       <v-col cols="12" align="center">
@@ -22,7 +22,7 @@
           class="text-none"
           @click="resetFilters"
         >
-          Reset filters
+          {{ $t('production.resetFilters') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -40,6 +40,9 @@ export default {
       return this.$vuetify.theme.dark
         ? 'not-found-dark'
         : 'not-found-light';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {

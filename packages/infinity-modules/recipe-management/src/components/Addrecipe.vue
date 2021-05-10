@@ -343,6 +343,7 @@ export default {
             this.dialog = false;
             this.recipe = {};
             this.$refs.form.reset();
+            this.$root.$emit('closeThechips', true);
           } else {
             this.setAlert({
               show: true,

@@ -1,14 +1,14 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
-    label="Type"
+    :label="$t('downtime.type')"
     v-model="type"
     return-object
     item-text="name"
     :items="typeList"
     prepend-inner-icon="mdi-text-box-multiple-outline"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
@@ -24,13 +24,13 @@ export default {
   data() {
     return {
       typeList: [{
-        name: 'All',
+        name: this.$t('downtime.all'),
         value: 'All',
       }, {
-        name: 'With reason',
+        name: this.$t('downtime.withReason'),
         value: 'reason',
       }, {
-        name: 'Without reason',
+        name: this.$t('downtime.withoutReason'),
         value: 'noreason',
       }],
     };

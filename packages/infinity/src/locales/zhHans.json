@@ -1,67 +1,64 @@
 {
   "$vuetify": {
-    "badge": "徽章",
+    "badge": "工卡",
     "close": "关闭",
-    "dataIterator": 
-    {
-      "noResultsText": "没有符合条件的结果",
-      "loadingText": "加载中……"
+    "dataIterator": {
+      "noResultsText": "没有找到匹配的记录",
+      "loadingText": "加载项..."
     },
-    "dataTable": 
-    {
-      "itemsPerPageText": "每页数目：",
-      "ariaLabel": 
-      {
-        "sortDescending": "：降序排列。",
-        "sortAscending": "：升序排列。",
-        "sortNone": "：未排序。",
-        "activateNone": "点击以移除排序。",
-        "activateDescending": "点击以降序排列。",
-        "activateAscending": "点击以升序排列。"
+    "dataTable": {
+      "itemsPerPageText": "每页行数:",
+      "ariaLabel": {
+        "sortDescending": "按降序排序",
+        "sortAscending": "按升序排序",
+        "sortNone": "没有排序",
+        "activateNone": "激活以删除排序",
+        "activateDescending": "激活以降序排序",
+        "activateAscending": "激活以升序排序"
       },
-      "sortBy": "排序方式"
+      "sortBy": "排序"
     },
     "dataFooter": 
     {
-      "itemsPerPageText": "每页数目：",
-      "itemsPerPageAll": "全部",
+      "itemsPerPageText": "每页项目:",
+      "itemsPerPageAll": "所有",
       "nextPage": "下一页",
       "prevPage": "上一页",
-      "firstPage": "首页",
-      "lastPage": "尾页",
-      "pageText": "{0}-{1} 共 {2}"
+      "firstPage": "第一页",
+      "lastPage": "最后一页",
+      "pageText": "{0}-{1} of {2}"
     },
     "datePicker": 
     {
-      "itemsSelected": "已选择 {0}",
+      "itemsSelected": "{0} 已选择",
       "nextMonthAriaLabel": "下个月",
-      "nextYearAriaLabel": "明年",
-      "prevMonthAriaLabel": "前一个月",
-      "prevYearAriaLabel": "前一年"
+      "nextYearAriaLabel": "下一年",
+      "prevMonthAriaLabel": "上一月",
+      "prevYearAriaLabel": "上一年"
     },
-    "noDataText": "没有数据",
+    "noDataText": "无效数据",
     "carousel": 
     {
-      "prev": "上一张",
-      "next": "下一张",
+      "prev": "上一页",
+      "next": "下一页",
       "ariaLabel": 
       {
-        "delimiter": "Carousel slide {0} of {1}"
+        "delimiter": "轮播至 {0} of {1}"
       }
     },
     "calendar": 
     {
-      "moreEvents": "还有 {0} 项"
+      "moreEvents": "{0} 更多"
     },
     "fileInput": 
     {
-      "counter": "{0} 个文件",
-      "counterSize": "{0} 个文件（共 {1}）"
+      "counter": "{0} 文件",
+      "counterSize": "{0} 文件 ({1} 总计)"
     },
     "timePicker": 
     {
-      "am": "AM",
-      "pm": "PM"
+      "am": "上午",
+      "pm": "下午"
     },
     "pagination": 
     {
@@ -70,107 +67,177 @@
         "wrapper": "分页导航",
         "next": "下一页",
         "previous": "上一页",
-        "page": "转到页面 {0}",
-        "currentPage": "当前页 {0}"
+        "page": "至{0}页",
+        "currentPage": "当前页, 页 {0}"
       }
     }
   },
   "success": {
-    "OTP_SENT": "通过注册的电子邮件/电话发送一次密码。",
-    "PASSWORD_RESET": "通过注册电子邮件/电话发送的新密码。",
-    "UPDATED": "更新！",
-    "PLAN_CREATED": "计划已创建！",
-    "PLAN_UPDATED": "计划已更新！"
+    "OTP_SENT": "一次性密码已发送到注册的电子邮件/电话。",
+    "PASSWORD_RESET": "新密码已发送到注册的电子邮件/电话。",
+    "UPDATED": "已更新!",
+    "PLAN_CREATED": "计划已创建!",
+    "PLAN_IMPORTED": "计划已导入!",
+    "PLAN_UPDATED": "计划已更新!",
+    "PLAN_DELETED": "计划已被删除!",
+    "ASSET_UPDATE": "资产已更新!",
+    "CREATED_RECORD": "记录已添加成功!",
+    "DELETE_RECORD": "记录已删除成功!",
+    "ROLE_UPDATED": "角色已更新成功!",
+    "USER_DELETED": "用户已移除成功!",
+    "DOWNTIME_UPDATE": "停机原因已更新!",
+    "OPERATOR_UPDATE": "操作员已更新!",
+    "REJECTION_UPDATE": "不良品已更新!",
+    "REWORK_UPDATE": "返工已更新!",
+    "SCRAP_UPDATE": "报废信息已更新!",
+    "PERMISSION_UPDATE": "角色权限已更新!",
+    "MATRIX_UPDATE": "Part matrix updated!",
+    "ROLE_CREATED": "角色创建成功!",
+    "EXPORT_REQUEST": "数据导出请求已创建。你马上就会收到一封带有下载链接的电子邮件。"
   },
   "error": {
-    "NOT_VALID": "{_field_}无效。",
-    "NO_LICENSE": "您没有有效的许可证。请联系ShopWorx支持。",
-    "CANNOT_FETCH_LICENSE": "我们无法获取您的有效许可证。请再试一遍。",
-    "INVALID_SESSION": "会话已过期：请重新登录。",
-    "USER_ALREADY_EXIST": "用户已存在。",
-    "USER_NOT_FOUND": "找不到用户帐户。",
-    "EMAIL_NOT_FOUND": "找不到用户帐户。",
-    "INCORRECT_PASSWORD": "登录失败：密码错误。",
-    "INVALID_OTP": "登录失败：OTP错误。",
-    "MISSING_BUSINESS_HOUR": "时间应按顺序设置。请验证您的数据。",
-    "INVALID_HOURS_SUM": "您提供的小时总数应为24。请验证您的数据。",
+    "ERROR_CREATING_RECORD": "添加记录错误。",
+    "ERROR_DELETE_RECORD": "删除记录时出错。",
+    "NOT_VALID": "{_field_} 是无效的。",
+    "NO_LICENSE": "你没有有效权限，请联系ShopWorx获取支持。",
+    "CANNOT_FETCH_LICENSE": "我们无法取得您的有效权限，请再试一次。",
+    "INVALID_SESSION": "会话已过期，请重新登录。",
+    "USER_ALREADY_EXIST": "用户已经存在。",
+    "USER_NOT_FOUND": "未找到用户帐户。",
+    "EMAIL_NOT_FOUND": "未找到用户帐户。",
+    "INCORRECT_PASSWORD": "登录失败:密码错误。",
+    "INVALID_OTP": "登录失败:一次性密码错误。",
+    "MISSING_BUSINESS_HOUR": "时间应该按顺序安排，请核实您的数据。",
+    "INVALID_HOURS_SUM": "你的总时间应该是24小时，请核实您的数据。",
     "ERROR_CREATING_PLAN": "创建计划时出错，请重试。",
-    "ERROR_UPDATING_PLAN": "更新计划时出错，请重试。"
+    "PLAN_UPDATED": "更新计划时出错，请刷新后重试。",
+    "PLAN_DELETED": "删除计划时出错，请刷新后重试。",
+    "ASSET_UPDATE": "更新资产配置时出错，请重试。",
+    "ERROR_UPDATING_PLAN": "更新计划时出错，请重试。",
+    "INVALID_DOWNTIME_SPLIT": "无效的停机开始或结束时间，请核实您的数据。",
+    "DOWNTIME_UPDATE": "更新停机原因时发生错误，请重试。",
+    "OPERATOR_UPDATE": "更新操作员时出错，请重试。",
+    "REJECTION_UPDATE": "更新不良信息时发生错误，请重试。",
+    "REJECTION_NOT_ALLOWED": "不能更新不良信息，其数量应少于良品数量。",
+    "REWORK_UPDATE": "更新返工时出现错误，请重试。",
+    "REWORK_NOT_ALLOWED": "无法更新返工，数量应少于良品数量。",
+    "SCRAP_UPDATE": "更新报废时发生错误，请重试。",
+    "PERMISSION_UPDATE": "更新角色权限时发生错误，请重试。",
+    "MATRIX_UPDATE": "工艺参数更新错误。请重试。",
+    "ROLE_CREATED": "创建角色时出错，请重试。",
+    "ROLE_CREATE_RETRY": "角色创建成功，但是我们不能定义角色访问权限，请更新表中的权限。",
+    "EXPORT_REQUEST": "您没有导出数据的权限。"
   },
   "fields": {
-    "email": "电子邮件",
+    "email": "邮件",
     "phone": "电话",
     "password": "密码",
     "otp": "一次性密码",
-    "firstName":"名字",
-    "lastName":"姓",
-    "name": "名称",
+    "firstName": "名字",
+    "lastName": "姓氏",
+    "name": "用户名",
     "type": "类型",
     "startTime": "开始时间",
-    "endTime": "时间结束",
+    "endTime": "结束时间",
     "date": "日期",
-    "shift": "转移",
-    "role": "角色"
+    "shift": "班次",
+    "role": "角色",
+    "partname": "物料名称",
+    "machinename": "机器名称",
+    "moldname": "模具名称",
+    "toolname": "工具名称",
+    "equipmentname": "设备名称",
+    "quantity": "数量",
+    "activecavity": "实际使用模穴数",
+    "cycletime": "周期时间",
+    "delaytime": "延迟时间",
+    "familyactivecavity": "实际使用模穴数",
+    "scheduledstart": "计划开始时间",
+    "rejectedQuantity": "数量",
+    "rejectionReason": "原因",
+    "reworkQuantity": "数量",
+    "reworkReason": "原因",
+    "scrapWeight": "重量",
+    "scrapReason": "原因",
+    "downtimeReason": "原因",
+    "downtimeStart": "开始时间",
+    "downtimeEnd": "结束时间",
+    "modelName": "Model name"
   },
   "snackbar": {
-    "close": "关",
-    "redirectToLogin": "重定向到{time}"
+    "close": "关闭",
+    "redirectToLogin": "将在{time}后转到登录界面"
+  },
+  "auth": {
+    "phoneRequired": "电话是必需的",
+    "phoneInvalid": "手机必须有效",
+    "emailRequired": "电子邮件是必需的",
+    "emailInvalid": "电子邮件必须有效"
   },
   "helper": {
-    "or": "或",
+    "or": "或者",
     "help": "帮助",
     "next": "下一个",
-    "skip": "现在跳过",
-    "loading": "载入中..."
+    "skip": "跳到当前",
+    "loading": "加载中...",
+    "cancel": "取消",
+    "agree": "同意"
   },
   "notFound": {
-    "title": "那是一个错误！",
-    "subTitle1": "要求的网址",
+    "title": "这是一个错误!",
+    "subTitle1": "请求的链接地址",
     "subTitle2": "{url}",
-    "subTitle3": "本服务器上没有找到。",
-    "goHome": "回去"
+    "subTitle3": "在此服务器上未找到。",
+    "goHome": "返回主页"
+  },
+  "serverError": {
+    "title": "严重错误!",
+    "subTitle1": "这太出乎预料了...",
+    "subTitle2": "错误代码500.",
+    "subTitle3": "出现了一个错误，我们正在修复这个问题!我们很快就可以开始运作了。",
+    "goHome": "返回主页"
   },
   "forbidden": {
-    "title": "禁止访问！",
-    "subTitle1": "您试图访问以前没有的页面",
+    "title": "禁止访问!",
+    "subTitle1": "您试图访问之前没有的页面",
     "subTitle2": "授权",
-    "subTitle3": "对于。",
-    "goHome": "回去"
+    "subTitle3": "for.",
+    "goHome": "返回主页"
   },
   "login": {
-    "title": "登录到Infinity",
-    "subTitle": "使用您的ShopWorx帐户",
-    "identifier": "邮件或者电话",
+    "title": "登陆进入Infinity",
+    "subTitle": "使用你的ShopWorx账号",
+    "identifier": "邮件或者手机号",
     "password": "密码",
-    "otp": "OTP",
-    "resendOtp": "重新发送otp？",
-    "resendOtpIn": "重新发送otp{time}",
-    "sendOtp": "发送OTP",
+    "otp": "一次性密码",
+    "resendOtp": "重发一次性密码?",
+    "resendOtpIn": "在{time}后重新发送一次性密码",
+    "sendOtp": "发送一次性密码",
     "forgotPassword": "忘记密码？",
     "login": "安全登录",
-    "loginWithOtp": "用otp登录",
+    "loginWithOtp": "用一次性密码登录",
     "loginWithPassword": "用密码登录"
   },
   "forgotPassword": {
-    "title": "重设密码？",
-    "subTitle": "输入您的电子邮件或电话号码",
-    "reset": "重设密码"
+    "title": "重置密码？",
+    "subTitle": "输入你的邮箱或手机号",
+    "reset": "重置密码"
   },
   "welcome": {
-    "title": "欢迎！我们一直在期待您。",
-    "subTitle1": "首先，让我们开始",
+    "title": "欢迎光临!我们一直在等您。",
+    "subTitle1": "重要的事情先说，让我们从",
     "subTitle2": "创建您的帐户。",
-    "subTitle3": "不到一分钟。",
-    "start": "让我们开始吧"
+    "subTitle3": "不到一分钟就能搞定。",
+    "start": "让我们开始"
   },
   "register": {
     "account": {
       "title": "更新您的ShopWorx帐户",
-      "update": "更新账户",
-      "firstName": "名字",
-      "lastName": "姓",
-      "email": "电子邮件（可选）",
-      "phone": "电话（可选）"
+      "update": "更新帐户",
+      "firstName": "姓氏",
+      "lastName": "名字",
+      "email": "邮箱 (可选)",
+      "phone": "手机 (可选)"
     },
     "password": {
       "title": "更新您的ShopWorx密码",
@@ -178,59 +245,70 @@
       "confirmPassword": "确认密码",
       "update": "更新密码"
     },
-    "updated": "您的ShopWorx帐户已更新！"
+    "updated": "您的ShopWorx帐户已更新!"
   },
   "modules": {
-    "apps": "应用",
-    "home": "家",
-    "operation": "生产应用层",
-    "configuration": "基础配置层",
-    "management": "参数管理层",
-    "shopfloorDashboard": "车间仪表板",
-    "orderManagement": "订单管理",
+    "rawdata": "数据可视化工具",
+    "apps": "应用程序",
+    "operation": "操作",
+    "dashboards": "看板",
+    "home": "主页",
+    "order": "订单",
+    "spc": "SPC",
+    "configuration": "配置",
+    "dataconfiguration": "数据配置",
+    "traceabilityApp": "追溯应用",
+    "traceability": "追溯",
+    "management": "管理",
+    "shopfloorDashboard": "车间看板",
+    "productionImage": "产品图片",
+    "liveShopfloor": "车间看板",
+    "utilityDashboard": "能耗看板",
+    "processDashboard": "工艺看板",
+    "orderManagement": "订单",
     "productionLog": "生产日志",
     "downtimeLog": "停机日志",
-    "maintenanceSummary": "维护摘要",
+    "maintenanceSummary": "维保汇总",
     "parameterConfiguration": "参数配置",
     "parameterConfigurationMes": "参数配置",
-    "productionPlanning": "计划生产",
-    "roadmapManagement": "工艺路径管理",
-    "recipeManagement": "配方管理",
-    "productManagement": "产品类型管理",
-    "productionImage": "图像信息追溯",
+    "productionPlanning": "生产计划",
+    "roadmapManagement": "路线图",
+    "recipeManagement": "配方",
+    "productManagement": "产品类型",
     "productionLayout": "生产布局",
     "productionLayoutMes": "生产布局",
-    "materialManagement": "物料管理",
-    "reports": "报告书",
+    "modelManagement": "机器学习模型管理",
+    "materialManagement": "原料",
+    "reports": "报告",
     "production": "生产",
-    "maintenance": "保养",
+    "maintenance": "维保",
     "downtime": "停机时间",
-    "rejection": "拒绝",
-    "oee": "大江",
-    "masters": "主数据（仅查看）",
+    "quality": "质量",
+    "performance": "绩效",
+    "masters": "主数据",
     "admin": "管理控制台",
-    "search": "搜索和提示",
-    "insights": "见解",
-    "traceabilityApp": "追溯报表",
-    "traceability": "追溯报表",
-    "ngCodeConfiguration": "异常管理",
-    "reworkOperation": "返工管理",
-    "packagingManagement": "包装管理",
-    "calibrationApp": "标定"
+    "search": "搜索报表和分析",
+    "searchMobile": "检索",
+    "insights": "分析",
+    "ngCodeConfiguration": "不良代码",
+    "reworkOperation": "返工",
+    "packagingManagement": "包装",
+    "formBuilder": "表单生成器",
+    "eLogbook": "电子表单"
   },
   "account": {
-    "account": "帐户",
-    "sites": "网站",
+    "account": "账户",
+    "sites": "地点",
     "profile": "个人资料",
     "logout": "登出",
-    "lightMode": "灯光模式",
-    "darkMode": "暗模式"
+    "lightMode": "浅色模式",
+    "darkMode": "深色模式"
   },
   "help": {
     "help": "帮助",
     "legal": "法律",
-    "version": "版",
-    "keyboardShortcuts": "键盘快捷键",
+    "version": "版本",
+    "keyboardShortcuts": "快捷键",
     "support": "支持",
     "terms": "服务条款",
     "privacy": "隐私政策"
@@ -239,19 +317,20 @@
     "general": "一般",
     "security": "安全",
     "profile": {
+      "heading": "我的个人资料设置",
       "title": "个人资料",
       "firstName": "名字",
-      "lastName":"姓",
-      "email": "电子邮件",
-      "phone": "电话",
-      "reset": "重启",
-      "update": "更新个人信息"
+      "lastName": "姓氏",
+      "email": "邮箱",
+      "phone": "手机",
+      "reset": "重置",
+      "update": "更新"
     },
     "preferences": {
-      "title": "优先",
+      "title": "偏好",
       "display": "显示设置",
       "language": "语言",
-      "darkMode": "暗模式"
+      "darkMode": "深色模式"
     },
     "password": {
       "title": "密码",
@@ -260,7 +339,7 @@
       "update": "更新密码"
     },
     "auditLog": {
-      "title": "审核日志"
+      "title": "日志"
     }
   }
 }

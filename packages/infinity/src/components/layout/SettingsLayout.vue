@@ -8,7 +8,12 @@
         {{ headerTitle }}
       </portal>
       <v-row>
-        <v-col cols="12" md="3" xl="2">
+        <v-col
+          cols="12"
+          md="3"
+          xl="2"
+          style="border-right: 1px solid rgba(0, 0, 0, 0.12); min-height: calc(100vh - 80px);"
+        >
           <perfect-scrollbar>
             <v-list
               shaped
@@ -40,18 +45,17 @@
             </v-list>
           </perfect-scrollbar>
         </v-col>
-        <v-divider vertical></v-divider>
-        <v-col cols="12" md="8" xl="7">
+        <v-col cols="12" md="9" xl="7">
           <v-card
             flat
             class="transparent"
           >
-            <v-card-title primary-title>
+            <v-card-title primary-title class="px-0">
               {{ $t(`${selectedTitle}`) }}
               <v-spacer></v-spacer>
               <portal-target name="settings-header"></portal-target>
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="px-0">
               <v-fade-transition mode="out-in">
                 <slot />
               </v-fade-transition>

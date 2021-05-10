@@ -1,0 +1,40 @@
+{
+  "name": "@shopworx/machine",
+  "version": "4.3.0",
+  "private": true,
+  "scripts": {
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@shopworx/services": "^4.3.0",
+    "axios": "^0.21.0",
+    "lodash": "^4.17.20",
+    "qrcode": "^1.4.4",
+    "vue-pdf": "^4.2.0",
+    "vue-qrcode": "^0.3.5",
+    "vue-qrious": "^1.5.5",
+    "vue-translator": "^0.9.5",
+    "vuex": "^3.5.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.4.1",
+    "@vue/cli-plugin-eslint": "^4.4.1",
+    "@vue/cli-service": "^4.4.1",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "lint-staged": "^10.2.7",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}

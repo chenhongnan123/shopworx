@@ -76,6 +76,8 @@
     }
   },
   "dashboards": {
-    "liveShopfloor": "Live Shopfloor"
+    "liveShopfloor": "Live Shopfloor",
+    "utilityDashboard": "Utility",
+    "processDashboard": "Live Process"
   }
 }

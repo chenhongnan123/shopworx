@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+
+
+
+
+
 ## [4.1.3](https://bitbucket.org/entrib/shopworx/compare/v4.1.2...v4.1.3) (2020-11-11)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration

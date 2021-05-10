@@ -9,7 +9,7 @@
         :color="getPlanStatus(status).color"
       ></v-avatar>
     </template>
-    {{ getPlanStatus(status).text }}
+    {{ $t(`planning.${getPlanStatus(status).text}`) }}
   </v-tooltip>
 </template>
 

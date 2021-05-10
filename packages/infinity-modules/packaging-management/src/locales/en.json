@@ -1,11 +1,18 @@
 {
-  "parameterConfiguration": "Parameter Configuration",
+  "parameterConfiguration": "Packaging Management",
   "success": {
     "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created"
   },
   "error": {
     "delete_parameter": "Error in deleteing parameter.",
-    "CREATE_PARAMETER": "Error in creating parameter"
+    "CREATE_PARAMETER": "Error in creating parameter",
+    "DUPLICATE_PARAMETER_NAME": "Found the duplicate parameter name",
+    "UPLOAD_ONLY_CSV": "Please upload file with (.csv) extension",
+    "DUPLICATE_DBADDRESS": "Found duplicate DB Address in file!",
+    "DUPLICATE_START_ADDRESS": "Found duplicate Start Address in file!",
+    "DUPLICATE_BIT_NUMBER": "Found duplicate Bit Number in file!",
+    "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
+    "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading"
   }
 }

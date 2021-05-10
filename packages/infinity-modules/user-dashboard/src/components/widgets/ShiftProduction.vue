@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Shift production
+      {{ $t('shiftProduction') }}
     </v-card-title>
     <v-card-text v-if="productionLoading">
       <production-loading />
@@ -78,15 +78,15 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Plan', value: 'planid' },
+        { text: this.$t('plan'), value: 'planid' },
         {
-          text: 'Part',
+          text: this.$t('part'),
           value: 'partname',
           width: '25%',
         },
-        { text: 'Produced', value: 'produced' },
-        { text: 'Accepted', value: 'accepted' },
-        { text: 'Rejected', value: 'rejected' },
+        { text: this.$t('produced'), value: 'produced' },
+        { text: this.$t('accepted'), value: 'accepted' },
+        { text: this.$t('rejected'), value: 'rejected' },
       ],
     };
   },

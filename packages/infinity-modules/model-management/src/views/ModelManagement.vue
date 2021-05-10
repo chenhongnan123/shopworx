@@ -12,8 +12,11 @@
         </v-col>
       </v-row>
       <line-details />
-      <v-fade-transition mode="out-in">
+      <v-fade-transition v-if="showModelUI" mode="out-in">
         <process-model-table class="mt-4" v-if="selectedProcess" />
+      </v-fade-transition>
+      <v-fade-transition v-else mode="out-in">
+        <process-train-table class="mt-4" v-if="selectedProcess" />
       </v-fade-transition>
     </v-col>
   </v-row>
@@ -26,6 +29,7 @@ import ModelManagementHeader from '../components/ModelManagementHeader.vue';
 import LineSelection from '../components/LineSelection.vue';
 import LineDetails from '../components/LineDetails.vue';
 import ProcessModelTable from '../components/ProcessModelTable.vue';
+import ProcessTrainTable from '../components/ProcessTrainTable.vue';
 import SseState from '../components/SseState.vue';
 
 export default {
@@ -35,10 +39,11 @@ export default {
     LineSelection,
     LineDetails,
     ProcessModelTable,
+    ProcessTrainTable,
     SseState,
   },
   computed: {
-    ...mapState('modelManagement', ['selectedProcess']),
+    ...mapState('modelManagement', ['selectedProcess', 'showModelUI']),
   },
 };
 </script>

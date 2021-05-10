@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Features
+
+* **live-shopfloor:** update now from system time to server time ([b466baf](https://bitbucket.org/entrib/shopworx/commits/b466baff5199dead36e37eaf09636a7f44ff4327))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/live-shopfloor
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Bug Fixes
+
+* **dashboard-viewer:** fixed dashboard data display on tv ([c628ccc](https://bitbucket.org/entrib/shopworx/commits/c628ccc717400e1f32c469b1f4f237c37ef90703))
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+**Note:** Version bump only for package @shopworx/live-shopfloor
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/live-shopfloor
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/live-shopfloor
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+* **live-shopfloor:** fix dashbaord display on hour change ([7e17175](https://bitbucket.org/entrib/shopworx/commits/7e17175f81cc6873bec7a06cde9c98b5919b794e))
+* **live-shopfloor:** fixed downtime reason display ([200fb23](https://bitbucket.org/entrib/shopworx/commits/200fb23ad179c0e671a00ce5340db48fba326f70))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Features
+
+* **shopfloor-view:** updated layout for mobile view ([15774a0](https://bitbucket.org/entrib/shopworx/commits/15774a0aca5dfe89b72f975be743ffae3181b39e))
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+**Note:** Version bump only for package @shopworx/live-shopfloor
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 **Note:** Version bump only for package @shopworx/live-shopfloor
