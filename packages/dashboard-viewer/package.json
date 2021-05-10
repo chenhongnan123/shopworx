@@ -9,7 +9,7 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^5.9.55",
     "@shopworx/assets": "^4.2.12",
     "@shopworx/live-shopfloor": "^4.2.12",
     "@shopworx/machine-dashboard": "^4.2.12",

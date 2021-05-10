@@ -2,16 +2,13 @@
   "$vuetify": {
     "badge": "工卡",
     "close": "关闭",
-    "dataIterator": 
-    {
+    "dataIterator": {
       "noResultsText": "没有找到匹配的记录",
       "loadingText": "加载项..."
     },
-    "dataTable": 
-    {
+    "dataTable": {
       "itemsPerPageText": "每页行数:",
-      "ariaLabel": 
-      {
+      "ariaLabel": {
         "sortDescending": "按降序排序",
         "sortAscending": "按升序排序",
         "sortNone": "没有排序",
