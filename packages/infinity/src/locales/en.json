@@ -301,6 +301,7 @@
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
     "packagingManagement": "Packaging",
+    "productionProcess": "Production Process",
     "formBuilder": "Form Builder",
     "eLogbook": "e-logbook",
     "operator": "Operator",

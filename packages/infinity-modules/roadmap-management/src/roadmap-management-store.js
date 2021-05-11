@@ -17,8 +17,10 @@ export default ({
     preSubStationList: [],
     lineList: [],
     preStationList: [],
+    setFilteredroadmapType: null,
   },
   mutations: {
+    setSelectedRoadmapType: set('setFilteredroadmapType'),
     toggleFilter: toggle('filter'),
     setFilter: set('filter'),
     setRoadmapList: set('roadmapList'),

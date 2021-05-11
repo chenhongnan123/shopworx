@@ -63,7 +63,8 @@
           color="primary"
           class="text-none"
           @click="saveRoadmap"
-          :disabled="!valid"
+          :loading="createLoading"
+          :disabled="!valid || !validNamePattern"
         >
           Save
         </v-btn>
@@ -96,8 +97,10 @@ export default {
       updateRoadmapId: 0,
       editedVersionNumber: 0,
       valid: true,
+      validNamePattern: true,
       name: '',
       roadmaptype: '',
+      createLoading: false,
       updateRnamerule: [(v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
         (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
@@ -130,20 +133,25 @@ export default {
     },
     async saveRoadmap() {
       this.$refs.form.validate();
+      this.createLoading = true;
       if (!this.roadmap.name) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ROADMAP_NAME_EMPTY',
         });
+        this.createLoading = false;
       } else if (!this.roadmap.roadmaptype) {
+        this.createLoading = true;
         this.roadmap.roadmaptype = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'ROADMAP_TYPE_NOT_SELECTED',
         });
+        this.createLoading = false;
       } else {
+        this.createLoading = true;
         this.saving = true;
         this.roadmap = {
           ...this.roadmap,
@@ -172,6 +180,7 @@ export default {
           });
         }
         this.saving = false;
+        this.createLoading = false;
       }
     },
     onChangeRoadmapType() {
@@ -189,7 +198,7 @@ export default {
       const roadmapFlag = this.roadmapList
         .filter((o) => o.name.toLowerCase().split(' ').join('') === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
-        this.valid = false;
+        this.validNamePattern = false;
         this.validupdate = false;
         this.setAlert({
           show: true,
@@ -197,7 +206,7 @@ export default {
           message: 'ALREADY_EXSIST',
         });
       } else {
-        this.valid = true;
+        this.validNamePattern = true;
         this.saving = false;
       }
     },
