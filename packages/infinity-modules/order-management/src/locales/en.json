@@ -95,15 +95,12 @@
     "PRODUCT_ROADMAP_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product",
     "ORDER_NOT_INTERRUPTED": "Not Allowed! This is Not Interrupted Order Or Completed Order !",
     "TARGET_ACTUAL": "Target count cannot be less than Actual count.",
-    "ALLREADY_ONE_RUNNING_STATUS": "Only one running order at time!",
-    "PRODUCT_DETAILS_NOT_FOUND": "Product details not found, Add product first",
-    "ROADMAP_DETAILS_NOT_FOUND": "Roadmap details not, Add roadmap first"
+    "ALLREADY_ONE_RUNNING_STATUS": "Only one running order at time!"
   },
   "success": {
     "ORDER_HIDE": "Selected Order is Hide by you.",
     "ORDER_UNHIDE": "Selected Order is Unhide by you.",
-    "DATA_SAVED": "Date saved",
-    "ORDER_CREATED": "Order Created"
+    "DATA_SAVED": "Date saved"
   },
   "Order Summary":	"Order Summary",
   "Order name":	"Order name",

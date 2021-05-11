@@ -290,7 +290,6 @@ export default {
       return Date.now() < (new Date(expiryDate).getTime());
     },
     async saveOrder() {
-      this.$refs.form.validate();
       if (!this.plan.ordername) {
         this.setAlert({
           show: true,
@@ -350,12 +349,10 @@ export default {
           let created = false;
           const payload = this.plan;
           created = await this.createOrder(payload);
+          const errorMessage = [];
+          let isError = false;
           if (created) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'ORDER_CREATED',
-            });
+            errorMessage.push('ORDER_CREATED');
             this.selectedPart = null;
             this.assetId = null;
             this.partMatrix = {};
@@ -366,7 +363,7 @@ export default {
             // order details in new table
             await this.getProductDetailsList(`?query=productnumber=="${this.orderList[0].productid}"`);
             const payloadDetails = [];
-            if (this.productDetailsList.length > 0) {
+            if (this.productDetailsList && this.productDetailsList.length) {
               this.productDetailsList.forEach((product) => {
                 payloadDetails.push({
                   orderid: this.orderList[0].ordernumber,
@@ -381,21 +378,21 @@ export default {
                   assetid: 4,
                 });
               });
+              const orderProduct = await this.createBulkOrderProduct(payloadDetails);
+              if (orderProduct) {
+                errorMessage.push('ORDER_PRODUCT_CREATED');
+              } else {
+                isError = true;
+                errorMessage.push('ERROR_CREATING_ORDER_PRODUCT');
+              }
             } else {
-              this.setAlert({
-                show: true,
-                type: 'error',
-                message: 'PRODUCT_DETAILS_NOT_FOUND',
-              });
-              this.$refs.form.reset();
-              this.saving = false;
-              this.dialog = false;
+              isError = true;
+              errorMessage.push('ERROR_NO_PRODUCT_DETAILS');
             }
-            await this.createBulkOrderProduct(payloadDetails);
             // orderroadmap - calling roadmapdetails
             await this.getRoadmapDetailsList(`?query=roadmapid=="${this.orderList[0].roadmapid}"`);
             const payloadRoadDetails = [];
-            if (this.roadmapDetailsList.length > 0) {
+            if (this.roadmapDetailsList && this.roadmapDetailsList.length) {
               this.roadmapDetailsList.forEach((roadmap) => {
                 let processCode = 0;
                 if (roadmap.process === '') {
@@ -421,25 +418,33 @@ export default {
                   assetid: 4,
                 });
               });
+              const orderRoadmap = await this.createBulkOrderRoadmap(payloadRoadDetails);
+              if (orderRoadmap) {
+                errorMessage.push('ORDER_ROADMAP_CREATED');
+              } else {
+                isError = true;
+                errorMessage.push('ERROR_CREATING_ORDER_ROADMAP');
+              }
             } else {
-              this.setAlert({
-                show: true,
-                type: 'error',
-                message: 'ROADMAP_DETAILS_NOT_FOUND',
-              });
-              this.$refs.form.reset();
-              this.saving = false;
-              this.dialog = false;
+              isError = true;
+              errorMessage.push('ERROR_NO_ROADMAP_DETAILS');
             }
-            await this.createBulkOrderRoadmap(payloadRoadDetails);
-            this.$refs.form.reset();
+            let messageType = 'success';
+            if (isError) {
+              messageType = 'error';
+            }
+            this.setAlert({
+              show: true,
+              type: messageType,
+              message: errorMessage,
+            });
             this.saving = false;
             this.dialog = false;
           } else {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'ERROR_CREATING_PLAN',
+              message: 'ERROR_CREATING_ORDER',
             });
           }
         }
