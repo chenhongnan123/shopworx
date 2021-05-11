@@ -7,6 +7,11 @@ import {
   startOfDay,
   endOfDay,
   format,
+  startOfMonth,
+  endOfMonth,
+  isFirstDayOfMonth,
+  isLastDayOfMonth,
+  isBefore,
 } from 'date-fns';
 
 import {
@@ -77,6 +82,12 @@ export const formatDate = (date, form, options = {}) => {
  * 
  * @param {Date} date
  */
+export const isBeforeDate = (date, dateToCompare) => isBefore(date, dateToCompare);
+
+/**
+ * 
+ * @param {Date} date
+ */
 export const dayStart = (date) => startOfDay(date);
 
 /**
@@ -84,6 +95,31 @@ export const dayStart = (date) => startOfDay(date);
  * @param {Date} date
  */
 export const dayEnd = (date) => endOfDay(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const monthStart = (date) => startOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const monthEnd = (date) => endOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const isMonthStart = (date) => isFirstDayOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const isMonthEnd = (date) => isLastDayOfMonth(date);
+
 
 /**
  * 

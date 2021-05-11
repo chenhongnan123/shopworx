@@ -1,0 +1,73 @@
+{
+  "manualinbound": {
+    "name" : "Manual Inbound",
+    "header": {
+      "locationcode":	"Location Code",
+      "locationname":	"Location Name",
+      "warehousecode":	"Warehouse Code",
+      "warehousename":	"Warehouse Name",
+      "partnumber":	"Part Number",
+      "partname":	"Part Name",
+      "quantity":	"Quantity",
+      "type":	"Type",
+      "editedby": "Edited by",
+      "editedtime": "Edit Date",
+      "createdby": "Created by",
+      "createdtime": "Created Date"
+    },
+    "addtitle": " Create Manual Inbound",
+    "filter": "Inbound Filters",
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "station": "Station",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to add the manual inbound record ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close",
+      "enable": "Enable",
+      "unable": "Unable",
+      "more": "LEARN MORE",
+      "warehouse": "Warehouse",
+      "location": "Location",
+      "part": "Part"
+    },
+    "detailtitle": "Manual Inbound Details", 
+    "basic": {
+      "title": "Manual Inbound Basic Infomation"
+    },
+    "timeline": {
+      "title": "Manual Inbound TimeLine",
+      "type": "Type",
+      "trigger": "Trigger",
+      "actualstarttime": "Actual Start Time",
+      "actualendtime": "Actual End Time",
+      "operator": "Operator"
+    }
+  }
+}

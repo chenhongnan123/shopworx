@@ -143,7 +143,6 @@ export default {
       window: 0,
       now: null,
       interval: null,
-      timeInterval: null,
       cHeight: window.innerHeight,
       cWidth: window.innerWidth,
     };
@@ -155,7 +154,12 @@ export default {
     ...mapGetters('shopfloor', ['screens']),
     ...mapGetters('helper', ['isTV']),
     ...mapState('helper', ['isFullscreen']),
-    ...mapState('shopfloor', ['currentShift', 'selectedView', 'machines']),
+    ...mapState('shopfloor', [
+      'currentShift',
+      'selectedView',
+      'machines',
+      'currentTime',
+    ]),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
@@ -206,13 +210,17 @@ export default {
         self.next();
       }
     }, 10000);
-    this.timeInterval = setInterval(() => {
-      self.now = formatDate(new Date().getTime(), 'HH:mm');
-    }, 1000);
+    if (this.currentTime) {
+      this.now = formatDate(this.currentTime, 'HH:mm');
+    }
+  },
+  watch: {
+    currentTime(val) {
+      this.now = formatDate(val, 'HH:mm');
+    },
   },
   beforeDestroy() {
     clearInterval(this.interval);
-    clearInterval(this.timeInterval);
   },
 };
 </script>

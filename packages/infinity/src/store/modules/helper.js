@@ -37,6 +37,7 @@ export default ({
         value: 'de',
       },
     ],
+    currentLocale: LocaleService.getLocale(),
     isDark: null,
     insightsDrawer: false,
     extendedHeader: false,
@@ -53,6 +54,7 @@ export default ({
     setInsightsDrawer: set('insightsDrawer'),
     toggleInsightsDrawer: toggle('insightsDrawer'),
     setIsConnected: set('isConnected'),
+    setCurrentLocale: set('currentLocale'),
   },
   actions: {
     getServerTime: async ({ commit, rootState }) => {
@@ -87,12 +89,11 @@ export default ({
       ? 'ag-theme-balham-dark'
       : 'ag-theme-balham'),
 
-    locale: () => {
-      const locale = LocaleService.getLocale();
-      if (locale === 'zhHans') {
+    locale: ({ currentLocale }) => {
+      if (currentLocale === 'zhHans') {
         return 'zh';
       }
-      return locale;
+      return currentLocale;
     },
   },
 });

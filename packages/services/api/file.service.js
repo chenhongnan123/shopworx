@@ -21,6 +21,12 @@ class FileService {
     });
   }
 
+  getInlineImage(downloadLink) {
+    return this.request.get(`${downloadLink}?disposition=inline`, {
+      responseType: 'blob',
+    });
+  }
+
   getImageFile(filename) {
     return this.request.get(`/server/media/image/${filename}`, {
       responseType: 'blob',

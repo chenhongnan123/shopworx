@@ -1,0 +1,93 @@
+{
+  "machine": {
+    "name": "工站",
+    "main": {
+      "header": {
+        "id": "站号",
+        "name": "站名",
+        "description": "描述",
+        "editedby": "编辑者",
+        "editedtime": "编辑时间",
+        "createdby": "创建者",
+        "createdtime": "创建时间",
+        "photo": "照片"
+      }
+    },
+    "filter": {
+      "title": "工站筛选"
+    },
+    "general": {
+      "line": "生产线",
+      "subline": "子线",
+      "apply": "应用",
+      "reset": "重置",
+      "selectall": "全选",
+      "selectnone": "全不选",
+      "search": "搜索",
+      "yes": "是",
+      "save": "保存",
+      "cancel": "取消",
+      "department": "部门",
+      "position": "职位",
+      "add": "添加",
+      "delete": "删除",
+      "refresh": "刷新",
+      "export": "导出",
+      "exportsample": "导出模板",
+      "import": "导入",
+      "filter": "筛选",
+      "confirmheader": "请确认",
+      "confirmmessage": "您确认删除所选项目吗 ?",
+      "noselected": "未选择",
+      "selected": "已选择",
+      "include": "包含",
+      "exclude": "排除",
+      "allinclude": "包含所有",
+      "allexclude": "排除所有",
+      "download": "下载",
+      "loading": "加载中",
+      "close": "关闭"
+    },
+    "stationdetail": "工站详情",
+    "basic": {
+      "title": "工站基础信息",
+      "id": "站号",
+      "name": "站名",
+      "description": "描述",
+      "owner": "负责人",
+      "manufacturingdate": "生产日期",
+      "supplier": "供应商",
+      "weight": "重量",
+      "size": "大小",
+      "voltage": "电压",
+      "starttime": "开始使用时间",
+      "oee": "理想OEE",
+      "cycletime": "理想节拍"
+    },
+    "position": {
+      "title": "备件位置",
+      "dialogtitle": "创建工站位置",
+      "image": "图片",
+      "id": "位置编号",
+      "name": "位置名称",
+      "description": "位置描述"
+    },
+    "sparepart": {
+      "title": "备件",
+      "id": "备件号",
+      "name": "备件名",
+      "desciption": "备件描述",
+      "bindtitle": "位置绑定备件"
+    },
+    "staff": {
+      "title": "员工",
+      "bindtitle": "工站绑定员工"
+    },
+    "document": {
+      "title": "文件",
+      "addtitle": "上载工站相关文件",
+      "file": "文件",
+      "name": "名称*"
+    }
+  }
+}

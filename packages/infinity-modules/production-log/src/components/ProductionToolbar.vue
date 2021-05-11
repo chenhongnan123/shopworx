@@ -66,11 +66,11 @@ export default {
     },
     shift() {
       let machine = '';
-      if (this.filters && this.filters.shiftName) {
-        if (this.filters.shiftName.value === 'All') {
+      if (this.filters && this.filters.shift) {
+        if (this.filters.shift.value === 'All') {
           machine = this.$t('production.allShifts');
         } else {
-          machine = this.filters.shiftName.value;
+          machine = this.filters.shift.value;
         }
       }
       return machine;

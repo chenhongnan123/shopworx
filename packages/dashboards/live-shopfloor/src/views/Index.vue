@@ -28,6 +28,8 @@ export default {
       timeout: null,
       timeInterval: null,
       readyState: 0,
+      serverTime: null,
+      workingTime: null,
       states: [
         { text: 'Connecting', color: 'warning' },
         { text: 'Open', color: 'success' },
@@ -41,6 +43,7 @@ export default {
     this.setLoading(true);
     await this.getShifts();
     await this.getBusinessTime();
+    this.serverTime = this.currentTime;
     this.timeInterval = setInterval(async () => {
       await self.getBusinessTime();
     }, 60000);
@@ -50,6 +53,7 @@ export default {
         value: 'shift',
         reportName: 'shiftliveshopfloor',
       });
+      this.workingTime = await this.getAvailableTime();
     }
     await this.getMachines();
     this.setLoading(false);
@@ -69,6 +73,7 @@ export default {
       if (loaded) {
         this.setLoading(true);
         await this.getMachines();
+        this.workingTime = await this.getAvailableTime();
         this.setLoading(false);
       }
     },
@@ -89,6 +94,7 @@ export default {
       'currentDate',
       'currentShift',
       'currentHour',
+      'currentTime',
     ]),
     isLoaded() {
       const isViewSelected = this.selectedView !== null;
@@ -160,10 +166,13 @@ export default {
         canSetData = this.currentHour === hour && this.currentDate === date;
       }
       if (canSetData) {
-        const workingTime = await this.getAvailableTime();
+        if (this.currentTime > this.serverTime) {
+          this.serverTime = this.currentTime;
+          this.workingTime = await this.getAvailableTime();
+        }
         const payload = {
           ...data,
-          workingTime,
+          workingTime: this.workingTime,
         };
         if (elementName === 'cycletime') {
           this.setProduction(payload);
@@ -249,7 +258,7 @@ export default {
             payload = {
               ...this.machines[i],
               machinestatus: 'DOWN',
-              updatedAt: new Date().getTime(),
+              updatedAt: this.currentTime,
               downsince: actualdowntimestart,
               downreason: reasonname || '',
             };
@@ -257,7 +266,7 @@ export default {
             payload = {
               ...this.machines[i],
               machinestatus: 'UP',
-              updatedAt: new Date().getTime(),
+              updatedAt: this.currentTime,
             };
           }
           this.setMachine({ index: i, payload });
@@ -273,7 +282,7 @@ export default {
         if (this.machines[i].machinename === machinename) {
           const payload = {
             ...this.machines[i],
-            updatedAt: new Date().getTime(),
+            updatedAt: this.currentTime,
             quality,
           };
           this.setMachine({ index: i, payload });
