@@ -14,10 +14,10 @@
       </v-btn>
     </template>
     <span v-if="starred">
-      Unmark as star
+      {{ $t('planning.unmarkAsStar') }}
     </span>
     <span v-else>
-      Mark as star
+      {{ $t('planning.markAsStar') }}
     </span>
   </v-tooltip>
 </template>

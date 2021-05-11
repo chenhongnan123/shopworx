@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **locale:** fixed date time locale ([39175d5](https://bitbucket.org/entrib/shopworx/commits/39175d50cc898c7dcf2fed02f07496b32dcc61c0))
+* **material-management:** RA-I264 ([6a0c4b8](https://bitbucket.org/entrib/shopworx/commits/6a0c4b8d43a1a082c5f275aa5ef316419e1b23f1))
+* **parameter-configuration:** RA-I254 basic validation while creating Paramater through UI ([522564a](https://bitbucket.org/entrib/shopworx/commits/522564a43818ec4ab7870a3958da3de66cb6b601))
+* **parameter-configuration:** RA-I254 validation for parameter name length ([f55d068](https://bitbucket.org/entrib/shopworx/commits/f55d068d207bafc033e876a0f5ab2f5cc9ddc729))
+* **paramwter-configuration:** Line MES | Parameter configuration | Data types for every field in popup should be defined | RA-I127 ([57648a9](https://bitbucket.org/entrib/shopworx/commits/57648a985c57a3ec1eabc508b99e897f0bbb8b7f))
+* **product-management:** RA-I204 | product type name should be unique ([ae8b69d](https://bitbucket.org/entrib/shopworx/commits/ae8b69d44d96fc609d78b862817e782adec88f8a))
+* **production-layout:** Line MES | Production Layout | Usg StartDate calendar should have date enbled after Manuf Date | RA-I106 ([cada629](https://bitbucket.org/entrib/shopworx/commits/cada629f59f727c9817a50eb6de0cd55f160f8fe))
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+* **recipe-management:** Line MES | Recipe Management | Unable to filter according to Station Name | RA-I140 ([3a2e4d4](https://bitbucket.org/entrib/shopworx/commits/3a2e4d415bdbb0f6b8ffd3a6f7f7906a83418d53))
+* **recipe-management:** RA-I473 | Input for Station name is taking wrong ([b349772](https://bitbucket.org/entrib/shopworx/commits/b349772c058f5ccf43f8591c471a0bef3757e72b))
+* **recipe-management:** RA-I474 | Need to change spelling in error message ([57d6719](https://bitbucket.org/entrib/shopworx/commits/57d671955ff36e18c6e3ea76d74ec425ad49b98a))
+* **recipe-management:** RA-I527 ([5ad0ddd](https://bitbucket.org/entrib/shopworx/commits/5ad0dddad1365f8d5a61dec396b995af5e811811))
+* **recipe-management:** RA-I527 show plcrecipename and plc recipeversion ([790698d](https://bitbucket.org/entrib/shopworx/commits/790698daea00aea1fd34ed6fc44fec595bb43f26))
+* **recipe-management:** RA-I528 | interlock to check that weather it is running order or not. ([a0809b0](https://bitbucket.org/entrib/shopworx/commits/a0809b0c54fa6c8c1c4c37453d51f276653b79da))
+* **recipe-management:** RA-I528 updare version number and recipenumber ([41c2297](https://bitbucket.org/entrib/shopworx/commits/41c22976092748daa4c4a82e8771ea47af098080))
+* **recipe-management:** RA-I547 ([2b2c331](https://bitbucket.org/entrib/shopworx/commits/2b2c331229972952dc3d1e2272e3384d65086584))
+* **roadmap-management:** RA-I188 | Roadmap name should be unique ([1d01bc2](https://bitbucket.org/entrib/shopworx/commits/1d01bc2cef333168d6e5e8f63d3f6ebc09e4f142))
+* **tracibility:** RA-I524 export in .xlsx with chinese description ([fc4868f](https://bitbucket.org/entrib/shopworx/commits/fc4868f9ce8143d73bb9ade6b83ade63ec7c8441))
+
+
+### Features
+
+* **live-shopfloor:** update now from system time to server time ([b466baf](https://bitbucket.org/entrib/shopworx/commits/b466baff5199dead36e37eaf09636a7f44ff4327))
+* **masters:** added multiple selection to master data grid ([ca925a0](https://bitbucket.org/entrib/shopworx/commits/ca925a06da83e97130f79058fc11e0f27bb3715f))
+* **parameter-configuration:** add new parameter named 'customized parameter' with id 57 ([38eb543](https://bitbucket.org/entrib/shopworx/commits/38eb5435a4152d21244eba11e2160a0e6920e67f))
+* **product-type:** add product description while creating new order ([adb277d](https://bitbucket.org/entrib/shopworx/commits/adb277d8e92ab357c4cb16a82cb46b815d347f89))
+* **recipe-management:** chinease translation with calibration category ([cdb9bb0](https://bitbucket.org/entrib/shopworx/commits/cdb9bb0da0a6cc38dd0b76f9702291e45e7aabf8))
+* **recipe-management:** RA-I527 ([2b6a227](https://bitbucket.org/entrib/shopworx/commits/2b6a227672f87dffd15d688385edcb64203d0b96))
+* **recipe-management:** RA-I527 ([3b0c66a](https://bitbucket.org/entrib/shopworx/commits/3b0c66a70a4afb5610857278a96bbb35781dc728))
+* **recipe-management:** RA-I528 update the recipe details with version number ([959c971](https://bitbucket.org/entrib/shopworx/commits/959c971f5ac08cc88106cfe1252c7019e6e53585))
+* **recipy-management:** remove validation for recipe name, able to add same recipy name foe different substation ([8a9b50e](https://bitbucket.org/entrib/shopworx/commits/8a9b50e1a42d7332e87d016b38e2021ed7387296))
+* **tpm:** input shopworx account details on login ([33633e9](https://bitbucket.org/entrib/shopworx/commits/33633e9f45b30c28fd16e23d899d65985231808c))
+* **tracibility-app:** RA-I524 pre-final ([66d7259](https://bitbucket.org/entrib/shopworx/commits/66d7259af16aad3b00e5fd14af3965dad9ba7ce0))
+* lingzhong-packagement ([51c2952](https://bitbucket.org/entrib/shopworx/commits/51c2952c61d6901a25bf742e2e521b6212cc3e7a))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+
+### Bug Fixes
+
+* **connection-status:** updated connection status polling time to 5 sec ([1b90961](https://bitbucket.org/entrib/shopworx/commits/1b909615064c1d6d63e5b36e4052771c8ef268bd))
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Bug Fixes
+
+* **dashboard-viewer:** fixed dashboard data display on tv ([c628ccc](https://bitbucket.org/entrib/shopworx/commits/c628ccc717400e1f32c469b1f4f237c37ef90703))
+* **parameter-configuration:** RA-I500 ([2c7915c](https://bitbucket.org/entrib/shopworx/commits/2c7915c339dc8799b09cf8a7a18711f2d881287c))
+* **parameter-configuration:** RA-I530, RA-I568 ([6aaa17c](https://bitbucket.org/entrib/shopworx/commits/6aaa17c5d9cae269c5c4f39fe483b485e996eb5b))
+* **parameter-configuration:** RA-I570 ([54664fd](https://bitbucket.org/entrib/shopworx/commits/54664fd91346f12d7e92ed17ee0b8b5e9da3d09d))
+
+
+### Features
+
+* **dashboard-viewer:** displayed device id with tv name ([abaa84a](https://bitbucket.org/entrib/shopworx/commits/abaa84ac9f70583897569cb044a57aad618206b9))
+* **report-viewer:** added otion to show/hide chart ([4d6d239](https://bitbucket.org/entrib/shopworx/commits/4d6d23933728d6c0b2c8220608569483f9ead241))
+* **report-viewer:** added shopworx theme to the chart ([076d658](https://bitbucket.org/entrib/shopworx/commits/076d6580f4ce57438a48735145812406f2ca7e77))
+
+
+
+
+
 ## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
 
 

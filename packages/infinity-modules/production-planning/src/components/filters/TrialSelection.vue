@@ -2,7 +2,7 @@
   <v-checkbox
     hide-details
     class="ma-0 pa-0"
-    label="Trial plans"
+    :label="$t('planning.trialPlans')"
     v-model="trial"
   ></v-checkbox>
 </template>

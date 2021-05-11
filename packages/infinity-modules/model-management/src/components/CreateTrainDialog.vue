@@ -81,7 +81,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'TRAINING_IN_PROGRESS',
+          message: 'TRAINING_IS_COMPLETED',
         });
       } else {
         this.dialog = true;

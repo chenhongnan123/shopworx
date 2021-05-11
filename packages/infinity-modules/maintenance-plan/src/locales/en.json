@@ -1,0 +1,82 @@
+{
+  "maintenanceplan": {
+    "name" : "Maintenance Plan",
+    "header": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "machinename": "Machine Name",
+      "solutionname": "Solution Name",
+      "status": "Status",
+      "unit": "Unit",
+      "duration": "Duration",
+      "cron": "Cron Express",
+      "alltask": "All Task",
+      "taskcompleted": "Task Completed",
+      "editedby": "Edited by",
+      "editedtime": "Edit Date",
+      "createdby": "Created by",
+      "createdtime": "Created Date"
+    },
+    "addtitle": " Create Maintenance Plan",
+    "filter": "Plan Filters",
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "machine": "Machine",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close",
+      "enable": "Enable",
+      "unable": "Unable",
+      "more": "LEARN MORE"
+    },
+    "detailtitle": "Maintenance Plan Details", 
+    "basic": {
+      "title": "Maintenance Plan Basic Infomation"
+    },
+    "timeline": {
+      "title": "Maintenance Plan TimeLine",
+      "type": "Type",
+      "trigger": "Trigger",
+      "actualstarttime": "Actual Start Time",
+      "actualendtime": "Actual End Time",
+      "operator": "Operator"
+    },
+    "sparepart": {
+      "title": "Spareparts List",
+      "addtitle": "Create Spareparts in Planning",
+      "edittitle": "Update Spareparts in Planning",
+      "sparepart": "Sparepart",
+      "lower": "Lower",
+      "upper": "Upper",
+      "position": "Position"
+    }
+  }
+}

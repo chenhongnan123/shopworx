@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('orderManagement', ['filter', 'orderList']),
+    ...mapState('orderManagement', ['filter', 'orderList', 'archiveValue']),
     showFilter: {
       get() {
         return this.filter;
@@ -116,7 +116,11 @@ export default {
     btnReset() {
       this.orderStatusSelected = null;
       this.selectedOrderName = null;
-      this.getOrderListRecords('?query=visible==true');
+      if (this.archiveValue) {
+        this.getOrderListRecords('?query=visible==true');
+      } else {
+        this.getOrderListRecords('?query=visible==false');
+      }
       this.toggleFilter();
     },
     orderStatusText(orderstatusnumber) {

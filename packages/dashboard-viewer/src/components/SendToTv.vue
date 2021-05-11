@@ -44,7 +44,7 @@
             <v-radio
               v-for="tv in filteredTvs"
               :key="tv.deviceid"
-              :label="tv.devicename"
+              :label="`${tv.devicename}(${tv.deviceid})`"
               :value="tv"
             ></v-radio>
           </v-radio-group>

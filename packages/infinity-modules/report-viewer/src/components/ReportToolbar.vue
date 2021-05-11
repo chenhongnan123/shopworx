@@ -11,7 +11,7 @@
     <v-spacer></v-spacer>
     <report-date-picker />
     <report-mappings />
-    <!-- <report-chart-type /> -->
+    <report-chart-toggle />
   </v-toolbar>
 </template>
 
@@ -19,7 +19,7 @@
 import ReportTitle from './toolbar/ReportTitle.vue';
 import ReportDatePicker from './toolbar/ReportDatePicker.vue';
 import ReportMappings from './toolbar/ReportMappings.vue';
-// import ReportChartType from './toolbar/ReportChartType.vue';
+import ReportChartToggle from './toolbar/ReportChartToggle.vue';
 
 export default {
   name: 'ReportToolbar',
@@ -27,7 +27,7 @@ export default {
     ReportTitle,
     ReportDatePicker,
     ReportMappings,
-    // ReportChartType,
+    ReportChartToggle,
   },
 };
 </script>

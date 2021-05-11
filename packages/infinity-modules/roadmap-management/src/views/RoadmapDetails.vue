@@ -135,6 +135,8 @@
           item-text="name"
           return-object
           prepend-icon="$production"
+          :rules="rmdetailLineName"
+          required
           v-model="roadmapDetail.linename"
           @change="handleLineClick"/>
         <v-select
@@ -341,6 +343,7 @@ export default {
       machinename: '',
       substationname: '',
       process: '',
+      rmdetailLineName: [(v) => !!v || 'Line Name Required'],
       rmdetailName: [(v) => !!v || 'Subline Name Required'],
       rmdetailStName: [(v) => !!v || 'Station Name Required'],
       rmdetailSstName: [(v) => !!v || 'Sub-Station Name Required'],
@@ -438,7 +441,13 @@ export default {
     },
     async fnAddRoadmapDetails() {
       this.$refs.form.validate();
-      if (!this.roadmapDetail.sublinename) {
+      if (!this.roadmapDetail.linename) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'LINE_NOT_SELECTED_ROADMAPDETAILS',
+        });
+      } else if (!this.roadmapDetail.sublinename) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -597,7 +606,6 @@ export default {
     },
     fnUpdateRecipeDetails(item) {
       this.flagEdit = true;
-      this.dialog = true;
       this.itemToUpdate = item;
       this.roadmapDetail.linename = item.linename;
       this.roadmapDetail.sublinename = item.sublinename;
@@ -605,9 +613,16 @@ export default {
       this.roadmapDetail.substationname = item.substationname;
       this.roadmapDetail.process = item.process;
       this.roadmapDetail.amtpresubstation = item.amtpresubstation;
+      this.roadmapDetail.presubline = item.presubline;
       this.roadmapDetail.prestationname = item.prestationname;
       this.roadmapDetail.presubstationname = item.presubstationname;
       this.recipeValue = item.parametervalue;
+      this.getSubLineList();
+      this.getStationList();
+      this.getSubStationList();
+      this.getPreStationList();
+      this.getPreSubStationList();
+      this.dialog = true;
     },
     deleteRecipeDeatils(item) {
       this.itemForDelete = item;
@@ -628,6 +643,11 @@ export default {
         query: `?query=id=="${this.$route.params.id}"`,
       };
       await this.updateRoadmap(object);
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'ROADMAP_ENTRY_DELETED',
+      });
       this.dialogConfirm = false;
     },
     async dialogReset() {

@@ -280,7 +280,7 @@ export default ({
         'element/getRecords',
         {
           elementName: ELEMENTS.MODEL_TRAINING,
-          query: '?query=status=="In Progress"',
+          query: '?query=status=="COMPLETED"',
         },
         { root: true },
       );
@@ -295,7 +295,7 @@ export default ({
         },
         { root: true },
       );
-      commit('setTrainingLogs', log.logs);
+      commit('setTrainingLogs', log.message);
     },
     getRecordsByTagData: async ({ commit, dispatch }, payload) => {
       const data = await dispatch(
@@ -963,20 +963,27 @@ export default ({
       const {
         selectedLine,
         selectedStation,
+        selectedStationName,
         selectedSubstation,
+        selectedSubstationName,
         selectedProcess,
+        selectedProcessName,
       } = state;
       const request = {
         ...payload,
         lineid: selectedLine,
         stationid: selectedStation,
+        stationname: selectedStationName,
         substationid: selectedSubstation,
+        substationname: selectedSubstationName,
         subprocessid: selectedProcess,
+        subprocessname: selectedProcessName,
       };
       const created = await dispatch(
         'element/postMmsTestModel',
         {
-          request,
+          payload: request,
+          queryParam: `?modelid=${request.modelid}`,
         },
         { root: true },
       );

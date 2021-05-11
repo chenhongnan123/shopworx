@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **tracibility:** RA-I524 export in .xlsx with chinese description ([fc4868f](https://bitbucket.org/entrib/shopworx/commits/fc4868f9ce8143d73bb9ade6b83ade63ec7c8441))
+
+
+### Features
+
+* **parameter-configuration:** add new parameter named 'customized parameter' with id 57 ([38eb543](https://bitbucket.org/entrib/shopworx/commits/38eb5435a4152d21244eba11e2160a0e6920e67f))
+* **recipe-management:** chinease translation with calibration category ([cdb9bb0](https://bitbucket.org/entrib/shopworx/commits/cdb9bb0da0a6cc38dd0b76f9702291e45e7aabf8))
+* **recipy-management:** remove validation for recipe name, able to add same recipy name foe different substation ([8a9b50e](https://bitbucket.org/entrib/shopworx/commits/8a9b50e1a42d7332e87d016b38e2021ed7387296))
+* **tracibility-app:** RA-I524 pre-final ([66d7259](https://bitbucket.org/entrib/shopworx/commits/66d7259af16aad3b00e5fd14af3965dad9ba7ce0))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/traceability-app
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/traceability-app
+
+
+
+
+
 ## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
 
 

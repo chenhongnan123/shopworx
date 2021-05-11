@@ -1,10 +1,6 @@
 <template>
 <div>
-  <v-card
-    flat
-    class="transparent"
-    id="chart"
-  ></v-card>
+  <div id="chart" :class="agGridTheme" v-show="showChart"></div>
   <ag-grid-vue
     :sideBar="true"
     :rowData="rowData"
@@ -19,7 +15,7 @@
     :class="`${agGridTheme} mt-2`"
     :localeText="agGridLocaleText"
     :defaultColDef="defaultColDef"
-    style="width: 100%; height: 450px;"
+    :style="`width: 100%; height: ${showChart ? '450' : '600'}px;`"
     @sort-changed="onStateChange"
     @filter-changed="onStateChange"
     @column-pinned="onStateChange"
@@ -31,6 +27,8 @@
     @column-row-group-changed="onStateChange"
     @column-value-changed="onStateChange"
     @first-data-rendered="visualizeData"
+    :customChartThemes="customChartThemes"
+    :chartThemes="chartThemes"
   ></ag-grid-vue>
 </div>
 </template>
@@ -57,6 +55,8 @@ export default {
       gridColumnApi: null,
       defaultColDef: null,
       rowGroupPanelShow: null,
+      chartThemes: null,
+      customChartThemes: null,
     };
   },
   created() {
@@ -73,6 +73,34 @@ export default {
       floatingFilter: true,
     };
   },
+  beforeMount() {
+    this.customChartThemes = {
+      shopworxTheme: {
+        baseTheme: 'ag-pastel',
+        palette: {
+          fills: [
+            '#354493',
+            '#21C77C',
+            '#2A2F36',
+            '#01C1E2',
+            '#0172CA',
+            '#5C68A8',
+            '#4CD195',
+            '#3E4249',
+          ],
+          strokes: ['black'],
+        },
+      },
+    };
+    this.chartThemes = [
+      'shopworxTheme',
+      'ag-default',
+      'ag-material',
+      'ag-pastel',
+      'ag-vivid',
+      'ag-solar',
+    ];
+  },
   mounted() {
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
@@ -80,7 +108,7 @@ export default {
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
-    ...mapState('reports', ['report', 'reportMapping']),
+    ...mapState('reports', ['report', 'reportMapping', 'showChart']),
     ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
   },
   watch: {
@@ -98,7 +126,6 @@ export default {
       }
       if (val && val.reportData) {
         this.rowData = val.reportData;
-        this.visualizeData();
       }
     },
   },
@@ -131,18 +158,24 @@ export default {
     },
     createRangeChart(chartContainer) {
       const param = {
-        chartType: 'column',
+        chartType: 'groupedColumn',
         cellRange: {
           columns: this.columnDefs.map((c) => c.field),
         },
         aggFunc: this.aggFunc,
         chartThemeOverrides: {
           common: {
+            background: {
+              visible: false,
+            },
             title: {
               enabled: false,
             },
             legend: { enabled: true },
-            navigator: { enabled: true },
+            navigator: {
+              enabled: true,
+              height: 15,
+            },
           },
         },
         chartContainer,
@@ -151,14 +184,20 @@ export default {
     },
     createPivotChart(chartContainer) {
       const param = {
-        chartType: 'column',
+        chartType: 'groupedColumn',
         chartThemeOverrides: {
           common: {
+            background: {
+              visible: false,
+            },
             title: {
               enabled: false,
             },
             legend: { enabled: true },
-            navigator: { enabled: true },
+            navigator: {
+              enabled: true,
+              height: 15,
+            },
           },
         },
         chartContainer,

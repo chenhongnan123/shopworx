@@ -1,0 +1,27 @@
+{
+  "productionLayoutSF": "产线配置",
+  "error": {
+    "ALREADY_EXSIST": "名称已存在",
+    "ALREADY_EXSIST_NO": "编号已存在",
+    "ALREADY_EXSIST_INITIAL_SUBSTATION": "首站已分配",
+    "ALREADY_EXSIST_FINAL_SUBSTATION": "末站已分配",
+    "NUMBER_REQUIRED": "所需数量",
+    "ERROR_CREATING_SUBLINE": "创建子线错误"
+  },
+  "success": {
+    "No_CHANGE_EXSIST_NO": "再次保存现有编号",
+    "INITIAL_SUBSTATION_ASSIGNED": "该子站已变更为首站",
+    "FINAL_SUBSTATION_ASSIGNED": "该子站已变更为末站",
+    "INITIAL_SUBSTATION_REMOVED": "本站不是首站",
+    "FINAL_SUBSTATION_REMOVED": "本站不是末站",
+    "STATION_CREATED": "已创建工站，接下来您可以添加子站",
+    "SUBLINE_CREATED": "子线已创建",
+    "SUB-STATION_CREATED": "子站已创建",
+    "PROCESS_CREATED": "流程已创建",
+    "SUBLINE_DELETED": "子线已删除",
+    "STATION_DELETED": "工站已删除",
+    "SUBSTATION_DELETED": "子站已删除",
+    "PROCESS_DELETED": "流程已删除",
+    "SUBSTATION_UPDATED": "子站已更新"
+  }
+}

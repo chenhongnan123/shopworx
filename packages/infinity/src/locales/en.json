@@ -2,16 +2,13 @@
   "$vuetify": {
     "badge": "Badge",
     "close": "Close",
-    "dataIterator": 
-    {
+    "dataIterator": {
       "noResultsText": "No matching records found",
       "loadingText": "Loading items..."
     },
-    "dataTable": 
-    {
+    "dataTable": {
       "itemsPerPageText": "Rows per page:",
-      "ariaLabel": 
-      {
+      "ariaLabel": {
         "sortDescending": "Sorted descending.",
         "sortAscending": "Sorted ascending.",
         "sortNone": "Not sorted.",
@@ -21,8 +18,7 @@
       },
       "sortBy": "Sort by"
     },
-    "dataFooter": 
-    {
+    "dataFooter": {
       "itemsPerPageText": "Items per page:",
       "itemsPerPageAll": "All",
       "nextPage": "Next page",
@@ -31,8 +27,7 @@
       "lastPage": "Last page",
       "pageText": "{0}-{1} of {2}"
     },
-    "datePicker": 
-    {
+    "datePicker": {
       "itemsSelected": "{0} selected",
       "nextMonthAriaLabel": "Next month",
       "nextYearAriaLabel": "Next year",
@@ -40,33 +35,26 @@
       "prevYearAriaLabel": "Previous year"
     },
     "noDataText": "No data available",
-    "carousel": 
-    {
+    "carousel": {
       "prev": "Previous visual",
       "next": "Next visual",
-      "ariaLabel": 
-      {
+      "ariaLabel": {
         "delimiter": "Carousel slide {0} of {1}"
       }
     },
-    "calendar": 
-    {
+    "calendar": {
       "moreEvents": "{0} more"
     },
-    "fileInput": 
-    {
+    "fileInput": {
       "counter": "{0} files",
       "counterSize": "{0} files ({1} in total)"
     },
-    "timePicker": 
-    {
+    "timePicker": {
       "am": "AM",
       "pm": "PM"
     },
-    "pagination": 
-    {
-      "ariaLabel": 
-      {
+    "pagination": {
+      "ariaLabel": {
         "wrapper": "Pagination Navigation",
         "next": "Next page",
         "previous": "Previous page",
@@ -171,12 +159,20 @@
     "close": "Close",
     "redirectToLogin": "Redirecting in {time}"
   },
+  "auth": {
+    "phoneRequired": "Phone is required",
+    "phoneInvalid": "Phone must be valid",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Email must be valid"
+  },
   "helper": {
     "or": "or",
     "help": "Help",
     "next": "Next",
     "skip": "Skip for now",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "agree": "Agree"
   },
   "notFound": {
     "title": "That's an error!",
@@ -272,6 +268,7 @@
     "productManagement": "Product Type",
     "productionLayout": "Production Layout",
     "productionLayoutMes": "Production Layout",
+    "productionLayoutSF": "Production Layout",
     "modelManagement": "ML Models",
     "materialManagement": "Material",
     "reports": "Reports",
@@ -313,6 +310,7 @@
     "general": "General",
     "security": "Security",
     "profile": {
+      "heading": "My Profile Settings",
       "title": "Profile",
       "firstName": "First name",
       "lastName": "Last name",
@@ -335,6 +333,45 @@
     },
     "auditLog": {
       "title": "Audit log"
+    }
+  },
+  "cron": {
+    "title": "Create Cron",
+    "generate": "GENERATE",
+    "express": "Cron Express",
+    "sample": "Sample Result",
+    "from": "From",
+    "to": "To",
+    "step": "Step Value",
+    "minute": {
+      "title": "MINUTE",
+      "every": "Any Minute",
+      "rangewithstep": "Range With Step Minute",
+      "assign": "Assign Minute"
+    },
+    "hour": {
+      "title": "HOUR",
+      "every": "Any Hour",
+      "rangewithstep": "Range With Step Hour",
+      "assign": "Assign Hour"
+    },
+    "day": {
+      "title": "DAY",
+      "every": "Any Day",
+      "rangewithstep": "Range With Step Day",
+      "assign": "Assign Minute"
+    },
+    "week": {
+      "title": "WEEK",
+      "every": "Any Week",
+      "rangewithstep": "Range Days of Week",
+      "assign": "Assign Days of Week"
+    },
+    "month": {
+      "title": "MONTH",
+      "every": "Any Month",
+      "rangewithstep": "Range With Step Month",
+      "assign": "Assign Month"
     }
   }
 }

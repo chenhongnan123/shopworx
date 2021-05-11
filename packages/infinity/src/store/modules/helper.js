@@ -1,4 +1,5 @@
 import AuthService from '@shopworx/services/api/auth.service';
+import LocaleService from '@shopworx/services/util/locale.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
 import i18n from '../../i18n';
 import AG_GRID_LOCALE_EN from '../../plugins/ag-grid-locale/locale.en';
@@ -36,6 +37,7 @@ export default ({
         value: 'de',
       },
     ],
+    currentLocale: LocaleService.getLocale(),
     isDark: null,
     insightsDrawer: false,
     extendedHeader: false,
@@ -52,6 +54,7 @@ export default ({
     setInsightsDrawer: set('insightsDrawer'),
     toggleInsightsDrawer: toggle('insightsDrawer'),
     setIsConnected: set('isConnected'),
+    setCurrentLocale: set('currentLocale'),
   },
   actions: {
     getServerTime: async ({ commit, rootState }) => {
@@ -71,6 +74,7 @@ export default ({
   },
   getters: {
     isWebView: ({ userAgent }) => userAgent.includes('wv'),
+
     agGridLocaleText: () => {
       const { locale } = i18n;
       switch (locale) {
@@ -80,8 +84,16 @@ export default ({
           return AG_GRID_LOCALE_EN;
       }
     },
+
     agGridTheme: ({ isDark }) => (isDark
       ? 'ag-theme-balham-dark'
       : 'ag-theme-balham'),
+
+    locale: ({ currentLocale }) => {
+      if (currentLocale === 'zhHans') {
+        return 'zh';
+      }
+      return currentLocale;
+    },
   },
 });

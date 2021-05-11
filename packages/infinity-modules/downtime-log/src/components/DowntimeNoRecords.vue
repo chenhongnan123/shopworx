@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No downtime record for selected filters
+          {{ $t('downtime.noRecords') }}
         </span>
       </v-col>
       <v-col cols="12" align="center">
@@ -22,7 +22,7 @@
           class="text-none"
           @click="resetFilters"
         >
-          Reset filters
+          {{ $t('downtime.resetFilters') }}
         </v-btn>
       </v-col>
     </v-row>

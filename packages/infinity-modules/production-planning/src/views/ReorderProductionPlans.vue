@@ -4,7 +4,7 @@
       <v-btn class="mb-1" icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>Re-order plans</span>
+      <span>{{ $t('planning.reorderPlans') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
@@ -23,7 +23,7 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedReorder }}</strong>
+        {{ $t('planning.lastRefreshed') }} <strong>{{ lastRefreshedReorder }}</strong>
       </v-tooltip>
     </portal>
     <reorder-plan-list />

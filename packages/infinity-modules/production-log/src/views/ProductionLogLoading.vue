@@ -14,10 +14,10 @@
       </v-col>
       <v-col cols="12" align="center">
         <div class="headline">
-          In God we trust. All others must bring data.
+          {{ $t('production.loadingTitle') }}
         </div>
         <div class="title">
-          Loading app configurations
+          {{ $t('production.loadingSubtitle') }}
         </div>
       </v-col>
     </v-row>

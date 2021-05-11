@@ -6,7 +6,6 @@
       hide-details
       single-line
       return-object
-      label="Operator"
       :loading="loading"
       :disabled="loading"
       :items="operators"

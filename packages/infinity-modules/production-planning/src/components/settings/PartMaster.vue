@@ -3,7 +3,7 @@
     <v-responsive :max-width="400">
       <v-autocomplete
         filled
-        label="Part"
+        :label="$t('planning.part')"
         :items="partList"
         item-text="partname"
         return-object
@@ -28,7 +28,7 @@
       class="mt-4"
       v-model="search"
       prepend-inner-icon="$search"
-      label="Filter by machine or equipment"
+      :label="$t('planning.filterPartMatrix')"
     ></v-text-field>
     <v-data-table
       :items="partMatrixList"
@@ -46,13 +46,13 @@
       :custom-filter="filterMatrix"
     >
       <template #loading>
-        Fetching matrix...
+        {{ $t('planning.fetchingMatrix') }}
       </template>
       <template #no-data>
-        No matrix available
+        {{ $t('planning.noMatrix') }}
       </template>
       <template #no-results>
-        No matching matrix found for '{{ search }}'
+        {{ $t('planning.noMatrixResult', { search }) }}
       </template>
       <template #expanded-item="{ headers, item }">
         <td :colspan="headers.length">
@@ -89,10 +89,10 @@ export default {
       partMatrixList: [],
       loading: false,
       headers: [{
-        text: 'Machine',
+        text: this.$t('planning.machine'),
         value: 'machinename',
       }, {
-        text: 'Equipment',
+        text: this.$t('planning.equipment'),
         value: 'equipmentname',
       }],
       partMatrixFields: [],

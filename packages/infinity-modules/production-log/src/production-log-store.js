@@ -1,5 +1,5 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
-import { sortAlphaNum, sortArray } from '@shopworx/services/util/sort.service';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default ({
   namespaced: true,
@@ -646,10 +646,10 @@ export default ({
     machineList: ({ machines }) => {
       let machineList = [];
       if (machines && machines.length) {
-        machineList = machines
-          .map((mac) => mac.machinename)
-          .sort(sortAlphaNum);
-        machineList = ['All Machines', ...machineList];
+        machineList = sortArray(machines, 'machinename').map(({ machinename }) => ({
+          name: machinename,
+          value: machinename,
+        }));
       }
       return machineList;
     },
@@ -658,8 +658,11 @@ export default ({
       let shiftList = [];
       if (shifts && shifts.length) {
         const allShifts = shifts.filter((rec) => rec.type === 'shift');
-        shiftList = [...new Set(allShifts.map((item) => item.name))];
-        shiftList = ['All Shifts', ...shiftList];
+        const list = [...new Set(allShifts.map((item) => item.name))];
+        shiftList = list.map((s) => ({
+          name: s,
+          value: s,
+        }));
       }
       return shiftList;
     },

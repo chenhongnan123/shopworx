@@ -1,0 +1,18 @@
+{
+  "calibration": "Calibration",
+  "selectsubstation": "Select Substation",
+  "selectmode": "Select Mode",
+  "startdate": "Start Date",
+  "enddate": "End Date",
+  "searchbtn": "Search",
+  "exportbtn": "Export",
+  "substation": "Substation",
+  "calibrationmode": "Calibration Mode",
+  "id": "ID",
+  "modedescription": "Mode Description",
+  "parametername": "Parameter Name",
+  "parameterdescription": "Parameter Description",
+  "parametervalue": "Parameter Value",
+  "createdTimestamp": "Created Time",
+  "modifiedtimestamp": "Modified Time"
+}

@@ -1,0 +1,45 @@
+{
+  "cronapp": {
+    "name": "Cron",
+    "header": {
+      "name": "Name",
+      "cron": "Cron Express",
+      "editedtime": "Edit Date",
+      "createdtime": "Created Date"
+    },
+    "addtitle": " Create Cron Express",
+    "general": {
+      "line": "Line",
+      "subline": "Subline",
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude",
+      "download": "Download",
+      "loading": "Loading",
+      "close": "Close"
+    }
+  }
+}
