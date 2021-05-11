@@ -57,7 +57,7 @@ export default {
     },
     subline: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   created() {

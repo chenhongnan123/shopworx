@@ -4,7 +4,7 @@
  v-model="dialog"
  transition="dialog-transition"
  max-width="600px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
@@ -42,7 +42,7 @@
          :rules ="numberRules"
          counter="10"
           required></v-text-field>
-        <v-text-field label="Serial Number *" type="number"
+          <v-text-field label="Serial Number *" type="number"
          hint="For example, 1,2,3,4"
          v-model="newSubstation.serialnumber"
          :rules ="numberRules"
@@ -51,7 +51,7 @@
         <v-text-field label="Description"
          hint="For example, added by Manager"
          type="text" v-model="newSubstation.description"></v-text-field>
-        <v-textarea
+           <v-textarea
         dense
         rows="3"
         outlined
@@ -74,8 +74,10 @@
         label="Final Sub Station"
         :disabled="btnFindisable"
         ></v-switch>
+        <v-checkbox v-model="checkedReal" class="mx-2"
+         label="Record Process parameters"></v-checkbox>
         <v-checkbox v-model="checked" class="mx-2"
-         label="Record process parameters"></v-checkbox>
+         label="Record Production parameters (Optional)"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -97,6 +99,7 @@ export default {
       newSubstation: {},
       assetId: null,
       checked: false,
+      checkedReal: false,
       selectedSubstationLine: null,
       default: false,
       dialog: false,
@@ -109,7 +112,7 @@ export default {
         (v) => !!v || 'Configuration is required.',
         (v) => this.isValidJsonString(v) || 'Input valid JSON configuration.',
       ],
-      numberRules: [(v) => v.length > 0 || 'number required',
+      numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
         (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
@@ -122,7 +125,6 @@ export default {
     },
   },
   created() {
-    // this.getAllStations('');
     this.newSubstation = { ...this.substation };
     this.getAssets();
   },
@@ -163,7 +165,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'Number Required',
+          message: 'NUMBER_REQUIRED',
         });
       } else {
         this.$refs.form.validate();
@@ -218,7 +220,7 @@ export default {
             )[0].ismainline,
             lineid: this.selectedSubstationLine.lineid,
             paramconfigured: this.checked,
-            // lineid: this.lineid,
+            realparamconfigured: this.checkedReal,
             assetid: this.assetId,
           };
           let created = false;
@@ -230,23 +232,17 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            this.dialog = false;
-            const checkedPlc = this.checked;
-            if (checkedPlc) {
-              this.newSubstation = {};
-              this.dialog = false;
+            const realParam = this.checkedReal;
+            if (realParam) {
               this.assetId = this.getAssetId;
-              // this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
                 siteId: 197,
                 categoryType: 'ASSET',
-                collectionName: 'provisioning',
+                collectionName: 'process',
                 elementName: `process_${substationid}`,
                 elementDescription: `Process_${substationid}`,
-                // dateCreated: 1590647154882,
-                // dateModified: 1590647154882,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',
@@ -268,9 +264,43 @@ export default {
                   message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
                 });
               }
-              this.dialog = false;
+            }
+            const checkedPlc = this.checked;
+            if (checkedPlc) {
+              this.newSubstation = {};
+              this.assetId = this.getAssetId;
+              const substationid = this.subStations[0].id;
+              const object = {
+                customerId: 195,
+                siteId: 197,
+                categoryType: 'ASSET',
+                collectionName: 'production',
+                elementName: `production_${substationid}`,
+                elementDescription: `Production_${substationid}`,
+                status: 'ACTIVE',
+                elementType: 'PROVISIONING',
+                uniqueTagName: '',
+                uniqueTagValue: 0,
+                uniqueTagStartValue: 0,
+                uniqueTagValuePrefix: '',
+                uniqueTagValueSuffix: '',
+                businessTimeTagsRequired: false,
+                optional: false,
+                assetBased: true,
+                uniqueTag: false,
+              };
+              let createdElement = false;
+              createdElement = await this.createElement(object);
+              if (createdElement) {
+                this.setAlert({
+                  show: true,
+                  type: 'success',
+                  message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
+                });
+              }
               this.$refs.form.reset();
             }
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,
