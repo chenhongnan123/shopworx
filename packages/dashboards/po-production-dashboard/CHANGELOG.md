@@ -5,12 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
-**Note:** Version bump only for package @shopworx/stock-taking
 
+### Features
 
-
-
-
-# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
-
-**Note:** Version bump only for package @shopworx/stock-taking
+* **po-production-dashboard:** initial commit ([65a37ac](https://bitbucket.org/entrib/shopworx/commits/65a37ac129279eda55428f753036128f65c2b677))

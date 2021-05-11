@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/admin",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.3.0",
+    "@shopworx/services": "^4.3.1",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
