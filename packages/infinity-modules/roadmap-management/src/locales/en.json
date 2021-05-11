@@ -1,6 +1,7 @@
 {
   "roadmapManagement": "Roadmap",
   "productionLog": "Production Log",
+  "ROADMAPTYPE": "RoadmapType",
   "error": {
     "ROADMAP_NAME_EMPTY": "Roadmap name is empty.",
     "ALREADY_EXSIST_ROADMAP": "Roadmap name already exsist.",

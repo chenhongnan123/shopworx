@@ -341,6 +341,17 @@ export default ({
       );
       return deleteParameter;
     },
+    deleteParameterById: async ({ dispatch }, id) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'parameters',
+          queryParam: `?query=id=="${id}"`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
     deleteDatatype: async ({ dispatch }, id) => {
       const deleteParameter = await dispatch(
         'element/deleteRecordByQuery',

@@ -615,7 +615,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('parameterConfiguration', ['setAddParameterDialog', 'toggleFilter', 'setLineValue', 'setSublineValue', 'setStationValue', 'setSubstationValue', 'setSelectedParameterName', 'setSelectedParameterDirection', 'setSelectedParameterCategory', 'setSelectedParameterDatatype', 'setCreateParam']),
     ...mapActions('parameterConfiguration', ['getPageDataList', 'getSublineList', 'getStationList', 'getSubstationList', 'getParameterListRecords', 'updateParameter', 'deleteParameter', 'createParameter', 'createParameterList', 'downloadToPLC', 'getSubStationIdElement',
-      'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParametersList']),
+      'getSubStationIdElement', 'createTagElement', 'updateTagStatus', 'getParametersList', 'deleteParameterById']),
     setHeight() {
       this.height = window.innerHeight - 212;
     },
@@ -830,17 +830,25 @@ export default {
         });
         await this.createTagElement(tagList);
         let payloadData = [];
-        tagList.forEach((l) => {
-          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
-          if (!tag[0].created) {
-            payloadData.push({
-              elementId: l.elementId,
-              tagId: tag[0].tagId,
-              status: 'ACTIVE',
-            });
-          }
-        });
-        await this.updateTagStatus(payloadData);
+        if (this.createElementResponse && this.createElementResponse.length) {
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ELEMENT_NOT_CREATED',
+          });
+        }
         // add tags to real parameters
         tagList = [];
         await this.getSubStationIdElement(`process_${this.substationValue}`);
@@ -1047,28 +1055,35 @@ export default {
           }
         });
         await this.createTagElement(tagList);
-        payloadData = [];
-        tagList.forEach((l) => {
-          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
-          if (!tag[0].created) {
-            payloadData.push({
-              elementId: l.elementId,
-              tagId: tag[0].tagId,
-              status: 'ACTIVE',
-            });
-          }
-        });
-        await this.updateTagStatus(payloadData);
-        this.savingImport = false;
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'IMPORT_PARAMETER_LIST',
-        });
-        this.savingImport = false;
-        this.setCreateParam(false);
-        this.importArray = [];
-        document.getElementById('uploadFiles').value = null;
+        if (this.createElementResponse && this.createElementResponse.length) {
+          payloadData = [];
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+          this.savingImport = false;
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'IMPORT_PARAMETER_LIST',
+          });
+          this.savingImport = false;
+          this.setCreateParam(false);
+          document.getElementById('uploadFiles').value = null;
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ELEMENT_NOT_CREATED',
+          });
+        }
       }
     },
     async showParameters(event, item) {
@@ -1227,35 +1242,39 @@ export default {
       await this.getParameterListRecords(this.getQuery());
     },
     async handleDeleteParameter() {
-      // const results = await Promise.all(this.parameterSelected.map(
-      //   (parameter) => this.deleteParameter(parameter.id),
-      // ));
-      const results = await this.deleteParameter(this.substationValue);
-      await this.getSubStationIdElement(`process_${this.substationValue}`);
-      const listT = this.subStationElementDeatils;
-      const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
-      const payloadData = [];
-      FilteredTags.forEach(async (tag) => {
-        payloadData.push({
-          tagId: tag.id,
-          elementId: tag.elementId,
-          status: 'INACTIVE',
+      let results = false;
+      if (this.parameterSelected.length > 0) {
+        results = await Promise.all(this.parameterSelected.map(
+          (parameter) => this.deleteParameterById(parameter.id),
+        ));
+      } else {
+        results = await this.deleteParameter(this.substationValue);
+        await this.getSubStationIdElement(`process_${this.substationValue}`);
+        const listT = this.subStationElementDeatils;
+        const FilteredTags = listT.tags.map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+        const payloadData = [];
+        FilteredTags.forEach(async (tag) => {
+          payloadData.push({
+            tagId: tag.id,
+            elementId: tag.elementId,
+            status: 'INACTIVE',
+          });
         });
-      });
-      await this.updateTagStatus(payloadData);
-      await this.getSubStationIdElement(`production_${this.substationValue}`);
-      const listProcess = this.subStationElementDeatils;
-      const FilteredTagsProcess = listProcess.tags
-        .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
-      const payloadDataProcess = [];
-      FilteredTagsProcess.forEach(async (tag) => {
-        payloadDataProcess.push({
-          tagId: tag.id,
-          elementId: tag.elementId,
-          status: 'INACTIVE',
+        await this.updateTagStatus(payloadData);
+        await this.getSubStationIdElement(`production_${this.substationValue}`);
+        const listProcess = this.subStationElementDeatils;
+        const FilteredTagsProcess = listProcess.tags
+          .map((obj) => ({ id: obj.id, elementId: obj.elementId }));
+        const payloadDataProcess = [];
+        FilteredTagsProcess.forEach(async (tag) => {
+          payloadDataProcess.push({
+            tagId: tag.id,
+            elementId: tag.elementId,
+            status: 'INACTIVE',
+          });
         });
-      });
-      await this.updateTagStatus(payloadDataProcess);
+        await this.updateTagStatus(payloadDataProcess);
+      }
       if (results) {
         this.saving = true;
         const parameterList = await this.getParameterListRecords(this.getQuery());

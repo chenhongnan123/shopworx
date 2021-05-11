@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* **product-type:** RA-I203 | Without filling out mandatory field, product get created ([72d96a1](https://bitbucket.org/entrib/shopworx/commits/72d96a1c2371006b62f3f53b5f0942943a1fa5a4))
+
+
+
+
+
 # [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
 
 
