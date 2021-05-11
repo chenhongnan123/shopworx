@@ -317,7 +317,9 @@
     "manualOutbound": "Manual Outbound",
     "stockTaking": "Stock-Taking",
     "andon": "Andon",
-    "calibrationApp": "Calibration"
+    "calibrationApp": "Calibration",
+    "poProductionDashboard": "Overall Production Information",
+    "poPredictionDashboard": "Overall Prediction Information"
   },
   "account": {
     "account": "Account",

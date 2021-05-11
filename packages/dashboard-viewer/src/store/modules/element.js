@@ -450,5 +450,16 @@ export default ({
       }
       return false;
     },
+    getRecordsByTags: async (_, { elementName, queryParam, payload }) => {
+      try {
+        const { data } = await ElementService.getRecordsByTags(elementName, queryParam, payload);
+        if (data && data.results) {
+          return data.results;
+        }
+      } catch (e) {
+        return false;
+      }
+      return false;
+    },
   },
 });
