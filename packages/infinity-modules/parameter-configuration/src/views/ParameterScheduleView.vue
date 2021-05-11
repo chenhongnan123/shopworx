@@ -830,17 +830,25 @@ export default {
         });
         await this.createTagElement(tagList);
         let payloadData = [];
-        tagList.forEach((l) => {
-          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
-          if (!tag[0].created) {
-            payloadData.push({
-              elementId: l.elementId,
-              tagId: tag[0].tagId,
-              status: 'ACTIVE',
-            });
-          }
-        });
-        await this.updateTagStatus(payloadData);
+        if (this.createElementResponse && this.createElementResponse.length) {
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ELEMENT_NOT_CREATED',
+          });
+        }
         // add tags to real parameters
         tagList = [];
         await this.getSubStationIdElement(`process_${this.substationValue}`);
@@ -1047,28 +1055,35 @@ export default {
           }
         });
         await this.createTagElement(tagList);
-        payloadData = [];
-        tagList.forEach((l) => {
-          const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
-          if (!tag[0].created) {
-            payloadData.push({
-              elementId: l.elementId,
-              tagId: tag[0].tagId,
-              status: 'ACTIVE',
-            });
-          }
-        });
-        await this.updateTagStatus(payloadData);
-        this.savingImport = false;
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'IMPORT_PARAMETER_LIST',
-        });
-        this.savingImport = false;
-        this.setCreateParam(false);
-        this.importArray = [];
-        document.getElementById('uploadFiles').value = null;
+        if (this.createElementResponse && this.createElementResponse.length) {
+          payloadData = [];
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse.filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+          this.savingImport = false;
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'IMPORT_PARAMETER_LIST',
+          });
+          this.savingImport = false;
+          this.setCreateParam(false);
+          document.getElementById('uploadFiles').value = null;
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ELEMENT_NOT_CREATED',
+          });
+        }
       }
     },
     async showParameters(event, item) {

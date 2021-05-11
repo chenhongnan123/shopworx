@@ -42,7 +42,8 @@
     "ONLY_BOOLEAN": "Please Enter Boolean 0 as{false} or 1 as {true}",
     "RUNNING_ORDER": "Recipe details bind with Running order, Hence can't update!",
     "LOWERBIGER": "Lower can not bigger than Upper!",
-    "ERROR_VALUE": "Value over the limit"
+    "ERROR_VALUE": "Value over the limit",
+    "RECIPE_IN_USE": "Recipe is in use, deletion not allowed!"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",
