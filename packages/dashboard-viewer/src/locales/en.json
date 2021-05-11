@@ -79,6 +79,7 @@
     "liveShopfloor": "Live Shopfloor",
     "utilityDashboard": "Utility",
     "processDashboard": "Live Process",
-    "poProductionDashboard": "Overall Production Information"
+    "poProductionDashboard": "Overall Production Information",
+    "poPredictionDashboard": "Overall Prediction Information"
   }
 }

@@ -16,6 +16,7 @@
     "@shopworx/process-dashboard": "^4.3.0",
     "@shopworx/services": "^4.3.0",
     "@shopworx/utility-dashboard": "^4.3.0",
+    "@shopworx/po-production-dashboard": "^4.3.0",
     "highcharts": "^8.2.2",
     "highcharts-vue": "^1.3.5",
     "lodash.camelcase": "^4.3.0",
