@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* **prder-management:** RA-I507 | Order | For second attempt, user not able to add order ([a3ae95b](https://bitbucket.org/entrib/shopworx/commits/a3ae95b2f9cea0e8f117e77e63189405cf42d605))
+
+
+
+
+
 # [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
 
 
