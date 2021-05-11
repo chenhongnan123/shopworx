@@ -303,7 +303,22 @@
     "packagingManagement": "Packaging",
     "formBuilder": "Form Builder",
     "eLogbook": "e-logbook",
-    "poProductionDashboard": "Overall Production Information"
+    "operator": "Operator",
+    "solution": "Solution",
+    "station": "Stations",
+    "maintenancePlan": "Maintenance Plan",
+    "maintenanceTask": "Maintenance Task",
+    "cron": "Cron",
+    "machine": "Machine",
+    "tpm": "TPM",
+    "warehouse": "Warehouse",
+    "manualInbound": "Manual Inbound",
+    "manualOutbound": "Manual Outbound",
+    "stockTaking": "Stock-Taking",
+    "andon": "Andon",
+    "calibrationApp": "Calibration",
+    "poProductionDashboard": "Overall Production Information",
+    "poPredictionDashboard": "Overall Prediction Information"
   },
   "account": {
     "account": "Account",
