@@ -187,6 +187,7 @@
             label="Pre-SubStations before"
             prepend-icon="mdi-tray-plus"
             v-model="roadmapDetail.amtpresubstation"
+            :rules="rmdetailPreSstNum"
             @keyup="checkProcessCode"
         ></v-text-field>
         <!-- <v-text-field
@@ -344,6 +345,7 @@ export default {
       substationname: '',
       process: '',
       rmdetailLineName: [(v) => !!v || 'Line Name Required'],
+      rmdetailPreSstNum: [(v) => /^[+]?([0-9]+(?:[0-9]*)?|[0-9]+)$/.test(v) || 'Negative Number not allowed'],
       rmdetailName: [(v) => !!v || 'Subline Name Required'],
       rmdetailStName: [(v) => !!v || 'Station Name Required'],
       rmdetailSstName: [(v) => !!v || 'Sub-Station Name Required'],

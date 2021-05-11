@@ -9,11 +9,30 @@
             class="stick"
             :color="$vuetify.theme.dark ? '#121212' : ''"
           >
-            <v-spacer></v-spacer>
             <!-- <v-btn small color='primary' class='text-none' @click='addNewRoadmap'>
             <v-icon small left>mdi-plus</v-icon>
             Add roadmap
           </v-btn> -->
+          <div v-if="setFilteredroadmapType != null" class="text-none ml-2">
+            <v-btn text
+            v-if="chipforRoadmapType"
+          >
+          {{ $t('ROADMAPTYPE') }}
+          </v-btn>
+            <v-chip
+              v-if="chipforRoadmapType"
+              class="ma-2"
+              close
+              close-icon="mdi-close"
+              color="info"
+              label
+              outlined
+              @click:close="(chipforRoadmapType = false); btnReset();"
+            >
+            {{setFilteredroadmapType}}
+          </v-chip>
+          </div>
+          <v-spacer></v-spacer>
             <AddRoadmapList />
             <v-btn
               v-if="roadmaps.length > 0"
@@ -183,7 +202,8 @@
               color="primary"
               class="text-none"
               @click="updatesaveRoadmap"
-              :disabled="!validUpdate"
+              :loading="updateLoading"
+              :disabled="!validUpdate || !validNamePattern"
             >
               Save
             </v-btn>
@@ -337,12 +357,15 @@ export default {
       updateRoadmapId: 0,
       editedVersionNumber: 0,
       validUpdate: true,
+      validNamePattern: true,
+      updateLoading: false,
       valid: true,
       validupdate: true,
       validDuplicate: true,
       dupRoadmapName: '',
       name: '',
       roadmaptype: '',
+      chipforRoadmapType: true,
       dupRoadmapNameRule: [
         (v) => !!v || 'Required RoadMap Name',
         (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -375,6 +398,7 @@ export default {
       'roadmapList',
       'roadmapTypeList',
       'createdRoadmap',
+      'setFilteredroadmapType',
     ]),
     ...mapState('user', ['me']),
     userName: {
@@ -394,7 +418,7 @@ export default {
       'createBulkRoadmapDetails',
     ]),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
-    ...mapMutations('roadmapManagement', ['toggleFilter']),
+    ...mapMutations('roadmapManagement', ['toggleFilter', 'setSelectedRoadmapType']),
     showFilter: {
       get() {
         return this.filter;
@@ -402,6 +426,10 @@ export default {
       set(val) {
         this.setFilter(val);
       },
+    },
+    async btnReset() {
+      this.setSelectedRoadmapType(null);
+      await this.RefreshUI();
     },
     deleteRoadmapItem(item) {
       this.dialogConfirm = true;
@@ -443,7 +471,13 @@ export default {
     //   this.flagNewUpdate = false;
     // },
     async RefreshUI() {
-      await this.getRecords('');
+      if (this.setFilteredroadmapType) {
+        let query = '?query=';
+        query += `roadmaptype=="${this.setFilteredroadmapType}"`;
+        this.getRecords(query);
+      } else {
+        await this.getRecords('');
+      }
     },
     handleClick(value) {
       this.$router.push({
@@ -564,6 +598,7 @@ export default {
           message: 'ROADMAP_TYPE_NOT_SELECTED',
         });
       } else {
+        this.updateLoading = true;
         if (this.flagNewUpdate) {
           this.saving = true;
           this.roadmap = {
@@ -597,6 +632,7 @@ export default {
           }
         }
         this.saving = false;
+        this.updateLoading = false;
       }
     },
     async updateDialogReset() {
@@ -611,7 +647,7 @@ export default {
          === this.roadmap.name.toLowerCase().split(' ').join(''));
       if (roadmapFlag.length > 0) {
         // this.roadmap.name = '';
-        this.validUpdate = false;
+        this.validNamePattern = false;
         this.setAlert({
           show: true,
           type: 'error',
@@ -619,7 +655,7 @@ export default {
         });
       } else {
         // this.valid = true;
-        this.validUpdate = true;
+        this.validNamePattern = true;
       }
     },
   },

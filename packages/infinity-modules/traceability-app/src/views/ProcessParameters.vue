@@ -348,16 +348,22 @@ export default {
       console.log(cFlag);
       const elementDetails = await this.getProcessElement('traceability');
       if (this.language === 'zhHans') {
+        this.processParametersheader.push(
+          {
+            headerName: 'Main Id',
+            field: 'mainid',
+            resizable: true,
+          },
+        );
         await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
         await Promise.all(this.subStationList.map(async (s) => {
           const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
-            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
           if (paramRecord.length > 0) {
             await Promise.all(paramRecord.map((p) => {
               this.processParametersheader.push(
                 {
-                  headerName: p.chinesedescription,
+                  headerName: `${s.name}_${p.chinesedescription}`,
                   field: `${s.id}_${p.name}`,
                   resizable: true,
                 },

@@ -55,6 +55,8 @@
         :single-select="true"
         item-key="ordernumber"
         show-select
+        :loading="myloadingvariable"
+        loading-text="Loading... Please wait"
         >
         <template v-slot:item.linename="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.linename }}</span>
@@ -182,6 +184,7 @@ export default {
       orders: [],
       max25chars: 25,
       visible: false,
+      myloadingvariable: true,
       orderStatusList: [
         {
           name: 'New',
@@ -284,6 +287,7 @@ export default {
   },
   async created() {
     await this.getOrderListRecords('?query=visible==true');
+    this.myloadingvariable = false;
     this.orders = [];
   },
   computed: {
