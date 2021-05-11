@@ -30,6 +30,18 @@
                 v-model="selectedLine.description"
               ></v-text-field>
             </v-col>
+            <v-col cols="2" md="2" lg="2">
+              <v-text-field
+                label="IP Address"
+                v-model="selectedLine.ipaddr"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2" md="2" lg="2">
+              <v-text-field
+                label="Host Name"
+                v-model="selectedLine.hostname"
+              ></v-text-field>
+            </v-col>
             <!-- <v-col cols="2" md="2" lg="2">
               <v-text-field label="Expected OEE"
                 v-model="selectedLine.expectedoee"></v-text-field>
@@ -38,10 +50,28 @@
               <v-text-field label="Expected CT"
                 v-model="selectedLine.expectedcycletime"></v-text-field>
             </v-col> -->
-            <v-col cols="1" md="1" lg="1">
+            <v-col class="mt-4" cols="1" md="1" lg="1">
               <SelectedLineUpdate :saveEnabled="saveEnabled" />
             </v-col>
           </template>
+        </v-row>
+        <v-row class="mb-6" no-gutters>
+          <v-col align="right">
+          <!-- <v-spacer></v-spacer> -->
+           <!-- <SelectedLineUpdate :saveEnabled="saveEnabled"/> -->
+           <AddLine />
+           <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="toggleFilter"
+            >
+              <v-icon small left>mdi-filter-variant</v-icon>
+              Filters
+            </v-btn>
+            <ProductionFilter />
+          </v-col>
         </v-row>
            <v-row class="mb-6" v-if="selectedLine"
            no-gutters>
@@ -188,6 +218,8 @@ import DeleteStation from '../Components/DeleteStation.vue';
 import DeleteSubstation from '../Components/DeleteSubstation.vue';
 import DeleteProcess from '../Components/DeleteProcess.vue';
 import SelectedLineUpdate from '../Components/SelectedLineUpdate.vue';
+import AddLine from '../Components/AddLine.vue';
+import ProductionFilter from '../Components/ProductionFilter.vue'
 
 export default {
   name: 'ProductionLayoutMes',
@@ -205,6 +237,8 @@ export default {
     DeleteSubstation,
     DeleteProcess,
     SelectedLineUpdate,
+    AddLine,
+    ProductionFilter,
   },
   data() {
     return {
@@ -277,6 +311,7 @@ export default {
       'setSubStations',
       'setProcesses',
       'setSelectedLine',
+      'toggleFilter',
     ]),
     // async changeInLine(value) {
     //   this.$root.$emit('changedescription', value);

@@ -197,6 +197,20 @@ export default ({
       }
       return deleted;
     },
+    getRecipeInUse: async ({ dispatch }, query) => {
+      const recipeInUse = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'productdetails',
+          query,
+        },
+        { root: true },
+      );
+      if (recipeInUse && recipeInUse.length) {
+        return recipeInUse[0];
+      }
+      return false;
+    },
     // getProductDetails
     getProductDetails: async ({ dispatch, commit }, query) => {
       const orders = await dispatch(

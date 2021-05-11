@@ -362,8 +362,10 @@ export default ({
         if (orderCount.length) {
           const actualUpdatecount = orderCount
             .filter((oc) => oc.ordernumber === item.ordernumber);
-          if (actualUpdatecount[0].ordercount) {
+          if (actualUpdatecount.length) {
             item.actualcount = actualUpdatecount[0].ordercount;
+          } else {
+            item.actualcount = 0;
           }
         }
       });
@@ -513,7 +515,11 @@ export default ({
         if (orderCount.length) {
           const actualUpdatecount = orderCount
             .filter((oc) => oc.ordernumber === item.ordernumber);
-          item.actualcount = actualUpdatecount[0].ordercount;
+          if (actualUpdatecount.length) {
+            item.actualcount = actualUpdatecount[0].ordercount;
+          } else {
+            item.actualcount = 0;
+          }
         }
         if (partStatus.length) {
           const okUpdatecount = partStatus
@@ -565,7 +571,11 @@ export default ({
         if (orderCount.length) {
           const actualUpdatecount = orderCount
             .filter((oc) => oc.ordernumber === item.ordernumber);
-          item.actualcount = actualUpdatecount[0].ordercount;
+          if (actualUpdatecount.length) {
+            item.actualcount = actualUpdatecount[0].ordercount;
+          } else {
+            item.actualcount = 0;
+          }
         }
         if (partStatus.length) {
           const okUpdatecount = partStatus
