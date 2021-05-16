@@ -328,7 +328,7 @@ export default {
       this.parameterName = '';
     },
     closeFilter() {
-      this.getParameterListRecords('?pagenumber=1&pagesize=10');
+      this.getParameterListRecords('');
       this.toggleFilter();
     },
   },

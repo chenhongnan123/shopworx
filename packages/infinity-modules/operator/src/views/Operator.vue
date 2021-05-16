@@ -104,7 +104,6 @@
         :headers="headers"
         item-key="id"
         :items="operatorList"
-        :options="{ itemsPerPage: 5 }"
         show-select
       >
         <template v-slot:item.photo="{ item }">

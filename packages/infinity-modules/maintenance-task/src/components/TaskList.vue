@@ -214,7 +214,7 @@ export default {
   },
   async created() {
     await this.getAssets();
-    await this.getRecords('?pagenumber=1&pagesize=10');
+    await this.getRecords('');
     await this.getLineList();
     await this.getMachineList();
     await this.getSublineList();
@@ -279,7 +279,7 @@ export default {
         !this.listtypeValue && !this.listmachineValue && !this.liststatusValue
         && !this.startdateValue && !this.enddateValue
       ) {
-        query = '?pagenumber=1&pagesize=10';
+        query = '';
       }
       return query;
     },
