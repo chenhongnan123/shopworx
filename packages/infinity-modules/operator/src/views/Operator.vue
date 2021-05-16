@@ -68,7 +68,14 @@
             <v-icon small left>mdi-delete</v-icon>
             {{ $t('operator.general.delete') }}
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="exportData">
+          <v-btn
+            small
+            color="primary"
+            outlined
+            class="text-none ml-2"
+            @click="exportData"
+            v-if="operatorList.length && operatorSelected.length"
+          >
             {{ $t('operator.general.export') }}
           </v-btn>
           <v-btn small color="primary" outlined class="text-none ml-2" @click="exportSampleData">
@@ -326,7 +333,7 @@ export default {
     await this.getAssets();
     await this.getDepartments();
     await this.getPositions();
-    this.getRecords('?pagenumber=1&pagesize=10');
+    this.getRecords('');
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
