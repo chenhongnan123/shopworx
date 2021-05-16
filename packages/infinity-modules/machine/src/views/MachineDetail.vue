@@ -9,13 +9,13 @@
         <v-icon v-text="'$settings'"></v-icon>
       </v-btn> -->
     </portal>
-    <v-container fluid class="py-0" style="height:100%;overflow: hidden;">
+    <v-container fluid class="py-0" style="height:100%;overflow: hidden;" v-if="machineInfo">
       <v-btn icon @click="$router.push({ name: 'machine' })" color="primary">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <span v-text="`${$t('machine.name')} : `"> </span>
       <span v-text="machineInfo.machinename"></span>
-      <v-row justify="center" style="height:25%;" class="px-6 mb-6 mt-1">
+      <v-row justify="center" class="px-6 mb-3">
         <v-card style="width:100%;">
           <v-card-title primary-title style="background-color: #28abb9;color: white;" class="py-1">
             <v-icon color="white" class="mr-2">mdi-information</v-icon>
@@ -132,7 +132,7 @@
           </v-card-text>
         </v-card>
       </v-row>
-      <v-row justify="center" style="height:47%;" class="px-6">
+      <v-row justify="center" class="px-6">
         <v-card style="width:100%;">
           <v-card-title primary-title style="background-color: #f05454;color: white;" class="py-1">
             <v-icon color="white" class="mr-2">mdi-cogs</v-icon>
@@ -294,7 +294,7 @@
           <add-machine-position />
         </v-card>
       </v-row>
-      <v-row justify="center" style="height:18%;">
+      <v-row justify="center">
         <v-col cols="6" class="pl-6">
           <v-card style="width:100%;height:100%;">
             <v-card-title
@@ -585,6 +585,9 @@ export default {
   },
   async created() {
     this.machineid = this.$route.params.id;
+    if (this.machineList && !this.machineList.length) {
+      await this.getRecords('');
+    }
     this.currenttab = 0;
 
     await this.getSparepartRecords();
@@ -617,10 +620,8 @@ export default {
       'operatorList',
     ]),
     ...mapState('auth', ['sessionId']),
-    machineInfo: {
-      get() {
-        return this.machineList.filter((item) => item.id === this.machineid)[0];
-      },
+    machineInfo() {
+      return this.machineList.find((item) => item.id === this.machineid);
     },
     // positions() {
     //   const mapPosition = this.positionList.map((i) => {
@@ -663,6 +664,7 @@ export default {
       'setAddDocumentDialog',
     ]),
     ...mapActions('machine', [
+      'getRecords',
       'getPositionRecords',
       'getDocumentRecords',
       'getSparepartRecords',

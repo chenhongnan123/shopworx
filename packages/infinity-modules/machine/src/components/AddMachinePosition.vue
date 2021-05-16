@@ -53,7 +53,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="red" text class="text-none" @click="dialog = false">
+        <v-btn color="red" text class="text-none" @click="onExit">
           {{ $t('machine.general.cancel') }}
         </v-btn>
         <v-btn
@@ -157,27 +157,27 @@ export default {
             type: 'success',
             message: 'CREATE_STATION_POSITION',
           });
+          this.onExit();
         }
-        this.dialog = false;
       }
+    },
+    onExit() {
+      this.positionObj = {};
+      this.files = [];
+      this.dialog = false;
     },
     uploaded(e) {
       const reader = new FileReader();
       reader.readAsArrayBuffer(e);
       reader.onload = async (event) => {
         const { content, nameWithoutExt, extension } = this.getFileDetails(e);
-        const url = `/server/uploadfile/${content}/${nameWithoutExt}?elementName=files&extension=${extension}`;
+        const url = `${content}/${nameWithoutExt}?elementName=files&extension=${extension}`;
         const form = new FormData();
         form.append('file', new Blob([event.target.result]), {
           contentType: 'multipart/form-data',
         });
         form.append('assetid', 0);
-        const config = {
-          headers: {
-            sessionId: this.sessionId,
-          },
-        };
-        const response = await FileService.uploadFile(url, form, config);
+        const response = await FileService.uploadFile(url, form);
         if (response.status === 200) {
           const link = await this.getDownloadLink(
             `?query=originalFilename=="${nameWithoutExt}"&sortquery=sortindex==-1&pagenumber=1&pagesize=1`,
