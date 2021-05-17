@@ -195,6 +195,7 @@
       show-select
       fixed-header
       :height="height"
+      :loading="myLoadingVariable"
     >
       <template v-slot:item.name="props">
         <v-edit-dialog
@@ -438,6 +439,7 @@ export default {
           name: 'ABPLC',
         },
       ],
+      myLoadingVariable: true,
       selectedProtocol: null,
       sampleDataBtn: true,
       parameterSelected: [],
@@ -584,16 +586,44 @@ export default {
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
-    protocol(val) {
+    async protocol(val) {
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else if (val === 'MELSEC') {
         this.headers = this.headersMelsec;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else {
         this.headers = this.headerAbPlc;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
+        // this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
   },
