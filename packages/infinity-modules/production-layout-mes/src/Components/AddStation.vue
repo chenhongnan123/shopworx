@@ -122,7 +122,8 @@ export default {
       numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
-        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters'],
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
       plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
