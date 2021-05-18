@@ -558,29 +558,41 @@ export default {
   watch: {
     lineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords(`?query=protocol=="${this.protocol}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = false;
       }
     },
-    sublineValue(val) {
+    async sublineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    stationValue(val) {
+    async stationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    substationValue(val) {
+    async substationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
     parameterList(parameterList) {
