@@ -131,10 +131,10 @@
             label="Protocol*"
             :items="protocolList"
             return-object
-            :disabled="saving"
+            disabled
             item-text="name"
             prepend-icon="$production"
-            v-model="parameterObj.protocol"
+            v-model="this.protocol"
             :rules="rules.protocol"
           >
             <template v-slot:item="{ item }">
@@ -232,7 +232,7 @@ export default {
         size: null,
         dbaddress: null,
         startaddress: null,
-        protocol: null,
+        // protocol: null,
         isconversion: null,
         // multiplicationfactor: null,
         // divisionfactor: null,
@@ -306,13 +306,24 @@ export default {
         { name: 'No', id: 0 },
       ],
       protocolList: [
-        { name: 'SNAP7', id: 'SNAP7' },
+        {
+          name: 'SNAP7',
+          id: 'SNAP7',
+        },
+        {
+          name: 'MELSEC',
+          id: 'MELSEC',
+        },
+        {
+          name: 'ABPLC',
+          id: 'ABPLC',
+        },
       ],
     };
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfigurationMes', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
+    ...mapState('parameterConfigurationMes', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList', 'protocol']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -409,7 +420,7 @@ export default {
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
           // isconversion: parameterObj.isconversion.id,
-          protocol: parameterObj.protocol.id,
+          protocol: this.protocol,
           maxdecimal: 3,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),

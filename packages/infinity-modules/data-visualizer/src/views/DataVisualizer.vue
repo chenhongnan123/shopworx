@@ -78,7 +78,6 @@ export default {
   methods: {
     ...mapActions('dataVisualizer', [
       'getElements',
-      'getLines',
     ]),
     fetchRecords(e) {
       this.$refs.grid[0].setRowData(e);
@@ -92,7 +91,6 @@ export default {
     this.loading = true;
     await Promise.all([
       this.getElements(),
-      this.getLines(),
     ]);
     this.loading = false;
   },
