@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I491 | Line MES | Production Layout | User can add blank spaces as name for every field ([9360360](https://bitbucket.org/entrib/shopworx/commits/9360360a8e6631547459bb4e0afc4ea845d99f0f))
+
+
+
+
+
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
 **Note:** Version bump only for package @shopworx/production-layout-mes
