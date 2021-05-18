@@ -192,7 +192,6 @@
       item-key="_id"
       :items="parameterList"
       :options="{ itemsPerPage: 5 }"
-      show-select
       fixed-header
       :height="height"
       :loading="myLoadingVariable"
@@ -608,6 +607,7 @@ export default {
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
+          this.myLoadingVariable = true;
           await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
@@ -620,6 +620,7 @@ export default {
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
+          this.myLoadingVariable = true;
           await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
@@ -632,6 +633,7 @@ export default {
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
+          this.myLoadingVariable = true;
           await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
