@@ -136,7 +136,7 @@ export default {
       'getRecords',
     ]),
     btnReset() {
-      this.getRecords('?pagenumber=1&pagesize=10');
+      this.getRecords('');
       this.toggleFilter();
       this.line = '';
       this.subline = '';

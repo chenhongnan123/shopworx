@@ -286,7 +286,7 @@ export default {
       this.setApply(true);
     },
     btnReset() {
-      this.getCalendarRecords('?pagenumber=1&pagesize=10');
+      this.getCalendarRecords('');
       this.toggleCalendarFilter();
       this.type = '';
       this.line = '';

@@ -58,7 +58,6 @@
         :headers="headers"
         item-key="_id"
         :items="machineList"
-        :options="{ itemsPerPage: 10 }"
       >
         <template v-slot:item.machinename="{ item }">
           <span @click="handleClick(item)"
@@ -104,9 +103,7 @@ export default {
   },
   async created() {
     this.getAssets();
-    await this.getLines();
-    await this.getSublines();
-    this.getRecords('?pagenumber=1&pagesize=10');
+    this.getRecords('');
   },
   watch: {
     lineValue(val) {

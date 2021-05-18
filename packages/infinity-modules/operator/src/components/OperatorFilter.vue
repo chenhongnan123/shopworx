@@ -152,7 +152,7 @@ export default {
       this.setApply(true);
     },
     btnReset() {
-      this.getRecords('?pagenumber=1&pagesize=10');
+      this.getRecords('');
       this.toggleFilter();
       this.department = '';
       this.position = '';

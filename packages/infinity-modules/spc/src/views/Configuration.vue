@@ -126,7 +126,7 @@ export default {
     this.getElements();
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getSpcconfigurationListRecords('?pagenumber=1&pagesize=10');
+    this.getSpcconfigurationListRecords('');
     // this.socket = socketioclient.connect('http://:10190');
     // this.socket.on('connect', () => {});
   },
@@ -146,7 +146,7 @@ export default {
   watch: {
     elementValue(val) {
       if (!val) {
-        this.getSpcconfigurationListRecords('?pagenumber=1&pagesize=10');
+        this.getSpcconfigurationListRecords('');
       }
     },
     spcconfigurationList(spcconfigurationList) {
