@@ -193,8 +193,10 @@
       :items="parameterList"
       :options="{ itemsPerPage: 5 }"
       fixed-header
+      show-select
       :height="height"
       :loading="myLoadingVariable"
+      :loading-text="this.initialMessage"
     >
       <template v-slot:item.name="props">
         <v-edit-dialog
@@ -438,6 +440,7 @@ export default {
           name: 'ABPLC',
         },
       ],
+      initialMessage: 'Please select protocol',
       myLoadingVariable: true,
       selectedProtocol: null,
       sampleDataBtn: true,
@@ -678,6 +681,7 @@ export default {
       this.height = window.innerHeight - 212;
     },
     onSelectProtocol(value) {
+      this.initialMessage = 'Loading...please wait';
       this.setProtocol(value);
       if (this.protocol) {
         this.sampleDataBtn = false;
