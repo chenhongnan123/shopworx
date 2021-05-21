@@ -394,7 +394,7 @@ export default {
         param += `?query=stationid=="${this.stations.id || null}"`;
       }
       if (this.sublines && this.stations) {
-        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
       }
       await this.getRecipeListRecords(param);
     },
