@@ -649,24 +649,5 @@ export default {
       this.setFilterStation('');
     },
   },
-  async btnApply() {
-    if (this.sublines != null) {
-      this.setFilterSubLine(this.sublines);
-      const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
-      this.setRecipeList(newarray);
-      if (this.stations != null) {
-        this.setFilterStation(this.stations);
-        this.setRecipeList(this.newarray.filter((o) => o.machinename === this.stations.name));
-      }
-    } else if (this.stations != null) {
-      this.setFilterStation(this.stations);
-      this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
-    } else if (this.recipesfilter != null) {
-      this.setRecipeList(this.filterBList.filter(
-        (o) => o.recipename === this.recipesfilter.recipename,
-      ));
-    }
-    this.toggleFilter();
-  },
 };
 </script>
