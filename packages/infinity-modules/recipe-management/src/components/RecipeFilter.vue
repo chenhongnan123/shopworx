@@ -145,10 +145,16 @@ export default {
       this.$root.$emit('filteredStation', null);
       this.sublines = '';
       this.stations = '';
+      this.recipes = '';
       this.setFilterSubLine(this.sublines);
       this.setFilterStation(this.stations);
       this.toggleFilter();
     },
+  },
+  async beforeDestroy() {
+    this.sublines = '';
+    this.stations = '';
+    this.recipes = '';
   },
 };
 </script>
