@@ -105,6 +105,7 @@
         show-select
         fixed-header
         :height="tableHeight - 168"
+        :loading="myloadingVariable"
         >
         <!-- eslint-disable-next-line -->
         <template v-slot:item.recipename="{ item }">
@@ -232,6 +233,7 @@ export default {
   },
   data() {
     return {
+      myloadingVariable: true,
       sublines: null,
       stations: null,
       recipesfilter: null,
@@ -311,6 +313,7 @@ export default {
   async created() {
     this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
+    this.myloadingVariable = false;
   },
   async mounted() {
     this.$root.$on('filteredSubline', (data) => {
@@ -388,6 +391,7 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
+      this.myloadingVariable = true;
       let param = '';
       if (this.sublines && !this.stations && !this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id || null}"`;
@@ -405,6 +409,7 @@ export default {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
       await this.getRecipeListRecords(param);
+      this.myloadingVariable = false;
     },
     handleClick(value) {
       this.$router.push({
@@ -633,7 +638,9 @@ export default {
     //   }
     // },
     async btnReset() {
+      this.myloadingVariable = true;
       await this.getRecipeListRecords('');
+      this.myloadingVariable = false;
       // this.setRecipeList(this.filterBList);
       this.sublines = '';
       this.stations = '';
