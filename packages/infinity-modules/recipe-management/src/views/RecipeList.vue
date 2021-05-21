@@ -335,6 +335,8 @@ export default {
   async beforeDestroy() {
     await this.btnReset();
     this.chipforSubline = false;
+    this.chipforStation = false;
+    this.chipforRecipe = false;
     this.closeThechips = false;
   },
   computed: {
@@ -387,14 +389,20 @@ export default {
     },
     async RefreshUI() {
       let param = '';
-      if (this.sublines && !this.stations) {
+      if (this.sublines && !this.stations && !this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id || null}"`;
       }
-      if (this.stations && !this.sublines) {
+      if (this.stations && !this.sublines && !this.recipesfilter) {
         param += `?query=stationid=="${this.stations.id || null}"`;
+      }
+      if (this.recipesfilter && !this.sublines && !this.stations) {
+        param += `?query=recipenumber=="${this.recipesfilter.recipenumber || null}"`;
       }
       if (this.sublines && this.stations) {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
+      }
+      if (this.sublines && this.stations && this.recipesfilter) {
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
       await this.getRecipeListRecords(param);
     },
@@ -627,10 +635,11 @@ export default {
     async btnReset() {
       await this.getRecipeListRecords('');
       // this.setRecipeList(this.filterBList);
-      this.sublines = [];
-      this.stations = [];
-      this.setFilterSubLine(this.sublines);
-      this.setFilterStation(this.stations);
+      this.sublines = '';
+      this.stations = '';
+      this.recipesfilter = '';
+      this.setFilterSubLine('');
+      this.setFilterStation('');
     },
   },
   async btnApply() {
