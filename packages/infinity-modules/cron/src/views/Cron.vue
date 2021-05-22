@@ -36,7 +36,7 @@
       <v-data-table
         v-model="cronSelected"
         :headers="headers"
-        item-key="id"
+        item-key="_id"
         :items="cronList"
         :options="{ itemsPerPage: 15 }"
         show-select

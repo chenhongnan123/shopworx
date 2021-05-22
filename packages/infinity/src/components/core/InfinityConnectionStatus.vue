@@ -29,7 +29,14 @@ export default {
     };
   },
   computed: {
-    ...mapState('helper', ['isConnected']),
+    ...mapState('helper', ['isConnected', 'isSessionValid']),
+  },
+  watch: {
+    isSessionValid(val) {
+      if (!val) {
+        clearTimeout(this.timeout);
+      }
+    },
   },
   methods: {
     ...mapMutations('helper', ['setIsConnected']),

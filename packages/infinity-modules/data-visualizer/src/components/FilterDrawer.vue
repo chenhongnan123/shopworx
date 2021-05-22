@@ -10,56 +10,13 @@
             dense
             outlined
             class="mt-1"
-            label="Line"
-            v-model="line"
-            :items="lines"
+            label="Element"
+            v-model="selectedElement"
+            :items="detaultElements"
             item-value="id"
             item-text="name"
             :loading="loading"
             :disabled="fetching"
-          ></v-select>
-          <v-select
-            dense
-            outlined
-            label="Subline"
-            :items="sublines"
-            item-value="id"
-            item-text="name"
-            v-model="subline"
-            :disabled="!line || fetching"
-            :loading="sublineLoading"
-          ></v-select>
-          <v-select
-            dense
-            outlined
-            label="Station"
-            :items="stations"
-            item-value="id"
-            item-text="name"
-            v-model="station"
-            :loading="stationLoading"
-            :disabled="!line || !subline || fetching"
-          ></v-select>
-          <v-select
-            dense
-            outlined
-            label="Sub station"
-            :items="subStations"
-            item-value="id"
-            item-text="name"
-            v-model="subStation"
-            :loading="subStationLoading"
-            :disabled="!line || !subline || !station || fetching"
-          ></v-select>
-          <v-select
-            dense
-            outlined
-            label="Data type"
-            :items="dataTypes"
-            item-value="name"
-            item-text="description"
-            v-model="dataType"
-            :disabled="!line || !subline || !station || !subStation || fetching"
           ></v-select>
           <v-text-field
             label="Date from"
@@ -79,14 +36,6 @@
             outlined
             :rules="dateToRules"
           ></v-text-field>
-          <!-- <v-text-field
-            label="Main ID (optional)"
-            dense
-            v-model="mainId"
-            type="text"
-            :disabled="fetching"
-            outlined
-          ></v-text-field> -->
           <div class="font-weight-medium">
             Parameters
           </div>
@@ -140,9 +89,23 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
-const REQUIRED_TAGS = ['mainid', 'timestamp'];
+const REQUIRED_TAGS = ['_id', 'createdTimestamp', 'modifiedtimestamp'];
+const REQUIRED_COLUMNS = [
+  {
+    name: '_id',
+    description: 'Object ID',
+  },
+  {
+    name: 'createdTimestamp',
+    description: 'Created On',
+  },
+  {
+    name: 'modifiedtimestamp',
+    description: 'Modified On',
+  },
+];
 
 export default {
   name: 'FilterDrawer',
@@ -156,43 +119,31 @@ export default {
     return {
       isValid: false,
       search: '',
-      line: null,
-      subline: null,
-      station: null,
-      subStation: null,
-      dataType: null,
       dateFrom: null,
       dateTo: null,
-      mainId: null,
       selectedParameters: [],
-      sublines: [],
-      stations: [],
-      subStations: [],
-      dataTypes: [],
       parameters: [],
       requiredParameters: [],
       requiredColumns: [],
-      sublineLoading: false,
-      stationLoading: false,
-      subStationLoading: false,
       parametersLoading: false,
       dateFromRules: [() => this.isValidDate() || `Should be before ${this.dateTo}`],
       dateToRules: [() => this.isValidDate() || `Should be after ${this.dateFrom}`],
+      selectedElement: null,
     };
   },
   computed: {
     ...mapState('dataVisualizer', [
-      'lines',
       'elements',
       'fetching',
     ]),
+    detaultElements() {
+      return this.elements
+        .map((e) => e.element.elementName)
+        .sort();
+    },
     disableApply() {
       return this.loading
-        || !this.line
-        || !this.subline
-        || !this.station
-        || !this.subStation
-        || !this.dataType
+        || !this.selectedElement
         || !this.dateFrom
         || !this.dateTo
         || !this.selectedParameters.length;
@@ -217,12 +168,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('dataVisualizer', [
-      'getSublines',
-      'getStations',
-      'getSubStations',
-      'getDefaultParameters',
-    ]),
     isValidDate() {
       let result = true;
       if (this.dateTo && this.dateFrom) {
@@ -233,25 +178,27 @@ export default {
       return result;
     },
     getTags(element) {
-      let tags = [];
+      let mappedTags = [];
+      this.requiredParameters = [];
       const elem = this.elements.find((e) => e.element.elementName === element);
       if (elem) {
-        const mappedTags = elem.tags
+        mappedTags = elem.tags
           .sort((a, b) => a.tagOrder - b.tagOrder)
           .map((t) => ({
             name: t.tagName,
             description: t.tagDescription,
           }));
-        tags = mappedTags.filter((t) => !this.requiredParameters.includes(t.name));
-        this.requiredColumns = mappedTags.filter((t) => this.requiredParameters.includes(t.name));
+        const tags = mappedTags.map((tag) => tag.name);
+        this.requiredParameters = [...REQUIRED_TAGS, ...tags];
+        this.requiredColumns = [...REQUIRED_COLUMNS];
       }
-      return tags;
+      return mappedTags;
     },
     fetchData() {
       const columns = this.parameters
         .filter((p) => this.selectedParameters.includes(p.name));
       const payload = {
-        elementName: `${this.dataType}_${this.subStation}`,
+        elementName: this.selectedElement,
         tags: [
           ...this.requiredParameters,
           ...this.selectedParameters,
@@ -260,7 +207,6 @@ export default {
           ...this.requiredColumns,
           ...columns,
         ],
-        mainId: this.mainId,
         dateFrom: new Date(this.dateFrom).getTime(),
         dateTo: new Date(this.dateTo).getTime(),
       };
@@ -268,9 +214,9 @@ export default {
     },
     exportData() {
       const payload = {
-        elementName: `${this.dataType}_${this.subStation}`,
+        elementName: this.selectedElement,
         fields: [
-          ...this.requiredParameters,
+          ...REQUIRED_TAGS,
           ...this.selectedParameters,
         ].join(', '),
         dateFrom: new Date(this.dateFrom).getTime(),
@@ -280,99 +226,12 @@ export default {
     },
   },
   watch: {
-    async line(val) {
-      this.sublineLoading = true;
-      if (val) {
-        this.subline = null;
-        this.station = null;
-        this.subStation = null;
-        this.dataType = null;
-        this.selectedParameters = [];
-        this.requiredParameters = [];
-        this.requiredColumns = [];
-        this.sublines = [];
-        this.stations = [];
-        this.subStations = [];
-        this.dataTypes = [];
-        this.parameters = [];
-        this.sublines = await this.getSublines(this.line);
-        if (this.sublines.length === 1) {
-          this.subline = this.sublines[0].id;
-        }
-      }
-      this.sublineLoading = false;
-    },
-    async subline(val) {
-      this.stationLoading = true;
-      if (val) {
-        this.station = null;
-        this.subStation = null;
-        this.dataType = null;
-        this.selectedParameters = [];
-        this.requiredParameters = [];
-        this.requiredColumns = [];
-        this.stations = [];
-        this.subStations = [];
-        this.dataTypes = [];
-        this.parameters = [];
-        this.stations = await this.getStations(this.subline);
-        if (this.stations.length === 1) {
-          this.station = this.stations[0].id;
-        }
-      }
-      this.stationLoading = false;
-    },
-    async station(val) {
-      this.subStationLoading = true;
-      if (val) {
-        this.subStation = null;
-        this.dataType = null;
-        this.selectedParameters = [];
-        this.requiredParameters = [];
-        this.requiredColumns = [];
-        this.subStations = [];
-        this.dataTypes = [];
-        this.parameters = [];
-        this.subStations = await this.getSubStations(this.station);
-        if (this.subStations.length === 1) {
-          this.subStation = this.subStations[0].id;
-        }
-      }
-      this.subStationLoading = false;
-    },
-    async subStation(val) {
-      this.parametersLoading = true;
-      if (val) {
-        this.dataType = null;
-        this.selectedParameters = [];
-        this.requiredParameters = [];
-        this.requiredColumns = [];
-        this.dataTypes = [];
-        this.parameters = [];
-        const filteredElems = this.elements
-          .map((elem) => elem.element)
-          .filter((elem) => elem.elementName.includes(val));
-        this.dataTypes = filteredElems.map((e) => ({
-          name: e.elementName.replace(`_${val}`, ''),
-          description: e.elementDescription.replace(`_${val}`, ''),
-        }));
-        if (this.dataTypes.length === 1) {
-          [this.dataType] = this.dataTypes;
-        }
-        this.requiredParameters = await this.getDefaultParameters(this.subStation);
-        this.requiredParameters = [
-          ...REQUIRED_TAGS,
-          ...this.requiredParameters,
-        ];
-        this.parametersLoading = false;
-      }
-    },
-    dataType(val) {
+    selectedElement(val) {
       if (val) {
         this.selectedParameters = [];
         this.requiredColumns = [];
         this.parameters = [];
-        this.parameters = this.getTags(`${val}_${this.subStation}`);
+        this.parameters = this.getTags(val);
       }
     },
   },

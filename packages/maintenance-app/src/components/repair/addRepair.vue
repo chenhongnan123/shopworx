@@ -171,7 +171,7 @@ export default {
         !this.repairmachineValue && !this.repairstatusValue
         && !this.repairstartdateValue && !this.repairenddateValue
       ) {
-        query = '?pagenumber=1&pagesize=10';
+        query = '';
       }
       return query;
     },

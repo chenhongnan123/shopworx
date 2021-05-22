@@ -545,7 +545,7 @@ export default {
   async created() {
     this.zipService = ZipService;
     await this.getPageDataList();
-    this.getParameterListRecords('?pagenumber=1&pagesize=10');
+    this.getParameterListRecords('');
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
     });
@@ -577,26 +577,26 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        this.getParameterListRecords('');
       }
     },
     sublineValue(val) {
       if (!val) {
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        this.getParameterListRecords('');
       }
     },
     stationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        this.getParameterListRecords('');
       }
     },
     substationValue(val) {
       if (!val) {
         this.setSubstationValue('');
-        this.getParameterListRecords('?pagenumber=1&pagesize=10');
+        this.getParameterListRecords('');
       }
     },
     parameterList(parameterList) {

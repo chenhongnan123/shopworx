@@ -219,7 +219,7 @@ export default {
   },
   async created() {
     this.getAssets();
-    this.getRecords('?pagenumber=1&pagesize=10');
+    this.getRecords('');
     await this.getLineList();
     await this.getMachineList();
     await this.getSublineList();

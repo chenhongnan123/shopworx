@@ -293,7 +293,7 @@ export default {
         query += `%26%26status=="${this.status}"`;
       }
       if (!this.startdate && !this.enddate && !this.type && !this.machine && !this.status) {
-        query = '?pagenumber=1&pagesize=10';
+        query = '';
       }
       this.saving = true;
 
@@ -304,7 +304,7 @@ export default {
       this.setApply(true);
     },
     btnReset() {
-      this.getRecords('?pagenumber=1&pagesize=10');
+      this.getRecords('');
       this.toggleListFilter();
       this.type = '';
       this.line = '';

@@ -1,4 +1,5 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default {
   namespaced: true,
@@ -214,7 +215,7 @@ export default {
       );
       let operator = [];
       if (list && list.length) {
-        operator = list.map((l, index) => ({
+        operator = sortArray(list, 'operatorcode').map((l, index) => ({
           ...l,
           selected: false,
           actions: '',

@@ -99,7 +99,7 @@ export default {
     await this.getAssets();
     // const currentMonth = formatDate(new Date(), 'yyyy-MM');
     // this.setMonthValue(currentMonth);
-    // this.getRecords('?pagenumber=1&pagesize=10');
+    // this.getRecords('');
     // await this.getLineList();
     // await this.getMachineList();
     // await this.getSublineList();

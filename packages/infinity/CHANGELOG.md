@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **core:** do not check connection status if session invalid ([620f0a6](https://bitbucket.org/entrib/shopworx/commits/620f0a60d4b94b8f02268ddd59bb50be30f8232e))
+
+
+### Features
+
+* **external-apps:** added API for android navigation of external apps ([65d6fed](https://bitbucket.org/entrib/shopworx/commits/65d6feda2ec0cf37b62e3b4f82257da1cea6b40a))
+
+
+
+
+
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
 
