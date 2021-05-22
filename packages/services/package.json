@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/services",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
