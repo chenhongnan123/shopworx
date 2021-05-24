@@ -58,6 +58,34 @@
           <v-icon small v-text="'$download'" left></v-icon>
           {{ $t('export') }}
         </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="uploadFile"
+        >
+          <v-icon small v-text="'$download'" left></v-icon>
+          {{ $t('Import') }}
+        </v-btn>
+        <input
+          type="file"
+          accept=".csv"
+          ref="uploader"
+          class="d-none"
+          id="uploadFiles"
+          @change="onFilesChanged"
+        >
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="downloadSample"
+        >
+          <v-icon small v-text="'$download'" left></v-icon>
+          {{ $t('downloadCSV') }}
+        </v-btn>
       </span>
     </portal>
     <v-tabs
@@ -82,17 +110,26 @@
       @deletebtnshow="visibleDeleteBtn"
       @on-fetch="fetchedData"
     />
+    <import-master-data
+      ref="importer"
+      :id="id"
+      :records="tags"
+      @on-imported="refreshUi"
+      @on-close-dialog="resetForm"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BaseMaster from '../components/BaseMaster.vue';
+import ImportMasterData from '../components/import/ImportMasterData.vue';
 
 export default {
   name: 'MasterWindow',
   components: {
     BaseMaster,
+    ImportMasterData,
   },
   data() {
     return {
@@ -106,6 +143,16 @@ export default {
   },
   mounted() {
     this.base = this.$refs.base;
+  },
+  computed: {
+    ...mapGetters('masters', ['showTabs', 'getAssets', 'getTags']),
+    id() {
+      return this.$route.params.id;
+    },
+    tags() {
+      const assetId = this.showTabs(this.id) ? this.getAssets(this.id)[this.tab].id : 0;
+      return this.getTags(this.id, assetId);
+    },
   },
   watch: {
     id() {
@@ -180,14 +227,20 @@ export default {
     onBtnExport() {
       this.base.exportData();
     },
+    downloadSample() {
+      this.base.downloadSampleCSV();
+    },
     refreshUi() {
       this.base.refreshData();
     },
-  },
-  computed: {
-    ...mapGetters('masters', ['showTabs', 'getAssets']),
-    id() {
-      return this.$route.params.id;
+    uploadFile() {
+      this.$refs.uploader.click();
+    },
+    resetForm() {
+      this.$refs.uploader.value = null;
+    },
+    onFilesChanged(e) {
+      this.$refs.importer.importCSV(e);
     },
   },
 };
