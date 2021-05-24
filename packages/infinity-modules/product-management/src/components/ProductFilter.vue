@@ -26,7 +26,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedBOM"
+            v-model="filteredBOM"
             name="name"
             :label="$t('BOM name')"
             item-text="name"
@@ -44,7 +44,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedRoadmap"
+            v-model="filteredRoadmap"
             name="name"
             :label="$t('Roadmap name')"
             item-text="name"
@@ -62,7 +62,7 @@
             outlined
             dense
             hide-details
-            v-model="selectedProduct"
+            v-model="filteredProduct"
             name="productname"
             :label="this.$t('Product Type name')"
             item-text="productname"
@@ -107,14 +107,14 @@ export default {
   data() {
     return {
       orderStatusSelected: null,
-      selectedProduct: null,
-      selectedBOM: null,
-      selectedRoadmap: null,
+      // selectedProduct: null,
+      // selectedBOM: null,
+      // selectedRoadmap: null,
       flag: false,
     };
   },
   computed: {
-    ...mapState('productManagement', ['filter', 'productList', 'productTypeCategory', 'bom', 'roadmapsDetails']),
+    ...mapState('productManagement', ['filter', 'productList', 'productTypeCategory', 'bom', 'roadmapsDetails', 'selectedProduct', 'selectedBOM', 'selectedRoadmap']),
     showFilter: {
       get() {
         return this.filter;
@@ -123,29 +123,61 @@ export default {
         this.setFilter(val);
       },
     },
+    filteredProduct: {
+      get() {
+        return this.selectedProduct;
+      },
+      set(val) {
+        this.setSelectedProduct(val);
+      },
+    },
+    filteredBOM: {
+      get() {
+        return this.selectedBOM;
+      },
+      set(val) {
+        this.setSelectedBOM(val);
+      },
+    },
+    filteredRoadmap: {
+      get() {
+        return this.selectedRoadmap;
+      },
+      set(val) {
+        this.setSelectedRoadmap(val);
+      },
+    },
   },
   methods: {
-    ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter']),
+    ...mapMutations('productManagement', ['setProductList', 'setFilter', 'toggleFilter', 'setSelectedProduct', 'setSelectedBOM', 'setSelectedRoadmap']),
     ...mapActions('productManagement', ['getProductListRecords']),
     btnApply() {
       let query = '?query=';
-      if (this.selectedBOM) {
-        query += `bomname=="${this.selectedBOM}"&`;
+      if (this.filteredBOM) {
+        query += `bomname=="${this.filteredBOM}"`;
       }
-      if (this.selectedRoadmap) {
-        query += `roadmapname=="${this.selectedRoadmap}"`;
+      if (this.filteredRoadmap) {
+        if (query === '?query=') {
+          query += `roadmapname=="${this.filteredRoadmap}"`;
+        } else {
+          query += `%26%26roadmapname=="${this.filteredRoadmap}"`;
+        }
       }
-      if (this.selectedProduct) {
-        query += `productname=="${this.selectedProduct}"`;
+      if (this.filteredProduct) {
+        if (query === '?query=') {
+          query += `productname=="${this.filteredProduct}"`;
+        } else {
+          query += `%26%26productname=="${this.filteredProduct}"`;
+        }
       }
       this.getProductListRecords(query);
       this.toggleFilter();
     },
     async btnReset() {
       await this.getProductListRecords('');
-      this.selectedBOM = '';
-      this.selectedRoadmap = '';
-      this.selectedProduct = '';
+      this.filteredBOM = '';
+      this.filteredRoadmap = '';
+      this.filteredProduct = '';
       this.toggleFilter();
     },
   },

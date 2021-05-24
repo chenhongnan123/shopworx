@@ -16,6 +16,9 @@ export default ({
     duplicateProductDialog: false,
     editProductDialog: false,
     deleteDialog: false,
+    selectedProduct: null,
+    selectedBOM: null,
+    selectedRoadmap: null,
   },
   mutations: {
     setLineList: set('lineList'),
@@ -32,6 +35,9 @@ export default ({
     setBom: set('bom'),
     setProductTypeCategory: set('productTypeCategory'),
     setDeleteDialog: set('deleteDialog'),
+    setSelectedProduct: set('selectedProduct'),
+    setSelectedBOM: set('selectedBOM'),
+    setSelectedRoadmap: set('selectedRoadmap'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {
