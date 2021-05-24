@@ -182,7 +182,7 @@ export default {
         };
         await this.updateMainLineFlagToSubStations(object);
         this.$refs.form.resetValidation();
-        this.sublineNew = { ...this.subline };
+        // this.sublineNew = { ...this.subline };
       } else {
         this.setAlert({
           show: true,
