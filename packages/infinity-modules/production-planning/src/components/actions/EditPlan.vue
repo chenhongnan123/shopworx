@@ -130,7 +130,7 @@
                   </v-btn>
                 </div>
                 <v-row>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="cycletime"
                       rules="required|min_value:1"
@@ -149,7 +149,7 @@
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="delaytime"
                       rules="required|min_value:0"
@@ -168,10 +168,10 @@
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="activecavity"
-                      :rules="`required|max_value:${plan.cavity}|min_value:0.1`"
+                      :rules="`required|numeric|max_value:${plan.cavity}|min_value:1`"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -184,6 +184,25 @@
                         v-model="plan.activecavity"
                         hide-details="auto"
                         @change="onCavityChange"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <validation-provider
+                      name="strokes"
+                      :rules="`required|numeric|min_value:1`"
+                      #default="{ errors }"
+                    >
+                      <v-text-field
+                        :label="$t('planning.strokes')"
+                        type="number"
+                        v-if="isPress"
+                        :disabled="!editParams || saving"
+                        :error-messages="errors"
+                        prepend-inner-icon="mdi-arrow-collapse-vertical"
+                        outlined
+                        v-model="plan.strokes"
+                        hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
@@ -203,6 +222,10 @@
                   <div>
                     {{ $t('planning.standardCavity') }}
                     <strong>{{ selectedMatrix.cavity }}</strong>
+                  </div>
+                  <div v-if="isPress">
+                    {{ $t('planning.standardStrokes') }}
+                    <strong>{{ selectedMatrix.strokes }}</strong>
                   </div>
                 </div>
                 <div class="title mt-4">
@@ -321,7 +344,7 @@
                           <validation-provider
                             name="familyactivecavity"
                             :vid="`cavity-${item._id}`"
-                            :rules="`required|max_value:${item.cavity}|min_value:0.1`"
+                            :rules="`required|numeric|max_value:${item.cavity}|min_value:1`"
                             #default="{ errors }"
                           >
                             <v-text-field
@@ -445,10 +468,12 @@ export default {
           stdcycletime,
           delaytime,
           cavity,
+          strokes,
         } = this.selectedMatrix;
         return +this.plan.stdcycletime !== stdcycletime
           || +this.plan.delaytime !== delaytime
-          || +this.plan.activecavity !== cavity;
+          || +this.plan.activecavity !== cavity
+          || +this.plan.strokes !== strokes;
       }
       return false;
     },
@@ -530,6 +555,7 @@ export default {
         delaytime: '',
         cavity: '',
         activecavity: '',
+        strokes: '',
         plannedquantity: '',
         scheduledstart: formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm'),
         scheduledend: '',
@@ -576,6 +602,9 @@ export default {
         sortindex: plan.sortindex,
         status: plan.status,
       };
+      if (this.isPress) {
+        this.plan.strokes = plan.strokes || 1;
+      }
       if (this.isInjectionMolding && this.notStarted) {
         const isFamily = await this.isFamilyMold(
           `?query=moldname=="${encodeURIComponent(plan.moldname)}"`,
@@ -629,6 +658,7 @@ export default {
           stdcycletime,
           delaytime,
           cavity,
+          strokes,
           moldname,
           machinename,
           partname,
@@ -640,6 +670,9 @@ export default {
         this.plan.delaytime = +delaytime;
         this.plan.cavity = +cavity;
         this.plan.activecavity = +cavity;
+        if (this.isPress) {
+          this.plan.strokes = +strokes || 1;
+        }
         if (this.isInjectionMolding) {
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,
