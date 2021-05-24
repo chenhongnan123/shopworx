@@ -126,6 +126,7 @@ export default {
       }
       if (val && val.reportData) {
         this.rowData = val.reportData;
+        this.visualizeData();
       }
     },
   },
