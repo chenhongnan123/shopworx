@@ -30,7 +30,7 @@
             name="name"
             :label="$t('BOM name')"
             item-text="name"
-            clearable="true"
+            clearable
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -48,7 +48,7 @@
             name="name"
             :label="$t('Roadmap name')"
             item-text="name"
-            clearable="true"
+            clearable
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>
@@ -66,7 +66,7 @@
             name="productname"
             :label="this.$t('Product Type name')"
             item-text="productname"
-            clearable="true"
+            clearable
           >
           <template v-slot:item="{ item }">
             <v-list-item-content>

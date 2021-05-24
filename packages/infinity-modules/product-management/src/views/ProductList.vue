@@ -158,14 +158,6 @@ export default {
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('productManagement', ['toggleFilter', 'setFilterLine', 'setAddProductDialog',
       'setDuplicateDialog', 'setEditDialog', 'setDeleteDialog']),
-    showFilter: {
-      get() {
-        return this.filter;
-      },
-      set(val) {
-        this.setFilter(val);
-      },
-    },
     async RefreshUI() {
       await this.getProductListRecords('');
     },
