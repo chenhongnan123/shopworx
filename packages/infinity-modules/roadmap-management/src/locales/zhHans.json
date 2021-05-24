@@ -6,6 +6,7 @@
     "ALREADY_EXSIST_ROADMAP": "流程路径名称已存在.",
     "ERROR_CREATING_ROADMAP": "创建流程路径时出错",
     "ERROR_CREATING_ROADMAP_DETAILS": "创建流程路径详细信息时出错",
+    "ERROR_CREATING_PRODUCT_DETAILS": "Error creating Product details",
     "SELECT_ROADMAP_FIRST": "请先选择流程路径",
     "ROADMAP_TYPE_NOT_SELECTED": "Please Select Roadmap Type",
     "SUBLINE_NOT_SELECTED_ROADMAPDETAILS": "Please Select Subline",
