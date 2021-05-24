@@ -164,7 +164,9 @@
                   <v-col cols="12" sm="3">
                     <validation-provider
                       name="strokes"
-                      :rules="`required|numeric|min_value:1`"
+                      :rules="`${isPress
+                        ? 'required|numeric|min_value:1'
+                        : ''}`"
                       #default="{ errors }"
                     >
                       <v-text-field
@@ -439,7 +441,7 @@ export default {
         return +this.plan.stdcycletime !== stdcycletime
           || +this.plan.delaytime !== delaytime
           || +this.plan.activecavity !== cavity
-          || +this.plan.strokes !== strokes;
+          || (this.isPress && +this.plan.strokes !== strokes);
       }
       return false;
     },
