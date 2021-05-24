@@ -132,7 +132,7 @@
     "PRODUCT_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product!",
     "ROADMAP_DETAILS_NOT_AVAILABLE": "RoadMap Details Not Exists for this Product!",
     "PRODUCT_ROADMAP_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product",
-    "ORDER_NOT_INTERRUPTED": "Not Allowed! This is Not Interrupted Order Or Completed Order !",
+    "ORDER_NOT_INTERRUPTED": "Updation not allowed for 'Interrupted' Or 'Completed' Order !",
     "TARGET_ACTUAL": "Target count cannot be less than Actual count.",
     "ALLREADY_ONE_RUNNING_STATUS": "Only one running order at time!",
     "ERROR_CREATING_PLAN": "Error while creating order.",
