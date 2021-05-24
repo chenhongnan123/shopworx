@@ -17,6 +17,7 @@
   "Apply":	"Apply",
   "error": {
     "PRODUCT_NAME_EMPTY": "Product name is empty.",
+    "PRODUCT_DESCRIPTION_EMPTY": "Product description is empty.",
     "ALREADY_EXSIST_PRODUCT": "Product name already exsist.",
     "ERROR_UPDATING_PRODUCT": "Error updating Roadmap",
     "ERROR_CREATING_PRODUCT": "Error creating Roadmap",

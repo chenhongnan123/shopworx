@@ -17,6 +17,7 @@
   "Apply":	"应用",
   "error": {
     "PRODUCT_NAME_EMPTY": "产品名称为空.",
+    "PRODUCT_DESCRIPTION_EMPTY": "产品说明为空",
     "ALREADY_EXSIST_PRODUCT": "产品名称已存在.",
     "ERROR_UPDATING_PRODUCT": "更新流程路径时出错",
     "ERROR_CREATING_PRODUCT": "创建流程路径时出错",

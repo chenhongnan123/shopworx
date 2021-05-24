@@ -105,6 +105,7 @@
             :disabled="!lineSelected ||
             !selectedRoadmap ||
             !product ||
+            !selectedBom ||
             !valid"
             @click="saveProduct"
             >
@@ -180,6 +181,12 @@ export default {
           show: true,
           type: 'error',
           message: 'PRODUCT_NAME_EMPTY',
+        });
+      } else if (!this.product.description) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PRODUCT_DESCRIPTION_EMPTY',
         });
       } else {
         const duplicateProduct = this.productList.filter(
