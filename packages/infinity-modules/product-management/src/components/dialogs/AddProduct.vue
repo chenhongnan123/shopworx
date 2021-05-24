@@ -173,7 +173,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productManagement', ['setAddProductDialog']),
-    ...mapActions('productManagement', ['createProduct']),
+    ...mapActions('productManagement', ['createProduct', 'checkDuplicateProduct']),
     async saveProduct() {
       this.$refs.form.validate();
       if (!this.product.productname) {
@@ -189,10 +189,9 @@ export default {
           message: 'PRODUCT_DESCRIPTION_EMPTY',
         });
       } else {
-        const duplicateProduct = this.productList.filter(
-          (o) => o.productname.toLowerCase().split(' ').join('') === this.product.productname.toLowerCase().split(' ').join(''),
-        );
-        if (duplicateProduct.length > 0) {
+        const query = `?query=productname=="${this.product.productname}"`;
+        const duplicateProduct = await this.checkDuplicateProduct(query);
+        if (duplicateProduct) {
           this.product.productname = '';
           this.setAlert({
             show: true,

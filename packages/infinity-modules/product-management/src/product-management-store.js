@@ -104,6 +104,21 @@ export default ({
       }
       commit('setProductList', product);
     },
+    checkDuplicateProduct: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'part',
+          query,
+        },
+        { root: true },
+      );
+      let duplicateFound = false;
+      if (list && list.length) {
+        duplicateFound = true;
+      }
+      return duplicateFound;
+    },
     createProduct: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/postRecord',
