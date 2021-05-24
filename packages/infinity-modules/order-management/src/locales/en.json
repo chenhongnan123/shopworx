@@ -84,7 +84,8 @@
         "next": "Let's go"
       },
       "error": {
-        "ROADMAPTYPE_NOT_EXISTS": "RoadMap Type Not Exists"
+        "ROADMAPTYPE_NOT_EXISTS": "RoadMap Type Not Exists",
+        "TARGET_NOT_EXISTS": "Please enter Target Quantity."
       }
     },
     "orderstatus": "Order Status"
