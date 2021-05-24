@@ -51,6 +51,7 @@
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
             v-model="product.description"
+            required
           ></v-text-field>
           <v-text-field
             :disabled="saving"

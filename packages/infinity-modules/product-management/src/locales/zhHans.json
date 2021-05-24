@@ -40,7 +40,7 @@
     "recipeId": "配方ID",
     "productTypeName" : "产品类型名称*",
     "productTypeNameHeader" : "Product Type Name",
-    "productTypeDescription": "产品类型编号",
+    "productTypeDescription": "产品类型编号*",
     "productTypeNumber": "产品类型编号",
     "customer": "客户 *",
     "customerHeader": "Customer ",
