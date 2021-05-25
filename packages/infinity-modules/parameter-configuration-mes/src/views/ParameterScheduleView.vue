@@ -187,6 +187,7 @@
       <v-col cols="12" md="12"> </v-col>
     </v-row>
     <v-data-table
+      v-if="parameterList.length"
       v-model="parameterSelected"
       :headers="headers"
       item-key="_id"
@@ -441,7 +442,7 @@ export default {
         },
       ],
       initialMessage: 'Please select protocol',
-      myLoadingVariable: true,
+      myLoadingVariable: false,
       selectedProtocol: null,
       sampleDataBtn: true,
       parameterSelected: [],
