@@ -53,17 +53,19 @@
          v-model="newSubstation.serverlive"
          label="Server Live value"
         ></v-switch>
+        <div>
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
          @change="validateInitsst"
-         :disabled="btnInitdisable"
+         :disabled="initialStationDisable || btnInitdisable"
         ></v-switch>
+        </div>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
          @change="validateFinalsst"
-         :disabled="btnFindisable"
+         :disabled="finalStationDisable || btnFindisable"
         ></v-switch>
       </v-col>
       </v-row>
@@ -105,7 +107,9 @@ export default {
       payload: {},
       btnDisable: false,
       btnInitdisable: false,
+      initialStationDisable: false,
       btnFindisable: false,
+      finalStationDisable: false,
       valid: true,
       name: '',
       numbers: '',
@@ -188,7 +192,7 @@ export default {
            === this.newSubstation.initialsubstation === true);
         if (initialSubstationFlag.length > 0) {
           this.newSubstation.initialsubstation = '';
-          this.btnDisable = true;
+          this.initialStationDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -201,7 +205,7 @@ export default {
             message: 'INITIAL_SUBSTATION_ASSIGNED',
           });
         } else {
-          this.btnDisable = false;
+          this.initialStationDisable = false;
           this.saving = true;
         }
       } else {
@@ -221,7 +225,7 @@ export default {
           .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
         if (finalSubstationFlag.length > 0) {
           this.newSubstation.finalsubstation = '';
-          this.btnDisable = true;
+          this.finalStationDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -234,7 +238,7 @@ export default {
             message: 'FINAL_SUBSTATION_ASSIGNED',
           });
         } else {
-          this.btnDisable = false;
+          this.finalStationDisable = false;
           this.saving = true;
         }
       } else {
@@ -310,6 +314,8 @@ export default {
           type: 'success',
           message: 'SUBSTATION_UPDATED',
         });
+        this.finalStationDisable = false;
+        this.btnDisable = false;
         this.dialog = false;
       } else {
         this.setAlert({
@@ -322,8 +328,9 @@ export default {
     },
     async resetDialog() {
       this.$refs.form.resetValidation();
-      this.sublineNew = { ...this.subline };
       this.newSubstation = { ...this.substation };
+      this.initialStationDisable = false;
+      this.finalStationDisable = false;
       this.btnDisable = false;
     },
   },

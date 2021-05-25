@@ -17,6 +17,7 @@
   "Apply":	"Apply",
   "error": {
     "PRODUCT_NAME_EMPTY": "Product name is empty.",
+    "PRODUCT_DESCRIPTION_EMPTY": "Product description is empty.",
     "ALREADY_EXSIST_PRODUCT": "Product name already exsist.",
     "ERROR_UPDATING_PRODUCT": "Error updating Roadmap",
     "ERROR_CREATING_PRODUCT": "Error creating Roadmap",
@@ -42,7 +43,7 @@
     "recipeId": "Recipe ID",
     "productTypeName" : "Product Type Name *",
     "productTypeNameHeader" : "Product Type Name",
-    "productTypeDescription": "Product Type Description",
+    "productTypeDescription": "Product Type Description *",
     "productTypeNumber": "Product Type Number",
     "customer": "Customer *",
     "customerHeader": "Customer ",
