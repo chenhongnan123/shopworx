@@ -30,9 +30,9 @@
               <v-col
                 :cols="12 / screenData.cols"
                 :key="n"
-                v-for="(machine, n) in screenData.machines"
+                v-for="(meter, n) in screenData.meters"
               >
-                <detailed-view :machine="machine" />
+                <detailed-view :meter="meter" />
               </v-col>
             </v-row>
           </v-window-item>
@@ -43,8 +43,8 @@
             style="max-height: calc(100vh - 158px)"
           >
             <compact-view
-              :machine="machine"
-              v-for="(machine, i) in machines"
+              :meter="meter"
+              v-for="(meter, i) in meters"
               :key="i" />
           </v-expansion-panels>
         </perfect-scrollbar>
@@ -157,7 +157,7 @@ export default {
     ...mapState('energyDashboard', [
       'currentShift',
       'selectedView',
-      'machines',
+      'meters',
       'currentTime',
     ]),
     shopworxLogo() {

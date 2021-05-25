@@ -1,104 +1,67 @@
 <template>
-  <v-responsive max-height="274" min-height="274" min-width="411">
+  <v-responsive max-height="254" min-height="254" min-width="411">
     <v-card
       flat
       outlined
       class="flex"
       height="100%"
       rounded="lg"
-      v-if="machine"
+      v-if="meter"
       dark
       :color="`${color} darken-2`"
     >
       <v-card-title class="headline font-weight-medium justify-space-between pb-0">
         <div>
-          {{ machine.machinename }}
+          {{ meter.metername }}
         </div>
       </v-card-title>
-      <v-window
-        v-model="card"
-        v-if="machine.production.length"
-        class="px-4"
-      >
-        <v-window-item v-for="(prod, n) in machine.production" :key="n">
-          <div
-            :class="`d-inline-block text-truncate
-              pt-2 title font-weight-regular ${color}--text text--lighten-4`"
-            style="max-width: 65%"
-          >
-            {{ prod.partname }}
-          </div>
-          <span class="float-right">
-            <span :class="`display-1 ${color}--text text--lighten-4 font-weight-medium`">
-              {{ prod.produced }}</span>
-              <span :class="`title ${color}--text text--lighten-4`">/{{ prod.timeTarget }}</span>
-          </span>
-          <v-progress-linear
-            :color="`${color} lighten-2`"
-            :value="(prod.produced/prod.timeTarget)* 100"
-          ></v-progress-linear>
-        </v-window-item>
-      </v-window>
       <div class="d-inline-block" style="width:60%">
-        <div v-if="machine.machinestatus === 'UP'" class="px-4 mt-2">
+        <div class="px-4 mt-2">
           <v-row no-gutters>
-            <v-col cols="6" class="py-0">
+            <v-col cols="4" class="py-0">
               <div :class="`${color}--text text--lighten-4`">
-                Availability
+                Current
               </div>
-              <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-                {{ availabilityText }}
+              <div :class="`font-weight-medium ${color}--text text--lighten-4`">
+                <span class="display-1">{{ meter.current }}</span> A
               </div>
             </v-col>
-            <v-col cols="6" class="py-0">
+            <v-col cols="4" class="py-0">
               <div :class="`${color}--text text--lighten-4`">
-                Performance
+                VLN
+              </div>
+              <div :class="`font-weight-medium ${color}--text text--lighten-4`">
+                <span class="display-1">{{ meter.vln }}</span> V
+              </div>
+            </v-col>
+            <v-col cols="4" class="py-0">
+              <div :class="`${color}--text text--lighten-4`">
+                PF
               </div>
               <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-                {{ performanceText }}
+                {{ meter.pf }}
               </div>
             </v-col>
           </v-row>
           <div :class="`${color}--text text--lighten-4 mt-1`">
-            Quality
+            Meter reading
           </div>
-          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-            {{ qualityText }}
-          </div>
-        </div>
-        <div v-if="machine.machinestatus === 'DOWN'" class="px-4 mt-2">
-          <div :class="`${color}--text text--lighten-4 mt-2`">
-            Down since
-          </div>
-          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-            {{ getStrictDistance(machine.downsince) }}
-          </div>
-          <div :class="`${color}--text text--lighten-4 mt-2`">
-            Down reason
-          </div>
-          <div :class="`display-1 font-weight-medium ${color}--text text--lighten-4`">
-            {{ machine.downreason || '-' }}
-          </div>
-        </div>
-        <div v-if="machine.machinestatus === 'NOPLAN'" class="px-4 mt-2">
-          <div :class="`${color}--text text--lighten-4 display-1`">
-            No plan
-          </div>
-          <div :class="`${color}--text text--lighten-4 display-1`">
-            available
+          <div :class="`font-weight-medium ${color}--text text--lighten-4`">
+            <span class="display-1">{{ meter.kwh }}</span> kWh
+            <span class="display-1 ml-11">{{ meter.kvah }}</span> kVAh
           </div>
         </div>
       </div>
       <div class="float-right">
         <v-progress-circular
           size="155"
-          :value="oee"
+          :value="meter.consumption"
           rotate="-90"
           width="12"
           class="mt-2 mr-4"
           :color="`${color} lighten-4`"
         >
-          <span class="display-1 font-weight-medium">{{ oeeText }}</span>
+          <span class="display-1 font-weight-medium">{{ meter.consumption }} kWh</span>
         </v-progress-circular>
       </div>
       <v-card-actions style="position: absolute; bottom: 0;">
@@ -110,12 +73,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import { timeDistance, distanceInWordsToNow } from '@shopworx/services/util/date.service';
+import { distanceInWordsToNow } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'DetailView',
   props: {
-    machine: {
+    meter: {
       type: Object,
     },
   },
@@ -124,7 +87,6 @@ export default {
     return {
       card: 0,
       interval: null,
-      cardInterval: null,
       lastUpdate: '',
     };
   },
@@ -132,14 +94,12 @@ export default {
     ...mapState('energyDashboard', ['currentTime']),
     color() {
       let color = '';
-      if (this.machine) {
-        const { machinestatus } = this.machine;
-        if (machinestatus === 'UP') {
+      if (this.meter) {
+        const { meterstatus } = this.meter;
+        if (meterstatus === 0) {
           color = 'success';
-        } else if (machinestatus === 'DOWN') {
+        } else if (meterstatus === 1) {
           color = 'error';
-        } else if (machinestatus === 'NOPLAN') {
-          color = 'info';
         }
       }
       return color;
@@ -159,49 +119,12 @@ export default {
       return 'darken';
     },
     updatedAt() {
-      return this.machine.updatedAt;
-    },
-    production() {
-      return this.machine.production;
-    },
-    availability() {
-      return this.machine.runtime / this.machine.workingTime;
-    },
-    performance() {
-      return this.machine.performance;
-    },
-    quailty() {
-      return this.machine.quality;
-    },
-    oee() {
-      return ((this.availability * this.performance * this.quailty) / 100) || 0;
-    },
-    qualityText() {
-      return `${this.quailty.toFixed(2)}%`;
-    },
-    availabilityText() {
-      return `${(this.availability * 100).toFixed(2)}%`;
-    },
-    performanceText() {
-      return `${this.performance.toFixed(2)}%`;
-    },
-    oeeText() {
-      return `${(this.oee).toFixed(2)}%`;
+      return this.meter.updatedAt;
     },
   },
   methods: {
-    getStrictDistance(datetime) {
-      return timeDistance(datetime, this.currentTime);
-    },
     getDistance(datetime) {
       return distanceInWordsToNow(datetime, { addSuffix: true });
-    },
-    next() {
-      if (this.card + 1 === this.production.length) {
-        this.card = 0;
-      } else {
-        this.card += 1;
-      }
     },
   },
   created() {
@@ -209,13 +132,9 @@ export default {
     this.interval = setInterval(() => {
       self.lastUpdate = self.getDistance(self.updatedAt);
     }, 60000);
-    this.cardInterval = setInterval(() => {
-      self.next();
-    }, 3000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
-    clearInterval(this.cardInterval);
   },
   watch: {
     updatedAt: {

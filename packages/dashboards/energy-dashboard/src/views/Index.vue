@@ -88,7 +88,7 @@ export default {
       'selectedView',
       'selectedDisplay',
       'selectedTheme',
-      'machines',
+      'meters',
       'currentDate',
       'currentShift',
       'currentHour',
@@ -166,124 +166,41 @@ export default {
         if (this.currentTime > this.serverTime) {
           this.serverTime = this.currentTime;
         }
-        const payload = {
-          ...data,
-          workingTime: this.workingTime,
-        };
-        if (elementName === 'cycletime') {
-          this.setProduction(payload);
-        } else if (elementName === 'downtime') {
-          this.setDowntime(payload);
-        } else if (elementName === 'rejection') {
-          this.setRejection(payload);
+        if (elementName === 'utility') {
+          this.setEnergy(data);
         }
       }
     },
-    setProduction(data) {
+    setEnergy(data) {
       const {
-        machinename,
-        planid,
-        partname,
-        qty,
-        activecavity,
+        metername,
         updatedAtTimestamp: updatedAt,
-        runtime,
-        shiftAvailableTime,
-        hourlyAvailableTime,
-        workingTime,
-        sctm,
-        performance,
-        quality,
+        current,
+        vll,
+        vln,
+        pf,
+        kwh,
+        kvah,
+        meterstatus,
+        kwh_sum: consumption,
       } = data;
-      this.machines.forEach((m, index) => {
-        if (m.machinename === machinename) {
+      this.meters.forEach((m, index) => {
+        if (m.metername === metername) {
           const payload = {
             ...m,
-            machinestatus: 'UP',
+            meterstatus,
             updatedAt,
-            runtime,
-            performance,
-            quality,
-            workingTime,
+            current,
+            vll,
+            vln,
+            pf,
+            kwh,
+            kvah,
+            consumption,
           };
-          let timeTarget = 0;
-          if (this.selectedView.value === 'shift') {
-            timeTarget = Math.floor((shiftAvailableTime / sctm) * activecavity);
-          } else if (this.selectedView.value === 'hourly') {
-            timeTarget = Math.floor((hourlyAvailableTime / sctm) * activecavity);
-          }
-          if (planid === m.planid) {
-            let productions = [...m.production];
-            const partIndex = m.production.findIndex((prod) => prod.partname === partname);
-            if (partIndex > -1) {
-              productions[partIndex].produced = qty;
-              productions[partIndex].timeTarget = timeTarget;
-            } else {
-              productions = [...productions, {
-                partname,
-                planid,
-                produced: qty,
-                timeTarget,
-              }];
-            }
-            payload.production = productions;
-          } else {
-            payload.planid = planid;
-            payload.production = [{
-              partname,
-              planid,
-              produced: qty,
-              timeTarget,
-            }];
-          }
           this.setMeter({ index, payload });
         }
       });
-    },
-    setDowntime(data) {
-      const {
-        machinename,
-        actualdowntimestart,
-        reasonname,
-        status,
-      } = data;
-      for (let i = 0; i < this.machines.length; i += 1) {
-        if (this.machines[i].machinename === machinename) {
-          let payload = {};
-          if (status === 'inProgress') {
-            payload = {
-              ...this.machines[i],
-              machinestatus: 'DOWN',
-              updatedAt: this.currentTime,
-              downsince: actualdowntimestart,
-              downreason: reasonname || '',
-            };
-          } else if (status === 'complete') {
-            payload = {
-              ...this.machines[i],
-              machinestatus: 'UP',
-              updatedAt: this.currentTime,
-            };
-          }
-          this.setMeter({ index: i, payload });
-        }
-      }
-    },
-    setRejection(data) {
-      const {
-        machinename,
-        quality,
-      } = data;
-      for (let i = 0; i < this.machines.length; i += 1) {
-        if (this.machines[i].machinename === machinename) {
-          const payload = {
-            ...this.machines[i],
-            updatedAt: this.currentTime,
-            quality,
-          };
-          this.setMeter({ index: i, payload });
-        }
-      }
     },
   },
 };
