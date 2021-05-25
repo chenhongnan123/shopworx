@@ -36,6 +36,7 @@
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
             v-model="duplicateProductDescription"
+            required
         ></v-text-field>
       </v-card-text>
       <v-card-actions>

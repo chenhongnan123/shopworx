@@ -187,6 +187,7 @@
       <v-col cols="12" md="12"> </v-col>
     </v-row>
     <v-data-table
+      v-if="parameterList.length"
       v-model="parameterSelected"
       :headers="headers"
       item-key="_id"
@@ -441,7 +442,7 @@ export default {
         },
       ],
       initialMessage: 'Please select protocol',
-      myLoadingVariable: true,
+      myLoadingVariable: false,
       selectedProtocol: null,
       sampleDataBtn: true,
       parameterSelected: [],
@@ -945,7 +946,7 @@ export default {
       this.socket.on(
         `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
         (data) => {
-          console.log('event received');
+          // console.log('event received');
           if (data) {
             this.parameterList.forEach((element) => {
               this.$set(element, 'monitorvalue', data[element.name]);

@@ -35,6 +35,9 @@
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
             v-model="productDescription"
+            :rules="productDescriptionRule"
+            required
+            @keyup="checkInputs"
         ></v-text-field>
         <v-text-field
             :disabled="saving"
@@ -90,7 +93,7 @@
         <v-btn
           color="primary"
           class="text-none"
-          :disabled="!productName || !productDescription || !valid"
+          :disabled="!productName || !valid"
           @click="updateProduct"
         >
           {{ $t('displayTags.buttons.save') }}
@@ -126,7 +129,8 @@ export default {
       customerNameRule: [(v) => !!v || 'Customer Name Required',
         (v) => (v && v.length <= 20) || 'Customer Name must be less than 20 characters'],
       bomRequiredRule: [(v) => !!v || 'BOM Required'],  
-      roadmapRequiredRule: [(v) => !!v || 'Roadmap Required'],  
+      roadmapRequiredRule: [(v) => !!v || 'Roadmap Required'],
+      productDescriptionRule: [(v) => !!v || 'Production Type description Required'],  
     };
   },
   props: {
@@ -176,7 +180,7 @@ export default {
     ...mapMutations('productManagement', ['setEditDialog']),
     ...mapActions('productManagement', ['updateProductType']),
     checkInputs() {
-      if (this.customername && this.selectedRoadmap && this.selectedBom) {
+      if (this.customername && this.selectedRoadmap && this.selectedBom && this.productDescription) {
         this.valid = true;
       } else {
         this.valid = false;

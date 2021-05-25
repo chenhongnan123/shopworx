@@ -7,6 +7,7 @@
     "ALREADY_EXSIST_ROADMAP": "Roadmap name already exsist.",
     "ERROR_CREATING_ROADMAP": "Error creating Roadmap",
     "ERROR_CREATING_ROADMAP_DETAILS": "Error creating Roadmap details",
+    "ERROR_CREATING_PRODUCT_DETAILS": "Error creating Product details",
     "SELECT_ROADMAP_FIRST": "Please select Roadmap first",
     "ROADMAP_TYPE_NOT_SELECTED": "Please Select Roadmap Type",
     "LINE_NOT_SELECTED_ROADMAPDETAILS": "Please Select Line",
