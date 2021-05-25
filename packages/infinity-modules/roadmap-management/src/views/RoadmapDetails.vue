@@ -572,7 +572,6 @@ export default {
               await this.getProductListFromRoadmapName(`?query=roadmapname=="${this.roadmapList[0].name}"`);
               if (this.productList.length) {
                 this.productList.forEach(async (products) => {
-                  debugger;
                   const object = {
                     productname: products.productname,
                     productnumber: products.productnumber,

@@ -212,7 +212,6 @@ export default {
     },
     async handleElementClick() {
       this.dataList = [];
-      console.log(this.selectedElement.to);
       const elementDetails = this.getTags(this.selectedElement.to, 4);
       this.headerList = [];
       // for traceability element - show heading titles in english or chinese
@@ -349,7 +348,6 @@ export default {
       if (this.currentLocale === 'zhHans') {
         column = this.$refs.process.headerForCSVChinese;
       }
-      console.log(column.length);
       csvContent = [];
       parameterSelected.forEach((parameter) => {
         const arr = [];

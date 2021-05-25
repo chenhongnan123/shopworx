@@ -946,7 +946,7 @@ export default {
       this.socket.on(
         `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
         (data) => {
-          console.log('event received');
+          // console.log('event received');
           if (data) {
             this.parameterList.forEach((element) => {
               this.$set(element, 'monitorvalue', data[element.name]);
