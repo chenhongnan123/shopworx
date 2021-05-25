@@ -1,0 +1,10 @@
+{
+  "shopfloorDashboard": {
+    "title": "Shopfloor Dashboard",
+    "up": "Running",
+    "down": "Down",
+    "customize": "Customize",
+    "done": "Done",
+    "addWidgets": "Add widgets"
+  }
+}

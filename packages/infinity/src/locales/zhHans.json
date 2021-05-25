@@ -265,6 +265,7 @@
     "productionImage": "产品图片",
     "liveShopfloor": "车间看板",
     "utilityDashboard": "能耗看板",
+    "energyDashboard": "能源消耗",
     "processDashboard": "工艺看板",
     "orderManagement": "订单",
     "productionLog": "生产日志",

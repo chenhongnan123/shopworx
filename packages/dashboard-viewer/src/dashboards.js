@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import LiveShopfloor from '@shopworx/live-shopfloor';
 import MachineDashboard from '@shopworx/machine-dashboard';
-import UtilityDashboard from '@shopworx/utility-dashboard';
-import ProcessDashbaord from '@shopworx/process-dashboard';
+import EnergyDashboard from '@shopworx/energy-dashboard';
+// import ProcessDashbaord from '@shopworx/process-dashboard';
 import PoProductionDashboard from '@shopworx/po-production-dashboard';
 
 import store from './store';
@@ -21,17 +21,17 @@ Vue.use(MachineDashboard, {
   i18n,
 });
 
-Vue.use(UtilityDashboard, {
+Vue.use(EnergyDashboard, {
   router,
   store,
   i18n,
 });
 
-Vue.use(ProcessDashbaord, {
+/* Vue.use(ProcessDashbaord, {
   router,
   store,
   i18n,
-});
+}); */
 
 Vue.use(PoProductionDashboard, {
   router,

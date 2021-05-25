@@ -272,6 +272,7 @@
     "productionImage": "Production Image",
     "liveShopfloor": "Live Shopfloor",
     "utilityDashboard": "Utility",
+    "energyDashboard": "Energy Consumption",
     "processDashboard": "Live Process",
     "orderManagement": "Order",
     "productionLog": "Production Log",
