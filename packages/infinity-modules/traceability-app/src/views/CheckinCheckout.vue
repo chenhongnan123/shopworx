@@ -105,6 +105,7 @@ export default {
     this.gridColumnApi = this.gridOptionsPart.columnApi;
   },
   async created() {
+    this.dataList = [];
     await this.getElements();
     this.language = this.currentLocale;
     this.zipService = ZipService;
@@ -113,7 +114,6 @@ export default {
     this.setExtendedHeader(true);
     await this.getSubLines('');
     // create element list
-    this.dataList = [];
     this.elementList.push({
         name: 'Check In',
         value: 'checkin',
@@ -211,15 +211,56 @@ export default {
       this.setGridState(JSON.stringify(state));
     },
     async handleElementClick() {
+      this.dataList = [];
+      console.log(this.selectedElement.to);
       const elementDetails = this.getTags(this.selectedElement.to, 4);
       this.headerList = [];
-      elementDetails.forEach((f) => {
+      // for traceability element - show heading titles in english or chinese
+      if (this.selectedElement.to === 'traceability') {
+        if (this.language === 'zhHans') {
+          this.headerList.push(
+            {
+              headerName: 'Main Id',
+              field: 'mainid',
+              resizable: true,
+            },
+          );
+          await this.getSubStations('');
+          await Promise.all(this.subStationList.map(async (s) => {
+            const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
+              (parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
+            if (paramRecord.length > 0) {
+              await Promise.all(paramRecord.map((p) => {
+                this.headerList.push(
+                  {
+                    headerName: `${s.name}_${p.chinesedescription}`,
+                    field: `${s.id}_${p.name}`,
+                    resizable: true,
+                  },
+                );
+                return true;
+              }));
+            }
+          }));
+        } else {
+          elementDetails.forEach((element) => {
+            this.headerList.push(
+              {
+                headerName: element.tagDescription,
+                field: element.tagName,
+                resizable: true,
+              },
+            );
+          });
+        }
+      } else {
+        elementDetails.forEach((f) => {
           this.headerList.push({
             headerName: f.tagDescription,
             field: f.tagName,
           });
-      })
-      this.dataList = [];
+        })
+      }
     },
     onExport(e) {
       this.exportReport(e);
