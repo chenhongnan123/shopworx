@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **recipe-management:** RA-I152 | Recipe Management | User is able to add recipe without selection of Subline and station ([5d4e879](https://bitbucket.org/entrib/shopworx/commits/5d4e879e65f1ea8b0776feb2f370d5473057ea50))
+
+
+
+
+
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
 **Note:** Version bump only for package @shopworx/recipe-management

@@ -5,6 +5,7 @@
   "delete": "Delete",
   "refresh": "Refresh",
   "export": "Export",
+  "downloadCSV": "Download sample CSV",
   "press": "Press",
   "injectionmolding": "Injection molding",
   "masterItems": {

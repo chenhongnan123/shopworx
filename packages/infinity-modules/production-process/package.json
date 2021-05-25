@@ -1,6 +1,6 @@
 {
 	"name": "@shopworx/production-process",
-	"version": "4.3.1",
+	"version": "4.3.2",
 	"private": true,
 	"dependencies": {
 		"socket.io-client": "^2.3.0",
