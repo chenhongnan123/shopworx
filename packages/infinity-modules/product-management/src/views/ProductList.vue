@@ -151,23 +151,33 @@ export default {
     this.products = [];
   },
   computed: {
-    ...mapState('productManagement', ['productList', 'lineList'/** ,  'filterLine', 'filterSubLine', 'filterStation' */]),
+    ...mapState('productManagement', ['productList', 'lineList', 'selectedProduct', 'selectedBOM', 'selectedRoadmap'/** ,  'filterLine', 'filterSubLine', 'filterStation' */]),
   },
   methods: {
     ...mapActions('productManagement', ['getProductListRecords', 'createProduct']),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
     ...mapMutations('productManagement', ['toggleFilter', 'setFilterLine', 'setAddProductDialog',
       'setDuplicateDialog', 'setEditDialog', 'setDeleteDialog']),
-    showFilter: {
-      get() {
-        return this.filter;
-      },
-      set(val) {
-        this.setFilter(val);
-      },
-    },
     async RefreshUI() {
-      await this.getProductListRecords('');
+      let query = '?query=';
+      if (this.selectedBOM) {
+        query += `bomname=="${this.selectedBOM}"`;
+      }
+      if (this.selectedRoadmap) {
+        if (query === '?query=') {
+          query += `roadmapname=="${this.selectedRoadmap}"`;
+        } else {
+          query += `%26%26roadmapname=="${this.selectedRoadmap}"`;
+        }
+      }
+      if (this.selectedProduct) {
+        if (query === '?query=') {
+          query += `productname=="${this.selectedProduct}"`;
+        } else {
+          query += `%26%26productname=="${this.selectedProduct}"`;
+        }
+      }
+      await this.getProductListRecords(query);
     },
     handleClick(value) {
       this.$router.push({ name: 'productDetails', params: { id: value.productnumber } });

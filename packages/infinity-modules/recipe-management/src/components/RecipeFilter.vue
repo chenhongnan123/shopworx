@@ -89,7 +89,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList']),
+    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList', 'subStationList']),
     showFilter: {
       get() {
         return this.filter;
@@ -100,15 +100,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords']),
+    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getStations', 'getSubStations']),
     ...mapMutations('recipeManagement', ['setFilter', 'toggleFilter', 'setFilterSubLine', 'setFilterStation', 'setRecipeList', 'setFilterRecipe']),
     onChangeLine() {
     },
-    onChangeSubLine(val) {
+    async onChangeSubLine(val) {
       this.$root.$emit('filteredSubline', val);
+      const query = `?query=sublineid=="${val.id}"`;
+      await this.getStations(query);
     },
-    onChangeStation(val) {
+    async onChangeStation(val) {
       this.$root.$emit('filteredStation', val);
+      const query = `?query=stationid=="${val.id}"`;
+      await this.getRecipeListRecords(query);
     },
     onChangeRecipe(val) {
       this.$root.$emit('filteredRecipe', val);
@@ -145,10 +149,16 @@ export default {
       this.$root.$emit('filteredStation', null);
       this.sublines = '';
       this.stations = '';
+      this.recipes = '';
       this.setFilterSubLine(this.sublines);
       this.setFilterStation(this.stations);
       this.toggleFilter();
     },
+  },
+  async beforeDestroy() {
+    this.sublines = '';
+    this.stations = '';
+    this.recipes = '';
   },
 };
 </script>
