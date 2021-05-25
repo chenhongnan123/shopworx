@@ -39,6 +39,7 @@
           :disabled="saving"
           item-text="name"
           v-model="input.linename"
+          :rules="lineSelect"
           :loading="loadingParts"
           prepend-icon="$production"
           @change="handleLineClick"
@@ -103,6 +104,7 @@
           :disabled="saving"
           return-object
           item-text="name"
+          :rules="subStationSelect"
           prepend-icon="$production"
           :label="this.$t('Select Sub-Station name')"/>
         <v-text-field
@@ -175,8 +177,10 @@ export default {
       recipename: '',
       nameRules: [(v) => !!v || 'Name required',
         (v) => (v && v.length <= 20) || 'Name must be less than 20 characters'],
+      lineSelect: [(v) => !!v || 'required'],
       sublineSelect: [(v) => !!v || 'required'],
       stationSelect: [(v) => !!v || 'required'],
+      subStationSelect: [(v) => !!v || 'required'],
       input: {
         linename: '',
         sublinename: '',
@@ -222,10 +226,15 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     async handleLineClick(item) {
       const sublines = this.subLineList.filter((o) => o.lineid === Number(item.id));
+      this.input.sublinename = '';
+      this.input.stationname = '';
+      this.input.substationname = '';
       this.setInStateSubline(sublines);
     },
     async handleSubLineClick(item) {
       const stations = this.stationList.filter((o) => o.sublineid === item.id);
+      this.input.stationname = '';
+      this.input.substationname = '';
       this.setInStateStation(stations);
     },
     async handleStationClick(item) {

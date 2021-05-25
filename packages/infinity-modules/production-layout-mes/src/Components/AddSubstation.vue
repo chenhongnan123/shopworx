@@ -115,7 +115,8 @@ export default {
       numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
-        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
+        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
     };
   },
   props: {

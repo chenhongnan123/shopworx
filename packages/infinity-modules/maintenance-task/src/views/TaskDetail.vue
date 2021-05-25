@@ -17,13 +17,13 @@
         <v-icon v-text="'$settings'"></v-icon>
       </v-btn> -->
     </portal>
-    <v-container fluid class="py-0" style="height:100%;overflow: hidden;">
+    <v-container fluid class="py-0" style="height:100%;">
       <v-btn icon @click="$router.push({ name: 'maintenanceTask' })" color="primary">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <span v-text="`${$t('maintenancetask.name')}`"> </span>
       <span v-text="taskInfo.name ? taskInfo.name : ''"></span>
-      <v-row justify="center" style="height:22%;" class="px-6 mb-6 mt-1">
+      <v-row justify="center" class="px-6 mb-3">
         <v-card style="width:100%;">
           <v-card-title primary-title style="background-color: #28abb9;color: white;" class="py-1">
             <v-icon color="white" class="mr-2">mdi-information</v-icon>
@@ -84,7 +84,7 @@
           </v-card-text>
         </v-card>
       </v-row>
-      <v-row justify="center" style="height:70%;" class="px-6 mb-6">
+      <v-row justify="center" class="px-6 mb-3">
         <v-card style="width:100%;height: 100%;">
           <v-card-title primary-title style="background-color: #f05454;color: white;" class="py-1">
             <v-icon color="white" class="mr-2">mdi-clipboard-list-outline</v-icon>

@@ -87,6 +87,7 @@
             v-else-if="item.external"
             target="_blank"
             :href="item.to"
+            @click="setActiveExternalApp(item)"
             :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
@@ -143,6 +144,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { onExternalAppClick } from '../../infinityLoader';
 
 export default {
   name: 'InfinityDrawer',
@@ -233,6 +235,9 @@ export default {
     setActiveApp(item) {
       this.setActiveAppId(item.id);
       localStorage.setItem('appId', item.id);
+    },
+    setActiveExternalApp(item) {
+      onExternalAppClick(item.to);
     },
   },
 };

@@ -11,7 +11,7 @@
     <v-card height="605px">
       <v-card-title class="primary">
         <span class="white--text">
-          {{ $t('staiton.sparepart.bindtitle') }}
+          {{ $t('machine.sparepart.bindtitle') }}
         </span>
       </v-card-title>
       <v-divider></v-divider>

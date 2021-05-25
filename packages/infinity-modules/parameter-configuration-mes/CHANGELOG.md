@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I497 | Parameter Configuration | While adding parameter through UI, protocol selection should not present in the popup ([0a5e2fb](https://bitbucket.org/entrib/shopworx/commits/0a5e2fb71fa2e431030cec702551aa7e14de69ab))
+* **parameter-configuration:** RA-I498 | Parameter Configuration | Filter is not working as expected ([21a3ada](https://bitbucket.org/entrib/shopworx/commits/21a3ada4433227bbba1ef4d941d9a3d9d833c12d))
+* **parameter-configuration:** RA-I499 | Line MES | Parameter Configuration | Data is not displaying according to selection of protocol ([81d0cfe](https://bitbucket.org/entrib/shopworx/commits/81d0cfebfb9d00e4f3d6de56f299c3bc5b62b46a))
+
+
+
+
+
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration-mes

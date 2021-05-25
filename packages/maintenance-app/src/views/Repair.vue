@@ -176,7 +176,7 @@ export default {
     await this.getAssets();
     this.getFaultList();
     this.getMachineList();
-    await this.getRepairByQuery('?pagenumber=1&pagesize=10');
+    await this.getRepairByQuery('');
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -231,7 +231,7 @@ export default {
         !this.repairmachineValue && !this.repairstatusValue
         && !this.repairstartdateValue && !this.repairenddateValue
       ) {
-        query = '?pagenumber=1&pagesize=10';
+        query = '';
       }
       return query;
     },

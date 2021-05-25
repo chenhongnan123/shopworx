@@ -1,4 +1,5 @@
 import { set, toggle } from '@shopworx/services/util/store.helper';
+import { sortArray } from '@shopworx/services/util/sort.service';
 
 export default {
   namespaced: true,
@@ -209,7 +210,7 @@ export default {
       );
       let machine = [];
       if (list && list.length) {
-        machine = list.map((l, index) => ({
+        machine = sortArray(list, 'machinename').map((l, index) => ({
           ...l,
           selected: false,
           actions: '',
