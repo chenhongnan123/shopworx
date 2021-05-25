@@ -126,7 +126,7 @@
           color="primary"
           class="text-none"
           :loading="saving"
-          :disabled="!valid"
+          :disabled="!valid || !selectedPart || !selectedLine"
           @click="saveOrder"
         >
           {{ $t('Save') }}
@@ -307,6 +307,12 @@ export default {
           show: true,
           type: 'error',
           message: 'ROADMAPTYPE_NOT_EXISTS',
+        });
+      } else if (!this.plan.targetcount) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TARGET_NOT_EXISTS',
         });
       } else {
         const orderNameFlag = this.orderList.filter((o) => o.ordername === this.plan.ordername);
