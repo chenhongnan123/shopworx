@@ -58,14 +58,14 @@
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
          @change="validateInitsst"
-         :disabled="initialStationDisable"
+         :disabled="initialStationDisable || btnInitdisable"
         ></v-switch>
         </div>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
          @change="validateFinalsst"
-         :disabled="finalStationDisable"
+         :disabled="finalStationDisable || btnFindisable"
         ></v-switch>
       </v-col>
       </v-row>
@@ -314,6 +314,8 @@ export default {
           type: 'success',
           message: 'SUBSTATION_UPDATED',
         });
+        this.finalStationDisable = false;
+        this.btnDisable = false;
         this.dialog = false;
       } else {
         this.setAlert({
@@ -326,8 +328,9 @@ export default {
     },
     async resetDialog() {
       this.$refs.form.resetValidation();
-      this.sublineNew = { ...this.subline };
       this.newSubstation = { ...this.substation };
+      this.initialStationDisable = false;
+      this.finalStationDisable = false;
       this.btnDisable = false;
     },
   },
