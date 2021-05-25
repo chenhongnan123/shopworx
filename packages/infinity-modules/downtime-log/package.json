@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/downtime-log",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.3.1",
+    "@shopworx/services": "^4.3.2",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

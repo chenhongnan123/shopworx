@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **core:** do not check connection status if session invalid ([620f0a6](https://bitbucket.org/entrib/shopworx/commits/620f0a60d4b94b8f02268ddd59bb50be30f8232e))
+* **cron:** fixed item selection ([7f9d46b](https://bitbucket.org/entrib/shopworx/commits/7f9d46bcb6c42ebe2d2754395c459bf341a6e64b))
+* **machine:** fixed minor bugs - images and list view ([aa1cffd](https://bitbucket.org/entrib/shopworx/commits/aa1cffdec34f2704b5ea85c98e43a008c3b1750f))
+* **maintenance:** remove default pagination of 10 from list view ([7c2c138](https://bitbucket.org/entrib/shopworx/commits/7c2c138cdb099fcc161d3041690dbb1818d8226e))
+* **maintenance-details:** fixed detail view layout ([52cd3bc](https://bitbucket.org/entrib/shopworx/commits/52cd3bca068bfd50306ca006d7cdd1b7e5fa5df7))
+* **operator:** fixed minor bugs - list view ([851495f](https://bitbucket.org/entrib/shopworx/commits/851495ff409075f9c0265baf78806c01438caa04))
+* **parameter-configuration:** RA-I497 | Parameter Configuration | While adding parameter through UI, protocol selection should not present in the popup ([0a5e2fb](https://bitbucket.org/entrib/shopworx/commits/0a5e2fb71fa2e431030cec702551aa7e14de69ab))
+* **parameter-configuration:** RA-I498 | Parameter Configuration | Filter is not working as expected ([21a3ada](https://bitbucket.org/entrib/shopworx/commits/21a3ada4433227bbba1ef4d941d9a3d9d833c12d))
+* **parameter-configuration:** RA-I499 | Line MES | Parameter Configuration | Data is not displaying according to selection of protocol ([81d0cfe](https://bitbucket.org/entrib/shopworx/commits/81d0cfebfb9d00e4f3d6de56f299c3bc5b62b46a))
+* **production-layout:** RA-I491 | Line MES | Production Layout | User can add blank spaces as name for every field ([9360360](https://bitbucket.org/entrib/shopworx/commits/9360360a8e6631547459bb4e0afc4ea845d99f0f))
+* **recipe-management:** RA-I152 | Recipe Management | User is able to add recipe without selection of Subline and station ([5d4e879](https://bitbucket.org/entrib/shopworx/commits/5d4e879e65f1ea8b0776feb2f370d5473057ea50))
+
+
+### Features
+
+* **external-apps:** added API for android navigation of external apps ([65d6fed](https://bitbucket.org/entrib/shopworx/commits/65d6feda2ec0cf37b62e3b4f82257da1cea6b40a))
+
+
+
+
+
 ## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
 
 
