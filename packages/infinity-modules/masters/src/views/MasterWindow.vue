@@ -63,9 +63,19 @@
           outlined
           color="primary"
           class="text-none ml-2"
-          @click="uploadFile"
+          @click="downloadSample"
         >
           <v-icon small v-text="'$download'" left></v-icon>
+          {{ $t('downloadCSV') }}
+        </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="uploadFile"
+        >
+          <v-icon small v-text="'$upload'" left></v-icon>
           {{ $t('Import') }}
         </v-btn>
         <input
@@ -76,16 +86,6 @@
           id="uploadFiles"
           @change="onFilesChanged"
         >
-        <v-btn
-          small
-          outlined
-          color="primary"
-          class="text-none ml-2"
-          @click="downloadSample"
-        >
-          <v-icon small v-text="'$download'" left></v-icon>
-          {{ $t('downloadCSV') }}
-        </v-btn>
       </span>
     </portal>
     <v-tabs

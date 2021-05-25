@@ -43,7 +43,7 @@
 
 <script>
 /* eslint-disable */
-import { mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ReviewMasterData from './ReviewMasterData.vue';
 
@@ -79,6 +79,9 @@ export default {
       invalidDataTypes: null,
       duplicateColumnData: null,
     };
+  },
+  computed: {
+    ...mapState('masters', ['elements']),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -196,7 +199,7 @@ export default {
     },
     async validateData() {
       this.missingData = this.missingRequiredData();
-      // this.duplicateColumnData = this.duplicateData();
+      this.duplicateColumnData = this.duplicateData();
       this.invalidDataTypes = this.validateDataType();
       if (this.missingData && this.missingData.length) {
         this.error = true;
@@ -234,19 +237,20 @@ export default {
       });
       return res;
     },
-    // duplicateData() {
-    //   const res = [];
-    //   this.masterData.forEach((t) => {
-    //     if (t.tagName === this.masterElement.uniqueTagName) {
-    //       const matchedRecords = this.records.map((rec) => rec[t.tagName]);
-    //       const uniqueRecords = [...new Set(matchedRecords)];
-    //       if (matchedRecords.length !== uniqueRecords.length) {
-    //         res.push(t.tagDescription);
-    //       }
-    //     }
-    //   });
-    //   return res;
-    // },
+    duplicateData() {
+      const res = [];
+      const masterElement = this.elements.find((e) => this.id === e.element.elementName);
+      this.records.forEach((t) => {
+        if (t.tagName === masterElement.element.uniqueTagName) {
+          const matchedRecords = this.masterData.map((rec) => rec[t.tagName]);
+          const uniqueRecords = [...new Set(matchedRecords)];
+          if (matchedRecords.length !== uniqueRecords.length) {
+            res.push(t.tagDescription);
+          }
+        }
+      });
+      return res;
+    },
     validateDataType() {
       const res = [];
       this.records.forEach((t) => {
