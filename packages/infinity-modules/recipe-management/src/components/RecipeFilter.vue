@@ -47,7 +47,7 @@
           <div class="subheading font-weight-regular mt-4"></div>
           <v-autocomplete
             v-model="recipes"
-            :items="recipeList"
+            :items="recipeNames"
             outlined
             dense
             hide-details
@@ -78,7 +78,8 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'RecipeFilter',
-  created() {
+  async created() {
+    await this.getRecipeNameByStation('');
   },
   data() {
     return {
@@ -89,7 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList', 'subStationList']),
+    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList', 'subStationList', 'recipeNames']),
     showFilter: {
       get() {
         return this.filter;
@@ -100,7 +101,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getStations', 'getSubStations']),
+    ...mapActions('recipeManagement', ['getRecipeListRecords', 'getStations', 'getSubStations', 'getRecipeNameByStation']),
     ...mapMutations('recipeManagement', ['setFilter', 'toggleFilter', 'setFilterSubLine', 'setFilterStation', 'setRecipeList', 'setFilterRecipe']),
     onChangeLine() {
     },
@@ -112,34 +113,43 @@ export default {
     async onChangeStation(val) {
       this.$root.$emit('filteredStation', val);
       const query = `?query=stationid=="${val.id}"`;
-      await this.getRecipeListRecords(query);
+      await this.getRecipeNameByStation(query);
+      // this.setRecipeList(this.recipeNames);
     },
     onChangeRecipe(val) {
       this.$root.$emit('filteredRecipe', val);
     },
-    btnApply() {
-      if (this.sublines != null) {
+    async btnApply() {
+      let query = '?query=';
+      if (this.sublines != null && this.stations === null && this.recipes === null) {
         this.setFilterSubLine(this.sublines);
-        const newarray = this.filterBList.filter((o) => o.sublineid === this.sublines.id);
-        this.setRecipeList(newarray);
-        if (this.stations != null) {
-          this.setFilterStation(this.stations);
-          this.setRecipeList(this.filterBList.filter((o) => o.stationid === this.stations.id));
-        }
-        if (this.recipes != null) {
-          this.setFilterRecipe(this.recipes);
-          this.setRecipeList(this.filterBList
-            .filter((o) => o.recipename === this.recipes.recipename));
-        }
-      } else if (this.stations != null) {
-        this.setFilterStation(this.stations);
-        const newStation = this.filterBList.filter((o) => o.stationid === this.stations.id);
-        this.setRecipeList(newStation);
-      } else if (this.recipes != null) {
-        this.setFilterRecipe(this.recipes);
-        const newRecipe = this.filterBList.filter((o) => o.recipename === this.recipes.recipename);
-        this.setRecipeList(newRecipe);
+        query += `sublineid=="${this.sublines.id}"`;
       }
+      if (this.stations != null && this.sublines === null && this.recipes === null) {
+        this.setFilterStation(this.stations);
+        query += `stationid=="${this.stations.id}"`;
+      }
+      if (this.recipes != null && this.sublines === null && this.stations === null) {
+        this.setFilterRecipe(this.recipes);
+        query += `recipenumber=="${this.recipes.recipenumber}"`;
+      }
+      if (this.sublines != null && this.stations != null && this.recipes === null) {
+        this.setFilterSubLine(this.sublines);
+        this.setFilterStation(this.stations);
+        query += `sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
+      }
+      if (this.stations != null && this.recipes != null && this.sublines === null) {
+        this.setFilterStation(this.stations);
+        this.setFilterRecipe(this.recipes);
+        query += `stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipes.recipenumber}"`;
+      }
+      if (this.sublines != null && this.stations != null && this.recipes != null) {
+        this.setFilterSubLine(this.sublines);
+        this.setFilterStation(this.stations);
+        this.setFilterRecipe(this.recipes);
+        query += `sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipes.recipenumber}"`;
+      }
+      await this.getRecipeListRecords(query);
       this.toggleFilter();
     },
     async btnReset() {
