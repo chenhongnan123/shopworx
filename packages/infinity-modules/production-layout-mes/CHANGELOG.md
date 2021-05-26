@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I103 | Line MES | Production Layout | User can assign multiple initial/final substation ([20be297](https://bitbucket.org/entrib/shopworx/commits/20be2971b75fed95735888291de75958bb207683))
+* **production-layout:** RA-I492 | Line MES | Production Layout | Incorrect functionality for assigning Mainline ([c3bd2f9](https://bitbucket.org/entrib/shopworx/commits/c3bd2f9a4595636160bad522d80ee5499150fc6b))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 

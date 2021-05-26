@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **production-planning:** fixed strokes per part validation ([a88a3e4](https://bitbucket.org/entrib/shopworx/commits/a88a3e49397ec8b820e35ca3bc31fa57e2da9ad5))
+
+
+### Features
+
+* **production-planning:** added strokes per part for press machine ([c35af6d](https://bitbucket.org/entrib/shopworx/commits/c35af6d034090ac4452222dbbbae94eb27f9d34c))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 **Note:** Version bump only for package @shopworx/production-planning

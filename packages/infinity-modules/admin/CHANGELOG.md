@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I297 | added validation to holiday ([3aeec4d](https://bitbucket.org/entrib/shopworx/commits/3aeec4d0bd2e5d8a8f420319fbf531327879cc0e))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 **Note:** Version bump only for package @shopworx/admin

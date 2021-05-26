@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **recipe-management:** RA-I614Line MES | Recipe Management | Showing no data available message when we click on refresh ([71e4895](https://bitbucket.org/entrib/shopworx/commits/71e48950f253c11ea2c580bbffa3416a53ac538c))
+
+
+### Features
+
+* **locale:** added utility reports locale ([988d268](https://bitbucket.org/entrib/shopworx/commits/988d268142c77c1d92152335ffaa888517db4981))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 
