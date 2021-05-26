@@ -332,6 +332,7 @@ export default {
       if (success) {
         this.chipforSubline = false;
         this.chipforStation = false;
+        this.chipforRecipe = false;
       }
     });
   },
@@ -373,7 +374,7 @@ export default {
         'getRecipeInUse',
       ]),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation', 'setFilterRecipe']),
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);
@@ -404,6 +405,9 @@ export default {
       }
       if (this.sublines && this.stations) {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
+      }
+      if (this.stations && this.recipesfilter) {
+        param += `?query=stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
       if (this.sublines && this.stations && this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
@@ -647,6 +651,7 @@ export default {
       this.recipesfilter = '';
       this.setFilterSubLine('');
       this.setFilterStation('');
+      this.setFilterRecipe('');
     },
   },
 };
