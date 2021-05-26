@@ -142,6 +142,7 @@
     "cycletime": "Cycle time",
     "delayTime": "Delay time",
     "activeCavity": "Active cavity",
+    "strokes": "Strokes per part",
     "quantity": "Quantity",
     "scheduledStartTime": "Scheduled start time*",
     "markAsTrial": "Mark as trial",
@@ -158,6 +159,7 @@
     "standardCycle": "Standard cycletime",
     "standardDelay": "Standard delaytime",
     "standardCavity": "Standard cavity",
+    "standardStrokes": "Standard strokes per part",
     "cannotEditTitle": "Cannot edit plan",
     "cannotEditSubtitle": "You cannot edit a completed or aborted plan",
     "goBack": "Go back"

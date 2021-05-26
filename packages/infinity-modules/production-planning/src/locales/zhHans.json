@@ -142,6 +142,7 @@
     "cycletime": "周期",
     "delayTime": "延迟时间",
     "activeCavity": "主动腔",
+    "strokes": "每个部分抚摸",
     "quantity": "数量",
     "scheduledStartTime": "预定开始时间*",
     "markAsTrial": "标记为试验",
@@ -158,6 +159,7 @@
     "standardCycle": "标准循环时间",
     "standardDelay": "标准延迟时间",
     "standardCavity": "标准腔",
+    "standardStrokes": "每个部分标准抚摸",
     "cannotEditTitle": "无法编辑计划",
     "cannotEditSubtitle": "您无法编辑已完成或中止计划",
     "goBack": "回去"
