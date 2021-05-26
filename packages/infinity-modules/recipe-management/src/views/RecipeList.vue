@@ -406,6 +406,9 @@ export default {
       if (this.sublines && this.stations) {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
       }
+      if (this.stations && this.recipesfilter) {
+        param += `?query=stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
+      }
       if (this.sublines && this.stations && this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
