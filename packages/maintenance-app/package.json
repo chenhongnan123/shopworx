@@ -1,6 +1,6 @@
 {
   "name": "@shopworx/maintenance-app",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,8 +11,8 @@
   "dependencies": {
     "@breejs/later": "^4.0.2",
     "@mdi/font": "^5.9.55",
-    "@shopworx/assets": "^4.3.2",
-    "@shopworx/services": "^4.3.2",
+    "@shopworx/assets": "^4.3.3",
+    "@shopworx/services": "^4.3.3",
     "ag-grid-community": "^23.1.1",
     "ag-grid-enterprise": "^23.1.1",
     "ag-grid-vue": "^23.1.1",

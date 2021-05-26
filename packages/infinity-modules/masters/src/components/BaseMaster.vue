@@ -38,6 +38,7 @@ import { AgGridVue } from 'ag-grid-vue';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
+import CSVParser from '@shopworx/services/util/csv.service';
 
 export default {
   name: 'BaseMaster',
@@ -329,6 +330,17 @@ export default {
         fileName: `${this.id}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsCsv(params);
+    },
+    async downloadSampleCSV() {
+      const columnDefs = this.tags.map((tag) => tag.tagDescription);
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse([columnDefs]);
+      const csvData = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const csvURL = window.URL.createObjectURL(csvData);
+      const tempLink = document.createElement('a');
+      tempLink.href = csvURL;
+      tempLink.setAttribute('download', `${this.id}-${new Date().toLocaleString()}.csv`);
+      tempLink.click();
     },
   },
 };

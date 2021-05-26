@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **recipe-management:** close the chips on navigation to other module ([fe3febf](https://bitbucket.org/entrib/shopworx/commits/fe3febfc3099d4f9998b524649bbd9da7dc54d1f))
+* **recipe-management:** filter functionality ([3088f4a](https://bitbucket.org/entrib/shopworx/commits/3088f4af245ca1d12b7bb82e45b4249e456622d4))
+* **recipe-management:** RA-I146 | Line MES | Recipe Management | Refresh button functionality is not proper ([b37fecd](https://bitbucket.org/entrib/shopworx/commits/b37fecd3d9fc69eb94fbe8908da1eab335653f4a))
+* **recipe-management:** RA-I153 | Line MES | Recipe Management | Filter options are not get cleared ([a5cfc54](https://bitbucket.org/entrib/shopworx/commits/a5cfc54b8c8ac5a5595eb4bbddcb756cd55a7976))
+* **recipe-management:** RA-I614Line MES | Recipe Management | Showing no data available message when we click on refresh ([71e4895](https://bitbucket.org/entrib/shopworx/commits/71e48950f253c11ea2c580bbffa3416a53ac538c))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 

@@ -5,7 +5,8 @@
       "maintenance": "维护报告",
       "downtime": "停机报告",
       "quality": "质量报告",
-      "performance": "绩效报告"
+      "performance": "绩效报告",
+      "utility": "公用事业报告"
     }
   },
   "noReports": "没有找到报告",

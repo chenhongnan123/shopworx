@@ -16,6 +16,9 @@ export default ({
     duplicateProductDialog: false,
     editProductDialog: false,
     deleteDialog: false,
+    selectedProduct: null,
+    selectedBOM: null,
+    selectedRoadmap: null,
   },
   mutations: {
     setLineList: set('lineList'),
@@ -32,6 +35,9 @@ export default ({
     setBom: set('bom'),
     setProductTypeCategory: set('productTypeCategory'),
     setDeleteDialog: set('deleteDialog'),
+    setSelectedProduct: set('selectedProduct'),
+    setSelectedBOM: set('selectedBOM'),
+    setSelectedRoadmap: set('selectedRoadmap'),
   },
   actions: {
     getLines: async ({ dispatch, commit }, query) => {
@@ -97,6 +103,21 @@ export default ({
         }));
       }
       commit('setProductList', product);
+    },
+    checkDuplicateProduct: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'part',
+          query,
+        },
+        { root: true },
+      );
+      let duplicateFound = false;
+      if (list && list.length) {
+        duplicateFound = true;
+      }
+      return duplicateFound;
     },
     createProduct: async ({ dispatch }, payload) => {
       const created = await dispatch(

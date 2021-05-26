@@ -5,7 +5,8 @@
       "maintenance": "Maintenance reports",
       "downtime": "Downtime reports",
       "quality": "Quality reports",
-      "performance": "Performance reports"
+      "performance": "Performance reports",
+      "utility": "Utility reports"
     }
   },
   "noReports": "No reports found",

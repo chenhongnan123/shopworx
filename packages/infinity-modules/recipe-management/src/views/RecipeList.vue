@@ -105,6 +105,7 @@
         show-select
         fixed-header
         :height="tableHeight - 168"
+        :loading="myloadingVariable"
         >
         <!-- eslint-disable-next-line -->
         <template v-slot:item.recipename="{ item }">
@@ -232,6 +233,7 @@ export default {
   },
   data() {
     return {
+      myloadingVariable: true,
       sublines: null,
       stations: null,
       recipesfilter: null,
@@ -311,6 +313,7 @@ export default {
   async created() {
     this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
+    this.myloadingVariable = false;
   },
   async mounted() {
     this.$root.$on('filteredSubline', (data) => {
@@ -329,12 +332,15 @@ export default {
       if (success) {
         this.chipforSubline = false;
         this.chipforStation = false;
+        this.chipforRecipe = false;
       }
     });
   },
   async beforeDestroy() {
     await this.btnReset();
     this.chipforSubline = false;
+    this.chipforStation = false;
+    this.chipforRecipe = false;
     this.closeThechips = false;
   },
   computed: {
@@ -368,7 +374,7 @@ export default {
         'getRecipeInUse',
       ]),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation', 'setFilterRecipe']),
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);
@@ -386,17 +392,28 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
+      this.myloadingVariable = true;
       let param = '';
-      if (this.sublines && !this.stations) {
+      if (this.sublines && !this.stations && !this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id || null}"`;
       }
-      if (this.stations && !this.sublines) {
+      if (this.stations && !this.sublines && !this.recipesfilter) {
         param += `?query=stationid=="${this.stations.id || null}"`;
       }
+      if (this.recipesfilter && !this.sublines && !this.stations) {
+        param += `?query=recipenumber=="${this.recipesfilter.recipenumber || null}"`;
+      }
       if (this.sublines && this.stations) {
-        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
+      }
+      if (this.stations && this.recipesfilter) {
+        param += `?query=stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
+      }
+      if (this.sublines && this.stations && this.recipesfilter) {
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
       await this.getRecipeListRecords(param);
+      this.myloadingVariable = false;
     },
     handleClick(value) {
       this.$router.push({
@@ -625,32 +642,17 @@ export default {
     //   }
     // },
     async btnReset() {
+      this.myloadingVariable = true;
       await this.getRecipeListRecords('');
+      this.myloadingVariable = false;
       // this.setRecipeList(this.filterBList);
-      this.sublines = [];
-      this.stations = [];
-      this.setFilterSubLine(this.sublines);
-      this.setFilterStation(this.stations);
+      this.sublines = '';
+      this.stations = '';
+      this.recipesfilter = '';
+      this.setFilterSubLine('');
+      this.setFilterStation('');
+      this.setFilterRecipe('');
     },
-  },
-  async btnApply() {
-    if (this.sublines != null) {
-      this.setFilterSubLine(this.sublines);
-      const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
-      this.setRecipeList(newarray);
-      if (this.stations != null) {
-        this.setFilterStation(this.stations);
-        this.setRecipeList(this.newarray.filter((o) => o.machinename === this.stations.name));
-      }
-    } else if (this.stations != null) {
-      this.setFilterStation(this.stations);
-      this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
-    } else if (this.recipesfilter != null) {
-      this.setRecipeList(this.filterBList.filter(
-        (o) => o.recipename === this.recipesfilter.recipename,
-      ));
-    }
-    this.toggleFilter();
   },
 };
 </script>

@@ -76,15 +76,15 @@
             @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
         <template v-slot:item.ordercreatedtime="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.ordercreatedtime" :class="orderC(item.orderstatus)">
             {{new Date(item.ordercreatedtime).toLocaleString()}}</span>
         </template>
         <template v-slot:item.scheduledstart="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.scheduledstart" :class="orderC(item.orderstatus)">
             {{new Date(item.scheduledstart).toLocaleString()}}</span>
         </template>
         <template v-slot:item.orderexpendtime="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.orderexpendtime" :class="orderC(item.orderstatus)">
             {{new Date(item.orderexpendtime).toLocaleString()}}</span>
         </template>
         <template v-slot:item.targetcount="{ item }">
