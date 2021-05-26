@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I297 | added validation to holiday ([3aeec4d](https://bitbucket.org/entrib/shopworx/commits/3aeec4d0bd2e5d8a8f420319fbf531327879cc0e))
+* **date-fns:** read date service optional options ([a8d0c7f](https://bitbucket.org/entrib/shopworx/commits/a8d0c7f089201cac28fd8987d006e05234af9f67))
+* **masters:** QA0-I186 Master Data|Import/Export ([4ec80bb](https://bitbucket.org/entrib/shopworx/commits/4ec80bb082171bf07612db45425bd21b98ae6cb8))
+* **production-layout:** RA-I103 | Line MES | Production Layout | User can assign multiple initial/final substation ([20be297](https://bitbucket.org/entrib/shopworx/commits/20be2971b75fed95735888291de75958bb207683))
+* **production-layout:** RA-I492 | Line MES | Production Layout | Incorrect functionality for assigning Mainline ([c3bd2f9](https://bitbucket.org/entrib/shopworx/commits/c3bd2f9a4595636160bad522d80ee5499150fc6b))
+* **production-planning:** fixed strokes per part validation ([a88a3e4](https://bitbucket.org/entrib/shopworx/commits/a88a3e49397ec8b820e35ca3bc31fa57e2da9ad5))
+* **recipe-management:** close the chips on navigation to other module ([fe3febf](https://bitbucket.org/entrib/shopworx/commits/fe3febfc3099d4f9998b524649bbd9da7dc54d1f))
+* **recipe-management:** filter functionality ([3088f4a](https://bitbucket.org/entrib/shopworx/commits/3088f4af245ca1d12b7bb82e45b4249e456622d4))
+* **recipe-management:** RA-I146 | Line MES | Recipe Management | Refresh button functionality is not proper ([b37fecd](https://bitbucket.org/entrib/shopworx/commits/b37fecd3d9fc69eb94fbe8908da1eab335653f4a))
+* **recipe-management:** RA-I153 | Line MES | Recipe Management | Filter options are not get cleared ([a5cfc54](https://bitbucket.org/entrib/shopworx/commits/a5cfc54b8c8ac5a5595eb4bbddcb756cd55a7976))
+* **recipe-management:** RA-I614Line MES | Recipe Management | Showing no data available message when we click on refresh ([71e4895](https://bitbucket.org/entrib/shopworx/commits/71e48950f253c11ea2c580bbffa3416a53ac538c))
+* **report-viewer:** fixed chart display on report change ([69f8ee6](https://bitbucket.org/entrib/shopworx/commits/69f8ee63cbf8ab7786dbc746991273868b042bbc))
+
+
+### Features
+
+* **energy-dashboard:** added card view for energy dashboard ([eb43b50](https://bitbucket.org/entrib/shopworx/commits/eb43b501c1ad5f7b7308236234ab6d76a8db3717))
+* **locale:** added utility reports locale ([988d268](https://bitbucket.org/entrib/shopworx/commits/988d268142c77c1d92152335ffaa888517db4981))
+* **production-planning:** added strokes per part for press machine ([c35af6d](https://bitbucket.org/entrib/shopworx/commits/c35af6d034090ac4452222dbbbae94eb27f9d34c))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **masters:** QA0-I186 Master Data|Import/Export ([4ec80bb](https://bitbucket.org/entrib/shopworx/commits/4ec80bb082171bf07612db45425bd21b98ae6cb8))
+
+
+
+
+
 ## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
 
 **Note:** Version bump only for package @shopworx/masters
