@@ -37,6 +37,12 @@ export default {
       default: false,
     },
   },
+  mounted() {
+    const username = localStorage.getItem('username');
+    if (username) {
+      this.identifier = username;
+    }
+  },
   computed: {
     isMobileNumber() {
       return this.isNumberic(this.identifier);

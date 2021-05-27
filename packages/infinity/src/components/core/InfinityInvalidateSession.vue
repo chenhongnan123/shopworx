@@ -79,5 +79,14 @@ export default {
       this.loading = false;
     },
   },
+  watch: {
+    dialog(dialog) {
+      const username = localStorage.getItem('username');
+      const password = localStorage.getItem('password');
+      if (dialog && username && password) {
+        this.logout();
+      }
+    },
+  },
 };
 </script>
