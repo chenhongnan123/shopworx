@@ -95,6 +95,15 @@ export default {
       isMobile: false,
     };
   },
+  mounted() {
+    const password = localStorage.getItem('password');
+    if (password) {
+      this.password = password;
+      setTimeout(() => {
+        this.onLogin();
+      }, 0);
+    }
+  },
   methods: {
     ...mapActions('auth', ['authenticate']),
     ...mapActions('user', ['getMySolutions']),
