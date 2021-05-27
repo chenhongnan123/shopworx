@@ -43,7 +43,7 @@
           small color="primary" outlined class="text-none ml-2" @click="MovetoTop">
             Move to Top
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="filterClick">
             <v-icon small left>mdi-filter-variant</v-icon>
             {{ $t('Filter') }}
           </v-btn>
@@ -55,6 +55,8 @@
         :single-select="true"
         item-key="ordernumber"
         show-select
+        :loading="myloadingvariable"
+        loading-text="Loading... Please wait"
         >
         <template v-slot:item.linename="{ item }">
           <span :class="orderC(item.orderstatus)">{{ item.linename }}</span>
@@ -74,15 +76,15 @@
             @click="handleClick(item)">{{ item.ordername }}</span>
         </template>
         <template v-slot:item.ordercreatedtime="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.ordercreatedtime" :class="orderC(item.orderstatus)">
             {{new Date(item.ordercreatedtime).toLocaleString()}}</span>
         </template>
         <template v-slot:item.scheduledstart="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.scheduledstart" :class="orderC(item.orderstatus)">
             {{new Date(item.scheduledstart).toLocaleString()}}</span>
         </template>
         <template v-slot:item.orderexpendtime="{ item }">
-          <span :class="orderC(item.orderstatus)">
+          <span v-if="item && item.orderexpendtime" :class="orderC(item.orderstatus)">
             {{new Date(item.orderexpendtime).toLocaleString()}}</span>
         </template>
         <template v-slot:item.targetcount="{ item }">
@@ -182,6 +184,7 @@ export default {
       orders: [],
       max25chars: 25,
       visible: false,
+      myloadingvariable: true,
       orderStatusList: [
         {
           name: 'New',
@@ -284,6 +287,7 @@ export default {
   },
   async created() {
     await this.getOrderListRecords('?query=visible==true');
+    this.myloadingvariable = false;
     this.orders = [];
   },
   computed: {
@@ -291,7 +295,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('orderManagement', ['setAddPlanDialog', 'toggleFilter']),
+    ...mapMutations('orderManagement', ['setAddPlanDialog', 'toggleFilter', 'setArchive']),
     showFilter: {
       get() {
         return this.filter;
@@ -310,6 +314,10 @@ export default {
       return '';
     },
     ...mapActions('orderManagement', ['getOrderListRecords', 'updateOrder']),
+    filterClick() {
+      this.setArchive(true);
+      this.toggleFilter();
+    },
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });
     },

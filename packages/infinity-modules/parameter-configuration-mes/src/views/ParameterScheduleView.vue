@@ -187,14 +187,17 @@
       <v-col cols="12" md="12"> </v-col>
     </v-row>
     <v-data-table
+      v-if="parameterList.length"
       v-model="parameterSelected"
       :headers="headers"
       item-key="_id"
       :items="parameterList"
       :options="{ itemsPerPage: 5 }"
-      show-select
       fixed-header
+      show-select
       :height="height"
+      :loading="myLoadingVariable"
+      :loading-text="this.initialMessage"
     >
       <template v-slot:item.name="props">
         <v-edit-dialog
@@ -438,6 +441,8 @@ export default {
           name: 'ABPLC',
         },
       ],
+      initialMessage: 'Please select protocol',
+      myLoadingVariable: false,
       selectedProtocol: null,
       sampleDataBtn: true,
       parameterSelected: [],
@@ -446,9 +451,9 @@ export default {
       headersSnap7: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -463,9 +468,9 @@ export default {
       headersMelsec: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -479,9 +484,9 @@ export default {
       headerAbPlc: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -556,44 +561,87 @@ export default {
   watch: {
     lineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords(`?query=protocol=="${this.protocol}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = false;
       }
     },
-    sublineValue(val) {
+    async sublineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    stationValue(val) {
+    async stationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    substationValue(val) {
+    async substationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
-    protocol(val) {
+    async protocol(val) {
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else if (val === 'MELSEC') {
         this.headers = this.headersMelsec;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else {
         this.headers = this.headerAbPlc;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
+        // this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
   },
@@ -634,6 +682,7 @@ export default {
       this.height = window.innerHeight - 212;
     },
     onSelectProtocol(value) {
+      this.initialMessage = 'Loading...please wait';
       this.setProtocol(value);
       if (this.protocol) {
         this.sampleDataBtn = false;
@@ -897,7 +946,7 @@ export default {
       this.socket.on(
         `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
         (data) => {
-          console.log('event received');
+          // console.log('event received');
           if (data) {
             this.parameterList.forEach((element) => {
               this.$set(element, 'monitorvalue', data[element.name]);
@@ -1147,37 +1196,47 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      data.forEach((item) => {
-        item.lineid = this.lineValue;
-        item.sublineid = this.sublineValue;
-        item.stationid = this.stationValue;
-        item.substationid = this.substationValue;
-        if (this.stationList.length > 0) {
-          item.plcaddress = this.stationList
-            .filter((station) => this.stationValue === station.id)[0].plcipaddress;
-        }
-        if (this.datatypeList.length > 0) {
-          item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
-             === 1;
-          item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
-             === 1;
-          // if (Number(item.datatypeList) === 11) {
-          //   item.size = this.datatypeList
-          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
-          // }
-          if (Number(item.datatype) !== 11) {
-            item.size = this.datatypeList
-              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+      if (data.length > 0) {
+        data.forEach((item) => {
+          item.lineid = this.lineValue;
+          item.sublineid = this.sublineValue;
+          item.stationid = this.stationValue;
+          item.substationid = this.substationValue;
+          if (this.stationList.length > 0) {
+            item.plcaddress = this.stationList
+              .filter((station) => this.stationValue === station.id)[0].plcipaddress;
           }
-        }
-        item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().trim();
-        item.assetid = 4;
-        delete item.monitorvalue;
-        delete item.status;
-      });
+          if (this.datatypeList.length > 0) {
+            item.isbigendian = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
+              === 1;
+            item.isswapped = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
+              === 1;
+            // if (Number(item.datatypeList) === 11) {
+            //   item.size = this.datatypeList
+            //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            // }
+            if (Number(item.datatype) !== 11) {
+              item.size = this.datatypeList
+                .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            }
+          }
+          item.protocol = item.protocol.toUpperCase();
+          item.name = item.name.toLowerCase().trim();
+          item.assetid = 4;
+          delete item.monitorvalue;
+          delete item.status;
+        });
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
@@ -1349,39 +1408,48 @@ export default {
             }
           });
           await this.createTagElement(tagList);
-          let payloadData = [];
-          tagList.forEach((l) => {
-            const tag = this.createElementResponse
-              .filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
-              });
-            }
-          });
-          await this.updateTagStatus(payloadData);
-          // updates tags of traceability elements
-          await this.createTagElement(traceabilityTagList);
-          payloadData = [];
-          traceabilityTagList.forEach((l) => {
-            const tag = this.createElementResponse
-              .filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
-              });
-            }
-          });
-          await this.updateTagStatus(payloadData);
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'IMPORT_PARAMETER_LIST',
-          });
+          // TODO - Check response "this.createElementResponse"
+          if (this.createElementResponse && this.createElementResponse.length) {
+            let payloadData = [];
+            tagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            // updates tags of traceability elements
+            await this.createTagElement(traceabilityTagList);
+            payloadData = [];
+            traceabilityTagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'IMPORT_PARAMETER_LIST',
+            });
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ELEMENT_NOT_CREATED',
+            });
+          }
         }
         document.getElementById('uploadFiles').value = null;
       } else {

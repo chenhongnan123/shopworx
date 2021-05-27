@@ -22,6 +22,7 @@ export default ({
     sublineInState: [],
     stationInState: [],
     substationInState: [],
+    recipeNames: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -43,6 +44,7 @@ export default ({
     setInStateSubline: set('sublineInState'),
     setInStateStation: set('stationInState'),
     setInStateSubStation: set('substationInState'),
+    setRecipeName: set('recipeNames'),
   },
   actions: {
     getMonitorValues: async ({ dispatch }, payload) => {
@@ -85,6 +87,18 @@ export default ({
         { root: true },
       );
       commit('setStationNamebySubline', stationNamebySubline);
+      return true;
+    },
+    getRecipeNameByStation: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'recipelist',
+          query,
+        },
+        { root: true },
+      );
+      commit('setRecipeName', list);
       return true;
     },
     getRecipeListRecords: async ({ dispatch, commit }, query) => {
@@ -196,6 +210,20 @@ export default ({
         return true;
       }
       return deleted;
+    },
+    getRecipeInUse: async ({ dispatch }, query) => {
+      const recipeInUse = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'productdetails',
+          query,
+        },
+        { root: true },
+      );
+      if (recipeInUse && recipeInUse.length) {
+        return recipeInUse[0];
+      }
+      return false;
     },
     // getProductDetails
     getProductDetails: async ({ dispatch, commit }, query) => {

@@ -5,7 +5,7 @@
     :subTitle="$t('forgotPassword.subTitle')"
   >
     <validation-observer #default="{ handleSubmit }">
-      <v-form @submit.prevent="handleSubmit(onResetPassword)">
+      <v-form @submit.prevent="handleSubmit(onResetPassword)" v-model="isValid">
         <v-card-text>
           <identifier-input
             id="identifier_input"
@@ -23,6 +23,7 @@
             class="text-none"
             id="reset_password_btn"
             :loading="loading"
+            :disabled="!isValid"
           >
             <v-icon
               left
@@ -70,6 +71,7 @@ export default {
       identifier: '',
       loading: false,
       isMobile: false,
+      isValid: false,
     };
   },
   computed: {

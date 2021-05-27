@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I103 | Line MES | Production Layout | User can assign multiple initial/final substation ([20be297](https://bitbucket.org/entrib/shopworx/commits/20be2971b75fed95735888291de75958bb207683))
+* **production-layout:** RA-I492 | Line MES | Production Layout | Incorrect functionality for assigning Mainline ([c3bd2f9](https://bitbucket.org/entrib/shopworx/commits/c3bd2f9a4595636160bad522d80ee5499150fc6b))
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **production-layout:** RA-I491 | Line MES | Production Layout | User can add blank spaces as name for every field ([9360360](https://bitbucket.org/entrib/shopworx/commits/9360360a8e6631547459bb4e0afc4ea845d99f0f))
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **production-layout:** Line MES | Production Layout | Usg StartDate calendar should have date enbled after Manuf Date | RA-I106 ([cada629](https://bitbucket.org/entrib/shopworx/commits/cada629f59f727c9817a50eb6de0cd55f160f8fe))
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Features
+
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+**Note:** Version bump only for package @shopworx/production-layout-mes
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

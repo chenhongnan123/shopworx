@@ -1,0 +1,71 @@
+{
+  "operator": {
+    "name": "员工",
+    "main": {
+      "header": {
+        "id": "员工号",
+        "name": "姓名",
+        "code": "识别号",
+        "password": "密码",
+        "department": "部门",
+        "position": "职位",
+        "editedby": "编辑者",
+        "editedtime": "编辑时间",
+        "createdby": "创建者",
+        "createdtime": "创建日期",
+        "photo": "照片"
+      }
+    },
+    "filter": {
+      "title": "Staff filters"
+    },
+    "addDialog": {
+      "id": "员工号",
+      "title": "创建员工",
+      "name": "姓名",
+      "code": "识别号",
+      "department": "部门",
+      "position": "职位",
+      "password": "密码"
+    },
+    "general": {
+      "apply": "应用",
+      "reset": "重置",
+      "selectall": "全选",
+      "selectnone": "全不选",
+      "search": "搜索",
+      "yes": "是",
+      "save": "保存",
+      "cancel": "取消",
+      "department": "部门",
+      "position": "职位",
+      "add": "添加",
+      "delete": "删除",
+      "refresh": "刷新",
+      "export": "导出",
+      "exportsample": "导出模板",
+      "import": "导入",
+      "filter": "筛选",
+      "confirmheader": "请确认",
+      "confirmmessage": "您确认删除所选项目吗 ?",
+      "noselected": "未选择",
+      "selected": "已选择",
+      "include": "包含",
+      "exclude": "排除",
+      "allinclude": "包含所有",
+      "allexclude": "排除所有"
+    },
+    "settings": {
+      "general": "通用设置",
+      "department": "部门",
+      "position": "职位",
+      "addposition": "创建职位",
+      "adddepartment": "创建部门",
+      "auth": "授权",
+      "id": "员工号",
+      "name": "姓名",
+      "code": "识别码",
+      "description": "描述"
+    }
+  }
+}

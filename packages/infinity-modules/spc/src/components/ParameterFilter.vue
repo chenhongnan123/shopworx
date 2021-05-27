@@ -87,7 +87,7 @@ export default {
       this.setApply(true);
     },
     btnReset() {
-      this.getSpcconfigurationListRecords('?pagenumber=1&pagesize=10');
+      this.getSpcconfigurationListRecords('');
       this.toggleFilter();
       this.element = '';
     },

@@ -76,6 +76,11 @@
     }
   },
   "dashboards": {
-    "liveShopfloor": "Live Shopfloor"
+    "liveShopfloor": "Live Shopfloor",
+    "utilityDashboard": "Utility",
+    "energyDashboard": "Energy Consumption",
+    "processDashboard": "Live Process",
+    "poProductionDashboard": "Overall Production Information",
+    "poPredictionDashboard": "Overall Prediction Information"
   }
 }

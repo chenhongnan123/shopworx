@@ -2,7 +2,7 @@
   <div>
     <portal to="settings-header">
       <span>
-        <v-btn
+        <!-- <v-btn
           small
           color="primary"
           class="text-none"
@@ -10,8 +10,9 @@
           @click="save"
           :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
         >
-          Save
-        </v-btn>
+          {{ $t('admin.save') }}
+        </v-btn> -->
+        <add-holiday :holidays="holidays" @added="fetchRecords"/>
         <v-btn
           small
           outlined
@@ -20,7 +21,7 @@
           @click="fetchRecords"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('admin.refresh') }}
         </v-btn>
       </span>
     </portal>
@@ -28,7 +29,7 @@
       indeterminate
       v-if="loading"
     ></v-progress-circular>
-    <validation-observer #default="{ handleSubmit }" v-else>
+    <!-- <validation-observer #default="{ handleSubmit }" v-else>
       <v-form @submit.prevent="handleSubmit(save)">
         <v-card
           flat
@@ -96,30 +97,71 @@
           <v-divider v-if="index + 1 != holidays.length"></v-divider>
         </v-card>
       </v-form>
-    </validation-observer>
+    </validation-observer> -->
+    <v-data-table
+      item-key="id"
+      class="transparent"
+      :items="holidays"
+      :headers="headers"
+      disable-pagination
+      hide-default-footer
+      v-else
+    >
+      <!-- eslint-disable-next-line -->
+      <template #item.actions="{ item }">
+        <v-btn
+          icon
+          @click="deleteHoliday(item)"
+          :loading="deleting"
+        >
+          <v-icon v-text="'$delete'"></v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import AddHoliday from './AddHoliday';
 
 export default {
   name: 'BusinessHolidays',
+  components: {
+    AddHoliday,
+  },
   data() {
     return {
+      headers: [
+        {
+          text: 'Name',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+        },
+        {
+          text: 'Date',
+          align: 'start',
+          sortable: true,
+          value: 'date',
+        },
+        {
+          text: 'Actions',
+          align: 'start',
+          sortable: false,
+          value: 'actions',
+        },
+      ],
       loading: false,
-      saving: false,
-      holidays: [{
-        name: '',
-        date: '',
-      }],
+      holidays: [],
+      deleting: false,
     };
   },
   created() {
     this.fetchRecords();
   },
   methods: {
-    ...mapActions('element', ['getRecords', 'upsertBulkRecords']),
+    ...mapActions('element', ['getRecords', 'upsertBulkRecords', 'deleteRecordById']),
     async fetchRecords() {
       this.loading = true;
       const records = await this.getRecords({
@@ -127,9 +169,12 @@ export default {
       });
       if (records && records.length) {
         this.holidays = records.map((rec) => ({
+          id: rec._id,
           name: rec.name,
           date: rec.date,
         }));
+      } else {
+        this.holidays = [];
       }
       this.loading = false;
     },
@@ -142,15 +187,23 @@ export default {
     removeHoliday(index) {
       this.holidays.splice(index, 1);
     },
-    async save() {
-      this.saving = true;
+    async deleteHoliday(item) {
+      this.deleting = true;
       const payload = {
         elementName: 'businessholidays',
-        records: this.holidays,
+        id: item.id,
       };
-      await this.upsertBulkRecords(payload);
-      this.saving = false;
+      await this.deleteRecordById(payload);
+      this.deleting = false;
+      this.fetchRecords();
     },
+    // async save() {
+    //   const payload = {
+    //     elementName: 'businessholidays',
+    //     records: this.holidays,
+    //   };
+    //   await this.upsertBulkRecords(payload);
+    // },
   },
 };
 </script>

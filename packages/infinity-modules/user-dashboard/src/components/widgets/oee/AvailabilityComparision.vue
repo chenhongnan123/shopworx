@@ -11,7 +11,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'AvailabilityComparision',
-  inject: ['theme'],
   props: {
     thisMachines: {
       type: Array,
@@ -34,7 +33,10 @@ export default {
           type: 'column',
         },
         title: {
-          text: 'Availability comparision',
+          text: this.$t('availabilityComparision'),
+          style: {
+            color: '',
+          },
         },
         plotOptions: {
           series: {
@@ -50,19 +52,30 @@ export default {
         },
         xAxis: {
           type: 'category',
+          labels: {
+            style: {
+              color: '',
+            },
+          },
         },
         yAxis: [
           {
             title: {
               text: null,
             },
+            labels: {
+              style: {
+                color: '',
+              },
+            },
           },
         ],
-        series: [],
+        series: [{}, {}],
       },
     };
   },
   computed: {
+    ...mapState('helper', ['isDark']),
     ...mapState('userDashboard', [
       'thisDate',
       'thisShift',
@@ -94,7 +107,7 @@ export default {
         y: this.roundOff(m.a),
       }));
       const series = {
-        color: this.theme.isDark ? '#21C77C' : '#354493',
+        color: this.isDark ? '#21C77C' : '#354493',
         id: 'main',
         data,
         name: `${this.thisDate} ${this.thisShift}`,
@@ -107,6 +120,22 @@ export default {
       deep: true,
       handler() {
         this.createSeries();
+      },
+    },
+    isDark: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.options.title.style.color = '#FFFFFF';
+          this.options.yAxis[0].labels.style.color = '#FFFFFF';
+          this.options.xAxis.labels.style.color = '#FFFFFF';
+          this.options.series[1].color = '#21C77C';
+        } else {
+          this.options.title.style.color = '#333333';
+          this.options.yAxis[0].labels.style.color = '#666666';
+          this.options.xAxis.labels.style.color = '#666666';
+          this.options.series[1].color = '#354493';
+        }
       },
     },
   },

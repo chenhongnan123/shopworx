@@ -56,7 +56,7 @@
         :rounded="expandOnHover"
         :shaped="!expandOnHover"
       >
-        <template v-for="(item, index) in items">
+        <template v-for="(item, index) in drawerItems">
           <v-subheader
             :key="index"
             v-if="item.header && !expandOnHover"
@@ -87,6 +87,7 @@
             v-else-if="item.external"
             target="_blank"
             :href="item.to"
+            @click="setActiveExternalApp(item)"
             :title="$t(`modules.${item.title}`)"
             :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
           >
@@ -115,7 +116,7 @@
         </template>
       </v-list>
     </perfect-scrollbar>
-    <template v-if="adminItems && adminItems.length">
+    <template v-if="drawerAdminItems && drawerAdminItems.length">
       <v-divider
         class="mt-2"
       ></v-divider>
@@ -128,7 +129,7 @@
         <v-list-item
           :key="item.title"
           :to="{ name: item.title }"
-          v-for="item in adminItems"
+          v-for="item in drawerAdminItems"
           :color="$vuetify.theme.dark ? 'primary' : 'secondary'"
         >
           <v-list-item-icon>
@@ -143,6 +144,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { onExternalAppClick } from '../../infinityLoader';
 
 export default {
   name: 'InfinityDrawer',
@@ -166,6 +168,9 @@ export default {
     };
   },
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
     canHover() {
       return this.expandOnHover && this.$vuetify.breakpoint.lgAndUp;
     },
@@ -185,13 +190,27 @@ export default {
         this.$emit('set-drawer', val);
       },
     },
+    drawerItems() {
+      let items = [...this.items];
+      if (this.isMobile) {
+        items = this.items.filter((i) => {
+          const isReportHeader = i.header === 'reports';
+          const areReportItems = i.to && i.to.includes('reports');
+          return !isReportHeader && !areReportItems;
+        });
+      }
+      return items;
+    },
+    drawerAdminItems() {
+      return this.isMobile ? [] : this.adminItems;
+    },
     scrollbarHeight() {
       // 64 - height of toolbar
       let totalHeight = 64;
-      if (this.adminItems && this.adminItems.length) {
+      if (this.drawerAdminItems && this.drawerAdminItems.length) {
         // 40 - height of one admin item
         // 16 - list padding
-        totalHeight += (40 * this.adminItems.length + 16 + 16);
+        totalHeight += (40 * this.drawerAdminItems.length + 16 + 16 + 1);
       }
       return totalHeight;
     },
@@ -216,6 +235,9 @@ export default {
     setActiveApp(item) {
       this.setActiveAppId(item.id);
       localStorage.setItem('appId', item.id);
+    },
+    setActiveExternalApp(item) {
+      onExternalAppClick(item.to);
     },
   },
 };

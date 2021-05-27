@@ -125,7 +125,7 @@
         <template v-slot:item.boundsublinename="{ item }">
          <v-select
           label="-"
-          :items="sublineList"
+          :items="sublineOptions"
           :disabled="saving"
           return-object
           solo
@@ -454,7 +454,6 @@ export default {
     // configurationLogic() {
     // },
     async chanageStation(item) {
-      console.log(item);
       const { boundsublinename } = item;
       // const substationItem = this.substationList
       //   .filter((substation) => stationSelected === substation.name)[0];
@@ -719,6 +718,15 @@ export default {
       'subStations',
     ]),
     ...mapState('materialManagement', ['materialList', 'materialListChoice']),
+    sublineOptions: {
+      get() {
+        const options = [{
+          name: '-',
+        }];
+        options.push(...this.sublineList);
+        return options;
+      },
+    },
   },
   props: ['query'],
 };

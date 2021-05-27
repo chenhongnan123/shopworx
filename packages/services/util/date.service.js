@@ -7,7 +7,28 @@ import {
   startOfDay,
   endOfDay,
   format,
+  startOfMonth,
+  endOfMonth,
+  isFirstDayOfMonth,
+  isLastDayOfMonth,
+  isBefore,
 } from 'date-fns';
+
+import {
+  enIN,
+  zhCN,
+  hi,
+  de,
+  th,
+} from 'date-fns/locale';
+
+const locales = {
+  'en': enIN,
+  'zh': zhCN,
+  'hi': hi,
+  'de': de,
+  'th': th,
+}
 
 export const now = () => new Date().getTime();
 
@@ -17,7 +38,12 @@ export const now = () => new Date().getTime();
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(date, baseDate, optoins);
+export const distanceInWords = (date, baseDate, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  const opt = Object.assign(options, locale);
+  return formatDistance(date, baseDate, opt);
+};
 
 /**
  * 
@@ -25,7 +51,12 @@ export const distanceInWords = (date, baseDate, optoins = {}) => formatDistance(
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const timeDistance = (date, baseDate, optoins = {}) => formatDistanceStrict(date, baseDate, optoins);
+export const timeDistance = (date, baseDate, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  const opt = Object.assign(options, locale);
+  return formatDistanceStrict(date, baseDate, opt);
+};
 
 /**
  * 
@@ -33,13 +64,29 @@ export const timeDistance = (date, baseDate, optoins = {}) => formatDistanceStri
  * @param {Date} baseDate
  * @param {Object} options
  */
-export const distanceInWordsToNow = (date, optoins = {}) => formatDistanceToNow(date, optoins);
+export const distanceInWordsToNow = (date, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  const opt = Object.assign(options, locale);
+  return formatDistanceToNow(date, opt);
+};
 
 /**
  * 
  * @param {Date} date
  */
-export const formatDate = (date, form) => format(date, form);
+export const formatDate = (date, form, options = {}) => {
+  const selectedLocale = options.locale || 'en';
+  const locale = locales[selectedLocale];
+  const opt = Object.assign(options, locale);
+  return format(date, form, opt);
+};
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const isBeforeDate = (date, dateToCompare) => isBefore(date, dateToCompare);
 
 /**
  * 
@@ -52,6 +99,31 @@ export const dayStart = (date) => startOfDay(date);
  * @param {Date} date
  */
 export const dayEnd = (date) => endOfDay(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const monthStart = (date) => startOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const monthEnd = (date) => endOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const isMonthStart = (date) => isFirstDayOfMonth(date);
+
+/**
+ * 
+ * @param {Date} date
+ */
+export const isMonthEnd = (date) => isLastDayOfMonth(date);
+
 
 /**
  * 

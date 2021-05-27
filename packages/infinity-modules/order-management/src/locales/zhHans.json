@@ -74,5 +74,78 @@
   "Filters":	"筛选",
   "MoveUp": "置顶",
   "Target quantity": "目标数量",
-  "Scheduled start": "预定开始时间"
+  "Scheduled start": "预定开始时间",
+  "planning": {
+    "setup": {
+      "counter": "Step {current} of {total}",
+      "importMaster": {
+        "title": "Import part matrix",
+        "title1": "Upload part matrix to ShopWorx to better",
+        "title2": "plan",
+        "title3": "your production on the shopfloor.",
+        "import": "Import part matrix",
+        "downloading": "Generating templates...",
+        "downloadError": "Could not download the part matrix templates.",
+        "retryDownload": "Retry download.",
+        "download": "You can download the part matrix templates",
+        "downloadLink": "here.",
+        "fetchMaster": "Fetching part matrix from ShopWorx servers...",
+        "fetchError": "We couldn't fetch part matrix from ShopWorx servers.",
+        "retryFetch": "Please retry.",
+        "importFile": "Import file",
+        "recordsExist": "1 record already exist! | {count} records already exist!",
+        "starting": "Starting...",
+        "parsing": "Parsing...",
+        "mapping": "Mapping...",
+        "importing": "Importing...",
+        "recordsImported": "1 record imported! | {count} records imported!",
+        "recordsNotCreated": "Cannot reach ShopWorx servers!",
+        "missingHeaders": "Please include headers in the first row!",
+        "missingData": "Please have atleast one data row!",
+        "fileUnparsable": "Cannot parse file!",
+        "fileNotFound": "File {file} not found!",
+        "review": "Review",
+        "updateColumns": "Update columns",
+        "reimport": "Re-import",
+        "reviewTitle": "Review {title}",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "missingMapping": "Missing required mappings:",
+        "requiredData": "Missing required data:",
+        "duplicateData": "Duplicate data for:",
+        "invalidDataType": "Invalid data type for:"
+      },
+      "complete": {
+        "title": "Complete setup",
+        "title1": "Great! you are all set. Welcome to the",
+        "title2": "planning",
+        "title3": "app. Other settings are available in the app for you to change.",
+        "next": "Let's go"
+      },
+      "error": {
+        "ROADMAPTYPE_NOT_EXISTS": "RoadMap Type Not Exists",
+        "TARGET_NOT_EXISTS": "Please enter Target Quantity."
+      }
+    },
+    "orderstatus": "Order Status"
+  },
+  "error": {
+    "PRODUCT_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product!",
+    "ROADMAP_DETAILS_NOT_AVAILABLE": "RoadMap Details Not Exists for this Product!",
+    "PRODUCT_ROADMAP_DETAILS_NOT_AVAILABLE": "Product Details Not Exists for this Product",
+    "ORDER_NOT_INTERRUPTED": "Updation not allowed for 'Interrupted' Or 'Completed' Order !",
+    "TARGET_ACTUAL": "Target count cannot be less than Actual count.",
+    "ALLREADY_ONE_RUNNING_STATUS": "Only one running order at time!",
+    "ERROR_CREATING_PLAN": "Error while creating order.",
+    "ERROR_CREATING_ORDER_PRODUCT": "Error while creating bulk records for 'Order Product'.",
+    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'."
+  },
+  "success": {
+    "ORDER_HIDE": "Selected Order is Hide by you.",
+    "ORDER_UNHIDE": "Selected Order is Unhide by you.",
+    "DATA_SAVED": "Date saved",
+    "ORDER_CREATED": "Order created successfully.",
+    "ORDER_PRODUCT_CREATED": "Bulk record created for 'Order Product' successfully.",
+    "ORDER_ROADMAP_CREATED": "Bulk record created for 'Order Roadmap' successfully."
+  }
 }

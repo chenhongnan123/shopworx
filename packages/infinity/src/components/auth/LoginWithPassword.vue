@@ -1,6 +1,6 @@
 <template>
-  <validation-observer #default="{ handleSubmit }">
-    <v-form @submit.prevent="handleSubmit(onLogin)">
+  <validation-observer #default="{ handleSubmit }" ref="loginForm">
+    <v-form @submit.prevent="handleSubmit(onLogin)" v-model="isValid">
       <v-card-text>
         <identifier-input
           id="identifier_input"
@@ -48,6 +48,7 @@
           color="primary"
           class="text-none"
           :loading="loading"
+          :disabled="!isValid"
         >
           <v-icon
             left
@@ -93,6 +94,7 @@ export default {
       identifier: '',
       loading: false,
       isMobile: false,
+      isValid: false,
     };
   },
   mounted() {

@@ -5,6 +5,14 @@ class CustomerService {
     this.request = ApiService;
   }
 
+  addCustomer(payload) {
+    return this.request.post('/server/customer', payload);
+  }
+
+  addSite(siteName, payload) {
+    return this.request.post(`/server/sites/${siteName}`, payload);
+  }
+
   getCustomers() {
     return this.request.get('/server/customer');
   }

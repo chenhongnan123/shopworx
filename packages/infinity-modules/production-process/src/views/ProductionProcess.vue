@@ -158,7 +158,6 @@ export default {
     });
     substationlistall.splice(op801k, 1);
     this.substationlistall = substationlistall.reverse();
-    console.log(this.substationlistall, 'this.substationlistall');
     if (this.substationid) {
       if (this.substationid === 'OP80-1') {
         this.initSoket('update_checkin');
@@ -187,10 +186,6 @@ export default {
       });
       socket.on(socketelement, async (data) => {
         console.log(data, 'data');
-        this.ngcode = '';
-        this.ngreason = '';
-        this.ngstation = '';
-        this.stationinfolist = [];
         const {
           substationlistall,
           recordlist,
@@ -198,12 +193,19 @@ export default {
           ngreasonlist,
         } = this;
         if (data.substationname === substationid) {
+          this.ngcode = '';
+          this.ngreason = '';
+          this.ngstation = '';
+          this.stationinfolist = [];
           const partStatuslist = await this.getPartStatus(`?query=mainid=="${data.mainid}"`);
+          const checkinlist = await this.getCheckin(`?query=substationname=="${substationid}"%26%26mainid=="${data.mainid}"`);
+          console.log(checkinlist, 'checkinlist');
+          const { createdTimestamp } = checkinlist[0];
           if (partStatuslist.length > 0) {
             const [currentpartstatus] = partStatuslist;
             recordlist.unshift({
               mainid: currentpartstatus.mainid,
-              scantime: currentpartstatus.createdTimestamp,
+              scantime: createdTimestamp,
               status: currentpartstatus.overallresult === 2 ? 0 : 1,
             });
             if (recordlist.length > 10) {
@@ -268,8 +270,6 @@ export default {
             });
             this.stationinfolist = stationinfolist;
             this.ngstation = substationid;
-            const checkinlist = await this.getCheckin(`?query=substationname=="${substationid}"%26%26mainid=="${data.mainid}"`);
-            console.log(checkinlist, 'checkinlist');
             if (checkinlist.length > 0) {
               const ngcode = checkinlist[0].checkinresult;
               let ngreason = '';

@@ -30,7 +30,7 @@ export default {
     ...mapState('helper', ['isDark', 'dashboardLoading', 'userAgent']),
     ...mapState('auth', ['sessionId']),
     ...mapState('dashboard', ['readyState', 'deviceId']),
-    ...mapGetters('helper', ['isTV']),
+    ...mapGetters('helper', ['isTV', 'isAndroid']),
   },
   async created() {
     const dark = localStorage.getItem('dark');
@@ -40,14 +40,14 @@ export default {
     }
   },
   beforeMount() {
-    if (this.isTV) {
+    if (this.isAndroid) {
       const deviceId = getDeviceId();
       this.setDeviceId(deviceId);
       this.sseInit();
     }
   },
   beforeDestroy() {
-    if (this.isTV) {
+    if (this.sseClient) {
       this.sseClient.close();
     }
   },
@@ -77,7 +77,7 @@ export default {
       handler(val) {
         const isCastUrl = val.name === 'cast';
         const isDashboardUrl = val.fullPath.includes('/d');
-        if (this.isTV && !isDashboardUrl) {
+        if (this.isAndroid && !isDashboardUrl) {
           this.$router.replace({ name: 'cast' });
         }
         if (!this.isTV && isCastUrl) {

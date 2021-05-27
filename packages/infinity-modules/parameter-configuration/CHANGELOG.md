@@ -3,6 +3,125 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **maintenance:** remove default pagination of 10 from list view ([7c2c138](https://bitbucket.org/entrib/shopworx/commits/7c2c138cdb099fcc161d3041690dbb1818d8226e))
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I500 ([2c7915c](https://bitbucket.org/entrib/shopworx/commits/2c7915c339dc8799b09cf8a7a18711f2d881287c))
+* **parameter-configuration:** RA-I530, RA-I568 ([6aaa17c](https://bitbucket.org/entrib/shopworx/commits/6aaa17c5d9cae269c5c4f39fe483b485e996eb5b))
+* **parameter-configuration:** RA-I570 ([54664fd](https://bitbucket.org/entrib/shopworx/commits/54664fd91346f12d7e92ed17ee0b8b5e9da3d09d))
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I408 ([857b43c](https://bitbucket.org/entrib/shopworx/commits/857b43ca59f07070c9a0b3229ac5b2e7ae7d2cec))
+* **parameter-configuration:** RA-I556 ([a732f67](https://bitbucket.org/entrib/shopworx/commits/a732f673d1da5d6630cc165738c9cceaf45ca2d0))
+* **parameter-configuration:** RA-I556 ([d9178cb](https://bitbucket.org/entrib/shopworx/commits/d9178cb928c8fffe5b68ea328d72dbd859ffdcf9))
+
+
+### Features
+
+* **parameter-configuration:** RA-I408 | changes required by Lukas with one new point ([cecbf24](https://bitbucket.org/entrib/shopworx/commits/cecbf24929488d459f89dbd73197915fbf4e32c8))
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** empty fields not allowed while uploading ([5cd9bd4](https://bitbucket.org/entrib/shopworx/commits/5cd9bd487eb23f5f38390c72b7a9b5af98dc193c))
+* **parameter-configuration:** RA-I489 Parameter Configuration | After importing file, Yes button should be disable after one click ([e01fded](https://bitbucket.org/entrib/shopworx/commits/e01fdedcad1c7ccb7cc5d9bb2231bded11d86e98))
+
+
+
+
+
 ## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
 
 

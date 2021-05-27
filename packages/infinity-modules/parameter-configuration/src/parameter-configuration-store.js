@@ -27,6 +27,7 @@ export default ({
     subStationElementDeatils: [],
     createElementResponse: [],
     createResult: false,
+    parameterList1: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -54,8 +55,21 @@ export default ({
     setSubStationIdDeatils: set('subStationElementDeatils'),
     setCreateElementResponse: set('createElementResponse'),
     setCreateParam: set('createResult'),
+    setParametersList: set('parameterList1'),
   },
   actions: {
+    getParametersList: async ({ dispatch, commit }, query) => {
+      const part = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      commit('setParametersList', part);
+      return part;
+    },
     createTagElement: async ({ commit, dispatch }, payload) => {
       const element = await dispatch(
         'element/createElementTags',
@@ -322,6 +336,17 @@ export default ({
         {
           elementName: 'parameters',
           queryParam: `?query=substationid=="${id}"`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
+    deleteParameterById: async ({ dispatch }, id) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'parameters',
+          queryParam: `?query=id=="${id}"`,
         },
         { root: true },
       );

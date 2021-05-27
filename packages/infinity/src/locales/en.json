@@ -2,16 +2,13 @@
   "$vuetify": {
     "badge": "Badge",
     "close": "Close",
-    "dataIterator": 
-    {
+    "dataIterator": {
       "noResultsText": "No matching records found",
       "loadingText": "Loading items..."
     },
-    "dataTable": 
-    {
+    "dataTable": {
       "itemsPerPageText": "Rows per page:",
-      "ariaLabel": 
-      {
+      "ariaLabel": {
         "sortDescending": "Sorted descending.",
         "sortAscending": "Sorted ascending.",
         "sortNone": "Not sorted.",
@@ -21,8 +18,7 @@
       },
       "sortBy": "Sort by"
     },
-    "dataFooter": 
-    {
+    "dataFooter": {
       "itemsPerPageText": "Items per page:",
       "itemsPerPageAll": "All",
       "nextPage": "Next page",
@@ -31,8 +27,7 @@
       "lastPage": "Last page",
       "pageText": "{0}-{1} of {2}"
     },
-    "datePicker": 
-    {
+    "datePicker": {
       "itemsSelected": "{0} selected",
       "nextMonthAriaLabel": "Next month",
       "nextYearAriaLabel": "Next year",
@@ -40,33 +35,26 @@
       "prevYearAriaLabel": "Previous year"
     },
     "noDataText": "No data available",
-    "carousel": 
-    {
+    "carousel": {
       "prev": "Previous visual",
       "next": "Next visual",
-      "ariaLabel": 
-      {
+      "ariaLabel": {
         "delimiter": "Carousel slide {0} of {1}"
       }
     },
-    "calendar": 
-    {
+    "calendar": {
       "moreEvents": "{0} more"
     },
-    "fileInput": 
-    {
+    "fileInput": {
       "counter": "{0} files",
       "counterSize": "{0} files ({1} in total)"
     },
-    "timePicker": 
-    {
+    "timePicker": {
       "am": "AM",
       "pm": "PM"
     },
-    "pagination": 
-    {
-      "ariaLabel": 
-      {
+    "pagination": {
+      "ariaLabel": {
         "wrapper": "Pagination Navigation",
         "next": "Next page",
         "previous": "Previous page",
@@ -84,17 +72,27 @@
     "PLAN_UPDATED": "Plan updated!",
     "PLAN_DELETED": "Plan deleted!",
     "ASSET_UPDATE": "Asset updated!",
-    "CREATED_RECORD": "Record added successfully.",
-    "DELETE_RECORD": "Record deleted successfully.",
-    "ROLE_UPDATED": "Role updated successfully.",
-    "USER_DELETED": "User removed successfully.",
+    "CREATED_RECORD": "Record added successfully!",
+    "DELETE_RECORD": "Record deleted successfully!",
+    "ROLE_UPDATED": "Role updated successfully!",
+    "USER_DELETED": "User removed successfully!",
     "DOWNTIME_UPDATE": "Downtime reason updated!",
     "OPERATOR_UPDATE": "Operator updated!",
     "REJECTION_UPDATE": "Rejection updated!",
     "REWORK_UPDATE": "Rework updated!",
     "SCRAP_UPDATE": "Scrap updated!",
     "PERMISSION_UPDATE": "Role permission updated!",
-    "MATRIX_UPDATE": "Part matrix updated!"
+    "MATRIX_UPDATE": "Part matrix updated!",  
+    "ERROR_CREATING_ORDER": "Error while creating order.",
+    "ERROR_CREATING_ORDER_PRODUCT": "Error while creating bulk records for 'Order Product'.",
+    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'.", 
+    "ORDER_CREATED": "Order created successfully.",
+    "ORDER_PRODUCT_CREATED": "Bulk record created for 'Order Product' successfully.",
+    "ORDER_ROADMAP_CREATED": "Bulk record created for 'Order Roadmap' successfully.",
+    "ERROR_NO_PRODUCT_DETAILS": "No Data found in Production Details.",
+    "ERROR_NO_ROADMAP_DETAILS": "No Data found in Roadmap Details.",
+    "ROLE_CREATED": "Role created successfully!",
+    "EXPORT_REQUEST": "Data export request created. You will recieve an email with the download link shortly."
   },
   "error": {
     "ERROR_CREATING_RECORD": "Error in adding record.",
@@ -124,7 +122,18 @@
     "REWORK_NOT_ALLOWED": "Cannot update rework. Quantity should be less than accepted quantity.",
     "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
     "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
-    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry."
+    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry.",
+    "ERROR_CREATING_ORDER": "Error while creating order.",
+    "ERROR_CREATING_ORDER_PRODUCT": "Error while creating bulk records for 'Order Product'.",
+    "ERROR_CREATING_ORDER_ROADMAP": "Error while creating bulk records for 'Order Roadmap'.",
+    "ORDER_CREATED": "Order created successfully.",
+    "ORDER_PRODUCT_CREATED": "Bulk record created for 'Order Product' successfully.",
+    "ORDER_ROADMAP_CREATED": "Bulk record created for 'Order Roadmap' successfully.",
+    "ERROR_NO_PRODUCT_DETAILS": "No Data found in Production Details.",
+    "ERROR_NO_ROADMAP_DETAILS": "No Data found in Roadmap Details.",
+    "ROLE_CREATED": "Error while creating the role. Please retry.",
+    "ROLE_CREATE_RETRY": "Role created successfully but we couldn't define role access. Please update the permissions from the table.",
+    "EXPORT_REQUEST": "You are not authorized to export data."
   },
   "fields": {
     "email": "Email",
@@ -147,6 +156,7 @@
     "equipmentname": "Equipment name",
     "quantity": "Quantity",
     "activecavity": "Active cavity",
+    "strokes": "Strokes per part",
     "cycletime": "Cycle time",
     "delaytime": "Delay time",
     "familyactivecavity": "Active cavity",
@@ -166,12 +176,20 @@
     "close": "Close",
     "redirectToLogin": "Redirecting in {time}"
   },
+  "auth": {
+    "phoneRequired": "Phone is required",
+    "phoneInvalid": "Phone must be valid",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Email must be valid"
+  },
   "helper": {
     "or": "or",
     "help": "Help",
     "next": "Next",
     "skip": "Skip for now",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "agree": "Agree"
   },
   "notFound": {
     "title": "That's an error!",
@@ -253,6 +271,9 @@
     "shopfloorDashboard": "Shopfloor Dashboard",
     "productionImage": "Production Image",
     "liveShopfloor": "Live Shopfloor",
+    "utilityDashboard": "Utility",
+    "energyDashboard": "Energy Consumption",
+    "processDashboard": "Live Process",
     "orderManagement": "Order",
     "productionLog": "Production Log",
     "downtimeLog": "Downtime Log",
@@ -265,6 +286,7 @@
     "productManagement": "Product Type",
     "productionLayout": "Production Layout",
     "productionLayoutMes": "Production Layout",
+    "productionLayoutSF": "Production Layout",
     "modelManagement": "ML Models",
     "materialManagement": "Material",
     "reports": "Reports",
@@ -272,6 +294,7 @@
     "maintenance": "Maintenance",
     "downtime": "Downtime",
     "quality": "Quality",
+    "utility": "Utility",
     "performance": "Performance",
     "masters": "Master Data",
     "admin": "Admin Console",
@@ -281,7 +304,25 @@
     "ngCodeConfiguration": "NG-Codes",
     "reworkOperation": "Rework",
     "packagingManagement": "Packaging",
-    "calibrationApp": "Calibration"
+    "productionProcess": "Production Process",
+    "formBuilder": "Form Builder",
+    "eLogbook": "e-logbook",
+    "operator": "Operator",
+    "solution": "Solution",
+    "station": "Stations",
+    "maintenancePlan": "Maintenance Plan",
+    "maintenanceTask": "Maintenance Task",
+    "cron": "Cron",
+    "machine": "Machine",
+    "tpm": "TPM",
+    "warehouse": "Warehouse",
+    "manualInbound": "Manual Inbound",
+    "manualOutbound": "Manual Outbound",
+    "stockTaking": "Stock-Taking",
+    "andon": "Andon",
+    "calibrationApp": "Calibration",
+    "poProductionDashboard": "Overall Production Information",
+    "poPredictionDashboard": "Overall Prediction Information"
   },
   "account": {
     "account": "Account",
@@ -304,6 +345,7 @@
     "general": "General",
     "security": "Security",
     "profile": {
+      "heading": "My Profile Settings",
       "title": "Profile",
       "firstName": "First name",
       "lastName": "Last name",
@@ -326,6 +368,45 @@
     },
     "auditLog": {
       "title": "Audit log"
+    }
+  },
+  "cron": {
+    "title": "Create Cron",
+    "generate": "GENERATE",
+    "express": "Cron Express",
+    "sample": "Sample Result",
+    "from": "From",
+    "to": "To",
+    "step": "Step Value",
+    "minute": {
+      "title": "MINUTE",
+      "every": "Any Minute",
+      "rangewithstep": "Range With Step Minute",
+      "assign": "Assign Minute"
+    },
+    "hour": {
+      "title": "HOUR",
+      "every": "Any Hour",
+      "rangewithstep": "Range With Step Hour",
+      "assign": "Assign Hour"
+    },
+    "day": {
+      "title": "DAY",
+      "every": "Any Day",
+      "rangewithstep": "Range With Step Day",
+      "assign": "Assign Minute"
+    },
+    "week": {
+      "title": "WEEK",
+      "every": "Any Week",
+      "rangewithstep": "Range Days of Week",
+      "assign": "Assign Days of Week"
+    },
+    "month": {
+      "title": "MONTH",
+      "every": "Any Month",
+      "rangewithstep": "Range With Step Month",
+      "assign": "Assign Month"
     }
   }
 }

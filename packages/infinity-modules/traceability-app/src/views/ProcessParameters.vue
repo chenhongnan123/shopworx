@@ -14,8 +14,9 @@
           rowGroupPanelShow="always"
           :gridOptions="gridOptions"
           :enableRangeSelection="true"
-          class="ag-theme-balham mt-2"
+          :class="`${agGridTheme} mt-2`"
           :defaultColDef="defaultColDef"
+          :localeText="agGridLocaleText"
           style="width: 100%; height: 350px;"
           @sort-changed="onStateChange"
           @filter-changed="onStateChange"
@@ -35,9 +36,15 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -101,6 +108,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     dateRangeText() {
       return this.dates.join(' to ');
     },
@@ -340,16 +348,22 @@ export default {
       console.log(cFlag);
       const elementDetails = await this.getProcessElement('traceability');
       if (this.language === 'zhHans') {
+        this.processParametersheader.push(
+          {
+            headerName: 'Main Id',
+            field: 'mainid',
+            resizable: true,
+          },
+        );
         await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
         await Promise.all(this.subStationList.map(async (s) => {
           const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
-            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
           if (paramRecord.length > 0) {
             await Promise.all(paramRecord.map((p) => {
               this.processParametersheader.push(
                 {
-                  headerName: p.chinesedescription,
+                  headerName: `${s.name}_${p.chinesedescription}`,
                   field: `${s.id}_${p.name}`,
                   resizable: true,
                 },

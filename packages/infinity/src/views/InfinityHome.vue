@@ -1,5 +1,6 @@
 <template>
   <v-app v-if="!infinityLoading">
+    <infinity-connection-status />
     <infinity-drawer
       :showDrawer="drawer"
       :items="items"
@@ -24,6 +25,7 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
+import InfinityConnectionStatus from '@/components/core/InfinityConnectionStatus.vue';
 import InfinityHeader from '@/components/core/InfinityHeader.vue';
 import InfinityDrawer from '@/components/core/InfinityDrawer.vue';
 import InfinityBottom from '@/components/core/InfinityBottom.vue';
@@ -32,6 +34,7 @@ import InfinityInsights from '@/components/insights/Insights.vue';
 export default {
   name: 'InfinityHome',
   components: {
+    InfinityConnectionStatus,
     InfinityHeader,
     InfinityDrawer,
     InfinityBottom,

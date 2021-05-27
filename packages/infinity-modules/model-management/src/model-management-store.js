@@ -11,10 +11,14 @@ const ELEMENTS = {
   PARAMETERS: 'parameters',
   TRANSFORMATIONS: 'mltransformationoutput',
   MODEL_INPUTS: 'modelinputs',
+  MODEL_CRITICALS: 'modelcriticals',
   MODEL_LOGS: 'modeldeploymentorderslogs',
   MODEL_FILES: 'modelfiles',
   MODEL_OUTPUTS: 'modeloutputs',
   MODEL_DEPLOYMENT: 'modeldeploymentorder',
+  MODEL_TYPE: 'modeltype',
+  MODEL_TRIGGER: 'modeltrigger',
+  MODEL_TRAINING: 'modeltraining',
 };
 const ASSETID = 4;
 const OPERATION_NAME = 'Deploy Model';
@@ -29,6 +33,7 @@ export default ({
   namespaced: true,
   state: {
     lines: [],
+    showModelUI: true,
     selectedLine: null,
     selectedSubline: null,
     selectedStation: null,
@@ -44,14 +49,25 @@ export default ({
     fetchingMaster: false,
     uploadingFiles: false,
     inputParameters: [],
+    criticalParameters: [],
     outputTransformations: [],
+    fullParameterList: [],
     modelDetails: null,
     files: [],
+    subLineInfo: null,
     createdModelId: null,
     lastStatusUpdate: {},
     deployedModels: [],
     selectedModel: null,
     customizeMode: false,
+    modelTypeList: [],
+    nonRealElementInfo: null,
+    selectedModelObject: {},
+    traningData: [],
+    trainingLogs: [],
+    elementInformation: null,
+    fileRecords: [],
+    csvRecords: '',
     allWidgets: [
       {
         component: 'model-info',
@@ -164,6 +180,7 @@ export default ({
     setFetchingMaster: set('fetchingMaster'),
     setUploadingFiles: set('uploadingFiles'),
     setInputParameters: set('inputParameters'),
+    setCriticalParameters: set('criticalParameters'),
     setOutputTransformations: set('outputTransformations'),
     setModelDetails: set('modelDetails'),
     setFiles: set('files'),
@@ -175,8 +192,131 @@ export default ({
     toggleCustomizeMode: toggle('customizeMode'),
     setAllWidgets: set('allWidgets'),
     setWidgets: set('widgets'),
+    setModelTypeList: set('modelTypeList'),
+    setNonRealElementInfo: set('nonRealElementInfo'),
+    setFullParameterList: set('fullParameterList'),
+    setSubLineInfo: set('subLineInfo'),
+    setShowModelUI: set('showModelUI'),
+    setSelectedModelObject: set('selectedModelObject'),
+    setTrainingData: set('traningData'),
+    setElementInformation: set('elementInformation'),
+    setRecords: set('fileRecords'),
+    setTrainingLogs: set('trainingLogs'),
+    setCsvRecords: set('csvRecords'),
   },
   actions: {
+    postStreamRecords: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/postStreamRecords',
+        { payload },
+        { root: true },
+      );
+      if (data) {
+        commit('setCsvRecords', data);
+      }
+      return data;
+    },
+    getTriggerForModelId: async ({ dispatch }, modelid) => {
+      const modelTriggers = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      if (modelTriggers.length === 0) {
+        return false;
+      }
+      return true;
+    },
+
+    getInputParametersForModelId: async ({ state, dispatch }, modelid) => {
+      const { inputParameters } = state;
+      const modelInputs = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_INPUTS,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      const mainid = inputParameters.find((f) => f.name === 'mainid');
+      if (mainid) {
+        const checkMainid = modelInputs.filter((f) => f.parameterid === mainid.parameterId);
+        if (checkMainid.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      const timestamp = inputParameters.find((f) => f.name === 'timestamp');
+      if (timestamp) {
+        const checkTimestamp = modelInputs.filter((f) => f.parameterid === timestamp.parameterId);
+        if (checkTimestamp.length === 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      return true;
+    },
+
+    updateModelDates: async ({ dispatch }, request) => {
+      const created = await dispatch(
+        'element/updateRecordByQuery',
+        {
+          elementName: ELEMENTS.MODELS,
+          queryParam: request.query,
+          payload: request.payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    getInProgressTrainingData: async ({ dispatch }) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: '?query=status=="COMPLETED"',
+        },
+        { root: true },
+      );
+      return training;
+    },
+
+    getTrainingLogs: async ({ dispatch, commit }, jobId) => {
+      const log = await dispatch(
+        'element/getTrainingLogsRecords',
+        {
+          jobId,
+        },
+        { root: true },
+      );
+      commit('setTrainingLogs', log.message);
+    },
+    getRecordsByTagData: async ({ commit, dispatch }, payload) => {
+      const data = await dispatch(
+        'element/getRecordsByTags',
+        payload,
+        { root: true },
+      );
+      if (data) {
+        commit('setRecords', data.results);
+      }
+      return data;
+    },
+    getTagsForSelectedElement: async ({ dispatch, commit }, eleName) => {
+      const info = await dispatch(
+        'element/getElement',
+        eleName,
+        { root: true },
+      );
+      commit('setElementInformation', info);
+    },
+
     getLines: async ({ dispatch, commit }) => {
       const lines = await dispatch(
         'element/getRecords',
@@ -273,6 +413,18 @@ export default ({
       return sortArray(processes, 'name');
     },
 
+    getModelTypeList: async ({ dispatch, commit }) => {
+      const modeltypes = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TYPE,
+          query: '',
+        },
+        { root: true },
+      );
+      commit('setModelTypeList', modeltypes);
+    },
+
     getModels: async ({ state, commit, dispatch }) => {
       const { selectedLine, selectedStation, selectedProcess } = state;
       commit('setFetchingModels', true);
@@ -289,7 +441,7 @@ export default ({
         .map(async ({
           _id,
           // eslint-disable-next-line
-          model_id,
+          modelid,
           modelname,
           modeldescription,
           modifiedtimestamp,
@@ -298,14 +450,14 @@ export default ({
           let model = {
             id: _id,
             // eslint-disable-next-line
-            model_id,
+            modelid,
             name: modelname,
             description: modeldescription,
             lastModified: formatDate(modifiedtimestamp),
             status: 'N.A',
             modelUpdateStatus: modelupdatestatus,
           };
-          const deployment = await dispatch('getLastDeploymentStatus', model_id);
+          const deployment = await dispatch('getLastDeploymentStatus', modelid);
           if (deployment) {
             model = {
               ...model,
@@ -357,6 +509,19 @@ export default ({
         },
         { root: true },
       );
+      commit('setFullParameterList', parameters);
+      parameters.push({
+        id: '0',
+        name: 'timestamp',
+        description: 'TimeStamp',
+        parametercategory: '45',
+      });
+      parameters.push({
+        id: '1',
+        name: 'productionstatus',
+        description: 'productionstatus',
+        parametercategory: '45',
+      });
       const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '42'
           || p.parametercategory === '45'
@@ -375,10 +540,26 @@ export default ({
       list.push({
         divider: true,
       });
+      commit('setInputParameters', list);
+    },
+
+    getCriticalParameters: async ({ commit, dispatch, state }) => {
+      const {
+        selectedSubstation,
+      } = state;
+      const list = [];
       list.push({
         header: 'Non Real Parameters',
       });
-      const nonRealParam = sortArray(parameters
+      const parameters = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.PARAMETERS,
+          query: `?query=substationid=="${selectedSubstation}"`,
+        },
+        { root: true },
+      );
+      const realParam = sortArray(parameters
         .filter((p) => p.parametercategory === '15'
           || p.parametercategory === '17'
           || p.parametercategory === '18'
@@ -389,10 +570,13 @@ export default ({
           description,
           group: 'Non Real Parameters',
         }));
-      nonRealParam.forEach((n) => {
-        list.push(n);
+      realParam.forEach((f) => {
+        list.push(f);
       });
-      commit('setInputParameters', list);
+      list.push({
+        divider: true,
+      });
+      commit('setCriticalParameters', list);
     },
 
     getOutputTransformations: async ({ commit, dispatch }) => {
@@ -419,6 +603,8 @@ export default ({
         dispatch('getModelInputs', query),
         dispatch('getModelFiles', query),
         dispatch('getModelOutputs', query),
+        dispatch('getModelCriticals', query),
+        dispatch('getModelTriggers', query),
       ]);
       const modelDetails = data.reduce((a, b) => {
         const key = Object.keys(b)[0];
@@ -487,11 +673,58 @@ export default ({
         },
         { root: true },
       );
-      const inputs = modelInputs.map(({ parameterid, _id }) => ({
+      const inputs = modelInputs.map(({ parameterid, _id, parametername }) => ({
         parameterId: parameterid,
         id: _id,
+        tagName: parametername,
       }));
       return { modelInputs: inputs };
+    },
+
+    getModelCriticals: async ({ dispatch }, query) => {
+      const modelCriticals = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_CRITICALS,
+          query,
+        },
+        { root: true },
+      );
+      const criticals = modelCriticals.map(({
+        parameterid,
+        parametername,
+        _id,
+        maxlimit,
+        minlimit,
+      }) => ({
+        parameterId: parameterid,
+        parameterName: parametername,
+        id: _id,
+        maxLimit: maxlimit,
+        minLimit: minlimit,
+      }));
+      return { modelCriticals: criticals };
+    },
+
+    getModelTriggers: async ({ dispatch }, query) => {
+      const modelTriggers = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          query,
+        },
+        { root: true },
+      );
+      const triggers = modelTriggers.map(({
+        triggername,
+        _id,
+        eventname,
+      }) => ({
+        triggerName: triggername,
+        eventName: eventname,
+        id: _id,
+      }));
+      return { modelTriggers: triggers };
     },
 
     getModelFiles: async ({ dispatch }, query) => {
@@ -535,7 +768,12 @@ export default ({
 
     createInputParameter: async (
       { state, commit, dispatch },
-      { modelId, parameterId },
+      {
+        modelId,
+        parameterId,
+        selectedElement,
+        parameterName,
+      },
     ) => {
       const {
         selectedLine,
@@ -551,6 +789,8 @@ export default ({
         assetid: ASSETID,
         modelid: modelId,
         parameterid: parameterId,
+        selectedelementname: selectedElement,
+        parametername: parameterName,
       };
       const created = await dispatch(
         'element/postRecord',
@@ -584,11 +824,314 @@ export default ({
       return created;
     },
 
+    fetchTrainingData: async ({ dispatch, commit }, modelid) => {
+      const training = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.MODEL_TRAINING,
+          query: `?query=modelid=="${modelid}"`,
+        },
+        { root: true },
+      );
+      commit('setTrainingData', training);
+    },
+
+    addModelTraningData: async ({ dispatch, state, commit }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        ...request,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+      };
+      const created = await dispatch(
+        'element/postMmsStartModelTraining',
+        {
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRAINING_SAVED',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRAINING_SAVED',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    addTriggerData: async ({ dispatch, state, commit }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+        modelid: request.modelid,
+        triggername: request.triggername,
+        eventname: request.eventname,
+      };
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRIGGER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRIGGER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
+    getNonRealElementInfo: async ({ commit, dispatch }, elementName) => {
+      const element = await dispatch(
+        'element/getElement',
+        elementName,
+        { root: true },
+      );
+      if (element) {
+        commit('setNonRealElementInfo', element);
+      }
+    },
+
+    getSubLineInfo: async ({ commit, dispatch, state }) => {
+      const {
+        selectedSubline,
+      } = state;
+      const element = await dispatch(
+        'element/getRecords',
+        {
+          elementName: ELEMENTS.SUBLINE,
+          query: `?query=id=="${selectedSubline}"`,
+        },
+        { root: true },
+      );
+      if (element) {
+        commit('setSubLineInfo', element);
+      }
+    },
+
+    sendTestModel: async ({ dispatch, state }, payload) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedStationName,
+        selectedSubstation,
+        selectedSubstationName,
+        selectedProcess,
+        selectedProcessName,
+      } = state;
+      const request = {
+        ...payload,
+        lineid: selectedLine,
+        stationid: selectedStation,
+        stationname: selectedStationName,
+        substationid: selectedSubstation,
+        substationname: selectedSubstationName,
+        subprocessid: selectedProcess,
+        subprocessname: selectedProcessName,
+      };
+      const created = await dispatch(
+        'element/postMmsTestModel',
+        {
+          payload: request,
+          queryParam: `?modelid=${request.modelid}`,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    createWebhook: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/createWebhook',
+        {
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
+
+    createCriticalParameter: async (
+      { state, commit, dispatch },
+      {
+        modelId,
+        parameterId,
+        maxLimit,
+        minLimit,
+        parameterName,
+      },
+    ) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      const payload = {
+        lineid: selectedLine,
+        stationid: selectedStation,
+        substationid: selectedSubstation,
+        subprocessid: selectedProcess,
+        assetid: ASSETID,
+        modelid: modelId,
+        parameterid: parameterId,
+        parametername: parameterName,
+        maxlimit: maxLimit,
+        minlimit: minLimit,
+      };
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_CRITICALS,
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'PARAMETER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
+    },
+
     deleteInputParameter: async ({ commit, dispatch }, modelInputId) => {
       const deleted = await dispatch(
         'element/deleteRecordById',
         {
           elementName: ELEMENTS.MODEL_INPUTS,
+          id: modelInputId,
+        },
+        { root: true },
+      );
+      if (deleted) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'PARAMETER_DELETE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'PARAMETER_DELETE',
+          },
+          { root: true },
+        );
+      }
+      return deleted;
+    },
+
+    deleteTriggerName: async ({ commit, dispatch }, triggerName) => {
+      const deleted = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: ELEMENTS.MODEL_TRIGGER,
+          queryParam: `?query=triggername=="${triggerName}"`,
+        },
+        { root: true },
+      );
+      if (deleted) {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRIGGER_DELETE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRIGGER_DELETE',
+          },
+          { root: true },
+        );
+      }
+      return deleted;
+    },
+
+    deleteCriticalParameter: async ({ commit, dispatch }, modelInputId) => {
+      const deleted = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: ELEMENTS.MODEL_CRITICALS,
           id: modelInputId,
         },
         { root: true },
@@ -729,6 +1272,7 @@ export default ({
     createNewModel: async ({ state, commit, dispatch }, payload) => {
       const {
         selectedLine,
+        selectedSubline,
         selectedStation,
         selectedSubstation,
         selectedProcess,
@@ -740,6 +1284,7 @@ export default ({
           payload: {
             ...payload,
             lineid: selectedLine,
+            sublineid: selectedSubline,
             stationid: selectedStation,
             substationid: selectedSubstation,
             subprocessid: selectedProcess,
@@ -789,7 +1334,7 @@ export default ({
         return {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -814,7 +1359,7 @@ export default ({
         const payload = {
           // eslint-disable-next-line
           id: model._id,
-          model_id: model.model_id,
+          modelid: model.modelid,
           name: model.modelname,
           description: model.modeldescription,
           lastModified: formatDate(model.modifiedtimestamp),
@@ -855,6 +1400,8 @@ export default ({
               operationname: OPERATION_NAME,
               modelid: modelId,
               assetid: ASSETID,
+              deploymode: 1,
+              outputpath: '',
             },
           },
           { root: true },
@@ -898,6 +1445,68 @@ export default ({
         { root: true },
       );
       return false;
+    },
+
+    createTrainingNewDeploymentOrder: async ({
+      state,
+      commit,
+      dispatch,
+    }, request) => {
+      const {
+        selectedLine,
+        selectedStation,
+        selectedSubstation,
+        selectedProcess,
+      } = state;
+      await dispatch('fetchModelDetails', request.modelid);
+      const status = DEPLOYMENT_STATUS;
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: ELEMENTS.MODEL_DEPLOYMENT,
+          payload: {
+            lineid: selectedLine,
+            stationid: selectedStation,
+            substationid: selectedSubstation,
+            subprocessid: selectedProcess,
+            status,
+            operationname: OPERATION_NAME,
+            modelid: request.modelid,
+            assetid: ASSETID,
+            deploymode: 2,
+            outputpath: request.outputfolder,
+          },
+        },
+        { root: true },
+      );
+      if (created && created.id) {
+        const eventData = {
+          key: request.modelid,
+          lastModified: new Date(),
+          status,
+        };
+        commit('setLastStatusUpdate', eventData);
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'success',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      } else {
+        commit(
+          'helper/setAlert',
+          {
+            show: true,
+            type: 'error',
+            message: 'TRAINING_ORDER_CREATE',
+          },
+          { root: true },
+        );
+      }
+      return created;
     },
 
     deleteModel: async ({ state, commit, dispatch }, { modelId, id }) => {

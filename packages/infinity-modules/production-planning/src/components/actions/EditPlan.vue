@@ -10,10 +10,10 @@
       >
         <v-card>
           <v-card-title>
-            Cannot edit plan
+            {{ $t('planning.cannotEditTitle') }}
           </v-card-title>
           <v-card-text>
-            You cannot edit a completed or aborted plan.
+            {{ $t('planning.cannotEditSubtitle') }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -22,7 +22,7 @@
               color="primary"
               @click="exit"
             >
-              Go back
+              {{ $t('planning.goBack') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -45,7 +45,7 @@
                       <v-autocomplete
                         clearable
                         filled
-                        label="Part"
+                        :label="$t('planning.part')"
                         :items="partList"
                         return-object
                         :error-messages="errors"
@@ -73,7 +73,7 @@
                       <v-autocomplete
                         clearable
                         filled
-                        label="Machine"
+                        :label="$t('planning.machine')"
                         :items="machineList"
                         :error-messages="errors"
                         :disabled="saving || !selectedPart || inProgress"
@@ -95,7 +95,7 @@
                       <v-autocomplete
                         clearable
                         filled
-                        label="Equipment"
+                        :label="$t('planning.equipment')"
                         :items="equipmentList"
                         :error-messages="errors"
                         :disabled="saving || !selectedPart || inProgress"
@@ -110,7 +110,7 @@
                   </v-col>
                 </v-row>
                 <div class="title">
-                  Operational parameters
+                  {{ $t('planning.operationalParams') }}
                   <v-btn
                     small
                     outlined
@@ -121,61 +121,61 @@
                   >
                     <template v-if="!editParams">
                       <v-icon left small>mdi-pencil-outline</v-icon>
-                      Edit
+                      {{ $t('planning.editButton') }}
                     </template>
                     <template v-else>
                       <v-icon left small>mdi-check</v-icon>
-                      Done
+                      {{ $t('planning.doneButton') }}
                     </template>
                   </v-btn>
                 </div>
                 <v-row>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="cycletime"
                       rules="required|min_value:1"
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Cycle time"
+                        :label="$t('planning.cycletime')"
                         type="number"
                         :disabled="!editParams || saving"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-clock-fast"
                         outlined
-                        suffix="secs"
+                        :suffix="$t('planning.secs')"
                         v-model="plan.stdcycletime"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="delaytime"
                       rules="required|min_value:0"
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Delay time"
+                        :label="$t('planning.delayTime')"
                         type="number"
                         :disabled="!editParams || saving"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-cached"
                         outlined
-                        suffix="secs"
+                        :suffix="$t('planning.secs')"
                         v-model="plan.delaytime"
                         hide-details="auto"
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
-                  <v-col cols="12" sm="4">
+                  <v-col cols="12" :sm="isPress ? 3 : 4">
                     <validation-provider
                       name="activecavity"
                       :rules="`required|numeric|max_value:${plan.cavity}|min_value:1`"
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Active cavity"
+                        :label="$t('planning.activeCavity')"
                         type="number"
                         :disabled="!editParams || saving"
                         :error-messages="errors"
@@ -187,23 +187,51 @@
                       ></v-text-field>
                     </validation-provider>
                   </v-col>
+                  <v-col cols="12" sm="3">
+                    <validation-provider
+                      name="strokes"
+                      :rules="`${isPress
+                        ? 'required|numeric|min_value:1'
+                        : ''}`"
+                      #default="{ errors }"
+                    >
+                      <v-text-field
+                        :label="$t('planning.strokes')"
+                        type="number"
+                        v-if="isPress"
+                        :disabled="!editParams || saving"
+                        :error-messages="errors"
+                        prepend-inner-icon="mdi-arrow-collapse-vertical"
+                        outlined
+                        v-model="plan.strokes"
+                        hide-details="auto"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
                 </v-row>
                 <div class="caption" v-if="areParamsEdited">
                   <span class="error--text">
-                    Operational parameters are edited.
+                    {{ $t('planning.paramsEdited') }}
                   </span>
                   <div>
-                    Standard cycletime <strong>{{ selectedMatrix.stdcycletime }}</strong> secs.
+                    {{ $t('planning.standardCycle') }}
+                    <strong>{{ selectedMatrix.stdcycletime }}</strong> {{ $t('planning.secs') }}
                   </div>
                   <div>
-                    Standard delaytime <strong>{{ selectedMatrix.delaytime }}</strong> secs.
+                    {{ $t('planning.standardDelay') }}
+                    <strong>{{ selectedMatrix.delaytime }}</strong> {{ $t('planning.secs') }}
                   </div>
                   <div>
-                    Standard cavity <strong>{{ selectedMatrix.cavity }}</strong>.
+                    {{ $t('planning.standardCavity') }}
+                    <strong>{{ selectedMatrix.cavity }}</strong>
+                  </div>
+                  <div v-if="isPress">
+                    {{ $t('planning.standardStrokes') }}
+                    <strong>{{ selectedMatrix.strokes }}</strong>
                   </div>
                 </div>
                 <div class="title mt-4">
-                  Plan details
+                  {{ $t('planning.planDetails') }}
                 </div>
                 <v-row>
                   <v-col cols="12" sm="4">
@@ -213,13 +241,13 @@
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Quantity"
+                        :label="$t('planning.quantity')"
                         type="number"
                         :disabled="saving || inProgress"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-package-variant-closed"
                         outlined
-                        suffix="pcs"
+                        :suffix="$t('planning.pieces')"
                         v-model="plan.plannedquantity"
                         hide-details="auto"
                         @change="onQuantityChange"
@@ -236,7 +264,7 @@
                       #default="{ errors }"
                     >
                       <v-text-field
-                        label="Scheduled start time*"
+                        :label="$t('planning.scheduledStartTime')"
                         type="datetime-local"
                         :error-messages="errors"
                         prepend-inner-icon="mdi-calendar-check-outline"
@@ -280,7 +308,7 @@
                   <v-col cols="6" sm="2">
                     <v-checkbox
                       hide-details
-                      label="Mark as star"
+                      :label="$t('planning.markAsStar')"
                       :disabled="saving"
                       v-model="plan.starred"
                     ></v-checkbox>
@@ -288,19 +316,19 @@
                   <v-col cols="6" sm="2">
                     <v-checkbox
                       hide-details
-                      label="Mark as trial"
+                      :label="$t('planning.markAsTrial')"
                       :disabled="saving || inProgress"
                       v-model="plan.trial"
                     ></v-checkbox>
                   </v-col>
                 </v-row>
                 <div>
-                  *Estimated end time:
+                  {{ $t('planning.estimatedEnd') }}
                   <strong>{{ estimatedEndDisplay }}</strong>
                 </div>
                 <template v-if="familyParts.length">
                   <div class="title mt-4">
-                    Family mold parts
+                    {{ $t('planning.familyMold') }}
                   </div>
                     <v-data-table
                       :items="familyParts"
@@ -324,7 +352,7 @@
                             <v-text-field
                               v-model="item.activecavity"
                               type="number"
-                              label="Active cavity"
+                              :label="$t('planning.activeCavity')"
                               :error-messages="errors"
                               single-line
                               dense
@@ -339,7 +367,7 @@
                     </template>
                       <!-- eslint-disable-next-line -->
                       <template #item.plannedquantity="{ item }">
-                        {{ item.plannedquantity }} pcs
+                        {{ item.plannedquantity }} {{ $t('planning.pieces') }}
                     </template>
                   </v-data-table>
                 </template>
@@ -352,7 +380,7 @@
                   :disabled="saving"
                   @click="exit"
                 >
-                  Exit
+                  {{ $t('planning.exit') }}
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -361,7 +389,7 @@
                   :loading="saving"
                   type="submit"
                 >
-                  Save & Exit
+                  {{ $t('planning.saveExit') }}
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -385,9 +413,9 @@ export default {
     return {
       dialog: false,
       headers: [
-        { text: 'Part', value: 'partname' },
-        { text: 'Active cavity', value: 'activecavity' },
-        { text: 'Quantity', value: 'plannedquantity' },
+        { text: this.$t('planning.part'), value: 'partname' },
+        { text: this.$t('planning.activeCavity'), value: 'activecavity' },
+        { text: this.$t('planning.quantity'), value: 'plannedquantity' },
       ],
       editParams: false,
       saving: false,
@@ -409,6 +437,7 @@ export default {
       'selectedPlan',
     ]),
     ...mapGetters('productionPlanning', ['selectedAsset', 'partMatrixTags']),
+    ...mapGetters('helper', ['locale']),
     isInjectionMolding() {
       let result = false;
       if (this.plan && this.plan.assetid) {
@@ -441,10 +470,12 @@ export default {
           stdcycletime,
           delaytime,
           cavity,
+          strokes,
         } = this.selectedMatrix;
         return +this.plan.stdcycletime !== stdcycletime
           || +this.plan.delaytime !== delaytime
-          || +this.plan.activecavity !== cavity;
+          || +this.plan.activecavity !== cavity
+          || (this.isPress && +this.plan.strokes !== strokes);
       }
       return false;
     },
@@ -474,7 +505,8 @@ export default {
       if (this.plan.scheduledend) {
         res = formatDate(
           new Date(this.plan.scheduledend),
-          'dd-MM-yyyy\' \'HH:mm',
+          'PPpp',
+          { locale: this.locale },
         );
       }
       return res;
@@ -525,6 +557,7 @@ export default {
         delaytime: '',
         cavity: '',
         activecavity: '',
+        strokes: '',
         plannedquantity: '',
         scheduledstart: formatDate(new Date(Math.ceil(new Date() / 9e5) * 9e5), 'yyyy-MM-dd\'T\'HH:mm'),
         scheduledend: '',
@@ -571,6 +604,9 @@ export default {
         sortindex: plan.sortindex,
         status: plan.status,
       };
+      if (this.isPress) {
+        this.plan.strokes = plan.strokes || 1;
+      }
       if (this.isInjectionMolding && this.notStarted) {
         const isFamily = await this.isFamilyMold(
           `?query=moldname=="${encodeURIComponent(plan.moldname)}"`,
@@ -624,6 +660,7 @@ export default {
           stdcycletime,
           delaytime,
           cavity,
+          strokes,
           moldname,
           machinename,
           partname,
@@ -635,6 +672,9 @@ export default {
         this.plan.delaytime = +delaytime;
         this.plan.cavity = +cavity;
         this.plan.activecavity = +cavity;
+        if (this.isPress) {
+          this.plan.strokes = +strokes || 1;
+        }
         if (this.isInjectionMolding) {
           const isFamily = await this.isFamilyMold(
             `?query=moldname=="${encodeURIComponent(moldname)}"`,

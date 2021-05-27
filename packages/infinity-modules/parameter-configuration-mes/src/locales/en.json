@@ -1,5 +1,5 @@
 {
-  "parameterConfiguration": "Parameter Configuration",
+  "ParameterConfigurationMes": "Parameter Configuration",
   "success": {
     "delete_parameter": "Parameters are deleted.",
     "CREATE_PARAMETER": "Parameter created",
@@ -18,10 +18,15 @@
     "EMPTY_FIELDS": "Found empty fields or Columns while uploading!",
     "SOMETHING_WRONG_UPLOADING": "Something went wrong while uploading",
     "PARAMETER_NAME_LENGTH": "Parameter name length should be less than 15 character",
-    "EMPTY_COLUMN_ERROR": "Below column dont have any data",
+    "EMPTY_COLUMN_ERROR": "Below location Special character, Space or Empty Value Found(required field)",
     "DUPLICATE_BIT_NUM_ERROR": "Below Location have Duplicate Bit Number",
     "DUPLICATE_START_NUM_ERROR": "Below Location have Duplicate Start Address",
     "DUPLICATE_DB_ADDRESS_ERROR": "Below Location have Duplicate DB Address",
-    "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)"
+    "PARAMETER_MAX_LENGTH": "Below are parameter names (length more than allowed)",
+    "ELEMENT_NOT_CREATED": "Error while creating tags for element.",
+    "IMPORT_EMPTY_FILE": "File you choose to import is an empty",
+    "EMPTY_COLUMN_ERROR_OPTIONAL": "Below location Special character, Space or Empty Value Found(optional field)",
+    "OPTIONAL_EMPTY_FIELDS": "Empty cell or Blank space found!",
+    "ROW_LIMIT": "Number of parameters inside the file exceeded limit of 1000"
   }
 }

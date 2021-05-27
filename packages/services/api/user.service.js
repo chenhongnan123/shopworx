@@ -45,6 +45,10 @@ class UserService {
     return this.request.get('/server/role');
   }
 
+  createRole(payload) {
+    return this.request.post('/server/role', payload);
+  }
+
   updateRole(payload) {
     return this.request.put('/server/role', payload);
   }
@@ -69,8 +73,44 @@ class UserService {
     return this.request.delete(`/server/reportscategoryaccess?roleId=${roleId}`);
   }
 
-  createAccess(payload) {
+  deleteReportAccess(roleId) {
+    return this.request.delete(`/server/reportaccess?roleId=${roleId}`);
+  }
+
+  deleteReportViewAccess(roleId) {
+    return this.request.delete(`/server/reportviewaccess/${roleId}`);
+  }
+
+  createElementAccess(payload) {
+    return this.request.post('/server/elementaccess', payload);
+  }
+
+  createSolutionAccess(payload) {
+    return this.request.post('/server/solutionaccess', payload);
+  }
+
+  createModuleAccess(payload) {
     return this.request.post('/server/moduleaccess', payload);
+  }
+
+  createReportAccess(payload) {
+    return this.request.post('/server/reportaccess', payload);
+  }
+
+  createReportsCategoryAccess(payload) {
+    return this.request.post('/server/reportscategoryaccess', payload);
+  }
+
+  createReportViewAccess(payload) {
+    return this.request.post('/server/reportviewaccess', payload);
+  }
+
+  createInsightViewAccess(payload) {
+    return this.request.post('/server/insightviewaccess', payload);
+  }
+
+  createInsightCategoryAccess(payload) {
+    return this.request.post('/server/insightcategoryaccess', payload);
   }
 }
 

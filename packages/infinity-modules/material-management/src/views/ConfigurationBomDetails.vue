@@ -345,8 +345,6 @@ export default {
       const detail = {};
       bomdetailList.forEach((element) => {
         element.configstatus.forEach((status) => {
-          console.log(status.name);
-          console.log(element[status.name]);
           if (status.name === 'componentstatus') {
             detail[`${status.name}_component_${element.parametername}`] = element[status.name] || '';
           } else {
@@ -355,7 +353,6 @@ export default {
             } else {
               detail[`${status.name}_component_${element.parametername}`] = false;
             }
-            console.log('');
           }
           // console.log({
           //   config: status.name,
@@ -374,7 +371,6 @@ export default {
         newList.push({ ...element, ...detail });
       });
       this.bomDetailList = newList;
-      console.log(newList);
     },
     async searchData() {
       let param = `?query=bomid==${this.query.id}`;
@@ -430,16 +426,12 @@ export default {
       }
     },
     async chanageComponentStatus(item, parameter, key) {
-      console.log(item);
-      console.log(parameter);
-      console.log(key);
       const payload = {
         id: item._id,
         payload: {
           [key]: parameter.name,
         },
       };
-      console.log(payload, 'payload');
       this.saving = true;
       const updateResult = await this.updateRecordById(payload);
       this.saving = false;
@@ -488,7 +480,6 @@ export default {
       const selectedBomName = this.query.name;
       const fileName = `${selectedBomName}-BomConfiguration`;
       const currentContext = this.bomDetailsConfigList;
-      console.log(currentContext);
       // const selectedBomNum = this.query.number;
       const csvContent = [];
       const column = [
@@ -535,7 +526,6 @@ export default {
           }
         });
         csvContent.push(arr);
-        console.log(csvContent);
       });
       const csvParser = new CSVParser();
       const content = csvParser.unparse({

@@ -1,0 +1,604 @@
+{
+  "$vuetify": {
+    "badge": "Badge",
+    "close": "Close",
+    "dataIterator": 
+    {
+      "noResultsText": "No matching records found",
+      "loadingText": "Loading items..."
+    },
+    "dataTable": 
+    {
+      "itemsPerPageText": "Rows per page:",
+      "ariaLabel": 
+      {
+        "sortDescending": "Sorted descending.",
+        "sortAscending": "Sorted ascending.",
+        "sortNone": "Not sorted.",
+        "activateNone": "Activate to remove sorting.",
+        "activateDescending": "Activate to sort descending.",
+        "activateAscending": "Activate to sort ascending."
+      },
+      "sortBy": "Sort by"
+    },
+    "dataFooter": 
+    {
+      "itemsPerPageText": "Items per page:",
+      "itemsPerPageAll": "All",
+      "nextPage": "Next page",
+      "prevPage": "Previous page",
+      "firstPage": "First page",
+      "lastPage": "Last page",
+      "pageText": "{0}-{1} of {2}"
+    },
+    "datePicker": 
+    {
+      "itemsSelected": "{0} selected",
+      "nextMonthAriaLabel": "Next month",
+      "nextYearAriaLabel": "Next year",
+      "prevMonthAriaLabel": "Previous month",
+      "prevYearAriaLabel": "Previous year"
+    },
+    "noDataText": "No data available",
+    "carousel": 
+    {
+      "prev": "Previous visual",
+      "next": "Next visual",
+      "ariaLabel": 
+      {
+        "delimiter": "Carousel slide {0} of {1}"
+      }
+    },
+    "calendar": 
+    {
+      "moreEvents": "{0} more"
+    },
+    "fileInput": 
+    {
+      "counter": "{0} files",
+      "counterSize": "{0} files ({1} in total)"
+    },
+    "timePicker": 
+    {
+      "am": "AM",
+      "pm": "PM"
+    },
+    "pagination": 
+    {
+      "ariaLabel": 
+      {
+        "wrapper": "Pagination Navigation",
+        "next": "Next page",
+        "previous": "Previous page",
+        "page": "Goto Page {0}",
+        "currentPage": "Current Page, Page {0}"
+      }
+    }
+  },
+  "success": {
+    "OTP_SENT": "One time password sent on registered email/phone.",
+    "PASSWORD_RESET": "New password sent on registered email/phone.",
+    "UPDATED": "Updated!",
+    "PLAN_CREATED": "Plan created!",
+    "PLAN_IMPORTED": "Plans imported!",
+    "PLAN_UPDATED": "Plan updated!",
+    "PLAN_DELETED": "Plan deleted!",
+    "ASSET_UPDATE": "Asset updated!",
+    "CREATED_RECORD": "Record added successfully!",
+    "DELETE_RECORD": "Record deleted successfully!",
+    "ROLE_UPDATED": "Role updated successfully!",
+    "USER_DELETED": "User removed successfully!",
+    "DOWNTIME_UPDATE": "Downtime reason updated!",
+    "OPERATOR_UPDATE": "Operator updated!",
+    "REJECTION_UPDATE": "Rejection updated!",
+    "REWORK_UPDATE": "Rework updated!",
+    "SCRAP_UPDATE": "Scrap updated!",
+    "PERMISSION_UPDATE": "Role permission updated!",
+    "MATRIX_UPDATE": "Part matrix updated!",
+    "ROLE_CREATED": "Role created successfully!",
+    "EXPORT_REQUEST": "Data export request created. You will recieve an email with the download link shortly."
+  },
+  "error": {
+    "ERROR_CREATING_RECORD": "Error in adding record.",
+    "ERROR_DELETE_RECORD": "Error in deleting record.",
+    "NOT_VALID": "{_field_} is not valid.",
+    "NO_LICENSE": "You do not have an active licence. Please contact ShopWorx support.",
+    "CANNOT_FETCH_LICENSE": "We are unable to fetch your active licence. Please try again.",
+    "INVALID_SESSION": "Session expired: Please login again.",
+    "USER_ALREADY_EXIST": "User already exists.",
+    "USER_NOT_FOUND": "User account not found.",
+    "EMAIL_NOT_FOUND": "User account not found.",
+    "INCORRECT_PASSWORD": "Login failed: Incorrect password.",
+    "INVALID_OTP": "Login failed: Incorrect OTP.",
+    "MISSING_BUSINESS_HOUR": "Hours should be provisioned in sequence. Please verify your data.",
+    "INVALID_HOURS_SUM": "Total sum of your provisioned hours should be 24. Please verify your data.",
+    "ERROR_CREATING_PLAN": "Error while creating plan, please retry.",
+    "PLAN_UPDATED": "Error while updating the plan, please refresh and retry.",
+    "PLAN_DELETED": "Error while deleting the plan, please refresh and retry.",
+    "ASSET_UPDATE": "Error while updating the asset config. Please retry.",
+    "ERROR_UPDATING_PLAN": "Error while updating plan, please retry.",
+    "INVALID_DOWNTIME_SPLIT": "Invalid downtime start or end time. Please verify your data.",
+    "DOWNTIME_UPDATE": "Error while updating downtime reason. Plese retry.",
+    "OPERATOR_UPDATE": "Error while updating operator. Plese retry.",
+    "REJECTION_UPDATE": "Error while updating rejection. Plese retry.",
+    "REJECTION_NOT_ALLOWED": "Cannot update rejection. Quantity should be less than accepted quantity.",
+    "REWORK_UPDATE": "Error while updating rework. Plese retry.",
+    "REWORK_NOT_ALLOWED": "Cannot update rework. Quantity should be less than accepted quantity.",
+    "SCRAP_UPDATE": "Error while updating scrap. Plese retry.",
+    "PERMISSION_UPDATE": "Error while updating role permission. Plese retry.",
+    "MATRIX_UPDATE": "Error while updating the part matrix. Please retry.",
+    "ROLE_CREATED": "Error while creating the role. Please retry.",
+    "ROLE_CREATE_RETRY": "Role created successfully but we couldn't define role access. Please update the permissions from the table.",
+    "EXPORT_REQUEST": "You are not authorized to export data."
+  },
+  "fields": {
+    "email": "Email",
+    "code": "Code",
+    "phone": "Phone",
+    "password": "Password",
+    "otp": "OTP",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "name": "Name",
+    "type": "Type",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "date": "Date",
+    "shift": "Shift",
+    "role": "Role",
+    "partname": "Part name",
+    "machinename": "Machine name",
+    "moldname": "Mold name",
+    "toolname": "Tool name",
+    "equipmentname": "Equipment name",
+    "quantity": "Quantity",
+    "activecavity": "Active cavity",
+    "cycletime": "Cycle time",
+    "delaytime": "Delay time",
+    "familyactivecavity": "Active cavity",
+    "scheduledstart": "Scheduled start",
+    "rejectedQuantity": "Quantity",
+    "rejectionReason": "Reason",
+    "reworkQuantity": "Quantity",
+    "reworkReason": "Reason",
+    "scrapWeight": "Weight",
+    "scrapReason": "Reason",
+    "downtimeReason": "Reason",
+    "downtimeStart": "Start time",
+    "downtimeEnd": "End time",
+    "modelName": "Model name"
+  },
+  "snackbar": {
+    "close": "Close",
+    "redirectToLogin": "Redirecting in {time}"
+  },
+  "auth": {
+    "phoneRequired": "Phone is required",
+    "phoneInvalid": "Phone must be valid",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Email must be valid"
+  },
+  "helper": {
+    "or": "or",
+    "help": "Help",
+    "next": "Next",
+    "skip": "Skip for now",
+    "loading": "Loading..."
+  },
+  "notFound": {
+    "title": "That's an error!",
+    "subTitle1": "The requested URL",
+    "subTitle2": "{url}",
+    "subTitle3": "was not found on this server.",
+    "goHome": "Go back home"
+  },
+  "serverError": {
+    "title": "Shoot!",
+    "subTitle1": "Well, this is unexpected...",
+    "subTitle2": "Error code 500.",
+    "subTitle3": "An error has occured and we're working to fix the problem! We'll be up and running shortly.",
+    "goHome": "Go back home"
+  },
+  "forbidden": {
+    "title": "Access forbidden!",
+    "subTitle1": "You tried to access a page you did not have prior",
+    "subTitle2": "authorization",
+    "subTitle3": "for.",
+    "goHome": "Go back home"
+  },
+  "login": {
+    "title": "Log in to TPM",
+    "subTitle": "Use your ShopWorx Account",
+    "identifier": "Email or phone",
+    "code": "Code",
+    "password": "Password",
+    "otp": "OTP",
+    "resendOtp": "Resend otp?",
+    "resendOtpIn": "Resend otp in {time}",
+    "sendOtp": "Send OTP",
+    "forgotPassword": "Forgot password?",
+    "login": "Login securely",
+    "loginWithOtp": "Login with otp",
+    "loginWithPassword": "Login with password"
+  },
+  "forgotPassword": {
+    "title": "Reset password?",
+    "subTitle": "Enter your email or phone number",
+    "reset": "Reset password"
+  },
+  "welcome": {
+    "title": "Welcome! We have been expecting you.",
+    "subTitle1": "First things first, let's start by",
+    "subTitle2": "creating your account.",
+    "subTitle3": "It will take less than a minute.",
+    "start": "Let's get started"
+  },
+  "register": {
+    "account": {
+      "title": "Update your ShopWorx Account",
+      "update": "Update account",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email (Optional)",
+      "phone": "Phone (Optional)"
+    },
+    "password": {
+      "title": "Update your ShopWorx Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "updated": "Your ShopWorx account is updated!"
+  },
+  "modules": {
+    "rawdata": "Data Visualizer",
+    "apps": "Apps",
+    "operation": "Operation",
+    "dashboards": "Dashboards",
+    "home": "Home",
+    "order": "Order",
+    "spc": "SPC",
+    "configuration": "Configuration",
+    "dataconfiguration": "Data Configuration",
+    "traceabilityApp": "Traceability",
+    "traceability": "Traceability",
+    "management": "Management",
+    "shopfloorDashboard": "Shopfloor Dashboard",
+    "productionImage": "Production Image",
+    "liveShopfloor": "Live Shopfloor",
+    "utilityDashboard": "Utility",
+    "processDashboard": "Live Process",
+    "orderManagement": "Order",
+    "productionLog": "Production Log",
+    "downtimeLog": "Downtime Log",
+    "maintenanceSummary": "Maintenance Summary",
+    "parameterConfiguration": "Parameter Configuration",
+    "parameterConfigurationMes": "Parameter Configuration",
+    "productionPlanning": "Production Planning",
+    "roadmapManagement": "Roadmap",
+    "recipeManagement": "Recipe",
+    "productManagement": "Product Type",
+    "productionLayout": "Production Layout",
+    "productionLayoutMes": "Production Layout",
+    "modelManagement": "ML Models",
+    "materialManagement": "Material",
+    "reports": "Reports",
+    "production": "Production",
+    "maintenance": "Maintenance",
+    "downtime": "Downtime",
+    "quality": "Quality",
+    "performance": "Performance",
+    "masters": "Master Data",
+    "admin": "Admin Console",
+    "search": "Search reports & insights",
+    "searchMobile": "Search",
+    "insights": "Insights",
+    "ngCodeConfiguration": "NG-Codes",
+    "reworkOperation": "Rework",
+    "packagingManagement": "Packaging",
+    "formBuilder": "Form Builder",
+    "eLogbook": "e-logbook",
+    "operator": "Operator",
+    "solution": "Solution",
+    "station": "Stations",
+    "maintenancePlan": "Maintenance Plan",
+    "maintenanceTask": "Maintenance Task",
+    "cron": "Cron",
+    "machine": "Machine",
+    "tpm": "TPM",
+    "warehouse": "Warehouse",
+    "manualInbound": "Manual Inbound",
+    "manualOutbound": "Manual Outbound",
+    "stockTaking": "Stock-Taking",
+    "calendar": "Calender",
+    "list": "List",
+    "repair": "Repair"
+  },
+  "account": {
+    "account": "Account",
+    "sites": "Sites",
+    "profile": "Profile settings",
+    "logout": "Logout",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
+    "toggle": "Toggle"
+  },
+  "help": {
+    "help": "Help",
+    "legal": "Legal",
+    "version": "Version",
+    "keyboardShortcuts": "Keyboard shortcuts",
+    "support": "Support",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy"
+  },
+  "user": {
+    "general": "General",
+    "security": "Security",
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "reset": "Reset",
+      "update": "Update profile"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "display": "Display settings",
+      "language": "Language",
+      "darkMode": "Dark mode"
+    },
+    "password": {
+      "title": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "update": "Update password"
+    },
+    "auditLog": {
+      "title": "Audit log"
+    }
+  },
+  "general": {
+    "line": "Line",
+    "subline": "Subline",
+    "machine": "Machine",
+    "apply": "Apply",
+    "reset": "Reset",
+    "selectall": "Select All",
+    "selectnone": "Select None",
+    "search": "Search",
+    "yes": "Yes",
+    "save": "Save",
+    "cancel": "Cancel",
+    "department": "Department",
+    "position": "Position",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "export": "Export",
+    "exportsample": "Export Sample File",
+    "import": "Import",
+    "filter": "Filters",
+    "confirmheader": "Please confirm",
+    "confirmmessage": "Are you sure to delete the items selected ?",
+    "confirmcompletemessage": "Are you sure to Complete this task ?",
+    "closerepair": "Are you sure to Close this repair ?",
+    "noselected": "No Selected",
+    "selected": "Selected",
+    "include": "Include",
+    "exclude": "Exclude",
+    "allinclude": "All Include",
+    "allexclude": "All Exclude",
+    "download": "Download",
+    "loading": "Loading",
+    "close": "Close",
+    "enable": "Enable",
+    "unable": "Unable",
+    "more": "LEARN MORE",
+    "complete": "Complete",
+    "hello": "Hello",
+    "status": "Status",
+    "start": "Start"
+  },
+  "maintenancetask": {
+    "name" : "Maintenance Task",
+    "list": "Task List",
+    "calendar": "Task Calendar",
+    "taskheader": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "machinename": "Machine Name",
+      "solutionname": "Solution Name",
+      "planname": "Plan Name",
+      "status": "Status",
+      "planstarttime": "Plan Start Time",
+      "planendtime": "Plan End Time",
+      "actualstarttime": "Actual Start Time",
+      "actualendtime": "Actual End Time",
+      "editedby": "Edited by",
+      "editedtime": "Edit Date",
+      "createdby": "Created by",
+      "createdtime": "Created Date",
+      "trigger": "Trigger"
+    },
+    "addtitle": "Create Maintenance Task",
+    "bindtitle": "Machine Bind Operator",
+    "operatorheader": {
+      "id": "ID",
+      "name": "Name",
+      "code": "Code"
+    },
+    "filter": {
+      "title": "Task Filters",
+      "month": "Month",
+      "type": "Type",
+      "status": "Status",
+      "today": "Today",
+      "day": "Day",
+      "startdate": "Start Date",
+      "enddate": "End Date"
+    },
+    "detailtitle": "Maintenance Task Details", 
+    "basic": {
+      "title": "Maintenance Task Basic Infomation"
+    },
+    "steps": {
+      "title": "Maintenance Task Steps",
+      "assign": "Assign Operators",
+      "report": "Report",
+      "datetime": "Date & Time",
+      "operator": "Operators",
+      "tasklist": "Task List",
+      "sparepart": "Spareparts",
+      "task": "Task List",
+      "replacement": "Replacement List"
+    },
+    "tasklistheader": {
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "upper": "Upper",
+      "lower": "Lower",
+      "value": "Value",
+      "result": "Result"
+    },
+    "sparepartheader": {
+      "sparepart": "Sparepart",
+      "position":"Position",
+      "upper": "Upper",
+      "lower": "Lower",
+      "quantity": "Quantity"
+    },
+    "reportsparepart": {
+      "title": "Report Sparepart Replacement",
+      "position": "Machine Position",
+      "quantity": "Quantity",
+      "sparepart": "Sparepart"
+    },
+    "confirmreport": "Confirm Report",
+    "welcomeheader": "You have got {task} tasks!"
+  },
+  "month": {
+    "0": "Jan",
+    "1": "Feb",
+    "2": "Mar",
+    "3": "Apr",
+    "4": "May",
+    "5": "Jun",
+    "6": "Jul",
+    "7": "Aug",
+    "8": "Sept",
+    "9": "Oct",
+    "10": "Nov",
+    "11": "Dec"
+  },
+  "week": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wendsday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "0": "Sunday"
+  },
+  "repair": {
+    "name" : "Repair",
+    "repairheader": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "machinename": "Machine Name",
+      "solutionname": "Solution Name",
+      "planname": "Plan Name",
+      "status": "Status",
+      "planstarttime": "Plan Start Time",
+      "planendtime": "Plan End Time",
+      "actualstarttime": "Actual Start Time",
+      "actualendtime": "Actual End Time",
+      "editedby": "Edited by",
+      "editedtime": "Edit Date",
+      "createdby": "Created by",
+      "createdtime": "Created Date",
+      "trigger": "Trigger",
+      "fault": "Fault",
+      "faultdescription": "Fault Description",
+      "ica": "Ica",
+      "repairaction": "Repair Action",
+      "remark": "Remark",
+      "image": "Image",
+      "solutiondetailname": "TPM Failed Tag",
+      "solutiondetailvalue": "TPM Failed Value"
+    },
+    "addtitle": "Create Repair",
+    "bindtitle": "Machine Bind Operator",
+    "operatorheader": {
+      "id": "ID",
+      "name": "Name",
+      "code": "Code"
+    },
+    "filter": {
+      "title": "Repair Filters",
+      "month": "Month",
+      "type": "Type",
+      "status": "Status",
+      "today": "Today",
+      "day": "Day",
+      "startdate": "Start Date",
+      "enddate": "End Date"
+    },
+    "detailtitle": "Repair Details", 
+    "basic": {
+      "title": "Repair Basic Infomation"
+    },
+    "steps": {
+      "title": "Maintenance Task Steps",
+      "assign": "Assign Operators",
+      "report": "Report",
+      "datetime": "Date & Time",
+      "operator": "Operators",
+      "tasklist": "Task List",
+      "sparepart": "Spareparts",
+      "repair": "Repair Detail",
+      "replacement": "Replacement List"
+    },
+    "tasklistheader": {
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "upper": "Upper",
+      "lower": "Lower",
+      "value": "Value",
+      "result": "Result"
+    },
+    "sparepartheader": {
+      "sparepart": "Sparepart",
+      "position":"Position",
+      "upper": "Upper",
+      "lower": "Lower",
+      "quantity": "Quantity"
+    },
+    "reportsparepart": {
+      "title": "Report Sparepart Replacement",
+      "position": "Machine Position",
+      "quantity": "Quantity",
+      "sparepart": "Sparepart",
+      "deleteheader": "Delete Sparepart",
+      "deletemessage": "Are you sure to delete the sparepart selected ?"
+    },
+    "reportimage": {
+      "title": "Report Repair Image",
+      "image": "Image",
+      "name": "Image Name",
+      "action": "Action",
+      "numberindex": "Number Index",
+      "deleteheader": "Delete Image",
+      "deletemessage": "Are you sure to delete the image selected ?"
+    },
+    "confirmreport": "Confirm Report",
+    "welcomeheader": "You have got {task} tasks!"
+  }
+}

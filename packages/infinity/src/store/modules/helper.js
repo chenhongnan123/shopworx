@@ -1,4 +1,9 @@
+import AuthService from '@shopworx/services/api/auth.service';
+import LocaleService from '@shopworx/services/util/locale.service';
 import { set, toggle } from '@shopworx/services/util/store.helper';
+import i18n from '../../i18n';
+import AG_GRID_LOCALE_EN from '../../plugins/ag-grid-locale/locale.en';
+import AG_GRID_LOCALE_CN from '../../plugins/ag-grid-locale/locale.cn';
 
 export default ({
   state: {
@@ -8,6 +13,7 @@ export default ({
       type: null,
       message: null,
     },
+    userAgent: navigator.userAgent,
     isSessionValid: true,
     locales: [
       {
@@ -31,10 +37,12 @@ export default ({
         value: 'de',
       },
     ],
+    currentLocale: LocaleService.getLocale(),
     isDark: null,
     insightsDrawer: false,
     extendedHeader: false,
     infinityLoading: false,
+    isConnected: true,
   },
   mutations: {
     setAlert: set('alert'),
@@ -45,5 +53,47 @@ export default ({
     setInfinityLoading: toggle('infinityLoading'),
     setInsightsDrawer: set('insightsDrawer'),
     toggleInsightsDrawer: toggle('insightsDrawer'),
+    setIsConnected: set('isConnected'),
+    setCurrentLocale: set('currentLocale'),
+  },
+  actions: {
+    getServerTime: async ({ commit, rootState }) => {
+      const { sessionId } = rootState.auth;
+      try {
+        const { data } = await AuthService.getServerTime(sessionId);
+        if (data && data.results) {
+          return true;
+        }
+      } catch (e) {
+        commit('setIsConnected', false);
+        return false;
+      }
+      commit('setIsConnected', false);
+      return false;
+    },
+  },
+  getters: {
+    isWebView: ({ userAgent }) => userAgent.includes('wv'),
+
+    agGridLocaleText: () => {
+      const { locale } = i18n;
+      switch (locale) {
+        case 'zhHans':
+          return AG_GRID_LOCALE_CN;
+        default:
+          return AG_GRID_LOCALE_EN;
+      }
+    },
+
+    agGridTheme: ({ isDark }) => (isDark
+      ? 'ag-theme-balham-dark'
+      : 'ag-theme-balham'),
+
+    locale: ({ currentLocale }) => {
+      if (currentLocale === 'zhHans') {
+        return 'zh';
+      }
+      return currentLocale;
+    },
   },
 });

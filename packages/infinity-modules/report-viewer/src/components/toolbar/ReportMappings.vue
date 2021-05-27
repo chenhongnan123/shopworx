@@ -12,7 +12,7 @@
         :loading="loading"
         class="text-none ml-2"
       >
-        {{ reportMapping ? reportMapping.aggregationType : '' }}
+        {{ reportMapping ? $t(`${reportMapping.aggregationType}`) : '' }}
         <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
       </v-btn>
     </template>
@@ -22,7 +22,7 @@
         v-for="mapping in reportMappings"
         @click="setReportMapping(mapping)"
       >
-        <v-list-item-title>{{ mapping.aggregationType }}</v-list-item-title>
+        <v-list-item-title>{{ $t(`${mapping.aggregationType}`) }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>

@@ -22,7 +22,13 @@ const detectLanguage = () => {
   if (locale) {
     return locale;
   }
-  return window.navigator.language.split('-')[0] || 'en';
+  let language = null;
+  if (window.navigator.language.split('-')[0] === 'zh') {
+    language = 'zhHans';
+  } else {
+    language = window.navigator.language.split('-')[0] || 'en';
+  }
+  return language;
 };
 
 export default new VueI18n({

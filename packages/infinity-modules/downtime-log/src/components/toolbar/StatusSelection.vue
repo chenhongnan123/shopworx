@@ -1,14 +1,14 @@
 <template>
-  <v-combobox
+  <v-select
     dense
     outlined
     return-object
     item-text="name"
     v-model="status"
     :items="statusList"
-    label="Status"
+    :label="$t('downtime.status')"
     prepend-inner-icon="mdi-progress-check"
-  ></v-combobox>
+  ></v-select>
 </template>
 
 <script>
@@ -24,13 +24,13 @@ export default {
   data() {
     return {
       statusList: [{
-        name: 'All',
+        name: this.$t('downtime.all'),
         value: 'All',
       }, {
-        name: 'Ongoing',
+        name: this.$t('downtime.ongoing'),
         value: 'inProgress',
       }, {
-        name: 'Completed',
+        name: this.$t('downtime.completed'),
         value: 'complete',
       }],
     };

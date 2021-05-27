@@ -2,7 +2,7 @@
   <settings-layout
     :items="items"
     windowRouteName="userWindow"
-    headerTitle="My Profile Settings"
+    :headerTitle="$t('user.profile.heading')"
   >
     <template #settingsCard>
       <v-card flat class="transparent text-center">
@@ -112,11 +112,11 @@ export default {
           icon: '$password',
           to: 'password',
         },
-        {
+        /* {
           title: 'user.auditLog.title',
           icon: '$log',
           to: 'audit-log',
-        },
+        }, */
       ],
     };
   },

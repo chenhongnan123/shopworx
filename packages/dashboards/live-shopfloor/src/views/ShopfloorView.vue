@@ -32,26 +32,25 @@
                 :key="n"
                 v-for="(machine, n) in screenData.machines"
               >
-                <asset-card :machine="machine" />
+                <detailed-view :machine="machine" />
               </v-col>
             </v-row>
           </v-window-item>
         </v-window>
-        <v-row
-          v-else
-          align="center"
-          justify="center"
-          class="mt-16"
-          :no-gutters="$vuetify.breakpoint.smAndDown"
-        >
-          <v-col cols="12" align="center" class="headline">
-            Screen too small to fit the machine card.<br>
-            Please view this dashboard on a bigger screen.
-          </v-col>
-        </v-row>
+        <perfect-scrollbar v-else>
+          <v-expansion-panels
+            class="mt-2"
+            style="max-height: calc(100vh - 158px)"
+          >
+            <compact-view
+              :machine="machine"
+              v-for="(machine, i) in machines"
+              :key="i" />
+          </v-expansion-panels>
+        </perfect-scrollbar>
       </v-responsive>
       <summary-layout v-if="isTV || isFullscreen" />
-      <v-footer padless fixed v-if="!isTV && !isFullscreen">
+      <v-footer padless fixed v-if="!isTV && !isFullscreen && screens">
         <v-col
           class="text-center py-1"
           cols="12"
@@ -68,7 +67,7 @@
             v-model="window"
             class="text-center d-inline-block"
             mandatory
-            v-if="$vuetify.breakpoint.mdAndUp"
+            v-if="$vuetify.breakpoint.smAndUp"
           >
             <v-item
               v-for="n in totalScreens"
@@ -128,13 +127,15 @@
 import { mapMutations, mapGetters, mapState } from 'vuex';
 import { formatDate } from '@shopworx/services/util/date.service';
 import SummaryLayout from '../components/SummaryLayout.vue';
-import AssetCard from '../components/AssetCard.vue';
+import CompactView from '../components/asset-card/CompactView.vue';
+import DetailedView from '../components/asset-card/DetailedView.vue';
 
 export default {
   name: 'ShopfloorView',
   components: {
     SummaryLayout,
-    AssetCard,
+    CompactView,
+    DetailedView,
   },
   inject: ['theme'],
   data() {
@@ -142,7 +143,6 @@ export default {
       window: 0,
       now: null,
       interval: null,
-      timeInterval: null,
       cHeight: window.innerHeight,
       cWidth: window.innerWidth,
     };
@@ -154,7 +154,12 @@ export default {
     ...mapGetters('shopfloor', ['screens']),
     ...mapGetters('helper', ['isTV']),
     ...mapState('helper', ['isFullscreen']),
-    ...mapState('shopfloor', ['currentShift', 'selectedView', '']),
+    ...mapState('shopfloor', [
+      'currentShift',
+      'selectedView',
+      'machines',
+      'currentTime',
+    ]),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
@@ -167,10 +172,12 @@ export default {
   methods: {
     ...mapMutations('shopfloor', ['setRows', 'setCols']),
     onResize() {
-      if (!this.isTV && !this.isFullscreen) {
-        this.cHeight = window.innerHeight - 168 - 36;
-      } else {
+      if (this.isTV || this.isFullscreen) {
         this.cHeight = window.innerHeight - 168;
+      } else if (this.$vuetify.breakpoint.xsOnly) {
+        this.cHeight = window.innerHeight - 158;
+      } else {
+        this.cHeight = window.innerHeight - 168 - 36;
       }
       this.cWidth = window.innerWidth;
       const rows = Math.floor(this.cHeight / (274 + 14));
@@ -203,13 +210,17 @@ export default {
         self.next();
       }
     }, 10000);
-    this.timeInterval = setInterval(() => {
-      self.now = formatDate(new Date().getTime(), 'HH:mm');
-    }, 1000);
+    if (this.currentTime) {
+      this.now = formatDate(this.currentTime, 'HH:mm');
+    }
+  },
+  watch: {
+    currentTime(val) {
+      this.now = formatDate(val, 'HH:mm');
+    },
   },
   beforeDestroy() {
     clearInterval(this.interval);
-    clearInterval(this.timeInterval);
   },
 };
 </script>

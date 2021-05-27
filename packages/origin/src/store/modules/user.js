@@ -170,6 +170,18 @@ export default ({
       return data;
     },
 
+    getRoles: async () => {
+      try {
+        const { data } = await UserService.getRoles();
+        if (data && data.results) {
+          return data.results;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     getUserRoles: async ({ commit }) => {
       try {
         const { data } = await UserService.getRoles();
