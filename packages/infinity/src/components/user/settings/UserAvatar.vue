@@ -1,15 +1,11 @@
 <template>
   <v-row no-gutters>
     <v-col cols="4" sm="2">
-      <v-avatar
-        size="96"
-        color="secondary"
-      >
-        <v-icon
-          x-large
-          v-text="'$account'"
-        ></v-icon>
-      </v-avatar>
+      <avatar
+        :name="fullName"
+        variant="beam"
+        :size="96"
+      />
     </v-col>
     <v-col class="my-auto">
       <div class="display-1 font-weight-medium">
@@ -24,9 +20,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import Avatar from '@shopworx/ui-components/avatars/Avatar.vue';
 
 export default {
   name: 'UserAvatar',
+  components: {
+    Avatar,
+  },
   computed: {
     ...mapGetters('user', ['fullName', 'currentSite', 'customer']),
   },

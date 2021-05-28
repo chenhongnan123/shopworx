@@ -50,6 +50,7 @@
     "@shopworx/stock-taking": "^4.3.3",
     "@shopworx/traceability-app": "^4.3.3",
     "@shopworx/user-dashboard": "^4.3.3",
+    "@shopworx/ui-components": "^4.3.3",
     "ag-grid-community": "^25.0.1",
     "ag-grid-enterprise": "^25.0.1",
     "ag-grid-vue": "^25.0.0",

@@ -12,15 +12,10 @@
             icon
             v-on="{ ...tooltip, ...menu }"
           >
-            <v-avatar
-              size="36"
-              color="secondary"
-            >
-              <v-icon
-                v-text="'$account'"
-                :color="$vuetify.theme.dark ? 'white' : '#212121'"
-              ></v-icon>
-            </v-avatar>
+            <avatar
+              :name="fullName"
+              variant="beam"
+            />
           </v-btn>
         </template>
         <span class="text-center">
@@ -72,9 +67,13 @@ import {
   mapActions,
   mapGetters,
 } from 'vuex';
+import Avatar from '@shopworx/ui-components/avatars/Avatar.vue';
 
 export default {
   name: 'InfinityAccount',
+  components: {
+    Avatar,
+  },
   computed: {
     ...mapState('helper', ['isDark']),
     ...mapState('user', ['activeSite']),
