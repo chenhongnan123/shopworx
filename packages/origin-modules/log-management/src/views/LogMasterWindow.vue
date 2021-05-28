@@ -8,7 +8,6 @@
       <v-tab
         :key="asset.id"
         class="text-none"
-        v-for="asset in getAssets(id)"
       >
         <span v-text="asset.assetDescription"></span>
       </v-tab>

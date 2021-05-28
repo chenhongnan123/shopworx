@@ -1,25 +1,26 @@
 <template>
   <div>
-    <settings-layout
+    <span>{{ $t('logManagement') }}</span>
+    <!-- <settings-layout
       v-if="!loading"
       :items="staticItemList"
       :headerTitle="$t('logManagement')"
       windowRouteName="logMasterWindow"
     >
+    </settings-layout> -->
       <log-master-window />
-    </settings-layout>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SettingsLayout from '@/components/layout/SettingsLayout.vue';
+// import SettingsLayout from '@/components/layout/SettingsLayout.vue';
 import LogMasterWindow from './LogMasterWindow.vue';
 
 export default {
   name: 'LogMaster',
   components: {
-    SettingsLayout,
+    // SettingsLayout,
     LogMasterWindow,
   },
   data() {

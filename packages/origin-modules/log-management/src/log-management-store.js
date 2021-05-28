@@ -19,7 +19,6 @@ export default ({
   },
   actions: {
     getSwxLogs: async ({ dispatch, commit }, query) => {
-      query = `?query=logcode=="${query}"`;
       const logList = await dispatch(
         'element/getRecords',
         {
@@ -31,13 +30,11 @@ export default ({
       commit('setLogs', logList);
       return true;
     },
-    getSwxLogCodes: async ({ dispatch, commit }, query) => {
-      query = `?query=code=="${query}"`;
+    getSwxLogCodes: async ({ dispatch, commit }) => {
       const codeList = await dispatch(
         'element/getRecords',
         {
           elementName: 'swxlogcodes',
-          query,
         },
         { root: true },
       );

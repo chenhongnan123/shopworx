@@ -1,4 +1,7 @@
 <template>
+<v-container fluid class="py-0">
+  <v-row justify="center">
+    <v-col cols="12" xl="10" class="py-0">
   <v-card
     flat
     class="transparent"
@@ -9,8 +12,9 @@
       dense
       class="stick"
       :color="$vuetify.theme.dark ? '#121212' : ''"
+      :headerTitle="$t('logManagement')"
     >
-    <v-responsive :max-width="250">
+    <v-responsive>
       <v-text-field
           class="mt-8 ml-0"
           type="datetime-local"
@@ -18,7 +22,7 @@
           :label="$t('From date')"
       ></v-text-field>
     </v-responsive>
-    <v-responsive :max-width="260">
+    <v-responsive>
       <v-text-field
           class="mt-8 ml-4"
           type="datetime-local"
@@ -32,6 +36,7 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
+        @click="searchRecord"
       >
         Search
       </v-btn>
@@ -40,6 +45,7 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
+        @click="refreshUI"
       >
         Refresh
       </v-btn>
@@ -50,7 +56,6 @@
       :items-per-page="5"
       class="elevation-1 mb-4 mt-2"
       show-select
-      height="190"
       @click:row="handleClick"
     ></v-data-table>
     <!-- <ag-grid-vue
@@ -94,14 +99,16 @@
             </v-col>
             <v-col cols="6">
              <h2>Description</h2>
+             <v-flex>
               <div v-if="this.language === 'zhHans'">
-                {{selectedRowDataswxCodes[0].cndescription || 'no descriprion'}}
-              </div>
-              <div v-else>
                 {{selectedRowDataswxCodes[0].endescription || 'no descriprion'}}
               </div>
+              <div v-else>
+                {{selectedRowDataswxCodes[0].cndescription || 'no descriprion'}}
+              </div>
+             </v-flex>
               <h2>Type</h2>
-              {{selectedRowDataswxCodes[0].type}}
+              {{selectedRowDataswxCodes[0].code || 'no descriprion'}}
             </v-col>
           </v-row>
         </v-card-text>
@@ -113,6 +120,9 @@
     </v-tabs-items>
     </div>
   </v-card>
+    </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>
@@ -246,11 +256,24 @@ export default {
   methods: {
     ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
     ...mapMutations('helper', ['setAlert']),
+    async refreshUI() {
+      await this.getSwxLogs('');
+    },
+    async searchRecord() {
+      const from = new Date(this.fromdate).getTime();
+      const to = new Date(this.todate).getTime();
+      await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+    },
     async handleClick(item) {
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
       this.selectedRowData = item.metadata;
-      this.selectedRowDataswxCodes = this.logcodes;
+      const codeDescriptionMapping = this.logcodes
+        .filter((c) => c.endescription === item.endescription);
+      const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
+      this.selectedRowDataswxCodes = codeDescriptionMapping;
+      this.selectedRowDataswxCodes = codeTypeMapping;
+      console.log(this.selectedRowDataswxCodes);
     },
     async fetchRecords() {
       this.loading = true;
