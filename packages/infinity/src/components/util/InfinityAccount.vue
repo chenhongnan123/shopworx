@@ -14,7 +14,7 @@
           >
             <avatar
               :name="fullName"
-              variant="beam"
+              :variant="currentAvatar"
             />
           </v-btn>
         </template>
@@ -75,7 +75,7 @@ export default {
     Avatar,
   },
   computed: {
-    ...mapState('helper', ['isDark']),
+    ...mapState('helper', ['isDark', 'currentAvatar']),
     ...mapState('user', ['activeSite']),
     ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer', 'role']),
     items() {

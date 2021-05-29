@@ -3,7 +3,7 @@
     <v-col cols="4" sm="2">
       <avatar
         :name="fullName"
-        variant="beam"
+        :variant="currentAvatar"
         :size="96"
       />
     </v-col>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import Avatar from '@shopworx/ui-components/avatars/Avatar.vue';
 
 export default {
@@ -28,6 +28,7 @@ export default {
     Avatar,
   },
   computed: {
+    ...mapState('helper', ['currentAvatar']),
     ...mapGetters('user', ['fullName', 'currentSite', 'customer']),
   },
 };

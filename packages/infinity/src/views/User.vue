@@ -9,7 +9,7 @@
         <v-card-text>
           <avatar
             :name="fullName"
-            variant="beam"
+            :variant="currentAvatar"
             :size="74"
           />
         </v-card-text>
@@ -119,7 +119,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('helper', ['version']),
+    ...mapState('helper', ['version', 'currentAvatar']),
     ...mapState('user', ['activeSite']),
     ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer', 'role']),
   },

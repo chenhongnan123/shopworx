@@ -1,76 +1,76 @@
 <template>
   <svg
-      :viewBox="viewBox"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      :width="size"
-      :height="size"
+    :viewBox="viewBox"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    :width="size"
+    :height="size"
+  >
+    <mask
+      id="mask__beam"
+      maskUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      :width="SIZE"
+      :height="SIZE"
     >
-      <mask
-        id="mask__beam"
-        maskUnits="userSpaceOnUse"
+      <rect
+        :width="SIZE"
+        :height="SIZE"
+        rx="20"
+        fill="white"
+      />
+    </mask>
+    <g mask="url(#mask__beam)" fill="transparent">
+      <rect
+        :width="SIZE"
+        :height="SIZE"
+        rx="20"
+        :fill="properties.backgroundColor"
+      />
+      <rect
         x="0"
         y="0"
         :width="SIZE"
         :height="SIZE"
-      >
-        <rect
-          :width="SIZE"
-          :height="SIZE"
-          rx="20"
-          fill="white"
+        :transform="transformRect"
+        :fill="properties.wrapperColor"
+        :rx="properties.isCircle ? SIZE : SIZE / 6"
+      />
+      <g :transform="transformG">
+        <path
+          v-if="properties.isMouthOpen"
+          :d="openMouthPathD"
+          :stroke="properties.faceColor"
+          fill="none"
+          strokeLinecap="round"
         />
-      </mask>
-      <g mask="url(#mask__beam)" fill="transparent">
-        <rect
-          :width="SIZE"
-          :height="SIZE"
-          rx="20"
-          :fill="options.backgroundColor"
+        <path
+          v-else
+          :d="closedMouthPathD"
+          :fill="properties.faceColor"
         />
         <rect
-          x="0"
-          y="0"
-          :width="SIZE"
-          :height="SIZE"
-          :transform="transformRect"
-          :fill="options.wrapperColor"
-          :rx="options.isCircle ? SIZE : SIZE / 6"
+          :x="14 - properties.eyeSpread"
+          y="14"
+          width="1.5"
+          height="2"
+          rx="1"
+          stroke="none"
+          :fill="properties.faceColor"
         />
-        <g :transform="transformG">
-          <path
-            v-if="options.isMouthOpen"
-            :d="openMouthPathD"
-            :stroke="options.faceColor"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            v-else
-            :d="closedMouthPathD"
-            :fill="options.faceColor"
-          />
-          <rect
-            :x="14 - options.eyeSpread"
-            y="14"
-            width="1.5"
-            height="2"
-            rx="1"
-            stroke="none"
-            :fill="options.faceColor"
-          />
-          <rect
-            :x="20 + options.eyeSpread"
-            y="14"
-            width="1.5"
-            height="2"
-            rx="1"
-            stroke="none"
-            :fill="options.faceColor"
-          />
-        </g>
+        <rect
+          :x="20 + properties.eyeSpread"
+          y="14"
+          width="1.5"
+          height="2"
+          rx="1"
+          stroke="none"
+          :fill="properties.faceColor"
+        />
       </g>
-    </svg>
+    </g>
+  </svg>
 </template>
 
 <script>
@@ -94,7 +94,7 @@ export default {
     };
   },
   computed: {
-    options() {
+    properties() {
       const numFromName = getNumber(this.name);
       const range = this.colors && this.colors.length;
       const wrapperColor = getRandomColor(numFromName, this.colors, range);
@@ -133,22 +133,22 @@ export default {
     },
     transformRect() {
       return `
-        translate(${this.options.wrapperTranslateX} ${this.options.wrapperTranslateY})
-        rotate(${this.options.wrapperRotate} ${SIZE / 2} ${SIZE / 2})
-        scale(${this.options.wrapperScale})
+        translate(${this.properties.wrapperTranslateX} ${this.properties.wrapperTranslateY})
+        rotate(${this.properties.wrapperRotate} ${SIZE / 2} ${SIZE / 2})
+        scale(${this.properties.wrapperScale})
       `;
     },
     transformG() {
       return `
-        translate(${this.options.faceTranslateX} ${this.options.faceTranslateY})
-        rotate(${this.options.faceRotate} ${SIZE / 2} ${SIZE / 2})
+        translate(${this.properties.faceTranslateX} ${this.properties.faceTranslateY})
+        rotate(${this.properties.faceRotate} ${SIZE / 2} ${SIZE / 2})
       `;
     },
     openMouthPathD() {
-      return `M15 ${19 + this.options.mouthSpread} c2 1 4 1 6 0`;
+      return `M15 ${19 + this.properties.mouthSpread} c2 1 4 1 6 0`;
     },
     closedMouthPathD() {
-      return `M13 ${19 + this.options.mouthSpread} a1,0.75 0 0,0 10,0`;
+      return `M13 ${19 + this.properties.mouthSpread} a1,0.75 0 0,0 10,0`;
     },
   },
 };

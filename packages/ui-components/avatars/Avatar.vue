@@ -9,6 +9,9 @@
 
 <script>
 import AvatarBeam from './AvatarBeam.vue';
+import AvatarBauhaus from './AvatarBauhaus.vue';
+import AvatarPixel from './AvatarPixel.vue';
+import AvatarRing from './AvatarRing.vue';
 
 export default {
   name: 'Avatar',
@@ -18,11 +21,14 @@ export default {
       default: 'beam',
       validator: (val) => [
         'beam',
+        'bauhaus',
+        'pixel',
+        'ring',
       ].includes(val),
     },
     name: {
       type: String,
-      required: true,
+      default: 'name',
     },
     size: {
       type: Number,
@@ -41,6 +47,9 @@ export default {
   },
   components: {
     AvatarBeam,
+    AvatarBauhaus,
+    AvatarPixel,
+    AvatarRing,
   },
   computed: {
     component() {
