@@ -8,6 +8,7 @@
   "dependencies": {
     "@shopworx/assets": "^4.3.3",
     "@shopworx/services": "^4.3.3",
+    "pdfmake": "0.1.71",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

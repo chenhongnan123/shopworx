@@ -47,6 +47,11 @@ export default {
           value: 'gridExcel',
           icon: 'mdi-file-excel-outline',
         },
+        {
+          name: 'PDF',
+          value: 'pdf',
+          icon: 'mdi-file-pdf-outline',
+        },
       ],
     };
   },
