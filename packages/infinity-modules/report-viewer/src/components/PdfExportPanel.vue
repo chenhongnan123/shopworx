@@ -17,7 +17,7 @@ export default {
       PDF_PAGE_ORITENTATION: 'landscape',
       PDF_WITH_HEADER_IMAGE: true,
       PDF_WITH_FOOTER_PAGE_COUNT: true,
-      PDF_HEADER_HEIGHT: 25,
+      PDF_HEADER_HEIGHT: 20,
       PDF_ROW_HEIGHT: 15,
       PDF_ODD_BKG_COLOR: '#fcfcfc',
       PDF_EVEN_BKG_COLOR: '#ffffff',
@@ -26,9 +26,12 @@ export default {
       PDF_SELECTED_ROWS_ONLY: false,
       PDF_REPORT_TITLE: '',
       PDF_REPORT_SUBTITLE: '',
+      CUSTOMER: '',
+      SITE: '',
     };
   },
   computed: {
+    ...mapGetters('user', ['customer', 'currentSite']),
     ...mapGetters('reports', ['reportTitle']),
     ...mapState('reports', ['reportMapping', 'dateRange']),
     aggType() {
@@ -53,6 +56,12 @@ export default {
       const [start, end] = this.dateRange;
       this.PDF_REPORT_SUBTITLE = `${start} to ${end}`;
     },
+    currentSite() {
+      this.SITE = this.currentSite;
+    },
+    customer() {
+      this.CUSTOMER = this.customer;
+    },
   },
   mounted() {
     const img = new Image();
@@ -70,6 +79,8 @@ export default {
     this.PDF_REPORT_TITLE = `${this.aggType} ${this.reportTitle}`;
     const [start, end] = this.dateRange;
     this.PDF_REPORT_SUBTITLE = `${start} to ${end}`;
+    this.CUSTOMER = this.customer;
+    this.SITE = this.currentSite;
   },
 };
 </script>

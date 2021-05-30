@@ -21,6 +21,8 @@ export default function getDocDefinition(
     PDF_LOGO,
     PDF_REPORT_TITLE,
     PDF_REPORT_SUBTITLE,
+    CUSTOMER,
+    SITE,
   } = printParams;
 
   return (function () {
@@ -41,9 +43,9 @@ export default function getDocDefinition(
     const header = PDF_WITH_HEADER_IMAGE
       ? {
         image: 'shopworx-logo',
-        width: 150,
-        alignment: 'center',
-        margin: [0, 10, 0, 10],
+        alignment: 'left',
+        width: 100,
+        margin: [20, 10, 0, 0],
       }
       : null;
 
@@ -96,8 +98,24 @@ export default function getDocDefinition(
 
     const docDefintiion = {
       pageOrientation: PDF_PAGE_ORITENTATION,
-      header,
+      header: {
+        alignment: 'right',
+        columns: [{
+          ...header,
+        }, [
+          {
+            text: CUSTOMER,
+            style: 'customer',
+            margin: [0, 10, 10, 0],
+          },
+          { text: SITE,
+            style: 'customer',
+            margin: [0, 0, 10, 0],
+          },
+        ]],
+      },
       footer,
+      watermark: { text: 'ShopWorx', opacity: 0.1 },
       content: [
         title,
         subtitle,
@@ -126,10 +144,16 @@ export default function getDocDefinition(
           fontSize: 18,
           bold: true,
           alignment: 'center',
+          margin: [0, 0, 0, 0],
         },
         subheader: {
           fontSize: 14,
           alignment: 'center',
+          margin: [0, 0, 0, 5],
+        },
+        customer: {
+          fontSize: 14,
+          alignment: 'right',
         },
         myTable: {
           margin: [0, 0, 0, 0],
