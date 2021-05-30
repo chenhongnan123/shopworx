@@ -19,6 +19,8 @@ export default function getDocDefinition(
     PDF_WITH_HEADER_IMAGE,
     PDF_WITH_FOOTER_PAGE_COUNT,
     PDF_LOGO,
+    PDF_REPORT_TITLE,
+    PDF_REPORT_SUBTITLE,
   } = printParams;
 
   return (function () {
@@ -38,7 +40,7 @@ export default function getDocDefinition(
 
     const header = PDF_WITH_HEADER_IMAGE
       ? {
-        image: 'ag-grid-logo',
+        image: 'shopworx-logo',
         width: 150,
         alignment: 'center',
         margin: [0, 10, 0, 10],
@@ -53,6 +55,16 @@ export default function getDocDefinition(
         };
       }
       : null;
+
+    const title = {
+			text: PDF_REPORT_TITLE,
+      style: 'header',
+		};
+
+    const subtitle = {
+			text: PDF_REPORT_SUBTITLE,
+      style: 'subheader',
+		};
 
     const pageMargins = [
       10,
@@ -87,6 +99,8 @@ export default function getDocDefinition(
       header,
       footer,
       content: [
+        title,
+        subtitle,
         {
           style: 'myTable',
           table: {
@@ -105,9 +119,18 @@ export default function getDocDefinition(
         },
       ],
       images: {
-        'ag-grid-logo': PDF_LOGO,
+        'shopworx-logo': PDF_LOGO,
       },
       styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center',
+        },
+        subheader: {
+          fontSize: 14,
+          alignment: 'center',
+        },
         myTable: {
           margin: [0, 0, 0, 0],
         },

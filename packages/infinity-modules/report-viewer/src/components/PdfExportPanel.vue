@@ -24,11 +24,13 @@ export default {
       PDF_WITH_CELL_FORMATTING: true,
       PDF_WITH_COLUMNS_AS_LINKS: true,
       PDF_SELECTED_ROWS_ONLY: false,
+      PDF_REPORT_TITLE: '',
+      PDF_REPORT_SUBTITLE: '',
     };
   },
   computed: {
     ...mapGetters('reports', ['reportTitle']),
-    ...mapState('reports', ['reportMapping']),
+    ...mapState('reports', ['reportMapping', 'dateRange']),
     aggType() {
       return this.reportMapping ? this.$i18n.t(`${this.reportMapping.aggregationType}`) : '';
     },
@@ -38,6 +40,18 @@ export default {
       const printParams = this.$data;
       const fileName = `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`;
       printDoc(printParams, fileName, agGridApi, agColumnApi);
+    },
+  },
+  watch: {
+    reportMapping() {
+      this.PDF_REPORT_TITLE = `${this.aggType} ${this.reportTitle}`;
+    },
+    reportTitle() {
+      this.PDF_REPORT_TITLE = `${this.aggType} ${this.reportTitle}`;
+    },
+    dateRange() {
+      const [start, end] = this.dateRange;
+      this.PDF_REPORT_SUBTITLE = `${start} to ${end}`;
     },
   },
   mounted() {
@@ -53,6 +67,9 @@ export default {
       ctx.drawImage(img, 0, 0);
       this.PDF_LOGO = canvas.toDataURL('image/png');
     };
+    this.PDF_REPORT_TITLE = `${this.aggType} ${this.reportTitle}`;
+    const [start, end] = this.dateRange;
+    this.PDF_REPORT_SUBTITLE = `${start} to ${end}`;
   },
 };
 </script>
