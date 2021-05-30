@@ -5,13 +5,13 @@ import getDocDefinition from './docDefinition';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-function printDoc(printParams, gridApi, columnApi) {
+function printDoc(printParams, fileName, gridApi, columnApi) {
   const docDefinition = getDocDefinition(
     printParams,
     gridApi,
     columnApi,
   );
-  pdfMake.createPdf(docDefinition).download();
+  pdfMake.createPdf(docDefinition).download(fileName);
 }
 
 export default printDoc;

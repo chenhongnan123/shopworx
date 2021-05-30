@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
 import printDoc from '../pdfExport/printDoc';
 
 export default {
@@ -25,10 +26,18 @@ export default {
       PDF_SELECTED_ROWS_ONLY: false,
     };
   },
+  computed: {
+    ...mapGetters('reports', ['reportTitle']),
+    ...mapState('reports', ['reportMapping']),
+    aggType() {
+      return this.reportMapping ? this.$i18n.t(`${this.reportMapping.aggregationType}`) : '';
+    },
+  },
   methods: {
     submitFormHandler({ agGridApi, agColumnApi }) {
       const printParams = this.$data;
-      printDoc(printParams, agGridApi, agColumnApi);
+      const fileName = `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`;
+      printDoc(printParams, fileName, agGridApi, agColumnApi);
     },
   },
   mounted() {

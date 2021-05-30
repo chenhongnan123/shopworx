@@ -109,7 +109,10 @@ export default {
     ...mapState('helper', ['isDark']),
     ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     ...mapState('reports', ['report', 'reportMapping', 'showChart']),
-    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
+    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'reportTitle']),
+    aggType() {
+      return this.reportMapping ? this.$i18n.t(`${this.reportMapping.aggregationType}`) : '';
+    },
   },
   watch: {
     report(val) {
@@ -258,13 +261,13 @@ export default {
     },
     exportGridCSV() {
       const params = {
-        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+        fileName: `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsCsv(params);
     },
     exportGridExcel() {
       const params = {
-        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+        fileName: `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsExcel(params);
     },
