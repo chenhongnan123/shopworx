@@ -134,7 +134,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('reports', ['setGridState']),
+    ...mapMutations('reports', ['setGridState', 'setIsPDFVisible']),
     getHeaderName(col) {
       switch (this.$i18n.locale) {
         case 'zhHans':
@@ -223,7 +223,16 @@ export default {
           return 'agTextColumnFilter';
       }
     },
+    togglePDF() {
+      const pivotColumns = this.gridColumnApi.getPivotColumns();
+      if (pivotColumns.length) {
+        this.setIsPDFVisible(false);
+      } else {
+        this.setIsPDFVisible(true);
+      }
+    },
     onStateChange() {
+      this.togglePDF();
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
       const filterState = this.gridApi.getFilterModel();
@@ -243,6 +252,7 @@ export default {
       if (!this.isBaseReport) {
         const state = JSON.parse(this.gridObject);
         this.setState(state);
+        this.togglePDF();
       } else {
         this.resetState();
       }
