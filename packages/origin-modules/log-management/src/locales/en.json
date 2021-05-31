@@ -2,9 +2,12 @@
   "logManagement": "Log Management",
   "success": {
     "DOWNLOADED": "Downloaded the Data in CSV format",
-    "DATA_SAVED": "Data Saved Successfully!"
+    "DATA_SAVED": "Data Saved Successfully!",
+    "No_LOGS_FOUND": "No logs found from yesterday to until now"
   },
   "error": {
-    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)"
+    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)",
+    "EITHER_DATE_EMPTY": "Please select from date & to date range",
+    "TO_DATE_IS_NOT_GREATER": "from date can't be > greater than to date"
   }
 }

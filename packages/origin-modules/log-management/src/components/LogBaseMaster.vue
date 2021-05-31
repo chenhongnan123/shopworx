@@ -55,8 +55,9 @@
       :items="logs"
       :items-per-page="5"
       class="elevation-1 mb-4 mt-2"
-      show-select
       @click:row="handleClick"
+      style="cursor:pointer"
+      :loading="myLoadingVariable"
     ></v-data-table>
     <!-- <ag-grid-vue
       v-model="rowData"
@@ -101,14 +102,14 @@
              <h2>Description</h2>
              <v-flex>
               <div v-if="this.language === 'zhHans'">
-                {{selectedRowDataswxCodes[0].endescription || 'no descriprion'}}
-              </div>
-              <div v-else>
                 {{selectedRowDataswxCodes[0].cndescription || 'no descriprion'}}
               </div>
+              <div v-else>
+                {{selectedRowDataswxCodes[0].endescription || 'no descriprion'}}
+              </div>
              </v-flex>
-              <h2>Type</h2>
-              {{selectedRowDataswxCodes[0].code || 'no descriprion'}}
+              <!-- <h2>Type</h2>
+              {{selectedRowDataswxCodes[0].code || 'no descriprion'}} -->
             </v-col>
           </v-row>
         </v-card-text>
@@ -172,6 +173,7 @@ export default {
       showUpdateBtn: false,
       updateData: [],
       language: null,
+      myLoadingVariable: true,
       headers: [
         {
           text: 'Time',
@@ -182,12 +184,6 @@ export default {
           align: 'start',
           sortable: false,
           value: 'logtype',
-        },
-        {
-          text: 'Sub-Station',
-          align: 'start',
-          sortable: false,
-          value: 'substationid',
         },
         {
           text: 'Log Code',
@@ -203,7 +199,9 @@ export default {
     this.language = this.currentLocale;
     this.fetchRecords();
     this.zipService = ZipService;
-    this.getSwxLogs(this.id);
+    this.myLoadingVariable = true;
+    this.getSwxLogsElement();
+    // this.getSwxLogs(this.id);
     this.getSwxLogCodes(this.id);
   },
   computed: {
@@ -257,23 +255,77 @@ export default {
     ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
-      await this.getSwxLogs('');
+      this.selectedRowData = [];
+      this.selectedRowDataswxCodes = [];
+      if (this.fromdate && this.todate) {
+        this.myLoadingVariable = true;
+        const from = new Date(this.fromdate).getTime();
+        const to = new Date(this.todate).getTime();
+        await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+        this.myLoadingVariable = false;
+      } else {
+        this.myLoadingVariable = true;
+        await this.getSwxLogsElement();
+        this.myLoadingVariable = false;
+      }
+    },
+    async getSwxLogsElement() {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const from = new Date(yesterday).getTime();
+      const to = new Date(today).getTime();
+      const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+      this.myLoadingVariable = false;
+      if (!records.length) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'No_LOGS_FOUND',
+        });
+      }
     },
     async searchRecord() {
-      const from = new Date(this.fromdate).getTime();
-      const to = new Date(this.todate).getTime();
-      await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+      if (!this.fromdate || !this.todate) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'EITHER_DATE_EMPTY',
+        });
+      } else if (this.fromdate > this.todate) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TO_DATE_IS_NOT_GREATER',
+        });
+      } else {
+        this.selectedRowData = [];
+        this.selectedRowDataswxCodes = [];
+        this.myLoadingVariable = true;
+        const from = new Date(this.fromdate).getTime();
+        const to = new Date(this.todate).getTime();
+        await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+        this.myLoadingVariable = false;
+      }
     },
     async handleClick(item) {
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
-      this.selectedRowData = item.metadata;
-      const codeDescriptionMapping = this.logcodes
-        .filter((c) => c.endescription === item.endescription);
-      const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
-      this.selectedRowDataswxCodes = codeDescriptionMapping;
-      this.selectedRowDataswxCodes = codeTypeMapping;
-      console.log(this.selectedRowDataswxCodes);
+      if (this.language === 'zhHans') {
+        this.selectedRowData = item.metadata;
+        const codeDescriptionMapping = this.logcodes
+          .filter((c) => c.cndescription === item.cndescription);
+        const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
+        this.selectedRowDataswxCodes = codeDescriptionMapping;
+        this.selectedRowDataswxCodes = codeTypeMapping;
+      } else {
+        this.selectedRowData = item.metadata;
+        const codeDescriptionMapping = this.logcodes
+          .filter((c) => c.endescription === item.endescription);
+        const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
+        this.selectedRowDataswxCodes = codeDescriptionMapping;
+        this.selectedRowDataswxCodes = codeTypeMapping;
+      }
     },
     async fetchRecords() {
       this.loading = true;
