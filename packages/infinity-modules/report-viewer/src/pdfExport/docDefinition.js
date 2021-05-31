@@ -68,6 +68,8 @@ export default function getDocDefinition(
       style: 'subheader',
 		};
 
+    const { PDF_REPORT_CHART, reportChart } = getReportChart();
+
     const pageMargins = [
       10,
       PDF_WITH_HEADER_IMAGE ? 70 : 20,
@@ -119,6 +121,7 @@ export default function getDocDefinition(
       content: [
         title,
         subtitle,
+        reportChart,
         {
           style: 'myTable',
           table: {
@@ -138,6 +141,7 @@ export default function getDocDefinition(
       ],
       images: {
         'shopworx-logo': PDF_LOGO,
+        'report-chart': PDF_REPORT_CHART,
       },
       styles: {
         header: {
@@ -171,6 +175,24 @@ export default function getDocDefinition(
 
     return docDefintiion;
   }());
+
+  function getReportChart() {
+    let url = '';
+    const models = agGridApi.getChartModels();
+    const chartModel = models[models.length - 1];
+    if (chartModel) {
+      url = chartModel.getChartImageDataURL({ type: 'image/png' });
+    }
+    return {
+      PDF_REPORT_CHART: url,
+      reportChart: {
+        image: 'report-chart',
+        alignment: 'center',
+        width: 830,
+        margin: [10, 10, 10, 10],
+      }
+    };
+  }
 
   function getColumnGroupsToExport() {
     const displayedColumnGroups = agGridColumnApi.getAllDisplayedColumnGroups();
