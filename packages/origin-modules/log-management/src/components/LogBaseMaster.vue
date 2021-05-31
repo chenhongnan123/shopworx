@@ -49,6 +49,26 @@
       >
         Refresh
       </v-btn>
+      <v-btn
+        small
+        outlined
+        color="primary"
+        class="text-none ml-2 mr-2 mt-3"
+        @click="downloadSample"
+        v-if="sampleBtnVisible"
+      >
+        Sample
+      </v-btn>
+      <v-btn
+        small
+        outlined
+        color="primary"
+        class="text-none ml-2 mr-2 mt-3"
+        @click="downloadSample"
+        v-if="importBtnVisible"
+      >
+        Import
+      </v-btn>
     </v-toolbar>
     <v-data-table
       :headers="headers"
@@ -174,6 +194,8 @@ export default {
       updateData: [],
       language: null,
       myLoadingVariable: true,
+      sampleBtnVisible: false,
+      importBtnVisible: false,
       headers: [
         {
           text: 'Time',
@@ -252,7 +274,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'getElementDetails', 'createElement', 'createTags']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
       this.selectedRowData = [];
@@ -270,19 +292,148 @@ export default {
       }
     },
     async getSwxLogsElement() {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const from = new Date(yesterday).getTime();
-      const to = new Date(today).getTime();
-      const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-      this.myLoadingVariable = false;
-      if (!records.length) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'No_LOGS_FOUND',
-        });
+      const swxLogsElement = await this.getElementDetails('swxlogs');
+      const swxLogCodesElement = await this.getElementDetails('swxlogcodes');
+      if (!swxLogsElement) {
+        const object = {
+          customerId: 195,
+          siteId: 197,
+          categoryType: 'ASSET',
+          collectionName: 'logs',
+          elementName: 'swxlogs',
+          elementDescription: 'SWX logs Test',
+          status: 'ACTIVE',
+          elementType: 'DEFAULT',
+          uniqueTagName: '',
+          uniqueTagValue: 0,
+          uniqueTagStartValue: 0,
+          uniqueTagValuePrefix: '',
+          uniqueTagValueSuffix: '',
+          businessTimeTagsRequired: false,
+          optional: false,
+          assetBased: true,
+          uniqueTag: false,
+        };
+        const createElementLogs = await this.createElement(object);
+        if (createElementLogs) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'ELEMENT_CREATED_SWXLOGS',
+          });
+        }
+      } else if (!swxLogCodesElement) {
+        const object = {
+          customerId: 195,
+          siteId: 197,
+          categoryType: 'ASSET',
+          collectionName: 'logs',
+          elementName: 'swxlogcodes',
+          elementDescription: 'SWX logs codes',
+          status: 'ACTIVE',
+          elementType: 'DEFAULT',
+          uniqueTagName: '',
+          uniqueTagValue: 0,
+          uniqueTagStartValue: 0,
+          uniqueTagValuePrefix: '',
+          uniqueTagValueSuffix: '',
+          businessTimeTagsRequired: false,
+          optional: false,
+          assetBased: true,
+          uniqueTag: false,
+        };
+        const createElementCodes = await this.createElement(object);
+        if (createElementCodes) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'ELEMENT_CREATED_SWXLOGCODES',
+          });
+          const tagList = [];
+          tagList.push({
+            customerId: 195,
+            tagName: 'code',
+            emgTagType: 'String',
+            tagDescription: 'Code',
+            elementId: createElementCodes,
+            assetId: 4,
+            status: 'ACTIVE',
+            derivedField: false,
+            derivedFunctionName: null,
+            derivedFieldType: null,
+            filter: false,
+            filterFromElementName: null,
+            filterFromTagName: null,
+            required: true,
+            hide: false,
+            tagOrder: 0,
+            filterFromList: null,
+          },
+          {
+            customerId: 195,
+            tagName: 'chinesedescription',
+            emgTagType: 'String',
+            tagDescription: 'Chinese description',
+            elementId: createElementCodes,
+            assetId: 4,
+            status: 'ACTIVE',
+            derivedField: false,
+            derivedFunctionName: null,
+            derivedFieldType: null,
+            filter: false,
+            filterFromElementName: null,
+            filterFromTagName: null,
+            required: true,
+            hide: false,
+            tagOrder: 0,
+            filterFromList: null,
+          }, {
+            customerId: 195,
+            tagName: 'englishdescription',
+            emgTagType: 'String',
+            tagDescription: 'English description',
+            elementId: createElementCodes,
+            assetId: 4,
+            status: 'ACTIVE',
+            derivedField: false,
+            derivedFunctionName: null,
+            derivedFieldType: null,
+            filter: false,
+            filterFromElementName: null,
+            filterFromTagName: null,
+            required: true,
+            hide: false,
+            tagOrder: 0,
+            filterFromList: null,
+          });
+          const createdTagList = await this.createTags(tagList);
+          console.log(createdTagList);
+          if (createdTagList) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'TAGS_CREATED',
+            });
+          }
+          this.myLoadingVariable = false;
+          this.sampleBtnVisible = true;
+          this.importBtnVisible = true;
+        }
+      } else if (swxLogsElement && swxLogCodesElement) {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const from = new Date(yesterday).getTime();
+        const to = new Date(today).getTime();
+        const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+        this.myLoadingVariable = false;
+        if (!records.length) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'No_LOGS_FOUND',
+          });
+        }
       }
     },
     async searchRecord() {

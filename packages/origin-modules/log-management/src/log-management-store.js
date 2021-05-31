@@ -18,6 +18,30 @@ export default ({
     setLogCodes: set('logcodes'),
   },
   actions: {
+    createTags: async ({ dispatch }, payload) => {
+      const element = await dispatch(
+        'element/createElementTags',
+        payload,
+        { root: true },
+      );
+      return element;
+    },
+    getElementDetails: async ({ dispatch }, elementName) => {
+      const element = await dispatch(
+        'element/getElement',
+        elementName,
+        { root: true },
+      );
+      return element;
+    },
+    createElement: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/createElement',
+        payload,
+        { root: true },
+      );
+      return created;
+    },
     getSwxLogs: async ({ dispatch, commit }, query) => {
       const logList = await dispatch(
         'element/getRecords',

@@ -3,7 +3,10 @@
   "success": {
     "DOWNLOADED": "Downloaded the Data in CSV format",
     "DATA_SAVED": "Data Saved Successfully!",
-    "No_LOGS_FOUND": "No logs found from yesterday to until now"
+    "No_LOGS_FOUND": "No logs found from yesterday to until now",
+    "ELEMENT_CREATED_SWXLOGS": "Element 'swxlogs' created",
+    "ELEMENT_CREATED_SWXLOGCODES": "Element 'swxlogcodes' created",
+    "TAGS_CREATED": "Tags created for swxlogscode element, use import button to import data"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)",
