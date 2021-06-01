@@ -37,6 +37,13 @@ export default ({
         value: 'de',
       },
     ],
+    avatars: [
+      'beam',
+      'bauhaus',
+      'pixel',
+      'ring',
+    ],
+    currentAvatar: '',
     currentLocale: LocaleService.getLocale(),
     isDark: null,
     insightsDrawer: false,
@@ -55,6 +62,7 @@ export default ({
     toggleInsightsDrawer: toggle('insightsDrawer'),
     setIsConnected: set('isConnected'),
     setCurrentLocale: set('currentLocale'),
+    setCurrentAvatar: set('currentAvatar'),
   },
   actions: {
     getServerTime: async ({ commit, rootState }) => {

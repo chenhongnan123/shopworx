@@ -793,13 +793,17 @@ export default {
       return created;
     },
     setEditPayload(payload) {
-      return {
+      const data = {
         plannedquantity: +payload.plannedquantity,
         stdcycletime: +payload.stdcycletime,
         delaytime: +payload.delaytime,
         activecavity: +payload.activecavity,
         starred: this.plan.starred,
       };
+      if (this.isPress) {
+        data.strokes = +payload.strokes;
+      }
+      return data;
     },
     async update() {
       let updatePayload = this.familyParts.map(({ id, ...p }) => ({

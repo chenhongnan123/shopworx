@@ -26,7 +26,7 @@
       </v-col>
       <v-col cols="12" lg="6" xl="7" v-if="!isMobile">
         <v-row>
-          <v-col cols="12" class="pt-0">
+          <v-col cols="12">
             <shift-production />
           </v-col>
           <v-col cols="12">

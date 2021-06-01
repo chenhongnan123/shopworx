@@ -16,6 +16,7 @@ export default ({
     report: null,
     gridState: '',
     loading: false,
+    isPDFVisible: true,
   },
   mutations: {
     setReportViews: set('reportViews'),
@@ -29,6 +30,7 @@ export default ({
     setReport: set('report'),
     setGridState: set('gridState'),
     setLoading: set('loading'),
+    setIsPDFVisible: set('isPDFVisible'),
   },
   actions: {
     getReportViews: async ({ commit }, reportCategoryId) => {
