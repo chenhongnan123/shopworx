@@ -69,7 +69,7 @@ export default ({
       return true;
     },
     getRoadmapList: async ({ dispatch, commit }, query) => {
-      const list = await dispatch(
+      let list = await dispatch(
         'element/getRecords',
         {
           elementName: 'roadmaplist',
@@ -77,8 +77,12 @@ export default ({
         },
         { root: true },
       );
-      commit('setRoadmapList', list);
-      return true;
+      if (list && list.length) {
+        list = list.sort((a, b) => a.name.localeCompare(b.name));
+        commit('setRoadmapList', list);
+        return true;
+      }
+      return false;
     },
     getPartStatusLastEntry: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
