@@ -1,5 +1,6 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
+import { elementsAndTags } from './data/elements';
 
 export default ({
   namespaced: true,
@@ -18,29 +19,27 @@ export default ({
     setLogCodes: set('logcodes'),
   },
   actions: {
-    createTags: async ({ dispatch }, payload) => {
-      const element = await dispatch(
-        'element/createElementTags',
-        payload,
-        { root: true },
-      );
-      return element;
-    },
-    getElementDetails: async ({ dispatch }, elementName) => {
-      const element = await dispatch(
-        'element/getElement',
-        elementName,
-        { root: true },
-      );
-      return element;
-    },
-    createElement: async ({ dispatch }, payload) => {
-      const created = await dispatch(
-        'element/createElement',
-        payload,
-        { root: true },
-      );
-      return created;
+    initElements: async ({ dispatch }) => {
+      const createElements = elementsAndTags.map(async (m) => {
+        const { element, tags } = m;
+        const e = await dispatch(
+          'element/getElement',
+          element.elementName,
+          { root: true },
+        );
+        if (!e) {
+          const payload = {
+            element,
+            tags,
+          };
+          await dispatch(
+            'element/createElementAndTags',
+            payload,
+            { root: true },
+          );
+        }
+      });
+      await Promise.all(createElements);
     },
     getSwxLogs: async ({ dispatch, commit }, query) => {
       const logList = await dispatch(

@@ -9,8 +9,9 @@
     "TAGS_CREATED": "Tags created for swxlogscode element, use import button to import data"
   },
   "error": {
-    "ERROR_CREATING_RECORD": "Somthing went wrong (Save button used for only creating new record!)",
+    "ERROR_CREATING_RECORD": "Something went wrong (Save button used for only creating new record!)",
     "EITHER_DATE_EMPTY": "Please select from date & to date range",
-    "TO_DATE_IS_NOT_GREATER": "from date can't be > greater than to date"
+    "TO_DATE_IS_NOT_GREATER": "Invalid date selection! End date is greater than Start Date.",
+    "CODE_NOT_AVAILABLE": "Code not available!"
   }
 }

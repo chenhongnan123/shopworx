@@ -12,7 +12,6 @@
       dense
       class="stick"
       :color="$vuetify.theme.dark ? '#121212' : ''"
-      :headerTitle="$t('logManagement')"
     >
     <v-responsive>
       <v-text-field
@@ -70,27 +69,21 @@
         Import
       </v-btn>
     </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="logs"
-      :items-per-page="5"
-      class="elevation-1 mb-4 mt-2"
-      @click:row="handleClick"
-      style="cursor:pointer"
-      :loading="myLoadingVariable"
-    ></v-data-table>
-    <!-- <ag-grid-vue
+    <v-progress-linear
+     :indeterminate="myLoadingVariable"
+     v-if="myLoadingVariable"
+     class="mt-1">
+    </v-progress-linear>
+    <ag-grid-vue
       v-model="rowData"
-      rowSelection="multiple"
-      class="ag-theme-balham"
       :columnDefs="columnDefs"
-      :gridOptions="gridOptions"
       :defaultColDef="defaultColDef"
-      :suppressRowClickSelection="true"
-      style="width: 100%; height: 400px;"
-      @selection-changed="onSelectionChanged"
-      @cellValueChanged="editMethod"
-    ></ag-grid-vue> -->
+      @rowClicked="handleClick($event)"
+      rowSelection="single"
+      class="ag-theme-balham mt-2"
+      style="width: 100%; height: 250px; cursor:pointer;"
+      :loading="myLoadingVariable"
+    ></ag-grid-vue>
     <div v-if="selectedRowData.length > 0 || selectedRowDataswxCodes.length > 0">
     <v-tabs
       v-model="tab"
@@ -117,6 +110,8 @@
             <v-col cols="6">
              <h2>Metadata</h2>
               {{selectedRowData}}
+               <h2>Code</h2>
+              {{selectedRowDataswxCodes[0].code || 'no Code'}}
             </v-col>
             <v-col cols="6">
              <h2>Description</h2>
@@ -128,8 +123,6 @@
                 {{selectedRowDataswxCodes[0].endescription || 'no descriprion'}}
               </div>
              </v-flex>
-              <!-- <h2>Type</h2>
-              {{selectedRowDataswxCodes[0].code || 'no descriprion'}} -->
             </v-col>
           </v-row>
         </v-card-text>
@@ -153,16 +146,17 @@ import {
   mapState,
   mapMutations,
 } from 'vuex';
-// import 'ag-grid-community/dist/styles/ag-grid.css';
-// import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
-// import { AgGridVue } from 'ag-grid-vue';
+import { AgGridVue } from 'ag-grid-vue';
+import { formatDate } from '@shopworx/services/util/date.service';
 
 export default {
   name: 'LogBaseMaster',
   components: {
-    // AgGridVue,
+    AgGridVue,
   },
   props: {
     assetId: {
@@ -198,22 +192,25 @@ export default {
       importBtnVisible: false,
       headers: [
         {
-          text: 'Time',
-          value: 'createdTimestamp',
+          headerName: this.$t('Created Date'),
+          field: 'createdTimestamp',
+          resizable: true,
         },
         {
-          text: 'Log Type',
-          align: 'start',
-          sortable: false,
-          value: 'logtype',
+          headerName: 'Log Type',
+          field: 'logtype',
+          resizable: true,
         },
         {
-          text: 'Log Code',
-          align: 'start',
-          sortable: false,
-          value: 'logcode',
+          headerName: 'Log Code',
+          field: 'logcode',
+          resizable: true,
         },
-        { text: 'Source', value: 'logsource' },
+        {
+          headerName: 'Log source',
+          field: 'logsource',
+          resizable: true,
+        },
       ],
     };
   },
@@ -223,7 +220,6 @@ export default {
     this.zipService = ZipService;
     this.myLoadingVariable = true;
     this.getSwxLogsElement();
-    // this.getSwxLogs(this.id);
     this.getSwxLogCodes(this.id);
   },
   computed: {
@@ -249,7 +245,7 @@ export default {
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
     },
-    records() {
+    logs() {
       this.setRowData();
       this.setColumnDefs();
     },
@@ -261,9 +257,8 @@ export default {
       editable: true,
       resizable: true,
       floatingFilter: true,
-      checkboxSelection: this.isFirstColumn,
-      headerCheckboxSelection: this.isFirstColumn,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
+      rowSelection: 'single',
     };
     this.setRowData();
     this.setColumnDefs();
@@ -274,7 +269,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'getElementDetails', 'createElement', 'createTags']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'initElements']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
       this.selectedRowData = [];
@@ -292,148 +287,22 @@ export default {
       }
     },
     async getSwxLogsElement() {
-      const swxLogsElement = await this.getElementDetails('swxlogs');
-      const swxLogCodesElement = await this.getElementDetails('swxlogcodes');
-      if (!swxLogsElement) {
-        const object = {
-          customerId: 195,
-          siteId: 197,
-          categoryType: 'ASSET',
-          collectionName: 'logs',
-          elementName: 'swxlogs',
-          elementDescription: 'SWX logs Test',
-          status: 'ACTIVE',
-          elementType: 'DEFAULT',
-          uniqueTagName: '',
-          uniqueTagValue: 0,
-          uniqueTagStartValue: 0,
-          uniqueTagValuePrefix: '',
-          uniqueTagValueSuffix: '',
-          businessTimeTagsRequired: false,
-          optional: false,
-          assetBased: true,
-          uniqueTag: false,
-        };
-        const createElementLogs = await this.createElement(object);
-        if (createElementLogs) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'ELEMENT_CREATED_SWXLOGS',
-          });
-        }
-      } else if (!swxLogCodesElement) {
-        const object = {
-          customerId: 195,
-          siteId: 197,
-          categoryType: 'ASSET',
-          collectionName: 'logs',
-          elementName: 'swxlogcodes',
-          elementDescription: 'SWX logs codes',
-          status: 'ACTIVE',
-          elementType: 'DEFAULT',
-          uniqueTagName: '',
-          uniqueTagValue: 0,
-          uniqueTagStartValue: 0,
-          uniqueTagValuePrefix: '',
-          uniqueTagValueSuffix: '',
-          businessTimeTagsRequired: false,
-          optional: false,
-          assetBased: true,
-          uniqueTag: false,
-        };
-        const createElementCodes = await this.createElement(object);
-        if (createElementCodes) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'ELEMENT_CREATED_SWXLOGCODES',
-          });
-          const tagList = [];
-          tagList.push({
-            customerId: 195,
-            tagName: 'code',
-            emgTagType: 'String',
-            tagDescription: 'Code',
-            elementId: createElementCodes,
-            assetId: 4,
-            status: 'ACTIVE',
-            derivedField: false,
-            derivedFunctionName: null,
-            derivedFieldType: null,
-            filter: false,
-            filterFromElementName: null,
-            filterFromTagName: null,
-            required: true,
-            hide: false,
-            tagOrder: 0,
-            filterFromList: null,
-          },
-          {
-            customerId: 195,
-            tagName: 'chinesedescription',
-            emgTagType: 'String',
-            tagDescription: 'Chinese description',
-            elementId: createElementCodes,
-            assetId: 4,
-            status: 'ACTIVE',
-            derivedField: false,
-            derivedFunctionName: null,
-            derivedFieldType: null,
-            filter: false,
-            filterFromElementName: null,
-            filterFromTagName: null,
-            required: true,
-            hide: false,
-            tagOrder: 0,
-            filterFromList: null,
-          }, {
-            customerId: 195,
-            tagName: 'englishdescription',
-            emgTagType: 'String',
-            tagDescription: 'English description',
-            elementId: createElementCodes,
-            assetId: 4,
-            status: 'ACTIVE',
-            derivedField: false,
-            derivedFunctionName: null,
-            derivedFieldType: null,
-            filter: false,
-            filterFromElementName: null,
-            filterFromTagName: null,
-            required: true,
-            hide: false,
-            tagOrder: 0,
-            filterFromList: null,
-          });
-          const createdTagList = await this.createTags(tagList);
-          console.log(createdTagList);
-          if (createdTagList) {
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'TAGS_CREATED',
-            });
-          }
-          this.myLoadingVariable = false;
-          this.sampleBtnVisible = true;
-          this.importBtnVisible = true;
-        }
-      } else if (swxLogsElement && swxLogCodesElement) {
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const from = new Date(yesterday).getTime();
-        const to = new Date(today).getTime();
-        const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-        this.myLoadingVariable = false;
-        if (!records.length) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'No_LOGS_FOUND',
-          });
-        }
+      await this.initElements();
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const from = new Date(yesterday).getTime();
+      const to = new Date(today).getTime();
+      const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
+      this.myLoadingVariable = false;
+      this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
+      this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
+      if (!records.length) {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'No_LOGS_FOUND',
+        });
       }
     },
     async searchRecord() {
@@ -460,22 +329,43 @@ export default {
       }
     },
     async handleClick(item) {
+      const responce = item.data;
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
       if (this.language === 'zhHans') {
-        this.selectedRowData = item.metadata;
+        this.selectedRowData = responce.metadata;
         const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.cndescription === item.cndescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
-        this.selectedRowDataswxCodes = codeDescriptionMapping;
-        this.selectedRowDataswxCodes = codeTypeMapping;
+          .filter((c) => c.cndescription === responce.cndescription);
+        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+        if (!codeTypeMapping.length) {
+          this.selectedRowData = [];
+          this.selectedRowDataswxCodes = [];
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'CODE_NOT_AVAILABLE',
+          });
+        } else {
+          this.selectedRowDataswxCodes = codeDescriptionMapping;
+          this.selectedRowDataswxCodes = codeTypeMapping;
+        }
       } else {
-        this.selectedRowData = item.metadata;
+        this.selectedRowData = responce.metadata;
         const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.endescription === item.endescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === item.logcode);
-        this.selectedRowDataswxCodes = codeDescriptionMapping;
-        this.selectedRowDataswxCodes = codeTypeMapping;
+          .filter((c) => c.endescription === responce.endescription);
+        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+        if (!codeTypeMapping.length) {
+          this.selectedRowData = [];
+          this.selectedRowDataswxCodes = [];
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'CODE_NOT_AVAILABLE',
+          });
+        } else {
+          this.selectedRowDataswxCodes = codeDescriptionMapping;
+          this.selectedRowDataswxCodes = codeTypeMapping;
+        }
       }
     },
     async fetchRecords() {
@@ -487,13 +377,10 @@ export default {
       this.loading = false;
     },
     setRowData() {
-      this.rowData = this.records;
+      this.rowData = this.logs;
     },
     setColumnDefs() {
-      this.columnDefs = this.tags.map((tag) => ({
-        headerName: `${tag.tagDescription}${tag.required ? '*' : ''}`,
-        field: tag.tagName,
-      }));
+      this.columnDefs = this.headers;
     },
     isFirstColumn(params) {
       const displayedColumns = params.columnApi.getAllDisplayedColumns();
