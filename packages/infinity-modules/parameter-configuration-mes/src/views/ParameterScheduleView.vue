@@ -101,6 +101,7 @@
               @change="onFilesChanged"
             />
             <v-btn
+              :disabled="!selectedProtocol"
               small
               color="primary"
               outlined
@@ -199,7 +200,7 @@
       :loading="myLoadingVariable"
       :loading-text="this.initialMessage"
     >
-      <template v-slot:item.name="props">
+      <template v-slot:[`item.name`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.name"
           @save="saveTableParameter(props.item, 'name')"
@@ -222,7 +223,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.description="props">
+      <template v-slot:[`item.description`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.description"
           large
@@ -252,7 +253,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.parametercategory="props">
+      <template v-slot:[`item.parametercategory`]="props">
         <v-select
           :disabled="(substationValue ? false : true) || saving"
           :items="categoryList"
@@ -266,7 +267,7 @@
           depressed
         ></v-select>
       </template>
-      <template v-slot:item.datatype="props">
+      <template v-slot:[`item.datatype`]="props">
         <v-select
           :disabled="(substationValue ? false : true) || saving"
           :items="datatypeList"
@@ -280,7 +281,7 @@
           depressed
         ></v-select>
       </template>
-      <template v-slot:item.bitnumber="props">
+      <template v-slot:[`item.bitnumber`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.bitnumber"
           @save="saveTableParameter(props.item, 'bitnumber')"
@@ -304,7 +305,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.size="props">
+      <template v-slot:[`item.size`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.size"
           @save="saveTableParameter(props.item, 'size')"
@@ -328,7 +329,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.startaddress="props">
+      <template v-slot:[`item.startaddress`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.startaddress"
           @save="saveTableParameter(props.item, 'startaddress')"
@@ -352,7 +353,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.dbaddress="props">
+      <template v-slot:[`item.dbaddress`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.dbaddress"
           @save="saveTableParameter(props.item, 'dbaddress')"
