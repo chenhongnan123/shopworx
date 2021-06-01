@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container :fill-height="!isMobile">
     <v-row
       align="center"
       justify="center"
@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No production plan for selected filters
+          {{ $t('planning.noRecords') }}
         </span>
       </v-col>
       <v-col cols="12" align="center">
@@ -23,7 +23,7 @@
           @click="addNew"
         >
           <v-icon left>mdi-plus</v-icon>
-          Add new plan
+          {{ $t('planning.addPlan') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -41,6 +41,9 @@ export default {
       return this.$vuetify.theme.dark
         ? 'not-found-dark'
         : 'not-found-light';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {

@@ -40,6 +40,10 @@
          type="number" v-model="newSubLine.expectedoee"></v-text-field>
         <v-text-field label="Expected Cycletime"
          type="number" v-model="newSubLine.expectedcycletime"></v-text-field>
+         <v-text-field label="Edge Ip Address"
+              :rules ="plcRules" required class="mb-3"
+              hint="Hint: 127.168.1.1"
+              v-model="newSubLine.ipaddress"  dense></v-text-field>
          <div>
          <v-checkbox v-model="checked" class="mx-2"
          label="Make this subline as MainLine"
@@ -70,10 +74,13 @@ export default {
       valid: true,
       name: '',
       numbers: '',
-      numberRules: [(v) => v.length > 0 || 'number required',
+      numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
-        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
+        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
+      plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
+      checked: false,
     };
   },
   props: {

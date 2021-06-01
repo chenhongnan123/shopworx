@@ -1,6 +1,7 @@
 <template>
   <v-btn
   color="primary"
+  small
   @click="saveline"
   :disabled="!saveEnabled"
   >Save
@@ -17,10 +18,10 @@ export default {
     };
   },
   props: {
-    selectedLine: {
-      type: Object,
-      required: true,
-    },
+    // selectedLine: {
+    //   type: Object,
+    //   required: true,
+    // },
     saveEnabled: {
       type: Boolean,
       default: false,
@@ -57,6 +58,7 @@ export default {
           type: 'success',
           message: 'LINE_UPDATED',
         });
+        this.saveEnabled = false;
         this.dialog = false;
         this.assetId = 4;
       } else {

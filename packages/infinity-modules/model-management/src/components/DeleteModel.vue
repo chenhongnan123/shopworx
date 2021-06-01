@@ -57,9 +57,9 @@ export default {
           This will also delete the associated model configurations.`,
         )) {
           this.deleting = true;
-          await this.fetchModelDetails(this.model.model_id);
+          await this.fetchModelDetails(this.model.modelid);
           await this.deleteModel({
-            modelId: this.model.model_id,
+            modelId: this.model.modelid,
             id: this.model.id,
           });
           if (this.$route.name === 'modelDetails') {

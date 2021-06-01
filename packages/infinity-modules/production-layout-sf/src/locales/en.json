@@ -1,0 +1,28 @@
+{
+  "productionLayoutSF": "Production Layout",
+  "error": {
+    "ALREADY_EXSIST": "Name already exists",
+    "ALREADY_EXSIST_NO": "Number already exists",
+    "ALREADY_EXSIST_INITIAL_SUBSTATION": "Initial Sub machine already assigned",
+    "ALREADY_EXSIST_FINAL_SUBSTATION": "Final Sub Machine already assigned",
+    "NUMBER_REQUIRED": "Number Field Should Not be Empty",
+    "ERROR_CREATING_SUBLINE": "Error in creating Subline",
+    "SELECT_INPUT": "Select atleast one input"
+  },
+  "success": {
+    "No_CHANGE_EXSIST_NO": "Again Saved with existing number",
+    "INITIAL_SUBSTATION_ASSIGNED": "This Submachine is Updated as initial submachine",
+    "FINAL_SUBSTATION_ASSIGNED": "This Submachine is Updated as Final Submachine",
+    "INITIAL_SUBSTATION_REMOVED": "This is not initial Sub Machine now",
+    "FINAL_SUBSTATION_REMOVED": "This is not final Sub Machine now",
+    "STATION_CREATED": "Machine created, now next you can Add Submachine",
+    "SUBLINE_CREATED": "Subline created",
+    "SUB-STATION_CREATED": "Sub-Machine created",
+    "PROCESS_CREATED": "Process created",
+    "SUBLINE_DELETED": "Subline deleted",
+    "STATION_DELETED": "Machine deleted",
+    "SUBSTATION_DELETED": "Sub-Machine deleted",
+    "PROCESS_DELETED": "Process deleted",
+    "SUBSTATION_UPDATED": "Sub-Machine updated"
+  }
+}

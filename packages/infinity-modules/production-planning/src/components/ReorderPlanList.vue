@@ -101,28 +101,28 @@ export default {
       headers: [
         { text: '', value: 'drag' },
         {
-          text: 'Execution order',
+          text: this.$t('planning.executionOrder'),
           value: 'sortindex',
           width: '5%',
         },
-        { text: 'Plan', value: 'planid' },
+        { text: this.$t('planning.plan'), value: 'planid' },
         {
-          text: 'Part',
+          text: this.$t('planning.part'),
           value: 'partname',
           width: '25%',
         },
         {
-          text: 'Equipment',
+          text: this.$t('planning.equipment'),
           value: 'equipmentname',
           width: '25%',
         },
         {
-          text: 'Planned Qty',
+          text: this.$t('planning.plannedQty'),
           value: 'plannedquantity',
         },
-        { text: 'Start at', value: 'scheduledstart' },
+        { text: this.$t('planning.planStart'), value: 'scheduledstart' },
         {
-          text: 'Action',
+          text: this.$t('planning.action'),
           value: 'action',
           sortable: false,
           width: '15%',

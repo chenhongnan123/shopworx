@@ -36,6 +36,7 @@
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
             v-model="duplicateProductDescription"
+            required
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -143,6 +144,7 @@ export default {
             customername: this.products[0].customername,
             roadmapname: this.products[0].roadmapname,
             roadmapid: this.products[0].roadmapid,
+            roadmaptype: this.products[0].roadmaptype,
             productversionnumber: 1,
             createdby: this.userName,
             editedby: this.userName,

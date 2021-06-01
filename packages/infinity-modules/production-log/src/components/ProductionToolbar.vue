@@ -9,7 +9,10 @@
       <div class="mt-1">
         <span class="title">
           <span v-if="filterCount">
-            {{ filterCount }} of {{ productionCount }} records
+            {{ $t('production.records', {
+              current: filterCount,
+              total: productionCount
+            }) }}
             <span v-if="$vuetify.breakpoint.smAndUp">|</span>
           </span>
           <span v-if="$vuetify.breakpoint.smAndUp">
@@ -24,7 +27,7 @@
         class="ml-2"
         @click="toggleDrawer(true)"
       >
-        <v-icon small v-if="!drawer">mdi-pencil</v-icon>
+        <v-icon small v-if="!drawer">mdi-filter-variant</v-icon>
         <v-icon small v-else>mdi-check</v-icon>
       </v-btn>
     </v-toolbar>
@@ -49,14 +52,36 @@ export default {
       'productionCount',
     ]),
     ...mapGetters('webApp', ['filters', 'filteredRecords']),
+    ...mapGetters('helper', ['locale']),
     machine() {
-      return this.filters && this.filters.machinename ? this.filters.machinename.value : '';
+      let machine = '';
+      if (this.filters && this.filters.machinename) {
+        if (this.filters.machinename.value === 'All') {
+          machine = this.$t('production.allMachines');
+        } else {
+          machine = this.filters.machinename.value;
+        }
+      }
+      return machine;
     },
     shift() {
-      return this.filters && this.filters.shift ? this.filters.shift.value : '';
+      let machine = '';
+      if (this.filters && this.filters.shift) {
+        if (this.filters.shift.value === 'All') {
+          machine = this.$t('production.allShifts');
+        } else {
+          machine = this.filters.shift.value;
+        }
+      }
+      return machine;
     },
     date() {
-      return this.filters && this.filters.date ? formatDate(new Date(this.filters.date.value), 'PP') : '';
+      return this.filters && this.filters.date
+        ? formatDate(
+          new Date(this.filters.date.value),
+          'PP',
+          { locale: this.locale },
+        ) : '';
     },
     filterCount() {
       const production = this.filteredRecords(this.productionList);

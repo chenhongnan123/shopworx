@@ -1,9 +1,9 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      Shift summary
+      {{ $t('shiftSummary') }}
       <shift-selector v-if="currentDate" />
-      <v-tooltip bottom>
+      <v-tooltip bottom v-if="!isMobile">
         <template #activator="{ on, attrs }">
           <v-btn
             icon
@@ -17,14 +17,14 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+        {{ $t('lastRefreshed') }} <strong>{{ lastRefreshedAt }}</strong>
       </v-tooltip>
     </portal>
     <v-row v-if="currentDate">
       <v-col cols="12" lg="6" xl="5">
         <oee-summary />
       </v-col>
-      <v-col cols="12" lg="6" xl="7">
+      <v-col cols="12" lg="6" xl="7" v-if="!isMobile">
         <v-row>
           <v-col cols="12">
             <shift-production />
@@ -76,6 +76,9 @@ export default {
       'lastRefreshedAt',
       'loading',
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
   },
   methods: {
     ...mapActions('userDashboard', [

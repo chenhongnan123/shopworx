@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('orderManagement', ['filter', 'orderList']),
+    ...mapState('orderManagement', ['filter', 'orderList', 'archiveValue']),
     showFilter: {
       get() {
         return this.filter;
@@ -106,17 +106,28 @@ export default {
     ...mapMutations('orderManagement', ['setFilter', 'toggleFilter']),
     ...mapActions('orderManagement', ['getOrderListRecords']),
     btnApply() {
+      let query = '';
       if (this.flag) {
-        this.getOrderListRecords(`?query=ordernumber=="${this.selectedOrderName.ordernumber}"`);
+        query = `?query=ordernumber=="${this.selectedOrderName.ordernumber}"`;
       } else {
-        this.getOrderListRecords(`?query=orderstatus=="${this.orderStatusText(this.orderStatusSelected)}"`);
+        query = `?query=orderstatus=="${this.orderStatusText(this.orderStatusSelected)}"`;
       }
+      if (this.archiveValue) {
+        query += '%26%26visible==true';
+      } else {
+        query += '%26%26visible==false';
+      }
+      this.getOrderListRecords(query);
       this.toggleFilter();
     },
     btnReset() {
       this.orderStatusSelected = null;
       this.selectedOrderName = null;
-      this.getOrderListRecords('?query=visible==true');
+      if (this.archiveValue) {
+        this.getOrderListRecords('?query=visible==true');
+      } else {
+        this.getOrderListRecords('?query=visible==false');
+      }
       this.toggleFilter();
     },
     orderStatusText(orderstatusnumber) {

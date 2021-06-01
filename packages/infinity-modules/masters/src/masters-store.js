@@ -5,16 +5,24 @@ export default ({
   namespaced: true,
   state: {
     assets: [],
-    records: [],
+    records: null,
     elements: [],
   },
   mutations: {
     setAssets: set('assets'),
     setRecords: set('records'),
+    deleteRecord: (state, id) => {
+      const { records } = state;
+      // eslint-disable-next-line
+      const index = records.findIndex((r) => r._id === id);
+      if (index > -1) {
+        records.splice(index, 1);
+      }
+    },
     setElements: set('elements'),
   },
   actions: {
-    updateRecord: async ({ dispatch, commit }, payloadData) => {
+    updateRecord: async ({ dispatch }, payloadData) => {
       const created = await dispatch(
         'element/updateRecordById',
         {
@@ -25,20 +33,9 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const record = await dispatch(
-          'element/getRecords',
-          {
-            elementName: payloadData.name,
-            query,
-          },
-          { root: true },
-        );
-        if (record) {
-          commit('setRecords', record);
-          // return record;
-        }
+        return true;
       }
+      return false;
     },
     postBulkRecords: async ({ dispatch }, { payload, name }) => {
       const created = await dispatch(
@@ -54,7 +51,7 @@ export default ({
       }
       return false;
     },
-    deleteRecord: async ({ dispatch }, { id, name }) => {
+    deleteRecord: async ({ commit, dispatch }, { id, name }) => {
       const deleteBomdetail = await dispatch(
         'element/deleteRecordById',
         {
@@ -63,6 +60,9 @@ export default ({
         },
         { root: true },
       );
+      if (deleteBomdetail) {
+        commit('deleteRecord', id);
+      }
       return deleteBomdetail;
     },
     getAssets: async ({ commit, dispatch }) => {
@@ -91,10 +91,30 @@ export default ({
     getRecords: async ({ commit, dispatch }, {
       elementName,
       assetId,
-      // fromDate,
-      // toDate,
-      // pageSize,
-      // pageNumber,
+    }) => {
+      commit('setRecords', null);
+      let payload = {
+        elementName,
+        query: `?query=assetid==${assetId}`,
+      };
+      if (!assetId) {
+        payload = {
+          elementName,
+        };
+      }
+      const records = await dispatch(
+        'element/getRecords',
+        payload,
+        { root: true },
+      );
+      if (records) {
+        commit('setRecords', records);
+      }
+    },
+
+    getRecordsAfterUpdate: async ({ commit, dispatch }, {
+      elementName,
+      assetId,
     }) => {
       let payload = {
         elementName,
@@ -103,9 +123,6 @@ export default ({
       if (!assetId) {
         payload = {
           elementName,
-          // fromDate,
-          // toDate,
-          // query: `?query=pagenumber==${pageNumber}&pagesize=${pageSize}`,
         };
       }
       const records = await dispatch(

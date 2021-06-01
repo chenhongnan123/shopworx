@@ -54,21 +54,21 @@ export default {
     return {
       headers: [
         { text: '', value: 'status' },
-        { text: 'Plan', value: 'planid' },
+        { text: this.$t('planning.plan'), value: 'planid' },
         {
-          text: 'Machine',
+          text: this.$t('planning.machine'),
           value: 'machinename',
           width: '15%',
         },
         {
-          text: 'Equipment',
+          text: this.$t('planning.equipment'),
           value: 'equipmentname',
           width: '25%',
         },
-        { text: 'Planned qty', value: 'plannedquantity' },
-        { text: 'Start at', value: 'actualstart' },
+        { text: this.$t('planning.plannedQty'), value: 'plannedquantity' },
+        { text: this.$t('planning.planStart'), value: 'actualstart' },
         {
-          text: 'Action',
+          text: this.$t('planning.action'),
           value: 'action',
           sortable: false,
           width: '15%',

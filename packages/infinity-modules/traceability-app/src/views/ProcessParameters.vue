@@ -14,8 +14,9 @@
           rowGroupPanelShow="always"
           :gridOptions="gridOptions"
           :enableRangeSelection="true"
-          class="ag-theme-balham mt-2"
+          :class="`${agGridTheme} mt-2`"
           :defaultColDef="defaultColDef"
+          :localeText="agGridLocaleText"
           style="width: 100%; height: 350px;"
           @sort-changed="onStateChange"
           @filter-changed="onStateChange"
@@ -35,9 +36,15 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -57,6 +64,7 @@ export default {
       isFullScreen: false,
       processParametersheader: [],
       headerForCSV: [],
+      headerForCSVChinese: [],
       language: null,
       headers: [
         {
@@ -67,7 +75,7 @@ export default {
         {
           headerName: 'Main ID',
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
@@ -100,6 +108,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     dateRangeText() {
       return this.dates.join(' to ');
     },
@@ -123,23 +132,23 @@ export default {
   async created() {
     this.language = this.currentLocale;
     await this.getSubStations();
-    const {
-      substationid,
-      mainid,
-      fromdate,
-      todate,
-    } = this.subStationInfo;
-    const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
-    this.selectedSubStation = subStation;
-    this.searchMainID = mainid;
-    this.fromdate = fromdate;
-    this.todate = todate;
-    if (substationid || mainid || fromdate || todate) {
-      this.btnSearchProcessParameters();
-    } else {
-      this.btnSearchProcessParameters();
-      // await this.fetchRecords();
-    }
+    // const {
+    //   substationid,
+    //   mainid,
+    //   fromdate,
+    //   todate,
+    // } = this.subStationInfo;
+    // const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
+    // this.selectedSubStation = subStation;
+    // this.searchMainID = mainid;
+    // this.fromdate = fromdate;
+    // this.todate = todate;
+    // if (substationid || mainid || fromdate || todate) {
+    //   await this.btnSearchProcessParameters();
+    // } else {
+    //   await this.btnSearchProcessParameters();
+    //   // await this.fetchRecords();
+    // }
   },
   beforeMount() {
     this.gridOptions = {};
@@ -158,6 +167,18 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
     // this.restoreState();
   },
+  watch: {
+    processParametersList: {
+      handler(val) {
+        if (val.length > 0) {
+          this.$root.$emit('dataLoded', true);
+        }
+      },
+    },
+  },
+  beforeDestroy() {
+    this.$root.$off('dataLoded', false);
+  },
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('element', ['getRecords']),
@@ -171,6 +192,7 @@ export default {
         'getCheckOutLists',
         'getProcessElement',
         'getProcessParameters',
+        'getTraceabilityData',
         'getParametersList',
         'getPartStatus']),
     async handleLineClick(item) {
@@ -193,14 +215,11 @@ export default {
       const records = await this.getRecords({
         elementName: 'businesshours',
       });
-      // console.log(records);
       const time = records[0].starttime;
       const splitTime = time.slice(0, 2);
       const day = new Date();
       const now = day.setHours(splitTime);
       const toDate = new Date().getTime();
-      // console.log(now);
-      // console.log(toDate);
       this.fromdate = now;
       this.todate = toDate;
       this.btnSearchProcessParameters();
@@ -245,25 +264,35 @@ export default {
       const query = `?query=stationid=="${item.id}"`;
       await this.getSubStations(query);
     },
+    async exportGridExcel() {
+      const name = 'process_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsExcel(params);
+    },
+    async exportGridCSV() {
+      const name = 'process_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
     async btnSearchProcessParameters() {
       this.processParametersList = [];
       this.processParametersListFirst = [];
       const fromDate = new Date(this.trecibilityState.fromdate).getTime();
       const toDate = new Date(this.trecibilityState.todate).getTime();
       this.headerForCSV = [];
+      this.headerForCSVChinese = [];
       this.headerForCSV.push('createdTimestamp', 'mainid', 'completedproductid');
+      this.headerForCSVChinese.push('创建日期', '主条码', '成品码');
       this.processParametersheader = [];
       if (this.language === 'zhHans') {
         this.processParametersheader.push(
           {
             headerName: this.$t('Created Date'),
             field: 'createdTimestamp',
-            resizable: true,
-          },
-          {
-            headerName: this.$t('Main Id'),
-            field: 'mainid',
-            rowGroup: true,
             resizable: true,
           },
           {
@@ -277,12 +306,6 @@ export default {
           {
             headerName: this.$t('Created Date'),
             field: 'createdTimestamp',
-            resizable: true,
-          },
-          {
-            headerName: this.$t('Main ID'),
-            field: 'mainid',
-            rowGroup: true,
             resizable: true,
           },
           {
@@ -321,204 +344,47 @@ export default {
       }
       // param += 'pagenumber=1&pagesize=20';
       // await this.getPartStatus(param);
-      if (this.trecibilityState.selectedSubStation) {
-        const elementDetails = await
-        this.getProcessElement(this.trecibilityState.selectedSubStation.id);
-        if (elementDetails) {
-          elementDetails.tags.forEach(async (element) => {
-            if (element.tagName !== 'mainid') {
-              const data = this.processParametersheader
-                .filter((p) => p.field === element.tagName);
-              if (data.length === 0) {
-                this.processParametersheader.push(
-                  {
-                    headerName: element.tagDescription,
-                    field: element.tagName,
-                    resizable: true,
-                  },
-                );
-              }
-            }
-          });
-          const processData = await this.getProcessParameters({
-            elementname: this.trecibilityState.selectedSubStation.id,
-            payload: param,
-          });
-          if (processData) {
-            const finalData = processData.map((l) => ({
-              ...l,
-              substationname: this.trecibilityState.selectedSubStation.name,
-            }));
-            if (this.processParametersList.length === 0) {
-              const checkData = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
-              if (checkData.length !== 0) {
-                this.processParametersList = finalData;
-              }
-            } else {
-              finalData.forEach((f) => {
-                const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
-                if (checkData.length !== 0) {
-                  this.processParametersList.push(f);
-                }
-              });
-            }
-          }
-        }
-        this.gridApi = this.gridOptions.api;
-        this.gridApi.expandAll();
-      } else {
+      // get tags of traceability element
+      console.log(cFlag);
+      const elementDetails = await this.getProcessElement('traceability');
+      if (this.language === 'zhHans') {
+        this.processParametersheader.push(
+          {
+            headerName: 'Main Id',
+            field: 'mainid',
+            resizable: true,
+          },
+        );
         await this.getSubStations(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
         await Promise.all(this.subStationList.map(async (s) => {
           const paramRecord = await this.getParametersList(`?query=substationid=="${s.id}"%26%26
-            (parametercategory=="15"%7C%7Cparametercategory=="17"%7
-            C%7Cparametercategory=="18")`);
-          const elementDetails = await this.getProcessElement(s.id);
-          if (elementDetails) {
-            elementDetails.tags.forEach(async (element) => {
-              if (element.tagName !== 'mainid') {
-                const data = this.processParametersheader
-                  .filter((p) => p.field === element.tagName);
-                if (data.length === 0) {
-                  const matchParam = paramRecord
-                    .find((m) => m.name === element.tagName);
-                  this.headerForCSV.push(`${s.name}_${element.tagName}`);
-                  if (this.language === 'zhHans') {
-                    this.processParametersheader.push(
-                      {
-                        headerName: `${s.name}_${matchParam.chinesedescription}`,
-                        field: `${s.name}_${element.tagName}`,
-                        resizable: true,
-                      },
-                    );
-                  } else {
-                    this.processParametersheader.push(
-                      {
-                        headerName: `${s.name}_${matchParam.description}`,
-                        field: `${s.name}_${element.tagName}`,
-                        resizable: true,
-                      },
-                    );
-                  }
-                }
-              }
-            });
-            await Promise.all(this.partStatusList.map(async (f) => {
-              // const componenetData = await this.getComponentList(`?query=mainid=="${f.mainid}"`);
-              // const subAssemblyIdData = componenetData.filter(
-              //  (id) => id.componentname === 'subassemblyid');
-              const processData = await this.getProcessParameters({
-                elementname: s.id,
-                payload: `?query=mainid=="${f.mainid}"`,
-              });
-              if (this.processParametersListFirst.find((pro) => pro.mainid === f.mainid)) {
-                const object = this.processParametersListFirst.find((pp) => pp.mainid === f.mainid);
-                this.processParametersListFirst.splice(this.processParametersListFirst
-                  .indexOf(object), 1);
-                object.completedproductid = f.completedproductid;
-                const processDataObject = processData[0];
-                this.parametersList.forEach((para) => {
-                  if (processDataObject && object) {
-                    if (processDataObject[para.name]) {
-                      object[`${s.name}_${para.name}`] = processDataObject[para.name];
-                    } else {
-                      object[`${s.name}_${para.name}`] = 0;
-                    }
-                  }
-                });
-                this.processParametersListFirst.push(object);
-              } else {
-                const processDataObject = processData[0];
-                if (processDataObject) {
-                  const object = {
-                    mainid: f.mainid,
-                    createdTimestamp: f.createdTimestamp,
-                    subassemblyid1: '',
-                    subassemblyid2: '',
-                  };
-                  // if (subAssemblyIdData.lenght > 0) {
-                  //   this.headerForCSV.push('subassemblyid1', 'subassemblyid2');
-                  //   if (subAssemblyIdData.lenght === 1) {
-                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
-                  //   } else {
-                  //     object.subassemblyid1 = subAssemblyIdData[0].componentvalue;
-                  //     object.subassemblyid2 = subAssemblyIdData[1].componentvalue;
-                  //   }
-                  // }
-                  this.parametersList.forEach((para) => {
-                    if (processDataObject[para.name]) {
-                      object[`${s.name}_${para.name}`] = processDataObject[para.name];
-                    } else {
-                      object[`${s.name}_${para.name}`] = 0;
-                    }
-                  });
-                  this.processParametersListFirst.push(object);
-                }
-              }
+            (parametercategory=="15"%7C%7Cparametercategory=="17"%7C%7Cparametercategory=="18")`);
+          if (paramRecord.length > 0) {
+            await Promise.all(paramRecord.map((p) => {
+              this.processParametersheader.push(
+                {
+                  headerName: `${s.name}_${p.chinesedescription}`,
+                  field: `${s.id}_${p.name}`,
+                  resizable: true,
+                },
+              );
+              return true;
             }));
-          //   if (processData) {
-          //   const finalData = processData.map((l) => ({
-          //     ...l,
-          //     substationname: s.name,
-          //   }));
-          //   if (this.processParametersList.length === 0) {
-          //     const check = this.partStatusList.filter((p) => p.mainid === finalData[0].mainid);
-          //     if (check.length !== 0) {
-          //       this.processParametersList = finalData;
-          //     }
-          //   } else {
-          //     finalData.forEach((f) => {
-          //       const checkData = this.partStatusList.filter((part) => part.mainid === f.mainid);
-          //       if (checkData.length !== 0) {
-          //         this.processParametersList.push(f);
-          //       }
-          //     });
-          //   }
-          //   if (this.processParametersList.length === 0) {
-          //     this.processParametersList = finalData;
-          //   } else {
-          //     finalData.forEach((f) => {
-          //       this.processParametersList.push(f);
-          //     });
-          //   }
-          // }
           }
         }));
-        this.processParametersList = this.processParametersListFirst;
-        console.log(this.processParametersList);
-        this.gridApi = this.gridOptions.api;
-        this.gridApi.expandAll();
-        if (cFlag === 1) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'GET_RECORDS_BY_MAINID',
-          });
-        } else if (cFlag === 2) {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'NOT_VALID_INPUT_SUB',
-          });
-        } else if (cFlag === 3) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'GET_RECORDS_BY_SUBSTATION',
-          });
-        } else if (cFlag === 4) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'GET_RECORDS_DATE_RANGE',
-          });
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'GET_RECORDS',
-          });
-        }
+      } else {
+        elementDetails.tags.forEach((element) => {
+          this.processParametersheader.push(
+            {
+              headerName: element.tagDescription,
+              field: element.tagName,
+              resizable: true,
+            },
+          );
+        });
       }
+      // get traceability data
+      this.processParametersList = await this.getTraceabilityData(param);
     },
   },
 };

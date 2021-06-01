@@ -3,6 +3,145 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **date-fns:** read date service optional options ([a8d0c7f](https://bitbucket.org/entrib/shopworx/commits/a8d0c7f089201cac28fd8987d006e05234af9f67))
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Features
+
+* **live-shopfloor:** update now from system time to server time ([b466baf](https://bitbucket.org/entrib/shopworx/commits/b466baff5199dead36e37eaf09636a7f44ff4327))
+* lingzhong-packagement ([51c2952](https://bitbucket.org/entrib/shopworx/commits/51c2952c61d6901a25bf742e2e521b6212cc3e7a))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+
+### Bug Fixes
+
+* **connection-status:** updated connection status polling time to 5 sec ([1b90961](https://bitbucket.org/entrib/shopworx/commits/1b909615064c1d6d63e5b36e4052771c8ef268bd))
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Features
+
+* **data-visualizer:** added data export dialog ([dc8de14](https://bitbucket.org/entrib/shopworx/commits/dc8de146c2509a73ae1fb308c209190c09c776d4))
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **customer-onboarding:** fixed reports and report views provisioning ([7c2cd1e](https://bitbucket.org/entrib/shopworx/commits/7c2cd1e61b63b615d05e42d92203da7da7c93537))
+* **user-roles:** fixed role access for report views ([6a5be2f](https://bitbucket.org/entrib/shopworx/commits/6a5be2fe82f90663f52f7bb8fa8ab35387eae042))
+
+
+### Features
+
+* **customer-onboarding:** origin user can now on-board a new customer ([033355c](https://bitbucket.org/entrib/shopworx/commits/033355c9f02cdf1e48424c625fb5fe16dae93840))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Features
+
+* **admin-console:** user can now create a new role ([91b2f11](https://bitbucket.org/entrib/shopworx/commits/91b2f111dbf9753f6e34a8fdb15fc8a7ac8bec3d))
+
+
+
+
+
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **infinity:** fixed connection status display ([5c62ea5](https://bitbucket.org/entrib/shopworx/commits/5c62ea5f8027c137800110b999ff2d2f3f93f96e))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+
+
+### Features
+
+* **core:** added connection status indicator ([d7862c3](https://bitbucket.org/entrib/shopworx/commits/d7862c37cf22a9e0fd1b0f6f9efd50839d8f3e42))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/services

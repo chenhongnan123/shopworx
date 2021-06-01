@@ -28,6 +28,7 @@
               label="Parameter Name*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.name"
+              counter="20"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -93,6 +94,13 @@
           ></v-text-field>
           <v-text-field
               :disabled="saving"
+              label="Bit Number*"
+              prepend-icon="mdi-tray-plus"
+              v-model="parameterObj.bitnumber"
+              :rules="rules.bitnumber"
+          ></v-text-field>
+          <v-text-field
+              :disabled="saving"
               label="DB Address*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.dbaddress"
@@ -154,6 +162,7 @@
             color="primary"
             class="text-none"
             :loading="saving"
+            :disabled="!valid"
             @click="saveParameter"
           >
             Save
@@ -181,6 +190,7 @@ export default {
         datatype: null,
         booleanbit: null,
         size: null,
+        bitnumber: null,
         dbaddress: null,
         startaddress: null,
         protocol: null,
@@ -193,6 +203,10 @@ export default {
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
+          (v) => (v && v.length <= 20) || 'Max length 20 characters.',
+          (v) => /^[A-Za-z0-9-_]+$/.test(v)
+            || 'Parameter name should not contain empty space or special characters',
+          (v) => !this.paramNames.includes(v) || 'Parameter name is not available',
         ],
         parametercategory: [
           (v) => !!v || 'Category is required',
@@ -202,10 +216,17 @@ export default {
         ],
         dbaddress: [
           (v) => !!v || 'DB ADdress is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'DB ADdress is an Integer( number )',
+        ],
+        bitnumber: [
+          (v) => !!v || 'Bit Number is required',
+          (v) => /^[0-7]*$/.test(v)
+            || 'Bit Number is an Integer( between 0 - 7 )',
         ],
         startaddress: [
-          (v) => !!v || 'Start Adress is required',
-          (v) => v % 1 === 0 || 'Start ADdress is Integer',
+          (v) => !!v || 'Start Address is required',
+          (v) => v % 1 === 0 || 'Start Address is an Integer',
         ],
         protocol: [
           (v) => !!v || 'Protocol is required',
@@ -232,9 +253,13 @@ export default {
         ],
         parameterunit: [
           (v) => !!v || 'Parameter Unit is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'Only integers( number ) allowed',
         ],
         paid: [
           (v) => !!v || 'PAID is required',
+          (v) => /^[0-9]*$/.test(v)
+            || 'Only integers( number ) allowed',
         ],
       },
       boolList: [
@@ -257,6 +282,9 @@ export default {
       set(val) {
         this.setAddParameterDialog(val);
       },
+    },
+    paramNames() {
+      return this.parameterList.map((d) => d.name);
     },
   },
   watch: {
@@ -291,19 +319,21 @@ export default {
       return query;
     },
     async saveParameter() {
+      const paramname = this.parameterObj.name.toLowerCase().replace(/\W/g, '');
       const { parameterObj } = this;
       if (this.$refs.form.validate()) {
         const {
-          name,
           dbaddress,
           startaddress,
-          booleanbit,
+          bitnumber,
+          datatype,
         } = parameterObj;
-        if (this.parameterList.some((parameter) => name === parameter.name)) {
+        if (this.parameterList.some((parameter) => paramname.toLowerCase()
+           === parameter.name.toLowerCase())) {
           this.setAlert({
             show: true,
             type: 'error',
-            message: 'parameter name is present',
+            message: 'DUPLICATE_PARAMETER_NAME',
           });
           return;
         }
@@ -311,22 +341,25 @@ export default {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
             && Number(startaddress) === parameter.startaddress
-            && Number(booleanbit) === Number(parameter.booleanbit))) {
+            && Number(datatype.id) === parameter.datatype
+            && Number(bitnumber) === Number(parameter.bitnumber))) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'Boolean Bit is present',
+              message: 'DUPLICATE_COMBINATION_ERROR',
             });
             return;
           }
         } else if (parameterObj.datatype && parameterObj.datatype.name !== 'Boolean') {
           if (this.parameterList
             .some((parameter) => Number(dbaddress) === parameter.dbaddress
-            && Number(startaddress) === parameter.startaddress)) {
+            && Number(startaddress) === parameter.startaddress
+            && Number(datatype.id) === parameter.datatype
+            && Number(bitnumber) === parameter.bitnumber)) {
             this.setAlert({
               show: true,
               type: 'error',
-              message: 'parameter startaddress is present',
+              message: 'DUPLICATE_COMBINATION_ERROR',
             });
             return;
           }
@@ -335,6 +368,7 @@ export default {
           ...parameterObj,
           assetid: 4,
           parametercategory: parameterObj.parametercategory.id,
+          name: paramname,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,

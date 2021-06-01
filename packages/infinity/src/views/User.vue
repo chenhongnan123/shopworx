@@ -2,20 +2,16 @@
   <settings-layout
     :items="items"
     windowRouteName="userWindow"
-    headerTitle="My Profile Settings"
+    :headerTitle="$t('user.profile.heading')"
   >
     <template #settingsCard>
       <v-card flat class="transparent text-center">
         <v-card-text>
-          <v-avatar
-            size="74"
-            color="secondary"
-          >
-            <v-icon
-              x-large
-              v-text="'$account'"
-            ></v-icon>
-          </v-avatar>
+          <avatar
+            :name="fullName"
+            :variant="currentAvatar"
+            :size="74"
+          />
         </v-card-text>
         <v-card-text class="py-0">
           <div class="headline font-weight-medium">
@@ -80,12 +76,14 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import SettingsLayout from '@/components/layout/SettingsLayout.vue';
 import UserWindow from '@/components/user/UserWindow.vue';
+import Avatar from '@shopworx/ui-components/avatars/Avatar.vue';
 
 export default {
   name: 'Admin',
   components: {
     SettingsLayout,
     UserWindow,
+    Avatar,
   },
   data() {
     return {
@@ -112,16 +110,16 @@ export default {
           icon: '$password',
           to: 'password',
         },
-        {
+        /* {
           title: 'user.auditLog.title',
           icon: '$log',
           to: 'audit-log',
-        },
+        }, */
       ],
     };
   },
   computed: {
-    ...mapState('helper', ['version']),
+    ...mapState('helper', ['version', 'currentAvatar']),
     ...mapState('user', ['activeSite']),
     ...mapGetters('user', ['fullName', 'sites', 'currentSite', 'customer', 'role']),
   },

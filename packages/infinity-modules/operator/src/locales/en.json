@@ -1,0 +1,71 @@
+{
+  "operator" : {
+    "name": "Operator",
+    "main": {
+      "header": {
+        "id": "ID",
+        "name": "Name",
+        "code": "Badge Code",
+        "password": "Password",
+        "department":"Department",
+        "position": "Position",
+        "editedby": "Edited by",
+        "editedtime": "Edit Date",
+        "createdby": "Created by",
+        "createdtime": "Created Date",
+        "photo": "Photo"
+      }
+    },
+    "filter": {
+      "title": "Operator filters"
+    },
+    "addDialog": {
+      "id": "ID",
+      "title": "Create Operator",
+      "name": "Name",
+      "code": "Badge Code",
+      "department": "Department",
+      "position": "Position",
+      "password": "Password"
+    },
+    "general": {
+      "apply": "Apply",
+      "reset": "Reset",
+      "selectall": "Select All",
+      "selectnone": "Select None",
+      "search": "Search",
+      "yes": "Yes",
+      "save": "Save",
+      "cancel": "Cancel",
+      "department": "Department",
+      "position": "Position",
+      "add": "Add",
+      "delete": "Delete",
+      "refresh": "Refresh",
+      "export": "Export",
+      "exportsample": "Export Sample File",
+      "import": "Import",
+      "filter": "Filters",
+      "confirmheader": "Please confirm",
+      "confirmmessage": "Are you sure to delete the items selected ?",
+      "noselected": "No Selected",
+      "selected": "Selected",
+      "include": "Include",
+      "exclude": "Exclude",
+      "allinclude": "All Include",
+      "allexclude": "All Exclude"
+    },
+    "settings": {
+      "general": "General",
+      "department": "Department",
+      "position": "Position",
+      "addposition" : "Create Position",
+      "adddepartment" : "Create Department",
+      "auth": "Authorization",
+      "id": "ID",
+      "name": "Name",
+      "code": "Code",
+      "description": "Description"
+    }
+  }
+}

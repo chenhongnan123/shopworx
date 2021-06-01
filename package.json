@@ -18,6 +18,9 @@
     "bootstrap:infinity": "lerna bootstrap --scope @shopworx/infinity --include-dependencies",
     "serve:infinity": "lerna exec --scope @shopworx/infinity -- npm run serve",
     "build:infinity": "lerna exec --scope @shopworx/infinity -- npm run build",
+    "bootstrap:maintenance-app": "lerna bootstrap --scope @shopworx/maintenance-app --include-dependencies",
+    "serve:maintenance-app": "lerna exec --scope @shopworx/maintenance-app -- npm run serve",
+    "build:maintenance-app": "lerna exec --scope @shopworx/maintenance-app -- npm run build",
     "bootstrap:dashboard-viewer": "lerna bootstrap --scope @shopworx/dashboard-viewer --include-dependencies",
     "serve:dashboard-viewer": "lerna exec --scope @shopworx/dashboard-viewer -- npm run serve",
     "build:dashboard-viewer": "lerna exec --scope @shopworx/dashboard-viewer -- npm run build",
@@ -26,7 +29,7 @@
     "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
-    "commitizen": "^4.2.2",
+    "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^5.0.1",
     "lerna": "^3.22.1"

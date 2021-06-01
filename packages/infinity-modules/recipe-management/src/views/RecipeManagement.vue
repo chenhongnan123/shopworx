@@ -21,11 +21,11 @@
         center-active
         v-model="recipeView"
       >
-        <v-tab class="text-none">
-          {{ $t('headers.list') }}
+        <v-tab v-if="isAdmin" class="text-none">
+          {{ $t('list') }}
         </v-tab>
         <v-tab class="text-none">
-          {{ $t('headers.changeover') }}
+          {{ $t('Changeover') }}
         </v-tab>
       </v-tabs>
     </portal>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 import RecipeList from './RecipeList.vue';
 import RecipeChangeover from './RecipeChangeover.vue';
 import RecipeFilter from '../components/RecipeFilter.vue';
@@ -53,8 +53,7 @@ export default {
     RecipeFilter,
   },
   async created() {
-    const view = localStorage.getItem('planView');
-    this.recipeView = view ? JSON.parse(view) : 0;
+    this.recipeView = 0;
     this.setExtendedHeader(true);
     await this.getLines('');
     await this.getSubLines('');
@@ -64,6 +63,9 @@ export default {
     return {
       recipeView: 0,
     };
+  },
+  computed: {
+    ...mapGetters('user', ['isAdmin']),
   },
   methods: {
     ...mapActions('recipeManagement', ['getLines', 'getSubLines', 'getStations']),

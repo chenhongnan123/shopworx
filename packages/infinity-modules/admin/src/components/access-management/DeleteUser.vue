@@ -7,6 +7,7 @@
         color="error"
         v-bind="attrs"
         :loading="deleting"
+        :disabled="user.id === myId"
         @click="removeUser"
       >
         <v-icon v-text="'$delete'"></v-icon>
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'DeleteModel',
@@ -31,6 +32,12 @@ export default {
     return {
       deleting: false,
     };
+  },
+  computed: {
+    ...mapState('user', ['me']),
+    myId() {
+      return this.me && this.me.user.id;
+    },
   },
   methods: {
     ...mapActions('admin', ['updateUser']),

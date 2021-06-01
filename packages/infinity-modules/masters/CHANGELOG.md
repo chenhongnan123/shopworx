@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **masters:** QA0-I186 Master Data|Import/Export ([4ec80bb](https://bitbucket.org/entrib/shopworx/commits/4ec80bb082171bf07612db45425bd21b98ae6cb8))
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Features
+
+* **masters:** added multiple selection to master data grid ([ca925a0](https://bitbucket.org/entrib/shopworx/commits/ca925a06da83e97130f79058fc11e0f27bb3715f))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+**Note:** Version bump only for package @shopworx/masters
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **master-data:** fixed button state on data refresh ([a9f1d25](https://bitbucket.org/entrib/shopworx/commits/a9f1d250b3eef85174f35cec360b760d6ebe6841))
+* **master-data:** fixed delete records ([7717937](https://bitbucket.org/entrib/shopworx/commits/77179376935cbbc475184c8580262f64863a7fdd))
+
+
+
+
+
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **master-data:** update export to use ag grid API ([4bc30e2](https://bitbucket.org/entrib/shopworx/commits/4bc30e21cb6d17968e3a1ea1ac65222983a10998))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** fix hide column issue after drag out of the table ([602aaf9](https://bitbucket.org/entrib/shopworx/commits/602aaf9d3be348b86197cde9c0f03e68c47f8f78))
+* **masters:** imporve and fixes master data ([2433a85](https://bitbucket.org/entrib/shopworx/commits/2433a852591065344878db39687ee793490ba240))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/masters

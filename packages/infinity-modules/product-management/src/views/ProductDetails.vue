@@ -24,7 +24,7 @@
           <v-row justify="left">
             <v-col cols="12" md="2" class="py-2">
               <v-text-field
-                :label="$t('displayTags.lineName')"
+                :label="$t('Line')"
                 disabled
                 v-model="productInfo.linename"
               ></v-text-field>
@@ -105,22 +105,22 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
-
+/* eslint-disable */
 export default {
   name: 'ProductDetails',
   data() {
     return {
       headers: [
         {
-          text: this.$i18n.t('displayTags.sublineName'),
+          text: this.$i18n.t('Subline'),
           value: 'sublinename',
         },
         {
-          text: this.$i18n.t('displayTags.stationName'),
+          text: this.$i18n.t('Station'),
           value: 'stationname',
         },
         {
-          text: this.$i18n.t('displayTags.substationName'),
+          text: this.$i18n.t('Sub-Station Name'),
           value: 'substationname',
         },
         {

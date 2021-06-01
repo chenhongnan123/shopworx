@@ -4,7 +4,7 @@
  v-model="dialog"
  transition="dialog-transition"
  max-width="600px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
     <v-icon v-on="on" v-text="'$plus'"
     class="float-right"></v-icon>
     </template>
@@ -42,9 +42,28 @@
          :rules ="numberRules"
          counter="10"
           required></v-text-field>
+          <v-text-field label="Serial Number *" type="number"
+         hint="For example, 1,2,3,4"
+         v-model="newSubstation.serialnumber"
+         :rules ="numberRules"
+         counter="10"
+          required></v-text-field>
         <v-text-field label="Description"
          hint="For example, added by Manager"
          type="text" v-model="newSubstation.description"></v-text-field>
+           <v-textarea
+        dense
+        rows="3"
+        outlined
+        single-line
+        v-model="newSubstation.jsondata"
+        label="Paste JSON here"
+        :rules="configRules"
+      ></v-textarea>
+        <v-switch
+         v-model="newSubstation.serverlive"
+         label="Server Live value"
+        ></v-switch>
          <v-switch
         v-model="newSubstation.initialsubstation"
         label="Initial Sub Station"
@@ -55,8 +74,10 @@
         label="Final Sub Station"
         :disabled="btnFindisable"
         ></v-switch>
+        <v-checkbox v-model="checkedReal" class="mx-2"
+         label="Record Process parameters"></v-checkbox>
         <v-checkbox v-model="checked" class="mx-2"
-         label="Record process parameters"></v-checkbox>
+         label="Record Production parameters (Optional)"></v-checkbox>
     </v-card-text>
     <v-card-actions>
         <v-spacer></v-spacer>
@@ -78,6 +99,7 @@ export default {
       newSubstation: {},
       assetId: null,
       checked: false,
+      checkedReal: false,
       selectedSubstationLine: null,
       default: false,
       dialog: false,
@@ -86,10 +108,15 @@ export default {
       valid: true,
       name: '',
       numbers: '',
-      numberRules: [(v) => v.length > 0 || 'number required',
+      configRules: [
+        (v) => !!v || 'Configuration is required.',
+        (v) => this.isValidJsonString(v) || 'Input valid JSON configuration.',
+      ],
+      numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
-        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters'],
+        (v) => (v && v.length <= 15) || 'Name must be less than 10 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
     };
   },
   props: {
@@ -99,7 +126,6 @@ export default {
     },
   },
   created() {
-    // this.getAllStations('');
     this.newSubstation = { ...this.substation };
     this.getAssets();
   },
@@ -121,6 +147,17 @@ export default {
         this.btnInitdisable = false;
       }
     },
+    isValidJsonString(jsonString) {
+      if (!(jsonString && typeof jsonString === 'string')) {
+        return false;
+      }
+      try {
+        JSON.parse(jsonString);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
     async getfilteredStations() {
       this.getStationbyline(`?query=lineid==${this.selectedLine.id}`);
     },
@@ -129,7 +166,7 @@ export default {
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'Number Required',
+          message: 'NUMBER_REQUIRED',
         });
       } else {
         this.$refs.form.validate();
@@ -184,7 +221,7 @@ export default {
             )[0].ismainline,
             lineid: this.selectedSubstationLine.lineid,
             paramconfigured: this.checked,
-            // lineid: this.lineid,
+            realparamconfigured: this.checkedReal,
             assetid: this.assetId,
           };
           let created = false;
@@ -196,23 +233,17 @@ export default {
               type: 'success',
               message: 'SUB-STATION_CREATED',
             });
-            this.dialog = false;
-            const checkedPlc = this.checked;
-            if (checkedPlc) {
-              this.newSubstation = {};
-              this.dialog = false;
+            const realParam = this.checkedReal;
+            if (realParam) {
               this.assetId = this.getAssetId;
-              // this.$refs.form.reset();
               const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
                 siteId: 197,
                 categoryType: 'ASSET',
-                collectionName: 'provisioning',
-                elementName: substationid,
-                elementDescription: this.subStations[0].name,
-                // dateCreated: 1590647154882,
-                // dateModified: 1590647154882,
+                collectionName: 'process',
+                elementName: `process_${substationid}`,
+                elementDescription: `Process_${substationid}`,
                 status: 'ACTIVE',
                 elementType: 'PROVISIONING',
                 uniqueTagName: '',
@@ -234,9 +265,43 @@ export default {
                   message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
                 });
               }
-              this.dialog = false;
+            }
+            const checkedPlc = this.checked;
+            if (checkedPlc) {
+              this.newSubstation = {};
+              this.assetId = this.getAssetId;
+              const substationid = this.subStations[0].id;
+              const object = {
+                customerId: 195,
+                siteId: 197,
+                categoryType: 'ASSET',
+                collectionName: 'production',
+                elementName: `production_${substationid}`,
+                elementDescription: `Production_${substationid}`,
+                status: 'ACTIVE',
+                elementType: 'PROVISIONING',
+                uniqueTagName: '',
+                uniqueTagValue: 0,
+                uniqueTagStartValue: 0,
+                uniqueTagValuePrefix: '',
+                uniqueTagValueSuffix: '',
+                businessTimeTagsRequired: false,
+                optional: false,
+                assetBased: true,
+                uniqueTag: false,
+              };
+              let createdElement = false;
+              createdElement = await this.createElement(object);
+              if (createdElement) {
+                this.setAlert({
+                  show: true,
+                  type: 'success',
+                  message: 'SUB-STATION_CREATED_PROCESS_PARAMETERS',
+                });
+              }
               this.$refs.form.reset();
             }
+            this.dialog = false;
           } else {
             this.setAlert({
               show: true,

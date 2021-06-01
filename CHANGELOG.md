@@ -3,6 +3,348 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I297 | added validation to holiday ([3aeec4d](https://bitbucket.org/entrib/shopworx/commits/3aeec4d0bd2e5d8a8f420319fbf531327879cc0e))
+* **date-fns:** read date service optional options ([a8d0c7f](https://bitbucket.org/entrib/shopworx/commits/a8d0c7f089201cac28fd8987d006e05234af9f67))
+* **masters:** QA0-I186 Master Data|Import/Export ([4ec80bb](https://bitbucket.org/entrib/shopworx/commits/4ec80bb082171bf07612db45425bd21b98ae6cb8))
+* **production-layout:** RA-I103 | Line MES | Production Layout | User can assign multiple initial/final substation ([20be297](https://bitbucket.org/entrib/shopworx/commits/20be2971b75fed95735888291de75958bb207683))
+* **production-layout:** RA-I492 | Line MES | Production Layout | Incorrect functionality for assigning Mainline ([c3bd2f9](https://bitbucket.org/entrib/shopworx/commits/c3bd2f9a4595636160bad522d80ee5499150fc6b))
+* **production-planning:** fixed strokes per part validation ([a88a3e4](https://bitbucket.org/entrib/shopworx/commits/a88a3e49397ec8b820e35ca3bc31fa57e2da9ad5))
+* **recipe-management:** close the chips on navigation to other module ([fe3febf](https://bitbucket.org/entrib/shopworx/commits/fe3febfc3099d4f9998b524649bbd9da7dc54d1f))
+* **recipe-management:** filter functionality ([3088f4a](https://bitbucket.org/entrib/shopworx/commits/3088f4af245ca1d12b7bb82e45b4249e456622d4))
+* **recipe-management:** RA-I146 | Line MES | Recipe Management | Refresh button functionality is not proper ([b37fecd](https://bitbucket.org/entrib/shopworx/commits/b37fecd3d9fc69eb94fbe8908da1eab335653f4a))
+* **recipe-management:** RA-I153 | Line MES | Recipe Management | Filter options are not get cleared ([a5cfc54](https://bitbucket.org/entrib/shopworx/commits/a5cfc54b8c8ac5a5595eb4bbddcb756cd55a7976))
+* **recipe-management:** RA-I614Line MES | Recipe Management | Showing no data available message when we click on refresh ([71e4895](https://bitbucket.org/entrib/shopworx/commits/71e48950f253c11ea2c580bbffa3416a53ac538c))
+* **report-viewer:** fixed chart display on report change ([69f8ee6](https://bitbucket.org/entrib/shopworx/commits/69f8ee63cbf8ab7786dbc746991273868b042bbc))
+
+
+### Features
+
+* **energy-dashboard:** added card view for energy dashboard ([eb43b50](https://bitbucket.org/entrib/shopworx/commits/eb43b501c1ad5f7b7308236234ab6d76a8db3717))
+* **locale:** added utility reports locale ([988d268](https://bitbucket.org/entrib/shopworx/commits/988d268142c77c1d92152335ffaa888517db4981))
+* **production-planning:** added strokes per part for press machine ([c35af6d](https://bitbucket.org/entrib/shopworx/commits/c35af6d034090ac4452222dbbbae94eb27f9d34c))
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **core:** do not check connection status if session invalid ([620f0a6](https://bitbucket.org/entrib/shopworx/commits/620f0a60d4b94b8f02268ddd59bb50be30f8232e))
+* **cron:** fixed item selection ([7f9d46b](https://bitbucket.org/entrib/shopworx/commits/7f9d46bcb6c42ebe2d2754395c459bf341a6e64b))
+* **machine:** fixed minor bugs - images and list view ([aa1cffd](https://bitbucket.org/entrib/shopworx/commits/aa1cffdec34f2704b5ea85c98e43a008c3b1750f))
+* **maintenance:** remove default pagination of 10 from list view ([7c2c138](https://bitbucket.org/entrib/shopworx/commits/7c2c138cdb099fcc161d3041690dbb1818d8226e))
+* **maintenance-details:** fixed detail view layout ([52cd3bc](https://bitbucket.org/entrib/shopworx/commits/52cd3bca068bfd50306ca006d7cdd1b7e5fa5df7))
+* **operator:** fixed minor bugs - list view ([851495f](https://bitbucket.org/entrib/shopworx/commits/851495ff409075f9c0265baf78806c01438caa04))
+* **parameter-configuration:** RA-I497 | Parameter Configuration | While adding parameter through UI, protocol selection should not present in the popup ([0a5e2fb](https://bitbucket.org/entrib/shopworx/commits/0a5e2fb71fa2e431030cec702551aa7e14de69ab))
+* **parameter-configuration:** RA-I498 | Parameter Configuration | Filter is not working as expected ([21a3ada](https://bitbucket.org/entrib/shopworx/commits/21a3ada4433227bbba1ef4d941d9a3d9d833c12d))
+* **parameter-configuration:** RA-I499 | Line MES | Parameter Configuration | Data is not displaying according to selection of protocol ([81d0cfe](https://bitbucket.org/entrib/shopworx/commits/81d0cfebfb9d00e4f3d6de56f299c3bc5b62b46a))
+* **production-layout:** RA-I491 | Line MES | Production Layout | User can add blank spaces as name for every field ([9360360](https://bitbucket.org/entrib/shopworx/commits/9360360a8e6631547459bb4e0afc4ea845d99f0f))
+* **recipe-management:** RA-I152 | Recipe Management | User is able to add recipe without selection of Subline and station ([5d4e879](https://bitbucket.org/entrib/shopworx/commits/5d4e879e65f1ea8b0776feb2f370d5473057ea50))
+
+
+### Features
+
+* **external-apps:** added API for android navigation of external apps ([65d6fed](https://bitbucket.org/entrib/shopworx/commits/65d6feda2ec0cf37b62e3b4f82257da1cea6b40a))
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* **prder-management:** RA-I507 | Order | For second attempt, user not able to add order ([a3ae95b](https://bitbucket.org/entrib/shopworx/commits/a3ae95b2f9cea0e8f117e77e63189405cf42d605))
+* **product-type:** RA-I203 | Without filling out mandatory field, product get created ([72d96a1](https://bitbucket.org/entrib/shopworx/commits/72d96a1c2371006b62f3f53b5f0942943a1fa5a4))
+* **roadmap-management:** RA-I170 | User is able to add same named multiple  roadmap records on single click by click on submit button more than one time ([0fec4b6](https://bitbucket.org/entrib/shopworx/commits/0fec4b6852191c49992702cd6aa701e7f17fb1d3))
+* **roadmap-management:** RA-I173 | Roadmap Management | Roadmap name should have limit for entering name | in Edit Roadmap dialog ([c40a655](https://bitbucket.org/entrib/shopworx/commits/c40a655d7544b4b60a6abaf4e6a724696763e509))
+* **roadmap-management:** RA-I175 | Roadmap Management | Refresh button function is not proper. ([b7b30a9](https://bitbucket.org/entrib/shopworx/commits/b7b30a9a99ed0e74f762abd71ca46cbde2a5ad05))
+* **roadmap-management:** RA-I185 | roadmap name field accepting blank spaces and special characters ([876f1bc](https://bitbucket.org/entrib/shopworx/commits/876f1bc9e9b4fb52c66040cd5aaabf1c6f3075c2))
+* **roadmap-management:** RA-I502 | validation for not allowed negative number in pre-substation befor text field ([acd5cbe](https://bitbucket.org/entrib/shopworx/commits/acd5cbe79fc7f88ade0d61e2b6f8c40407f856df))
+
+
+### Features
+
+* **po-production-dashboard:** initial commit ([65a37ac](https://bitbucket.org/entrib/shopworx/commits/65a37ac129279eda55428f753036128f65c2b677))
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **locale:** fixed date time locale ([39175d5](https://bitbucket.org/entrib/shopworx/commits/39175d50cc898c7dcf2fed02f07496b32dcc61c0))
+* **material-management:** RA-I264 ([6a0c4b8](https://bitbucket.org/entrib/shopworx/commits/6a0c4b8d43a1a082c5f275aa5ef316419e1b23f1))
+* **parameter-configuration:** RA-I254 basic validation while creating Paramater through UI ([522564a](https://bitbucket.org/entrib/shopworx/commits/522564a43818ec4ab7870a3958da3de66cb6b601))
+* **parameter-configuration:** RA-I254 validation for parameter name length ([f55d068](https://bitbucket.org/entrib/shopworx/commits/f55d068d207bafc033e876a0f5ab2f5cc9ddc729))
+* **paramwter-configuration:** Line MES | Parameter configuration | Data types for every field in popup should be defined | RA-I127 ([57648a9](https://bitbucket.org/entrib/shopworx/commits/57648a985c57a3ec1eabc508b99e897f0bbb8b7f))
+* **product-management:** RA-I204 | product type name should be unique ([ae8b69d](https://bitbucket.org/entrib/shopworx/commits/ae8b69d44d96fc609d78b862817e782adec88f8a))
+* **production-layout:** Line MES | Production Layout | Usg StartDate calendar should have date enbled after Manuf Date | RA-I106 ([cada629](https://bitbucket.org/entrib/shopworx/commits/cada629f59f727c9817a50eb6de0cd55f160f8fe))
+* **production-layout:** RA-I265 ([3ba8ab9](https://bitbucket.org/entrib/shopworx/commits/3ba8ab95bb55c3d714ef9773625bb494aa3d6ac2))
+* **recipe-management:** Line MES | Recipe Management | Unable to filter according to Station Name | RA-I140 ([3a2e4d4](https://bitbucket.org/entrib/shopworx/commits/3a2e4d415bdbb0f6b8ffd3a6f7f7906a83418d53))
+* **recipe-management:** RA-I473 | Input for Station name is taking wrong ([b349772](https://bitbucket.org/entrib/shopworx/commits/b349772c058f5ccf43f8591c471a0bef3757e72b))
+* **recipe-management:** RA-I474 | Need to change spelling in error message ([57d6719](https://bitbucket.org/entrib/shopworx/commits/57d671955ff36e18c6e3ea76d74ec425ad49b98a))
+* **recipe-management:** RA-I527 ([5ad0ddd](https://bitbucket.org/entrib/shopworx/commits/5ad0dddad1365f8d5a61dec396b995af5e811811))
+* **recipe-management:** RA-I527 show plcrecipename and plc recipeversion ([790698d](https://bitbucket.org/entrib/shopworx/commits/790698daea00aea1fd34ed6fc44fec595bb43f26))
+* **recipe-management:** RA-I528 | interlock to check that weather it is running order or not. ([a0809b0](https://bitbucket.org/entrib/shopworx/commits/a0809b0c54fa6c8c1c4c37453d51f276653b79da))
+* **recipe-management:** RA-I528 updare version number and recipenumber ([41c2297](https://bitbucket.org/entrib/shopworx/commits/41c22976092748daa4c4a82e8771ea47af098080))
+* **recipe-management:** RA-I547 ([2b2c331](https://bitbucket.org/entrib/shopworx/commits/2b2c331229972952dc3d1e2272e3384d65086584))
+* **roadmap-management:** RA-I188 | Roadmap name should be unique ([1d01bc2](https://bitbucket.org/entrib/shopworx/commits/1d01bc2cef333168d6e5e8f63d3f6ebc09e4f142))
+* **tracibility:** RA-I524 export in .xlsx with chinese description ([fc4868f](https://bitbucket.org/entrib/shopworx/commits/fc4868f9ce8143d73bb9ade6b83ade63ec7c8441))
+
+
+### Features
+
+* **live-shopfloor:** update now from system time to server time ([b466baf](https://bitbucket.org/entrib/shopworx/commits/b466baff5199dead36e37eaf09636a7f44ff4327))
+* **masters:** added multiple selection to master data grid ([ca925a0](https://bitbucket.org/entrib/shopworx/commits/ca925a06da83e97130f79058fc11e0f27bb3715f))
+* **parameter-configuration:** add new parameter named 'customized parameter' with id 57 ([38eb543](https://bitbucket.org/entrib/shopworx/commits/38eb5435a4152d21244eba11e2160a0e6920e67f))
+* **product-type:** add product description while creating new order ([adb277d](https://bitbucket.org/entrib/shopworx/commits/adb277d8e92ab357c4cb16a82cb46b815d347f89))
+* **recipe-management:** chinease translation with calibration category ([cdb9bb0](https://bitbucket.org/entrib/shopworx/commits/cdb9bb0da0a6cc38dd0b76f9702291e45e7aabf8))
+* **recipe-management:** RA-I527 ([2b6a227](https://bitbucket.org/entrib/shopworx/commits/2b6a227672f87dffd15d688385edcb64203d0b96))
+* **recipe-management:** RA-I527 ([3b0c66a](https://bitbucket.org/entrib/shopworx/commits/3b0c66a70a4afb5610857278a96bbb35781dc728))
+* **recipe-management:** RA-I528 update the recipe details with version number ([959c971](https://bitbucket.org/entrib/shopworx/commits/959c971f5ac08cc88106cfe1252c7019e6e53585))
+* **recipy-management:** remove validation for recipe name, able to add same recipy name foe different substation ([8a9b50e](https://bitbucket.org/entrib/shopworx/commits/8a9b50e1a42d7332e87d016b38e2021ed7387296))
+* **tpm:** input shopworx account details on login ([33633e9](https://bitbucket.org/entrib/shopworx/commits/33633e9f45b30c28fd16e23d899d65985231808c))
+* **tracibility-app:** RA-I524 pre-final ([66d7259](https://bitbucket.org/entrib/shopworx/commits/66d7259af16aad3b00e5fd14af3965dad9ba7ce0))
+* lingzhong-packagement ([51c2952](https://bitbucket.org/entrib/shopworx/commits/51c2952c61d6901a25bf742e2e521b6212cc3e7a))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+
+### Bug Fixes
+
+* **connection-status:** updated connection status polling time to 5 sec ([1b90961](https://bitbucket.org/entrib/shopworx/commits/1b909615064c1d6d63e5b36e4052771c8ef268bd))
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+
+### Bug Fixes
+
+* **dashboard-viewer:** fixed dashboard data display on tv ([c628ccc](https://bitbucket.org/entrib/shopworx/commits/c628ccc717400e1f32c469b1f4f237c37ef90703))
+* **parameter-configuration:** RA-I500 ([2c7915c](https://bitbucket.org/entrib/shopworx/commits/2c7915c339dc8799b09cf8a7a18711f2d881287c))
+* **parameter-configuration:** RA-I530, RA-I568 ([6aaa17c](https://bitbucket.org/entrib/shopworx/commits/6aaa17c5d9cae269c5c4f39fe483b485e996eb5b))
+* **parameter-configuration:** RA-I570 ([54664fd](https://bitbucket.org/entrib/shopworx/commits/54664fd91346f12d7e92ed17ee0b8b5e9da3d09d))
+
+
+### Features
+
+* **dashboard-viewer:** displayed device id with tv name ([abaa84a](https://bitbucket.org/entrib/shopworx/commits/abaa84ac9f70583897569cb044a57aad618206b9))
+* **report-viewer:** added otion to show/hide chart ([4d6d239](https://bitbucket.org/entrib/shopworx/commits/4d6d23933728d6c0b2c8220608569483f9ead241))
+* **report-viewer:** added shopworx theme to the chart ([076d658](https://bitbucket.org/entrib/shopworx/commits/076d6580f4ce57438a48735145812406f2ca7e77))
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added date range validation to filters ([f19ffc5](https://bitbucket.org/entrib/shopworx/commits/f19ffc59a089a0814308a65da5309f0a939ea39b))
+* **data-visualizer:** fixed email validations and log table height width ([ab37c33](https://bitbucket.org/entrib/shopworx/commits/ab37c33e93831839e63c781581b63e2d8bfc0977))
+* **ml-management:** RA-I549 cant delete mandetory tags whle creating new dialog as well as in input parameter from configuration dialog of model ([caa58c9](https://bitbucket.org/entrib/shopworx/commits/caa58c9fba044cb2c05f4cca09af45d602e8c1f9))
+* **ml-management:** RA-I554 | alert for mandatory date & time fields while creating new Training ([849af26](https://bitbucket.org/entrib/shopworx/commits/849af26168971b42f8f1879c9082fdacfa5352fb))
+* **parameter-configuration:** RA-I408 ([857b43c](https://bitbucket.org/entrib/shopworx/commits/857b43ca59f07070c9a0b3229ac5b2e7ae7d2cec))
+* **parameter-configuration:** RA-I556 ([a732f67](https://bitbucket.org/entrib/shopworx/commits/a732f673d1da5d6630cc165738c9cceaf45ca2d0))
+* **parameter-configuration:** RA-I556 ([d9178cb](https://bitbucket.org/entrib/shopworx/commits/d9178cb928c8fffe5b68ea328d72dbd859ffdcf9))
+* **report-viewer:** fixed pivot mode state on report run ([c057fe0](https://bitbucket.org/entrib/shopworx/commits/c057fe0781c0c7ef1418c378e58eb0d32ef35c9b))
+
+
+### Features
+
+* **ag-grid:** added dark mode and multi lingual support ([432f396](https://bitbucket.org/entrib/shopworx/commits/432f396123d1fff775a2010bc9b4c72cb6bc2267))
+* **data-visualizer:** added server side pagination to export logs ([48d4c28](https://bitbucket.org/entrib/shopworx/commits/48d4c28e25e90f83762b1be81b2a3258262d38c1))
+* **ml-management:** RA-I549 show the element selected on create training dialog open ([46ceb6d](https://bitbucket.org/entrib/shopworx/commits/46ceb6d241dd322654192003e7d14a64528fcd3e))
+* **parameter-configuration:** RA-I408 | changes required by Lukas with one new point ([cecbf24](https://bitbucket.org/entrib/shopworx/commits/cecbf24929488d459f89dbd73197915fbf4e32c8))
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+* **report-viewer:** added aggregation support to charts ([cc2a83b](https://bitbucket.org/entrib/shopworx/commits/cc2a83b36ffe4e5cde397984c52a4e64b6e9578c))
+* **report-viewer:** integrate charts with the grid ([8eee74a](https://bitbucket.org/entrib/shopworx/commits/8eee74a2f99a3f84e091959f7ee5281dfb0ada8a))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+
+### Bug Fixes
+
+* **data-visualizer:** added data fetch query ([9c16dd6](https://bitbucket.org/entrib/shopworx/commits/9c16dd692056c78329825d9ce44c0c704dbdad9e))
+* **data-visualizer:** added download link to the export log ([37be1c4](https://bitbucket.org/entrib/shopworx/commits/37be1c4ccfc4862f2259da12d590bfc9b7c9029a))
+* **data-visualizer:** fetch default parameters from the server ([63a691e](https://bitbucket.org/entrib/shopworx/commits/63a691e9c9d197791e311dc966ecd9eb83b32ff2))
+* **data-visualizer:** remove sort and filter ([e5335e3](https://bitbucket.org/entrib/shopworx/commits/e5335e301460fe628eaf54b7ec38631e31083c6b))
+* **origin:** fixed object parameter for shift oee report ([1207910](https://bitbucket.org/entrib/shopworx/commits/1207910b941a64fcce2cb35a3364619b98f1f8d5))
+* **origin:** fixed payload (vm) for shift oee report ([ddff4a4](https://bitbucket.org/entrib/shopworx/commits/ddff4a43852220bddf98aee6bca8f9ee5bb903cb))
+
+
+### Features
+
+* **data-visualizer:** added auto page size ([75b3b33](https://bitbucket.org/entrib/shopworx/commits/75b3b3332b6aa84b04c9c52206feafb38ab26a68))
+* **data-visualizer:** added data export dialog ([dc8de14](https://bitbucket.org/entrib/shopworx/commits/dc8de146c2509a73ae1fb308c209190c09c776d4))
+* **data-visualizer:** added date query in the export logs ([304b4bd](https://bitbucket.org/entrib/shopworx/commits/304b4bda22d857fe88d43c8fbee0a3685db5ad15))
+* **data-visualizer:** added server side pagination ([50881a3](https://bitbucket.org/entrib/shopworx/commits/50881a311bd90534a71b0c22e3ff16491175a191))
+* **data-visualizer:** auto fetch export logs every 2 minutes ([e21e8c3](https://bitbucket.org/entrib/shopworx/commits/e21e8c3931248f1315e593d088ae840d58978cc3))
+* **data-visualizer:** integrated grid visualizations ([83b6211](https://bitbucket.org/entrib/shopworx/commits/83b6211db842467ee816f8815261650007c8624a))
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+
+### Bug Fixes
+
+* **production-log:** fixed form reset after rejection entry ([2f9fbb5](https://bitbucket.org/entrib/shopworx/commits/2f9fbb5c484fe7ecf9f655a87ab0dc4bd7170f05))
+* **user-dashboard:** display oee values to 2 decimal places ([25ecde2](https://bitbucket.org/entrib/shopworx/commits/25ecde2c3351de246b18d3c2685a4d393b766684))
+* **user-dashboard:** show blank state for oee widget if no data ([a4ec2c4](https://bitbucket.org/entrib/shopworx/commits/a4ec2c4a68213cb041d41b259c408e6764e88bac))
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **admin:** QA0-I149 fix button loading all users ([02eb9e3](https://bitbucket.org/entrib/shopworx/commits/02eb9e344f6fa40f9266bfaf16996a456f47c302))
+* **admin:** QA0-I151 fixed alert when sent invite ([5c6760e](https://bitbucket.org/entrib/shopworx/commits/5c6760ecb3196351e1c1112f129783911388e2ee))
+* **customer-onboarding:** fixed asset and license provisioning with webhooks ([c225153](https://bitbucket.org/entrib/shopworx/commits/c225153606bb752af3ce7fc5bbce230d95c030db))
+* **customer-onboarding:** fixed reports and report views provisioning ([7c2cd1e](https://bitbucket.org/entrib/shopworx/commits/7c2cd1e61b63b615d05e42d92203da7da7c93537))
+* **infinity:** QA0-I150 fixed invite user UI ([bffdc4e](https://bitbucket.org/entrib/shopworx/commits/bffdc4e8d538a6b6afad9bf5e62d8388054db0bb))
+* **live-shopfloor:** display dashbaord in shopworx android app ([4e20c30](https://bitbucket.org/entrib/shopworx/commits/4e20c30cecb5f671759e0aa88b4140ea1af659b4))
+* **live-shopfloor:** fix dashbaord display on hour change ([7e17175](https://bitbucket.org/entrib/shopworx/commits/7e17175f81cc6873bec7a06cde9c98b5919b794e))
+* **live-shopfloor:** fixed downtime reason display ([200fb23](https://bitbucket.org/entrib/shopworx/commits/200fb23ad179c0e671a00ce5340db48fba326f70))
+* **production-log:** fixed hourly production fetch ([3b60d38](https://bitbucket.org/entrib/shopworx/commits/3b60d384e424978f223c8e0ffd161d6d2c310592))
+* **user-roles:** fixed role access for report views ([6a5be2f](https://bitbucket.org/entrib/shopworx/commits/6a5be2fe82f90663f52f7bb8fa8ab35387eae042))
+
+
+### Features
+
+* **customer-onboarding:** origin user can now on-board a new customer ([033355c](https://bitbucket.org/entrib/shopworx/commits/033355c9f02cdf1e48424c625fb5fe16dae93840))
+* **downtime-log:** disable multiple assignment on mobile ([6e327a8](https://bitbucket.org/entrib/shopworx/commits/6e327a81eaca5afab1f93d049b4f2962074c68af))
+* **elements:** elements can now be created with webhooks ([b10f2ca](https://bitbucket.org/entrib/shopworx/commits/b10f2ca5ac6fccacbcd32a3ebee4f29ab626cd09))
+* **infinity-onboarding:** create webhooks on onboarding ([bd0016d](https://bitbucket.org/entrib/shopworx/commits/bd0016d1daa97f045692b49ae6b542a39956842d))
+* **production-planning:** accept decimal cavities ([e977471](https://bitbucket.org/entrib/shopworx/commits/e9774716cc74dac9122b44e1a256c13a03dd8c58))
+* **users:** user cannot delete himself ([9c990e8](https://bitbucket.org/entrib/shopworx/commits/9c990e8360a166849ab82abbc97b62dad72dad57))
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **charts:** fixed charts to work in dark mode ([1e9fb62](https://bitbucket.org/entrib/shopworx/commits/1e9fb625f8e8cdcad0956325cf22faca47d147d4))
+* **infinity-drawer:** display dashbaords on mobile view ([ce1a765](https://bitbucket.org/entrib/shopworx/commits/ce1a7658ec96ea9c9dac8f8d217d8be1fa609a54))
+* **mobile:** fixed login & logout for webview ([0c689e9](https://bitbucket.org/entrib/shopworx/commits/0c689e96ea4dac99103c3343efc31448fe8be745))
+* **settings-layout:** fixed settings layout to stretch for desktops ([2abad19](https://bitbucket.org/entrib/shopworx/commits/2abad1975532933b5067d33b3fd0b3cc14c60fb8))
+* **web-view:** fixed login and logout in webview ([8373598](https://bitbucket.org/entrib/shopworx/commits/83735986eac20fe7420bfb84e3694ea8d295e685))
+
+
+### Features
+
+* **app-filters:** updated filters to v-select on mobile device ([b97d54b](https://bitbucket.org/entrib/shopworx/commits/b97d54bb3caff6fd427c1fb0221e3b083c586414))
+* **infinity-drawer:** disabled dashbaords and reports on mobile ([8fd06b6](https://bitbucket.org/entrib/shopworx/commits/8fd06b614dbd398b293be4c230c1c639ed7652df))
+* **insights:** updated insights to be fullscreen on mobile ([0959b4e](https://bitbucket.org/entrib/shopworx/commits/0959b4ef908571ae24a6118a5f2314bc5f631f0b))
+* **production-log:** updated mobile view for data entry ([8a93b66](https://bitbucket.org/entrib/shopworx/commits/8a93b662807dfd559d752eb4da5f3adcb2368538))
+* **production-planning:** updated app for mobile view ([5e6e778](https://bitbucket.org/entrib/shopworx/commits/5e6e778b05f1551d645320d55ff2e3cb5761c4ed))
+* **shift-summary:** show tab arrows in oee widget ([3a8b0af](https://bitbucket.org/entrib/shopworx/commits/3a8b0af237e8a51405bedd2070ee1574aebf8ccf))
+* **shopfloor-view:** updated layout for mobile view ([15774a0](https://bitbucket.org/entrib/shopworx/commits/15774a0aca5dfe89b72f975be743ffae3181b39e))
+* **web-view:** integrated APIs for login and logout on web view ([815854e](https://bitbucket.org/entrib/shopworx/commits/815854ebb7347fdb8e3dd79030e7bcce83424c82))
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+
+### Bug Fixes
+
+* **data-visualizer:** RA-I490 PO | Row data UI | Default tags/columns are not displaying on selecting parameter ([182969f](https://bitbucket.org/entrib/shopworx/commits/182969f89f8302aaa227b465ce57fe64ff933cf8))
+* **master-data:** fixed button state on data refresh ([a9f1d25](https://bitbucket.org/entrib/shopworx/commits/a9f1d250b3eef85174f35cec360b760d6ebe6841))
+* **master-data:** fixed delete records ([7717937](https://bitbucket.org/entrib/shopworx/commits/77179376935cbbc475184c8580262f64863a7fdd))
+* **parameter-configuration:** empty fields not allowed while uploading ([5cd9bd4](https://bitbucket.org/entrib/shopworx/commits/5cd9bd487eb23f5f38390c72b7a9b5af98dc193c))
+* **parameter-configuration:** RA-I489 Parameter Configuration | After importing file, Yes button should be disable after one click ([e01fded](https://bitbucket.org/entrib/shopworx/commits/e01fdedcad1c7ccb7cc5d9bb2231bded11d86e98))
+* **shift-summary:** fixed oee display widget ([b096641](https://bitbucket.org/entrib/shopworx/commits/b09664139b7b2d7e8209cbf1f5eca0cf0b0ee3a1))
+* **shift-summary:** updated change from percent to absolute ([367af49](https://bitbucket.org/entrib/shopworx/commits/367af49a439349b5dc310e0028c0eacebf688d90))
+
+
+### Features
+
+* **admin-console:** user can now create a new role ([91b2f11](https://bitbucket.org/entrib/shopworx/commits/91b2f111dbf9753f6e34a8fdb15fc8a7ac8bec3d))
+
+
+
+
+
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **icons:** updated icons for master data ([a4982dd](https://bitbucket.org/entrib/shopworx/commits/a4982dde5019af9c95ec4c1d639c7a29e5896a08))
+* **infinity:** clear connection status timeout on destroy ([24406ba](https://bitbucket.org/entrib/shopworx/commits/24406baea0eeabd45a13f537b5b53a89c2cc61cc))
+* **infinity:** fix back button layout ([6e189a9](https://bitbucket.org/entrib/shopworx/commits/6e189a997c4f636a6e1ebd95061040e81307eb1e))
+* **infinity:** fixed connection status display ([5c62ea5](https://bitbucket.org/entrib/shopworx/commits/5c62ea5f8027c137800110b999ff2d2f3f93f96e))
+* **master-data:** update export to use ag grid API ([4bc30e2](https://bitbucket.org/entrib/shopworx/commits/4bc30e21cb6d17968e3a1ea1ac65222983a10998))
+* **masters:** empty record showing when switch to another lable ([fb371d6](https://bitbucket.org/entrib/shopworx/commits/fb371d600fbf6c89dfd603f1e3e94a281a3fc19c))
+* **masters:** fix hide column issue after drag out of the table ([602aaf9](https://bitbucket.org/entrib/shopworx/commits/602aaf9d3be348b86197cde9c0f03e68c47f8f78))
+* **masters:** imporve and fixes master data ([2433a85](https://bitbucket.org/entrib/shopworx/commits/2433a852591065344878db39687ee793490ba240))
+* **masters:** RA-I291 ([e52df12](https://bitbucket.org/entrib/shopworx/commits/e52df1283244a14ea9b7e50579b62897cdcc12e0))
+* **ml-management:** RA-I458 file size > 7mb not allowed to upload ([358b22f](https://bitbucket.org/entrib/shopworx/commits/358b22f2f46a90ffbd5ebfbf63f8b06865ad665e))
+* **parameter-config:** enable Export data button on selection of protocol ([a5efd05](https://bitbucket.org/entrib/shopworx/commits/a5efd052272cd1befe712cf33969379359369037))
+* **parameter-configuration:** problem while creating single parameter ([f980c9f](https://bitbucket.org/entrib/shopworx/commits/f980c9f9b013dcc9e24e39aa31fe3a1dd6b72b07))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+* **parameter-configuration:** RA-I398 with point two and three ([cc137c5](https://bitbucket.org/entrib/shopworx/commits/cc137c59690f63c6c70ebd5c7d1ef18e689e2507))
+* **parameter-configuration:** RA-I408 all validation check ([71af3bf](https://bitbucket.org/entrib/shopworx/commits/71af3bf20a79662593a95f00590923fc62460d04))
+* **parameter-configuration:** RA-I408 with all validation ([a747e1d](https://bitbucket.org/entrib/shopworx/commits/a747e1da9d4fe47815727fec6bf87be4a7365951))
+* **product-management:** simmiler like RA-I180 ([b2a3bde](https://bitbucket.org/entrib/shopworx/commits/b2a3bdec88ebfe8d0e574563ad6562ce0bd73347))
+* **production-layout:** RA-I280 cannot add final and initial substation more than one(minor) ([5745a35](https://bitbucket.org/entrib/shopworx/commits/5745a35085d6d67b2a42104a602370742811b578))
+* **production-planning:** fix matrix onboarding error ([8f1077f](https://bitbucket.org/entrib/shopworx/commits/8f1077f06393870927b1d45100215b1cd3ecd528))
+* **production-planning:** fix onboarding based on license ([d1dcea9](https://bitbucket.org/entrib/shopworx/commits/d1dcea9c7d87ea2745371458d5fd68c00d3edaf9))
+* **raw-data:** ERA-I425 ([84011ae](https://bitbucket.org/entrib/shopworx/commits/84011ae2802d75e1c5d2fc1f6425e756ff3f0be9))
+* **raw-data:** RA-I424 ([8f3b1bf](https://bitbucket.org/entrib/shopworx/commits/8f3b1bf7334883af3092803b4792f3e4c7886ace))
+* **roadmap-management:** simmiler like RA-I180 ([997db0b](https://bitbucket.org/entrib/shopworx/commits/997db0b8912bf036fc5d81987357a813939b47bd))
+* **shift-summary:** fixed availability calculation for previous shifts ([4bd2936](https://bitbucket.org/entrib/shopworx/commits/4bd29369abf4b854627223ae2ba5dfa32c427be8))
+* **shift-summary:** fixed percentage change in oee summary ([02211a7](https://bitbucket.org/entrib/shopworx/commits/02211a751777cc4ff7a357cbdc10613da6b1726d))
+* **shift-summary:** updated icons and text display for oee summary ([0b7244b](https://bitbucket.org/entrib/shopworx/commits/0b7244b2bf87e4cbdc59675de03394a7bd9252d0))
+
+
+### Features
+
+* **core:** added connection status indicator ([d7862c3](https://bitbucket.org/entrib/shopworx/commits/d7862c37cf22a9e0fd1b0f6f9efd50839d8f3e42))
+* **parameter-configuration:** RA-I470 add the 'chinesedescription' column in sample-csv and downloaded csv file ([a8b7282](https://bitbucket.org/entrib/shopworx/commits/a8b7282ba9b34d0e39d71e601f4aa61fd2539b8a))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 

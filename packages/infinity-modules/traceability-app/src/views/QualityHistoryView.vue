@@ -14,8 +14,9 @@
           rowGroupPanelShow="always"
           :gridOptions="gridOptionsCheckOut"
           :enableRangeSelection="true"
-          class="ag-theme-balham mt-2"
+          :class="`${agGridTheme} mt-2`"
           :defaultColDef="defaultColDefCheckOut"
+          :localeText="agGridLocaleText"
           style="width: 100%; height: 350px;"
           @sort-changed="onStateChange"
           @filter-changed="onStateChange"
@@ -35,9 +36,16 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+/* eslint-disable */
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -65,7 +73,7 @@ export default {
         {
           headerName: this.$t('Main Id'),
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
@@ -103,6 +111,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     dateRangeText() {
       return this.dates.join(' to ');
     },
@@ -118,23 +127,23 @@ export default {
   },
   async created() {
     await this.getSubStations();
-    const {
-      substationid,
-      mainid,
-      fromdate,
-      todate,
-    } = this.subStationInfo;
-    const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
-    this.selectedSubStation = subStation;
-    this.searchMainID = mainid;
-    this.fromdate = fromdate;
-    this.todate = todate;
-    if (substationid || mainid || fromdate || todate) {
-      this.btnSearchProcessParameters();
-    } else {
-      await this.btnSearchProcessParameters();
-      // await this.fetchRecords();
-    }
+    // const {
+    //   substationid,
+    //   mainid,
+    //   fromdate,
+    //   todate,
+    // } = this.subStationInfo;
+    // const subStation = this.subStationList.filter((i) => i.name === substationid)[0];
+    // this.selectedSubStation = subStation;
+    // this.searchMainID = mainid;
+    // this.fromdate = fromdate;
+    // this.todate = todate;
+    // if (substationid || mainid || fromdate || todate) {
+    //   this.btnSearchProcessParameters();
+    // } else {
+    //   await this.btnSearchProcessParameters();
+    //   // await this.fetchRecords();
+    // }
   },
   beforeMount() {
     this.gridOptionsCheckOut = {};
@@ -152,6 +161,8 @@ export default {
     // this.restoreState();
     this.gridApi = this.gridOptionsCheckOut.api;
     this.gridColumnApi = this.gridOptionsCheckOut.columnApi;
+    this.gridApi = this.gridOptions.api;
+    this.gridColumnApi = this.gridOptions.columnApi;
     // this.btnSearchProcessParameters();
   },
   methods: {
@@ -306,6 +317,20 @@ export default {
           message: 'GET_RECORDS',
         });
       }
+    },
+    async exportGridCSV() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'quality_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

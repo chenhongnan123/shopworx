@@ -156,7 +156,8 @@
                   :items="roadmapList"
                   return-object
                   item-text="name"
-                  v-model="selectedReworkRoadmap"
+                  v-model="reworkRoadmap"
+                  ref="reworkRoadmap"
                   @change="onReworkRoadmapSelected()"/>
             </div>
             <div class="title" v-else>
@@ -165,8 +166,8 @@
             <div>
                 {{ $t('Rework Description') }}
               </div>
-              <div class="title" v-if="selectedReworkRoadmap">
-                {{selectedReworkRoadmap.reworkdescription}}
+              <div class="title" v-if="reworkRoadmap">
+                {{reworkRoadmap.reworkdescription}}
               </div>
               <div class="title" v-else>
                 {{'-'}}
@@ -208,7 +209,7 @@
                   </v-col>
                     <v-data-table
                       v-model="reworkdetails"
-                      :headers="headers"
+                      :headers="selectedHeader"
                       :items="componantList"
                       item-key="_id"
                       :single-select="true"
@@ -238,6 +239,14 @@
                           item-value="value"
                           item-text="name"
                           v-model="item.qualitystatus"/>
+                      </template>
+                      <template v-slot:item.isbind="{ item }">
+                        <v-select
+                          hide-details
+                          :items="bindStatus"
+                          item-value="value"
+                          item-text="name"
+                          v-model="item.isbind"/>
                       </template>
                       <template v-slot:item.bound>
                         <span>1</span>
@@ -273,6 +282,17 @@ export default {
   },
   data() {
     return {
+      selectedHeader: [],
+      bindStatus: [
+        {
+          name: this.$t('Bind'),
+          value: 1,
+        },
+        {
+          name: this.$t('Unbind'),
+          value: 2,
+        },
+      ],
       qualityStatusList: [
         {
           name: 'Default',
@@ -287,25 +307,25 @@ export default {
           value: 2,
         },
         {
-          name: 'Scraped',
+          name: this.$t('Scraped'),
           value: 3,
         },
         {
-          name: 'Reworked',
+          name: this.$t('Reworked'),
           value: 4,
         },
       ],
       setQualityStatusList: [
         {
-          name: 'Scraped',
+          name: this.$t('Scraped'),
           value: 3,
         },
         {
-          name: 'Reworked',
+          name: this.$t('Reworked'),
           value: 4,
         },
       ],
-      headers: [
+      headersEn: [
         {
           text: this.$t('Component'),
           value: 'componentname',
@@ -320,7 +340,27 @@ export default {
         },
         { text: this.$t('Current Quality'), value: 'checkquality' },
         { text: this.$t('Set Quality'), value: 'qualitystatus' },
+        { text: this.$t('Set Bind'), value: 'isbind' },
         // { text: 'Bound?', value: 'boundstatus' },
+        // { text: 'Keep?', value: 'rework' },
+        // { text: 'Good?', value: 'quality' },
+      ],
+      headersCn: [
+        {
+          text: this.$t('Component'),
+          value: 'componentname',
+        },
+        {
+          text: this.$t('Component Value'),
+          value: 'componentvalue',
+        },
+        {
+          text: this.$t('Sub-Station name'),
+          value: 'substationname',
+        },
+        { text: this.$t('Current Quality'), value: 'checkquality' },
+        { text: this.$t('Set Quality'), value: 'qualitystatus' },
+        { text: this.$t('Set Bind'), value: 'isbind' },
         // { text: 'Keep?', value: 'rework' },
         // { text: 'Good?', value: 'quality' },
       ],
@@ -332,16 +372,20 @@ export default {
       reworkable: null,
       rework: {},
       checkMainId: null,
-      selectedReworkRoadmap: null,
+      reworkRoadmap: null,
     };
   },
   async created() {
+    this.language = this.currentLocale;
+    if (this.language === 'zhHans') {
+      this.selectedHeader = this.headersCn;
+    } else {
+      this.selectedHeader = this.headersEn;
+    }
     // await this.getComponentRecords(`?query=mainid=="${this.reworkItem.mainid}"`);
     // await this.getNgCodeRecords(`?query=ngcode==${this.reworkItem.checkoutngcode}`);
     await this.getNgCodeRecords('');
-    // this.getSingleNgCodeDetail('');
-    // this.getComponentRecords('');
-    await this.getRoadmapList('?query=roadmaptype=="rework"');
+    await this.getRoadmapList('?query=roadmaptype=="Rework"');
     await this.getReworkList('?query=overallresult!="1"');
     await this.getRunningOrder('?query=orderstatus=="Running"');
   },
@@ -361,7 +405,14 @@ export default {
       'reworkRoadMapDetails',
       'partStatusList',
       'roadmapList',
+      'parameterList',
+      'selectedReworkRoadmap',
       'roadmapDetailsList']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
@@ -381,11 +432,12 @@ export default {
       'getReworkRoadmapDetails',
       'getPartStatusLastEntry',
       'updateRecordById',
+      'getParametersList',
       'getRoadmapList']),
     async onReworkRoadmapSelected() {
-      await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
-      this.setSelectedReworkRoadmap(this.selectedReworkRoadmap);
-      // await this.getReworkRoadMapDetails(`?query=roadmapid=="${this.selectedReworkRoadmap.id}"`);
+      await this.getReworkRoadmapDetails(`?query=roadmapid=="${this.reworkRoadmap.id}"`);
+      this.setSelectedReworkRoadmap(this.reworkRoadmap);
+      // await this.getReworkRoadMapDetails(`?query=roadmapid=="${this.reworkRoadmap.id}"`);
       // console.log(this.normalRoadMapDetails);
       // const item = this.normalRoadMapDetails.find((i) => i.substationid
       // === this.reworkRoadMapDetails[this.reworkRoadMapDetails.length - 1].substationid);
@@ -399,7 +451,6 @@ export default {
       // }
     },
     async updateQualityStatus(item) {
-      console.log(item);
       const payload = {
         id: item._id,
         payload: {
@@ -468,7 +519,17 @@ export default {
         .filter((i) => i.mainid === this.rework.enterManinId);
       if (this.checkMainId.length > 0) {
         // await this.getReworkList(`?query=mainid=="${this.rework.enterManinId}"`);
-        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"`);
+        await this.getComponentRecords(`?query=mainid=="${this.rework.enterManinId}"%26%26isbind!=2`);
+        const sublineid = this.componantList
+          .map((sb) => sb.sublineid);
+        const pList = await this.getParametersList(`?query=sublineid=="${sublineid[0]}"`);
+        await Promise.all(this.componantList.map((com) => {
+          const data = pList.filter((f) => f.name === `q_${com.componentname}`);
+          if (data.length > 0 && this.currentLocale === 'zhHans') {
+            com.componentname = data[0].chinesedescription;
+          }
+          return com;
+        }));
         const ngCode = this.checkMainId[0].checkoutngcode;
         const singlengcodeconfig = await this.getSingleNgCodeDetail(`?query=ngcode==${ngCode}`);
         // console.log(singlengcodeconfig);
@@ -481,7 +542,7 @@ export default {
           this.setDisableSave(false);
           this.setSingleNgCodeConfig([]);
           this.setComponentList([]);
-          this.selectedReworkRoadmap = null;
+          this.reworkRoadmap = null;
         } else {
           this.rework.ngcodedata = singlengcodeconfig;
           this.rework.reworkinfo = this.checkMainId;
@@ -496,6 +557,14 @@ export default {
         this.setDisableSave(false);
         this.setSingleNgCodeConfig([]);
         this.setComponentList([]);
+      }
+    },
+  },
+  watch: {
+    selectedReworkRoadmap(val) {
+      if (!val) {
+        this.reworkRoadmap = null;
+        this.$refs.reworkRoadmap.reset();
       }
     },
   },

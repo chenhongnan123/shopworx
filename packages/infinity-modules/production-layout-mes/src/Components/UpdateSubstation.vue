@@ -31,20 +31,41 @@
           required
           hint="For example, 123"
          @keyup="validateNumber"></v-text-field>
+         <v-text-field label="Serial Number *" type="number"
+         hint="For example, 1,2,3,4"
+         v-model="newSubstation.serialnumber"
+         :rules ="numberRules"
+         counter="10"
+          required></v-text-field>
         <v-text-field label="Description" type="Description"
         hint="For example, Updated by Manager"
          v-model="newSubstation.description"></v-text-field>
+        <v-textarea
+        dense
+        rows="3"
+        outlined
+        single-line
+        v-model="newSubstation.jsondata"
+        label="Paste JSON here"
+        :rules="configRules"
+      ></v-textarea>
+        <v-switch
+         v-model="newSubstation.serverlive"
+         label="Server Live value"
+        ></v-switch>
+        <div>
         <v-switch
          v-model="newSubstation.initialsubstation"
          label="Initial Sub Station"
          @change="validateInitsst"
-         :disabled="btnInitdisable"
+         :disabled="initialStationDisable || btnInitdisable"
         ></v-switch>
+        </div>
         <v-switch
          v-model="newSubstation.finalsubstation"
          label="Final Sub Station"
          @change="validateFinalsst"
-         :disabled="btnFindisable"
+         :disabled="finalStationDisable || btnFindisable"
         ></v-switch>
       </v-col>
       </v-row>
@@ -86,10 +107,16 @@ export default {
       payload: {},
       btnDisable: false,
       btnInitdisable: false,
+      initialStationDisable: false,
       btnFindisable: false,
+      finalStationDisable: false,
       valid: true,
       name: '',
       numbers: '',
+      configRules: [
+        (v) => !!v || 'Configuration is required.',
+        (v) => this.isValidJsonString(v) || 'Input valid JSON configuration.',
+      ],
       numberRules: [(value) => !!value || 'Number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
       ],
@@ -109,6 +136,17 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayoutMes', ['updateSubstation']),
+    isValidJsonString(jsonString) {
+      if (!(jsonString && typeof jsonString === 'string')) {
+        return false;
+      }
+      try {
+        JSON.parse(jsonString);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
     compareValues(val) {
       if (val.name !== this.substation.name) {
         this.payload.name = val.name;
@@ -154,7 +192,7 @@ export default {
            === this.newSubstation.initialsubstation === true);
         if (initialSubstationFlag.length > 0) {
           this.newSubstation.initialsubstation = '';
-          this.btnDisable = true;
+          this.initialStationDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -167,7 +205,7 @@ export default {
             message: 'INITIAL_SUBSTATION_ASSIGNED',
           });
         } else {
-          this.btnDisable = false;
+          this.initialStationDisable = false;
           this.saving = true;
         }
       } else {
@@ -187,7 +225,7 @@ export default {
           .filter((o) => o.finalsubstation === this.newSubstation.finalsubstation === true);
         if (finalSubstationFlag.length > 0) {
           this.newSubstation.finalsubstation = '';
-          this.btnDisable = true;
+          this.finalStationDisable = true;
           this.setAlert({
             show: true,
             type: 'error',
@@ -200,7 +238,7 @@ export default {
             message: 'FINAL_SUBSTATION_ASSIGNED',
           });
         } else {
-          this.btnDisable = false;
+          this.finalStationDisable = false;
           this.saving = true;
         }
       } else {
@@ -252,6 +290,18 @@ export default {
     async saveSubstation() {
       this.saving = true;
       let created = false;
+      if (this.newSubstation.serialnumber) {
+        this.payload.serialnumber = this.newSubstation.serialnumber;
+      }
+      if (this.newSubstation.description) {
+        this.payload.description = this.newSubstation.description;
+      }
+      if (this.newSubstation.jsondata) {
+        this.payload.jsondata = this.newSubstation.jsondata;
+      }
+      if (this.newSubstation.serverlive) {
+        this.payload.serverlive = this.newSubstation.serverlive;
+      }
       const payload = {
         query: `?query=id=="${this.substation.id}"`,
         payload: this.payload,
@@ -264,6 +314,8 @@ export default {
           type: 'success',
           message: 'SUBSTATION_UPDATED',
         });
+        this.finalStationDisable = false;
+        this.btnDisable = false;
         this.dialog = false;
       } else {
         this.setAlert({
@@ -276,8 +328,9 @@ export default {
     },
     async resetDialog() {
       this.$refs.form.resetValidation();
-      this.sublineNew = { ...this.subline };
       this.newSubstation = { ...this.substation };
+      this.initialStationDisable = false;
+      this.finalStationDisable = false;
       this.btnDisable = false;
     },
   },

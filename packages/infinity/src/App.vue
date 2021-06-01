@@ -24,12 +24,14 @@ export default {
     InfinityLoading,
   },
   computed: {
-    ...mapState('helper', ['isDark', 'infinityLoading']),
+    ...mapState('helper', ['isDark', 'infinityLoading', 'avatars', 'currentAvatar']),
     ...mapState('auth', ['sessionId']),
   },
   async created() {
     const dark = localStorage.getItem('dark');
+    const avatar = localStorage.getItem('avatar');
     this.setIsDark(dark ? JSON.parse(dark) : false);
+    this.setCurrentAvatar(avatar || this.avatars[0]);
     if (!this.sessionId) {
       this.initAuth();
     }
@@ -42,8 +44,9 @@ export default {
         this.setIsSessionValid(false);
       }
       return res;
-    }, () => {
+    }, (error) => {
       this.$router.push({ name: '500' });
+      return Promise.reject(error);
     });
   },
   watch: {
@@ -51,11 +54,15 @@ export default {
       this.$vuetify.theme.dark = this.isDark;
       localStorage.setItem('dark', this.isDark);
     },
+    currentAvatar() {
+      localStorage.setItem('avatar', this.currentAvatar);
+    },
   },
   methods: {
     ...mapActions('auth', ['initAuth']),
     ...mapMutations('helper', [
       'setIsDark',
+      'setCurrentAvatar',
       'setIsSessionValid',
     ]),
   },

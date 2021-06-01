@@ -5,6 +5,7 @@
       flat
       v-if="!isTV && !isFullscreen"
       :color="$vuetify.theme.dark ? '#121212' : 'grey lighten-5'"
+      style="z-index: 99"
     >
       <img
         :src="require(`@shopworx/assets/logo/${shopworxLogo}.png`)"
@@ -13,6 +14,7 @@
         height="38"
       />
       <v-toolbar-title
+        v-if="$vuetify.breakpoint.smAndUp"
         :class="$vuetify.breakpoint.mdAndUp
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
@@ -20,17 +22,21 @@
         <portal-target name="dashboard-title"></portal-target>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <send-to-tv />
-      <v-btn
-        class="text-none mr-2"
-        color="primary"
-        outlined
-        small
-        @click="previewDashboard"
-      >
-        <v-icon left>mdi-television</v-icon>
-        Preview
-      </v-btn>
+      <portal-target name="dashboard-actions" />
+      <template v-if="showHeaderButtons">
+        <send-to-tv v-if="!isMobile" />
+        <v-btn
+          class="text-none mr-2"
+          color="primary"
+          outlined
+          small
+          v-if="!isMobile"
+          @click="previewDashboard"
+        >
+          <v-icon left>mdi-television</v-icon>
+          Preview
+        </v-btn>
+      </template>
       <v-btn
         class="text-none mr-2"
         color="primary"
@@ -72,11 +78,14 @@ export default {
   },
   computed: {
     ...mapGetters('helper', ['isTV']),
-    ...mapState('helper', ['isFullscreen']),
+    ...mapState('helper', ['isFullscreen', 'showHeaderButtons']),
     shopworxLogo() {
       return this.$vuetify.theme.dark
         ? 'shopworx-dark'
         : 'shopworx-light';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
   methods: {

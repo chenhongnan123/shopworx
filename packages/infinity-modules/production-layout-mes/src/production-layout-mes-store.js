@@ -1,5 +1,5 @@
-import { set } from '@shopworx/services/util/store.helper';
-
+import { set, toggle } from '@shopworx/services/util/store.helper';
+/* eslint-disable */
 export default ({
   namespaced: true,
   state: {
@@ -27,6 +27,10 @@ export default ({
     parametersList: [],
     subStationsForIP: [],
     assets: {},
+    filter: false,
+    sublineByline: [],
+    stationBySubline: [],
+    subStationByStation: [],
   },
   mutations: {
     setSelectedLine: set('selectedLine'),
@@ -45,6 +49,9 @@ export default ({
     setUpdateProcessDialog: set('updateProcessDialog'),
     setAllSublines: set('allSublines'),
     setAllStations: set('allStations'),
+    setSublinesbyline: set('sublineByline'),
+    setStationbySubLines: set('stationBySubline'),
+    setSubStationbyStation: set('subStationByStation'),
     setStationsbyline: set('stationsbylines'),
     setSubStationsbyline: set('substationsbylines'),
     setSubStationName: set('subStationName'),
@@ -52,6 +59,8 @@ export default ({
     setRoadMapDetailsRecord: set('roadMapDetailsRecord'),
     setParametersList: set('parametersList'),
     setAssets: set('assets'),
+    toggleFilter: toggle('filter'),
+    setFilter: set('filter'),
   },
   actions: {
     getAssets: async ({ commit, dispatch }) => {
@@ -165,8 +174,8 @@ export default ({
       // // return true;
     },
     getStations: async ({ dispatch, commit, state }, query) => {
-      const { stations } = state;
-      const localStations = await dispatch(
+      // const { stations } = state;
+      const stations = await dispatch(
         'element/getRecords',
         {
           elementName: 'station',
@@ -179,8 +188,44 @@ export default ({
       //     dispatch('getSubStations', `?query=stationid=="${station.id}"`);
       //   });
       // }
-      stations.push(...localStations);
+      // stations.push(...localStations);
       commit('setStations', stations);
+      return true;
+    },
+    getfilteredSubline: async ({ dispatch, commit }, query) => {
+      const sublinebyLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'subline',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSublinesbyline', sublinebyLines);
+      return true;
+    },
+    getfilteredStation: async ({ dispatch, commit }, query) => {
+      const stationbySubLines = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'station',
+          query,
+        },
+        { root: true },
+      );
+      commit('setStationbySubLines', stationbySubLines);
+      return true;
+    },
+    getfilteredSubStation: async ({ dispatch, commit }, query) => {
+      const subStationbyStation = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'substation',
+          query,
+        },
+        { root: true },
+      );
+      commit('setSubStationbyStation', subStationbyStation);
       return true;
     },
     getStationbyline: async ({ dispatch, commit }, query) => {
@@ -281,7 +326,7 @@ export default ({
     createElement: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/createElement',
-        payload,
+        { element: payload },
         { root: true },
       );
       return created;
@@ -298,22 +343,9 @@ export default ({
       );
       if (created) {
         const query = `?query=lineid==${payload.lineid}`;
-        const sublines = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'subline',
-            query,
-          },
-          { root: true },
-        );
-        if (sublines) {
-          commit('setSublines', []);
-          list = sublines;
-          commit('setSublines', list);
-          // return sublines;
-        }
+        dispatch('getSublines', query);
       }
-      // return created;
+      return created;
     },
     createStation: async ({ dispatch, commit }, payload) => {
       let list = [];
@@ -326,21 +358,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = `?query=lineid==${payload.lineid}`;
-        const stations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'station',
-            query,
-          },
-          { root: true },
-        );
-        if (stations) {
-          list = stations;
-          list = list.sort((a, b) => a.indexno - b.indexno);
-          commit('setStations', list);
-          return stations;
-        }
+        dispatch('getStations');
       }
       return created;
     },
@@ -355,21 +373,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = `?query=lineid==${payload.lineid}&sortquery=createdTimestamp==-1`;
-        const substations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'substation',
-            query,
-          },
-          { root: true },
-        );
-        if (substations) {
-          list = substations;
-          // list = list.sort((a, b) => a.indexno - b.indexno);
-          commit('setSubStations', list);
-          return substations;
-        }
+        dispatch('getSubStations');
       }
       return created;
     },
@@ -384,21 +388,21 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const processes = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'process',
-            query,
-          },
-          { root: true },
-        );
-        if (processes) {
-          list = processes;
-          list = list.sort((a, b) => a.indexno - b.indexno);
-          commit('setProcesses', list);
-          return processes;
-        }
+        dispatch('getProcesses');
+      }
+      return created;
+    },
+    createLine: async ({ dispatch, commit }, payload) => {
+      const created = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'line',
+          payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        dispatch('getLines');
       }
       return created;
     },
@@ -426,20 +430,9 @@ export default ({
       );
       if (created) {
         const query = `?query=lineid==${payload.lineid}`;
-        const sublines = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'subline',
-            query,
-          },
-          { root: true },
-        );
-        if (sublines) {
-          commit('setSublines', sublines);
-          // return sublines;
-        }
+        dispatch('getSublines', query);
       }
-      // return created;
+      return created;
     },
     updateMainLineFlagToSubStations: async ({ dispatch }, payload) => {
       const created = await dispatch(
@@ -464,21 +457,9 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const processes = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'process',
-            query,
-          },
-          { root: true },
-        );
-        if (processes) {
-          commit('setProcesses', processes);
-          // return processes;
-        }
+        dispatch('getProcesses');
       }
-      // return created;
+      return created;
     },
     updateSubstation: async ({ dispatch, commit }, payload) => {
       const created = await dispatch(
@@ -491,19 +472,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const substations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'substation',
-            query,
-          },
-          { root: true },
-        );
-        if (substations) {
-          commit('setSubStations', substations);
-          return substations;
-        }
+        dispatch('getSubStations');
       }
       return created;
     },
@@ -518,19 +487,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        const query = '';
-        const stations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'station',
-            query,
-          },
-          { root: true },
-        );
-        if (stations) {
-          commit('setStations', stations);
-          return stations;
-        }
+        dispatch('getStations');
       }
       return created;
     },
@@ -556,19 +513,7 @@ export default ({
         { root: true },
       );
       if (deleted) {
-        const query = '';
-        const processes = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'process',
-            query,
-          },
-          { root: true },
-        );
-        if (processes) {
-          commit('setProcesses', processes);
-          return processes;
-        }
+        dispatch('getProcesses');
       }
       return deleted;
     },
@@ -643,18 +588,7 @@ export default ({
       }
       if (deleted) {
         const query = `?query=lineid==${object.lineid}`;
-        const sublines = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'subline',
-            query,
-          },
-          { root: true },
-        );
-        if (sublines) {
-          commit('setSublines', sublines);
-          return sublines;
-        }
+        dispatch('getSublines', query);
       }
       return deleted;
     },
@@ -723,19 +657,7 @@ export default ({
       //   message: 'STATION_DEPENDANT_DELETED',
       // });
       if (deleted) {
-        const query = '';
-        const stations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'station',
-            query,
-          },
-          { root: true },
-        );
-        if (stations) {
-          commit('setStations', stations);
-          return stations;
-        }
+        dispatch('getStations');
       }
       return deleted;
     },
@@ -779,21 +701,31 @@ export default ({
         );
       }
       if (deleted) {
-        const query = '';
-        const substations = await dispatch(
-          'element/getRecords',
-          {
-            elementName: 'substation',
-            query,
-          },
-          { root: true },
-        );
-        if (substations) {
-          commit('setSubStations', substations);
-          return substations;
-        }
+        dispatch('getSubStations');
       }
       return deleted;
+    },
+    inactiveRealElement: async ({ dispatch }, payload) => {
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
+    },
+    inactiveProcessElement: async ({ dispatch }, payload) => {
+      const updated = await dispatch(
+        'element/updateElementStatusById',
+        {
+          id: payload.elementId,
+          payload: { status: payload.status },
+        },
+        { root: true },
+      );
+      return updated;
     },
   },
 });

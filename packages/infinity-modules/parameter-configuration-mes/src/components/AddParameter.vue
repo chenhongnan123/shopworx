@@ -28,6 +28,7 @@
               label="Parameter Name*"
               prepend-icon="mdi-tray-plus"
               v-model="parameterObj.name"
+              :counter="20"
           ></v-text-field>
           <v-text-field
               :disabled="saving"
@@ -110,6 +111,7 @@
               :rules="rules.size"
           ></v-text-field>
           <v-text-field
+              type="number"
               :disabled="saving"
               label="DB Address*"
               prepend-icon="mdi-tray-plus"
@@ -129,10 +131,10 @@
             label="Protocol*"
             :items="protocolList"
             return-object
-            :disabled="saving"
+            disabled
             item-text="name"
             prepend-icon="$production"
-            v-model="parameterObj.protocol"
+            v-model="this.protocol"
             :rules="rules.protocol"
           >
             <template v-slot:item="{ item }">
@@ -199,6 +201,7 @@
             class="text-none"
             :loading="saving"
             @click="saveParameter"
+            :disabled="!valid"
           >
             Save
           </v-btn>
@@ -229,7 +232,7 @@ export default {
         size: null,
         dbaddress: null,
         startaddress: null,
-        protocol: null,
+        // protocol: null,
         isconversion: null,
         // multiplicationfactor: null,
         // divisionfactor: null,
@@ -242,6 +245,7 @@ export default {
       rules: {
         name: [
           (v) => !!v || 'Parameter Name is required',
+          (v) => (v && v.length <= 20) || 'Parameter Name must be less than 20 characters',
         ],
         // description: [
         //   (v) => !!v || 'Parameter Description is required',
@@ -257,6 +261,8 @@ export default {
         ],
         dbaddress: [
           (v) => !!v || 'DB ADdress is required',
+          (v) => /^[0-9]+$/.test(v)
+          || 'only integers allowed',
         ],
         startaddress: [
           (v) => !!v || 'Start Adress is required',
@@ -300,13 +306,24 @@ export default {
         { name: 'No', id: 0 },
       ],
       protocolList: [
-        { name: 'SNAP7', id: 'SNAP7' },
+        {
+          name: 'SNAP7',
+          id: 'SNAP7',
+        },
+        {
+          name: 'MELSEC',
+          id: 'MELSEC',
+        },
+        {
+          name: 'ABPLC',
+          id: 'ABPLC',
+        },
       ],
     };
   },
   props: ['station', 'substation', 'line', 'subline'],
   computed: {
-    ...mapState('parameterConfigurationMes', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList']),
+    ...mapState('parameterConfigurationMes', ['addParameterDialog', 'directionList', 'categoryList', 'datatypeList', 'parameterList', 'selectedParameterName', 'selectedParameterDirection', 'selectedParameterCategory', 'selectedParameterDatatype', 'stationList', 'protocol']),
     dialog: {
       get() {
         return this.addParameterDialog;
@@ -351,15 +368,17 @@ export default {
       return query;
     },
     async saveParameter() {
+      this.$refs.form.validate();
+      const paramname = this.parameterObj.name.toLowerCase().replace(/\W/g, '');
       const { parameterObj } = this;
       if (parameterObj) {
         const {
-          name,
           dbaddress,
           startaddress,
           booleanbit,
         } = parameterObj;
-        if (this.parameterList.some((parameter) => name === parameter.name)) {
+        if (this.parameterList.some((parameter) => paramname.toLowerCase().split(' ').join('')
+           === parameter.name.toLowerCase().split(' ').join(''))) {
           this.setAlert({
             show: true,
             type: 'error',
@@ -396,11 +415,12 @@ export default {
           assetid: 4,
           // parameterdirection: parameterObj.parameterdirection.id,
           parametercategory: parameterObj.parametercategory.id,
+          name: paramname,
           datatype: parameterObj.datatype.id,
           isbigendian: parameterObj.datatype.isbigendian,
           isswapped: parameterObj.datatype.isswapped,
           // isconversion: parameterObj.isconversion.id,
-          protocol: parameterObj.protocol.id,
+          protocol: this.protocol,
           maxdecimal: 3,
           startaddress: Number(parameterObj.startaddress),
           size: Number(parameterObj.datatype.size),
@@ -471,6 +491,7 @@ export default {
             message: 'CREATE_PARAMETER',
           });
         }
+        this.$refs.form.reset();
         this.dialog = false;
       }
     },

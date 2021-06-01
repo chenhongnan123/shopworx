@@ -14,8 +14,9 @@
           rowGroupPanelShow="always"
           :gridOptions="gridOptions"
           :enableRangeSelection="false"
-          class="ag-theme-balham mt-2"
+          :class="`${agGridTheme} mt-2`"
           :defaultColDef="defaultColDef"
+          :localeText="agGridLocaleText"
           style="width: 100%; height: 350px;"
           @sort-changed="onStateChange"
           @filter-changed="onStateChange"
@@ -36,9 +37,15 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} from 'vuex';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
 import { AgGridVue } from 'ag-grid-vue';
 
 export default {
@@ -70,12 +77,12 @@ export default {
         {
           headerName: this.$t('Main Id'),
           field: 'mainid',
-          rowGroup: true,
+          // rowGroup: true,
           resizable: true,
         },
         {
           headerName: this.$t('Sub station'),
-          field: 'substationid',
+          field: 'substationname',
           resizable: true,
         },
         {
@@ -119,6 +126,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     dateRangeText() {
       return this.dates.join(' to ');
     },
@@ -130,12 +138,18 @@ export default {
       'componentList',
       'partStatusList',
       'componentData',
-      'trecibilityState']),
+      'trecibilityState',
+      'parametersList']),
+    currentLocale: {
+      get() {
+        return this.$i18n.locale;
+      },
+    },
   },
   async created() {
-    if (this.trecibilityState.selectedSubLine) {
-      await this.btnSearchCheckOut();
-    }
+    // if (this.trecibilityState.selectedSubLine) {
+    //   await this.btnSearchCheckOut();
+    // }
     // await this.fetchRecords();
   },
   beforeMount() {
@@ -176,7 +190,8 @@ export default {
         'getProcessElement',
         'getProcessParameters',
         'getPartStatus',
-        'getComponentData']),
+        'getComponentData',
+        'getParametersList']),
     async handleSubLineClick(item) {
       const query = `?query=sublineid=="${item.id}"`;
       await this.getSubStations(query);
@@ -277,6 +292,14 @@ export default {
       }
       // param += 'pagenumber=1&pagesize=20';
       await this.getComponentList(param);
+      await this.getParametersList(`?query=sublineid=="${this.trecibilityState.selectedSubLine.id}"`);
+      await Promise.all(this.componentList.map((com) => {
+        const data = this.parametersList.filter((f) => f.name === `q_${com.componentname}`);
+        if (data.length > 0 && this.currentLocale === 'zhHans') {
+          com.componentname = data[0].chinesedescription;
+        }
+        return com;
+      }));
       this.gridApi = this.gridOptions.api;
       this.gridApi.expandAll();
       if (cFlag === 1) {
@@ -321,6 +344,20 @@ export default {
         this.setRecipeViewState(0);
         this.setSubStationInfo(data);
       }
+    },
+    async exportGridCSV() {
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      await this.gridApi.exportDataAsCsv(params);
+    },
+    exportGridExcel() {
+      const name = 'component_data';
+      const params = {
+        fileName: `${name}-${new Date().toLocaleString()}`,
+      };
+      this.gridApi.exportDataAsExcel(params);
     },
   },
 };

@@ -23,7 +23,7 @@
           <v-icon>mdi-pencil-outline</v-icon>
         </v-btn>
       </template>
-      Edit plan
+      {{ $t('planning.editPlan') }}
     </v-tooltip>
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
@@ -41,7 +41,7 @@
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
       </template>
-      Duplicate plan
+      {{ $t('planning.duplicatePlan') }}
     </v-tooltip>
     <abort-plan
       v-if="inProgress"

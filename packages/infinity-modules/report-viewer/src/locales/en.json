@@ -5,7 +5,26 @@
       "maintenance": "Maintenance reports",
       "downtime": "Downtime reports",
       "quality": "Quality reports",
-      "performance": "Performance reports"
+      "performance": "Performance reports",
+      "utility": "Utility reports"
     }
-  }
+  },
+  "noReports": "No reports found",
+  "reportsLoading": "If you torture the data long enough, it will confess.",
+  "save": "Save",
+  "saved": "Saved",
+  "saveAs": "Save as...",
+  "reportsLabel": "Reports",
+  "export": "Export",
+  "to": "to",
+  "ok": "OK",
+  "hideChart": "Hide chart",
+  "showChart": "Show chart",
+  "saveAsTitle": "Save as new report",
+  "reportTitleInput": "Enter a title for your report",
+  "HOURLY": "Hourly",
+  "SHIFTWISE": "Shift wise",
+  "DAILY": "Daily",
+  "WEEKLY": "Weekly",
+  "MONTHLY": "Monthly"
 }

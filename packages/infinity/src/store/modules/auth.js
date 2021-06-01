@@ -2,6 +2,7 @@ import ApiService from '@shopworx/services/api/api.service';
 import AuthService from '@shopworx/services/api/auth.service';
 import SessionService from '@shopworx/services/util/session.service';
 import { set } from '@shopworx/services/util/store.helper';
+import { onLogin, onLogout } from '../../infinityLoader';
 
 export default ({
   state: {
@@ -20,9 +21,15 @@ export default ({
       ApiService.setSessionHeader(sessionId);
     },
 
-    authenticate: async ({ state, commit, dispatch }, payload) => {
+    authenticate: async ({
+      state,
+      commit,
+      dispatch,
+      rootGetters,
+    }, payload) => {
       try {
         const { loginType } = state;
+        const isWebView = rootGetters['helper/isWebView'];
         ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticate(payload);
         if (data && data.sessionId) {
@@ -31,11 +38,15 @@ export default ({
           ApiService.setSessionHeader(data.sessionId);
           const success = await dispatch('user/getMe', null, { root: true });
           if (success) {
+            if (isWebView) {
+              onLogin(data.sessionId);
+            }
             return true;
           }
           commit('setSessionId', null);
           SessionService.removeSession();
           ApiService.removeHeader();
+          onLogin(null);
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -51,9 +62,15 @@ export default ({
       return false;
     },
 
-    authenticateWithOtp: async ({ state, commit, dispatch }, payload) => {
+    authenticateWithOtp: async ({
+      state,
+      commit,
+      dispatch,
+      rootGetters,
+    }, payload) => {
       try {
         const { loginType } = state;
+        const isWebView = rootGetters['helper/isWebView'];
         ApiService.setLoginTypeHeader(loginType);
         const { data } = await AuthService.authenticateWithOtp(payload);
         if (data && data.sessionId) {
@@ -62,11 +79,15 @@ export default ({
           ApiService.setSessionHeader(data.sessionId);
           const success = await dispatch('user/getMe', null, { root: true });
           if (success) {
+            if (isWebView) {
+              onLogin(data.sessionId);
+            }
             return true;
           }
           commit('setSessionId', null);
           SessionService.removeSession();
           ApiService.removeHeader();
+          onLogin(null);
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,
@@ -82,8 +103,9 @@ export default ({
       return false;
     },
 
-    logoutUser: async ({ commit, rootState }) => {
+    logoutUser: async ({ commit, rootState, rootGetters }) => {
       try {
+        const isWebView = rootGetters['helper/isWebView'];
         const { data } = await AuthService.logout();
         if (data && data.results) {
           const { storageLocation } = rootState.webApp;
@@ -95,6 +117,9 @@ export default ({
           Object.keys(storageLocation).forEach((loc) => {
             localStorage.removeItem(storageLocation[loc]);
           });
+          if (isWebView) {
+            onLogout();
+          }
         } else if (data && data.errors) {
           commit('helper/setAlert', {
             show: true,

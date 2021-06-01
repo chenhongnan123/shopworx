@@ -35,7 +35,7 @@
       <v-btn
         color="primary"
         class="text-none"
-        @click="cancel"
+        @click="onFinish"
       >
         Finish
       </v-btn>
@@ -70,27 +70,50 @@ export default {
           this.loading = true;
           this.model = null;
           this.model = await this.getModelById(this.createdModelId);
-          await this.fetchModelDetails(this.model.model_id);
+          await this.fetchModelDetails(this.model.modelid);
           this.loading = false;
         }
       },
     },
   },
   methods: {
+    ...mapMutations('helper', ['setAlert']),
     ...mapMutations('modelManagement', ['setCreatedModelId', 'setModelDetails']),
     ...mapActions('modelManagement', [
       'createNewDeploymentOrder',
       'fetchModelDetails',
       'getModelById',
+      'getInputParametersForModelId',
+      'getTriggerForModelId',
     ]),
-    cancel() {
+    async onFinish() {
+      // validation for model trigger, input parameters (mainid and timestamp)
+      const checkInputParam = await this.getInputParametersForModelId(this.model.modelid);
+      const checkTrigger = await this.getTriggerForModelId(this.model.modelid);
+      if (checkInputParam && checkTrigger) {
+        this.cancel();
+      } else if (!checkInputParam) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'INPUT_PARAM_REQUIRED',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'TRIGGER_REQUIRED',
+        });
+      }
+    },
+    async cancel() {
       this.setCreatedModelId(null);
       this.setModelDetails(null);
       this.$emit('on-cancel');
     },
     async deployModel() {
       this.deploying = true;
-      const created = await this.createNewDeploymentOrder(this.model.model_id);
+      const created = await this.createNewDeploymentOrder(this.model.modelid);
       if (created) {
         this.cancel();
       }

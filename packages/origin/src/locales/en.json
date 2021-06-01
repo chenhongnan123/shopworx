@@ -108,7 +108,9 @@
     "INSTALL_DEBIAN": "Error while installing debian. Please retry.",
     "DEBIAN_PARSE_ERROR": "Unable to parse debian name and version. Accepted format - swx-bot-<packagename>_<version>-<buildnumber>.deb",
     "UPLOAD_DEBIAN": "Unable to upload the debian file. Please retry.",
-    "UPDATE_INSTANCE_CONFIG": "Unable to update instance config. Please retry."
+    "UPDATE_INSTANCE_CONFIG": "Unable to update instance config. Please retry.",
+    "INVALID_LICENSE": "Invalid license for {asset}. Please verify your license and retry.",
+    "INVITE_ERROR": "Error while inviting the user. Please retry."
   },
   "fields": {
     "email": "Email",
@@ -224,6 +226,7 @@
   "modules": {
     "provision": "Provision",
     "devTools": "Dev Tools",
+    "addNewCustomer": "Add New Customer",
     "customerSupport": "Customer Support",
     "customers": "Customer",
     "industries": "Industries",

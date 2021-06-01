@@ -1,13 +1,13 @@
 <template>
   <div style="height:100%">
     <portal to="app-header">
-      <span>Production Planning</span>
+      <span>{{ $t('planning.title') }}</span>
       <v-btn icon small class="ml-4 mb-1">
         <v-icon
           v-text="'$info'"
         ></v-icon>
       </v-btn>
-      <v-tooltip bottom>
+      <v-tooltip bottom v-if="!isMobile">
         <template #activator="{ on, attrs }">
           <v-btn
             icon
@@ -22,7 +22,7 @@
             ></v-icon>
           </v-btn>
         </template>
-        Settings
+        {{ $t('planning.settingsTitle') }}
       </v-tooltip>
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
@@ -37,7 +37,7 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </template>
-        Last refreshed at: <strong>{{ lastRefreshedAt }}</strong>
+        {{ $t('planning.lastRefreshed') }} <strong>{{ lastRefreshedAt }}</strong>
       </v-tooltip>
     </portal>
     <planning-toolbar />
@@ -77,6 +77,9 @@ export default {
       return this.isCalendarView
         ? 'planning-calendar'
         : 'planning-list';
+    },
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
     },
   },
   created() {

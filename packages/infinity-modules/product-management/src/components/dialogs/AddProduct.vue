@@ -44,15 +44,14 @@
             :label="$t('displayTags.productTypeName')"
             prepend-icon="mdi-tray-plus"
             v-model="product.productname"
-            :rules="productNameRule"
             required
-            :counter="10"
           ></v-text-field>
           <v-text-field
             :disabled="saving"
             :label="$t('displayTags.productTypeDescription')"
             prepend-icon="mdi-tray-plus"
             v-model="product.description"
+            required
           ></v-text-field>
           <v-text-field
             :disabled="saving"
@@ -106,6 +105,7 @@
             :disabled="!lineSelected ||
             !selectedRoadmap ||
             !product ||
+            !selectedBom ||
             !valid"
             @click="saveProduct"
             >
@@ -142,8 +142,8 @@ export default {
       productname: '',
       customername: '',
       productNameRule: [(v) => !!v || 'Product Name Required',
-        (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
-        (v) => !/[^a-zA-Z0-9]/.test(v) || 'Special Characters ( including space ) not allowed'],
+        // (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v) => !/[^a-zA-Z0-9-]/.test(v) || 'Special Characters ( including space ) not allowed'],
       selectLineRule: [(v) => !!v || 'Line selection Required'],
       selectProductTypeRule: [(v) => !!v || 'Roadmap selection Required'],
       selectBomRule: [(v) => !!v || 'BOM selection Required'],
@@ -173,7 +173,7 @@ export default {
   methods: {
     ...mapMutations('helper', ['setAlert']),
     ...mapMutations('productManagement', ['setAddProductDialog']),
-    ...mapActions('productManagement', ['createProduct']),
+    ...mapActions('productManagement', ['createProduct', 'checkDuplicateProduct']),
     async saveProduct() {
       this.$refs.form.validate();
       if (!this.product.productname) {
@@ -182,11 +182,16 @@ export default {
           type: 'error',
           message: 'PRODUCT_NAME_EMPTY',
         });
+      } else if (!this.product.description) {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'PRODUCT_DESCRIPTION_EMPTY',
+        });
       } else {
-        const duplicateProduct = this.productList.filter(
-          (o) => o.productname.toLowerCase().split(' ').join('') === this.product.productname.toLowerCase().split(' ').join(''),
-        );
-        if (duplicateProduct.length > 0) {
+        const query = `?query=productname=="${this.product.productname}"`;
+        const duplicateProduct = await this.checkDuplicateProduct(query);
+        if (duplicateProduct) {
           this.product.productname = '';
           this.setAlert({
             show: true,

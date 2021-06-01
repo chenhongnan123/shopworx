@@ -10,11 +10,13 @@ export default ({
     reportMappings: [],
     reportMapping: null,
     chartType: null,
+    showChart: true,
     dateRange: [new Date().toISOString().substr(0, 10),
       new Date().toISOString().substr(0, 10)],
     report: null,
     gridState: '',
     loading: false,
+    isPDFVisible: true,
   },
   mutations: {
     setReportViews: set('reportViews'),
@@ -23,10 +25,12 @@ export default ({
     setReportMappings: set('reportMappings'),
     setReportMapping: set('reportMapping'),
     setChartType: set('chartType'),
+    setShowChart: set('showChart'),
     setDateRange: set('dateRange'),
     setReport: set('report'),
     setGridState: set('gridState'),
     setLoading: set('loading'),
+    setIsPDFVisible: set('isPDFVisible'),
   },
   actions: {
     getReportViews: async ({ commit }, reportCategoryId) => {

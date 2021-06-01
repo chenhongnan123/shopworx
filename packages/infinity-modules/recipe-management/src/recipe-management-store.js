@@ -14,6 +14,7 @@ export default ({
     filterLine: {},
     filterSubLine: {},
     filterStation: {},
+    filterRecipe: {},
     filterBList: [],
     stationNamebySubline: [],
     datatypeList: [],
@@ -21,6 +22,7 @@ export default ({
     sublineInState: [],
     stationInState: [],
     substationInState: [],
+    recipeNames: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -34,6 +36,7 @@ export default ({
     setFilterLine: set('filterLine'),
     setFilterSubLine: set('filterSubLine'),
     setFilterStation: set('filterStation'),
+    setFilterRecipe: set('filterRecipe'),
     setFilterBackupList: set('filterBList'),
     setStationNamebySubline: set('stationNamebySubline'),
     setDataTypeList: set('datatypeList'),
@@ -41,6 +44,7 @@ export default ({
     setInStateSubline: set('sublineInState'),
     setInStateStation: set('stationInState'),
     setInStateSubStation: set('substationInState'),
+    setRecipeName: set('recipeNames'),
   },
   actions: {
     getMonitorValues: async ({ dispatch }, payload) => {
@@ -83,6 +87,18 @@ export default ({
         { root: true },
       );
       commit('setStationNamebySubline', stationNamebySubline);
+      return true;
+    },
+    getRecipeNameByStation: async ({ dispatch, commit }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'recipelist',
+          query,
+        },
+        { root: true },
+      );
+      commit('setRecipeName', list);
       return true;
     },
     getRecipeListRecords: async ({ dispatch, commit }, query) => {
@@ -139,16 +155,24 @@ export default ({
         },
         { root: true },
       );
-      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '33');
+      parameters = parameters.filter((d) => d.parametercategory === '35' || d.parametercategory === '7' || d.parametercategory === '58');
       commit('setParamtersList', parameters);
       return parameters;
     },
     createRecipeDetails: async ({ dispatch }, payload) => {
+      await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'recipedetails',
+          queryParam: `?query=recipeid=="${payload.recipeid}"%26%26versionnumber==${payload.versionnumber}`,
+        },
+        { root: true },
+      );
       const created = await dispatch(
         'element/postBulkRecords',
         {
           elementName: 'recipedetails',
-          payload,
+          payload: payload.list,
         },
         { root: true },
       );
@@ -177,7 +201,7 @@ export default ({
         'element/deleteRecordByQuery',
         {
           elementName: 'recipedetails',
-          queryParam: `?query=tagname=="${id}"`,
+          queryParam: id,
         },
         { root: true },
       );
@@ -187,8 +211,22 @@ export default ({
       }
       return deleted;
     },
+    getRecipeInUse: async ({ dispatch }, query) => {
+      const recipeInUse = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'productdetails',
+          query,
+        },
+        { root: true },
+      );
+      if (recipeInUse && recipeInUse.length) {
+        return recipeInUse[0];
+      }
+      return false;
+    },
     // getProductDetails
-    getProductDetails: async ({ dispatch }, query) => {
+    getProductDetails: async ({ dispatch, commit }, query) => {
       const orders = await dispatch(
         'element/getRecords',
         {
@@ -197,7 +235,19 @@ export default ({
         },
         { root: true },
       );
-      return orders;
+      let recipe = [];
+      if (orders && orders.length) {
+        recipe = orders.map((l) => ({
+          ...l,
+          plcrecipename: '',
+          plcrecipenumber: '',
+          plcrecipeversion: '',
+          notmatchname: 1,
+          notmatchversion: 1,
+        }));
+      }
+      commit('setRecipeList', recipe);
+      return recipe;
     },
     getLines: async ({ dispatch, commit }, query) => {
       const line = await dispatch(
@@ -290,12 +340,44 @@ export default ({
       }
       return created;
     },
+    updateProductDetails: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'productdetails',
+          id: `?query=recipenumber=="${payload.id}"`,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        dispatch('getProductDetails');
+        return true;
+      }
+      return created;
+    },
     updateRecipeDetails: async ({ dispatch }, payload) => {
       const created = await dispatch(
         'element/updateRecordByQuery',
         {
           elementName: 'recipedetails',
           queryParam: payload.query,
+          payload: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        dispatch('getRecipeDetailListRecords');
+        return true;
+      }
+      return created;
+    },
+    updateRecipeDetailById: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'recipedetails',
+          id: payload.id,
           payload: payload.payload,
         },
         { root: true },

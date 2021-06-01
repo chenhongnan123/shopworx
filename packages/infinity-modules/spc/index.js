@@ -1,3 +1,4 @@
+/* eslint-disable */
 // import 'ag-grid-enterprise';
 import routes from './src/spc-routes';
 import store from './src/spc-store';

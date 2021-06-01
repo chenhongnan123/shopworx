@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="py-0">
-    <portal to="app-extension">
     <v-row justify="center">
       <v-col cols="12" xl="10" class="py-0">
         <v-toolbar
@@ -56,6 +55,25 @@
            {{filterStation.name}}
          </v-chip>
         </div>
+        <div v-if="filterRecipe.recipename != null" class="text-none ml-2">
+          <v-btn text
+          v-if="chipforRecipe"
+         >
+           {{ $t('displayTags.recipeName') }}
+         </v-btn>
+          <v-chip
+            v-if="chipforRecipe"
+            class="ma-2"
+            close
+            close-icon="mdi-close"
+            color="info"
+            label
+            outlined
+            @click:close="(chipforRecipe = false); btnReset();"
+           >
+           {{filterRecipe.recipename}}
+         </v-chip>
+        </div>
         <v-spacer></v-spacer>
         <!-- <v-btn small color="primary" class="text-none ml-2"> -->
                         <AddRecipe ref="addUpdateRecipe"/>
@@ -78,7 +96,6 @@
         </v-toolbar>
       </v-col>
     </v-row>
-    </portal>
         <v-data-table
         v-model="recipes"
         :headers="headers"
@@ -88,15 +105,19 @@
         show-select
         fixed-header
         :height="tableHeight - 168"
+        :loading="myloadingVariable"
         >
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.recipename="{ item }">
           <span @click="handleClick(item)"><a>{{ item.recipename }}</a></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.editedtime="{ item }">
           <span v-if="item.editedtime">
             {{ new Date(item.editedtime).toLocaleString("en-GB") }}</span>
           <span v-else></span>
         </template>
+        <!-- eslint-disable-next-line -->
         <template v-slot:item.actions="{ item }">
           <v-row><v-btn
               icon
@@ -212,42 +233,44 @@ export default {
   },
   data() {
     return {
+      myloadingVariable: true,
       sublines: null,
       stations: null,
+      recipesfilter: null,
       deleting: false,
       headers: [
         {
-          text: 'No.',
+          text: this.$t('No'),
           value: 'numberIndex',
         },
         {
-          text: 'Line',
+          text: this.$t('Line'),
           value: 'linename',
         },
         {
-          text: 'Sub-Line',
+          text: this.$t('Sub-Line'),
           value: 'sublinename',
         },
-        { text: 'Station name', value: 'stationname' },
-        { text: 'Sub-Station name', value: 'substationname' },
+        { text: this.$t('Station name'), value: 'stationname' },
+        { text: this.$t('Sub-Station name'), value: 'substationname' },
         {
-          text: 'Recipe',
+          text: this.$t('Recipe'),
           value: 'recipename',
         },
         {
-          text: 'Recipe number',
+          text: this.$t('Recipe number'),
           value: 'recipenumber',
         },
         {
-          text: 'Version',
+          text: this.$t('Version'),
           value: 'versionnumber',
         },
-        { text: 'Created time', value: 'createdTimestamp' },
-        { text: 'Created By', value: 'createdby' },
-        { text: 'Edited time', value: 'editedtime' },
-        { text: 'Edited By', value: 'editedby' },
+        { text: this.$t('Created time'), value: 'createdTimestamp' },
+        { text: this.$t('Created By'), value: 'createdby' },
+        { text: this.$t('Edited time'), value: 'editedtime' },
+        { text: this.$t('Edited By'), value: 'editedby' },
         {
-          text: 'Actions',
+          text: this.$t('Actions'),
           align: 'start',
           sortable: false,
           value: 'actions',
@@ -255,6 +278,7 @@ export default {
       ],
       chipforSubline: true,
       chipforStation: true,
+      chipforRecipe: true,
       visible: false,
       dialog: false,
       dialogDup: false,
@@ -289,6 +313,7 @@ export default {
   async created() {
     this.setExtendedHeader(true);
     await this.getRecipeListRecords('');
+    this.myloadingVariable = false;
   },
   async mounted() {
     this.$root.$on('filteredSubline', (data) => {
@@ -297,16 +322,31 @@ export default {
     this.$root.$on('filteredStation', (data) => {
       this.stations = data;
     });
+    this.$root.$on('filteredRecipe', (data) => {
+      this.recipesfilter = data;
+    });
+  },
+  updated() {
+    this.$root.$on('closeThechips', (data) => {
+      const success = data;
+      if (success) {
+        this.chipforSubline = false;
+        this.chipforStation = false;
+        this.chipforRecipe = false;
+      }
+    });
   },
   async beforeDestroy() {
-    // console.log('beforeDestroy');
     await this.btnReset();
     this.chipforSubline = false;
+    this.chipforStation = false;
+    this.chipforRecipe = false;
+    this.closeThechips = false;
   },
   computed: {
     ...mapState('recipeManagement', ['recipeList', 'stationList',
       'lineList', 'subLineList', 'filterLine', 'filterSubLine',
-      'filterStation', 'subStationList']),
+      'filterStation', 'subStationList', 'filterRecipe']),
     ...mapState('user', ['me']),
     userName: {
       get() {
@@ -315,7 +355,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions('recipeManagement', ['getRecipeListRecords', 'createRecipe', 'updateRecipe', 'deleteRecipeByRecipeNumber', 'btnReset', 'btnApply']),
+    /* ...mapActions('recipeManagement', ['getRecipeListRecords',
+    'createRecipe',
+    'updateRecipe',
+    'deleteRecipeByRecipeNumber',
+    'btnReset',
+    'btnApply']), */
     ...mapActions('recipeManagement',
       ['getRecipeListRecords',
         'createRecipe',
@@ -323,17 +368,13 @@ export default {
         'deleteRecipeByRecipeNumber',
         'getSubLines',
         'getStations',
-        'getSubStations']),
+        'getSubStations',
+        'btnReset',
+        'btnApply',
+        'getRecipeInUse',
+      ]),
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
-    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation']),
-    showFilter: {
-      get() {
-        return this.filter;
-      },
-      set(val) {
-        this.setFilter(val);
-      },
-    },
+    ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine', 'setFilterSubLine', 'setFilterStation', 'setFilterRecipe']),
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;
       await this.getSubLines(query);
@@ -351,25 +392,38 @@ export default {
       this.flagNewUpdate = false;
     },
     async RefreshUI() {
+      this.myloadingVariable = true;
       let param = '';
-      if (this.sublines && !this.stations) {
+      if (this.sublines && !this.stations && !this.recipesfilter) {
         param += `?query=sublineid=="${this.sublines.id || null}"`;
       }
-      if (this.stations && !this.sublines) {
+      if (this.stations && !this.sublines && !this.recipesfilter) {
         param += `?query=stationid=="${this.stations.id || null}"`;
       }
+      if (this.recipesfilter && !this.sublines && !this.stations) {
+        param += `?query=recipenumber=="${this.recipesfilter.recipenumber || null}"`;
+      }
       if (this.sublines && this.stations) {
-        param += `?query=sublineid=="${this.sublines.id}%26%26stationid==${this.stations.id}"`;
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"`;
+      }
+      if (this.stations && this.recipesfilter) {
+        param += `?query=stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
+      }
+      if (this.sublines && this.stations && this.recipesfilter) {
+        param += `?query=sublineid=="${this.sublines.id}"%26%26stationid=="${this.stations.id}"%26%26recipenumber=="${this.recipesfilter.recipenumber}"`;
       }
       await this.getRecipeListRecords(param);
+      this.myloadingVariable = false;
     },
     handleClick(value) {
-      console.log(value);
       this.$router.push({
         name: 'recipe-details',
         params: {
           id: value.recipenumber,
+          versionnumber: value.versionnumber,
+          lineid: value.lineid,
           linename: value.linename,
+          sublineid: value.sublineid,
           sublinename: value.sublinename,
           substationname: value.substationname,
           recipename: value.recipename,
@@ -457,30 +511,46 @@ export default {
       this.$refs.addUpdateRecipe.recipe.recipename = item.recipename;
       this.$refs.addUpdateRecipe.input.stationname = item.stationname;
       this.$refs.addUpdateRecipe.input.substationname = item.substationname;
+      this.$refs.addUpdateRecipe.input.substationid = item.substationid;
       this.recipes = [];
+      this.getSubLines('');
+      this.getStations('');
+      this.getSubStations('');
     },
     deleteRecipe(item) {
       this.dialogConfirm = true;
       this.itemForDelete = item;
       this.recipes = [];
     },
-    fnDeleteOnYes() {
+    async fnDeleteOnYes() {
       let deleted = false;
-      deleted = this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
-      if (deleted) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'RECIPE_RECORD_DELETED',
-        });
-        this.dialogConfirm = false;
-        this.recipes = {};
-      } else {
+      const query = `?query=recipenumber=="${this.itemForDelete.recipenumber}"`;
+      const recipeInUse = await this.getRecipeInUse(query);
+      if (recipeInUse) {
+        // TODO - enhancement - pass product name in message
         this.setAlert({
           show: true,
           type: 'error',
-          message: 'ERROR_DELETING_RECIPE',
+          message: 'RECIPE_IN_USE',
         });
+        this.dialogConfirm = false;
+      } else {
+        deleted = await this.deleteRecipeByRecipeNumber(this.itemForDelete.recipenumber);
+        if (deleted) {
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'RECIPE_RECORD_DELETED',
+          });
+          this.dialogConfirm = false;
+          this.recipes = {};
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ERROR_DELETING_RECIPE',
+          });
+        }
       }
       this.dialogConfirm = false;
     },
@@ -572,28 +642,17 @@ export default {
     //   }
     // },
     async btnReset() {
+      this.myloadingVariable = true;
       await this.getRecipeListRecords('');
+      this.myloadingVariable = false;
       // this.setRecipeList(this.filterBList);
-      this.sublines = [];
-      this.stations = [];
-      this.setFilterSubLine(this.sublines);
-      this.setFilterStation(this.stations);
+      this.sublines = '';
+      this.stations = '';
+      this.recipesfilter = '';
+      this.setFilterSubLine('');
+      this.setFilterStation('');
+      this.setFilterRecipe('');
     },
-  },
-  async btnApply() {
-    if (this.sublines != null) {
-      this.setFilterSubLine(this.sublines);
-      const newarray = this.filterBList.filter((o) => o.subline === this.sublines.name);
-      this.setRecipeList(newarray);
-      if (this.stations != null) {
-        this.setFilterStation(this.stations);
-        this.setRecipeList(this.newarray.filter((o) => o.machinename === this.stations.name));
-      }
-    } else if (this.stations != null) {
-      this.setFilterStation(this.stations);
-      this.setRecipeList(this.filterBList.filter((o) => o.machinename === this.stations.name));
-    }
-    this.toggleFilter();
   },
 };
 </script>

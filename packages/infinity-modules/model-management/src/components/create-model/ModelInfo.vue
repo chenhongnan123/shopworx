@@ -27,6 +27,23 @@
            'Description must be less than 200 characters']"
         :counter="200"
       ></v-textarea>
+      <v-autocomplete
+            clearable
+            class="ml-8"
+            label="Select Model Type"
+            :items="modelTypeList"
+            return-object
+            item-text="name"
+            v-model="selectedModelType"
+            :loading="loadingProducts"
+            required
+            >
+            <template v-slot:item="{ item }">
+                <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+            </template>
+          </v-autocomplete>
       <div class="caption">*Required field</div>
     </v-card-text>
     <v-divider></v-divider>
@@ -72,19 +89,24 @@ export default {
     return {
       name: '',
       description: '',
+      selectedModelType: null,
       isValid: false,
       saving: false,
       savingAndClosing: false,
     };
   },
+  async created() {
+    await this.getModelTypeList();
+  },
   computed: {
     ...mapState('modelManagement', [
       'models',
+      'modelTypeList',
     ]),
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapActions('modelManagement', ['createNewModel']),
+    ...mapActions('modelManagement', ['createNewModel', 'getModelTypeList']),
     clear() {
       this.name = '';
       this.description = '';
@@ -100,11 +122,21 @@ export default {
       let flag = false;
       const checkNames = this.models.filter((f) => f.name === this.name);
       if (checkNames.length === 0) {
-        const payload = {
-          modelname: this.name,
-          modeldescription: this.description,
-        };
-        flag = this.createNewModel(payload);
+        let payload = {};
+        if (this.selectedModelType) {
+          payload = {
+            modelname: this.name,
+            modeldescription: this.description,
+            modeltype: this.selectedModelType.name,
+          };
+          flag = this.createNewModel(payload);
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'MODEL_TYPE_REQUIRED',
+          });
+        }
       } else {
         flag = false;
         this.setAlert({

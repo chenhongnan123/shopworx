@@ -1,0 +1,75 @@
+{
+  "solution": {
+    "name": "维保方案",
+    "main": {
+      "header": {
+        "id": "维保方案号",
+        "name": "维保方案名",
+        "type": "维保方案类型",
+        "version": "版本",
+        "editedby": "编辑者",
+        "editedtime": "编辑时间",
+        "createdby": "创建者",
+        "createdtime": "创建时间"
+      },
+      "dialogtitle": " 创建维保方案"
+    },
+    "filter": {
+      "title": "维保方案筛选"
+    },
+    "general": {
+      "line": "生产线",
+      "subline": "子线",
+      "apply": "应用",
+      "reset": "重置",
+      "selectall": "全选",
+      "selectnone": "全不选",
+      "search": "搜索",
+      "yes": "是",
+      "save": "保存",
+      "cancel": "取消",
+      "department": "部门",
+      "position": "职位",
+      "add": "添加",
+      "edit": "编辑",
+      "delete": "删除",
+      "refresh": "刷新",
+      "export": "导出",
+      "exportsample": "导出模板",
+      "import": "导入",
+      "filter": "筛选",
+      "confirmheader": "请确认",
+      "confirmmessage": "您确认删除所选项目吗 ?",
+      "noselected": "未选择",
+      "selected": "已选择",
+      "include": "包含",
+      "exclude": "排除",
+      "allinclude": "包含所有",
+      "allexclude": "排除所有",
+      "download": "下载",
+      "loading": "加载中",
+      "close": "关闭",
+      "value": "定量",
+      "attr": "定性"
+    },
+    "solutiondetail": "维保方案详情",
+    "basic": {
+      "title": "维保方案基础信息",
+      "name": "维保方案名",
+      "type": "类型",
+      "version": "版本"
+    },
+    "detaillist": {
+      "title": "维保方案详情列表",
+      "dialogtitle": "创建维保方案详情",
+      "name": "名称*",
+      "group": "组别*",
+      "type": "类型*",
+      "lower": "下限*",
+      "upper": "上限*",
+      "description": "描述",
+      "image": "图片",
+      "limited": "是否自动判断结果"
+    }
+  }
+}

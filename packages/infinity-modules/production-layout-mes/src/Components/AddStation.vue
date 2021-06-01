@@ -119,10 +119,11 @@ export default {
       name: '',
       numbers: '',
       plcipaddress: '',
-      numberRules: [(v) => v.length > 0 || 'number required',
+      numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
       nameRules: [(v) => !!v || 'Name required',
-        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters'],
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
       plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
@@ -155,17 +156,20 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayoutMes', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
     async comapareDates(item) {
+      this.newStation.usagestartdate = '';
       const fromdate = this.newStation.manufacturingdate;
       const todate = item;
       const from = new Date(fromdate);
       const to = new Date(todate);
       if (to < from) {
-        this.newStation.usagestartdate = '';
         this.setAlert({
           show: true,
           type: 'error',
           message: 'GREATER_DATE',
         });
+        this.valid = false;
+      } else {
+        this.valid = true;
       }
     },
     async saveStation() {

@@ -11,7 +11,7 @@
         color="primary"
         class="text-none ml-2"
       >
-        Reports
+        {{ $t('reportsLabel') }}
         <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
       </v-btn>
     </template>

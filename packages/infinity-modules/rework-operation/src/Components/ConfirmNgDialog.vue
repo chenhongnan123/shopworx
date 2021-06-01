@@ -66,7 +66,13 @@ export default {
         'setPartStatusList',
         'setSelectedReworkRoadmap',
       ]),
-    ...mapActions('reworkOperation', ['updateOverAllResultPartStatus', 'updateOverAllResult', 'updateComponentById']),
+    ...mapActions('reworkOperation',
+      ['updateOverAllResultPartStatus',
+        'updateOverAllResult',
+        'updateComponentById',
+        'deletePartStatus',
+        'createOrUpdateManidStore',
+      ]),
     async checkMainId() {
       if (this.rework.enterManinId) {
         this.dialog = true;
@@ -89,31 +95,51 @@ export default {
       };
       // console.log(payloadRework);
       await this.updateOverAllResult(payloadRework);
-      const payload = {
-        query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
-        payload: {
-          overallresult: 2,
-        },
-      };
-      // console.log(payload);
-      await this.updateOverAllResultPartStatus(payload);
+      const { productname, mainid, ordernumber } = this.rework.reworkinfo[0];
+      if (productname === '49180-04900') {
+        // Delete PartStatus
+        await this.deletePartStatus(mainid);
+        // Store Mainid
+        const payloadMainidstore = {
+          payload: {
+            mainid,
+            ordernumber,
+            status: 0,
+          },
+          query: `?query=mainid=="${mainid}"%26%26ordernumber=="${ordernumber}"`,
+        };
+        await this.createOrUpdateManidStore({
+          payload: payloadMainidstore,
+        });
+      } else {
+        const payload = {
+          query: `?query=mainid=="${this.rework.enterManinId}"&pagesize=1`,
+          payload: {
+            overallresult: 2,
+          },
+        };
+        // console.log(payload);
+        await this.updateOverAllResultPartStatus(payload);
+      }
       this.componantList.forEach(async (element) => {
         const payloadComponent = {
           query: element._id,
           payload: {
             qualitystatus: element.qualitystatus,
+            isbind: element.isbind,
           },
         };
         await this.updateComponentById(payloadComponent);
       });
       this.dialog = false;
+      // eslint-disable-next-line vue/no-mutating-props
       this.rework = [];
       this.setDisableSave(false);
       this.setSingleNgCodeConfig([]);
       this.setComponentList([]);
       this.setRoadmapDetailsList([]);
       this.setPartStatusList([]);
-      this.setSelectedReworkRoadmap({});
+      this.setSelectedReworkRoadmap(null);
     },
   },
 };

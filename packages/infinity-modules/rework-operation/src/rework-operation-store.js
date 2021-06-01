@@ -20,6 +20,7 @@ export default ({
     roadmapList: [],
     roadmapDetailsList: [],
     selectedReworkRoadmap: {},
+    parameterList: [],
   },
   mutations: {
     toggleFilter: toggle('filter'),
@@ -40,8 +41,21 @@ export default ({
     setRoadmapList: set('roadmapList'),
     setRoadmapDetailsList: set('roadmapDetailsList'),
     setSelectedReworkRoadmap: set('selectedReworkRoadmap'),
+    setParametersList: set('parameterList'),
   },
   actions: {
+    getParametersList: async ({ dispatch, commit }, query) => {
+      const part = await dispatch(
+        'element/getRecords',
+        {
+          elementName: 'parameters',
+          query,
+        },
+        { root: true },
+      );
+      commit('setParametersList', part);
+      return part;
+    },
     getReworkRoadmapDetails: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
         'element/getRecords',
@@ -205,17 +219,19 @@ export default ({
           c.qualitystatus = 4;
         }
         if (c.qualitystatus === 2) {
-          c.qualitystatus = 3;
+          c.qualitystatus = 4;
         }
         if (c.qualitystatus === 0) {
           c.qualitystatus = 4;
+        }
+        if (!c.isbind) {
+          c.isbind = 1;
         }
         return {
           ...c,
           checkquality,
         };
       });
-      console.log(component);
       commit('setComponentList', component);
       return true;
     },
@@ -270,7 +286,7 @@ export default ({
         }
         if (ngconfig.length) {
           const ngcodedesc = ngconfig
-            .filter((ng) => ng.id === item.checkoutngcode);
+            .filter((ng) => ng.ngcode === item.checkoutngcode);
           item.ngcodematch = ngcodedesc[0].ngdescription;
         }
       });
@@ -329,6 +345,43 @@ export default ({
       );
       commit('setroadMapsList', roadMaps);
       return true;
+    },
+    createOrUpdateManidStore: async ({ dispatch }, { payload }) => {
+      const created = await dispatch(
+        'element/upsertRecordByQuery',
+        {
+          elementName: 'mainidstore',
+          query: payload.query,
+          record: payload.payload,
+        },
+        { root: true },
+      );
+      if (created) {
+        return true;
+      }
+      return false;
+    },
+    deletePartStatus: async ({ dispatch }, mainid) => {
+      const deleteParameter = await dispatch(
+        'element/deleteRecordByQuery',
+        {
+          elementName: 'partstatus',
+          queryParam: `?query=mainid=="${mainid}"`,
+        },
+        { root: true },
+      );
+      return deleteParameter;
+    },
+    deleteRecord: async ({ dispatch }, { id, name }) => {
+      const deleteBomdetail = await dispatch(
+        'element/deleteRecordById',
+        {
+          elementName: name,
+          id,
+        },
+        { root: true },
+      );
+      return deleteBomdetail;
     },
   },
 });

@@ -3,7 +3,7 @@
     v-model="dialog"
     scrollable
     persistent
-    max-width="500px"
+    max-width="650px"
     transition="dialog-transition"
   >
     <template #activator="{ on, attrs }" v-if="!isDashboardView">
@@ -93,7 +93,7 @@ export default {
     async dialog(val) {
       if (val) {
         this.loading = true;
-        await this.fetchModelDetails(this.model.model_id);
+        await this.fetchModelDetails(this.model.modelid);
         this.loading = false;
       }
     },

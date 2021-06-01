@@ -5,7 +5,7 @@
       dense
       :color="$vuetify.theme.dark ? '#121212': ''"
     >
-      <template v-if="isCalendarView">
+      <template v-if="isCalendarView && !isMobile">
         <v-btn
           class="text-none"
           color="primary"
@@ -13,7 +13,7 @@
           small
           @click="setToday"
         >
-          Today
+          {{ $t('planning.today') }}
         </v-btn>
         <v-btn
           icon
@@ -33,7 +33,7 @@
           {{ calendarRef.title }}
         </span>
       </template>
-      <span class="title" v-else>
+      <span class="title" v-else-if="!isMobile">
         {{ date }}
       </span>
       <v-spacer></v-spacer>
@@ -44,17 +44,18 @@
         :to="{ name: 'addProductionPlan' }"
       >
         <v-icon left small>mdi-plus</v-icon>
-        Add new plan
+        {{ $t('planning.addPlan') }}
       </v-btn>
       <v-btn
         small
         outlined
         color="primary"
+        v-if="!isMobile"
         :to="{ name: 'reorderPlans' }"
         class="text-none mr-2"
       >
         <v-icon left small>mdi-swap-vertical</v-icon>
-        Re-order plans
+        {{ $t('planning.reorderPlans') }}
       </v-btn>
       <v-menu bottom right>
         <template #activator="{ on, attrs }">
@@ -66,22 +67,22 @@
             v-bind="attrs"
             v-on="on"
           >
-            <span>{{ typeToLabel[viewType] }}</span>
+            <span>{{ $t(`planning.${typeToLabel[viewType]}`) }}</span>
             <v-icon right v-text="'mdi-menu-down'"></v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item @click="viewType = 'default'">
-            <v-list-item-title>List</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.list') }}</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="viewType = 'month'">
-            <v-list-item-title>Month</v-list-item-title>
+          <v-list-item v-if="!isMobile" @click="viewType = 'month'">
+            <v-list-item-title>{{ $t('planning.month') }}</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="viewType = 'week'">
-            <v-list-item-title>Week</v-list-item-title>
+          <v-list-item v-if="!isMobile" @click="viewType = 'week'">
+            <v-list-item-title>{{ $t('planning.week') }}</v-list-item-title>
           </v-list-item>
           <v-list-item @click="viewType = 'day'">
-            <v-list-item-title>Day</v-list-item-title>
+            <v-list-item-title>{{ $t('planning.day') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -100,7 +101,7 @@
           @click="toggleDrawer(true)"
         >
           <v-icon small left>mdi-filter-variant</v-icon>
-          Filters
+          {{ $t('planning.filters') }}
         </v-btn>
       </v-badge>
     </v-toolbar>
@@ -116,10 +117,10 @@ export default {
   data() {
     return {
       typeToLabel: {
-        default: 'List',
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
+        default: 'list',
+        month: 'month',
+        week: 'week',
+        day: 'day',
       },
     };
   },
@@ -130,7 +131,11 @@ export default {
       'today',
       'calendarRef',
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.xsOnly;
+    },
     ...mapGetters('webApp', ['filters']),
+    ...mapGetters('helper', ['locale']),
     ...mapGetters('productionPlanning', ['isCalendarView']),
     viewType: {
       get() {
@@ -156,11 +161,19 @@ export default {
     date() {
       let dateText = '';
       if (this.filters && this.filters.date && this.filters.date.value) {
-        const start = formatDate(new Date(this.filters.date.value[0]), 'PP');
+        const start = formatDate(
+          new Date(this.filters.date.value[0]),
+          'PP',
+          { locale: this.locale },
+        );
         dateText = start;
         let end = '';
         if (this.filters.date.value.length === 2) {
-          end = formatDate(new Date(this.filters.date.value[1]), 'PP');
+          end = formatDate(
+            new Date(this.filters.date.value[1]),
+            'PP',
+            { locale: this.locale },
+          );
         }
         dateText = `${start} - ${end}`;
       }

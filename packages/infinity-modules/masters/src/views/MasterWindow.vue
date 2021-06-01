@@ -14,7 +14,7 @@
             small
             v-text="'mdi-plus'"
           ></v-icon>
-          Add new
+          {{ $t('addNew') }}
         </v-btn>
         <v-btn
           small
@@ -23,20 +23,10 @@
           class="text-none"
           @click="saveNewEntry"
           :class="'ml-2'"
+          v-if="showSaveBtn"
         >
-          Save
+          {{ $t('save') }}
         </v-btn>
-        <!-- <v-btn
-          small
-          outlined
-          color="success"
-          class="text-none"
-          @click="updateValueFun"
-          :class="'ml-2'"
-          v-if="showUpdateBtn"
-        >
-          Update
-        </v-btn> -->
         <v-btn
           small
           outlined
@@ -44,8 +34,9 @@
           class="text-none"
           @click="deleteEntry"
           :class="'ml-2'"
+          v-if="showDeleteBtn"
         >
-          Delete
+          {{ $t('delete') }}
         </v-btn>
         <v-btn
           small
@@ -55,7 +46,7 @@
           @click="refreshUi"
         >
           <v-icon small v-text="'mdi-refresh'" left></v-icon>
-          Refresh
+          {{ $t('refresh') }}
         </v-btn>
         <v-btn
           small
@@ -65,9 +56,36 @@
           @click="onBtnExport"
         >
           <v-icon small v-text="'$download'" left></v-icon>
-          Export
-          <v-icon small v-text="'mdi-chevron-down'" right></v-icon>
+          {{ $t('export') }}
         </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="downloadSample"
+        >
+          <v-icon small v-text="'$download'" left></v-icon>
+          {{ $t('downloadCSV') }}
+        </v-btn>
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="text-none ml-2"
+          @click="uploadFile"
+        >
+          <v-icon small v-text="'$upload'" left></v-icon>
+          {{ $t('Import') }}
+        </v-btn>
+        <input
+          type="file"
+          accept=".csv"
+          ref="uploader"
+          class="d-none"
+          id="uploadFiles"
+          @change="onFilesChanged"
+        >
       </span>
     </portal>
     <v-tabs
@@ -80,24 +98,25 @@
         class="text-none"
         v-for="asset in getAssets(id)"
       >
-        <span v-text="asset.assetDescription"></span>
-      </v-tab>
-      <v-tab-item
-        :key="asset.id"
-        v-for="asset in getAssets(id)"
-      >
-        <base-master
-          :assetId="asset.id"
-          :id="id"
-          ref="base"
-        />
-      </v-tab-item>
+      <span v-text="$t(asset.assetName)"></span>
+    </v-tab>
     </v-tabs>
-    <base-master
-      v-else
+     <base-master
+      :assetId="assetId"
       :id="id"
       ref="base"
-      @showupdatebtnemt="visibleUpdateBtn"
+      :fetchData="fetchData"
+      @savebtnshow="visibleSaveBtn"
+      @deletebtnshow="visibleDeleteBtn"
+      @on-fetch="fetchedData"
+    />
+    <import-master-data
+      ref="importer"
+      :id="id"
+      :assetId="assetId"
+      :records="tags"
+      @on-imported="refreshUi"
+      @on-close-dialog="resetForm"
     />
   </div>
 </template>
@@ -105,103 +124,126 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import BaseMaster from '../components/BaseMaster.vue';
+import ImportMasterData from '../components/import/ImportMasterData.vue';
 
 export default {
   name: 'MasterWindow',
   components: {
     BaseMaster,
+    ImportMasterData,
   },
   data() {
     return {
       base: '',
       tab: 0,
       showUpdateBtn: false,
+      showSaveBtn: false,
+      showDeleteBtn: false,
+      fetchData: false,
     };
   },
   mounted() {
     this.base = this.$refs.base;
   },
+  computed: {
+    ...mapGetters('masters', ['showTabs', 'getAssets', 'getTags']),
+    id() {
+      return this.$route.params.id;
+    },
+    assetId() {
+      return this.showTabs(this.id) ? this.getAssets(this.id)[this.tab].id : 0;
+    },
+    tags() {
+      return this.getTags(this.id, this.assetId);
+    },
+  },
+  watch: {
+    id() {
+      this.tab = 0;
+      this.fetchingData();
+    },
+    tab() {
+      this.fetchingData();
+    },
+  },
   methods: {
-    ...mapActions('masters', ['postBulkRecords', 'deleteRecord']),
+    ...mapActions('masters', ['deleteRecord']),
     ...mapMutations('helper', ['setAlert']),
+    fetchingData() {
+      this.fetchData = true;
+      this.$emit('fetching', true);
+    },
+    fetchedData() {
+      this.fetchData = false;
+      this.$emit('fetching', false);
+    },
     visibleUpdateBtn(value) {
       this.showUpdateBtn = value;
+    },
+    visibleSaveBtn(value) {
+      this.showSaveBtn = value;
+    },
+    visibleDeleteBtn(value) {
+      this.showDeleteBtn = value;
     },
     addNewEntry() {
       this.base.addRow();
     },
     async deleteEntry() {
-      if (this.base.gridApi.getSelectedRows()) {
-        const selectedRow = this.base.gridApi.getSelectedRows();
-        const name = this.id;
-        let deleted = '';
-        await Promise.all([
-          selectedRow.forEach((row) => {
-            const id = row._id;
-            deleted = this.deleteRecord({ id, name });
-          }),
-        ]);
-        if (deleted) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'DELETE_RECORD',
-          });
-          this.base.deleteSelectedRows();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_DELETE_RECORD',
-          });
-        }
-      }
-    },
-    async saveNewEntry() {
-      if (this.base.updateData.length > 0) {
-        this.base.updateValue();
-      } else {
-        const name = this.id;
-        const payload = [];
-        this.base.rowData.forEach((data) => {
-          if (!data.elementName) {
-            payload.push({
-              ...data,
-              assetid: 4,
+      if (await this.$root.$confirm.open(
+        'Delete record(s)',
+        'Are you you want to delete?',
+      )) {
+        if (this.base.gridApi.getSelectedRows()) {
+          const selectedRow = this.base.gridApi.getSelectedRows();
+          const name = this.id;
+          let deleted = '';
+          await Promise.all([
+            selectedRow.forEach((row) => {
+              // eslint-disable-next-line
+              const id = row._id;
+              deleted = this.deleteRecord({ id, name });
+            }),
+          ]);
+          if (deleted) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'DELETE_RECORD',
+            });
+            this.base.deleteSelectedRows();
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ERROR_DELETE_RECORD',
             });
           }
-        });
-        const postData = await this.postBulkRecords({ payload, name });
-        if (postData) {
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'CREATED_RECORD',
-          });
-          this.base.fetchRecords();
-        } else {
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'ERROR_CREATING_RECORD',
-          });
+          this.base.newData = [];
+          this.showSaveBtn = false;
         }
       }
     },
-    updateValueFun() {
-      this.base.updateValue();
+    saveNewEntry() {
+      this.base.saveModifiedRecords();
     },
     onBtnExport() {
       this.base.exportData();
     },
-    refreshUi() {
-      this.base.fetchRecords();
+    downloadSample() {
+      this.base.downloadSampleCSV();
     },
-  },
-  computed: {
-    ...mapGetters('masters', ['showTabs', 'getAssets']),
-    id() {
-      return this.$route.params.id;
+    refreshUi() {
+      this.base.refreshData();
+    },
+    uploadFile() {
+      this.$refs.uploader.click();
+    },
+    resetForm() {
+      this.$refs.uploader.value = null;
+    },
+    onFilesChanged(e) {
+      this.$refs.importer.importCSV(e);
     },
   },
 };

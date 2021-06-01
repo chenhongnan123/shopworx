@@ -125,19 +125,19 @@
         <template v-slot:item.boundsublinename="{ item }">
          <v-select
           label="-"
-          :items="sublineList"
+          :items="sublineOptions"
           :disabled="saving"
           return-object
           solo
           dense
           depressed
           item-text="name"
-          v-model="item.stationSelected"
+          v-model="item.boundsublinename"
           @change="chanageStation(item)"
         >
           <template v-slot:item="{ item }">
             <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
+              <v-list-item-title  v-text="item.name"></v-list-item-title>
             </v-list-item-content>
           </template>
          </v-select>
@@ -454,17 +454,16 @@ export default {
     // configurationLogic() {
     // },
     async chanageStation(item) {
-      const { stationSelected } = item;
+      const { boundsublinename } = item;
       // const substationItem = this.substationList
       //   .filter((substation) => stationSelected === substation.name)[0];
       let payload;
-      if (stationSelected.name !== '-') {
+      if (boundsublinename.name !== '-') {
         payload = {
           id: item._id,
           payload: {
-            stationSelected,
-            boundsublinename: stationSelected.name,
-            boundsublineid: stationSelected.id,
+            boundsublinename: boundsublinename.name,
+            boundsublineid: boundsublinename.id,
           },
         };
       } else {
@@ -472,7 +471,6 @@ export default {
         payload = {
           id: item._id,
           payload: {
-            stationSelected,
             boundsublinename: '',
             boundsublineid: '',
           },
@@ -720,6 +718,15 @@ export default {
       'subStations',
     ]),
     ...mapState('materialManagement', ['materialList', 'materialListChoice']),
+    sublineOptions: {
+      get() {
+        const options = [{
+          name: '-',
+        }];
+        options.push(...this.sublineList);
+        return options;
+      },
+    },
   },
   props: ['query'],
 };

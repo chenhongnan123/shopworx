@@ -12,7 +12,7 @@
         class="text-none ml-2"
       >
         <v-icon small left>mdi-cloud-download-outline</v-icon>
-        Export
+        {{ $t('export') }}
         <v-icon small right v-text="'mdi-chevron-down'"></v-icon>
       </v-btn>
     </template>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'ExportReport',
   data() {
@@ -47,8 +49,52 @@ export default {
           value: 'gridExcel',
           icon: 'mdi-file-excel-outline',
         },
+        {
+          name: 'PDF',
+          value: 'pdf',
+          icon: 'mdi-file-pdf-outline',
+        },
       ],
     };
+  },
+  computed: {
+    ...mapState('reports', ['isPDFVisible']),
+  },
+  watch: {
+    isPDFVisible(val) {
+      if (!val) {
+        this.exportTypes = [
+          {
+            name: 'CSV',
+            value: 'gridCSV',
+            icon: 'mdi-file-delimited-outline',
+          },
+          {
+            name: 'Excel',
+            value: 'gridExcel',
+            icon: 'mdi-file-excel-outline',
+          },
+        ];
+      } else {
+        this.exportTypes = [
+          {
+            name: 'CSV',
+            value: 'gridCSV',
+            icon: 'mdi-file-delimited-outline',
+          },
+          {
+            name: 'Excel',
+            value: 'gridExcel',
+            icon: 'mdi-file-excel-outline',
+          },
+          {
+            name: 'PDF',
+            value: 'pdf',
+            icon: 'mdi-file-pdf-outline',
+          },
+        ];
+      }
+    },
   },
   methods: {
     exportReport(type) {

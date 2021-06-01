@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="12" align="center">
         <span class="headline">
-          No production record for selected date and shift.
+          {{ $t('noRecordsProduction') }}
         </span>
       </v-col>
     </v-row>

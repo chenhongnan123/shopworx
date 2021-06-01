@@ -12,7 +12,8 @@ export default ({
     getLabelFile: async ({ dispatch }) => {
       const data = await dispatch(
         'file/getFile',
-        '/lingzhong.prn',
+        // '/lingzhong.prn',
+        '/infinity/lingzhong.prn',
         { root: true },
       );
       if (data) {
@@ -75,12 +76,60 @@ export default ({
       }
       return [];
     },
+    getPartStatus: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'partstatus', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
+    getNgConfig: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'ngcodeconfig', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
     updatePackageRecord: async ({ dispatch }, postData) => {
       const { id, payload } = postData;
       const putPackageRecord = await dispatch(
         'element/updateRecordById',
         {
           elementName: 'package',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return putPackageRecord;
+    },
+    updatePartStatus: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
+      const putPartstatus = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'partstatus',
+          id,
+          payload,
+        },
+        { root: true },
+      );
+      return putPartstatus;
+    },
+    updatePackageLabelRecord: async ({ dispatch }, postData) => {
+      const { id, payload } = postData;
+      const putPackageRecord = await dispatch(
+        'element/updateRecordById',
+        {
+          elementName: 'packagelabel',
           id,
           payload,
         },
@@ -100,6 +149,31 @@ export default ({
         { root: true },
       );
       return putLabelRule;
+    },
+    getOrderList: async ({ dispatch }, query) => {
+      const list = await dispatch(
+        'element/getRecords',
+        { elementName: 'order', query },
+        { root: true },
+      );
+      if (list) {
+        return list;
+      }
+      return [];
+    },
+    addRework: async ({ dispatch }, payload) => {
+      const result = await dispatch(
+        'element/postRecord',
+        {
+          elementName: 'rework',
+          payload,
+        },
+        { root: true },
+      );
+      if (result) {
+        return true;
+      }
+      return false;
     },
   },
 });

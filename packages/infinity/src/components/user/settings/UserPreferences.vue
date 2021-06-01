@@ -9,7 +9,7 @@
         item-text="text"
         item-value="value"
         autocomplete="language"
-        v-model="currentLocale"
+        v-model="locale"
         prepend-icon="$locale"
         :label="$t('user.preferences.language')"
       ></v-select>
@@ -23,18 +23,40 @@
         :label="$t('user.preferences.darkMode')"
       ></v-switch>
     </v-card-text>
+    <v-card-title class="px-0 py-0 pt-2">
+      {{ $t('user.preferences.avatar') }}
+    </v-card-title>
+    <v-card-text class="py-0">
+      <v-radio-group row v-model="selectedAvatar">
+        <v-radio
+          v-for="avatar in avatars"
+          :key="avatar"
+          :value="avatar"
+        >
+          <template #label>
+            <avatar
+              :name="fullName"
+              :variant="avatar"
+              :size="36"
+            />
+          </template>
+        </v-radio>
+      </v-radio-group>
+    </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import LocaleService from '@shopworx/services/util/locale.service';
 import UserAvatar from '@/components/user/settings/UserAvatar.vue';
+import Avatar from '@shopworx/ui-components/avatars/Avatar.vue';
 
 export default {
   name: 'UserPreferences',
   components: {
     UserAvatar,
+    Avatar,
   },
   data() {
     return {
@@ -44,14 +66,33 @@ export default {
     };
   },
   computed: {
-    ...mapState('helper', ['locales', 'isDark']),
-    currentLocale: {
+    ...mapState('helper', [
+      'locales',
+      'avatars',
+      'isDark',
+      'currentLocale',
+      'currentAvatar',
+    ]),
+    ...mapGetters('user', [
+      'fullName',
+    ]),
+    locale: {
       get() {
-        return this.$i18n.locale;
+        this.setCurrentLocale(this.$i18n.locale);
+        return this.currentLocale;
       },
       set(val) {
         this.$i18n.locale = val;
         LocaleService.setLocale(val);
+        this.setCurrentLocale(val);
+      },
+    },
+    selectedAvatar: {
+      get() {
+        return this.currentAvatar;
+      },
+      set(val) {
+        this.setCurrentAvatar(val);
       },
     },
     darkMode: {
@@ -64,7 +105,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('helper', ['toggleIsDark']),
+    ...mapMutations('helper', [
+      'toggleIsDark',
+      'setCurrentLocale',
+      'setCurrentAvatar',
+    ]),
   },
 };
 </script>

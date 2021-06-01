@@ -43,7 +43,7 @@
           small color="primary" outlined class="text-none ml-2" @click="MovetoTop">
             Move to Top
           </v-btn>
-          <v-btn small color="primary" outlined class="text-none ml-2" @click="toggleFilter">
+          <v-btn small color="primary" outlined class="text-none ml-2" @click="filterClick">
             <v-icon small left>mdi-filter-variant</v-icon>
             {{ $t('Filter') }}
           </v-btn>
@@ -228,7 +228,7 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('orderManagement', ['setAddPlanDialog', 'toggleFilter']),
+    ...mapMutations('orderManagement', ['setAddPlanDialog', 'toggleFilter', 'setArchive']),
     showFilter: {
       get() {
         return this.filter;
@@ -249,6 +249,10 @@ export default {
     ...mapActions('orderManagement', ['getOrderListRecords', 'updateOrder', 'getHiddenOrderListRecords']),
     handleClick(value) {
       this.$router.push({ name: 'order-details', params: { id: value } });
+    },
+    filterClick() {
+      this.setArchive(false);
+      this.toggleFilter();
     },
     async RefreshUI() {
       await this.getHiddenOrderListRecords('');

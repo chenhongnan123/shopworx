@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid class="py-0" v-resize="setHeight">
     <portal to="app-extension">
       <v-row>
         <v-col cols="12" md="3">
@@ -187,14 +187,17 @@
       <v-col cols="12" md="12"> </v-col>
     </v-row>
     <v-data-table
+      v-if="parameterList.length"
       v-model="parameterSelected"
       :headers="headers"
       item-key="_id"
       :items="parameterList"
       :options="{ itemsPerPage: 5 }"
-      show-select
       fixed-header
-      :height="tableHeight - 168"
+      show-select
+      :height="height"
+      :loading="myLoadingVariable"
+      :loading-text="this.initialMessage"
     >
       <template v-slot:item.name="props">
         <v-edit-dialog
@@ -438,6 +441,8 @@ export default {
           name: 'ABPLC',
         },
       ],
+      initialMessage: 'Please select protocol',
+      myLoadingVariable: false,
       selectedProtocol: null,
       sampleDataBtn: true,
       parameterSelected: [],
@@ -446,9 +451,9 @@ export default {
       headersSnap7: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -463,9 +468,9 @@ export default {
       headersMelsec: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -479,9 +484,9 @@ export default {
       headerAbPlc: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
-        { text: 'subline', value: 'subline', width: 120 },
-        { text: 'station', value: 'station', width: 120 },
-        { text: 'substation', value: 'substation', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
         { text: 'Category', value: 'parametercategory' },
@@ -489,11 +494,13 @@ export default {
         { text: 'Size', value: 'size', width: 80 },
         { text: 'PLC Parameter', value: 'plc_parameter', width: 140 },
         { text: 'Prefix', value: 'prefix', width: 120 },
+        { text: 'Monitor', value: 'monitorvalue', width: 130 },
       ],
       parameterListSave: [],
       confirmDialog: false,
       socket: null,
       saving: false,
+      height: window.innerHeight,
     };
   },
   async created() {
@@ -502,6 +509,9 @@ export default {
     await this.getPageDataList();
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {});
+  },
+  mounted() {
+    this.setHeight();
   },
   destroyed() {
     this.setLineValue('');
@@ -551,44 +561,87 @@ export default {
   watch: {
     lineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        this.getParameterListRecords(`?query=protocol=="${this.protocol}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = false;
       }
     },
-    sublineValue(val) {
+    async sublineValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setStationValue('');
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    stationValue(val) {
+    async stationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
-    substationValue(val) {
+    async substationValue(val) {
       if (!val) {
+        this.myLoadingVariable = true;
         this.setSubstationValue('');
-        this.getParameterListRecords('?query=stationid==null');
+        // this.getParameterListRecords('?query=stationid==null');
+        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`);
+        this.myLoadingVariable = false;
       }
     },
     parameterList(parameterList) {
       this.parameterListSave = parameterList.map((item) => ({ ...item }));
     },
-    protocol(val) {
+    async protocol(val) {
       if (val === 'SNAP7') {
         this.headers = this.headersSnap7;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else if (val === 'MELSEC') {
         this.headers = this.headersMelsec;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else {
         this.headers = this.headerAbPlc;
-        this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
+        // this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
   },
@@ -621,10 +674,15 @@ export default {
       'downloadToPLC',
       'getSubStationIdElement',
       'getSubStationIdElement',
+      'getElementDetails',
       'createTagElement',
       'updateTagStatus',
     ]),
+    setHeight() {
+      this.height = window.innerHeight - 212;
+    },
     onSelectProtocol(value) {
+      this.initialMessage = 'Loading...please wait';
       this.setProtocol(value);
       if (this.protocol) {
         this.sampleDataBtn = false;
@@ -645,7 +703,8 @@ export default {
         return;
       }
       if (type === 'name') {
-        if (parameterListSave.some((parameter) => value === parameter.name)) {
+        if (parameterListSave.some((parameter) => value.toLowerCase().split(' ').join('')
+           === parameter.name.toLowerCase().split(' ').join(''))) {
           this.setAlert({
             show: true,
             type: 'error',
@@ -796,11 +855,26 @@ export default {
       await this.getSubStationIdElement(selectedSubStaionlist[0]);
       const listT = this.subStationElementDeatils;
       // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
-      const FilteredTags = listT.tags.map((obj) => ({
+      let FilteredTags = listT.tags.map((obj) => ({
         id: obj.id,
         elementId: obj.elementId,
       }));
-      const payloadData = [];
+      let payloadData = [];
+      FilteredTags.forEach(async (tag) => {
+        payloadData.push({
+          tagId: tag.id,
+          elementId: tag.elementId,
+          status: 'INACTIVE',
+        });
+      });
+      // on delete update the tags of traceability element
+      const listTags = await this.getElementDetails('traceability');
+      // const FilteredTags = listT.tags.map((t,e) => t.id, e.elementId);
+      FilteredTags = listTags.tags.map((obj) => ({
+        id: obj.id,
+        elementId: obj.elementId,
+      }));
+      payloadData = [];
       FilteredTags.forEach(async (tag) => {
         payloadData.push({
           tagId: tag.id,
@@ -872,11 +946,10 @@ export default {
       this.socket.on(
         `update_parameter_${object.lineid}_${object.sublineid}_${object.substationid}`,
         (data) => {
+          // console.log('event received');
           if (data) {
             this.parameterList.forEach((element) => {
-              if (data[element.name] || data[element.name] === 0) {
-                this.$set(element, 'monitorvalue', data[element.name]);
-              }
+              this.$set(element, 'monitorvalue', data[element.name]);
             });
           }
         },
@@ -1123,37 +1196,47 @@ export default {
       const files = e && e !== undefined ? e.target.files : null;
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
-      data.forEach((item) => {
-        item.lineid = this.lineValue;
-        item.sublineid = this.sublineValue;
-        item.stationid = this.stationValue;
-        item.substationid = this.substationValue;
-        if (this.stationList.length > 0) {
-          item.plcaddress = this.stationList
-            .filter((station) => this.stationValue === station.id)[0].plcipaddress;
-        }
-        if (this.datatypeList.length > 0) {
-          item.isbigendian = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
-             === 1;
-          item.isswapped = this.datatypeList
-            .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
-             === 1;
-          // if (Number(item.datatypeList) === 11) {
-          //   item.size = this.datatypeList
-          //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
-          // }
-          if (Number(item.datatype) !== 11) {
-            item.size = this.datatypeList
-              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+      if (data.length > 0) {
+        data.forEach((item) => {
+          item.lineid = this.lineValue;
+          item.sublineid = this.sublineValue;
+          item.stationid = this.stationValue;
+          item.substationid = this.substationValue;
+          if (this.stationList.length > 0) {
+            item.plcaddress = this.stationList
+              .filter((station) => this.stationValue === station.id)[0].plcipaddress;
           }
-        }
-        item.protocol = item.protocol.toUpperCase();
-        item.name = item.name.toLowerCase().trim();
-        item.assetid = 4;
-        delete item.monitorvalue;
-        delete item.status;
-      });
+          if (this.datatypeList.length > 0) {
+            item.isbigendian = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isbigendian
+              === 1;
+            item.isswapped = this.datatypeList
+              .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].isswapped
+              === 1;
+            // if (Number(item.datatypeList) === 11) {
+            //   item.size = this.datatypeList
+            //     .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            // }
+            if (Number(item.datatype) !== 11) {
+              item.size = this.datatypeList
+                .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].size;
+            }
+          }
+          item.protocol = item.protocol.toUpperCase();
+          item.name = item.name.toLowerCase().trim();
+          item.assetid = 4;
+          delete item.monitorvalue;
+          delete item.status;
+        });
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
       const dataList = data.concat(this.parameterList);
       const nameList = dataList.map((item) => item.name);
       if (new Set(nameList).size === nameList.length) {
@@ -1208,6 +1291,9 @@ export default {
         if (createResult) {
           await this.getParameterListRecords(this.getQuery());
           const tagList = [];
+          const traceabilityTagList = [];
+          // get information of traceability element
+          const traceabilityElementDetails = await this.getElementDetails('traceability');
           await this.getSubStationIdElement(this.substationValue);
           // add by default mainid
           tagList.push({
@@ -1287,27 +1373,83 @@ export default {
                 filterFromTagName: '',
                 filterQuery: '',
               });
-            }
-          });
-          await this.createTagElement(tagList);
-          const payloadData = [];
-          tagList.forEach((l) => {
-            const tag = this.createElementResponse
-              .filter((f) => f.tagName === l.tagName);
-            if (!tag[0].created) {
-              payloadData.push({
-                elementId: l.elementId,
-                tagId: tag[0].tagId,
-                status: 'ACTIVE',
+              // Add tags to Traceability element
+              traceabilityTagList.push({
+                assetId: 4,
+                tagName: `${this.substationValue}_${tagname.toLowerCase().trim()}`,
+                tagDescription: `${this.substationValue}_${item.name}`,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: traceabilityElementDetails.element.id,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
               });
             }
           });
-          await this.updateTagStatus(payloadData);
-          this.setAlert({
-            show: true,
-            type: 'success',
-            message: 'IMPORT_PARAMETER_LIST',
-          });
+          await this.createTagElement(tagList);
+          // TODO - Check response "this.createElementResponse"
+          if (this.createElementResponse && this.createElementResponse.length) {
+            let payloadData = [];
+            tagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            // updates tags of traceability elements
+            await this.createTagElement(traceabilityTagList);
+            payloadData = [];
+            traceabilityTagList.forEach((l) => {
+              const tag = this.createElementResponse
+                .filter((f) => f.tagName === l.tagName);
+              if (!tag[0].created) {
+                payloadData.push({
+                  elementId: l.elementId,
+                  tagId: tag[0].tagId,
+                  status: 'ACTIVE',
+                });
+              }
+            });
+            await this.updateTagStatus(payloadData);
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'IMPORT_PARAMETER_LIST',
+            });
+          } else {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ELEMENT_NOT_CREATED',
+            });
+          }
         }
         document.getElementById('uploadFiles').value = null;
       } else {

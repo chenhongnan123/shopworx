@@ -103,7 +103,7 @@ export default {
       this.setComponentList([]);
       this.setRoadmapDetailsList([]);
       this.setPartStatusList([]);
-      this.setSelectedReworkRoadmap({});
+      this.setSelectedReworkRoadmap(null);
     },
   },
 };

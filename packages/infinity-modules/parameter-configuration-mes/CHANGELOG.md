@@ -3,6 +3,139 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.3.2](https://bitbucket.org/entrib/shopworx/compare/v4.3.1...v4.3.2) (2021-05-18)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I497 | Parameter Configuration | While adding parameter through UI, protocol selection should not present in the popup ([0a5e2fb](https://bitbucket.org/entrib/shopworx/commits/0a5e2fb71fa2e431030cec702551aa7e14de69ab))
+* **parameter-configuration:** RA-I498 | Parameter Configuration | Filter is not working as expected ([21a3ada](https://bitbucket.org/entrib/shopworx/commits/21a3ada4433227bbba1ef4d941d9a3d9d833c12d))
+* **parameter-configuration:** RA-I499 | Line MES | Parameter Configuration | Data is not displaying according to selection of protocol ([81d0cfe](https://bitbucket.org/entrib/shopworx/commits/81d0cfebfb9d00e4f3d6de56f299c3bc5b62b46a))
+
+
+
+
+
+## [4.3.1](https://bitbucket.org/entrib/shopworx/compare/v4.3.0...v4.3.1) (2021-05-11)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+# [4.3.0](https://bitbucket.org/entrib/shopworx/compare/v4.2.12...v4.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** RA-I254 basic validation while creating Paramater through UI ([522564a](https://bitbucket.org/entrib/shopworx/commits/522564a43818ec4ab7870a3958da3de66cb6b601))
+* **parameter-configuration:** RA-I254 validation for parameter name length ([f55d068](https://bitbucket.org/entrib/shopworx/commits/f55d068d207bafc033e876a0f5ab2f5cc9ddc729))
+* **paramwter-configuration:** Line MES | Parameter configuration | Data types for every field in popup should be defined | RA-I127 ([57648a9](https://bitbucket.org/entrib/shopworx/commits/57648a985c57a3ec1eabc508b99e897f0bbb8b7f))
+
+
+### Features
+
+* **parameter-configuration:** add new parameter named 'customized parameter' with id 57 ([38eb543](https://bitbucket.org/entrib/shopworx/commits/38eb5435a4152d21244eba11e2160a0e6920e67f))
+
+
+
+
+
+## [4.2.12](https://bitbucket.org/entrib/shopworx/compare/v4.2.11...v4.2.12) (2021-04-27)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.11](https://bitbucket.org/entrib/shopworx/compare/v4.2.10...v4.2.11) (2021-04-20)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.10](https://bitbucket.org/entrib/shopworx/compare/v4.2.9...v4.2.10) (2021-04-14)
+
+
+### Features
+
+* **parameter-configuration:** RA-I556 ([ee3e85d](https://bitbucket.org/entrib/shopworx/commits/ee3e85da5da605614e7cccde177c9afb7e7377be))
+
+
+
+
+
+## [4.2.9](https://bitbucket.org/entrib/shopworx/compare/v4.2.8...v4.2.9) (2021-04-06)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.8](https://bitbucket.org/entrib/shopworx/compare/v4.2.7...v4.2.8) (2021-03-30)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.7](https://bitbucket.org/entrib/shopworx/compare/v4.2.6...v4.2.7) (2021-03-23)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.6](https://bitbucket.org/entrib/shopworx/compare/v4.2.5...v4.2.6) (2021-03-09)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.5](https://bitbucket.org/entrib/shopworx/compare/v4.2.4...v4.2.5) (2021-03-02)
+
+**Note:** Version bump only for package @shopworx/parameter-configuration-mes
+
+
+
+
+
+## [4.2.4](https://bitbucket.org/entrib/shopworx/compare/v4.2.3...v4.2.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* **parameter-config:** enable Export data button on selection of protocol ([a5efd05](https://bitbucket.org/entrib/shopworx/commits/a5efd052272cd1befe712cf33969379359369037))
+* **parameter-configuration:** problem while creating single parameter ([f980c9f](https://bitbucket.org/entrib/shopworx/commits/f980c9f9b013dcc9e24e39aa31fe3a1dd6b72b07))
+* **parameter-configuration:** RA-I398 with all points ([036077d](https://bitbucket.org/entrib/shopworx/commits/036077d1f23a8ab21930d9fd894ee552b4fb7772))
+* **parameter-configuration:** RA-I398 with point two and three ([cc137c5](https://bitbucket.org/entrib/shopworx/commits/cc137c59690f63c6c70ebd5c7d1ef18e689e2507))
+
+
+### Features
+
+* **parameter-configuration:** RA-I470 add the 'chinesedescription' column in sample-csv and downloaded csv file ([a8b7282](https://bitbucket.org/entrib/shopworx/commits/a8b7282ba9b34d0e39d71e601f4aa61fd2539b8a))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration-mes
