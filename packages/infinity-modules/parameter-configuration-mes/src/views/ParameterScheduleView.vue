@@ -101,6 +101,7 @@
               @change="onFilesChanged"
             />
             <v-btn
+              :disabled="!selectedProtocol"
               small
               color="primary"
               outlined
@@ -199,7 +200,7 @@
       :loading="myLoadingVariable"
       :loading-text="this.initialMessage"
     >
-      <template v-slot:item.name="props">
+      <template v-slot:[`item.name`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.name"
           @save="saveTableParameter(props.item, 'name')"
@@ -222,7 +223,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.description="props">
+      <template v-slot:[`item.description`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.description"
           large
@@ -252,7 +253,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.parametercategory="props">
+      <template v-slot:[`item.parametercategory`]="props">
         <v-select
           :disabled="(substationValue ? false : true) || saving"
           :items="categoryList"
@@ -266,7 +267,7 @@
           depressed
         ></v-select>
       </template>
-      <template v-slot:item.datatype="props">
+      <template v-slot:[`item.datatype`]="props">
         <v-select
           :disabled="(substationValue ? false : true) || saving"
           :items="datatypeList"
@@ -280,7 +281,7 @@
           depressed
         ></v-select>
       </template>
-      <template v-slot:item.bitnumber="props">
+      <template v-slot:[`item.bitnumber`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.bitnumber"
           @save="saveTableParameter(props.item, 'bitnumber')"
@@ -304,7 +305,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.size="props">
+      <template v-slot:[`item.size`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.size"
           @save="saveTableParameter(props.item, 'size')"
@@ -328,7 +329,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.startaddress="props">
+      <template v-slot:[`item.startaddress`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.startaddress"
           @save="saveTableParameter(props.item, 'startaddress')"
@@ -352,7 +353,7 @@
           </template>
         </v-edit-dialog>
       </template>
-      <template v-slot:item.dbaddress="props">
+      <template v-slot:[`item.dbaddress`]="props">
         <v-edit-dialog
           :return-value.sync="props.item.dbaddress"
           @save="saveTableParameter(props.item, 'dbaddress')"
@@ -440,6 +441,9 @@ export default {
         {
           name: 'ABPLC',
         },
+        {
+          name: 'OPCUA',
+        },
       ],
       initialMessage: 'Please select protocol',
       myLoadingVariable: false,
@@ -481,7 +485,7 @@ export default {
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
         { text: 'Status', value: 'status', width: 130 },
       ],
-      headerAbPlc: [
+      headersAbPlc: [
         { text: 'Number', value: 'number', width: 120 },
         { text: 'Line', value: 'line', width: 120 },
         { text: 'Subline', value: 'subline', width: 120 },
@@ -495,6 +499,23 @@ export default {
         { text: 'PLC Parameter', value: 'plc_parameter', width: 140 },
         { text: 'Prefix', value: 'prefix', width: 120 },
         { text: 'Monitor', value: 'monitorvalue', width: 130 },
+      ],
+      headersOPCUA: [
+        { text: 'Number', value: 'number', width: 120 },
+        { text: 'Line', value: 'line', width: 120 },
+        { text: 'Subline', value: 'subline', width: 120 },
+        { text: 'Station', value: 'station', width: 120 },
+        { text: 'Substation', value: 'substation', width: 120 },
+        { text: 'Parameter', value: 'name', width: 120 },
+        { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Category', value: 'parametercategory' },
+        { text: 'Node ID', value: 'nodeid' },
+        { text: 'Data type', value: 'datatype' },
+        { text: 'Size', value: 'size', width: 80 },
+        { text: 'Start Address', value: 'startaddress', width: 140 },
+        { text: 'Boolean Bit', value: 'bitnumber', width: 120 },
+        { text: 'Monitor', value: 'monitorvalue', width: 130 },
+        { text: 'Status', value: 'status', width: 130 },
       ],
       parameterListSave: [],
       confirmDialog: false,
@@ -575,8 +596,12 @@ export default {
         this.myLoadingVariable = true;
         this.setStationValue('');
         this.setSubstationValue('');
+        let query = `?query=protocol=="${this.protocol}"`;
+        if (this.lineValue && this.lineValue !== '') {
+          query = `?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`;
+        }
         // this.getParameterListRecords('?query=stationid==null');
-        await this.getParameterListRecords(`?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`);
+        await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
     },
@@ -585,7 +610,14 @@ export default {
         this.myLoadingVariable = true;
         this.setSubstationValue('');
         // this.getParameterListRecords('?query=stationid==null');
-        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`);
+        let query = `?query=protocol=="${this.protocol}"`;
+        if (this.lineValue && this.lineValue !== '') {
+          query = `?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`;
+        }
+        if (this.sublineValue && this.sublineValue !== '') {
+          query = `?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`;
+        }
+        await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
     },
@@ -593,8 +625,18 @@ export default {
       if (!val) {
         this.myLoadingVariable = true;
         this.setSubstationValue('');
+        let query = `?query=protocol=="${this.protocol}"`;
+        if (this.lineValue && this.lineValue !== '') {
+          query = `?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`;
+        }
+        if (this.sublineValue && this.sublineValue !== '') {
+          query = `?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`;
+        }
+        if (this.sublineValue && this.sublineValue !== '') {
+          query = `?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`;
+        }
         // this.getParameterListRecords('?query=stationid==null');
-        await this.getParameterListRecords(`?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`);
+        await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
     },
@@ -628,8 +670,21 @@ export default {
           await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
+      } else if (val === 'OPCUA') {
+        this.headers = this.headersOPCUA;
+        this.myLoadingVariable = true;
+        let query = '?query=';
+        if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          await this.getParameterListRecords(query);
+          this.myLoadingVariable = false;
+        } else {
+          this.myLoadingVariable = true;
+          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          this.myLoadingVariable = false;
+        }
       } else {
-        this.headers = this.headerAbPlc;
+        this.headers = this.headersAbPlc;
         this.myLoadingVariable = true;
         let query = '?query=';
         if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
@@ -1006,10 +1061,7 @@ export default {
           'dbaddress',
           'startaddress',
           'size',
-          // 'isconversion',
           'multiplicationfactor',
-          // 'divisionfactor',
-          // 'currentvalue',
           'parameterunit',
           'parametercategory',
           'plcaddress',
@@ -1028,6 +1080,23 @@ export default {
           'paid',
           'prefix',
         ];
+      } else if (this.protocol === 'OPCUA') {
+        column = [
+          'name',
+          'description',
+          'chinesedescription',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'startaddress',
+          'size',
+          'multiplicationfactor',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'nodeid',
+        ];
       } else {
         column = [
           'name',
@@ -1038,10 +1107,7 @@ export default {
           'bitnumber',
           'startaddress',
           'size',
-          // 'isconversion',
           'multiplicationfactor',
-          // 'divisionfactor',
-          // 'currentvalue',
           'parameterunit',
           'parametercategory',
           'plcaddress',
@@ -1083,6 +1149,7 @@ export default {
     async exportSampleData() {
       const fileName = 'sample-file';
       let column = [];
+      let csvContent = [];
       if (this.protocol === 'SNAP7') {
         column = [
           'name',
@@ -1094,14 +1161,27 @@ export default {
           'dbaddress',
           'startaddress',
           'size',
-          // 'isconversion',
           'multiplicationfactor',
-          // 'divisionfactor',
-          // 'currentvalue',
           'parameterunit',
           'parametercategory',
           'plcaddress',
           'paid',
+        ];
+        csvContent = [
+          'parametername',
+          'description-text',
+          '描述文字',
+          'SNAP7',
+          2,
+          1,
+          1002,
+          1001,
+          2,
+          1,
+          1,
+          '35',
+          '127.0.0.1',
+          1,
         ];
       } else if (this.protocol === 'ABPLC') {
         column = [
@@ -1116,6 +1196,51 @@ export default {
           'paid',
           'prefix',
         ];
+        csvContent = [
+          'Shopworx.Handshake.PLCOnline',
+          'PLCOnline',
+          'description(optional)',
+          2,
+          'ABPLC',
+          12,
+          100,
+          '192.168.2.10',
+          1,
+          'station1',
+        ];
+      } else if (this.protocol === 'OPCUA') {
+        column = [
+          'name',
+          'description',
+          'chinesedescription',
+          'protocol',
+          'datatype',
+          'bitnumber',
+          'startaddress',
+          'size',
+          'multiplicationfactor',
+          'parameterunit',
+          'parametercategory',
+          'plcaddress',
+          'paid',
+          'nodeid',
+        ];
+        csvContent = [
+          'parametername',
+          'description-text',
+          '描述文字',
+          'OPCUA',
+          2,
+          1,
+          1002,
+          1001,
+          1,
+          1,
+          '35',
+          '127.0.0.1',
+          1,
+          'ns=4;s=GVL_LinMesOPC.g_Beckhoff.Handshake.xPLCLive',
+        ];
       } else {
         column = [
           'name',
@@ -1126,51 +1251,64 @@ export default {
           'bitnumber',
           'startaddress',
           'size',
-          // 'isconversion',
           'multiplicationfactor',
-          // 'divisionfactor',
-          // 'currentvalue',
           'parameterunit',
           'parametercategory',
           'plcaddress',
           'paid',
         ];
+        csvContent = [
+          'parametername',
+          'description-text',
+          '描述文字',
+          'OPCUA',
+          2,
+          1,
+          1002,
+          1001,
+          2,
+          1,
+          1,
+          '35',
+          '127.0.0.1',
+          1,
+        ];
       }
-      const csvContent = [];
-      const arr = [
-        'parametername',
-        'description-text',
-        '描述文字',
-        12,
-        '6',
-        '6',
-        '2',
-        12,
-        false,
-        2,
-        2,
-        '2',
-        '2',
-        2,
-        2,
-      ];
-      const arr2 = [
-        'Shopworx.Handshake.PLCOnline',
-        'PLCOnline',
-        'description(optional)',
-        '',
-        'ethernet',
-        12,
-        100,
-        '192.168.2.10',
-        1,
-        'station1',
-      ];
-      if (this.protocol === 'ABPLC') {
-        csvContent.push(arr2);
-      } else {
-        csvContent.push(arr);
-      }
+      // const arr = [
+      //   'parametername',
+      //   'description-text',
+      //   '描述文字',
+      //   12,
+      //   '6',
+      //   '6',
+      //   '2',
+      //   12,
+      //   false,
+      //   2,
+      //   2,
+      //   '2',
+      //   '2',
+      // ];
+      // const arr2 = [
+      //   'Shopworx.Handshake.PLCOnline',
+      //   'PLCOnline',
+      //   'description(optional)',
+      //   '',
+      //   'ethernet',
+      //   12,
+      //   100,
+      //   '192.168.2.10',
+      //   1,
+      //   'station1',
+      // ];
+      // if (this.protocol === 'ABPLC') {
+      //   csvContent.push(arr2);
+      // } else if (this.protocol === 'OPCUA') {
+      //   arr.push('ns=4;s=GVL_LinMesOPC.g_Beckhoff.Handshake.xPLCLive');
+      //   csvContent.push(arr);
+      // } else {
+      //   csvContent.push(arr);
+      // }
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
         fields: column,

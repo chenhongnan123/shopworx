@@ -78,11 +78,16 @@
               <!-- <v-text-field label="Process" type="text"
               v-model="newStation.process"
               hint="For example, Night Shift"  dense></v-text-field> -->
+              <v-text-field label="Endpoint Url"
+                class="mb-3"
+                hint="Hint: opc.tcp://127.0.0.1:1010"
+                v-model="newStation.endpointurl"
+                :rules ="endpointUrlRules" required type="text" dense></v-text-field>
               <v-text-field label="PLC Ip Address"
               :rules ="plcRules" required class="mb-3"
               hint="Hint: 127.168.1.1"
               v-model="newStation.plcipaddress"  dense></v-text-field>
-              <v-text-field label="Usg Start Date" type="date"
+              <v-text-field label="Usg Start Date *" type="date"
                v-model="newStation.usagestartdate"
                :disabled="usgDateDisabled"
                return-object
@@ -121,6 +126,7 @@ export default {
       plcipaddress: '',
       numberRules: [(v) => (v && v.length) > 0 || 'number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters'],
+      endpointUrlRules: [(v) => /^\S+$/.test(v) || 'Space not allowed'],
       nameRules: [(v) => !!v || 'Name required',
         (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
         (v) => /^\S+$/.test(v) || 'Space not allowed'],
@@ -156,7 +162,7 @@ export default {
     ...mapMutations('helper', ['setAlert']),
     ...mapActions('productionLayoutMes', ['createSubline', 'getAllSublines', 'createStation', 'getAssets']),
     async comapareDates(item) {
-      this.newStation.usagestartdate = '';
+      // this.newStation.usagestartdate = '';
       const fromdate = this.newStation.manufacturingdate;
       const todate = item;
       const from = new Date(fromdate);
