@@ -53,8 +53,7 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
-        @click="downloadSample"
-        v-if="sampleBtnVisible"
+        @click="exportData"
       >
         Sample
       </v-btn>
@@ -63,11 +62,20 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
-        @click="downloadSample"
-        v-if="importBtnVisible"
+        @click="importData"
+        :loading="importBtnLoading"
       >
         Import
       </v-btn>
+      <input
+        multiple
+        type="file"
+        accept=".csv"
+        ref="uploader"
+        class="d-none"
+        id="uploadFiles"
+        @change="onFilesChanged"
+      />
     </v-toolbar>
     <v-progress-linear
      :indeterminate="myLoadingVariable"
@@ -188,8 +196,7 @@ export default {
       updateData: [],
       language: null,
       myLoadingVariable: true,
-      sampleBtnVisible: false,
-      importBtnVisible: false,
+      importBtnLoading: false,
       headers: [
         {
           headerName: this.$t('Created Date'),
@@ -211,6 +218,16 @@ export default {
           field: 'logsource',
           resizable: true,
         },
+      ],
+      column: [
+        'code',
+        'endescription',
+        'cndescription',
+      ],
+      csvContent: [
+        'MF',
+        'Machine failure',
+        '机器故障',
       ],
     };
   },
@@ -269,7 +286,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'createNewLogCodes']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
       this.selectedRowData = [];
@@ -434,22 +451,11 @@ export default {
       this.updateData = [];
     },
     async exportData() {
-      const nameEement = this.id;
-      const fileName = `${nameEement}_Master_Table`;
-      const parameterSelected = this.rowData.map((item) => ({ ...item }));
-      const column = parameterSelected[0].questions;
-      const csvContent = [];
-      parameterSelected.forEach((parameter) => {
-        const arr = [];
-        column.forEach((key) => {
-          arr.push(parameter[key]);
-        });
-        csvContent.push(arr);
-      });
+      const fileName = 'Swxlogcodes-sample';
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
-        fields: column,
-        data: csvContent,
+        fields: this.column,
+        data: this.csvContent,
       });
       this.addToZip({
         fileName: `${fileName}.csv`,
@@ -466,6 +472,93 @@ export default {
     },
     addToZip(file) {
       this.zipService.addFile(file);
+    },
+    importData() {
+      this.$refs.uploader.click();
+    },
+    async onFilesChanged(e) {
+      this.importBtnLoading = true;
+      const files = e && e !== undefined ? e.target.files : null;
+      const ext = /^.+\.([^.]+)$/.exec(files[0].name);
+      const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
+      if (getFileExtension !== 'csv' && getFileExtension !== 'CSV') {
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_ONLY_CSV',
+        });
+        this.importBtnLoading = false;
+        document.getElementById('uploadFiles').value = null;
+        return;
+      }
+      const csvParser = new CSVParser();
+      const { data } = await csvParser.parse(files[0]);
+      if (data.length > 0) {
+        const nameList = data.map((item) => item.code);
+        const dummycode = [];
+        data.forEach((d) => {
+          const codesDuplicate = this.logcodes.filter((l) => l.code === d.code);
+          if (codesDuplicate.length) {
+            dummycode.push(d.code);
+          }
+        });
+        if (dummycode.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'DUPLICATE_CODES_IN_DATABASE',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+        }
+        const duplicateCodes = nameList.map((item) => item)
+          .filter((value, index, self) => self.indexOf(value) !== index);
+        if (duplicateCodes.length > 0) {
+          this.validateFlag = false;
+          this.savingImport = false;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'DUPLICATE_CODES',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+        } else {
+          const obj = {
+            assetid: 4,
+            siteId: 197,
+            customerId: 195,
+            userId: 200,
+          };
+          const payload = [];
+          data.forEach((el) => {
+            payload.push({
+              code: el.code,
+              endescription: el.endescription,
+              cndescription: el.cndescription,
+              ...obj,
+            });
+          });
+          const created = await this.createNewLogCodes(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'CODE_CREATED',
+            });
+            this.importBtnLoading = false;
+          }
+        }
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
     },
   },
 };

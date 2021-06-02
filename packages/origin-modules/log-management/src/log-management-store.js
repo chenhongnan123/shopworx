@@ -19,6 +19,17 @@ export default ({
     setLogCodes: set('logcodes'),
   },
   actions: {
+    createNewLogCodes: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/postBulkRecords',
+        {
+          elementName: 'swxlogcodes',
+          payload,
+        },
+        { root: true },
+      );
+      return created;
+    },
     initElements: async ({ dispatch }) => {
       const createElements = elementsAndTags.map(async (m) => {
         const { element, tags } = m;
