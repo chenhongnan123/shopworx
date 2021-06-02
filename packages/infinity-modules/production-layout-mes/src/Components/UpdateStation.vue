@@ -59,12 +59,17 @@
         v-model="newStation.lifetime"   dense></v-text-field>
         <!-- <v-text-field label="Process" type="text"
         v-model="newStation.process"  dense></v-text-field> -->
+        <v-text-field label="Endpoint Url"
+          class="mb-3"
+          hint="Hint: opc.tcp://127.0.0.1:1010"
+          v-model="newStation.endpointurl"
+          :rules ="endpointUrlRules" required type="text" dense></v-text-field>
         <v-text-field label="PLC Ip Address" mask="###.###.###-##"
         :rules ="plcRules" required
         class="mb-3"
         hint="Hint: 127.168.1.1"
         v-model="newStation.plcipaddress"  dense></v-text-field>
-        <v-text-field label="Usg Start Date" type="date"
+        <v-text-field label="Usg Start Date *" type="date"
          v-model="newStation.usagestartdate"   dense></v-text-field>
       </v-col>
       </v-row>
@@ -102,6 +107,7 @@ export default {
       numberRules: [(value) => !!value || 'Number required',
         (v) => (v && v.length <= 10) || 'Number must be less than 10 characters',
       ],
+      endpointUrlRules: [(v) => /^\S+$/.test(v) || 'Space not allowed'],
       nameRules: [(value) => !!value || 'Name required',
         (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
       ],
@@ -155,23 +161,6 @@ export default {
     },
     async saveStation() {
       this.saving = true;
-      this.newStation = {
-        name: this.newStation.name,
-        description: this.newStation.description,
-        numbers: this.newStation.numbers,
-        expectedoee: this.newStation.expectedoee,
-        expectedcycletime: this.newStation.expectedcycletime,
-        manufacturingdate: this.newStation.manufacturingdate,
-        weight: this.newStation.weight,
-        size: this.newStation.size,
-        voltage: this.newStation.voltage,
-        power: this.newStation.power,
-        supplier: this.newStation.supplier,
-        usagestartdate: this.newStation.usagestartdate,
-        lifetime: this.newStation.lifetime,
-        process: this.newStation.process,
-        plcipaddress: this.newStation.plcipaddress,
-      };
       let created = false;
       const payload = {
         query: `?query=id=="${this.station.id}"`,

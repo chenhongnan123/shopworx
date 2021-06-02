@@ -389,7 +389,7 @@ export default {
       if (toDate) {
         param += `dateto=${toDate}&`;
       }
-      param += 'pagenumber=1&pagesize=500';
+      param += 'pagenumber=1&pagesize=40000';
       const payload = {
         elementname: this.selectedElement.to,
         query: param,
