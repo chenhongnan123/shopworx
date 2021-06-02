@@ -1,11 +1,8 @@
 const routes = [
   {
-    path: 'log-management/:id?',
-    name: 'logManagement',
-    component: () => import(/* webpackChunkName: "masters" */ './views/LogMasters.vue'),
-    meta: {
-      permissionRequired: true,
-    },
+    path: 'logs',
+    name: 'customerLogManagement',
+    component: () => import(/* webpackChunkName: "customer-log-management" */ './views/LogMasters.vue'),
   },
 ];
 

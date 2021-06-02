@@ -77,7 +77,7 @@ export default {
           comingSoon: true,
         }, {
           icon: 'mdi-rocket-launch-outline',
-          title: 'logManagement',
+          title: 'customerLogManagement',
           comingSoon: false,
         }],
       }, {

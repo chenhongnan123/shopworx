@@ -26,12 +26,11 @@ export default {
   },
   async created() {
     this.loading = true;
-    // await this.getElements();
-    // await this.getAssets();
+    await this.initElements();
     this.loading = false;
   },
   methods: {
-    ...mapActions('logManagement', ['getElements', 'getAssets']),
+    ...mapActions('logManagement', ['initElements']),
   },
 };
 </script>

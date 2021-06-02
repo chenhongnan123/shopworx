@@ -15,8 +15,12 @@ function loadLocaleMessages(i18nInstance) {
 
 export default {
   install(Vue, options) {
-    const routerData = options.router.options.routes.find((r) => r.path === '/');
-    routerData.children = routes;
+    const routerData = options.router.options.routes
+      .find((r) => r.path === '/');
+    const customerRoute = routerData.children
+      .find((r) => r.path === 'customer');
+    customerRoute.children = routes;
+    routerData.children = [...routerData.children, customerRoute];
     options.router.addRoutes([routerData]);
     options.store.registerModule('logManagement', store);
     loadLocaleMessages(options.i18n);

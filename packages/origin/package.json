@@ -19,6 +19,7 @@
     "@shopworx/customer-solutions": "^4.3.3",
     "@shopworx/customer-users": "^4.3.3",
     "@shopworx/customer-webhooks": "^4.3.3",
+    "@shopworx/log-management": "^4.3.3",
     "@shopworx/services": "^4.3.3",
     "ag-grid-community": "^25.0.1",
     "ag-grid-enterprise": "^25.0.1",

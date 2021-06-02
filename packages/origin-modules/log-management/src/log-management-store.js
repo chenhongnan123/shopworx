@@ -1,6 +1,6 @@
 import { set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
-import { elementsAndTags } from './data/elements';
+import elementsAndTags from './data/elements';
 
 export default ({
   namespaced: true,

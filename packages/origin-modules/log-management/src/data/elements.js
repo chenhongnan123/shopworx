@@ -1,8 +1,6 @@
-export const elementsAndTags = [
+export default [
   {
     element: {
-      customerId: 195,
-      siteId: 197,
       categoryType: 'ASSET',
       collectionName: 'provisioning',
       elementName: 'swxlogcodes',
@@ -21,7 +19,6 @@ export const elementsAndTags = [
     },
     tags: [
       {
-        customerId: 195,
         tagName: 'code',
         emgTagType: 'String',
         tagDescription: 'Code',
@@ -39,7 +36,6 @@ export const elementsAndTags = [
         filterFromList: null,
       },
       {
-        customerId: 195,
         tagName: 'cndescription',
         emgTagType: 'String',
         tagDescription: 'Chinese description',
@@ -57,7 +53,6 @@ export const elementsAndTags = [
         filterFromList: null,
       },
       {
-        customerId: 195,
         tagName: 'endescription',
         emgTagType: 'String',
         tagDescription: 'English description',
@@ -78,8 +73,6 @@ export const elementsAndTags = [
   },
   {
     element: {
-      customerId: 195,
-      siteId: 197,
       categoryType: 'ASSET',
       collectionName: 'logs',
       elementName: 'swxlogs',
@@ -98,7 +91,6 @@ export const elementsAndTags = [
     },
     tags: [
       {
-        customerId: 195,
         tagName: 'logcode',
         emgTagType: 'String',
         tagDescription: 'Log Code',
@@ -116,7 +108,6 @@ export const elementsAndTags = [
         filterFromList: null,
       },
       {
-        customerId: 195,
         tagName: 'logtype',
         emgTagType: 'String',
         tagDescription: 'Log type',
@@ -134,7 +125,6 @@ export const elementsAndTags = [
         filterFromList: null,
       },
       {
-        customerId: 195,
         tagName: 'logsource',
         emgTagType: 'String',
         tagDescription: 'Log source',
@@ -154,13 +144,3 @@ export const elementsAndTags = [
     ],
   },
 ];
-
-export const elementMap = {
-  DEPLOYMENT_SERVICE: 'deploymentservices',
-  NODEBOT: 'nodebotmaster',
-  NODEBOT_FILE: 'nodebotfile',
-  DEVICE: 'line',
-  INSTANCE: 'instances',
-  DEPLOYMENT: 'instancedeploymentorders',
-  LOGS: 'instancedeploymentorderlogs',
-};

@@ -214,13 +214,13 @@ export default {
       ],
     };
   },
-  created() {
+  async created() {
     this.language = this.currentLocale;
-    this.fetchRecords();
+    await this.fetchRecords();
     this.zipService = ZipService;
     this.myLoadingVariable = true;
-    this.getSwxLogsElement();
-    this.getSwxLogCodes(this.id);
+    await this.getSwxLogsElement();
+    await this.getSwxLogCodes(this.id);
   },
   computed: {
     ...mapState('logManagement', ['records', 'logs', 'logcodes']),
@@ -269,7 +269,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'initElements']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
       this.selectedRowData = [];
@@ -287,7 +287,6 @@ export default {
       }
     },
     async getSwxLogsElement() {
-      await this.initElements();
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
