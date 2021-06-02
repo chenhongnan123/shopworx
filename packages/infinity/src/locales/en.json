@@ -357,6 +357,7 @@
     "preferences": {
       "title": "Preferences",
       "display": "Display settings",
+      "avatar": "Avatar display",
       "language": "Language",
       "darkMode": "Dark mode"
     },

@@ -242,7 +242,8 @@
     "customerSolutions": "Roles & Access",
     "customerUsers": "Users",
     "customerDeployment": "Deployment Manager",
-    "customerData": "Data export"
+    "customerData": "Data export",
+    "customerLogManagement": "Log Management"
   },
   "account": {
     "account": "Account",

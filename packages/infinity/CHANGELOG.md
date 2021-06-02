@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
+
+
+### Features
+
+* **avatars:** added avatars option to user preferences ([17c9ff9](https://bitbucket.org/entrib/shopworx/commits/17c9ff9c23b0859600c7563de37ab85cc2481b21))
+* **core:** added dynamic beam avatars ([4ed9032](https://bitbucket.org/entrib/shopworx/commits/4ed9032e8e4250891ee2f35fdb0f67008b89bb8b))
+
+
+
+
+
 ## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
 
 

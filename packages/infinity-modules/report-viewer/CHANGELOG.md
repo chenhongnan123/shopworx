@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
+
+
+### Bug Fixes
+
+* **report-viewer:** added report title and time to exported file name ([95f99fe](https://bitbucket.org/entrib/shopworx/commits/95f99fe04d154e771610d2c5c26f3443f932f071))
+* **report-viewer:** disable pdf export for pivot columns ([f9f056d](https://bitbucket.org/entrib/shopworx/commits/f9f056dfaab7fa6e8c937db832627b54eb58ad08))
+
+
+### Features
+
+* **pdf-export:** added chart to exported pdf reports ([32bf97a](https://bitbucket.org/entrib/shopworx/commits/32bf97a889e703d2ead48234dbf905b8facf4a99))
+* **report-viewer:** added pdf export ([9da2dd8](https://bitbucket.org/entrib/shopworx/commits/9da2dd8af99f97590ca2051252684ac7d674c590))
+* **report-viewer:** added report title and date range to pdf export ([3d6fdc1](https://bitbucket.org/entrib/shopworx/commits/3d6fdc13aa0231e7ac1e26bbad5f31336381bfdd))
+* **report-viewer:** updated pdf doc definition ([00fd919](https://bitbucket.org/entrib/shopworx/commits/00fd9192144dcf91f04bee9e6176fee8efaf1233))
+
+
+
+
+
 ## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
 
 

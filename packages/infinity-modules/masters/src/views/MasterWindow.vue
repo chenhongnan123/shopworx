@@ -102,7 +102,7 @@
     </v-tab>
     </v-tabs>
      <base-master
-      :assetId="showTabs(id) ? getAssets(id)[tab].id : 0"
+      :assetId="assetId"
       :id="id"
       ref="base"
       :fetchData="fetchData"
@@ -113,6 +113,7 @@
     <import-master-data
       ref="importer"
       :id="id"
+      :assetId="assetId"
       :records="tags"
       @on-imported="refreshUi"
       @on-close-dialog="resetForm"
@@ -149,9 +150,11 @@ export default {
     id() {
       return this.$route.params.id;
     },
+    assetId() {
+      return this.showTabs(this.id) ? this.getAssets(this.id)[this.tab].id : 0;
+    },
     tags() {
-      const assetId = this.showTabs(this.id) ? this.getAssets(this.id)[this.tab].id : 0;
-      return this.getTags(this.id, assetId);
+      return this.getTags(this.id, this.assetId);
     },
   },
   watch: {

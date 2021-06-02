@@ -29,7 +29,8 @@
     "RECIPE_NAME_ALLREADY_EXISIST": "Recipe Name All ready Exist",
     "LOWERBIGER": "下限值大于上限值!",
     "ERROR_VALUE": "超过上下限",
-    "RECIPE_IN_USE": "配方正在使用中，不允许删除!"
+    "RECIPE_IN_USE": "配方正在使用中，不允许删除!",
+    "IMPORT_EMPTY_FILE": "Can not import empty file"
   },
   "success": {
     "RECIPE_CREATED": "配方已创建！",

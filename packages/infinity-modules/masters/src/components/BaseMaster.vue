@@ -78,10 +78,15 @@ export default {
   },
   computed: {
     ...mapState('masters', ['records']),
-    ...mapGetters('masters', ['getTags']),
+    ...mapGetters('masters', ['getTags', 'getAssets']),
     ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     tags() {
       return this.getTags(this.id, this.assetId);
+    },
+    assetName() {
+      return this.assetId !== 0
+        ? this.getAssets(this.id).find((a) => a.id === this.assetId).assetName
+        : '';
     },
   },
   watch: {
@@ -326,12 +331,18 @@ export default {
       this.updateData = [];
     },
     async exportData() {
+      const fileName = this.assetId !=0
+        ? `${this.id}_${this.assetName}-${new Date().toLocaleString()}`
+        : `${this.id}-${new Date().toLocaleString()}`
       const params = {
-        fileName: `${this.id}-${new Date().toLocaleString()}`,
+        fileName,
       };
       this.gridApi.exportDataAsCsv(params);
     },
     async downloadSampleCSV() {
+      const fileName = this.assetId !=0
+        ? `${this.id}_${this.assetName}-sample.csv`
+        : `${this.id}-sample.csv`
       const columnDefs = this.tags.map((tag) => tag.tagDescription);
       const csvParser = new CSVParser();
       const content = csvParser.unparse([columnDefs]);
@@ -339,7 +350,7 @@ export default {
       const csvURL = window.URL.createObjectURL(csvData);
       const tempLink = document.createElement('a');
       tempLink.href = csvURL;
-      tempLink.setAttribute('download', `${this.id}-${new Date().toLocaleString()}.csv`);
+      tempLink.setAttribute('download', fileName);
       tempLink.click();
     },
   },

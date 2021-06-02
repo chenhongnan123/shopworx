@@ -2,16 +2,6 @@
   <div>
     <portal to="settings-header">
       <span>
-        <!-- <v-btn
-          small
-          color="primary"
-          class="text-none"
-          :loading="saving"
-          @click="save"
-          :class="$vuetify.breakpoint.smAndDown ? '' : 'ml-4'"
-        >
-          {{ $t('admin.save') }}
-        </v-btn> -->
         <add-holiday :holidays="holidays" @added="fetchRecords"/>
         <v-btn
           small
@@ -29,75 +19,6 @@
       indeterminate
       v-if="loading"
     ></v-progress-circular>
-    <!-- <validation-observer #default="{ handleSubmit }" v-else>
-      <v-form @submit.prevent="handleSubmit(save)">
-        <v-card
-          flat
-          :key="index"
-          class="mb-2 transparent"
-          v-for="(holiday, index) in holidays"
-        >
-          <v-row>
-            <v-col cols="4">
-              <validation-provider
-                name="name"
-                rules="required"
-                #default="{ errors }"
-              >
-                <v-text-field
-                  type="text"
-                  hide-details="auto"
-                  :id="`name-${index}`"
-                  v-model="holiday.name"
-                  :error-messages="errors"
-                  :disabled="loading"
-                  :label="$t('setup.onboardCalendar.holidays.name')"
-                ></v-text-field>
-              </validation-provider>
-            </v-col>
-            <v-col cols="5">
-              <validation-provider
-                name="date"
-                rules="required"
-                #default="{ errors }"
-              >
-                <v-text-field
-                  type="date"
-                  hide-details="auto"
-                  :id="`date-${index}`"
-                  v-model="holiday.date"
-                  :error-messages="errors"
-                  :disabled="loading"
-                  :label="$t('setup.onboardCalendar.holidays.date')"
-                ></v-text-field>
-              </validation-provider>
-            </v-col>
-            <v-col cols="3" class="my-auto">
-              <v-btn
-                icon
-                small
-                class="mx-2"
-                @click="addHoliday"
-                :id="`add-${index}`"
-              >
-                <v-icon v-text="'$add'"></v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                small
-                class="pa-0"
-                :id="`remove-${index}`"
-                @click="removeHoliday(index)"
-                :disabled="holidays.length === 1"
-              >
-                <v-icon v-text="'$remove'"></v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-          <v-divider v-if="index + 1 != holidays.length"></v-divider>
-        </v-card>
-      </v-form>
-    </validation-observer> -->
     <v-data-table
       item-key="id"
       class="transparent"
@@ -197,13 +118,6 @@ export default {
       this.deleting = false;
       this.fetchRecords();
     },
-    // async save() {
-    //   const payload = {
-    //     elementName: 'businessholidays',
-    //     records: this.holidays,
-    //   };
-    //   await this.upsertBulkRecords(payload);
-    // },
   },
 };
 </script>
