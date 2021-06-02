@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
+
+
+### Features
+
+* **log-management:** for release ([92187ea](https://bitbucket.org/entrib/shopworx/commits/92187ea96df86e557c5e2dd241e62eb9459f8f18))
+* **log-management:** new changes ([0a2cdf5](https://bitbucket.org/entrib/shopworx/commits/0a2cdf5f7b240accc632de92c9a728949be34c21))
+* **log-management:** new changes with UI ([dc050cf](https://bitbucket.org/entrib/shopworx/commits/dc050cf7183a096b62c72e9e9b20cb8cbc8c81f6))
+* **log-management:** RA-I484 ([078af04](https://bitbucket.org/entrib/shopworx/commits/078af04e687dd5783f5da93e042db10712acaf11))
+* **log-management:** show the data in table on click ([338a7c4](https://bitbucket.org/entrib/shopworx/commits/338a7c404fcfb793efd3ca7bd203fe5846353338))
+* **log-management:** TA-I484 show the data on row click from the element 'swxlogcodes' ([d5e4719](https://bitbucket.org/entrib/shopworx/commits/d5e4719f3dae1dfce2314c5263e4c2f596841f95))
+* **log-management:** Ui development with creation of element ([24c7dcb](https://bitbucket.org/entrib/shopworx/commits/24c7dcbead7bf4377e534b2bda066df6709b978b))
+
+
+
+
+
 ## [4.2.3](https://bitbucket.org/entrib/shopworx/compare/v4.2.2...v4.2.3) (2021-02-07)
 
 **Note:** Version bump only for package @shopworx/masters

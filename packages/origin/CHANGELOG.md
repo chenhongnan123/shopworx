@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
+
+
+### Features
+
+* **log-management:** for release ([92187ea](https://bitbucket.org/entrib/shopworx/commits/92187ea96df86e557c5e2dd241e62eb9459f8f18))
+
+
+
+
+
 ## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
 
 **Note:** Version bump only for package @shopworx/origin
