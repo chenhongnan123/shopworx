@@ -19,6 +19,7 @@
     "@shopworx/customer-solutions": "^4.3.3",
     "@shopworx/customer-users": "^4.3.3",
     "@shopworx/customer-webhooks": "^4.3.3",
+    "@shopworx/log-management": "^4.3.3",
     "@shopworx/services": "^4.3.3",
     "ag-grid-community": "^25.0.1",
     "ag-grid-enterprise": "^25.0.1",
@@ -36,7 +37,11 @@
     "vue-router": "^3.4.8",
     "vue2-perfect-scrollbar": "^1.5.0",
     "vuetify": "^2.3.19",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "ag-grid-community": "^23.1.1",
+    "ag-grid-enterprise": "^23.1.1",
+    "ag-grid-vue": "^23.1.1",
+    "vue-property-decorator": "^8.4.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.4.1",
