@@ -41,7 +41,7 @@ export const now = () => new Date().getTime();
 export const distanceInWords = (date, baseDate, options = {}) => {
   const selectedLocale = options.locale || 'en';
   const locale = locales[selectedLocale];
-  const opt = Object.assign(options, locale);
+  const opt = Object.assign(options, { locale });
   return formatDistance(date, baseDate, opt);
 };
 
@@ -54,7 +54,7 @@ export const distanceInWords = (date, baseDate, options = {}) => {
 export const timeDistance = (date, baseDate, options = {}) => {
   const selectedLocale = options.locale || 'en';
   const locale = locales[selectedLocale];
-  const opt = Object.assign(options, locale);
+  const opt = Object.assign(options, { locale });
   return formatDistanceStrict(date, baseDate, opt);
 };
 
@@ -67,7 +67,7 @@ export const timeDistance = (date, baseDate, options = {}) => {
 export const distanceInWordsToNow = (date, options = {}) => {
   const selectedLocale = options.locale || 'en';
   const locale = locales[selectedLocale];
-  const opt = Object.assign(options, locale);
+  const opt = Object.assign(options, { locale });
   return formatDistanceToNow(date, opt);
 };
 
@@ -78,7 +78,7 @@ export const distanceInWordsToNow = (date, options = {}) => {
 export const formatDate = (date, form, options = {}) => {
   const selectedLocale = options.locale || 'en';
   const locale = locales[selectedLocale];
-  const opt = Object.assign(options, locale);
+  const opt = Object.assign(options, { locale });
   return format(date, form, opt);
 };
 
