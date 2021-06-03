@@ -17,6 +17,9 @@
     "IMPORT_EMPTY_FILE": "Can not import an empty file",
     "DUPLICATE_CODES": "Found duplicate codes in file",
     "DUPLICATE_CODES_IN_DATABASE": "Found Duplicate code in database",
-    "UPLOAD_ONLY_CSV": "import only .csv file"
+    "UPLOAD_ONLY_CSV": "import only .csv file",
+    "CODE_LENGTH_EXCEEDED": "Code length exceeded (15 char max)",
+    "ROW_LIMIT": "Number of codes inside the file exceeded limit of 100",
+    "EMPTY_INPUT": "Empty cell found for code column"
   }
 }

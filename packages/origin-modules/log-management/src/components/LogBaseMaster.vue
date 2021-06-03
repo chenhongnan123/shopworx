@@ -495,10 +495,11 @@ export default {
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       if (data.length > 0) {
-        const nameList = data.map((item) => item.code);
+        const codelist = data.map((item) => item.code.toLowerCase().split(' ').join(''));
         const dummycode = [];
         data.forEach((d) => {
-          const codesDuplicate = this.logcodes.filter((l) => l.code === d.code);
+          const codesDuplicate = this.logcodes
+            .filter((l) => l.code.toLowerCase().split(' ').join('') === d.code.toLowerCase().split(' ').join(''));
           if (codesDuplicate.length) {
             dummycode.push(d.code);
           }
@@ -511,8 +512,51 @@ export default {
           });
           this.importBtnLoading = false;
           document.getElementById('uploadFiles').value = null;
+          return;
         }
-        const duplicateCodes = nameList.map((item) => item)
+        const codeLength = [];
+        codelist.forEach((len) => {
+          if (len.length > 15) {
+            codeLength.push(len);
+          }
+        });
+        if (codeLength.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'CODE_LENGTH_EXCEEDED',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        if (codelist.length > 100) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ROW_LIMIT',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        const nullCode = [];
+        data.forEach((em) => {
+          if (em.code === null || em.code === '' || em.code === undefined) {
+            nullCode.push(em.code);
+          }
+        });
+        if (nullCode.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'EMPTY_INPUT',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        const duplicateCodes = codelist.map((item) => item)
           .filter((value, index, self) => self.indexOf(value) !== index);
         if (duplicateCodes.length > 0) {
           this.validateFlag = false;
