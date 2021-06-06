@@ -155,9 +155,9 @@ export default ({
 
     totalConsumption: ({ meters }) => meters
       .reduce((acc, cur) => {
-        const { kwh } = cur;
+        const { consumption } = cur;
         // eslint-disable-next-line
-        acc += kwh || 0;
+        acc += consumption || 0;
         return acc;
       }, 0),
 
