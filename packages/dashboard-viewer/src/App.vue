@@ -73,11 +73,10 @@ export default {
       localStorage.setItem('dark', this.isDark);
     },
     $route: {
-      immediate: true,
       handler(val) {
         const isCastUrl = val.name === 'cast';
         const isDashboardUrl = val.fullPath.includes('/d');
-        if (this.isAndroid && !isDashboardUrl) {
+        if (this.isTV && !isDashboardUrl) {
           this.$router.replace({ name: 'cast' });
         }
         if (!this.isTV && isCastUrl) {
