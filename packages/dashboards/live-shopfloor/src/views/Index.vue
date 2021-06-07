@@ -12,9 +12,13 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
-
 import ConfigDrawer from '../components/ConfigDrawer.vue';
 import ShopfloorLoading from '../components/ShopfloorLoading.vue';
+
+const SSE_CHANNELS = {
+  hour: 'hourly',
+  shift: 'shift',
+};
 
 export default {
   name: 'Index',
@@ -38,25 +42,17 @@ export default {
     };
   },
   async created() {
+    this.setLoading(true);
     this.setShowHeaderButtons(true);
     const self = this;
-    this.setLoading(true);
     await this.getShifts();
     await this.getBusinessTime();
     this.serverTime = this.currentTime;
     this.timeInterval = setInterval(async () => {
       await self.getBusinessTime();
     }, 60000);
-    if (!this.isLoaded) {
-      this.setSelectedView({
-        label: 'Shift',
-        value: 'shift',
-        reportName: 'shiftliveshopfloor',
-      });
-      this.workingTime = await this.getAvailableTime();
-    }
-    await this.getMachines();
-    this.setLoading(false);
+    this.workingTime = await this.getAvailableTime();
+    this.setQueryParams();
   },
   beforeMount() {
     this.sseInit();
@@ -69,44 +65,44 @@ export default {
     clearInterval(this.timeInterval);
   },
   watch: {
-    async isLoaded(loaded) {
-      if (loaded) {
-        this.setLoading(true);
-        await this.getMachines();
-        this.workingTime = await this.getAvailableTime();
-        this.setLoading(false);
-      }
+    // eslint-disable-next-line
+    '$route'() {
+      this.setQueryParams();
     },
-    selectedView() {
+    async selectedView() {
+      this.setLoading(true);
+      await this.getBusinessTime();
+      await this.getMachines();
       if (this.sseClient) {
         this.sseClient.close();
       }
       this.sseInit();
+      this.setLoading(false);
+    },
+    selectedTheme(val) {
+      this.$vuetify.theme.dark = (val === 'dark');
     },
   },
   computed: {
     ...mapState('shopfloor', [
       'loading',
       'selectedView',
-      'selectedDisplay',
       'selectedTheme',
       'machines',
       'currentDate',
       'currentShift',
       'currentHour',
       'currentTime',
+      'themes',
+      'views',
     ]),
-    isLoaded() {
-      const isViewSelected = this.selectedView !== null;
-      const isThemeSelected = this.selectedTheme !== null;
-      return isViewSelected && isThemeSelected;
-    },
   },
   methods: {
     ...mapMutations('shopfloor', [
       'setLoading',
       'setMachine',
       'setSelectedView',
+      'setSelectedTheme',
     ]),
     ...mapMutations('helper', [
       'setShowHeaderButtons',
@@ -117,26 +113,43 @@ export default {
       'getShifts',
       'getAvailableTime',
     ]),
-    sseInit() {
-      if (this.selectedView) {
-        this.sseClient = new EventSource('/sse/asm');
-        this.readyState = this.sseClient.readyState;
-        this.sseClient.onopen = () => {
-          if (this.timeout != null) {
-            clearTimeout(this.timeout);
-          }
-        };
-        this.sseClient.addEventListener(this.selectedView.value, (e) => {
-          this.readyState = e.target.readyState;
-          const eventData = JSON.parse(JSON.parse(e.data));
-          this.setEventData(eventData);
-        });
-        this.sseClient.onerror = (event) => {
-          this.readyState = event.target.readyState;
-          this.sseClient.close();
-          this.reconnectSse();
-        };
+    setQueryParams() {
+      const { query } = this.$route;
+      let { theme, view } = query;
+      const isValidTheme = theme && this.themes.includes(theme);
+      const isValidView = view && this.views.includes(view);
+      if (!isValidTheme) {
+        [theme] = this.themes;
       }
+      if (!isValidView) {
+        [view] = this.views;
+      }
+      const payload = {
+        theme,
+        view,
+      };
+      this.$router.replace({ query: payload }).catch(() => {});
+      this.setSelectedTheme(theme);
+      this.setSelectedView(view);
+    },
+    sseInit() {
+      this.sseClient = new EventSource('/sse/asm');
+      this.readyState = this.sseClient.readyState;
+      this.sseClient.onopen = () => {
+        if (this.timeout != null) {
+          clearTimeout(this.timeout);
+        }
+      };
+      this.sseClient.addEventListener(SSE_CHANNELS[this.selectedView], (e) => {
+        this.readyState = e.target.readyState;
+        const eventData = JSON.parse(JSON.parse(e.data));
+        this.setEventData(eventData);
+      });
+      this.sseClient.onerror = (event) => {
+        this.readyState = event.target.readyState;
+        this.sseClient.close();
+        this.reconnectSse();
+      };
     },
     reconnectSse() {
       let sseOK = false;
@@ -159,10 +172,10 @@ export default {
         hour,
       } = data;
       let canSetData = false;
-      if (this.selectedView.value === 'shift') {
+      if (this.selectedView === 'shift') {
         canSetData = (this.currentShift === shift || this.currentShift === shiftName)
         && this.currentDate === date;
-      } else if (this.selectedView.value === 'hourly') {
+      } else if (this.selectedView === 'hour') {
         canSetData = this.currentHour === hour && this.currentDate === date;
       }
       if (canSetData) {
@@ -211,9 +224,9 @@ export default {
             workingTime,
           };
           let timeTarget = 0;
-          if (this.selectedView.value === 'shift') {
+          if (this.selectedView === 'shift') {
             timeTarget = Math.floor((shiftAvailableTime / sctm) * activecavity);
-          } else if (this.selectedView.value === 'hourly') {
+          } else if (this.selectedView === 'hour') {
             timeTarget = Math.floor((hourlyAvailableTime / sctm) * activecavity);
           }
           if (planid === m.planid) {

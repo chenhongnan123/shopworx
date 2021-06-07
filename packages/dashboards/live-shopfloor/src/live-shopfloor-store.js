@@ -2,18 +2,10 @@ import { reactiveSetArray, set } from '@shopworx/services/util/store.helper';
 import { sortArray } from '@shopworx/services/util/sort.service';
 import HourService from '@shopworx/services/api/hour.service';
 
-/* const parseDate = (datetime) => {
-  const [date, hr, min, sec] = datetime.split(':');
-  const [day, month, year] = date.split('-');
-  return new Date(
-    year,
-    month - 1,
-    day,
-    hr,
-    min,
-    sec,
-  ).getTime();
-}; */
+const REPORTS = {
+  hour: 'hourlyliveshopfloor',
+  shift: 'shiftliveshopfloor',
+};
 
 export default ({
   namespaced: true,
@@ -29,6 +21,14 @@ export default ({
     selectedTheme: null,
     machines: [],
     shifts: [],
+    themes: [
+      'light',
+      'dark',
+    ],
+    views: [
+      'shift',
+      'hour',
+    ],
     rows: 0,
     cols: 0,
   },
@@ -97,7 +97,7 @@ export default ({
     getAvailableTime: async ({ state, getters }) => {
       const { selectedView, currentTime } = state;
       const now = currentTime;
-      if (selectedView.value === 'shift') {
+      if (selectedView === 'shift') {
         const { shiftStartTime } = getters;
         const { data } = await HourService.getNonWorkingTime(shiftStartTime, now);
         if (data) {
@@ -125,13 +125,13 @@ export default ({
       } = state;
       const { activeSite } = rootState.user;
       let payload = {};
-      if (selectedView.value === 'shift') {
+      if (selectedView === 'shift') {
         payload = {
           siteid: activeSite,
           dateVal: currentDate,
           shiftVal: currentShift,
         };
-      } else if (selectedView.value === 'hourly') {
+      } else if (selectedView === 'hour') {
         payload = {
           siteid: activeSite,
           dateVal: currentDate,
@@ -141,7 +141,7 @@ export default ({
       const data = await dispatch(
         'report/executeReport',
         {
-          reportName: selectedView.reportName,
+          reportName: REPORTS[selectedView],
           payload,
         },
         { root: true },
