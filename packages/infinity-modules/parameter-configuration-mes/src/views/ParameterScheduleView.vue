@@ -184,6 +184,17 @@
             </div>
           </v-btn>
         </span>
+        <proceed-dialog ref="ProceedDialog"
+          :openDialog="openDialog"
+          :responce="responce"
+          :optionalRes="optionalRes"
+          :duplicateBnum="duplicateBnum"
+          :duplicateStartnum="duplicateStartnum"
+          :dupDbAddress="dupDbAddress"
+          :paramLength="paramLength"
+          :dummyNames="dummyNames"
+          :dummyCombo="dummyCombo"
+          :duplicateCombination="duplicateCombination"/>
       </v-col>
       <v-col cols="12" md="12"> </v-col>
     </v-row>
@@ -452,11 +463,13 @@ import CSVParser from '@shopworx/services/util/csv.service';
 import ZipService from '@shopworx/services/util/zip.service';
 import AddParameter from '../components/AddParameter.vue';
 import ParameterFilter from '../components/ParameterFilter.vue';
+import ProceedDialog from '../components/ProceedDialog.vue';
 
 export default {
   name: 'PlanScheduleView',
   data() {
     return {
+      ProceedDialog: '',
       protocolList: [
         {
           name: 'SNAP7',
@@ -552,6 +565,87 @@ export default {
       socket: null,
       saving: false,
       height: window.innerHeight,
+      openDialog: false,
+      responce: [],
+      optionalRes: [],
+      resLen: [],
+      paramLength: [],
+      dataForCreation: [],
+      duplicateBnum: [],
+      duplicateStartnum: [],
+      dupDbAddress: [],
+      dummyCombo: [],
+      dummyNames: [],
+      validateFlag: true,
+      duplicateCombination: [],
+      importArray: [],
+      emptyDataList: [],
+      masterTags: [{
+        tagName: 'name',
+        tagDescription: 'Parameter Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'description',
+        tagDescription: 'Parameter Description',
+        required: false,
+        emgTagType: 'string',
+      }, {
+        tagName: 'protocol',
+        tagDescription: 'Protcol Name',
+        required: true,
+        emgTagType: 'string',
+      }, {
+        tagName: 'datatype',
+        tagDescription: 'Datatype',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'bitnumber',
+        tagDescription: 'BitnNumber',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'dbaddress',
+        tagDescription: 'DB Address',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'size',
+        tagDescription: 'Size',
+        required: false,
+        emgTagType: 'int',
+      }, {
+        tagName: 'multiplicationfactor',
+        tagDescription: 'Mutiplication Factor',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parameterunit',
+        tagDescription: 'Parameter Unit',
+        required: false,
+        emgTagType: 'int',
+      }, {
+        tagName: 'parametercategory',
+        tagDescription: 'Parameter Category',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'paid',
+        tagDescription: 'Paid',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'startaddress',
+        tagDescription: 'Start Address',
+        required: true,
+        emgTagType: 'int',
+      }, {
+        tagName: 'maxdecimal',
+        tagDescription: 'Max Decimal',
+        required: false,
+        emgTagType: 'int',
+      }],
     };
   },
   async created() {
@@ -563,6 +657,29 @@ export default {
   },
   mounted() {
     this.setHeight();
+    this.ProceedDialog = this.$refs.ProceedDialog;
+    this.$root.$on('clearResponce', (data) => {
+      const clear = data;
+      if (clear) {
+        document.getElementById('uploadFiles').value = null;
+        this.responce = [];
+        this.optionalRes = [];
+        this.duplicateBnum = [];
+        this.duplicateStartnum = [];
+        this.dupDbAddress = [];
+        this.paramLength = [];
+        this.dummyNames = [];
+        this.dummyCombo = [];
+        this.duplicateCombination = [];
+        this.importArray = [];
+      }
+    });
+    this.$root.$on('getListofParams', (data) => {
+      const getList = data;
+      if (getList) {
+        this.getParameterListRecords(this.getQuery());
+      }
+    });
   },
   destroyed() {
     this.setLineValue('');
@@ -1382,7 +1499,21 @@ export default {
       this.$refs.uploader.click();
     },
     async onFilesChanged(e) {
+      this.validateFlag = true;
+      this.savingImport = true;
       const files = e && e !== undefined ? e.target.files : null;
+      const ext = /^.+\.([^.]+)$/.exec(files[0].name);
+      const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
+      if (getFileExtension !== 'csv' && getFileExtension !== 'CSV') {
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_ONLY_CSV',
+        });
+        document.getElementById('uploadFiles').value = null;
+        return;
+      }
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
       if (data.length > 0) {
@@ -1415,7 +1546,7 @@ export default {
             }
           }
           item.protocol = item.protocol.toUpperCase();
-          item.name = item.name.toLowerCase().trim();
+          item.name = item.name.toLowerCase().replace(/\W/g, '');
           item.assetid = 4;
           delete item.monitorvalue;
           delete item.status;
@@ -1430,52 +1561,260 @@ export default {
         });
       }
       const dataList = data.concat(this.parameterList);
+      const importedDataList = data;
+      const floatOrDoubles = dataList.filter((fd) => fd.maxdecimal === '' || fd.maxdecimal === undefined);
+      floatOrDoubles.forEach((md) => {
+        if (md.datatype === '9' || md.datatype === '10' || Number(md.datatype) === 9 || Number(md.datatype) === 10) {
+          md.maxdecimal = 4;
+        } else {
+          md.maxdecimal = 0;
+        }
+      });
       const nameList = dataList.map((item) => item.name);
-      if (new Set(nameList).size === nameList.length) {
-        if (this.protocol === 'SNAP7') {
-          const isBooleanList = dataList
-            .filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
-          const noBooleanList = dataList.filter(
-            (dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'),
-          );
-          if (isBooleanList.length) {
-            for (let i = 0; i < isBooleanList.length; i += 1) {
-              for (let k = i + 1; k < isBooleanList.length; k += 1) {
-                if (
-                  Number(isBooleanList[i].dbaddress)
-                   === Number(isBooleanList[k].dbaddress)
-                   && Number(isBooleanList[i].startaddress)
-                   === Number(isBooleanList[k].startaddress)
-                   && Number(isBooleanList[i].bitnumber)
-                   === Number(isBooleanList[k].bitnumber)) {
-                  this.setAlert({
-                    show: true,
-                    type: 'error',
-                    message: 'duplicate_parameter_Boolean_Bit',
-                  });
-                  document.getElementById('uploadFiles').value = null;
-                  return;
-                }
-              }
+      const duplicateNames = nameList.map((item) => item)
+        .filter((value, index, self) => self.indexOf(value) !== index);
+      const res = [];
+      importedDataList.forEach((d, r) => {
+        this.masterTags.forEach((t) => {
+          if (t.required) {
+            const val = d[t.tagName];
+            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
+              res.push({ row: r + 2, tag: t.tagDescription });
+              this.responce = res;
             }
           }
-          if (noBooleanList.length) {
-            for (let i = 0; i < noBooleanList.length; i += 1) {
-              for (let k = i + 1; k < noBooleanList.length; k += 1) {
-                if (
-                  Number(noBooleanList[i].dbaddress)
-                   === Number(noBooleanList[k].dbaddress)
-                   && Number(noBooleanList[i].startaddress)
-                   === Number(noBooleanList[k].startaddress)) {
-                  this.setAlert({
-                    show: true,
-                    type: 'error',
-                    message: 'duplicate_parameter_startaddress',
-                  });
-                  document.getElementById('uploadFiles').value = null;
-                  return;
+        });
+      });
+      const resopt = [];
+      dataList.forEach((d, r) => {
+        this.masterTags.forEach((op) => {
+          if (!op.required) {
+            const val = d[op.tagName];
+            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
+              resopt.push({ row: r + 2, tag: op.tagDescription });
+              this.optionalRes = resopt;
+            }
+          }
+        });
+      });
+      if (nameList) {
+        const isBooleanList = dataList.filter((dataItem) => dataItem.datatype === 12 || dataItem.datatype === '12');
+        const noBooleanList = dataList.filter((dataItem) => !(dataItem.datatype === 12 || dataItem.datatype === '12'));
+        if (isBooleanList.length) {
+          if (this.parameterList.length > 0) {
+            Object.values(data).forEach((m) => {
+              this.importArray.push(m);
+            });
+            this.parameterList.forEach((l) => {
+              this.importArray.forEach((d) => {
+                if (l.bitnumber === Number(d.bitnumber) && l.dbaddress === Number(d.dbaddress)
+                  && l.datatype === Number(d.datatype)
+                  && l.startaddress === Number(d.startaddress)) {
+                  this.duplicateCombination.push(d.name);
                 }
+              });
+            });
+            if (this.duplicateCombination.length > 0) {
+              this.validateFlag = false;
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+            }
+          }
+          const combination = importedDataList.map((item, index) => (
+            {
+              dbaddress: item.dbaddress,
+              startaddress: item.startaddress,
+              bitnumber: item.bitnumber,
+              datatype: item.datatype,
+              index,
+            }
+          ));
+          const dummyCombination = combination.filter((v, i, a) => a.findIndex((t) => (t.bitnumber
+             === v.bitnumber && t.dbaddress === v.dbaddress
+              && t.startaddress === v.startaddress && t.datatype === v.datatype)) !== i);
+          if (dummyCombination.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            // this.setAlert({
+            //   show: true,
+            //   type: 'error',
+            //   message: 'DUPLICATE_COMBINATION',
+            // });
+            dataList.push(this.emptyDataList);
+            document.getElementById('uploadFiles').value = null;
+          }
+          if (dummyCombination.length > 0) {
+            const combo = [];
+            dummyCombination.forEach((p) => {
+              combo.push(` (Duplicate combination) row : ${p.index + 2} `);
+              this.dummyCombo = combo;
+              this.$root.$emit('parameterCreation', true);
+            });
+          }
+          if (duplicateNames.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            dataList.push(this.emptyDataList);
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
               }
+            });
+          }
+          if (nameList) {
+            const resLen = [];
+            nameList.forEach((p, index) => {
+              if (p.length > 20) {
+                resLen.push(` name: ${p} | row: ${index + 2} `);
+                this.paramLength = resLen;
+                this.savingImport = false;
+                this.validateFlag = false;
+                this.$root.$emit('parameterCreation', true);
+                dataList.push(this.emptyDataList);
+                document.getElementById('uploadFiles').value = null;
+                // return;
+              }
+            });
+            // return;
+          }
+          if (this.paramLength.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
+            });
+            dataList.push(this.emptyDataList);
+            // this.paramLength = [];
+            // return;
+          }
+          if (dataList.length > 1000) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ROW_LIMIT',
+            });
+            dataList.push(this.emptyDataList);
+          }
+          if (this.responce.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            // this.setAlert({
+            //   show: true,
+            //   type: 'error',
+            //   message: 'EMPTY_FIELDS',
+            // });
+            this.$root.$emit('parameterCreation', true);
+            dataList.push(this.emptyDataList);
+          }
+          if (this.validateFlag === true) {
+            if (this.optionalRes.length > 0) {
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+              this.$root.$emit('payload', data);
+              this.dialog = true;
+              this.setAlert({
+                show: true,
+                type: 'error',
+                message: 'OPTIONAL_EMPTY_FIELDS',
+              });
+              document.getElementById('uploadFiles').value = null;
+              // return;
+            } else {
+              this.$root.$emit('payload', data);
+              this.$root.$emit('successPayload', true);
+              dataList.push(this.emptyDataList);
+            }
+          }
+        }
+        if (noBooleanList.length) {
+          if (duplicateNames.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'DUPLICATE_PARAMETER_NAME',
+            });
+            dataList.push(this.emptyDataList);
+            document.getElementById('uploadFiles').value = null;
+            // return;
+          }
+          if (duplicateNames.length > 0) {
+            const resNames = [];
+            duplicateNames.forEach((p) => {
+              if (p.length > 0) {
+                resNames.push(` name: ${p} `);
+                this.dummyNames = resNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
+          if (nameList) {
+            const resLen = [];
+            nameList.forEach((p, index) => {
+              if (p.length > 20) {
+                resLen.push(` name: ${p} | row: ${index + 2} `);
+                this.paramLength = resLen;
+                this.savingImport = false;
+                this.validateFlag = false;
+                this.$root.$emit('parameterCreation', true);
+                document.getElementById('uploadFiles').value = null;
+                dataList.push(this.emptyDataList);
+                // return;
+              }
+            });
+            // return;
+          }
+          if (this.paramLength.length > 0) {
+            this.validateFlag = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'PARAMETER_NAME_LENGTH_EXCEEDED',
+            });
+            dataList.push(this.emptyDataList);
+            // this.paramLength = [];
+            // return;
+          }
+          if (dataList.length > 1000) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'ROW_LIMIT',
+            });
+            dataList.push(this.emptyDataList);
+          }
+          if (this.responce.length > 0) {
+            this.validateFlag = false;
+            this.savingImport = false;
+            this.$root.$emit('parameterCreation', true);
+            dataList.push(this.emptyDataList);
+          }
+          if (this.validateFlag === true) {
+            if (this.optionalRes.length > 0) {
+              this.savingImport = false;
+              this.$root.$emit('parameterCreation', true);
+              this.$root.$emit('payload', data);
+              this.dialog = true;
+              dataList.push(this.emptyDataList);
             }
           }
         }
@@ -1660,6 +1999,7 @@ export default {
   components: {
     AddParameter,
     ParameterFilter,
+    ProceedDialog,
   },
 };
 </script>
