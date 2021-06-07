@@ -362,7 +362,7 @@ export default {
     };
   },
   async mounted() {
-    await this.getRecipeListRecords(`?query=recipenumber=="${this.$route.params.id}"`);
+    await this.getRecipeListRecords(`?query=recipenumber=="${this.$route.params.id}"&sortquery=sequence==1`);
     this.line = this.recipeList[0].linename;
     this.subline = this.recipeList[0].sublinename;
     this.substationname = this.recipeList[0].substationname;
@@ -390,7 +390,7 @@ export default {
       this.selectedHeader = this.headersEn;
     }
     const totalRecords = await this.getRecipeDetailListRecords(
-      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+      `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}&sortquery=sequence==1`,
     );
     this.totalRecipeDetails = totalRecords;
     const first = this.totalRecipeDetails
@@ -410,13 +410,14 @@ export default {
       const payload = [];
       // %26%26%28parametercategory=="36"%7C%7Cparametercategory=="7"%29
       await this.getParametersRecords(
-        `?query=substationid=="${this.substationid}"`,
+        `?query=substationid=="${this.substationid}"&sortquery=sequence==1`,
       );
       this.parametersList.forEach((element) => {
         if (element.datatype === 11) {
           payload.push({
             tagname: element.name,
             chinesedescription: element.chinesedescription,
+            sequence: element.sequence,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
             parametercategory: element.parametercategory,
@@ -432,6 +433,7 @@ export default {
           payload.push({
             tagname: element.name,
             chinesedescription: element.chinesedescription,
+            sequence: element.sequence,
             datatype: element.datatype,
             recipeid: this.$route.params.id,
             parametercategory: element.parametercategory,
@@ -451,10 +453,12 @@ export default {
         versionnumber: 1,
       };
       if (object && object.list && object.list.length) {
-        await this.createRecipeDetails(object);
-        this.selectedList = await this.getRecipeDetailListRecords(
-          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
-        );
+        const recipeDetailsCreated = await this.createRecipeDetails(object);
+        if (recipeDetailsCreated) {
+          this.selectedList = await this.getRecipeDetailListRecords(
+            `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")&sortquery=sequence==1`,
+          );
+        }
       }
     }
     this.socket = socketioclient.connect('http://:10190');
@@ -916,6 +920,7 @@ export default {
             versionnumber: currentVersion + 1,
             tagname: ls.tagname,
             chinesedescription: ls.chinesedescription,
+            sequence: ls.sequence,
             datatype: ls.datatype,
             recipeid: ls.recipeid,
             parametercategory: ls.parametercategory,
@@ -990,7 +995,7 @@ export default {
       };
       await this.updateRecipe(object);
       this.dialogConfirm = false;
-      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`);
+      await this.getRecipeDetailListRecords(`?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}&sortquery=sequence==1`);
     },
     async saveTableParameter(item, type) {
       if (this.btnDisable) return;
@@ -1003,7 +1008,7 @@ export default {
               message: 'LOWERBIGER',
             });
             const totalRecords = await this.getRecipeDetailListRecords(
-              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}&sortquery=sequence==1`,
             );
             this.totalRecipeDetails = totalRecords;
             const first = this.totalRecipeDetails
@@ -1025,7 +1030,7 @@ export default {
               message: 'LOWERBIGER',
             });
             const totalRecords = await this.getRecipeDetailListRecords(
-              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}`,
+              `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}&sortquery=sequence==1`,
             );
             this.totalRecipeDetails = totalRecords;
             const first = this.totalRecipeDetails

@@ -365,6 +365,7 @@ export default {
         query += `datatype=="${this.selectedParameterDatatype}"%26%26`;
       }
       query += `substationid=="${this.substation || null}"`;
+      query += '&sortquery=sequence==1';
       return query;
     },
     async saveParameter() {

@@ -222,7 +222,7 @@ export default {
     },
     async fnDoChangever() {
       await Promise.all(this.recipeList.map(async (recipe) => {
-        await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"%26%26versionnumber==${recipe.recipeversion}`);
+        await this.getRecipeDetailListRecords(`?query=recipeid=="${recipe.recipenumber}"%26%26versionnumber==${recipe.recipeversion}&sortquery=sequence==1`);
         if (this.recipeListDetails.length > 0) {
           const parameterList = [];
           this.recipeListDetails.forEach((element) => {

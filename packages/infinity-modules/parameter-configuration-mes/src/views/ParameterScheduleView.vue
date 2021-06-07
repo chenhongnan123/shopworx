@@ -253,6 +253,32 @@
           </template>
         </v-edit-dialog>
       </template>
+
+      <template v-slot:[`item.sequence`]="props">
+        <v-edit-dialog
+          :return-value.sync="props.item.sequence"
+          @save="saveTableParameter(props.item, 'sequence')"
+        >
+          {{ props.item.sequence }}
+          <v-icon
+            small
+            color="primary"
+            :disabled="substationValue ? false : true"
+          >
+            mdi-pencil
+          </v-icon>
+          <template v-slot:input>
+            <v-text-field
+              :disabled="substationValue ? false : true"
+              v-model="props.item.sequence"
+              label="Edit"
+              single-line
+              type="number"
+            ></v-text-field>
+          </template>
+        </v-edit-dialog>
+      </template>
+
       <template v-slot:[`item.parametercategory`]="props">
         <v-select
           :disabled="(substationValue ? false : true) || saving"
@@ -460,6 +486,7 @@ export default {
         { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Sequence', value: 'sequence' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
@@ -477,6 +504,7 @@ export default {
         { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Sequence', value: 'sequence' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
@@ -493,6 +521,7 @@ export default {
         { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Sequence', value: 'sequence' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Data type', value: 'datatype' },
         { text: 'Size', value: 'size', width: 80 },
@@ -508,6 +537,7 @@ export default {
         { text: 'Substation', value: 'substation', width: 120 },
         { text: 'Parameter', value: 'name', width: 120 },
         { text: 'Parameter Description', value: 'description', width: 200 },
+        { text: 'Sequence', value: 'sequence' },
         { text: 'Category', value: 'parametercategory' },
         { text: 'Node ID', value: 'nodeid' },
         { text: 'Data type', value: 'datatype' },
@@ -586,8 +616,7 @@ export default {
         this.setSublineValue('');
         this.setStationValue('');
         this.setSubstationValue('');
-        // this.getParameterListRecords('?query=stationid==null');
-        this.getParameterListRecords(`?query=protocol=="${this.protocol}"&pagenumber=1&pagesize=10`);
+        this.getParameterListRecords(`?query=protocol=="${this.protocol}"&sortquery=sequence==1&pagenumber=1&pagesize=10`);
         this.myLoadingVariable = false;
       }
     },
@@ -600,7 +629,7 @@ export default {
         if (this.lineValue && this.lineValue !== '') {
           query = `?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`;
         }
-        // this.getParameterListRecords('?query=stationid==null');
+        query += '&sortquery=sequence==1';
         await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
@@ -609,7 +638,6 @@ export default {
       if (!val) {
         this.myLoadingVariable = true;
         this.setSubstationValue('');
-        // this.getParameterListRecords('?query=stationid==null');
         let query = `?query=protocol=="${this.protocol}"`;
         if (this.lineValue && this.lineValue !== '') {
           query = `?query=lineid==${this.lineValue}"%26%26protocol=="${this.protocol}"`;
@@ -617,6 +645,7 @@ export default {
         if (this.sublineValue && this.sublineValue !== '') {
           query = `?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26protocol=="${this.protocol}"`;
         }
+        query += '&sortquery=sequence==1';
         await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
@@ -635,7 +664,7 @@ export default {
         if (this.sublineValue && this.sublineValue !== '') {
           query = `?query=lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26protocol=="${this.protocol}"`;
         }
-        // this.getParameterListRecords('?query=stationid==null');
+        query += '&sortquery=sequence==1';
         await this.getParameterListRecords(query);
         this.myLoadingVariable = false;
       }
@@ -649,12 +678,12 @@ export default {
         this.myLoadingVariable = true;
         let query = '?query=';
         if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
-          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"&sortquery=sequence==1`;
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
           this.myLoadingVariable = true;
-          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          await this.getParameterListRecords(`?query=protocol=="${val}"&sortquery=sequence==1&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
       } else if (val === 'MELSEC') {
@@ -662,12 +691,12 @@ export default {
         this.myLoadingVariable = true;
         let query = '?query=';
         if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
-          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"&sortquery=sequence==1`;
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
           this.myLoadingVariable = true;
-          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          await this.getParameterListRecords(`?query=protocol=="${val}"&sortquery=sequence==1&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
       } else if (val === 'OPCUA') {
@@ -675,12 +704,12 @@ export default {
         this.myLoadingVariable = true;
         let query = '?query=';
         if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
-          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"&sortquery=sequence==1`;
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
           this.myLoadingVariable = true;
-          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          await this.getParameterListRecords(`?query=protocol=="${val}"&sortquery=sequence==1&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
       } else {
@@ -688,15 +717,14 @@ export default {
         this.myLoadingVariable = true;
         let query = '?query=';
         if (this.lineValue && this.sublineValue && this.stationValue && this.substationValue) {
-          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"`;
+          query += `lineid==${this.lineValue}%26%26sublineid=="${this.sublineValue}"%26%26stationid=="${this.stationValue}"%26%26substationid=="${this.substationValue}"%26%26protocol=="${val}"&sortquery=sequence==1`;
           await this.getParameterListRecords(query);
           this.myLoadingVariable = false;
         } else {
           this.myLoadingVariable = true;
-          await this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
+          await this.getParameterListRecords(`?query=protocol=="${val}"&sortquery=sequence==1&pagenumber=1&pagesize=10`);
           this.myLoadingVariable = false;
         }
-        // this.getParameterListRecords(`?query=protocol=="${val}"&pagenumber=1&pagesize=10`);
       }
     },
   },
@@ -746,6 +774,9 @@ export default {
       }
     },
     async saveTableParameter(item, type) {
+      if (type === 'sequence') {
+        item[type] = Number(item[type]);
+      }
       const value = item[type];
       const parameterListSave = [...this.parameterListSave];
       if (!value) {
@@ -965,8 +996,6 @@ export default {
       }
     },
     async RefreshUI() {
-      // await this.getParameterListRecords(this.getQuery());
-      // this.downloadFromPLC();
       let query = '?query=';
       if (this.selectedParameterName) {
         query += `name=="${this.selectedParameterName}"%26%26`;
@@ -984,6 +1013,11 @@ export default {
         query += `substationid=="${this.substationValue}"`;
       } else {
         query += `stationid=="${this.stationValue || null}"`;
+      }
+      if (query === '?query=') {
+        query = '?sortquery=sequence==1';
+      } else {
+        query += '&sortquery=sequence==1';
       }
       this.saving = true;
       await this.getParameterListRecords(query);
@@ -1028,6 +1062,11 @@ export default {
       if (this.substationValue) {
         query += `substationid=="${this.substationValue || ''}"`;
       }
+      if (query === '?query=') {
+        query = '?sortquery=sequence==1';
+      } else {
+        query += '&sortquery=sequence==1';
+      }
       return query;
     },
     async exportData() {
@@ -1055,6 +1094,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          'sequence',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1072,6 +1112,7 @@ export default {
           'plc_parameter',
           'name',
           'description',
+          1,
           'protocol',
           'datatype',
           'size',
@@ -1085,6 +1126,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          'sequence',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1102,6 +1144,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          1,
           'protocol',
           'datatype',
           'bitnumber',
@@ -1155,6 +1198,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          'sequence',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1171,6 +1215,7 @@ export default {
           'parametername',
           'description-text',
           '描述文字',
+          1,
           'SNAP7',
           2,
           1,
@@ -1188,6 +1233,7 @@ export default {
           'plc_parameter',
           'name',
           'description',
+          'sequence',
           'size',
           'protocol',
           'datatype',
@@ -1200,6 +1246,7 @@ export default {
           'Shopworx.Handshake.PLCOnline',
           'PLCOnline',
           'description(optional)',
+          1,
           2,
           'ABPLC',
           12,
@@ -1213,6 +1260,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          'sequence',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1229,6 +1277,7 @@ export default {
           'parametername',
           'description-text',
           '描述文字',
+          1,
           'OPCUA',
           2,
           1,
@@ -1246,6 +1295,7 @@ export default {
           'name',
           'description',
           'chinesedescription',
+          'sequence',
           'protocol',
           'datatype',
           'bitnumber',
@@ -1261,6 +1311,7 @@ export default {
           'parametername',
           'description-text',
           '描述文字',
+          1,
           'OPCUA',
           2,
           1,
@@ -1340,6 +1391,9 @@ export default {
           item.sublineid = this.sublineValue;
           item.stationid = this.stationValue;
           item.substationid = this.substationValue;
+          if (item.sequence) {
+            item.sequence = Number(item.sequence);
+          }
           if (this.stationList.length > 0) {
             item.plcaddress = this.stationList
               .filter((station) => this.stationValue === station.id)[0].plcipaddress;
