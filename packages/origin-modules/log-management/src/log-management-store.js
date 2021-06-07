@@ -10,6 +10,7 @@ export default ({
     records: [],
     logcodes: [],
     elements: [],
+    elementExisted: true,
   },
   mutations: {
     setLogs: set('logs'),
@@ -17,6 +18,7 @@ export default ({
     setRecords: set('records'),
     setElements: set('elements'),
     setLogCodes: set('logcodes'),
+    setVariableForLoading: set('elementExisted'),
   },
   actions: {
     createNewLogCodes: async ({ dispatch }, payload) => {
@@ -30,7 +32,7 @@ export default ({
       );
       return created;
     },
-    initElements: async ({ dispatch }) => {
+    initElements: async ({ dispatch, commit }) => {
       const createElements = elementsAndTags.map(async (m) => {
         const { element, tags } = m;
         const e = await dispatch(
@@ -51,6 +53,7 @@ export default ({
         }
       });
       await Promise.all(createElements);
+      commit('setVariableForLoading', false);
     },
     getSwxLogs: async ({ dispatch, commit }, query) => {
       const logList = await dispatch(

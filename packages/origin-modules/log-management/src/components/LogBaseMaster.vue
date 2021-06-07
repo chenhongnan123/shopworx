@@ -82,6 +82,12 @@
      v-if="myLoadingVariable"
      class="mt-1">
     </v-progress-linear>
+    <v-progress-linear
+     :indeterminate="flagElement"
+     v-if="flagElement"
+     reverse
+     class="mt-1">
+    </v-progress-linear>
     <ag-grid-vue
       v-model="rowData"
       :columnDefs="columnDefs"
@@ -90,7 +96,6 @@
       rowSelection="single"
       class="ag-theme-balham mt-2"
       style="width: 100%; height: 250px; cursor:pointer;"
-      :loading="myLoadingVariable"
     ></ag-grid-vue>
     <div v-if="selectedRowData.length > 0 || selectedRowDataswxCodes.length > 0">
     <v-tabs
@@ -233,14 +238,11 @@ export default {
   },
   async created() {
     this.language = this.currentLocale;
-    await this.fetchRecords();
     this.zipService = ZipService;
-    this.myLoadingVariable = true;
-    await this.getSwxLogsElement();
-    await this.getSwxLogCodes(this.id);
+    await this.getSwxLogCodes();
   },
   computed: {
-    ...mapState('logManagement', ['records', 'logs', 'logcodes']),
+    ...mapState('logManagement', ['records', 'logs', 'logcodes', 'elementExisted']),
     ...mapGetters('logManagement', ['getTags']),
     currentLocale: {
       get() {
@@ -250,18 +252,16 @@ export default {
     tags() {
       return this.getTags(this.id, this.assetId);
     },
+    flagElement: {
+      get() {
+        if (this.elementExisted) {
+          this.getSwxLogsElement();
+        }
+        return this.elementExisted;
+      },
+    },
   },
   watch: {
-    assetId() {
-      this.fetchRecords();
-    },
-    id() {
-      this.fetchRecords();
-      this.getSwxLogs(this.id);
-      this.getSwxLogCodes(this.id);
-      this.selectedRowData = [];
-      this.selectedRowDataswxCodes = [];
-    },
     logs() {
       this.setRowData();
       this.setColumnDefs();
@@ -304,6 +304,7 @@ export default {
       }
     },
     async getSwxLogsElement() {
+      this.myLoadingVariable = true;
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
@@ -313,6 +314,7 @@ export default {
       this.myLoadingVariable = false;
       this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
       this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
+      this.myLoadingVariable = false;
       if (!records.length) {
         this.setAlert({
           show: true,
@@ -384,14 +386,6 @@ export default {
         }
       }
     },
-    async fetchRecords() {
-      this.loading = true;
-      await this.getRecords({
-        elementName: this.id,
-        assetId: this.assetId,
-      });
-      this.loading = false;
-    },
     setRowData() {
       this.rowData = this.logs;
     },
@@ -403,52 +397,8 @@ export default {
       const thisIsFirstColumn = displayedColumns[0] === params.column;
       return thisIsFirstColumn;
     },
-    getNewRowItem() {
-      return this.tags.reduce((acc, tag) => {
-        acc[tag.tagName] = null;
-        return acc;
-      }, {});
-    },
     onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
-    },
-    addRow() {
-      this.gridApi.applyTransaction({ add: [this.getNewRowItem()] });
-    },
-    deleteSelectedRows() {
-      const selectedRows = this.gridApi.getSelectedRows();
-      this.gridApi.applyTransaction({ remove: selectedRows });
-      this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
-    },
-    editMethod(event) {
-      if (event.data.assetid) {
-        const makevisible = true;
-        this.updateData.push(event.data);
-        this.$emit('showupdatebtnemt', makevisible);
-      }
-    },
-    async updateValue() {
-      const elementName = this.id;
-      const data = this.updateData;
-      const multipleRows = data.forEach(async (item) => {
-        await this.updateRecord(
-          {
-            query: item._id, payload: item, name: elementName,
-          },
-        );
-      });
-      let update = false;
-      update = await Promise.all([multipleRows]);
-      if (update) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'DATA_SAVED',
-        });
-      }
-      const makeunvisible = false;
-      this.$emit('showupdatebtnemt', makeunvisible);
-      this.updateData = [];
     },
     async exportData() {
       const fileName = 'Swxlogcodes-sample';
