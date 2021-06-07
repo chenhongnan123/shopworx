@@ -43,7 +43,8 @@
     "RUNNING_ORDER": "Recipe details bind with Running order, Hence can't update!",
     "LOWERBIGER": "Lower can not bigger than Upper!",
     "ERROR_VALUE": "Value over the limit",
-    "RECIPE_IN_USE": "Recipe is in use, deletion not allowed!"
+    "RECIPE_IN_USE": "Recipe is in use, deletion not allowed!",
+    "IMPORT_EMPTY_FILE": "Can not import empty file"
   },
   "success": {
     "RECIPE_CREATED": "Recipe created!",

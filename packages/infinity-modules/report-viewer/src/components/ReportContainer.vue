@@ -5,7 +5,7 @@
     </template>
     <v-row justify="center">
       <v-col cols="12" class="py-0">
-        <!-- <report-chart /> -->
+        <pdf-export-panel ref="pdfExport" />
         <report-grid ref="reportGrid" />
       </v-col>
     </v-row>
@@ -14,13 +14,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-// import ReportChart from './ReportChart.vue';
+import PdfExportPanel from './PdfExportPanel.vue';
 import ReportGrid from './ReportGrid.vue';
 
 export default {
   name: 'ReportContainer',
   components: {
-    // ReportChart,
+    PdfExportPanel,
     ReportGrid,
   },
   computed: {
@@ -47,6 +47,11 @@ export default {
         this.$refs.reportGrid.exportGridCSV();
       } else if (type === 'gridExcel') {
         this.$refs.reportGrid.exportGridExcel();
+      } else if (type === 'pdf') {
+        this.$refs.pdfExport.submitFormHandler({
+          agGridApi: this.$refs.reportGrid.gridApi,
+          agColumnApi: this.$refs.reportGrid.gridColumnApi,
+        });
       }
     },
   },

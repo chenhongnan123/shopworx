@@ -38,8 +38,11 @@
                 required>
                 </v-text-field>
               <v-text-field label="Line Name"
-              counter="10"
+              counter="15"
               v-model="name" required>
+              </v-text-field>
+              <v-text-field label="Line Description"
+              v-model="description" required>
               </v-text-field>
               <v-text-field label="IP Address"
               v-model="ipaddr"
@@ -74,6 +77,7 @@ export default {
       getAssetId: '',
       dialog: false,
       name: null,
+      description: null,
       ipaddr: null,
       hostname: null,
       valid: true,
@@ -99,6 +103,7 @@ export default {
       this.newProcess = {
         id: this.id,
         name: this.name,
+        description: this.description,
         ipaddr: this.ipaddr,
         hostname: this.hostname,
         assetid: this.assetId,
@@ -116,6 +121,7 @@ export default {
         this.assetId = this.getAssetId;
         this.id = null;
         this.name = null;
+        this.description = null;
         this.$refs.form.reset();
       } else {
         this.setAlert({

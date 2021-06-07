@@ -13,13 +13,37 @@
       <v-btn icon @click="$router.push({ name: 'recipeManagement' })">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span>{{ this.$t('Recipe name')}}</span>
+      <span>{{ this.$t('Recipe name')}} : </span>
       <span>{{recipename}}</span>
       <v-row justify="center">
         <v-col cols="12" xl="10" class="py-0">
           <v-toolbar flat dense class="stick" :color="$vuetify.theme.dark ? '#121212': ''">
             <v-spacer></v-spacer>
-             <v-btn small color="primary" outlined class="text-none ml-2"
+            <v-btn small color="primary" outlined class="text-none ml-2"
+              :disabled="!selectedList.length"
+              @click="exportData">
+              {{ $t('Export') }}
+            </v-btn>
+            <v-btn
+              small
+              color="primary"
+              outlined
+              class="text-none ml-2"
+              :disabled="!selectedList.length"
+              @click="importData"
+            >
+              Import
+            </v-btn>
+            <input
+              multiple
+              type="file"
+              accept=".csv"
+              ref="uploader"
+              class="d-none"
+              id="uploadFiles"
+              @change="onFilesChanged"
+            />
+            <v-btn small color="primary" outlined class="text-none ml-2"
               :disabled="!saveBtnEnable"
               @click="saveVersion">
               {{ $t('Save') }}
@@ -153,7 +177,6 @@
                       small
                       color="primary"
                       @click="fnUpdateRecipeDetails(item)"
-                      :loading="deleting"
                     >
                       <v-icon v-text="'$edit'"></v-icon>
                     </v-btn>
@@ -162,7 +185,6 @@
                       small
                       color="error"
                       @click="deleteRecipeDeatils(item)"
-                      :loading="deleting"
                     >
                       <v-icon v-text="'$delete'"></v-icon>
                     </v-btn>
@@ -190,6 +212,12 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
+            <v-text-field
+              :disabled="true"
+              label="Parameter"
+              prepend-icon="mdi-tray-plus"
+              v-model="selectedParamToUpdate"
+            ></v-text-field>
             <v-text-field
               :disabled="saving"
               label="Value"
@@ -238,6 +266,8 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex';
 import socketioclient from 'socket.io-client';
+import CSVParser from '@shopworx/services/util/csv.service';
+import ZipService from '@shopworx/services/util/zip.service';
 
 export default {
   name: 'RecipeDetails',
@@ -254,6 +284,7 @@ export default {
         first: [],
         second: [],
       },
+      selectedList: [],
       recipeFilters: [
         {
           name: this.$t('Recipe Parameters'),
@@ -327,6 +358,7 @@ export default {
       itemForDelete: null,
       saveBtnEnable: false,
       btnDisable: false,
+      selectedParamToUpdate: null,
     };
   },
   async mounted() {
@@ -350,6 +382,7 @@ export default {
   // },
   async created() {
     this.saveBtnEnable = false;
+    this.zipService = ZipService;
     this.language = this.currentLocale;
     if (this.language === 'zhHans') {
       this.selectedHeader = this.headersCn;
@@ -417,10 +450,12 @@ export default {
         recipeid: this.$route.params.id,
         versionnumber: 1,
       };
-      await this.createRecipeDetails(object);
-      await this.getRecipeDetailListRecords(
-        `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
-      );
+      if (object && object.list && object.list.length) {
+        await this.createRecipeDetails(object);
+        this.selectedList = await this.getRecipeDetailListRecords(
+          `?query=recipeid=="${this.$route.params.id}"%26%26versionnumber==${this.$route.params.versionnumber}%26%26(parametercategory=="35"%7C%7Cparametercategory=="7")`,
+        );
+      }
     }
     this.socket = socketioclient.connect('http://:10190');
     this.socket.on('connect', () => {
@@ -853,8 +888,11 @@ export default {
     },
     async saveVersion() {
       const runningorder = await this.getOrderRecords('?query=orderstatus=="Running"');
-      const productNumber = await this.getProductDetails(`?query=productnumber=="${runningorder[0].productid}"`);
-      if (productNumber[0].recipenumber === this.$route.params.id) {
+      let productNumber = [];
+      if (runningorder && runningorder.length) {
+        productNumber = await this.getProductDetails(`?query=productnumber=="${runningorder[0].productid}"`);
+      }
+      if (productNumber.length && productNumber[0].recipenumber === this.$route.params.id) {
         this.setAlert({
           show: true,
           type: 'error',
@@ -931,6 +969,7 @@ export default {
     fnUpdateRecipeDetails(item) {
       this.dialog = true;
       this.itemToUpdate = item;
+      this.selectedParamToUpdate = item.tagname;
       this.recipeValue = item.parametervalue;
       this.datatype = item.datatype;
     },
@@ -1013,6 +1052,63 @@ export default {
           show: true,
           type: 'success',
           message: 'RECIPE_UPDATED',
+        });
+      }
+    },
+    async exportData() {
+      const csvContent = [];
+      const column = [
+        'Parameter',
+        'Recipe Value',
+      ];
+      this.selectedList.forEach((row) => {
+        csvContent.push([
+          row.tagname,
+          row.parametervalue,
+        ]);
+      });
+      const csvParser = new CSVParser();
+      const content = csvParser.unparse({
+        fields: column,
+        data: csvContent,
+      });
+      this.addToZip({
+        fileName: 'RecipeDetails.csv',
+        fileContent: content,
+      });
+      const zip = await this.zipService.generateZip();
+      this.zipService.downloadFile(zip, 'RecipeDetails.zip');
+      this.setAlert({
+        show: true,
+        type: 'success',
+        message: 'SAMPLE_FILE_DOWNLOAD',
+      });
+      return content;
+    },
+    addToZip(file) {
+      this.zipService.addFile(file);
+    },
+    importData() {
+      this.$refs.uploader.click();
+    },
+    async onFilesChanged(e) {
+      const files = e && e !== undefined ? e.target.files : null;
+      const csvParser = new CSVParser();
+      const { data } = await csvParser.parse(files[0]);
+      if (data && data.length) {
+        this.selectedList.forEach((param) => {
+          data.forEach((row) => {
+            if (row.Parameter === param.tagname) {
+              param.parametervalue = row['Recipe Value'];
+            }
+          });
+        });
+        this.saveBtnEnable = true;
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
         });
       }
     },

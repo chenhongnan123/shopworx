@@ -109,7 +109,10 @@ export default {
     ...mapState('helper', ['isDark']),
     ...mapGetters('helper', ['agGridLocaleText', 'agGridTheme']),
     ...mapState('reports', ['report', 'reportMapping', 'showChart']),
-    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'exportFileName']),
+    ...mapGetters('reports', ['isBaseReport', 'gridObject', 'reportTitle']),
+    aggType() {
+      return this.reportMapping ? this.$i18n.t(`${this.reportMapping.aggregationType}`) : '';
+    },
   },
   watch: {
     report(val) {
@@ -131,7 +134,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('reports', ['setGridState']),
+    ...mapMutations('reports', ['setGridState', 'setIsPDFVisible']),
     getHeaderName(col) {
       switch (this.$i18n.locale) {
         case 'zhHans':
@@ -220,7 +223,16 @@ export default {
           return 'agTextColumnFilter';
       }
     },
+    togglePDF() {
+      const pivotColumns = this.gridColumnApi.getPivotColumns();
+      if (pivotColumns.length) {
+        this.setIsPDFVisible(false);
+      } else {
+        this.setIsPDFVisible(true);
+      }
+    },
     onStateChange() {
+      this.togglePDF();
       const colState = this.gridColumnApi.getColumnState();
       const groupState = this.gridColumnApi.getColumnGroupState();
       const filterState = this.gridApi.getFilterModel();
@@ -240,6 +252,7 @@ export default {
       if (!this.isBaseReport) {
         const state = JSON.parse(this.gridObject);
         this.setState(state);
+        this.togglePDF();
       } else {
         this.resetState();
       }
@@ -258,13 +271,13 @@ export default {
     },
     exportGridCSV() {
       const params = {
-        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+        fileName: `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsCsv(params);
     },
     exportGridExcel() {
       const params = {
-        fileName: `${this.exportFileName}-${new Date().toLocaleString()}`,
+        fileName: `${this.reportTitle}_${this.aggType}-${new Date().toLocaleString()}`,
       };
       this.gridApi.exportDataAsExcel(params);
     },

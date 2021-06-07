@@ -54,6 +54,9 @@ export default {
     id: {
       type: String,
     },
+    assetId: {
+      type: [Number, String],
+    },
     records: {
       type: Array,
     },
@@ -289,9 +292,13 @@ export default {
     },
     async createRecords() {
       this.message = this.$i18n.t('setup.importMaster.importing');
+      const payload = this.masterData.map((d) => ({
+        ...d,
+        assetid: this.assetId,
+      }));
       const recordsCreated = await this.postBulkRecords({
         elementName: this.id,
-        payload: this.masterData,
+        payload,
       });
 
       if (recordsCreated) {

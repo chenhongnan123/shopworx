@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
+
+
+### Bug Fixes
+
+* **master-data:** fixed export file names ([952ed5e](https://bitbucket.org/entrib/shopworx/commits/952ed5ed5ab00bfa2ae035a3d04b7e925824e4cf))
+* **master-data:** fixed master data import ([f54d00f](https://bitbucket.org/entrib/shopworx/commits/f54d00f43f5be08bae69ae80c1a8a969d6a8d2eb))
+* **production-planning:** fixed edit plan for strokes per part ([7c24ff3](https://bitbucket.org/entrib/shopworx/commits/7c24ff392a3723c4d298ae3627cce8711074efa0))
+* **report-viewer:** added report title and time to exported file name ([95f99fe](https://bitbucket.org/entrib/shopworx/commits/95f99fe04d154e771610d2c5c26f3443f932f071))
+* **report-viewer:** disable pdf export for pivot columns ([f9f056d](https://bitbucket.org/entrib/shopworx/commits/f9f056dfaab7fa6e8c937db832627b54eb58ad08))
+
+
+### Features
+
+* **avatars:** added avatars option to user preferences ([17c9ff9](https://bitbucket.org/entrib/shopworx/commits/17c9ff9c23b0859600c7563de37ab85cc2481b21))
+* **core:** added dynamic beam avatars ([4ed9032](https://bitbucket.org/entrib/shopworx/commits/4ed9032e8e4250891ee2f35fdb0f67008b89bb8b))
+* **log-management:** for release ([92187ea](https://bitbucket.org/entrib/shopworx/commits/92187ea96df86e557c5e2dd241e62eb9459f8f18))
+* **log-management:** new changes ([0a2cdf5](https://bitbucket.org/entrib/shopworx/commits/0a2cdf5f7b240accc632de92c9a728949be34c21))
+* **log-management:** new changes with UI ([dc050cf](https://bitbucket.org/entrib/shopworx/commits/dc050cf7183a096b62c72e9e9b20cb8cbc8c81f6))
+* **log-management:** RA-I484 ([078af04](https://bitbucket.org/entrib/shopworx/commits/078af04e687dd5783f5da93e042db10712acaf11))
+* **log-management:** show the data in table on click ([338a7c4](https://bitbucket.org/entrib/shopworx/commits/338a7c404fcfb793efd3ca7bd203fe5846353338))
+* **log-management:** TA-I484 show the data on row click from the element 'swxlogcodes' ([d5e4719](https://bitbucket.org/entrib/shopworx/commits/d5e4719f3dae1dfce2314c5263e4c2f596841f95))
+* **log-management:** Ui development with creation of element ([24c7dcb](https://bitbucket.org/entrib/shopworx/commits/24c7dcbead7bf4377e534b2bda066df6709b978b))
+* **pdf-export:** added chart to exported pdf reports ([32bf97a](https://bitbucket.org/entrib/shopworx/commits/32bf97a889e703d2ead48234dbf905b8facf4a99))
+* **report-viewer:** added pdf export ([9da2dd8](https://bitbucket.org/entrib/shopworx/commits/9da2dd8af99f97590ca2051252684ac7d674c590))
+* **report-viewer:** added report title and date range to pdf export ([3d6fdc1](https://bitbucket.org/entrib/shopworx/commits/3d6fdc13aa0231e7ac1e26bbad5f31336381bfdd))
+* **report-viewer:** updated pdf doc definition ([00fd919](https://bitbucket.org/entrib/shopworx/commits/00fd9192144dcf91f04bee9e6176fee8efaf1233))
+
+
+
+
+
 ## [4.3.3](https://bitbucket.org/entrib/shopworx/compare/v4.3.2...v4.3.3) (2021-05-26)
 
 

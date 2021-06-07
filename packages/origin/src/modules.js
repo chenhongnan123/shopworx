@@ -7,6 +7,7 @@ import CustomerSms from '@shopworx/customer-sms';
 import CustomerSolutions from '@shopworx/customer-solutions';
 import CustomerUsers from '@shopworx/customer-users';
 import CustomerWebhooks from '@shopworx/customer-webhooks';
+import LogManagement from '@shopworx/log-management';
 import store from './store';
 import router from './router';
 import i18n from './i18n';
@@ -54,6 +55,12 @@ Vue.use(CustomerUsers, {
 });
 
 Vue.use(CustomerWebhooks, {
+  router,
+  store,
+  i18n,
+});
+
+Vue.use(LogManagement, {
   router,
   store,
   i18n,

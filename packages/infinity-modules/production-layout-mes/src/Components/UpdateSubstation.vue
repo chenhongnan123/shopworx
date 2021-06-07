@@ -290,21 +290,21 @@ export default {
     async saveSubstation() {
       this.saving = true;
       let created = false;
-      if (this.newSubstation.serialnumber) {
-        this.payload.serialnumber = this.newSubstation.serialnumber;
-      }
-      if (this.newSubstation.description) {
-        this.payload.description = this.newSubstation.description;
-      }
-      if (this.newSubstation.jsondata) {
-        this.payload.jsondata = this.newSubstation.jsondata;
-      }
-      if (this.newSubstation.serverlive) {
-        this.payload.serverlive = this.newSubstation.serverlive;
-      }
+      // if (this.newSubstation.serialnumber) {
+      //   this.payload.serialnumber = this.newSubstation.serialnumber;
+      // }
+      // if (this.newSubstation.description) {
+      //   this.payload.description = this.newSubstation.description;
+      // }
+      // if (this.newSubstation.jsondata) {
+      //   this.payload.jsondata = this.newSubstation.jsondata;
+      // }
+      // if (this.newSubstation.serverlive) {
+      //   this.payload.serverlive = this.newSubstation.serverlive;
+      // }
       const payload = {
         query: `?query=id=="${this.substation.id}"`,
-        payload: this.payload,
+        payload: this.newSubstation,
         stationid: this.substation.stationid,
       };
       created = this.updateSubstation(payload);
