@@ -422,7 +422,7 @@ export default {
       this.flagEdit = false;
     },
     async RefreshUI() {
-      await this.getRecipeDetailListRecords('');
+      await this.getRecipeDetailListRecords('?sortquery=sequence==1');
     },
     async handleLineClick(item) {
       const query = `?query=lineid==${item.id}`;

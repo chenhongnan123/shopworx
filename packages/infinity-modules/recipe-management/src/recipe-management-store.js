@@ -206,7 +206,7 @@ export default ({
         { root: true },
       );
       if (deleted) {
-        dispatch('getRecipeDetailListRecords');
+        dispatch('getRecipeDetailListRecords', '?sortquery=sequence==1');
         return true;
       }
       return deleted;
@@ -367,7 +367,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        dispatch('getRecipeDetailListRecords');
+        dispatch('getRecipeDetailListRecords', '?sortquery=sequence==1');
         return true;
       }
       return created;
@@ -383,7 +383,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        dispatch('getRecipeDetailListRecords');
+        dispatch('getRecipeDetailListRecords', '?sortquery=sequence==1');
         return true;
       }
       return created;

@@ -53,8 +53,7 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
-        @click="downloadSample"
-        v-if="sampleBtnVisible"
+        @click="exportData"
       >
         Sample
       </v-btn>
@@ -63,15 +62,30 @@
         outlined
         color="primary"
         class="text-none ml-2 mr-2 mt-3"
-        @click="downloadSample"
-        v-if="importBtnVisible"
+        @click="importData"
+        :loading="importBtnLoading"
       >
         Import
       </v-btn>
+      <input
+        multiple
+        type="file"
+        accept=".csv"
+        ref="uploader"
+        class="d-none"
+        id="uploadFiles"
+        @change="onFilesChanged"
+      />
     </v-toolbar>
     <v-progress-linear
      :indeterminate="myLoadingVariable"
      v-if="myLoadingVariable"
+     class="mt-1">
+    </v-progress-linear>
+    <v-progress-linear
+     :indeterminate="flagElement"
+     v-if="flagElement"
+     reverse
      class="mt-1">
     </v-progress-linear>
     <ag-grid-vue
@@ -82,7 +96,6 @@
       rowSelection="single"
       class="ag-theme-balham mt-2"
       style="width: 100%; height: 250px; cursor:pointer;"
-      :loading="myLoadingVariable"
     ></ag-grid-vue>
     <div v-if="selectedRowData.length > 0 || selectedRowDataswxCodes.length > 0">
     <v-tabs
@@ -188,8 +201,7 @@ export default {
       updateData: [],
       language: null,
       myLoadingVariable: true,
-      sampleBtnVisible: false,
-      importBtnVisible: false,
+      importBtnLoading: false,
       headers: [
         {
           headerName: this.$t('Created Date'),
@@ -212,18 +224,25 @@ export default {
           resizable: true,
         },
       ],
+      column: [
+        'code',
+        'endescription',
+        'cndescription',
+      ],
+      csvContent: [
+        'XXX01000',
+        'Station not found',
+        '机器故障',
+      ],
     };
   },
   async created() {
     this.language = this.currentLocale;
-    await this.fetchRecords();
     this.zipService = ZipService;
-    this.myLoadingVariable = true;
-    await this.getSwxLogsElement();
-    await this.getSwxLogCodes(this.id);
+    await this.getSwxLogCodes();
   },
   computed: {
-    ...mapState('logManagement', ['records', 'logs', 'logcodes']),
+    ...mapState('logManagement', ['records', 'logs', 'logcodes', 'elementExisted']),
     ...mapGetters('logManagement', ['getTags']),
     currentLocale: {
       get() {
@@ -233,18 +252,16 @@ export default {
     tags() {
       return this.getTags(this.id, this.assetId);
     },
+    flagElement: {
+      get() {
+        if (this.elementExisted) {
+          this.getSwxLogsElement();
+        }
+        return this.elementExisted;
+      },
+    },
   },
   watch: {
-    assetId() {
-      this.fetchRecords();
-    },
-    id() {
-      this.fetchRecords();
-      this.getSwxLogs(this.id);
-      this.getSwxLogCodes(this.id);
-      this.selectedRowData = [];
-      this.selectedRowDataswxCodes = [];
-    },
     logs() {
       this.setRowData();
       this.setColumnDefs();
@@ -269,7 +286,7 @@ export default {
     this.gridApi.sizeColumnsToFit();
   },
   methods: {
-    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes']),
+    ...mapActions('logManagement', ['getRecords', 'updateRecord', 'getSwxLogs', 'getSwxLogCodes', 'createNewLogCodes']),
     ...mapMutations('helper', ['setAlert']),
     async refreshUI() {
       this.selectedRowData = [];
@@ -287,6 +304,7 @@ export default {
       }
     },
     async getSwxLogsElement() {
+      this.myLoadingVariable = true;
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
@@ -296,6 +314,7 @@ export default {
       this.myLoadingVariable = false;
       this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
       this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
+      this.myLoadingVariable = false;
       if (!records.length) {
         this.setAlert({
           show: true,
@@ -367,14 +386,6 @@ export default {
         }
       }
     },
-    async fetchRecords() {
-      this.loading = true;
-      await this.getRecords({
-        elementName: this.id,
-        assetId: this.assetId,
-      });
-      this.loading = false;
-    },
     setRowData() {
       this.rowData = this.logs;
     },
@@ -386,70 +397,15 @@ export default {
       const thisIsFirstColumn = displayedColumns[0] === params.column;
       return thisIsFirstColumn;
     },
-    getNewRowItem() {
-      return this.tags.reduce((acc, tag) => {
-        acc[tag.tagName] = null;
-        return acc;
-      }, {});
-    },
     onSelectionChanged(event) {
       this.rowsSelected = event.api.getSelectedRows().length > 0;
     },
-    addRow() {
-      this.gridApi.applyTransaction({ add: [this.getNewRowItem()] });
-    },
-    deleteSelectedRows() {
-      const selectedRows = this.gridApi.getSelectedRows();
-      this.gridApi.applyTransaction({ remove: selectedRows });
-      this.rowsSelected = this.gridApi.getSelectedRows().length > 0;
-    },
-    editMethod(event) {
-      if (event.data.assetid) {
-        const makevisible = true;
-        this.updateData.push(event.data);
-        this.$emit('showupdatebtnemt', makevisible);
-      }
-    },
-    async updateValue() {
-      const elementName = this.id;
-      const data = this.updateData;
-      const multipleRows = data.forEach(async (item) => {
-        await this.updateRecord(
-          {
-            query: item._id, payload: item, name: elementName,
-          },
-        );
-      });
-      let update = false;
-      update = await Promise.all([multipleRows]);
-      if (update) {
-        this.setAlert({
-          show: true,
-          type: 'success',
-          message: 'DATA_SAVED',
-        });
-      }
-      const makeunvisible = false;
-      this.$emit('showupdatebtnemt', makeunvisible);
-      this.updateData = [];
-    },
     async exportData() {
-      const nameEement = this.id;
-      const fileName = `${nameEement}_Master_Table`;
-      const parameterSelected = this.rowData.map((item) => ({ ...item }));
-      const column = parameterSelected[0].questions;
-      const csvContent = [];
-      parameterSelected.forEach((parameter) => {
-        const arr = [];
-        column.forEach((key) => {
-          arr.push(parameter[key]);
-        });
-        csvContent.push(arr);
-      });
+      const fileName = 'Swxlogcodes-sample';
       const csvParser = new CSVParser();
       const content = csvParser.unparse({
-        fields: column,
-        data: csvContent,
+        fields: this.column,
+        data: this.csvContent,
       });
       this.addToZip({
         fileName: `${fileName}.csv`,
@@ -466,6 +422,137 @@ export default {
     },
     addToZip(file) {
       this.zipService.addFile(file);
+    },
+    importData() {
+      this.$refs.uploader.click();
+    },
+    async onFilesChanged(e) {
+      this.importBtnLoading = true;
+      const files = e && e !== undefined ? e.target.files : null;
+      const ext = /^.+\.([^.]+)$/.exec(files[0].name);
+      const getFileExtension = ext == null ? 'Null input from upload' : ext[1];
+      if (getFileExtension !== 'csv' && getFileExtension !== 'CSV') {
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'UPLOAD_ONLY_CSV',
+        });
+        this.importBtnLoading = false;
+        document.getElementById('uploadFiles').value = null;
+        return;
+      }
+      const csvParser = new CSVParser();
+      const { data } = await csvParser.parse(files[0]);
+      if (data.length > 0) {
+        const codelist = data.map((item) => item.code.toLowerCase().split(' ').join(''));
+        const dummycode = [];
+        data.forEach((d) => {
+          const codesDuplicate = this.logcodes
+            .filter((l) => l.code.toLowerCase().split(' ').join('') === d.code.toLowerCase().split(' ').join(''));
+          if (codesDuplicate.length) {
+            dummycode.push(d.code);
+          }
+        });
+        if (dummycode.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'DUPLICATE_CODES_IN_DATABASE',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        const codeLength = [];
+        codelist.forEach((len) => {
+          if (len.length > 15) {
+            codeLength.push(len);
+          }
+        });
+        if (codeLength.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'CODE_LENGTH_EXCEEDED',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        if (codelist.length > 100) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ROW_LIMIT',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        const nullCode = [];
+        data.forEach((em) => {
+          if (em.code === null || em.code === '' || em.code === undefined) {
+            nullCode.push(em.code);
+          }
+        });
+        if (nullCode.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'EMPTY_INPUT',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
+        const duplicateCodes = codelist.map((item) => item)
+          .filter((value, index, self) => self.indexOf(value) !== index);
+        if (duplicateCodes.length > 0) {
+          this.validateFlag = false;
+          this.savingImport = false;
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'DUPLICATE_CODES',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+        } else {
+          const obj = {
+            assetid: 4,
+            siteId: 197,
+            customerId: 195,
+            userId: 200,
+          };
+          const payload = [];
+          data.forEach((el) => {
+            payload.push({
+              code: el.code,
+              endescription: el.endescription,
+              cndescription: el.cndescription,
+              ...obj,
+            });
+          });
+          const created = await this.createNewLogCodes(payload);
+          if (created) {
+            this.setAlert({
+              show: true,
+              type: 'success',
+              message: 'CODE_CREATED',
+            });
+            this.importBtnLoading = false;
+          }
+        }
+      } else {
+        this.validateFlag = false;
+        this.savingImport = false;
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'IMPORT_EMPTY_FILE',
+        });
+      }
     },
   },
 };
