@@ -66,7 +66,7 @@
                 <v-col cols="12" sm="4">
                   <validation-provider
                     name="scrapWeight"
-                    rules="required"
+                    rules="required|min_value:0"
                     #default="{ errors }"
                   >
                     <v-text-field

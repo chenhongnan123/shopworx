@@ -53,4 +53,15 @@ export default [{
     defaultSchema: '',
     moduleName: 'dashboards',
   },
+}, {
+  isComplete: false,
+  isLoading: false,
+  payload: {
+    webAppName: 'energyDashboard',
+    webAppDescription: 'Energy Dashboard',
+    iconURL: '$energyDashboard',
+    webAppLink: '/dashboards/#/d/energy-dashboard',
+    defaultSchema: '',
+    moduleName: 'dashboards',
+  },
 }];

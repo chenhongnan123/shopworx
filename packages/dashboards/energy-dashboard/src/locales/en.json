@@ -1,10 +1,10 @@
 {
-  "shopfloorDashboard": {
-    "title": "Shopfloor Dashboard",
-    "up": "Running",
-    "down": "Down",
-    "customize": "Customize",
-    "done": "Done",
-    "addWidgets": "Add widgets"
+  "energyDashboard": {
+    "titleshift": "Shift-wise energy dashboard",
+    "titlehour": "Hourly energy dashboard",
+    "light": "Light",
+    "dark": "Dark",
+    "hour": "Hourly",
+    "shift": "Shift-wise"
   }
 }

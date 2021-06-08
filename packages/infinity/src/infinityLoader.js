@@ -16,8 +16,3 @@ export const onLogin = (sessionId) => {
 export const onLogout = () => {
   App.onLogout();
 };
-
-// Set dashboard url
-export const onExternalAppClick = (url) => {
-  App.onExternalAppClick(url);
-};

@@ -151,8 +151,9 @@ export default ({
       return tvs;
     },
 
-    isAppProvisioned: (_, { myDashboards }) => (appLink) => {
-      let isProvisioned = false;
+    isAppProvisioned: (_, { myDashboards }, __, rootGetters) => (appLink) => {
+      const isTV = rootGetters['helper/isTV'];
+      let isProvisioned = isTV || false;
       if (myDashboards && myDashboards.length) {
         isProvisioned = myDashboards.find((d) => d.to.includes(appLink));
       }

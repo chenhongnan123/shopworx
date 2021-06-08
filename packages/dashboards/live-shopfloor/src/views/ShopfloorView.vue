@@ -1,9 +1,7 @@
 <template>
   <div>
     <portal to="dashboard-title">
-      {{ selectedView && selectedView.value === 'shift'
-        ? 'Shift-wise shopfloor dashboard'
-        : 'Hourly shopfloor dashboard' }}
+      {{ $t(`shopfloorDashboard.title${selectedView}`) }}
     </portal>
     <v-container
       grid-list-lg
@@ -111,9 +109,7 @@
           ? 'headline font-weight-medium ml-4'
           : 'title pl-0'"
       >
-        {{ selectedView && selectedView.value === 'shift'
-          ? 'Shift-wise shopfloor dashboard'
-          : 'Hourly shopfloor dashboard' }}
+        {{ $t(`shopfloorDashboard.title${selectedView}`) }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="headline font-weight-medium">
