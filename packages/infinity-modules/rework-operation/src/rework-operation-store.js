@@ -78,7 +78,7 @@ export default ({
         { root: true },
       );
       if (list && list.length) {
-        list = list.sort((a, b) => a.name.localeCompare(b.name));
+        list = list.sort((a, b) => a.sequence - b.sequence);
         commit('setRoadmapList', list);
         return true;
       }
