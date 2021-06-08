@@ -261,6 +261,8 @@ export default {
       const {
         machinename,
         actualdowntimestart,
+        downtimeend,
+        downtimestart,
         reasonname,
         status,
       } = data;
@@ -273,9 +275,10 @@ export default {
               machinestatus: 'DOWN',
               updatedAt: this.currentTime,
               downsince: actualdowntimestart,
+              downtimestart,
               downreason: reasonname || '',
             };
-          } else if (status === 'complete') {
+          } else if (status === 'complete' && downtimeend > this.machines[i].downtimestart) {
             payload = {
               ...this.machines[i],
               machinestatus: 'UP',
