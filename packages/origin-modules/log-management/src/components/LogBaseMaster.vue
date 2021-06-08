@@ -230,8 +230,8 @@ export default {
         'cndescription',
       ],
       csvContent: [
-        'MF',
-        'Machine failure',
+        'XXX01000',
+        'Station not found',
         '机器故障',
       ],
     };
