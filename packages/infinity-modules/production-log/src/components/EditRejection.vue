@@ -42,6 +42,7 @@
             class="mt-1"
             :suffix="$t('production.pieces')"
             :rules="[(v) => (
+              v > 0 &&
               Number.isInteger(Number(v)) > 0
               && parseInt(v, 10) <= acceptedQty
             )
