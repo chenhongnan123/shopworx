@@ -580,13 +580,14 @@ export default {
       duplicateCombination: [],
       importArray: [],
       emptyDataList: [],
+      dataForTracebilityElement: [],
       masterTags: [{
         tagName: 'name',
         tagDescription: 'Parameter Name',
         required: true,
         emgTagType: 'string',
       }, {
-        tagName: 'description',
+        tagName: 'englishdescription',
         tagDescription: 'Parameter Description',
         required: false,
         emgTagType: 'string',
@@ -712,6 +713,7 @@ export default {
       'subStationElementDeatils',
       'createElementResponse',
       'protocol',
+      'validationsPassed',
     ]),
     isAddButtonOK() {
       if (
@@ -844,6 +846,14 @@ export default {
         }
       }
     },
+    validationsPassed: {
+      handler(val) {
+        if (val) {
+          this.executeTracebilityLogic(val);
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapMutations('helper', ['setAlert', 'setExtendedHeader']),
@@ -860,6 +870,7 @@ export default {
       'setSelectedParameterDatatype',
       'setParameterList',
       'setProtocol',
+      'setCreateParam',
     ]),
     ...mapActions('parameterConfigurationMes', [
       'getPageDataList',
@@ -877,6 +888,7 @@ export default {
       'getElementDetails',
       'createTagElement',
       'updateTagStatus',
+      'createElement',
     ]),
     setHeight() {
       this.height = window.innerHeight - 212;
@@ -1516,6 +1528,7 @@ export default {
       }
       const csvParser = new CSVParser();
       const { data } = await csvParser.parse(files[0]);
+      this.dataForTracebilityElement = data;
       if (data.length > 0) {
         data.forEach((item) => {
           item.lineid = this.lineValue;
@@ -1570,7 +1583,7 @@ export default {
           md.maxdecimal = 0;
         }
       });
-      const nameList = dataList.map((item) => item.name);
+      const nameList = importedDataList.map((item) => item.name);
       const duplicateNames = nameList.map((item) => item)
         .filter((value, index, self) => self.indexOf(value) !== index);
       const res = [];
@@ -1818,14 +1831,45 @@ export default {
             }
           }
         }
-        const createResult = await this.createParameterList(data);
-        if (createResult) {
-          await this.getParameterListRecords(this.getQuery());
-          const tagList = [];
-          const traceabilityTagList = [];
-          // get information of traceability element
-          const traceabilityElementDetails = await this.getElementDetails('traceability');
-          await this.getSubStationIdElement(this.substationValue);
+        // remove the parameter creation call
+        // const createResult = await this.createParameterList(data);
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'duplicate_parameter_name',
+        });
+        document.getElementById('uploadFiles').value = null;
+      }
+    },
+    async executeTracebilityLogic(val) {
+      if (val) {
+        await this.getParameterListRecords(this.getQuery());
+        const tagList = [];
+        const traceabilityTagList = [];
+        // get information of traceability element
+        const traceabilityElementDetails = await this.getElementDetails('traceability');
+        await this.getSubStationIdElement(this.substationValue);
+        if (!traceabilityElementDetails) {
+          const payloadElement = {
+            categoryType: 'ASSET',
+            collectionName: 'provisioning',
+            elementName: 'traceability',
+            elementDescription: 'traceability',
+            status: 'ACTIVE',
+            elementType: 'PROVISIONING',
+            uniqueTagName: '',
+            uniqueTagValue: 0,
+            uniqueTagStartValue: 0,
+            uniqueTagValuePrefix: '',
+            uniqueTagValueSuffix: '',
+            businessTimeTagsRequired: false,
+            optional: false,
+            assetBased: true,
+            uniqueTag: false,
+            assetId: 4,
+          };
+          const newElement = await this.createElement(payloadElement);
           // add by default mainid
           tagList.push({
             assetId: 4,
@@ -1858,11 +1902,124 @@ export default {
             filterFromTagName: '',
             filterQuery: '',
           });
-          data.forEach((item) => {
+          this.dataForTracebilityElement.forEach((item) => {
             if (
               Number(item.parametercategory) === 15
-               || Number(item.parametercategory) === 17
-               || Number(item.parametercategory) === 18) {
+                || Number(item.parametercategory) === 17
+                || Number(item.parametercategory) === 18) {
+              let dataTypeName = '';
+              if (
+                this.datatypeList
+                  .filter((datatype) => Number(datatype.id) === Number(item.datatype))[0].name === 'String'
+              ) {
+                dataTypeName = 'String';
+              } else {
+                dataTypeName = 'Double';
+              }
+              const tagname = item.name;
+              tagList.push({
+                assetId: 4,
+                tagName: tagname.toLowerCase().trim(),
+                tagDescription: item.name,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: this.subStationElementDeatils.element.id,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
+              });
+              // Add tags to Traceability element
+              traceabilityTagList.push({
+                assetId: 4,
+                tagName: `${this.substationValue}_${tagname.toLowerCase().trim()}`,
+                tagDescription: `${this.substationValue}_${item.name}`,
+                emgTagType: dataTypeName,
+                tagOrder: 1,
+                connectorId: 2,
+                defaultValue: '',
+                elementId: newElement,
+                hide: false,
+                identifier: true,
+                interactionType: '',
+                mode: '',
+                required: true,
+                sampling: true,
+                lowerRangeValue: 1,
+                upperRangeValue: 1,
+                alarmFlag: true,
+                alarmId: 1,
+                derivedField: false,
+                derivedFunctionName: '',
+                derivedFieldType: '',
+                displayType: true,
+                displayUnit: 1,
+                isFamily: true,
+                familyQueryTag: '',
+                filter: true,
+                filterFromElementName: '',
+                filterFromTagName: '',
+                filterQuery: '',
+              });
+            }
+          });
+        } else {
+          // add by default mainid
+          tagList.push({
+            assetId: 4,
+            tagName: 'mainid',
+            tagDescription: 'mainid',
+            emgTagType: 'String',
+            tagOrder: 1,
+            connectorId: 2,
+            defaultValue: '',
+            elementId: this.subStationElementDeatils.element.id,
+            hide: false,
+            identifier: true,
+            interactionType: '',
+            mode: '',
+            required: true,
+            sampling: true,
+            lowerRangeValue: 1,
+            upperRangeValue: 1,
+            alarmFlag: true,
+            alarmId: 1,
+            derivedField: false,
+            derivedFunctionName: '',
+            derivedFieldType: '',
+            displayType: true,
+            displayUnit: 1,
+            isFamily: true,
+            familyQueryTag: '',
+            filter: true,
+            filterFromElementName: '',
+            filterFromTagName: '',
+            filterQuery: '',
+          });
+          this.dataForTracebilityElement.forEach((item) => {
+            if (
+              Number(item.parametercategory) === 15
+                || Number(item.parametercategory) === 17
+                || Number(item.parametercategory) === 18) {
               let dataTypeName = '';
               if (
                 this.datatypeList
@@ -1938,59 +2095,54 @@ export default {
               });
             }
           });
-          await this.createTagElement(tagList);
-          // TODO - Check response "this.createElementResponse"
-          if (this.createElementResponse && this.createElementResponse.length) {
-            let payloadData = [];
-            tagList.forEach((l) => {
-              const tag = this.createElementResponse
-                .filter((f) => f.tagName === l.tagName);
-              if (!tag[0].created) {
-                payloadData.push({
-                  elementId: l.elementId,
-                  tagId: tag[0].tagId,
-                  status: 'ACTIVE',
-                });
-              }
-            });
-            await this.updateTagStatus(payloadData);
-            // updates tags of traceability elements
-            await this.createTagElement(traceabilityTagList);
-            payloadData = [];
-            traceabilityTagList.forEach((l) => {
-              const tag = this.createElementResponse
-                .filter((f) => f.tagName === l.tagName);
-              if (!tag[0].created) {
-                payloadData.push({
-                  elementId: l.elementId,
-                  tagId: tag[0].tagId,
-                  status: 'ACTIVE',
-                });
-              }
-            });
-            await this.updateTagStatus(payloadData);
-            this.setAlert({
-              show: true,
-              type: 'success',
-              message: 'IMPORT_PARAMETER_LIST',
-            });
-          } else {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: 'ELEMENT_NOT_CREATED',
-            });
-          }
         }
-        document.getElementById('uploadFiles').value = null;
-      } else {
-        this.setAlert({
-          show: true,
-          type: 'error',
-          message: 'duplicate_parameter_name',
-        });
-        document.getElementById('uploadFiles').value = null;
+        await this.createTagElement(tagList);
+        // TODO - Check response "this.createElementResponse"
+        if (this.createElementResponse && this.createElementResponse.length) {
+          let payloadData = [];
+          tagList.forEach((l) => {
+            const tag = this.createElementResponse
+              .filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+          // updates tags of traceability elements
+          await this.createTagElement(traceabilityTagList);
+          payloadData = [];
+          traceabilityTagList.forEach((l) => {
+            const tag = this.createElementResponse
+              .filter((f) => f.tagName === l.tagName);
+            if (!tag[0].created) {
+              payloadData.push({
+                elementId: l.elementId,
+                tagId: tag[0].tagId,
+                status: 'ACTIVE',
+              });
+            }
+          });
+          await this.updateTagStatus(payloadData);
+          this.setAlert({
+            show: true,
+            type: 'success',
+            message: 'IMPORT_PARAMETER_LIST',
+          });
+          this.setCreateParam(false);
+          document.getElementById('uploadFiles').value = null;
+        } else {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'ELEMENT_NOT_CREATED',
+          });
+        }
       }
+      document.getElementById('uploadFiles').value = null;
     },
     addToZip(file) {
       this.zipService.addFile(file);

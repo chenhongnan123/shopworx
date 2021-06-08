@@ -283,8 +283,8 @@ export default {
   },
   methods: {
     ...mapMutations('helper', ['setAlert']),
-    ...mapMutations('parameterConfiguration', ['setCreateParam']),
-    ...mapActions('parameterConfiguration', ['createParameterList']),
+    ...mapMutations('parameterConfigurationMes', ['setCreateParam']),
+    ...mapActions('parameterConfigurationMes', ['createParameterList']),
     async createParamsBtn() {
       this.deleting = true;
       const createResult = await this.createParameterList(this.payloadData);
