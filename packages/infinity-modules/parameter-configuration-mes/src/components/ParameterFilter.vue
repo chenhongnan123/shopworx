@@ -319,6 +319,11 @@ export default {
       } else {
         query += `stationid=="${this.stationValue || null}"`;
       }
+      if (query === '?query=') {
+        query = '?sortquery=sequence==1';
+      } else {
+        query += '&sortquery=sequence==1';
+      }
       this.saving = true;
       await this.getParameterListRecords(query);
       this.saving = false;
@@ -326,7 +331,7 @@ export default {
       this.setApply(true);
     },
     btnReset() {
-      this.getParameterListRecords('?query=stationid==null');
+      this.getParameterListRecords('?query=stationid==null&sortquery=sequence==1');
       this.toggleFilter();
       this.selectedParameterName = '';
       this.selectedParameterDirection = '';

@@ -27,6 +27,7 @@ export default ({
     subStationElementDeatils: [],
     createElementResponse: [],
     protocol: '',
+    validationsPassed: false,
   },
   mutations: {
     setProtocol: set('protocol'),
@@ -54,8 +55,17 @@ export default ({
     setSelectedParameterDatatype: set('selectedParameterDatatype'),
     setSubStationIdDeatils: set('subStationElementDeatils'),
     setCreateElementResponse: set('createElementResponse'),
+    setCreateParam: set('validationsPassed'),
   },
   actions: {
+    createElement: async ({ dispatch }, payload) => {
+      const created = await dispatch(
+        'element/createElement',
+        { element: payload },
+        { root: true },
+      );
+      return created;
+    },
     createTagElement: async ({ commit, dispatch }, payload) => {
       const element = await dispatch(
         'element/createElementTags',
