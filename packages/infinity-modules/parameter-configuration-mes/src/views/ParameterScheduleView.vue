@@ -193,6 +193,7 @@
           :dupDbAddress="dupDbAddress"
           :paramLength="paramLength"
           :dummyNames="dummyNames"
+          :dummyParamsDb="dummyParamsDb"
           :dummyCombo="dummyCombo"
           :duplicateCombination="duplicateCombination"/>
       </v-col>
@@ -576,6 +577,7 @@ export default {
       dupDbAddress: [],
       dummyCombo: [],
       dummyNames: [],
+      dummyParamsDb: [],
       validateFlag: true,
       duplicateCombination: [],
       importArray: [],
@@ -587,7 +589,7 @@ export default {
         required: true,
         emgTagType: 'string',
       }, {
-        tagName: 'englishdescription',
+        tagName: 'description',
         tagDescription: 'Parameter Description',
         required: false,
         emgTagType: 'string',
@@ -670,6 +672,7 @@ export default {
         this.dupDbAddress = [];
         this.paramLength = [];
         this.dummyNames = [];
+        this.dummyParamsDb = [];
         this.dummyCombo = [];
         this.duplicateCombination = [];
         this.importArray = [];
@@ -1586,24 +1589,34 @@ export default {
       const nameList = importedDataList.map((item) => item.name);
       const duplicateNames = nameList.map((item) => item)
         .filter((value, index, self) => self.indexOf(value) !== index);
+      const duplicateParamsDB = [];
+      nameList.forEach((pf) => {
+        this.parameterList.forEach((pd) => {
+          if (pf.toLowerCase().split(' ').join('') === pd.name.toLowerCase().split(' ').join('')) {
+            duplicateParamsDB.push(pf);
+          }
+        });
+      });
+      // validations for required fields
       const res = [];
       importedDataList.forEach((d, r) => {
         this.masterTags.forEach((t) => {
           if (t.required) {
             const val = d[t.tagName];
-            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
+            if (val === null || val === '' || val === undefined) {
               res.push({ row: r + 2, tag: t.tagDescription });
               this.responce = res;
             }
           }
         });
       });
+      // validation for optional fields
       const resopt = [];
-      dataList.forEach((d, r) => {
+      importedDataList.forEach((d, r) => {
         this.masterTags.forEach((op) => {
           if (!op.required) {
             const val = d[op.tagName];
-            if (val === null || val === '' || val === undefined || /[^A-Za-z0-9]/.test(val)) {
+            if (val === null || val === '' || val === undefined) {
               resopt.push({ row: r + 2, tag: op.tagDescription });
               this.optionalRes = resopt;
             }
@@ -1686,10 +1699,20 @@ export default {
               }
             });
           }
+          if (duplicateParamsDB.length > 0) {
+            const paramNames = [];
+            duplicateParamsDB.forEach((p) => {
+              if (p.length > 0) {
+                paramNames.push(` name: ${p} `);
+                this.dummyParamsDb = paramNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
-              if (p.length > 20) {
+              if (p.length > 40) {
                 resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
@@ -1778,10 +1801,20 @@ export default {
               }
             });
           }
+          if (duplicateParamsDB.length > 0) {
+            const paramNames = [];
+            duplicateParamsDB.forEach((p) => {
+              if (p.length > 0) {
+                paramNames.push(` name: ${p} `);
+                this.dummyParamsDb = paramNames;
+                this.$root.$emit('parameterCreation', true);
+              }
+            });
+          }
           if (nameList) {
             const resLen = [];
             nameList.forEach((p, index) => {
-              if (p.length > 20) {
+              if (p.length > 40) {
                 resLen.push(` name: ${p} | row: ${index + 2} `);
                 this.paramLength = resLen;
                 this.savingImport = false;
