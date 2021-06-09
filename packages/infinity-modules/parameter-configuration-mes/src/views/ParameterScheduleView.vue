@@ -87,6 +87,7 @@
               outlined
               class="text-none ml-2"
               :disabled="isAddButtonOK"
+              :loading="savingImport"
               @click="importData"
             >
               Import
@@ -579,10 +580,12 @@ export default {
       dummyNames: [],
       dummyParamsDb: [],
       validateFlag: true,
+      savingImport: false,
       duplicateCombination: [],
       importArray: [],
       emptyDataList: [],
       dataForTracebilityElement: [],
+      tracibilityExecution: false,
       masterTags: [{
         tagName: 'name',
         tagDescription: 'Parameter Name',
@@ -682,6 +685,13 @@ export default {
       const getList = data;
       if (getList) {
         this.getParameterListRecords(this.getQuery());
+      }
+    });
+    this.$root.$on('passedFlagOfValidations', (data) => {
+      const getTrue = data;
+      if (getTrue) {
+        this.tracibilityExecution = true;
+        this.executeTracebilityLogic(getTrue);
       }
     });
   },
@@ -848,14 +858,6 @@ export default {
           this.myLoadingVariable = false;
         }
       }
-    },
-    validationsPassed: {
-      handler(val) {
-        if (val) {
-          this.executeTracebilityLogic(val);
-        }
-      },
-      deep: true,
     },
   },
   methods: {
@@ -1882,7 +1884,7 @@ export default {
         const traceabilityTagList = [];
         // get information of traceability element
         const traceabilityElementDetails = await this.getElementDetails('traceability');
-        await this.getSubStationIdElement(this.substationValue);
+        await this.getSubStationIdElement(`process_${this.substationValue}`);
         if (!traceabilityElementDetails) {
           const payloadElement = {
             categoryType: 'ASSET',
@@ -2165,7 +2167,8 @@ export default {
             type: 'success',
             message: 'IMPORT_PARAMETER_LIST',
           });
-          this.setCreateParam(false);
+          // this.setCreateParam(false);
+          this.tracibilityExecution = false;
           document.getElementById('uploadFiles').value = null;
         } else {
           this.setAlert({

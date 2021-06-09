@@ -313,7 +313,8 @@ export default {
       this.dialog = false;
       this.payloadData = [];
       if (createResult) {
-        this.setCreateParam(true);
+        // this.setCreateParam(true);
+        this.$root.$emit('passedFlagOfValidations', true);
         this.setAlert({
           show: true,
           type: 'success',
