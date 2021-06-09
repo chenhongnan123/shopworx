@@ -7,12 +7,12 @@
       dense
       hide-details
       class="ma-0 pa-0"
-      v-model="view"
+      v-model="currentView"
     >
       <v-radio
         v-for="(view, n) in views"
         :key="n"
-        :label="view.label"
+        :label="$t(`shopfloorDashboard.${view}`)"
         :value="view"
       ></v-radio>
     </v-radio-group>
@@ -20,36 +20,16 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ViewType',
-  data() {
-    return {
-      views: [{
-        label: 'Hour',
-        value: 'hourly',
-        reportName: 'hourlyliveshopfloor',
-      }, {
-        label: 'Shift',
-        value: 'shift',
-        reportName: 'shiftliveshopfloor',
-      }],
-    };
-  },
-  created() {
-    if (this.queries && this.queries.view) {
-      this.setViewFromQuery(this.queries.view);
-    } else if (!this.selectedView) {
-      this.setView(this.views[1]);
-    }
-  },
   computed: {
-    ...mapState('shopfloor', ['selectedView']),
+    ...mapState('shopfloor', ['selectedView', 'views']),
     queries() {
       return this.$route.query;
     },
-    view: {
+    currentView: {
       get() {
         return this.selectedView;
       },
@@ -59,27 +39,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions('shopfloor', ['getBusinessTime', 'getMachines']),
-    ...mapMutations('shopfloor', ['setSelectedView', 'setLoading']),
-    setViewFromQuery(value) {
-      const view = this.views.find((v) => v.value === value);
-      if (view) {
-        this.setSelectedView(view);
-      } else {
-        this.setView(this.views[1]);
-      }
-    },
+    ...mapMutations('shopfloor', ['setSelectedView']),
     async setView(view) {
       const query = {
         ...this.queries,
-        view: view.value,
+        view,
       };
-      this.$router.replace({ query });
+      this.$router.replace({ query }).catch(() => {});
       this.setSelectedView(view);
-      this.setLoading(true);
-      await this.getBusinessTime();
-      await this.getMachines();
-      this.setLoading(false);
     },
   },
 };

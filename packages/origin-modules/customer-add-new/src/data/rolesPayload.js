@@ -13,11 +13,11 @@ export default [{
   }, {
     name: 'dashboards',
     enterpriseMode: false,
-    items: ['liveShopfloor'],
+    items: ['liveShopfloor', 'energyDashboard'],
   }, {
     name: 'reports',
     enterpriseMode: false,
-    items: ['production', 'downtime', 'quality', 'performance'],
+    items: ['production', 'downtime', 'quality', 'performance', 'utility'],
   }, {
     name: 'masters',
     enterpriseMode: false,

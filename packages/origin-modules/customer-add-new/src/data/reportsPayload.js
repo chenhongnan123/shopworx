@@ -1431,7 +1431,7 @@ export default [
         ],
       },
     ],
-    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyliveshopfloor" Description="Hourly Live Shopfloor" Database="emgda" Host="localhost" Port="27017"><DataObject Name="machine" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;machine&quot;"/></Pipeline><Pipeline><Group><Key Name="machinecode" Field="machinecode" /><Key Name="machinename" Field="machinename" /><Key Name="machinecell" Field="machinecell" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="cycletime" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="machinename" Field="machinename" /><Key Name="partname" Field="partname" /><Key Name="hourlyAvailableTime" Field="hourlyAvailableTime" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="produced" Field="qty" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="Last" /><GroupField Name="activecavity" Field="activecavity" GroupFunction="Last" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="performance" Collection="machinewise-oee-hourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="runtime" Field="runtime" /><Key Name="updatedAt" Field="updatedAtTimestamp" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="inProgressDowntime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;inProgress&quot; &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimestart" Field="actualdowntimestart" /><Key Name="downtimereason" Field="reasonname" /></Group></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyliveshopfloor" Description="Hourly Live Shopfloor" Database="emgda" Host="localhost" Port="27017"><DataObject Name="machine" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;machine&quot;"/></Pipeline><Pipeline><Group><Key Name="machinecode" Field="machinecode" /><Key Name="machinename" Field="machinename" /><Key Name="machinecell" Field="machinecell" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="cycletime" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="machinename" Field="machinename" /><Key Name="partname" Field="partname" /><Key Name="hourlyAvailableTime" Field="hourlyAvailableTime" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="produced" Field="qty" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="Last" /><GroupField Name="activecavity" Field="activecavity" GroupFunction="Last" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="performance" Collection="machinewise-oee-hourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="runtime" Field="runtime" /><Key Name="updatedAt" Field="updatedAtTimestamp" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="inProgressDowntime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;inProgress&quot; &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimestart" Field="downtimestart" /><Key Name="actualdowntimestart" Field="actualdowntimestart" /><Key Name="downtimereason" Field="reasonname" /></Group></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *##set($count = 0)#*
       *##set($machines = $resultmap.machine)#*
@@ -1504,14 +1504,17 @@ export default [
                 *##end#*
               *#],#*
               *##set($downsince = '"-"')#*
+              *##set($downtimestart = '"-"')#*
               *##set($downreason = '"No reason"')#*
               *##foreach($downtime in $downtimes)#*
                 *##if($machinename == $downtime.get("_id").machinename)#*
                   *##set($machinestatus = '"DOWN"')#*
-                  *##set($downsince = $downtime.get("_id").downtimestart)#*
+                  *##set($downsince = $downtime.get("_id").actualdowntimestart)#*
+                  *##set($downtimestart = $downtime.get("_id").downtimestart)#*
                   *##set($downreason = $downtime.get("_id").downtimereason)#*
                 *##end#*
               *##end#*
+              *#"downtimestart": $downtimestart,#*
               *#"downsince": $downsince,#*
               *#"downreason": $downreason,#*
               *#"machinestatus": $machinestatus#*
@@ -1566,7 +1569,7 @@ export default [
         ],
       },
     ],
-    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftliveshopfloor" Description="Shift wise Live Shopfloor" Database="emgda" Host="localhost" Port="27017"><DataObject Name="machine" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;machine&quot;"/></Pipeline><Pipeline><Group><Key Name="machinecode" Field="machinecode" /><Key Name="machinename" Field="machinename" /><Key Name="machinecell" Field="machinecell" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="cycletime" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="machinename" Field="machinename" /><Key Name="partname" Field="partname" /><Key Name="shiftAvailableTime" Field="shiftAvailableTime" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="produced" Field="qty" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="Last" /><GroupField Name="activecavity" Field="activecavity" GroupFunction="Last" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="performance" Collection="machinewise-oee-shift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="runtime" Field="runtime" /><Key Name="updatedAt" Field="updatedAtTimestamp" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="inProgressDowntime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;inProgress&quot; &amp;&amp; date == dateVal &amp;&amp; shiftName == shiftVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimestart" Field="actualdowntimestart" /><Key Name="downtimereason" Field="reasonname" /></Group></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftliveshopfloor" Description="Shift wise Live Shopfloor" Database="emgda" Host="localhost" Port="27017"><DataObject Name="machine" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;machine&quot;"/></Pipeline><Pipeline><Group><Key Name="machinecode" Field="machinecode" /><Key Name="machinename" Field="machinename" /><Key Name="machinecell" Field="machinecell" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="cycletime" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="machinename" Field="machinename" /><Key Name="partname" Field="partname" /><Key Name="shiftAvailableTime" Field="shiftAvailableTime" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="produced" Field="qty" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="Last" /><GroupField Name="activecavity" Field="activecavity" GroupFunction="Last" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="performance" Collection="machinewise-oee-shift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="runtime" Field="runtime" /><Key Name="updatedAt" Field="updatedAtTimestamp" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="inProgressDowntime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;inProgress&quot; &amp;&amp; date == dateVal &amp;&amp; shiftName == shiftVal"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimestart" Field="downtimestart" /><Key Name="actualdowntimestart" Field="actualdowntimestart" /><Key Name="downtimereason" Field="reasonname" /></Group></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *##set($count = 0)#*
       *##set($machines = $resultmap.machine)#*
@@ -1639,20 +1642,187 @@ export default [
                 *##end#*
               *#],#*
               *##set($downsince = '"-"')#*
+              *##set($downtimestart = '"-"')#*
               *##set($downreason = '"No reason"')#*
               *##foreach($downtime in $downtimes)#*
                 *##if($machinename == $downtime.get("_id").machinename)#*
                   *##set($machinestatus = '"DOWN"')#*
-                  *##set($downsince = $downtime.get("_id").downtimestart)#*
+                  *##set($downsince = $downtime.get("_id").actualdowntimestart)#*
+                  *##set($downtimestart = $downtime.get("_id").downtimestart)#*
                   *##set($downreason = $downtime.get("_id").downtimereason)#*
                 *##end#*
               *##end#*
+              *#"downtimestart": $downtimestart,#*
               *#"downsince": $downsince,#*
               *#"downreason": $downreason,#*
               *#"machinestatus": $machinestatus#*
             *#}#*
             *##set($count=$count+1)#*
           *##end#*
+      *#],#*
+      *#"records" : $count#*
+    *#}`,
+  },
+  {
+    category: 'standard',
+    aggregationType: 'HOURLY',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'hourlyenergydashboard',
+    reportDescription: 'Hourly Energy Dashboard',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'meter',
+        reportObjectDesc: 'meter',
+        reportObjectParameters: [
+          'siteid',
+        ],
+      },
+      {
+        reportObjectname: 'energy',
+        reportObjectDesc: 'energy',
+        reportObjectParameters: [
+          'siteid',
+          'dateVal',
+          'hourVal',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyenergydashboard" Description="Hourly Energy Dashboard" Database="emgda" Host="localhost" Port="27017"><DataObject Name="meter" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;meter&quot;"/></Pipeline><Pipeline><Group><Key Name="metercode" Field="metercode" /><Key Name="metername" Field="metername" /><Key Name="metergroup" Field="metergroup" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="energy" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;utility&quot; &amp;&amp; date == dateVal &amp;&amp; hour == hourVal"/></Pipeline><Pipeline><Group><Key Name="metername" Field="metername" /><Key Name="metercode" Field="metercode" /><Key Name="meterstatus" Field="meterstatus" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="kwh" Field="kwh" GroupFunction="First" /><GroupField Name="kvah" Field="kvah" GroupFunction="First" /><GroupField Name="current" Field="current" GroupFunction="First" /><GroupField Name="vll" Field="vll" GroupFunction="First" /><GroupField Name="vln" Field="vln" GroupFunction="First" /><GroupField Name="pf" Field="pf" GroupFunction="First" /><GroupField Name="consumption" Field="kwh_sum" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *##set($count = 0)#*
+      *##set($meters = $resultmap.meter)#*
+      *##set($energy = $resultmap.energy)#*
+      *#"meters": [#*
+        *##foreach($meter in $meters)#*
+          *##set($plancount = 0)#*
+          *##if($count > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *##set($metercode = $meter.get("_id").metercode)#*
+            *##set($metername = $meter.get("_id").metername)#*
+            *##set($metergroup = $meter.get("_id").metergroup)#*
+            *#"metercode": $metercode,#*
+            *#"metername": $metername,#*
+            *#"metergroup": $metergroup,#*
+            *##set($meterstatus = 1)#*
+            *##set($current = 0)#*
+            *##set($vll = 0)#*
+            *##set($vln = 0)#*
+            *##set($pf = 0)#*
+            *##set($kwh = 0)#*
+            *##set($kvah = 0)#*
+            *##set($consumption = 0)#*
+            *##set($updatedAt = 0)#*
+            *##foreach($e in $energy)#*
+              *##if($metername == $e.get("_id").metername)#*
+                *##set($current = $e.get("current"))#*
+                *##set($vll = $e.get("vll"))#*
+                *##set($vln = $e.get("vln"))#*
+                *##set($pf = $e.get("pf"))#*
+                *##set($kwh = $e.get("kwh"))#*
+                *##set($kvah = $e.get("kvah"))#*
+                *##set($consumption = $e.get("consumption"))#*
+                *##set($meterstatus = $e.get("_id").meterstatus)#*
+                *##set($updatedAt = $e.get("_id").updatedAt)#*
+              *##end#*
+            *##end#*
+            *#"current": $current,#*
+            *#"vll": $vll,#*
+            *#"vln": $vln,#*
+            *#"pf": $pf,#*
+            *#"kwh": $kwh,#*
+            *#"kvah": $kvah,#*
+            *#"consumption": $consumption,#*
+            *#"meterstatus": $meterstatus,#*
+            *#"updatedAt": $updatedAt#*
+          *#}#*
+          *##set($count=$count+1)#*
+        *##end#*
+      *#],#*
+      *#"records" : $count#*
+    *#}`,
+  },
+  {
+    category: 'standard',
+    aggregationType: 'SHIFTWISE',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'shiftenergydashboard',
+    reportDescription: 'Shift wise Energy Dashboard',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'meter',
+        reportObjectDesc: 'meter',
+        reportObjectParameters: [
+          'siteid',
+        ],
+      },
+      {
+        reportObjectname: 'energy',
+        reportObjectDesc: 'energy',
+        reportObjectParameters: [
+          'siteid',
+          'dateVal',
+          'hourVal',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftenergydashboard" Description="Shift wise Energy Dashboard" Database="emgda" Host="localhost" Port="27017"><DataObject Name="meter" Collection="provisioning"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;meter&quot;"/></Pipeline><Pipeline><Group><Key Name="metercode" Field="metercode" /><Key Name="metername" Field="metername" /><Key Name="metergroup" Field="metergroup" /></Group></Pipeline></Aggregate></DataObject><DataObject Name="energy" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;utility&quot; &amp;&amp; date == dateVal &amp;&amp; shift == shiftVal"/></Pipeline><Pipeline><Group><Key Name="metername" Field="metername" /><Key Name="metercode" Field="metercode" /><Key Name="meterstatus" Field="meterstatus" /><Key Name="updatedAtTimestamp" Field="updatedAtTimestamp" /><GroupField Name="kwh" Field="kwh" GroupFunction="First" /><GroupField Name="kvah" Field="kvah" GroupFunction="First" /><GroupField Name="current" Field="current" GroupFunction="First" /><GroupField Name="vll" Field="vll" GroupFunction="First" /><GroupField Name="vln" Field="vln" GroupFunction="First" /><GroupField Name="pf" Field="pf" GroupFunction="First" /><GroupField Name="consumption" Field="kwh_sum" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="updatedAtTimestamp" SortDirection="Desc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *##set($count = 0)#*
+      *##set($meters = $resultmap.meter)#*
+      *##set($energy = $resultmap.energy)#*
+      *#"meters": [#*
+        *##foreach($meter in $meters)#*
+          *##set($plancount = 0)#*
+          *##if($count > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *##set($metercode = $meter.get("_id").metercode)#*
+            *##set($metername = $meter.get("_id").metername)#*
+            *##set($metergroup = $meter.get("_id").metergroup)#*
+            *#"metercode": $metercode,#*
+            *#"metername": $metername,#*
+            *#"metergroup": $metergroup,#*
+            *##set($meterstatus = 1)#*
+            *##set($current = 0)#*
+            *##set($vll = 0)#*
+            *##set($vln = 0)#*
+            *##set($pf = 0)#*
+            *##set($kwh = 0)#*
+            *##set($kvah = 0)#*
+            *##set($consumption = 0)#*
+            *##set($updatedAt = 0)#*
+            *##foreach($e in $energy)#*
+              *##if($metername == $e.get("_id").metername)#*
+                *##set($current = $e.get("current"))#*
+                *##set($vll = $e.get("vll"))#*
+                *##set($vln = $e.get("vln"))#*
+                *##set($pf = $e.get("pf"))#*
+                *##set($kwh = $e.get("kwh"))#*
+                *##set($kvah = $e.get("kvah"))#*
+                *##set($consumption = $e.get("consumption"))#*
+                *##set($meterstatus = $e.get("_id").meterstatus)#*
+                *##set($updatedAt = $e.get("_id").updatedAt)#*
+              *##end#*
+            *##end#*
+            *#"current": $current,#*
+            *#"vll": $vll,#*
+            *#"vln": $vln,#*
+            *#"pf": $pf,#*
+            *#"kwh": $kwh,#*
+            *#"kvah": $kvah,#*
+            *#"consumption": $consumption,#*
+            *#"meterstatus": $meterstatus,#*
+            *#"updatedAt": $updatedAt#*
+          *#}#*
+          *##set($count=$count+1)#*
+        *##end#*
       *#],#*
       *#"records" : $count#*
     *#}`,
@@ -1688,9 +1858,10 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlymachineproduction" Description="Hourly Machine Production" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="actualquantity" Field="qty" GroupFunction="Sum" /><GroupField Name="runtime" Field="actm_sum" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="First" /><GroupField Name="cavity" Field="cavity" GroupFunction="First" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Hourly Machine Production",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
-        *#{"name":"date","type":"String","description":"Date"},#*
+        *#{"name":"date","type":"String","description":"Date", "description_cn":"日期"},#*
         *#{"name": "hour", "type": "String", "description": "Hour"},#*
         *#{"name": "machinename", "type": "String", "description": "Machine"},#*
         *#{"name": "planid", "type": "String", "description": "Plan"},#*
@@ -1811,6 +1982,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwisemachineproduction" Description="Shift Wise Machine Production" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shift" /><GroupField Name="actualquantity" Field="qty" GroupFunction="Sum" /><GroupField Name="runtime" Field="actm_sum" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="First" /><GroupField Name="cavity" Field="cavity" GroupFunction="First" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject><DataObject Name="rework" Collection="rework"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rework&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="reworkquantity" Field="reworkquantity" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject><DataObject Name="scrap" Collection="scrap"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;scrap&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="scrapweight" Field="scrapweight" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Shiftwise Machine Production",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -1952,6 +2124,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailymachineproduction" Description="Shift Wise Machine Production" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="actualquantity" Field="qty" GroupFunction="Sum" /><GroupField Name="runtime" Field="actm_sum" GroupFunction="Sum" /><GroupField Name="stdcycletime" Field="sctm" GroupFunction="First" /><GroupField Name="cavity" Field="cavity" GroupFunction="First" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject><DataObject Name="rework" Collection="rework"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rework&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="reworkquantity" Field="reworkquantity" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject><DataObject Name="scrap" Collection="scrap"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;scrap&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="scrapweight" Field="scrapweight" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Daily Machine Production",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2063,6 +2236,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlymachinedowntime" Description="Hourly Machine Downtime" Database="emgda" Host="localhost" Port="27017"><DataObject Name="downtime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;complete&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimereason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="totaldowntime" Field="downtimeinms" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Hourly Machine Downtime",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2139,6 +2313,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwisemachinedowntime" Description="Shift Wise Machine Downtime" Database="emgda" Host="localhost" Port="27017"><DataObject Name="downtime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;complete&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimereason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="totaldowntime" Field="downtimeinms" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Shiftwise Machine Downtime",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2214,6 +2389,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailymachinedowntime" Description="Daily Machine Downtime" Database="emgda" Host="localhost" Port="27017"><DataObject Name="downtime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;complete&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="downtimereason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="totaldowntime" Field="downtimeinms" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Daily Machine Downtime",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2286,6 +2462,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyrejectionbyreason" Description="Hourly Rejection By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="department" Field="department" /><Key Name="category" Field="category" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Hourly Rejection By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2357,6 +2534,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwiserejectionbyreason" Description="Shiftwise Rejection By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="department" Field="department" /><Key Name="category" Field="category" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Shiftwise Rejection By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2428,6 +2606,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailyrejectionbyreason" Description="Daily Rejection By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="department" Field="department" /><Key Name="category" Field="category" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Daily Rejection By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2495,6 +2674,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwisereworkbyreason" Description="Shiftwise Rework By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="rework" Collection="rework"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;rework&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="reworkquantity" Field="reworkquantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Shiftwise Rework By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2560,6 +2740,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailyreworkbyreason" Description="Daily Rework By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="rework" Collection="rework"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;rework&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="reworkquantity" Field="reworkquantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Daily Rework By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2621,6 +2802,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwisescrapbyreason" Description="Shiftwise Scrap By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="scrap" Collection="scrap"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;scrap&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="scrapweight" Field="scrapweight" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Shiftwise Scrap By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2686,6 +2868,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailyscrapbyreason" Description="Daily Scrap By Reason" Database="emgda" Host="localhost" Port="27017"><DataObject Name="scrap" Collection="scrap"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;scrap&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="remark" Field="remark" /><Key Name="code" Field="reasoncode" /><Key Name="reason" Field="reasonname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="scrapweight" Field="scrapweight" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name" : "Daily Scrap By Reason",#*
+      *#"aggFunc" : "sum",#*
       *##set($count = 0)#*
       *#"cols": [#*
         *#{"name":"date","type":"String","description":"Date"},#*
@@ -2747,6 +2930,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlymachineperformance" Description="Hourly Machine Performance" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="machinewise-oee-hourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><Key Name="availability" Field="availability" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="oee" Field="oee" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name": "Hourly Machine Performance",#*
+      *#"aggFunc" : "avg",#*
       *##set($count = 0)#*
       *#"cols": [#*
             *#{"name":"date","type":"String","description":"Date"},#*
@@ -2798,6 +2982,135 @@ export default [
   },
   {
     category: 'standard',
+    aggregationType: 'HOURLY',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'hourlyanalysis',
+    reportDescription: 'Hourly Analysis',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'cycletime',
+        reportObjectDesc: 'cycletime',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+      {
+        reportObjectname: 'rejection',
+        reportObjectDesc: 'rejection',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+      {
+        reportObjectname: 'downtime',
+        reportObjectDesc: 'downtime',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyanalysis" Description="Hourly Analysis" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="actualquantity" Field="qty" GroupFunction="Sum" /><GroupField Name="runtime" Field="actm_sum" GroupFunction="Sum" /><GroupField Name="standardtime" Field="sctm_sum" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="downtime" Collection="downtime"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;downtime&quot; &amp;&amp; status == &quot;complete&quot; &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><GroupField Name="totaldowntime" Field="downtimeinms" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *#"name" : "Hourly Analysis",#*
+      *#"aggFunc" : "sum",#*
+      *##set($count = 0)#*
+      *#"cols": [#*
+        *#{"name":"date","type":"String","description":"Date", "description_cn":"日期"},#*
+        *#{"name": "hour", "type": "String", "description": "Hour"},#*
+        *#{"name": "machinename", "type": "String", "description": "Machine"},#*
+        *#{"name": "planid", "type": "String", "description": "Plan"},#*
+        *#{"name": "partname", "type": "String", "description": "Part"},#*
+        *#{"name": "produced", "type": "Long", "description": "Produced"},#*
+        *#{"name": "rejectionpercent", "type": "Long", "description": "Rejection(%)"},#*
+        *#{"name": "runtime", "type": "Long", "description": "Runtime(mins)"},#*
+        *#{"name": "delaytime", "type": "Long", "description": "Delay time(mins)"},#*
+        *#{"name": "totaldowntime", "type": "Long", "description": "Downtime(mins)"}#*
+      *#],#*
+      *#"reportData" : [#*
+        *##set($cycletime = $resultmap.cycletime)#*
+        *##set($rejection = $resultmap.rejection)#*
+        *##set($downtime = $resultmap.downtime)#*
+        *##set($quot = '"')#*
+        *##set($concat = '-')#*
+        *##foreach($cycle in $cycletime)#*
+          *##set($planid = '"-"')#*
+          *##set($machinename = '"-"')#*
+          *##set($partname = '"-"')#*
+          *##set($runtime = 0)#*
+          *##set($delaytime = 0)#*
+          *##set($totaldowntime = 0)#*
+          *##set($standardtime = 0)#*
+          *##set($rejected = 0)#*
+          *##set($rejectionpercent = 0)#*
+          *##set($year = $cycle.get("_id").year)#*
+          *##set($month = $cycle.get("_id").month)#*
+          *##set($day = $cycle.get("_id").day)#*
+          *##set($hour = $cycle.get("_id").hour)#*
+          *##set($displayHour = $cycle.get("_id").displayHour)#*
+          *##set($planid = $cycle.get("_id").planid)#*
+          *##set($partname = $cycle.get("_id").partname)#*
+          *##set($machinename = $cycle.get("_id").machinename)#*
+          *##set($produced = $cycle.get("actualquantity"))#*
+          *##set($runtime = $cycle.get("runtime"))#*
+          *##set($standardtime = $cycle.get("standardtime"))#*
+          *##set($delaytime = $math.sub($runtime, $standardtime))#*
+          *##if($delaytime < 0)#* 
+            *##set($delaytime = 0)#*
+          *##end#*
+          *##foreach($reject in $rejection)#*
+            *##if($planid == $reject.get("_id").planid && $partname == $reject.get("_id").partname && $year == $reject.get("_id").year && $month == $reject.get("_id").month && $day == $reject.get("_id").day && $hour == $reject.get("_id").hour)#*
+              *##set($rejected = $reject.get("rejectedquantity"))#*
+            *##end#*
+          *##end#*
+          *##foreach($dt in $downtime)#*
+            *##if($planid == $dt.get("_id").planid && $partname == $dt.get("_id").partname && $year == $dt.get("_id").year && $month == $dt.get("_id").month && $day == $dt.get("_id").day && $hour == $dt.get("_id").hour)#*
+              *##set($totaldowntime = $dt.get("totaldowntime"))#*
+            *##end#*
+          *##end#*
+          *##set($rejectionpercent = $math.div($rejected, $produced))#*
+          *##set($rejectionpercent = $math.mul($rejectionpercent, 100))#*
+          *##set($rejectionpercent = $math.roundTo(2, $rejectionpercent))#*
+          *##set($delaytime = $math.div($delaytime, 1000))#*
+          *##set($delaytime = $math.div($delaytime, 60))#*
+          *##set($delaytime = $math.roundTo(2, $delaytime))#*
+          *##set($runtime = $math.div($runtime, 1000))#*
+          *##set($runtime = $math.div($runtime, 60))#*
+          *##set($runtime = $math.roundTo(2, $runtime))#*
+          *##set($totaldowntime = $math.div($totaldowntime, 1000))#*
+          *##set($totaldowntime = $math.div($totaldowntime, 60))#*
+          *##set($totaldowntime = $math.roundTo(2, $totaldowntime))#*
+          *##set($date = $quot+$day+$concat+$month+$concat+$year+$quot)#*
+          *##if($count > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *#"date": $date,#*
+            *#"hour": $displayHour,#*
+            *#"machinename": $machinename,#*
+            *#"planid": $planid,#*
+            *#"partname": $partname,#*
+            *#"produced": $produced,#*
+            *#"rejectionpercent": $rejectionpercent,#*
+            *#"runtime": $runtime,#*
+            *#"delaytime": $delaytime,#*
+            *#"totaldowntime": $totaldowntime#*
+          *#}#*
+          *##set($count=$count+1)#*
+        *##end#*
+      *#],#*
+      *#"records" : $count#*
+    *#}`,
+  },
+  {
+    category: 'standard',
     aggregationType: 'SHIFTWISE',
     reportRenderType: 'JSON',
     reportType: 'multiple element based',
@@ -2818,6 +3131,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwisemachineperformance" Description="Shiftwise Machine Performance" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="machinewise-oee-shift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shift" /><Key Name="availability" Field="availability" /><Key Name="performance" Field="performance" /><Key Name="quality" Field="quality" /><Key Name="oee" Field="oee" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name": "Shift wise Machine Performance",#*
+      *#"aggFunc" : "avg",#*
       *##set($count = 0)#*
       *#"cols": [#*
             *#{"name":"date","type":"String","description":"Date"},#*
@@ -2869,6 +3183,141 @@ export default [
   },
   {
     category: 'standard',
+    aggregationType: 'SHIFTWISE',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'shiftwiseoperatorefficiency',
+    reportDescription: 'Shift Wise Operator Efficiency',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'cycletime',
+        reportObjectDesc: 'cycletime',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+      {
+        reportObjectname: 'rejection',
+        reportObjectDesc: 'rejection',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+      {
+        reportObjectname: 'operatorlog',
+        reportObjectDesc: 'operatorlog',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwiseoperatorefficiency" Description="Shift Wise Operator Efficiency" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;cycletime&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shift" /><GroupField Name="actualquantity" Field="qty" GroupFunction="Sum" /><GroupField Name="runtime" Field="actm_sum" GroupFunction="Sum" /><GroupField Name="standardtime" Field="sctm_sum" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /><SortField Name="machinename" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject><DataObject Name="rejection" Collection="rejection"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;rejection&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="planid" Field="planid" /><Key Name="partname" Field="partname" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /><GroupField Name="rejectedquantity" Field="quantity" GroupFunction="Sum" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject><DataObject Name="operatorlog" Collection="operatorlog"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp;  elementName == &quot;operatorlog&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="operatorname" Field="operatorname" /><Key Name="operatorcode" Field="operatorcode" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shiftName" /></Group></Pipeline></Aggregate><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *#"name" : "Shiftwise Operator Efficiency",#*
+      *#"aggFunc" : "sum",#*
+      *##set($count = 0)#*
+      *#"cols": [#*
+        *#{"name":"date","type":"String","description":"Date"},#*
+        *#{"name": "shift", "type": "String", "description": "Shift"},#*
+        *#{"name": "machinename", "type": "String", "description": "Machine"},#*
+        *#{"name": "operatorname", "type": "String", "description": "Operator"},#*
+        *#{"name": "operatorcode", "type": "String", "description": "Operator code"},#*
+        *#{"name": "planid", "type": "String", "description": "Plan"},#*
+        *#{"name": "partname", "type": "String", "description": "Part"},#*
+        *#{"name": "rejectionpercent", "type": "Long", "description": "Rejection(%)"},#*
+        *#{"name": "efficiency", "type": "Long", "description": "Operator Efficiency(%)"},#*
+        *#{"name": "delaytime", "type": "Long", "description": "Operator delay(mins)"},#*
+        *#{"name": "runtime", "type": "Long", "description": "Runtime(mins)"}#*
+      *#],#*
+      *#"reportData" : [#*
+        *##set($cycletime = $resultmap.cycletime)#*
+        *##set($rejection = $resultmap.rejection)#*
+        *##set($operatorlog = $resultmap.operatorlog)#*
+        *##set($quot = '"')#*
+        *##set($concat = '-')#*
+        *##foreach($cycle in $cycletime)#*
+          *##set($planid = '"-"')#*
+          *##set($machinename = '"-"')#*
+          *##set($partname = '"-"')#*
+          *##set($runtime = 0)#*
+          *##set($standardtime = 0)#*
+          *##set($operatorname = '"-"')#*
+          *##set($operatorcode = '"-"')#*
+          *##set($produced = 0)#*
+          *##set($rejected = 0)#*
+          *##set($rejectionpercent = 0)#*
+          *##set($efficiency = 0)#*
+          *##set($delaytime = 0)#*
+          *##set($year = $cycle.get("_id").year)#*
+          *##set($month = $cycle.get("_id").month)#*
+          *##set($day = $cycle.get("_id").day)#*
+          *##set($shift = $cycle.get("_id").shift)#*
+          *##set($planid = $cycle.get("_id").planid)#*
+          *##set($partname = $cycle.get("_id").partname)#*
+          *##set($machinename = $cycle.get("_id").machinename)#*
+          *##set($produced = $cycle.get("actualquantity"))#*
+          *##set($runtime = $cycle.get("runtime"))#*
+          *##set($standardtime = $cycle.get("standardtime"))#*
+          *##set($delaytime = $math.sub($runtime, $standardtime))#*
+          *##if($delaytime < 0)#* 
+            *##set($delaytime = 0)#*
+          *##end#*
+          *##set($efficiency = $math.sub($runtime, $delaytime))#*
+          *##set($efficiency = $math.div($efficiency, $runtime))#*
+          *##set($efficiency = $math.mul($efficiency, 100))#*
+          *##set($efficiency = $math.roundTo(2, $efficiency))#*
+          *##foreach($reject in $rejection)#*
+            *##if($planid == $reject.get("_id").planid && $partname == $reject.get("_id").partname && $year == $reject.get("_id").year && $month == $reject.get("_id").month && $day == $reject.get("_id").day && $shift == $reject.get("_id").shift)#*
+              *##set($rejected = $reject.get("rejectedquantity"))#*
+            *##end#*
+          *##end#*
+          *##foreach($op in $operatorlog)#*
+            *##if($machinename == $op.get("_id").machinename && $year == $op.get("_id").year && $month == $op.get("_id").month && $day == $op.get("_id").day && $shift == $op.get("_id").shift)#*
+              *##set($operatorname = $op.get("_id").operatorname)#*
+              *##set($operatorcode = $op.get("_id").operatorcode)#*
+            *##end#*
+          *##end#*
+          *##set($rejectionpercent = $math.div($rejected, $produced))#*
+          *##set($rejectionpercent = $math.mul($rejectionpercent, 100))#*
+          *##set($rejectionpercent = $math.roundTo(2, $rejectionpercent))#*
+          *##set($delaytime = $math.div($delaytime, 1000))#*
+          *##set($delaytime = $math.div($delaytime, 60))#*
+          *##set($delaytime = $math.roundTo(2, $delaytime))#*
+          *##set($runtime = $math.div($runtime, 1000))#*
+          *##set($runtime = $math.div($runtime, 60))#*
+          *##set($runtime = $math.roundTo(2, $runtime))#*
+          *##set($date = $quot+$day+$concat+$month+$concat+$year+$quot)#*
+          *##if($count > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *#"date": $date,#*
+            *#"shift": $shift,#*
+            *#"machinename": $machinename,#*
+            *#"operatorname": $operatorname,#*
+            *#"operatorcode": $operatorcode,#*
+            *#"planid": $planid,#*
+            *#"partname": $partname,#*
+            *#"rejectionpercent": $rejectionpercent,#*
+            *#"efficiency": $efficiency,#*
+            *#"delaytime": $delaytime,#*
+            *#"runtime": $runtime#*
+          *#}#*
+          *##set($count=$count+1)#*
+        *##end#*
+      *#],#*
+      *#"records" : $count#*
+    *#}`,
+  },
+  {
+    category: 'standard',
     aggregationType: 'DAILY',
     reportRenderType: 'JSON',
     reportType: 'multiple element based',
@@ -2889,6 +3338,7 @@ export default [
     reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="dailymachineperformance" Description="Daily Machine Performance" Database="emgda" Host="localhost" Port="27017"><DataObject Name="cycletime" Collection="machinewise-oee-hourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; date &gt;= start &amp;&amp; date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="machinename" Field="machinename" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><GroupField Name="runtime" Field="runtime" GroupFunction="Sum" /><GroupField Name="plannedProductionTime" Field="hourlyAvailableTime" GroupFunction="Sum" /><GroupField Name="target" Field="target" GroupFunction="Sum" /><GroupField Name="produced" Field="produced" GroupFunction="Sum" /><GroupField Name="rejected" Field="rejected" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
     reportVm: `{#*
       *#"name": "Daily Machine Performance",#*
+      *#"aggFunc" : "avg",#*
       *##set($count = 0)#*
       *#"cols": [#*
             *#{"name":"date","type":"String","description":"Date"},#*
@@ -2953,6 +3403,333 @@ export default [
         *##end#*
       *#],#*
       *#"records": $count#*
+    *#}`,
+  },
+  {
+    category: 'standard',
+    aggregationType: 'HOURLY',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'hourlyenergyconsumption',
+    reportDescription: 'Hourly Energy Consumption',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'energy',
+        reportObjectDesc: 'energy',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="hourlyenergyconsumption" Description="Hourly Energy Consumption" Database="emgda" Host="localhost" Port="27017"><DataObject Name="energy" Collection="aggregatehourly"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;utility&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="metername" Field="metername" /><Key Name="metergroup" Field="metergroup" /><Key Name="metersubgroup" Field="metersubgroup" /><Key Name="metersubsubgroup" Field="metersubsubgroup" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="hour" Field="hour" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="kvah" Field="kvah_sum" GroupFunction="Sum" /><GroupField Name="kwh" Field="kwh_sum" GroupFunction="Sum" /><GroupField Name="count" Field="count" GroupFunction="Sum" /><GroupField Name="currentmax" Field="current_max" GroupFunction="Sum" /><GroupField Name="currentmin" Field="current_min" GroupFunction="Sum" /><GroupField Name="frequencymax" Field="frequency_max" GroupFunction="Sum" /><GroupField Name="frequencymin" Field="frequency_min" GroupFunction="Sum" /><GroupField Name="pfmax" Field="pf_max" GroupFunction="Sum" /><GroupField Name="pfmin" Field="pf_min" GroupFunction="Sum" /><GroupField Name="vllmax" Field="vll_max" GroupFunction="Sum" /><GroupField Name="vllmin" Field="vll_min" GroupFunction="Sum" /><GroupField Name="vlnmax" Field="vln_max" GroupFunction="Sum" /><GroupField Name="vlnmin" Field="vln_min" GroupFunction="Sum" /><GroupField Name="wattmax" Field="watts_max" GroupFunction="Sum" /><GroupField Name="wattmin" Field="watts_min" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="hour" SortDirection="Asc" SortGroupById="true" /><SortField Name="metername" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *#"name" : "Hourly Energy Consumption",#*
+      *#"aggFunc" : "sum",#*
+      *##set($records = 0)#*
+      *#"cols": [#*
+        *#{"name": "date","type":"String","description":"Date", "description_cn":"日期"},#*
+        *#{"name": "hour", "type": "String", "description": "Hour"},#*
+        *#{"name": "metername", "type": "String", "description": "Meter"},#*
+        *#{"name": "metergroup", "type": "String", "description": "Meter group 1"},#*
+        *#{"name": "metersubgroup", "type": "String", "description": "Meter group 2"},#*
+        *#{"name": "metersubsubgroup", "type": "String", "description": "Meter group 3"},#*
+        *#{"name": "kwh", "type": "String", "description": "Consumption(kWh)"},#*
+        *#{"name": "kvah", "type": "String", "description": "Consumption(kVAh)"},#*
+        *#{"name": "currentmax", "type": "String", "description": "Max current(A)"},#*
+        *#{"name": "currentmin", "type": "String", "description": "Min current(A)"},#*
+        *#{"name": "currentavg", "type": "String", "description": "Avg current(A)"},#*
+        *#{"name": "frequencymax", "type": "String", "description": "Max frequency(Hz)"},#*
+        *#{"name": "frequencymin", "type": "String", "description": "Min frequency(Hz)"},#*
+        *#{"name": "frequencyavg", "type": "String", "description": "Avg frequency(Hz)"},#*
+        *#{"name": "pfmax", "type": "String", "description": "Max power factor"},#*
+        *#{"name": "pfmin", "type": "String", "description": "Min power factor"},#*
+        *#{"name": "pfavg", "type": "String", "description": "Avg power factor"},#*
+        *#{"name": "wattmax", "type": "String", "description": "Max power(W)"},#*
+        *#{"name": "wattmin", "type": "String", "description": "Min power(W)"},#*
+        *#{"name": "wattavg", "type": "String", "description": "Avg power(W)"},#*
+        *#{"name": "vllmax", "type": "String", "description": "Max line to line voltage(V)"},#*
+        *#{"name": "vllmin", "type": "String", "description": "Min line to line voltage(V)"},#*
+        *#{"name": "vllavg", "type": "String", "description": "Avg line to line voltage(V)"},#*
+        *#{"name": "vlnmax", "type": "String", "description": "Max phase voltage(V)"},#*
+        *#{"name": "vlnmin", "type": "String", "description": "Min phase voltage(V)"},#*
+        *#{"name": "vlnavg", "type": "String", "description": "Avg phase voltage(V)"}#*
+      *#],#*
+      *#"reportData" : [#*
+        *##set($energy = $resultmap.energy)#*
+        *##set($quot = '"')#*
+        *##set($concat = '-')#*
+        *##foreach($e in $energy)#*
+          *##set($metername = '"-"')#*
+          *##set($metergroup = '"-"')#*
+          *##set($metersubgroup = '"-"')#*
+          *##set($metersubsubgroup = '"-"')#*
+          *##set($kwh = 0)#*
+          *##set($kvah = 0)#*
+          *##set($count = 0)#*
+          *##set($currentmax = 0)#*
+          *##set($currentmin = 0)#*
+          *##set($currentavg = 0)#*
+          *##set($frequencymax = 0)#*
+          *##set($frequencymin = 0)#*
+          *##set($frequencyavg = 0)#*
+          *##set($pfmax = 0)#*
+          *##set($pfmin = 0)#*
+          *##set($pfavg = 0)#*
+          *##set($wattmax = 0)#*
+          *##set($wattmin = 0)#*
+          *##set($wattavg = 0)#*
+          *##set($vllmax = 0)#*
+          *##set($vllmin = 0)#*
+          *##set($vllavg = 0)#*
+          *##set($vlnmax = 0)#*
+          *##set($vlnmin = 0)#*
+          *##set($vlnavg = 0)#*
+          *##set($year = $e.get("_id").year)#*
+          *##set($month = $e.get("_id").month)#*
+          *##set($day = $e.get("_id").day)#*
+          *##set($hour = $e.get("_id").hour)#*
+          *##set($displayHour = $e.get("_id").displayHour)#*
+          *##set($metername = $e.get("_id").metername)#*
+          *##set($metergroup = $e.get("_id").metergroup)#*
+          *##set($metersubgroup = $e.get("_id").metersubgroup)#*
+          *##set($metersubsubgroup = $e.get("_id").metersubsubgroup)#*
+          *##set($kwh = $e.get("kwh"))#*
+          *##set($kwh = $math.roundTo(2, $kwh))#*
+          *##set($kvah = $e.get("kvah"))#*
+          *##set($kvah = $math.roundTo(2, $kvah))#*
+          *##set($count = $e.get("count"))#*
+          *##set($currentmax = $e.get("currentmax"))#*
+          *##set($currentmin = $e.get("currentmin"))#*
+          *##set($currentavg = $math.add($currentmax, $currentmin))#*
+          *##set($currentavg = $math.div($currentavg, $count))#*
+          *##set($currentavg = $math.roundTo(2, $currentavg))#*
+          *##set($frequencymax = $e.get("frequencymax"))#*
+          *##set($frequencymin = $e.get("frequencymin"))#*
+          *##set($frequencyavg = $math.add($frequencymax, $frequencymin))#*
+          *##set($frequencyavg = $math.div($frequencyavg, $count))#*
+          *##set($frequencyavg = $math.roundTo(2, $frequencyavg))#*
+          *##set($pfmax = $e.get("pfmax"))#*
+          *##set($pfmin = $e.get("pfmin"))#*
+          *##set($pfavg = $math.add($pfmax, $pfmin))#*
+          *##set($pfavg = $math.div($pfavg, $count))#*
+          *##set($pfavg = $math.roundTo(2, $pfavg))#*
+          *##set($wattmax = $e.get("wattmax"))#*
+          *##set($wattmin = $e.get("wattmin"))#*
+          *##set($wattavg = $math.add($wattmax, $wattmin))#*
+          *##set($wattavg = $math.div($wattavg, $count))#*
+          *##set($wattavg = $math.roundTo(2, $wattavg))#*
+          *##set($vllmax = $e.get("vllmax"))#*
+          *##set($vllmin = $e.get("vllmin"))#*
+          *##set($vllavg = $math.add($vllmax, $vllmin))#*
+          *##set($vllavg = $math.div($vllavg, $count))#*
+          *##set($vllavg = $math.roundTo(2, $vllavg))#*
+          *##set($vlnmax = $e.get("vlnmax"))#*
+          *##set($vlnmin = $e.get("vlnmin"))#*
+          *##set($vlnavg = $math.add($vlnmax, $vlnmin))#*
+          *##set($vlnavg = $math.div($vlnavg, $count))#*
+          *##set($vlnavg = $math.roundTo(2, $vlnavg))#*
+          *##set($date = $quot+$day+$concat+$month+$concat+$year+$quot)#*
+          *##if($records > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *#"date": $date,#*
+            *#"hour": $displayHour,#*
+            *#"metername": $metername,#*
+            *#"metergroup": $metergroup,#*
+            *#"metersubgroup": $metersubgroup,#*
+            *#"metersubsubgroup": $metersubsubgroup,#*
+            *#"kwh": $kwh,#*
+            *#"kvah": $kvah,#*
+            *#"currentmax": $currentmax,#*
+            *#"currentmin": $currentmin,#*
+            *#"currentavg": $currentavg,#*
+            *#"frequencymax": $frequencymax,#*
+            *#"frequencymin": $frequencymin,#*
+            *#"frequencyavg": $frequencyavg,#*
+            *#"pfmax": $pfmax,#*
+            *#"pfmin": $pfmin,#*
+            *#"pfavg": $pfavg,#*
+            *#"wattmax": $wattmax,#*
+            *#"wattmin": $wattmin,#*
+            *#"wattavg": $wattavg,#*
+            *#"vllmax": $vllmax,#*
+            *#"vllmin": $vllmin,#*
+            *#"vllavg": $vllavg,#*
+            *#"vlnmax": $vlnmax,#*
+            *#"vlnmin": $vlnmin,#*
+            *#"vlnavg": $vlnavg#*
+          *#}#*
+          *##set($records=$records+1)#*
+        *##end#*
+      *#],#*
+      *#"records" : $records#*
+    *#}`,
+  },
+  {
+    category: 'standard',
+    aggregationType: 'SHIFTWISE',
+    reportRenderType: 'JSON',
+    reportType: 'multiple element based',
+    reportName: 'shiftwiseenergyconsumption',
+    reportDescription: 'Shiftwise Energy Consumption',
+    reportaccess: [],
+    reportObjects: [
+      {
+        reportObjectname: 'energy',
+        reportObjectDesc: 'energy',
+        reportObjectParameters: [
+          'siteid',
+          'start',
+          'end',
+        ],
+      },
+    ],
+    reportXml: '<mon:Mongobot xmlns:mon="http://mongobot.entrib.com" Name="shiftwiseenergyconsumption" Description="Shiftwise Energy Consumption" Database="emgda" Host="localhost" Port="27017"><DataObject Name="energy" Collection="aggregateshift"><Aggregate><Pipeline><Match Condition="siteId == siteid &amp;&amp; elementName == &quot;utility&quot; &amp;&amp; date &gt;= start  &amp;&amp;  date &lt;= end"/></Pipeline><Pipeline><Group><Key Name="metername" Field="metername" /><Key Name="metergroup" Field="metergroup" /><Key Name="metersubgroup" Field="metersubgroup" /><Key Name="metersubsubgroup" Field="metersubsubgroup" /><Key Name="year" Field="year" /><Key Name="month" Field="month" /><Key Name="day" Field="day" /><Key Name="shift" Field="shift" /><Key Name="displayHour" Field="displayHour" /><GroupField Name="kvah" Field="kvah_sum" GroupFunction="Sum" /><GroupField Name="kwh" Field="kwh_sum" GroupFunction="Sum" /><GroupField Name="count" Field="count" GroupFunction="Sum" /><GroupField Name="currentmax" Field="current_max" GroupFunction="Sum" /><GroupField Name="currentmin" Field="current_min" GroupFunction="Sum" /><GroupField Name="frequencymax" Field="frequency_max" GroupFunction="Sum" /><GroupField Name="frequencymin" Field="frequency_min" GroupFunction="Sum" /><GroupField Name="pfmax" Field="pf_max" GroupFunction="Sum" /><GroupField Name="pfmin" Field="pf_min" GroupFunction="Sum" /><GroupField Name="vllmax" Field="vll_max" GroupFunction="Sum" /><GroupField Name="vllmin" Field="vll_min" GroupFunction="Sum" /><GroupField Name="vlnmax" Field="vln_max" GroupFunction="Sum" /><GroupField Name="vlnmin" Field="vln_min" GroupFunction="Sum" /><GroupField Name="wattmax" Field="watts_max" GroupFunction="Sum" /><GroupField Name="wattmin" Field="watts_min" GroupFunction="Sum" /></Group></Pipeline><Pipeline><Sort><SortField Name="year" SortDirection="Asc" SortGroupById="true" /><SortField Name="month" SortDirection="Asc" SortGroupById="true" /><SortField Name="day" SortDirection="Asc" SortGroupById="true" /><SortField Name="shift" SortDirection="Asc" SortGroupById="true" /><SortField Name="metername" SortDirection="Asc" SortGroupById="true" /></Sort></Pipeline></Aggregate></DataObject></mon:Mongobot>',
+    reportVm: `{#*
+      *#"name" : "Shiftwise Energy Consumption",#*
+      *#"aggFunc" : "sum",#*
+      *##set($records = 0)#*
+      *#"cols": [#*
+        *#{"name": "date","type":"String","description":"Date", "description_cn":"日期"},#*
+        *#{"name": "shift", "type": "String", "description": "Shift"},#*
+        *#{"name": "metername", "type": "String", "description": "Meter"},#*
+        *#{"name": "metergroup", "type": "String", "description": "Meter group 1"},#*
+        *#{"name": "metersubgroup", "type": "String", "description": "Meter group 2"},#*
+        *#{"name": "metersubsubgroup", "type": "String", "description": "Meter group 3"},#*
+        *#{"name": "kwh", "type": "String", "description": "Consumption(kWh)"},#*
+        *#{"name": "kvah", "type": "String", "description": "Consumption(kVAh)"},#*
+        *#{"name": "currentmax", "type": "String", "description": "Max current(A)"},#*
+        *#{"name": "currentmin", "type": "String", "description": "Min current(A)"},#*
+        *#{"name": "currentavg", "type": "String", "description": "Avg current(A)"},#*
+        *#{"name": "frequencymax", "type": "String", "description": "Max frequency(Hz)"},#*
+        *#{"name": "frequencymin", "type": "String", "description": "Min frequency(Hz)"},#*
+        *#{"name": "frequencyavg", "type": "String", "description": "Avg frequency(Hz)"},#*
+        *#{"name": "pfmax", "type": "String", "description": "Max power factor"},#*
+        *#{"name": "pfmin", "type": "String", "description": "Min power factor"},#*
+        *#{"name": "pfavg", "type": "String", "description": "Avg power factor"},#*
+        *#{"name": "wattmax", "type": "String", "description": "Max power(W)"},#*
+        *#{"name": "wattmin", "type": "String", "description": "Min power(W)"},#*
+        *#{"name": "wattavg", "type": "String", "description": "Avg power(W)"},#*
+        *#{"name": "vllmax", "type": "String", "description": "Max line to line voltage(V)"},#*
+        *#{"name": "vllmin", "type": "String", "description": "Min line to line voltage(V)"},#*
+        *#{"name": "vllavg", "type": "String", "description": "Avg line to line voltage(V)"},#*
+        *#{"name": "vlnmax", "type": "String", "description": "Max phase voltage(V)"},#*
+        *#{"name": "vlnmin", "type": "String", "description": "Min phase voltage(V)"},#*
+        *#{"name": "vlnavg", "type": "String", "description": "Avg phase voltage(V)"}#*
+      *#],#*
+      *#"reportData" : [#*
+        *##set($energy = $resultmap.energy)#*
+        *##set($quot = '"')#*
+        *##set($concat = '-')#*
+        *##foreach($e in $energy)#*
+          *##set($metername = '"-"')#*
+          *##set($metergroup = '"-"')#*
+          *##set($metersubgroup = '"-"')#*
+          *##set($metersubsubgroup = '"-"')#*
+          *##set($kwh = 0)#*
+          *##set($kvah = 0)#*
+          *##set($count = 0)#*
+          *##set($currentmax = 0)#*
+          *##set($currentmin = 0)#*
+          *##set($currentavg = 0)#*
+          *##set($frequencymax = 0)#*
+          *##set($frequencymin = 0)#*
+          *##set($frequencyavg = 0)#*
+          *##set($pfmax = 0)#*
+          *##set($pfmin = 0)#*
+          *##set($pfavg = 0)#*
+          *##set($wattmax = 0)#*
+          *##set($wattmin = 0)#*
+          *##set($wattavg = 0)#*
+          *##set($vllmax = 0)#*
+          *##set($vllmin = 0)#*
+          *##set($vllavg = 0)#*
+          *##set($vlnmax = 0)#*
+          *##set($vlnmin = 0)#*
+          *##set($vlnavg = 0)#*
+          *##set($year = $e.get("_id").year)#*
+          *##set($month = $e.get("_id").month)#*
+          *##set($day = $e.get("_id").day)#*
+          *##set($shift = $e.get("_id").shift)#*
+          *##set($metername = $e.get("_id").metername)#*
+          *##set($metergroup = $e.get("_id").metergroup)#*
+          *##set($metersubgroup = $e.get("_id").metersubgroup)#*
+          *##set($metersubsubgroup = $e.get("_id").metersubsubgroup)#*
+          *##set($kwh = $e.get("kwh"))#*
+          *##set($kwh = $math.roundTo(2, $kwh))#*
+          *##set($kvah = $e.get("kvah"))#*
+          *##set($kvah = $math.roundTo(2, $kvah))#*
+          *##set($count = $e.get("count"))#*
+          *##set($currentmax = $e.get("currentmax"))#*
+          *##set($currentmin = $e.get("currentmin"))#*
+          *##set($currentavg = $math.add($currentmax, $currentmin))#*
+          *##set($currentavg = $math.div($currentavg, $count))#*
+          *##set($currentavg = $math.roundTo(2, $currentavg))#*
+          *##set($frequencymax = $e.get("frequencymax"))#*
+          *##set($frequencymin = $e.get("frequencymin"))#*
+          *##set($frequencyavg = $math.add($frequencymax, $frequencymin))#*
+          *##set($frequencyavg = $math.div($frequencyavg, $count))#*
+          *##set($frequencyavg = $math.roundTo(2, $frequencyavg))#*
+          *##set($pfmax = $e.get("pfmax"))#*
+          *##set($pfmin = $e.get("pfmin"))#*
+          *##set($pfavg = $math.add($pfmax, $pfmin))#*
+          *##set($pfavg = $math.div($pfavg, $count))#*
+          *##set($pfavg = $math.roundTo(2, $pfavg))#*
+          *##set($wattmax = $e.get("wattmax"))#*
+          *##set($wattmin = $e.get("wattmin"))#*
+          *##set($wattavg = $math.add($wattmax, $wattmin))#*
+          *##set($wattavg = $math.div($wattavg, $count))#*
+          *##set($wattavg = $math.roundTo(2, $wattavg))#*
+          *##set($vllmax = $e.get("vllmax"))#*
+          *##set($vllmin = $e.get("vllmin"))#*
+          *##set($vllavg = $math.add($vllmax, $vllmin))#*
+          *##set($vllavg = $math.div($vllavg, $count))#*
+          *##set($vllavg = $math.roundTo(2, $vllavg))#*
+          *##set($vlnmax = $e.get("vlnmax"))#*
+          *##set($vlnmin = $e.get("vlnmin"))#*
+          *##set($vlnavg = $math.add($vlnmax, $vlnmin))#*
+          *##set($vlnavg = $math.div($vlnavg, $count))#*
+          *##set($vlnavg = $math.roundTo(2, $vlnavg))#*
+          *##set($date = $quot+$day+$concat+$month+$concat+$year+$quot)#*
+          *##if($records > 0)#* 
+            *#,#* 
+          *##end#*
+          *#{#*
+            *#"date": $date,#*
+            *#"shift": $shift,#*
+            *#"metername": $metername,#*
+            *#"metergroup": $metergroup,#*
+            *#"metersubgroup": $metersubgroup,#*
+            *#"metersubsubgroup": $metersubsubgroup,#*
+            *#"kwh": $kwh,#*
+            *#"kvah": $kvah,#*
+            *#"currentmax": $currentmax,#*
+            *#"currentmin": $currentmin,#*
+            *#"currentavg": $currentavg,#*
+            *#"frequencymax": $frequencymax,#*
+            *#"frequencymin": $frequencymin,#*
+            *#"frequencyavg": $frequencyavg,#*
+            *#"pfmax": $pfmax,#*
+            *#"pfmin": $pfmin,#*
+            *#"pfavg": $pfavg,#*
+            *#"wattmax": $wattmax,#*
+            *#"wattmin": $wattmin,#*
+            *#"wattavg": $wattavg,#*
+            *#"vllmax": $vllmax,#*
+            *#"vllmin": $vllmin,#*
+            *#"vllavg": $vllavg,#*
+            *#"vlnmax": $vlnmax,#*
+            *#"vlnmin": $vlnmin,#*
+            *#"vlnavg": $vlnavg#*
+          *#}#*
+          *##set($records=$records+1)#*
+        *##end#*
+      *#],#*
+      *#"records" : $records#*
     *#}`,
   },
   {

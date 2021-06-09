@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Bug Fixes
+
+* **dashboard-viewer:** fixed dashbaord display for mobile and tv app ([562e15c](https://bitbucket.org/entrib/shopworx/commits/562e15c9428340529a598176ed8ceb6d4b92bb31))
+* **dashboards:** fixed route query params sync ([a8e2256](https://bitbucket.org/entrib/shopworx/commits/a8e22569ab90cabd2af237f5bbcbe6e806e79094))
+* **date-locale:** fixed date fns locale ([93deb23](https://bitbucket.org/entrib/shopworx/commits/93deb23cbc89c076d955c07087811b039ceef669))
+* **energy-dashboard:** fixed total consumption calculation ([725b7e4](https://bitbucket.org/entrib/shopworx/commits/725b7e4fa6b7db64478bbe5b892e591b9856fd51))
+* **locale:** set browser language to locale cookie ([09840b3](https://bitbucket.org/entrib/shopworx/commits/09840b39e746701da4d90f6354b2887c98d36ca2))
+* **production-log:** fixed input validations ([f524d69](https://bitbucket.org/entrib/shopworx/commits/f524d69144146ad7b9186a2fbf5f9a3785553ed0))
+* **shopfloor-dashboard:** update machine status only if current downtime ([c9aed75](https://bitbucket.org/entrib/shopworx/commits/c9aed757598749c2fbe38d18f392f1b2ad07de29))
+
+
+### Features
+
+* **customer-onboarding:** updated onboarding payloads for EMS + reports ([1a27b0c](https://bitbucket.org/entrib/shopworx/commits/1a27b0cc681831b4de7ee1c938e71919394c48ec))
+* **log-management:** sample data download & Import codes with description functionality ([a178d82](https://bitbucket.org/entrib/shopworx/commits/a178d82bfaa0f92222825e4cd2414d431788f3d3))
+* **Log-management:** code for tuesday release ([c51344a](https://bitbucket.org/entrib/shopworx/commits/c51344afbe0a595a735ae8ddf6f799fa3da51030))
+* **logmanagement:** basic validation while importing csv ([35d749b](https://bitbucket.org/entrib/shopworx/commits/35d749b2d2cb206c16b66c8aa71890b0625fbee4))
+* **parameter-configuration:** create parameters by importing csv file ([a2ab8b6](https://bitbucket.org/entrib/shopworx/commits/a2ab8b6aff9d9c976edb60fd563cef4c979bfe8b))
+* **parameter-configuration:** import parameters through csv ([04ec56c](https://bitbucket.org/entrib/shopworx/commits/04ec56cd88ccf3b5629f71f45cc9b29e666b6673))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 

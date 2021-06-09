@@ -28,6 +28,7 @@ const detectLanguage = () => {
   } else {
     language = window.navigator.language.split('-')[0] || 'en';
   }
+  LocaleService.setLocale(language);
   return language;
 };
 

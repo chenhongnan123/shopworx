@@ -35,6 +35,28 @@ export default [
   {
     reportView: {
       gridObject: '',
+      reportViewName: 'Shopfloor Analysis',
+      reportName: 'hourlyanalysis',
+      reportsCategoryName: 'performance',
+    },
+    reportViewMapping: {
+      reportNames: [],
+    },
+  },
+  {
+    reportView: {
+      gridObject: '',
+      reportViewName: 'Operator Efficiency',
+      reportName: 'shiftwiseoperatorefficiency',
+      reportsCategoryName: 'performance',
+    },
+    reportViewMapping: {
+      reportNames: [],
+    },
+  },
+  {
+    reportView: {
+      gridObject: '',
       reportViewName: 'Rejection By Reason',
       reportName: 'hourlyrejectionbyreason',
       reportsCategoryName: 'quality',
@@ -63,6 +85,17 @@ export default [
     },
     reportViewMapping: {
       reportNames: ['dailyscrapbyreason'],
+    },
+  },
+  {
+    reportView: {
+      gridObject: '',
+      reportViewName: 'Energy Consumption',
+      reportName: 'hourlyenergyconsumption',
+      reportsCategoryName: 'utility',
+    },
+    reportViewMapping: {
+      reportNames: ['shiftwiseenergyconsumption'],
     },
   },
 ];

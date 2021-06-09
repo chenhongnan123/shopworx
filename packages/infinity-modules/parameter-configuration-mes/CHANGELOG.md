@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Features
+
+* **parameter-configuration:** create parameters by importing csv file ([a2ab8b6](https://bitbucket.org/entrib/shopworx/commits/a2ab8b6aff9d9c976edb60fd563cef4c979bfe8b))
+* **parameter-configuration:** import parameters through csv ([04ec56c](https://bitbucket.org/entrib/shopworx/commits/04ec56cd88ccf3b5629f71f45cc9b29e666b6673))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 **Note:** Version bump only for package @shopworx/parameter-configuration-mes

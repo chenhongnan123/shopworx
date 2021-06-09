@@ -1,12 +1,12 @@
 {
   "name": "@shopworx/model-management",
-  "version": "4.3.4",
+  "version": "4.3.5",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.3.4",
+    "@shopworx/services": "^4.3.5",
     "vue-grid-layout": "^2.3.11",
     "vue2-dropzone": "^3.6.0",
     "vuex": "^3.4.0"

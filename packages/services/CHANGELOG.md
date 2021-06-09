@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Bug Fixes
+
+* **date-locale:** fixed date fns locale ([93deb23](https://bitbucket.org/entrib/shopworx/commits/93deb23cbc89c076d955c07087811b039ceef669))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 **Note:** Version bump only for package @shopworx/services
