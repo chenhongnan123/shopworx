@@ -1,9 +1,9 @@
 {
 	"name": "@shopworx/calibration-app",
-	"version": "4.3.4",
+	"version": "4.3.5",
 	"private": true,
 	"dependencies": {
-		"@shopworx/services": "^4.3.4",
+		"@shopworx/services": "^4.3.5",
 		"socket.io-client": "^2.3.0",
 		"vuex": "^3.5.1"
 	},

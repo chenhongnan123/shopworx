@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Bug Fixes
+
+* **production-log:** fixed input validations ([f524d69](https://bitbucket.org/entrib/shopworx/commits/f524d69144146ad7b9186a2fbf5f9a3785553ed0))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 **Note:** Version bump only for package @shopworx/production-log

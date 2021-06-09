@@ -1,13 +1,13 @@
 {
   "name": "@shopworx/process-dashboard",
-  "version": "4.3.4",
+  "version": "4.3.5",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/services": "^4.3.4",
-    "@shopworx/ui-components": "^4.3.4",
+    "@shopworx/services": "^4.3.5",
+    "@shopworx/ui-components": "^4.3.5",
     "vue-grid-layout": "^2.3.11",
     "vuex": "^3.5.1"
   },

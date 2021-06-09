@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Bug Fixes
+
+* **locale:** set browser language to locale cookie ([09840b3](https://bitbucket.org/entrib/shopworx/commits/09840b39e746701da4d90f6354b2887c98d36ca2))
+
+
+### Features
+
+* **customer-onboarding:** updated onboarding payloads for EMS + reports ([1a27b0c](https://bitbucket.org/entrib/shopworx/commits/1a27b0cc681831b4de7ee1c938e71919394c48ec))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 

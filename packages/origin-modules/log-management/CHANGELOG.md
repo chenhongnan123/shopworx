@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
+
+
+### Features
+
+* **log-management:** sample data download & Import codes with description functionality ([a178d82](https://bitbucket.org/entrib/shopworx/commits/a178d82bfaa0f92222825e4cd2414d431788f3d3))
+* **Log-management:** code for tuesday release ([c51344a](https://bitbucket.org/entrib/shopworx/commits/c51344afbe0a595a735ae8ddf6f799fa3da51030))
+* **logmanagement:** basic validation while importing csv ([35d749b](https://bitbucket.org/entrib/shopworx/commits/35d749b2d2cb206c16b66c8aa71890b0625fbee4))
+
+
+
+
+
 ## [4.3.4](https://bitbucket.org/entrib/shopworx/compare/v4.3.3...v4.3.4) (2021-06-02)
 
 
