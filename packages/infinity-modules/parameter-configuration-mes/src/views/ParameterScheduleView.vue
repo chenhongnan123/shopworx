@@ -466,6 +466,7 @@ import ZipService from '@shopworx/services/util/zip.service';
 import AddParameter from '../components/AddParameter.vue';
 import ParameterFilter from '../components/ParameterFilter.vue';
 import ProceedDialog from '../components/ProceedDialog.vue';
+import elementsAndTags from '../data/elements';
 
 export default {
   name: 'PlanScheduleView',
@@ -1879,6 +1880,7 @@ export default {
     },
     async executeTracebilityLogic(val) {
       if (val) {
+        this.savingImport = true;
         await this.getParameterListRecords(this.getQuery());
         const tagList = [];
         const traceabilityTagList = [];
@@ -1886,57 +1888,19 @@ export default {
         const traceabilityElementDetails = await this.getElementDetails('traceability');
         await this.getSubStationIdElement(`process_${this.substationValue}`);
         if (!traceabilityElementDetails) {
-          const payloadElement = {
-            categoryType: 'ASSET',
-            collectionName: 'provisioning',
-            elementName: 'traceability',
-            elementDescription: 'traceability',
-            status: 'ACTIVE',
-            elementType: 'PROVISIONING',
-            uniqueTagName: '',
-            uniqueTagValue: 0,
-            uniqueTagStartValue: 0,
-            uniqueTagValuePrefix: '',
-            uniqueTagValueSuffix: '',
-            businessTimeTagsRequired: false,
-            optional: false,
-            assetBased: true,
-            uniqueTag: false,
-            assetId: 4,
+          const elementProperties = {
+            ...elementsAndTags[0].element,
           };
-          const newElement = await this.createElement(payloadElement);
+          const newElement = await this.createElement(elementProperties);
           // add by default mainid
-          tagList.push({
-            assetId: 4,
-            tagName: 'mainid',
+          const newObjTag = {
+            agName: 'mainid',
             tagDescription: 'mainid',
             emgTagType: 'String',
-            tagOrder: 1,
-            connectorId: 2,
-            defaultValue: '',
-            elementId: this.subStationElementDeatils.element.id,
-            hide: false,
-            identifier: true,
-            interactionType: '',
-            mode: '',
-            required: true,
-            sampling: true,
-            lowerRangeValue: 1,
-            upperRangeValue: 1,
-            alarmFlag: true,
-            alarmId: 1,
-            derivedField: false,
-            derivedFunctionName: '',
-            derivedFieldType: '',
-            displayType: true,
-            displayUnit: 1,
-            isFamily: true,
-            familyQueryTag: '',
-            filter: true,
-            filterFromElementName: '',
-            filterFromTagName: '',
-            filterQuery: '',
-          });
+            ...elementsAndTags[0].tags,
+          };
+          newObjTag.elementId = this.subStationElementDeatils.element.id;
+          tagList.push(newObjTag);
           this.dataForTracebilityElement.forEach((item) => {
             if (
               Number(item.parametercategory) === 15
@@ -1952,104 +1916,37 @@ export default {
                 dataTypeName = 'Double';
               }
               const tagname = item.name;
-              tagList.push({
-                assetId: 4,
-                tagName: tagname.toLowerCase().trim(),
-                tagDescription: item.name,
-                emgTagType: dataTypeName,
-                tagOrder: 1,
-                connectorId: 2,
-                defaultValue: '',
-                elementId: this.subStationElementDeatils.element.id,
-                hide: false,
-                identifier: true,
-                interactionType: '',
-                mode: '',
-                required: true,
-                sampling: true,
-                lowerRangeValue: 1,
-                upperRangeValue: 1,
-                alarmFlag: true,
-                alarmId: 1,
-                derivedField: false,
-                derivedFunctionName: '',
-                derivedFieldType: '',
-                displayType: true,
-                displayUnit: 1,
-                isFamily: true,
-                familyQueryTag: '',
-                filter: true,
-                filterFromElementName: '',
-                filterFromTagName: '',
-                filterQuery: '',
-              });
+              const newobjTag2 = {
+                ...elementsAndTags[0].tags,
+              };
+              newobjTag2.elementId = this.subStationElementDeatils.element.id;
+              newobjTag2.tagName = tagname.toLowerCase().trim();
+              newobjTag2.tagDescription = item.name;
+              newobjTag2.emgTagType = dataTypeName;
+              tagList.push(newobjTag2);
               // Add tags to Traceability element
-              traceabilityTagList.push({
-                assetId: 4,
-                tagName: `${this.substationValue}_${tagname.toLowerCase().trim()}`,
-                tagDescription: `${this.substationValue}_${item.name}`,
-                emgTagType: dataTypeName,
-                tagOrder: 1,
-                connectorId: 2,
-                defaultValue: '',
-                elementId: newElement,
-                hide: false,
-                identifier: true,
-                interactionType: '',
-                mode: '',
-                required: true,
-                sampling: true,
-                lowerRangeValue: 1,
-                upperRangeValue: 1,
-                alarmFlag: true,
-                alarmId: 1,
-                derivedField: false,
-                derivedFunctionName: '',
-                derivedFieldType: '',
-                displayType: true,
-                displayUnit: 1,
-                isFamily: true,
-                familyQueryTag: '',
-                filter: true,
-                filterFromElementName: '',
-                filterFromTagName: '',
-                filterQuery: '',
-              });
+              const newObjeTraceibility = {
+                ...elementsAndTags[0].tags,
+              };
+              newObjeTraceibility.elementId = newElement;
+              newObjeTraceibility.tagName = `${this.substationValue}_${tagname.toLowerCase().trim()}`;
+              newObjeTraceibility.tagDescription = `${this.substationValue}_${item.name}`;
+              newObjeTraceibility.emgTagType = dataTypeName;
+              traceabilityTagList.push(newObjeTraceibility);
             }
           });
         } else {
           // add by default mainid
-          tagList.push({
-            assetId: 4,
-            tagName: 'mainid',
+          // elementId: this.subStationElementDeatils.element.id,
+          const objTag = {
+            agName: 'mainid',
             tagDescription: 'mainid',
             emgTagType: 'String',
-            tagOrder: 1,
-            connectorId: 2,
-            defaultValue: '',
-            elementId: this.subStationElementDeatils.element.id,
-            hide: false,
-            identifier: true,
-            interactionType: '',
-            mode: '',
-            required: true,
-            sampling: true,
-            lowerRangeValue: 1,
-            upperRangeValue: 1,
-            alarmFlag: true,
-            alarmId: 1,
-            derivedField: false,
-            derivedFunctionName: '',
-            derivedFieldType: '',
-            displayType: true,
-            displayUnit: 1,
-            isFamily: true,
-            familyQueryTag: '',
-            filter: true,
-            filterFromElementName: '',
-            filterFromTagName: '',
-            filterQuery: '',
-          });
+            ...elementsAndTags[0].tags,
+          };
+          // assign element id
+          objTag.elementId = this.subStationElementDeatils.element.id;
+          tagList.push(objTag);
           this.dataForTracebilityElement.forEach((item) => {
             if (
               Number(item.parametercategory) === 15
@@ -2065,69 +1962,23 @@ export default {
                 dataTypeName = 'Double';
               }
               const tagname = item.name;
-              tagList.push({
-                assetId: 4,
-                tagName: tagname.toLowerCase().trim(),
-                tagDescription: item.name,
-                emgTagType: dataTypeName,
-                tagOrder: 1,
-                connectorId: 2,
-                defaultValue: '',
-                elementId: this.subStationElementDeatils.element.id,
-                hide: false,
-                identifier: true,
-                interactionType: '',
-                mode: '',
-                required: true,
-                sampling: true,
-                lowerRangeValue: 1,
-                upperRangeValue: 1,
-                alarmFlag: true,
-                alarmId: 1,
-                derivedField: false,
-                derivedFunctionName: '',
-                derivedFieldType: '',
-                displayType: true,
-                displayUnit: 1,
-                isFamily: true,
-                familyQueryTag: '',
-                filter: true,
-                filterFromElementName: '',
-                filterFromTagName: '',
-                filterQuery: '',
-              });
-              // Add tags to Traceability element
-              traceabilityTagList.push({
-                assetId: 4,
-                tagName: `${this.substationValue}_${tagname.toLowerCase().trim()}`,
-                tagDescription: `${this.substationValue}_${item.name}`,
-                emgTagType: dataTypeName,
-                tagOrder: 1,
-                connectorId: 2,
-                defaultValue: '',
-                elementId: traceabilityElementDetails.element.id,
-                hide: false,
-                identifier: true,
-                interactionType: '',
-                mode: '',
-                required: true,
-                sampling: true,
-                lowerRangeValue: 1,
-                upperRangeValue: 1,
-                alarmFlag: true,
-                alarmId: 1,
-                derivedField: false,
-                derivedFunctionName: '',
-                derivedFieldType: '',
-                displayType: true,
-                displayUnit: 1,
-                isFamily: true,
-                familyQueryTag: '',
-                filter: true,
-                filterFromElementName: '',
-                filterFromTagName: '',
-                filterQuery: '',
-              });
+              const objTag2 = {
+                ...elementsAndTags[0].tags,
+              };
+              objTag2.elementId = this.subStationElementDeatils.element.id;
+              objTag2.tagName = tagname.toLowerCase().trim();
+              objTag2.tagDescription = item.name;
+              objTag2.emgTagType = dataTypeName;
+              tagList.push(objTag2);
+              // // Add tags to Traceability element
+              const objeTraceibility = {
+                ...elementsAndTags[0].tags,
+              };
+              objeTraceibility.elementId = traceabilityElementDetails.element.id;
+              objeTraceibility.tagName = `${this.substationValue}_${tagname.toLowerCase().trim()}`;
+              objeTraceibility.tagDescription = `${this.substationValue}_${item.name}`;
+              objeTraceibility.emgTagType = dataTypeName;
+              traceabilityTagList.push(objeTraceibility);
             }
           });
         }
@@ -2169,8 +2020,10 @@ export default {
           });
           // this.setCreateParam(false);
           this.tracibilityExecution = false;
+          this.savingImport = false;
           document.getElementById('uploadFiles').value = null;
         } else {
+          this.tracibilityExecution = false;
           this.setAlert({
             show: true,
             type: 'error',
