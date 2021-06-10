@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid>
     <v-row justify="center">
-      <v-col cols="12" xl="10" class="py-0">
+      <v-col cols="12" xl="10">
         <portal to="app-header">{{ $t('productionLayout') }}</portal>
         <v-row>
           <!-- {{lines}} -->
@@ -153,13 +153,13 @@
       </v-col>
     </v-row> -->
 <v-row class="pa-1 mx-1 grid_row" :key="subline._id" v-for="subline in sublines">
-  <v-col cols="3" md="3" lg="3" class="py-0">
+  <v-col cols="3" md="3" lg="3">
     <div>{{ subline.name }}
       <DeleteSubline :subline="subline" />
       <UpdateSubline :subline="subline" :lineid="selectedLine.id"/>
     </div>
   </v-col>
-  <v-col cols="9" md="9" lg="9" class="py-0">
+  <v-col cols="9" md="9" lg="9">
       <v-row :key="station._id" v-for="station in stations
       .filter((s) => subline.id === s.sublineid)">
         <v-col cols="4" md="4" lg="4" class="py-0">
@@ -168,7 +168,7 @@
             <UpdateStation :station="station" />
           </div>
         </v-col>
-        <v-col cols="8" md="8" lg="8" class="py-0">
+        <v-col cols="8" md="8" lg="8">
           <v-row :key="substation._id" v-for="substation in subStations
           .filter((ss) => station.id === ss.stationid)">
             <v-col cols="6" md="6" lg="6" class="py-0">
@@ -180,7 +180,7 @@
                 <UpdateSubstation :substation="substation" :lineid="selectedLine.id"/>
               </div>
             </v-col>
-            <v-col cols="6" md="6" lg="6" class="py-0">
+            <v-col cols="6" md="6" lg="6">
               <v-row :key="process._id" v-for="process in processes
               .filter((p) => substation.id === p.substationid)">
                 <v-col cols="12" md="12" lg="12" class="py-0">
