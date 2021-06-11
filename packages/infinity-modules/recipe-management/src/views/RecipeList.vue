@@ -124,7 +124,6 @@
               small
               color="primary"
               @click="fnUpdateRecipe(item)"
-              :loading="deleting"
             >
               <v-icon v-text="'$edit'"></v-icon>
             </v-btn>
@@ -133,7 +132,6 @@
               small
               color="error"
               @click="deleteRecipe(item)"
-              :loading="deleting"
             >
               <v-icon v-text="'$delete'"></v-icon>
             </v-btn></v-row>
@@ -213,6 +211,7 @@
           color="primary"
           class="text-none"
           @click="fnDeleteOnYes"
+          :loading="deleting"
         >
           Yes
         </v-btn>
@@ -316,15 +315,35 @@ export default {
     this.myloadingVariable = false;
   },
   async mounted() {
-    this.$root.$on('filteredSubline', (data) => {
-      this.sublines = data;
-    });
-    this.$root.$on('filteredStation', (data) => {
-      this.stations = data;
-    });
-    this.$root.$on('filteredRecipe', (data) => {
-      this.recipesfilter = data;
-    });
+    // this.$root.$on('filteredSubline', (data) => {
+    //   this.sublines = data;
+    // });
+    // this.$root.$on('filteredStation', (data) => {
+    //   this.stations = data;
+    // });
+    // this.$root.$on('filteredRecipe', (data) => {
+    //   this.recipesfilter = data;
+    // });
+  },
+  watch: {
+    filterSubLine: {
+      handler(val) {
+        this.sublines = val;
+      },
+      deep: true,
+    },
+    filterStation: {
+      handler(val) {
+        this.stations = val;
+      },
+      deep: true,
+    },
+    filterRecipe: {
+      handler(val) {
+        this.recipesfilter = val;
+      },
+      deep: true,
+    },
   },
   updated() {
     this.$root.$on('closeThechips', (data) => {
@@ -523,6 +542,7 @@ export default {
       this.recipes = [];
     },
     async fnDeleteOnYes() {
+      this.deleting = true;
       let deleted = false;
       const query = `?query=recipenumber=="${this.itemForDelete.recipenumber}"`;
       const recipeInUse = await this.getRecipeInUse(query);
@@ -542,6 +562,7 @@ export default {
             type: 'success',
             message: 'RECIPE_RECORD_DELETED',
           });
+          this.deleting = false;
           this.dialogConfirm = false;
           this.recipes = {};
         } else {
@@ -550,6 +571,7 @@ export default {
             type: 'error',
             message: 'ERROR_DELETING_RECIPE',
           });
+          this.deleting = false;
         }
       }
       this.dialogConfirm = false;

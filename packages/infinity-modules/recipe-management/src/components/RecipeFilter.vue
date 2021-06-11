@@ -90,7 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList', 'subStationList', 'recipeNames']),
+    ...mapState('recipeManagement', ['recipeList', 'filter', 'subLineList', 'stationList', 'filterBList', 'subStationList', 'recipeNames', 'filterStation', 'filterSubLine', 'filterRecipe']),
     showFilter: {
       get() {
         return this.filter;
@@ -106,18 +106,20 @@ export default {
     onChangeLine() {
     },
     async onChangeSubLine(val) {
-      this.$root.$emit('filteredSubline', val);
+      this.setFilterSubLine('');
       const query = `?query=sublineid=="${val.id}"`;
       await this.getStations(query);
+      this.setFilterSubLine(this.sublines);
     },
     async onChangeStation(val) {
-      this.$root.$emit('filteredStation', val);
+      this.setFilterStation('');
       const query = `?query=stationid=="${val.id}"`;
       await this.getRecipeNameByStation(query);
-      // this.setRecipeList(this.recipeNames);
+      this.setFilterStation(this.stations);
     },
-    onChangeRecipe(val) {
-      this.$root.$emit('filteredRecipe', val);
+    onChangeRecipe() {
+      this.setFilterRecipe('');
+      this.setFilterRecipe(this.recipes);
     },
     async btnApply() {
       let query = '?query=';

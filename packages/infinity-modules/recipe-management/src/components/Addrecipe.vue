@@ -139,6 +139,7 @@
           class="text-none"
           :disabled="!valid"
           @click="saveRecipe"
+          :loading="creating"
         >
           {{ $t('Save') }}
         </v-btn>
@@ -175,6 +176,7 @@ export default {
       valid: true,
       sublinename: '',
       recipename: '',
+      creating: false,
       nameRules: [(v) => !!v || 'Name required',
         (v) => (v && v.length <= 20) || 'Name must be less than 20 characters'],
       lineSelect: [(v) => !!v || 'required'],
@@ -243,6 +245,7 @@ export default {
     },
     // ...mapMutations('recipeManagement', ['toggleFilter', 'setFilterLine']),
     async saveRecipe() {
+      this.creating = true;
       this.$refs.form.validate();
       const recipeNameFlag = this.recipeList
         .filter((rn) => rn.recipename.toLowerCase().split(' ').join('') === this.recipe.recipename.toLowerCase().split(' ').join('')
@@ -253,6 +256,7 @@ export default {
           type: 'error',
           message: 'RECIPE_NAME_EMPTY',
         });
+        this.creating = false;
       } else if (recipeNameFlag.length > 0) {
         this.recipe.recipename = '';
         this.setAlert({
@@ -260,18 +264,21 @@ export default {
           type: 'error',
           message: 'RECIPE_NAME_ALLREADY_EXISIST',
         });
+        this.creating = false;
       } else if (!this.input.sublinename) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'RECIPE_SUBLINE_NAME_EMPTY',
         });
+        this.creating = false;
       } else if (!this.input.stationname) {
         this.setAlert({
           show: true,
           type: 'error',
           message: 'RECIPE_STATION_NAME_EMPTY',
         });
+        this.creating = false;
       } else {
         const recipeFlag = this.recipeList.filter((o) => o.recipename === this.recipe.recipename
         && o.substationid === this.input.substationid);
@@ -283,6 +290,7 @@ export default {
             type: 'error',
             message: 'ALREADY_EXSIST_RECIPE',
           });
+          this.creating = false;
         } else if (this.flagNewUpdate) {
           // update recipe
           this.saving = true;
@@ -308,6 +316,7 @@ export default {
               type: 'success',
               message: 'RECIPE_UPDATED',
             });
+            this.creating = false;
             this.recipe = {};
             this.$refs.form.reset();
             this.dialog = false;
@@ -317,6 +326,7 @@ export default {
               type: 'error',
               message: 'ERROR_UPDATING_RECIPE',
             });
+            this.creating = false;
           }
           this.flagNewUpdate = false;
           this.saving = false;
@@ -349,16 +359,17 @@ export default {
               type: 'success',
               message: 'RECIPE_CREATED',
             });
+            this.creating = false;
             this.dialog = false;
             this.recipe = {};
             this.$refs.form.reset();
-            this.$root.$emit('closeThechips', true);
           } else {
             this.setAlert({
               show: true,
               type: 'error',
               message: 'ERROR_CREATING_RECIPE',
             });
+            this.creating = false;
           }
           this.$refs.form.reset();
           this.saving = false;
@@ -369,9 +380,6 @@ export default {
       this.saving = false;
       this.flagNewUpdate = false;
       this.$refs.form.reset();
-    },
-    async getfilteredStationNames(item) {
-      await this.getStationNamesbysubline(`?query=sublineid=="${item.id}"`);
     },
   },
 };
