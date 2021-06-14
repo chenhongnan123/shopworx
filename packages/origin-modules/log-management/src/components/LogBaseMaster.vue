@@ -315,11 +315,17 @@ export default {
       this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
       this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
       this.myLoadingVariable = false;
-      if (!records.length) {
+      if (!records) {
         this.setAlert({
           show: true,
           type: 'success',
           message: 'No_LOGS_FOUND',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'LOGS_FOUND',
         });
       }
     },
