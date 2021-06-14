@@ -271,7 +271,6 @@ export default {
     this.gridOptions = {};
     this.defaultColDef = {
       filter: true,
-      editable: true,
       resizable: true,
       floatingFilter: true,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
