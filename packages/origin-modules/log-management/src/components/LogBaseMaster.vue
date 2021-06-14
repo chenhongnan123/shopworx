@@ -547,6 +547,10 @@ export default {
               message: 'CODE_CREATED',
             });
             this.importBtnLoading = false;
+            this.myLoadingVariable = true;
+            await this.getSwxLogCodes();
+            this.getSwxLogsElement();
+            this.myLoadingVariable = false;
           }
         }
       } else {
