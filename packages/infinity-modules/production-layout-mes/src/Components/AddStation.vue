@@ -101,7 +101,7 @@
         <!-- <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn> -->
         <v-btn color="primary"
         class="text-none"
-        :disabled="!valid"
+        :disabled="!valid || validTodate"
          @click="saveStation">Save</v-btn>
     </v-card-actions>
     </v-card>
@@ -121,6 +121,7 @@ export default {
       default: false,
       dialog: false,
       valid: true,
+      validTodate: true,
       name: '',
       numbers: '',
       plcipaddress: '',
@@ -173,9 +174,9 @@ export default {
           type: 'error',
           message: 'GREATER_DATE',
         });
-        this.valid = false;
+        this.validTodate = true;
       } else {
-        this.valid = true;
+        this.validTodate = false;
       }
     },
     async saveStation() {
