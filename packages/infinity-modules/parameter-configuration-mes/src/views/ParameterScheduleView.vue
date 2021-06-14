@@ -598,6 +598,16 @@ export default {
         required: false,
         emgTagType: 'string',
       }, {
+        tagName: 'chinesedescription',
+        tagDescription: 'Chinese Description',
+        required: false,
+        emgTagType: 'string',
+      }, {
+        tagName: 'sequence',
+        tagDescription: 'Sequence',
+        required: false,
+        emgTagType: 'string',
+      }, {
         tagName: 'protocol',
         tagDescription: 'Protcol Name',
         required: true,
@@ -1894,12 +1904,12 @@ export default {
           const newElement = await this.createElement(elementProperties);
           // add by default mainid
           const newObjTag = {
-            agName: 'mainid',
-            tagDescription: 'mainid',
-            emgTagType: 'String',
             ...elementsAndTags[0].tags,
           };
-          newObjTag.elementId = this.subStationElementDeatils.element.id;
+          newObjTag.tagName = 'mainid';
+          newObjTag.tagDescription = 'mainid';
+          newObjTag.emgTagType = 'String';
+          newObjTag.elementId = newElement;
           tagList.push(newObjTag);
           this.dataForTracebilityElement.forEach((item) => {
             if (
@@ -1936,17 +1946,6 @@ export default {
             }
           });
         } else {
-          // add by default mainid
-          // elementId: this.subStationElementDeatils.element.id,
-          const objTag = {
-            agName: 'mainid',
-            tagDescription: 'mainid',
-            emgTagType: 'String',
-            ...elementsAndTags[0].tags,
-          };
-          // assign element id
-          objTag.elementId = this.subStationElementDeatils.element.id;
-          tagList.push(objTag);
           this.dataForTracebilityElement.forEach((item) => {
             if (
               Number(item.parametercategory) === 15
@@ -2024,6 +2023,7 @@ export default {
           document.getElementById('uploadFiles').value = null;
         } else {
           this.tracibilityExecution = false;
+          this.savingImport = false;
           this.setAlert({
             show: true,
             type: 'error',
