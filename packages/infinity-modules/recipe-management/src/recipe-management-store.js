@@ -179,25 +179,28 @@ export default ({
       if (deleted) {
         const { filterSubLine, filterStation, filterRecipe } = state;
         let param = '';
-        if (filterSubLine && !filterStation && !filterRecipe) {
-          param += `?query=sublineid=="${filterSubLine.id || null}"`;
+        if (filterSubLine && filterSubLine.id && !filterStation.id && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"`;
         }
-        if (filterStation && !filterSubLine && !filterRecipe) {
-          param += `?query=stationid=="${filterStation.id || null}"`;
+        if (filterStation && filterStation.id && !filterSubLine.id && !filterRecipe.recipenumber) {
+          param += `?query=stationid=="${filterStation.id}"`;
         }
-        if (filterRecipe && !filterSubLine && !filterStation) {
-          param += `?query=recipenumber=="${filterRecipe.recipenumber || null}"`;
+        if (filterRecipe && filterRecipe.recipenumber && !filterStation.id && !filterSubLine.id) {
+          param += `?query=recipenumber=="${filterRecipe.recipenumber}"`;
         }
-        if (filterSubLine && filterStation) {
+        if (filterSubLine && filterSubLine.id && filterStation && filterStation.id
+           && !filterRecipe.recipenumber) {
           param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"`;
         }
-        if (filterStation && filterRecipe) {
+        if (filterStation && filterStation.id && filterRecipe && filterRecipe.recipenumber
+            && !filterSubLine.id) {
           param += `?query=stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
         }
-        if (filterSubLine && filterStation && filterRecipe) {
+        if (filterSubLine && filterSubLine.id && filterStation
+            && filterStation.id && filterRecipe && filterRecipe.recipenumber) {
           param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
         }
-        if (!filterSubLine.length && !filterStation.length && !filterRecipe.length) {
+        if (!filterSubLine.id && !filterStation.id && filterRecipe.recipenumber) {
           param = '';
         }
         await dispatch('getRecipeListRecords', param);
@@ -330,23 +333,29 @@ export default ({
       if (created) {
         const { filterSubLine, filterStation, filterRecipe } = state;
         let param = '';
-        if (filterSubLine && !filterStation && !filterRecipe) {
-          param += `?query=sublineid=="${filterSubLine.id || null}"`;
+        if (filterSubLine && filterSubLine.id && !filterStation.id && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"`;
         }
-        if (filterStation && !filterSubLine && !filterRecipe) {
-          param += `?query=stationid=="${filterStation.id || null}"`;
+        if (filterStation && filterStation.id && !filterSubLine.id && !filterRecipe.recipenumber) {
+          param += `?query=stationid=="${filterStation.id}"`;
         }
-        if (filterRecipe && !filterSubLine && !filterStation) {
-          param += `?query=recipenumber=="${filterRecipe.recipenumber || null}"`;
+        if (filterRecipe && filterRecipe.recipenumber && !filterStation.id && !filterSubLine.id) {
+          param += `?query=recipenumber=="${filterRecipe.recipenumber}"`;
         }
-        if (filterSubLine && filterStation) {
+        if (filterSubLine && filterSubLine.id && filterStation && filterStation.id
+           && !filterRecipe.recipenumber) {
           param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"`;
         }
-        if (filterStation && filterRecipe) {
+        if (filterStation && filterStation.id && filterRecipe && filterRecipe.recipenumber
+            && !filterSubLine.id) {
           param += `?query=stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
         }
-        if (filterSubLine && filterStation && filterRecipe) {
+        if (filterSubLine && filterSubLine.id && filterStation
+            && filterStation.id && filterRecipe && filterRecipe.recipenumber) {
           param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (!filterSubLine.id && !filterStation.id && filterRecipe.recipenumber) {
+          param = '';
         }
         await dispatch('getRecipeListRecords', param);
         return true;
