@@ -519,6 +519,22 @@ export default {
           document.getElementById('uploadFiles').value = null;
           return;
         }
+        const nullEnDecription = [];
+        data.forEach((en) => {
+          if (en.endescription === null || en.endescription === '' || en.endescription === undefined) {
+            nullEnDecription.push(en.endescription);
+          }
+        });
+        if (nullEnDecription.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'EMPTY_ENGLISH_DESCRIPTION',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
         const duplicateCodes = codelist.map((item) => item)
           .filter((value, index, self) => self.indexOf(value) !== index);
         if (duplicateCodes.length > 0) {
