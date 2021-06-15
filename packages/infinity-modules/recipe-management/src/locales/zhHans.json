@@ -80,7 +80,7 @@
   "Lower": "下限",
   "Monitor value": "监控值",
   "Recipe Parameters": "配方参数",
-  "Calibration": "标定参数",
+  "deviceParameters": "设备参数",
   "Upload to PLC": "上传",
   "Download from PLC": "下载"
 }
