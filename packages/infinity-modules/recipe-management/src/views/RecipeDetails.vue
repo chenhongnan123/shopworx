@@ -291,7 +291,7 @@ export default {
           id: 1,
         },
         {
-          name: this.$t('Calibration'),
+          name: this.$t('deviceParameters'),
           id: 2,
           parametercategory: 58,
         },

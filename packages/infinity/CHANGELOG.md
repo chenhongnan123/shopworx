@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+
+### Bug Fixes
+
+* **master-data:** fixed QA0-I635 ([e3e5871](https://bitbucket.org/entrib/shopworx/commits/e3e587112afefc0e55886f3153cdddb7f73a7eaa))
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 

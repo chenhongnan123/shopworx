@@ -54,7 +54,7 @@
             :key="index"
             v-for="(user, index) in users"
           >
-            <v-col cols="6" class="py-0">
+            <v-col cols="6">
               <identifier-input
                 :loading="loading"
                 v-model="user.identifier"
@@ -63,7 +63,7 @@
                 :error="user.error"
               />
             </v-col>
-            <v-col cols="3" class="py-0">
+            <v-col cols="3">
               <v-select
                 :items="roles"
                 :rules="[v => !!v || $t('admin.users.roleRequired')]"

@@ -109,7 +109,7 @@
                     </validation-provider>
                   </v-col>
                 </v-row>
-                <div class="title">
+                <div class="title mb-2">
                   {{ $t('planning.operationalParams') }}
                   <v-btn
                     small
@@ -230,7 +230,7 @@
                     <strong>{{ selectedMatrix.strokes }}</strong>
                   </div>
                 </div>
-                <div class="title mt-4">
+                <div class="title mt-4 mb-2">
                   {{ $t('planning.planDetails') }}
                 </div>
                 <v-row>
@@ -327,7 +327,7 @@
                   <strong>{{ estimatedEndDisplay }}</strong>
                 </div>
                 <template v-if="familyParts.length">
-                  <div class="title mt-4">
+                  <div class="title mt-4 mb-2">
                     {{ $t('planning.familyMold') }}
                   </div>
                     <v-data-table

@@ -103,7 +103,7 @@
             @click="nextSearch(pageNumber+=1)">Next
             </v-btn>
         </v-toolbar> -->
-    <PartStatusView ref="partstatus" :pageNumber="pageNumber"/>
+    <PartStatusView ref="partstatus" :pageNumber="pageNumber" @cell-clicked="btnSearch"/>
     <v-tabs
         dense
         center-active
@@ -718,7 +718,7 @@ export default {
           message: 'SELECT_SUBLINE',
         });
       } else {
-        this.searchBtnLoading = true;
+        // this.searchBtnLoading = true;
         await this.$refs.partstatus.btnSearchCheckOut();
         await this.$refs.overall.btnSearchCheckOut();
         await this.$refs.process.btnSearchProcessParameters();
@@ -740,6 +740,7 @@ export default {
         //   // this.$refs.partstatus.btnSearchCheckOut();
         // }
       }
+      this.searchBtnLoading = false;
     },
     async nextSearch() {
       this.$refs.partstatus.nextSearch();

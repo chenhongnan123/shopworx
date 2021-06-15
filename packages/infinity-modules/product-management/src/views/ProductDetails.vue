@@ -13,14 +13,14 @@
         ></v-icon>
       </v-btn>
     </portal>
-    <v-container fluid class="py-0">
+    <v-container fluid>
       <v-btn icon @click="$router.push({ name: 'productManagement' })">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <span v-text="`${$t('displayTags.productType')} : `"> </span>
       <span v-text="productInfo.productname"></span>
       <v-row justify="center">
-        <v-col cols="12" xl="10" class="py-0">
+        <v-col cols="12" xl="10">
           <v-row justify="left">
             <v-col cols="12" md="2" class="py-2">
               <v-text-field

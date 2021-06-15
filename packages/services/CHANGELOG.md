@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+**Note:** Version bump only for package @shopworx/services
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 

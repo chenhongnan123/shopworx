@@ -37,7 +37,7 @@
             :key="index"
             v-for="(holiday, index) in newHolidays"
           >
-            <v-col cols="4" class="py-0">
+            <v-col cols="4">
               <v-text-field
                 type="text"
                 hide-details="auto"
@@ -48,7 +48,7 @@
                 :label="$t('setup.onboardCalendar.holidays.name')"
               ></v-text-field>
             </v-col>
-            <v-col cols="4" class="py-0">
+            <v-col cols="4">
               <v-text-field
                 type="date"
                 hide-details="auto"
@@ -58,28 +58,25 @@
                 :label="$t('setup.onboardCalendar.holidays.date')"
               ></v-text-field>
             </v-col>
-            <v-col cols="4" class="my-auto">
-              <div class="mx-auto">
-                <v-btn
-                  icon
-                  small
-                  class="mx-2"
-                  @click="addHoliday"
-                  :id="`add-${index}`"
-                >
-                  <v-icon v-text="'$add'"></v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  small
-                  class="pa-0 mx-2"
-                  :id="`remove-${index}`"
-                  @click="removeHoliday(index)"
-                  :disabled="holidays.length === 1"
-                >
-                  <v-icon v-text="'$remove'"></v-icon>
-                </v-btn>
-              </div>
+            <v-col cols="4" class="mt-4">
+              <v-btn
+                icon
+                small
+                class="ml-8 mr-2"
+                @click="addHoliday"
+                :id="`add-${index}`"
+              >
+                <v-icon v-text="'$add'"></v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                small
+                :id="`remove-${index}`"
+                @click="removeHoliday(index)"
+                :disabled="holidays.length === 1"
+              >
+                <v-icon v-text="'$remove'"></v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-card-text>

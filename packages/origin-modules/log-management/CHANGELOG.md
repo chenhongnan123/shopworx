@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+
+### Bug Fixes
+
+* **log-management:** RA-I653 | Log-management | Error message should not get displayed ([dc2444c](https://bitbucket.org/entrib/shopworx/commits/dc2444cb37790f0c5ef2ea782536de93a08783bd))
+* **log-management:** RA-I654 | Log-management | On importing codes, need to refresh the page ([ebbef55](https://bitbucket.org/entrib/shopworx/commits/ebbef558e9c03c202304bf3035b54791169f0d17))
+* **log-management:** RA-I656 | columns value should not get edited ([50e6198](https://bitbucket.org/entrib/shopworx/commits/50e6198c05dd98acf2ebfee6a70cf4dcb8b0282f))
+* **log-management:** RA-I657 | og-management | For blank csv, loading sign is shown on import button ([6e8d995](https://bitbucket.org/entrib/shopworx/commits/6e8d995d04058cf25f68bdd1183b92cabade312c))
+* **log-management:** RA-I659 |  Date fields are showing blank and showing continuous loading ([f1232f8](https://bitbucket.org/entrib/shopworx/commits/f1232f89602bfd9057f527a27893bbd4b4df153f))
+* **origin:** RA-I660 |  origin | assetidbased should be false for swxlogs element ([70a8ce7](https://bitbucket.org/entrib/shopworx/commits/70a8ce7372314fac5b6d9496aea928f7fc920149))
+
+
+### Features
+
+* **log-management:** RA-I658 | Log-management | For blank description csv get uploaded ([43bdd7e](https://bitbucket.org/entrib/shopworx/commits/43bdd7ecd2c2e8a0970e903cb2adaccfe09826f7))
+* **log-management:** validation to check the length of 'swxlogcodes' element ([9ddd13f](https://bitbucket.org/entrib/shopworx/commits/9ddd13fd95c165eb754cddc4ffca23e92daae538))
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 

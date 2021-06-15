@@ -95,7 +95,7 @@
   "Lower": "Lower",
   "Monitor value": "Monitor value",
   "Recipe Parameters": "Recipe Parameters",
-  "Calibration": "Calibration",
+  "deviceParameters": "Device Parameters",
   "Upload to PLC": "Upload to PLC",
   "Download from PLC": "Download from PLC"
 }

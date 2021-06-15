@@ -362,7 +362,7 @@ export default ({
       }
       return created;
     },
-    createSubstation: async ({ dispatch, commit }, payload) => {
+    createSubstation: async ({ dispatch }, payload) => {
       let list = [];
       const created = await dispatch(
         'element/postRecord',
@@ -373,7 +373,7 @@ export default ({
         { root: true },
       );
       if (created) {
-        dispatch('getSubStations');
+        await dispatch('getSubStations');
       }
       return created;
     },
