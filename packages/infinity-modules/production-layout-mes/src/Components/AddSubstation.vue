@@ -234,9 +234,9 @@ export default {
               message: 'SUB-STATION_CREATED',
             });
             const realParam = this.checkedReal;
+            const substationid = this.subStations[0].id;
             if (realParam) {
               this.assetId = this.getAssetId;
-              const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
                 siteId: 197,
@@ -270,7 +270,7 @@ export default {
             if (checkedPlc) {
               this.newSubstation = {};
               this.assetId = this.getAssetId;
-              const substationid = this.subStations[0].id;
+              // const substationid = this.subStations[0].id;
               const object = {
                 customerId: 195,
                 siteId: 197,

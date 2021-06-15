@@ -12,11 +12,10 @@ export default ({
     stationList: [],
     subStationList: [],
     filterLine: {},
-    filterSubLine: {},
-    filterStation: {},
-    filterRecipe: {},
+    filterSubLine: [],
+    filterStation: [],
+    filterRecipe: [],
     filterBList: [],
-    stationNamebySubline: [],
     datatypeList: [],
     parametersList: [],
     sublineInState: [],
@@ -38,7 +37,6 @@ export default ({
     setFilterStation: set('filterStation'),
     setFilterRecipe: set('filterRecipe'),
     setFilterBackupList: set('filterBList'),
-    setStationNamebySubline: set('stationNamebySubline'),
     setDataTypeList: set('datatypeList'),
     setParamtersList: set('parametersList'),
     setInStateSubline: set('sublineInState'),
@@ -76,18 +74,6 @@ export default ({
         { root: true },
       );
       return orders;
-    },
-    getStationNamesbysubline: async ({ dispatch, commit }, query) => {
-      const stationNamebySubline = await dispatch(
-        'element/getRecords',
-        {
-          elementName: 'station',
-          query,
-        },
-        { root: true },
-      );
-      commit('setStationNamebySubline', stationNamebySubline);
-      return true;
     },
     getRecipeNameByStation: async ({ dispatch, commit }, query) => {
       const list = await dispatch(
@@ -181,7 +167,7 @@ export default ({
       }
       return false;
     },
-    deleteRecipeByRecipeNumber: async ({ dispatch }, id) => {
+    deleteRecipeByRecipeNumber: async ({ dispatch, state }, id) => {
       const deleted = await dispatch(
         'element/deleteRecordByQuery',
         {
@@ -191,7 +177,33 @@ export default ({
         { root: true },
       );
       if (deleted) {
-        dispatch('getRecipeListRecords');
+        const { filterSubLine, filterStation, filterRecipe } = state;
+        let param = '';
+        if (filterSubLine && filterSubLine.id && !filterStation.id && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"`;
+        }
+        if (filterStation && filterStation.id && !filterSubLine.id && !filterRecipe.recipenumber) {
+          param += `?query=stationid=="${filterStation.id}"`;
+        }
+        if (filterRecipe && filterRecipe.recipenumber && !filterStation.id && !filterSubLine.id) {
+          param += `?query=recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (filterSubLine && filterSubLine.id && filterStation && filterStation.id
+           && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"`;
+        }
+        if (filterStation && filterStation.id && filterRecipe && filterRecipe.recipenumber
+            && !filterSubLine.id) {
+          param += `?query=stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (filterSubLine && filterSubLine.id && filterStation
+            && filterStation.id && filterRecipe && filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (!filterSubLine.id && !filterStation.id && filterRecipe.recipenumber) {
+          param = '';
+        }
+        await dispatch('getRecipeListRecords', param);
         return true;
       }
       return deleted;
@@ -309,7 +321,7 @@ export default ({
       commit('setRecipeListDetails', recipeDetails);
       return recipeDetails;
     },
-    createRecipe: async ({ dispatch }, payload) => {
+    createRecipe: async ({ dispatch, state }, payload) => {
       const created = await dispatch(
         'element/postRecord',
         {
@@ -319,7 +331,33 @@ export default ({
         { root: true },
       );
       if (created) {
-        dispatch('getRecipeListRecords');
+        const { filterSubLine, filterStation, filterRecipe } = state;
+        let param = '';
+        if (filterSubLine && filterSubLine.id && !filterStation.id && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"`;
+        }
+        if (filterStation && filterStation.id && !filterSubLine.id && !filterRecipe.recipenumber) {
+          param += `?query=stationid=="${filterStation.id}"`;
+        }
+        if (filterRecipe && filterRecipe.recipenumber && !filterStation.id && !filterSubLine.id) {
+          param += `?query=recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (filterSubLine && filterSubLine.id && filterStation && filterStation.id
+           && !filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"`;
+        }
+        if (filterStation && filterStation.id && filterRecipe && filterRecipe.recipenumber
+            && !filterSubLine.id) {
+          param += `?query=stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (filterSubLine && filterSubLine.id && filterStation
+            && filterStation.id && filterRecipe && filterRecipe.recipenumber) {
+          param += `?query=sublineid=="${filterSubLine.id}"%26%26stationid=="${filterStation.id}"%26%26recipenumber=="${filterRecipe.recipenumber}"`;
+        }
+        if (!filterSubLine.id && !filterStation.id && filterRecipe.recipenumber) {
+          param = '';
+        }
+        await dispatch('getRecipeListRecords', param);
         return true;
       }
       return created;

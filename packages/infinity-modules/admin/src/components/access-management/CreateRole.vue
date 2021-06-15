@@ -145,24 +145,7 @@ export default {
       const modules = [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (
-            module.moduleName.toUpperCase().trim() === 'APPS'
-              || module.moduleName.toUpperCase().trim() === 'DASHBOARDS'
-              || module.moduleName.toUpperCase().trim() === 'OPERATION'
-              || module.moduleName.toUpperCase().trim() === 'MANAGEMENT'
-              || module.moduleName.toUpperCase().trim() === 'CONFIGURATION'
-          ) {
-            modules.push({
-              id: module.id,
-              name: this.$i18n.t(`modules.${module.moduleName}`),
-              children: module.details.map((detail) => ({
-                moduleId: module.id,
-                moduleName: module.moduleName,
-                id: detail.id,
-                name: this.$i18n.t(`modules.${detail.webAppName}`),
-              })),
-            });
-          } else if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+          if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
             this.masterReportCategoryIds = this.removeDuplicates(module.details, 'id')
               .map((detail) => detail.id);
             modules.push({
@@ -177,12 +160,23 @@ export default {
                 }),
               ),
             });
-          } else if (module.moduleName.toUpperCase().trim() !== 'INSIGHTS') {
+          } else if (module.moduleName.toUpperCase().trim() === 'MASTERS' || module.moduleName.toUpperCase().trim() === 'ADMIN' || module.moduleName.toUpperCase().trim() === 'RAWDATA') {
             modules.push({
               moduleId: module.id,
               moduleName: module.moduleName,
               id: module.id,
               name: this.$i18n.t(`modules.${module.moduleName}`),
+            });
+          } else {
+            modules.push({
+              id: module.id,
+              name: this.$i18n.t(`modules.${module.moduleName}`),
+              children: module.details.map((detail) => ({
+                moduleId: module.id,
+                moduleName: module.moduleName,
+                id: detail.id,
+                name: this.$i18n.t(`modules.${detail.webAppName}`),
+              })),
             });
           }
           return modules;
@@ -224,17 +218,18 @@ export default {
             };
             const modules = permissionsByModule[moduleId];
             if (
-              modules[0].moduleName.toUpperCase().trim() === 'APPS'
-              || modules[0].moduleName.toUpperCase().trim() === 'DASHBOARDS'
-              || modules[0].moduleName.toUpperCase().trim() === 'OPERATION'
-              || modules[0].moduleName.toUpperCase().trim() === 'MANAGEMENT'
-              || modules[0].moduleName.toUpperCase().trim() === 'CONFIGURATION'
+              modules[0].moduleName.toUpperCase().trim() !== 'REPORTS'
             ) {
               mod.webAppIds = modules.map((m) => m.id);
             } else if (
               modules[0].moduleName.toUpperCase().trim() === 'REPORTS'
             ) {
               mod.reportsCategoryIds = modules.map((m) => m.id);
+            }
+            if (
+              modules[0].moduleName.toUpperCase().trim() === 'MASTERS' || modules[0].moduleName.toUpperCase().trim() === 'ADMIN' || modules[0].moduleName.toUpperCase().trim() === 'RAWDATA'
+            ) {
+              delete mod.webAppIds;
             }
             return mod;
           },

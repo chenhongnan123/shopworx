@@ -78,8 +78,8 @@
       />
     </v-toolbar>
     <v-progress-linear
-     :indeterminate="myLoadingVariable"
-     v-if="myLoadingVariable"
+     :indeterminate="myProgressVariable"
+     v-if="myProgressVariable"
      class="mt-1">
     </v-progress-linear>
     <v-progress-linear
@@ -200,7 +200,7 @@ export default {
       showUpdateBtn: false,
       updateData: [],
       language: null,
-      myLoadingVariable: true,
+      myProgressVariable: true,
       importBtnLoading: false,
       headers: [
         {
@@ -240,6 +240,7 @@ export default {
     this.language = this.currentLocale;
     this.zipService = ZipService;
     await this.getSwxLogCodes();
+    this.getSwxLogsElement();
   },
   computed: {
     ...mapState('logManagement', ['records', 'logs', 'logcodes', 'elementExisted']),
@@ -271,7 +272,6 @@ export default {
     this.gridOptions = {};
     this.defaultColDef = {
       filter: true,
-      editable: true,
       resizable: true,
       floatingFilter: true,
       headerCheckboxSelectionFilteredOnly: this.isFirstColumn,
@@ -292,34 +292,39 @@ export default {
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
       if (this.fromdate && this.todate) {
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         const from = new Date(this.fromdate).getTime();
         const to = new Date(this.todate).getTime();
         await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       } else {
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         await this.getSwxLogsElement();
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       }
     },
     async getSwxLogsElement() {
-      this.myLoadingVariable = true;
+      this.myProgressVariable = true;
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       const from = new Date(yesterday).getTime();
       const to = new Date(today).getTime();
       const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-      this.myLoadingVariable = false;
       this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
       this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
-      this.myLoadingVariable = false;
-      if (!records.length) {
+      this.myProgressVariable = false;
+      if (!records) {
         this.setAlert({
           show: true,
           type: 'success',
           message: 'No_LOGS_FOUND',
+        });
+      } else {
+        this.setAlert({
+          show: true,
+          type: 'success',
+          message: 'LOGS_FOUND',
         });
       }
     },
@@ -339,51 +344,59 @@ export default {
       } else {
         this.selectedRowData = [];
         this.selectedRowDataswxCodes = [];
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         const from = new Date(this.fromdate).getTime();
         const to = new Date(this.todate).getTime();
         await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       }
     },
     async handleClick(item) {
       const responce = item.data;
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
-      if (this.language === 'zhHans') {
-        this.selectedRowData = responce.metadata;
-        const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.cndescription === responce.cndescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
-        if (!codeTypeMapping.length) {
-          this.selectedRowData = [];
-          this.selectedRowDataswxCodes = [];
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'CODE_NOT_AVAILABLE',
-          });
+      if (this.logcodes.length) {
+        if (this.language === 'zhHans') {
+          this.selectedRowData = responce.metadata;
+          const codeDescriptionMapping = this.logcodes
+            .filter((c) => c.cndescription === responce.cndescription);
+          const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+          if (!codeTypeMapping.length) {
+            this.selectedRowData = [];
+            this.selectedRowDataswxCodes = [];
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'CODE_NOT_AVAILABLE',
+            });
+          } else {
+            this.selectedRowDataswxCodes = codeDescriptionMapping;
+            this.selectedRowDataswxCodes = codeTypeMapping;
+          }
         } else {
-          this.selectedRowDataswxCodes = codeDescriptionMapping;
-          this.selectedRowDataswxCodes = codeTypeMapping;
+          this.selectedRowData = responce.metadata;
+          const codeDescriptionMapping = this.logcodes
+            .filter((c) => c.endescription === responce.endescription);
+          const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+          if (!codeTypeMapping.length) {
+            this.selectedRowData = [];
+            this.selectedRowDataswxCodes = [];
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'CODE_NOT_AVAILABLE',
+            });
+          } else {
+            this.selectedRowDataswxCodes = codeDescriptionMapping;
+            this.selectedRowDataswxCodes = codeTypeMapping;
+          }
         }
       } else {
-        this.selectedRowData = responce.metadata;
-        const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.endescription === responce.endescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
-        if (!codeTypeMapping.length) {
-          this.selectedRowData = [];
-          this.selectedRowDataswxCodes = [];
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'CODE_NOT_AVAILABLE',
-          });
-        } else {
-          this.selectedRowDataswxCodes = codeDescriptionMapping;
-          this.selectedRowDataswxCodes = codeTypeMapping;
-        }
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SWXCODES_ELEMENT_EMPTY',
+        });
       }
     },
     setRowData() {
@@ -506,6 +519,22 @@ export default {
           document.getElementById('uploadFiles').value = null;
           return;
         }
+        const nullEnDecription = [];
+        data.forEach((en) => {
+          if (en.endescription === null || en.endescription === '' || en.endescription === undefined) {
+            nullEnDecription.push(en.endescription);
+          }
+        });
+        if (nullEnDecription.length) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: 'EMPTY_ENGLISH_DESCRIPTION',
+          });
+          this.importBtnLoading = false;
+          document.getElementById('uploadFiles').value = null;
+          return;
+        }
         const duplicateCodes = codelist.map((item) => item)
           .filter((value, index, self) => self.indexOf(value) !== index);
         if (duplicateCodes.length > 0) {
@@ -542,16 +571,23 @@ export default {
               message: 'CODE_CREATED',
             });
             this.importBtnLoading = false;
+            this.myProgressVariable = true;
+            await this.getSwxLogCodes();
+            this.getSwxLogsElement();
+            this.myProgressVariable = false;
+            document.getElementById('uploadFiles').value = null;
           }
         }
       } else {
         this.validateFlag = false;
         this.savingImport = false;
+        this.importBtnLoading = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'IMPORT_EMPTY_FILE',
         });
+        document.getElementById('uploadFiles').value = null;
       }
     },
   },

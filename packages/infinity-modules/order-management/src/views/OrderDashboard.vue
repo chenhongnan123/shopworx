@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid>
     <v-row justify="left">
       <v-col cols="12" md="3" xl="2">
         <in-progress-stats />
