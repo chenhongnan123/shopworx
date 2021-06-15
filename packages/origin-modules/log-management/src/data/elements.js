@@ -86,7 +86,7 @@ export default [
       uniqueTagValueSuffix: '',
       businessTimeTagsRequired: false,
       optional: false,
-      assetBased: true,
+      assetBased: false,
       uniqueTag: false,
     },
     tags: [
