@@ -78,8 +78,8 @@
       />
     </v-toolbar>
     <v-progress-linear
-     :indeterminate="myLoadingVariable"
-     v-if="myLoadingVariable"
+     :indeterminate="myProgressVariable"
+     v-if="myProgressVariable"
      class="mt-1">
     </v-progress-linear>
     <v-progress-linear
@@ -200,7 +200,7 @@ export default {
       showUpdateBtn: false,
       updateData: [],
       language: null,
-      myLoadingVariable: true,
+      myProgressVariable: true,
       importBtnLoading: false,
       headers: [
         {
@@ -240,6 +240,7 @@ export default {
     this.language = this.currentLocale;
     this.zipService = ZipService;
     await this.getSwxLogCodes();
+    this.getSwxLogsElement();
   },
   computed: {
     ...mapState('logManagement', ['records', 'logs', 'logcodes', 'elementExisted']),
@@ -291,29 +292,28 @@ export default {
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
       if (this.fromdate && this.todate) {
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         const from = new Date(this.fromdate).getTime();
         const to = new Date(this.todate).getTime();
         await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       } else {
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         await this.getSwxLogsElement();
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       }
     },
     async getSwxLogsElement() {
-      this.myLoadingVariable = true;
+      this.myProgressVariable = true;
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       const from = new Date(yesterday).getTime();
       const to = new Date(today).getTime();
       const records = await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-      this.myLoadingVariable = false;
       this.fromdate = formatDate(new Date(from), 'yyyy-MM-dd\'T\'HH:mm');
       this.todate = formatDate(new Date(to), 'yyyy-MM-dd\'T\'HH:mm');
-      this.myLoadingVariable = false;
+      this.myProgressVariable = false;
       if (!records) {
         this.setAlert({
           show: true,
@@ -344,11 +344,11 @@ export default {
       } else {
         this.selectedRowData = [];
         this.selectedRowDataswxCodes = [];
-        this.myLoadingVariable = true;
+        this.myProgressVariable = true;
         const from = new Date(this.fromdate).getTime();
         const to = new Date(this.todate).getTime();
         await this.getSwxLogs(`?datefrom=${from}&dateto=${to}`);
-        this.myLoadingVariable = false;
+        this.myProgressVariable = false;
       }
     },
     async handleClick(item) {
@@ -547,10 +547,10 @@ export default {
               message: 'CODE_CREATED',
             });
             this.importBtnLoading = false;
-            this.myLoadingVariable = true;
+            this.myProgressVariable = true;
             await this.getSwxLogCodes();
             this.getSwxLogsElement();
-            this.myLoadingVariable = false;
+            this.myProgressVariable = false;
           }
         }
       } else {
