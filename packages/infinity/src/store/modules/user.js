@@ -396,16 +396,13 @@ export default ({
           .sort((a, b) => a.id - b.id)
           .map((module) => {
             const isApp = module.moduleName.toUpperCase().trim() === 'APPS';
-            const isDashboard = module.moduleName.toUpperCase().trim() === 'DASHBOARDS';
             const isReport = module.moduleName.toUpperCase().trim() === 'REPORTS';
             const isMaster = module.moduleName.toUpperCase().trim() === 'MASTERS';
             const isRawData = module.moduleName.toUpperCase().trim() === 'RAWDATA';
             const isAdmin = module.moduleName.toUpperCase().trim() === 'ADMIN';
             const isInsight = module.moduleName.toUpperCase().trim() === 'INSIGHTS';
-            if (isApp || isDashboard) {
-              if (isDashboard) {
-                modules.items.push({ header: module.moduleName });
-              }
+            const areAdminItems = isMaster || isRawData || isAdmin;
+            if (isApp) {
               module.details.forEach((detail) => {
                 const isExternal = detail.webAppLink.includes('/#');
                 modules.items.push({
@@ -426,21 +423,7 @@ export default ({
                   title: detail.reportsCategoryName,
                 });
               });
-            } else if (isMaster) {
-              modules.adminItems.push({
-                id: module.id,
-                to: module.moduleLink,
-                title: module.moduleName,
-                icon: `$${module.moduleName}`,
-              });
-            } else if (isRawData) {
-              modules.adminItems.push({
-                id: module.id,
-                to: module.moduleLink,
-                title: module.moduleName,
-                icon: `$${module.moduleName}`,
-              });
-            } else if (isAdmin) {
+            } else if (areAdminItems) {
               modules.adminItems.push({
                 id: module.id,
                 to: module.moduleLink,
@@ -450,11 +433,13 @@ export default ({
             } else if (!isInsight) {
               modules.items.push({ header: module.moduleName });
               module.details.forEach((detail) => {
+                const isExternal = detail.webAppLink.includes('/#');
                 modules.items.push({
                   id: detail.id,
                   icon: detail.iconURL,
                   to: detail.webAppLink,
                   title: detail.webAppName,
+                  external: isExternal,
                 });
               });
             }

@@ -88,9 +88,16 @@
           <div v-for="(data, n) in dummyNames" :key="n">{{ data }}</div>
         </v-expansion-panel-content>
       </v-expansion-panel>
+      <v-expansion-panel v-if="dummyParamsDb.length > 0">
+        <v-expansion-panel-header class="pa-0 ma-0 error--text">
+          {{ $t('error.DUPLICATE_PARAMETER_FOUND_DB', dummyParamsDb.length) }}
+          </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div v-for="(data, n) in dummyParamsDb" :key="n">{{ data }}</div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
     </v-expansion-panels>
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
@@ -170,6 +177,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    dummyParamsDb: {
+      type: Array,
+      default: () => [],
+    },
   },
   watch: {
     responce: {
@@ -244,6 +255,15 @@ export default {
         }
       },
     },
+    dummyParamsDb: {
+      handler(val) {
+        if (val.length > 0) {
+          this.yesBtnDisable = true;
+        } else {
+          this.yesBtnDisable = false;
+        }
+      },
+    },
   },
   created() {
     this.duplicateBnum = [];
@@ -252,6 +272,7 @@ export default {
     this.paramLength = [];
     this.dummyNames = [];
     this.dummyCombo = [];
+    this.dummyParamsDb = [];
     this.duplicateCombination = [];
   },
   mounted() {
@@ -278,6 +299,7 @@ export default {
     this.dupDbAddress = [];
     this.paramLength = [];
     this.dummyNames = [];
+    this.dummyParamsDb = [];
     this.dummyCombo = [];
     this.duplicateCombination = [];
   },
@@ -291,7 +313,8 @@ export default {
       this.dialog = false;
       this.payloadData = [];
       if (createResult) {
-        this.setCreateParam(true);
+        // this.setCreateParam(true);
+        this.$root.$emit('passedFlagOfValidations', true);
         this.setAlert({
           show: true,
           type: 'success',
@@ -319,6 +342,7 @@ export default {
       this.dupDbAddress = [];
       this.paramLength = [];
       this.dummyNames = [];
+      this.dummyParamsDb = [];
       this.dummyCombo = [];
       this.duplicateCombination = [];
       this.$root.$emit('clearResponce', true);

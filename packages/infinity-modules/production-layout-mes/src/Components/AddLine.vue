@@ -38,7 +38,8 @@
                 required>
                 </v-text-field>
               <v-text-field label="Line Name"
-              counter="15"
+              :counter="15"
+              :rules="LineNameRule"
               v-model="name" required>
               </v-text-field>
               <v-text-field label="Line Description"
@@ -81,6 +82,9 @@ export default {
       ipaddr: null,
       hostname: null,
       valid: true,
+      LineNameRule: [(v) => !!v || 'Name required',
+        (v) => (v && v.length <= 15) || 'Name must be less than 15 characters',
+        (v) => /^\S+$/.test(v) || 'Space not allowed'],
       plcRules: [(v) => /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/.test(v) || 'Invalid format'],
     };
   },
