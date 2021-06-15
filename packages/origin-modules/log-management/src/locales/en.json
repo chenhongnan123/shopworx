@@ -21,6 +21,7 @@
     "UPLOAD_ONLY_CSV": "import only .csv file",
     "CODE_LENGTH_EXCEEDED": "Code length exceeded (15 char max)",
     "ROW_LIMIT": "Number of codes inside the file exceeded limit of 100",
-    "EMPTY_INPUT": "Empty cell found for code column"
+    "EMPTY_INPUT": "Empty cell found for code column",
+    "SWXCODES_ELEMENT_EMPTY": "Somthing went wrong with element 'swxlogcodes'"
   }
 }

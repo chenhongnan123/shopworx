@@ -355,40 +355,48 @@ export default {
       const responce = item.data;
       this.selectedRowData = [];
       this.selectedRowDataswxCodes = [];
-      if (this.language === 'zhHans') {
-        this.selectedRowData = responce.metadata;
-        const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.cndescription === responce.cndescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
-        if (!codeTypeMapping.length) {
-          this.selectedRowData = [];
-          this.selectedRowDataswxCodes = [];
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'CODE_NOT_AVAILABLE',
-          });
+      if (this.logcodes.length) {
+        if (this.language === 'zhHans') {
+          this.selectedRowData = responce.metadata;
+          const codeDescriptionMapping = this.logcodes
+            .filter((c) => c.cndescription === responce.cndescription);
+          const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+          if (!codeTypeMapping.length) {
+            this.selectedRowData = [];
+            this.selectedRowDataswxCodes = [];
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'CODE_NOT_AVAILABLE',
+            });
+          } else {
+            this.selectedRowDataswxCodes = codeDescriptionMapping;
+            this.selectedRowDataswxCodes = codeTypeMapping;
+          }
         } else {
-          this.selectedRowDataswxCodes = codeDescriptionMapping;
-          this.selectedRowDataswxCodes = codeTypeMapping;
+          this.selectedRowData = responce.metadata;
+          const codeDescriptionMapping = this.logcodes
+            .filter((c) => c.endescription === responce.endescription);
+          const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
+          if (!codeTypeMapping.length) {
+            this.selectedRowData = [];
+            this.selectedRowDataswxCodes = [];
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: 'CODE_NOT_AVAILABLE',
+            });
+          } else {
+            this.selectedRowDataswxCodes = codeDescriptionMapping;
+            this.selectedRowDataswxCodes = codeTypeMapping;
+          }
         }
       } else {
-        this.selectedRowData = responce.metadata;
-        const codeDescriptionMapping = this.logcodes
-          .filter((c) => c.endescription === responce.endescription);
-        const codeTypeMapping = this.logcodes.filter((c) => c.code === responce.logcode);
-        if (!codeTypeMapping.length) {
-          this.selectedRowData = [];
-          this.selectedRowDataswxCodes = [];
-          this.setAlert({
-            show: true,
-            type: 'error',
-            message: 'CODE_NOT_AVAILABLE',
-          });
-        } else {
-          this.selectedRowDataswxCodes = codeDescriptionMapping;
-          this.selectedRowDataswxCodes = codeTypeMapping;
-        }
+        this.setAlert({
+          show: true,
+          type: 'error',
+          message: 'SWXCODES_ELEMENT_EMPTY',
+        });
       }
     },
     setRowData() {
