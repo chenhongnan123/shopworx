@@ -1767,7 +1767,7 @@ export default [
         reportObjectParameters: [
           'siteid',
           'dateVal',
-          'hourVal',
+          'shiftVal',
         ],
       },
     ],
