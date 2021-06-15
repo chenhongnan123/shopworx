@@ -556,11 +556,13 @@ export default {
       } else {
         this.validateFlag = false;
         this.savingImport = false;
+        this.importBtnLoading = false;
         this.setAlert({
           show: true,
           type: 'error',
           message: 'IMPORT_EMPTY_FILE',
         });
+        document.getElementById('uploadFiles').value = null;
       }
     },
   },
