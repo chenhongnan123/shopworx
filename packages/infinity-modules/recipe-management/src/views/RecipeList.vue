@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid class="py-0">
+  <v-container fluid>
     <v-row justify="center">
-      <v-col cols="12" xl="10" class="py-0">
+      <v-col cols="12" xl="10">
         <v-toolbar
           flat
           dense
