@@ -57,6 +57,7 @@ export default {
     this.sseInit();
   },
   beforeDestroy() {
+    this.setSelectedView('');
     if (this.sseClient) {
       this.sseClient.close();
     }
@@ -95,11 +96,6 @@ export default {
       'themes',
       'views',
     ]),
-    isLoaded() {
-      const isViewSelected = this.selectedView !== null;
-      const isThemeSelected = this.selectedTheme !== null;
-      return isViewSelected && isThemeSelected;
-    },
   },
   methods: {
     ...mapMutations('energyDashboard', [
