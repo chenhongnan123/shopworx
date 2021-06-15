@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+
+### Bug Fixes
+
+* **parameter-configuration:** import functionality with unique param name  checking in db & other validations ([2f56cab](https://bitbucket.org/entrib/shopworx/commits/2f56cab39f808dedc4d1d216534df41954075bfc))
+* **parametr-configuration:** import parameters with tag creations ([4fc53b4](https://bitbucket.org/entrib/shopworx/commits/4fc53b484448490e5d4e01034909fecf82e45703))
+
+
+### Features
+
+* **parameter-configuration:** tag creation inTraceability element ([34d040f](https://bitbucket.org/entrib/shopworx/commits/34d040f368681130195470e988b19b781938738d))
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 
