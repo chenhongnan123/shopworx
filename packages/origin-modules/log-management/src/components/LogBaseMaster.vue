@@ -559,6 +559,7 @@ export default {
             await this.getSwxLogCodes();
             this.getSwxLogsElement();
             this.myProgressVariable = false;
+            document.getElementById('uploadFiles').value = null;
           }
         }
       } else {
