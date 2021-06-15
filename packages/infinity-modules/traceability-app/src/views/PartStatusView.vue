@@ -330,7 +330,8 @@ export default {
         this.trecibilityState.searchMainID = node.data.mainid;
         this.setTrecibilityState(this.trecibilityState);
         if (this.recipeViewState === 0) {
-          this.getDataForComponent();
+          // this.getDataForComponent();
+          this.$emit('cell-clicked');
         } else {
           this.setRecipeViewState(0);
         }
