@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+
+### Bug Fixes
+
+* **admin:** fixed QA0-I636 ([a94b502](https://bitbucket.org/entrib/shopworx/commits/a94b502f711731ea00ca687b0785590a72093165))
+* **customer-onboarding:** fixed parameters for shift energy dashboard report ([d45ede0](https://bitbucket.org/entrib/shopworx/commits/d45ede012291a6e66ec55c3644fd181fbcfa811a))
+* **dashboards:** fixed QA0-I638 - dashbaord loading ([4b7d12c](https://bitbucket.org/entrib/shopworx/commits/4b7d12c8dbe2ae6221ca79bf4e79495398b16dd6))
+* **log-management:** RA-I653 | Log-management | Error message should not get displayed ([dc2444c](https://bitbucket.org/entrib/shopworx/commits/dc2444cb37790f0c5ef2ea782536de93a08783bd))
+* **log-management:** RA-I654 | Log-management | On importing codes, need to refresh the page ([ebbef55](https://bitbucket.org/entrib/shopworx/commits/ebbef558e9c03c202304bf3035b54791169f0d17))
+* **log-management:** RA-I656 | columns value should not get edited ([50e6198](https://bitbucket.org/entrib/shopworx/commits/50e6198c05dd98acf2ebfee6a70cf4dcb8b0282f))
+* **log-management:** RA-I657 | og-management | For blank csv, loading sign is shown on import button ([6e8d995](https://bitbucket.org/entrib/shopworx/commits/6e8d995d04058cf25f68bdd1183b92cabade312c))
+* **log-management:** RA-I659 |  Date fields are showing blank and showing continuous loading ([f1232f8](https://bitbucket.org/entrib/shopworx/commits/f1232f89602bfd9057f527a27893bbd4b4df153f))
+* **master-data:** fixed QA0-I635 ([e3e5871](https://bitbucket.org/entrib/shopworx/commits/e3e587112afefc0e55886f3153cdddb7f73a7eaa))
+* **origin:** RA-I660 |  origin | assetidbased should be false for swxlogs element ([70a8ce7](https://bitbucket.org/entrib/shopworx/commits/70a8ce7372314fac5b6d9496aea928f7fc920149))
+* **parameter-configuration:** import functionality with unique param name  checking in db & other validations ([2f56cab](https://bitbucket.org/entrib/shopworx/commits/2f56cab39f808dedc4d1d216534df41954075bfc))
+* **parametr-configuration:** import parameters with tag creations ([4fc53b4](https://bitbucket.org/entrib/shopworx/commits/4fc53b484448490e5d4e01034909fecf82e45703))
+* **production-layout:** RA-I106 | Production Layout | Usg StartDate calendar should have date enbled after Manuf Date ([3282676](https://bitbucket.org/entrib/shopworx/commits/3282676d117c490fe85700584872acd664b0f1ed))
+* **production-layout:** RA-I110 | validation for line name while creating new line ([ea16f6b](https://bitbucket.org/entrib/shopworx/commits/ea16f6bab53e439744347a9b3ceda3f37269e0d9))
+* **production-planning:** fixed QA0-I633 ([c3e4526](https://bitbucket.org/entrib/shopworx/commits/c3e45269b78f678f1951428ee82e367f217eb7fb))
+* **recipe-management:** RA-I140 |  Recipe Management | Unable to filter according to Station Name ([60de639](https://bitbucket.org/entrib/shopworx/commits/60de639e13f793a3e2bb2a212e918acbf6af0937))
+* **recipe-management:** RA-I140 | Refresh button functionality is not proper ([605dca5](https://bitbucket.org/entrib/shopworx/commits/605dca56b11b9787a84386e06cd3f430344087fb))
+
+
+### Features
+
+* **log-management:** RA-I658 | Log-management | For blank description csv get uploaded ([43bdd7e](https://bitbucket.org/entrib/shopworx/commits/43bdd7ecd2c2e8a0970e903cb2adaccfe09826f7))
+* **log-management:** validation to check the length of 'swxlogcodes' element ([9ddd13f](https://bitbucket.org/entrib/shopworx/commits/9ddd13fd95c165eb754cddc4ffca23e92daae538))
+* **parameter-configuration:** tag creation inTraceability element ([34d040f](https://bitbucket.org/entrib/shopworx/commits/34d040f368681130195470e988b19b781938738d))
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 

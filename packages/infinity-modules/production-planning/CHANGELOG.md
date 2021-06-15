@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.6](https://bitbucket.org/entrib/shopworx/compare/v4.3.5...v4.3.6) (2021-06-15)
+
+
+### Bug Fixes
+
+* **production-planning:** fixed QA0-I633 ([c3e4526](https://bitbucket.org/entrib/shopworx/commits/c3e45269b78f678f1951428ee82e367f217eb7fb))
+
+
+
+
+
 ## [4.3.5](https://bitbucket.org/entrib/shopworx/compare/v4.3.4...v4.3.5) (2021-06-08)
 
 **Note:** Version bump only for package @shopworx/production-planning

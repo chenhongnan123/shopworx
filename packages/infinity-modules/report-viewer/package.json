@@ -1,13 +1,13 @@
 {
   "name": "@shopworx/report-viewer",
-  "version": "4.3.5",
+  "version": "4.3.6",
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@shopworx/assets": "^4.3.5",
-    "@shopworx/services": "^4.3.5",
+    "@shopworx/assets": "^4.3.6",
+    "@shopworx/services": "^4.3.6",
     "pdfmake": "0.1.71",
     "vuex": "^3.5.1"
   },
