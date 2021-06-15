@@ -7,7 +7,8 @@
     "ELEMENT_CREATED_SWXLOGS": "Element 'swxlogs' created",
     "ELEMENT_CREATED_SWXLOGCODES": "Element 'swxlogcodes' created",
     "TAGS_CREATED": "Tags created for swxlogscode element, use import button to import data",
-    "CODE_CREATED": "Codes created"
+    "CODE_CREATED": "Codes created",
+    "LOGS_FOUND": "Found the logs from last 24 hours"
   },
   "error": {
     "ERROR_CREATING_RECORD": "Something went wrong (Save button used for only creating new record!)",
@@ -20,6 +21,8 @@
     "UPLOAD_ONLY_CSV": "import only .csv file",
     "CODE_LENGTH_EXCEEDED": "Code length exceeded (15 char max)",
     "ROW_LIMIT": "Number of codes inside the file exceeded limit of 100",
-    "EMPTY_INPUT": "Empty cell found for code column"
+    "EMPTY_INPUT": "Empty cell found for code column",
+    "SWXCODES_ELEMENT_EMPTY": "Somthing went wrong with element 'swxlogcodes'",
+    "EMPTY_ENGLISH_DESCRIPTION": "Found an empty cell for English Description"
   }
 }
