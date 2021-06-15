@@ -89,13 +89,23 @@
             {{ averageCt }} {{ $t('planning.secs') }}
           </div>
         </v-col>
-      </v-row>
-      <div class="mt-4">
+        <v-col cols="4">
+          <div>
         {{ $t('planning.runtime') }}
-      </div>
-      <div class="title white--text">
-        {{ runtime }}
-      </div>
+          </div>
+          <div class="title white--text">
+            {{ runtime }}
+          </div>
+        </v-col>
+        <v-col cols="4" v-if="isPress">
+          <div>
+        {{ $t('planning.strokes') }}
+          </div>
+          <div class="title white--text">
+            {{ strokes }}
+          </div>
+        </v-col>
+      </v-row>
       <div v-for="(p, n) in selectedPlan" :key="n" class="mt-4">
         <div>
           {{ $t('planning.cavity') }}
@@ -143,8 +153,15 @@ export default {
   },
   computed: {
     ...mapState('productionPlanning', ['selectedPlan']),
-    ...mapGetters('productionPlanning', ['planStatus']),
+    ...mapGetters('productionPlanning', ['selectedAsset', 'planStatus']),
     ...mapGetters('helper', ['locale']),
+    isPress() {
+      let result = false;
+      if (this.selectedPlan[0] && this.selectedPlan[0].assetid) {
+        result = this.selectedAsset(this.selectedPlan[0].assetid) === 'press';
+      }
+      return result;
+    },
     isDark() {
       return this.theme.isDark;
     },
@@ -179,6 +196,9 @@ export default {
     },
     planCt() {
       return this.selectedPlan[0].stdcycletime;
+    },
+    strokes() {
+      return this.selectedPlan[0].strokes;
     },
     averageCt() {
       return this.selectedPlan[0].averagecycletime || 0;

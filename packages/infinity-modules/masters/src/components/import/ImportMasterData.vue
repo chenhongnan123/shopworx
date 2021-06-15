@@ -95,6 +95,7 @@ export default {
         this.dialog = true;
         await this.processFileUpload();
       }
+      e.target.value = '';
     },
     async processFileUpload() {
       await this.mapFile();

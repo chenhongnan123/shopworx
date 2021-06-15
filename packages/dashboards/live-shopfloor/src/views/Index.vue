@@ -58,6 +58,7 @@ export default {
     this.sseInit();
   },
   beforeDestroy() {
+    this.setSelectedView('');
     if (this.sseClient) {
       this.sseClient.close();
     }

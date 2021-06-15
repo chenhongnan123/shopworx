@@ -145,7 +145,12 @@ export default {
       const modules = [];
       if (this.masterSolutions && this.masterSolutions.length) {
         this.masterSolutions.forEach((solution) => solution.modules.map((module) => {
-          if (module.moduleName.toUpperCase().trim() === 'REPORTS') {
+          const isReports = module.moduleName.toUpperCase().trim() === 'REPORTS';
+          const isMaster = module.moduleName.toUpperCase().trim() === 'MASTERS';
+          const isAdmin = module.moduleName.toUpperCase().trim() === 'ADMIN';
+          const isRawData = module.moduleName.toUpperCase().trim() === 'RAWDATA';
+          const areAdminItems = isMaster || isAdmin || isRawData;
+          if (isReports) {
             this.masterReportCategoryIds = this.removeDuplicates(module.details, 'id')
               .map((detail) => detail.id);
             modules.push({
@@ -160,7 +165,7 @@ export default {
                 }),
               ),
             });
-          } else if (module.moduleName.toUpperCase().trim() === 'MASTERS' || module.moduleName.toUpperCase().trim() === 'ADMIN' || module.moduleName.toUpperCase().trim() === 'RAWDATA') {
+          } else if (areAdminItems) {
             modules.push({
               moduleId: module.id,
               moduleName: module.moduleName,
@@ -217,18 +222,17 @@ export default {
               enterpriseMode,
             };
             const modules = permissionsByModule[moduleId];
-            if (
-              modules[0].moduleName.toUpperCase().trim() !== 'REPORTS'
-            ) {
+            const isReports = modules[0].moduleName.toUpperCase().trim() === 'REPORTS';
+            const isMaster = modules[0].moduleName.toUpperCase().trim() === 'MASTERS';
+            const isAdmin = modules[0].moduleName.toUpperCase().trim() === 'ADMIN';
+            const isRawData = modules[0].moduleName.toUpperCase().trim() === 'RAWDATA';
+            const areAdminItems = isMaster || isAdmin || isRawData;
+            if (!isReports) {
               mod.webAppIds = modules.map((m) => m.id);
-            } else if (
-              modules[0].moduleName.toUpperCase().trim() === 'REPORTS'
-            ) {
+            } else if (isReports) {
               mod.reportsCategoryIds = modules.map((m) => m.id);
             }
-            if (
-              modules[0].moduleName.toUpperCase().trim() === 'MASTERS' || modules[0].moduleName.toUpperCase().trim() === 'ADMIN' || modules[0].moduleName.toUpperCase().trim() === 'RAWDATA'
-            ) {
+            if (areAdminItems) {
               delete mod.webAppIds;
             }
             return mod;
