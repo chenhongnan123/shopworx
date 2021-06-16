@@ -25,7 +25,6 @@ class ApiService {
       url,
       data,
       config,
-      responseType: config.responseType || 'json'
     });
   }
 

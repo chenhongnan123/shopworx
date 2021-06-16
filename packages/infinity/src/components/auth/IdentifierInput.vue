@@ -61,6 +61,12 @@ export default {
       countryCode: '+91',
     };
   },
+  mounted() {
+    const username = localStorage.getItem('username');
+    if (username) {
+      this.identifier = username;
+    }
+  },
   computed: {
     isMobileNumber() {
       return this.isNumberic(this.identifier);

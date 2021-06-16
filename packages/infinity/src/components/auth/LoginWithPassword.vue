@@ -97,10 +97,14 @@ export default {
       isValid: false,
     };
   },
-  watch: {
-    password() {
-      this.$refs.loginForm.validate();
-    },
+  mounted() {
+    const password = localStorage.getItem('password');
+    if (password) {
+      this.password = password;
+      setTimeout(() => {
+        this.onLogin();
+      }, 0);
+    }
   },
   methods: {
     ...mapActions('auth', ['authenticate']),

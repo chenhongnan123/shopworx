@@ -1,4 +1,5 @@
 import { set } from '@shopworx/services/util/store.helper';
+import FileService from '@shopworx/services/api/file.service';
 
 export default ({
   namespaced: true,
@@ -9,12 +10,10 @@ export default ({
     setPackageRecordlist: set('packagerecordlist'),
   },
   actions: {
-    getLabelFile: async ({ dispatch }) => {
-      const data = await dispatch(
-        'file/getFile',
+    getLabelFile: async () => {
+      const { data } = await FileService.getFile(
         // '/lingzhong.prn',
         '/infinity/lingzhong.prn',
-        { root: true },
       );
       if (data) {
         return data;
