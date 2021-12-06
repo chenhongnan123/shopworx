@@ -23,12 +23,9 @@
           label="请扫描条码信息。"
           :disabled="inputDisabled"
           prepend-inner-icon="mdi-barcode-scan"
-          @change="handlePackageRecord"
+          @keyup.enter="handlePackageRecord"
           class="textfield"
         ></v-text-field>
-        <div class="test">
-          <ag-grid-vue></ag-grid-vue>
-        </div>
         <v-card
         >
           <v-row no-gutters class="px-2">
@@ -308,15 +305,12 @@
      :packagerecorddialog = "packagerecorddialog"
      :packagehistoryrecord = "packagehistoryrecord"
       @setPackageRecordDialog="packagerecorddialog=false"
-      @handlePrint="handlePrint"
+      @handlePrint="handlePrint(1)"
     />
   </div>
 </template>
 
 <script>
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { AgGridVue } from 'ag-grid-vue';
 import { mapMutations, mapActions } from 'vuex';
 import socketioclient from 'socket.io-client';
 import PackageRecord from '../components/PackageRecord';
@@ -352,7 +346,7 @@ export default {
     };
   },
   components: {
-    PackageRecord, AgGridVue,
+    PackageRecord,
   },
   created() {
     this.init();
@@ -398,19 +392,42 @@ export default {
         });
       }
     },
-    async init() {
-      const labelprn = await this.getLabelFile();
-      this.labelprn = labelprn;
-      const orderList = await this.getOrderList('?query=orderstatus=="Running"');
+    async handleLabelRule(query) {
+      const orderList = await this.getOrderList(query);
       let labelruleList = await this.getLabelRule();
       labelruleList = labelruleList.filter((i) => i.type === 'barcode');
       if (labelruleList.length > 0 && orderList.length > 0) {
         [this.currentOrder] = orderList;
         const labelrule = labelruleList.find((i) => i.productname === orderList[0].productnumber);
-        this.labelrule = labelrule;
-        this.totalNumber = labelrule.quantity;
-        this.getOrderCount(orderList[0]);
+        if (labelrule) {
+          this.labelrule = labelrule;
+          this.totalNumber = labelrule.quantity;
+          await this.getOrderCount(orderList[0]);
+        }
+        console.log(2);
+        return labelrule;
       }
+      return false;
+    },
+    async init() {
+      const labelprn = await this.getLabelFile();
+      this.labelprn = labelprn;
+      console.log(1);
+      await this.handleLabelRule('?query=orderstatus=="Running"');
+      console.log(3);
+      // const orderList = await this.getOrderList('?query=orderstatus=="Running"');
+      // let labelruleList = await this.getLabelRule();
+      // labelruleList = labelruleList.filter((i) => i.type === 'barcode');
+      // if (labelruleList.length > 0 && orderList.length > 0) {
+      //   [this.currentOrder] = orderList;
+      //   const labelrule = labelruleList
+      //    .find((i) => i.productname === orderList[0].productnumber);
+      //   if (labelrule) {
+      //     this.labelrule = labelrule;
+      //     this.totalNumber = labelrule.quantity;
+      //     this.getOrderCount(orderList[0]);
+      //   }
+      // }
       const packageLabelRecordList = await this.getPackageLabelRecord(
         '?query=status==0',
       );
@@ -422,7 +439,7 @@ export default {
       } else {
         this.packageLabelRecord = {};
       }
-      const packagerecordlist = await this.getPackageRecord();
+      const packagerecordlist = await this.getPackageRecord('?pagesize=100&pagenumber=1');
       const packagerecordlistinprogress = packagerecordlist
         .filter((packagerecord) => (packagerecord.status === 1));
       if (packagerecordlistinprogress.length > 0) {
@@ -478,7 +495,6 @@ export default {
       if (substationList.length) {
         let op801k = 0;
         substationList.forEach((item, k) => {
-          console.log(k);
           if (item.name === 'OP80-1') {
             op801k = k;
           }
@@ -489,7 +505,6 @@ export default {
           `?query=substationid==%22${substation.id}%22%26%26mainid==%22${mainid}%22&`
           + 'sortquery=createdTimestamp==-1&pagenumber=1&pagesize=1',
         )));
-        console.log(checkoutList, 'checkoutList');
         substationList = substationList.map((item, key) => {
           const obj = {
             id: item.id,
@@ -551,8 +566,10 @@ export default {
       this.stationinfolist = substationList;
       this.ngConfigList = await this.getNgConfig();
     },
-    async handlePackageRecord(mainid) {
+    async handlePackageRecord() {
       this.loading = true;
+      const { mainid } = this;
+      console.log(mainid, 'mainid');
       if (!mainid) return false;
       this.mainidstatus = 0;
       this.detailMessege = '';
@@ -560,7 +577,8 @@ export default {
       this.partStatus = {};
       // this.packageLabelRecord = {};
       this.stationinfolist = [];
-      const packagerecordlist = await this.getPackageRecord();
+      const packagerecordlist = await this.getPackageRecord('?pagesize=100&pagenumber=1');
+      console.log(packagerecordlist, 'packagerecordlist');
       const packagerecordObj = packagerecordlist
         .find((item) => item.mainid === mainid);
       console.log(packagerecordObj, 'packagerecordObj');
@@ -575,14 +593,14 @@ export default {
             const postData = {
               id: packagerecordObj._id,
               payload: {
-                status: 5,
+                status: 4,
               },
             };
             await this.updatePackageRecord(postData);
           }
           this.loading = false;
           console.log(partStatusList, 'partStatusList');
-          return false;
+          // return false;
         }
       } else {
         this.partStatus = {};
@@ -653,6 +671,9 @@ export default {
         this.mainidstatus = 2;
         this.detailMessege = '当前条码未流经视频检测站';
       }
+      if (this.packageLabelRecord._id) {
+        this.handleLabelRule(`?query=ordernumber=="${this.packageLabelRecord.ordernumber}"`);
+      }
       // this.getNGInfo(mainid);
       this.loading = false;
       return true;
@@ -683,7 +704,7 @@ export default {
         const postData1 = {
           id: this.packagerecord._id,
           payload: {
-            status: 5,
+            status: 4,
           },
         };
         await this.updatePackageRecord(postData1);
@@ -722,6 +743,31 @@ export default {
       const result2 = await this.updatePartStatus(postData2);
       const result3 = await this.addRework(postData3);
       if (result2 && result3) {
+        if (Number(this.packageLabelRecord.status) === 1) {
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            '?query=status==0',
+          );
+          if (packageLabelRecordList.length > 0) {
+            this.setAlert({
+              show: true,
+              type: 'error',
+              message: '当前存在未完成包装箱，不可执行此操作!',
+            });
+            this.scrapDialog = false;
+            this.reset();
+            this.loading = false;
+            return;
+          }
+          const postData4 = {
+            id: this.packageLabelRecord._id,
+            payload: {
+              status: 0,
+              qty: Number(this.packageLabelRecord.qty) - 1,
+              completed: 1,
+            },
+          };
+          await this.updatePackageLabelRecord(postData4);
+        }
         this.setAlert({
           show: true,
           type: 'success',
@@ -757,7 +803,7 @@ export default {
       }
       this.packageDialog = true;
     },
-    handlePrint() {
+    handlePrint(ishandle) {
       window.BrowserPrint.getDefaultDevice('printer', (selectedDevice) => {
         const { labelrule } = this;
         const {
@@ -772,7 +818,11 @@ export default {
           barcode,
           qrcode,
           qty,
+          completed,
         } = this.packageLabelRecord;
+        if (completed && !ishandle) {
+          return;
+        }
         const {
           createdTimestamp,
         } = this.currentOrder;
