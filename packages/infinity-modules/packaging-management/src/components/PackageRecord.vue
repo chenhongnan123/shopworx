@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     handlePrint() {
-      this.$emit('handlePrint');
+      this.$emit('handlePrint', 1);
     },
   },
 };

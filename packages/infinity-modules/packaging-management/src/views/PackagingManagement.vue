@@ -181,7 +181,7 @@
             style="width:400px;"
             :loading="loading"
             :disabled="!isPrintAble"
-            @click="handlePrint"
+            @click="handlePrint(1)"
           >
             <v-icon>mdi-plus</v-icon>
             打印标签
@@ -305,7 +305,7 @@
      :packagerecorddialog = "packagerecorddialog"
      :packagehistoryrecord = "packagehistoryrecord"
       @setPackageRecordDialog="packagerecorddialog=false"
-      @handlePrint="handlePrint(1)"
+      @handlePrint="handlePrint"
     />
   </div>
 </template>
@@ -412,9 +412,6 @@ export default {
     async init() {
       const labelprn = await this.getLabelFile();
       this.labelprn = labelprn;
-      console.log(1);
-      await this.handleLabelRule('?query=orderstatus=="Running"');
-      console.log(3);
       // const orderList = await this.getOrderList('?query=orderstatus=="Running"');
       // let labelruleList = await this.getLabelRule();
       // labelruleList = labelruleList.filter((i) => i.type === 'barcode');
@@ -436,8 +433,10 @@ export default {
         if (this.packageLabelRecord.qty > 0) {
           this.isPrintAble = true;
         }
+        await this.handleLabelRule(`?query=ordernumber=="${this.packageLabelRecord.ordernumber}"`);
       } else {
         this.packageLabelRecord = {};
+        await this.handleLabelRule('?query=orderstatus=="Running"');
       }
       const packagerecordlist = await this.getPackageRecord('?pagesize=100&pagenumber=1');
       const packagerecordlistinprogress = packagerecordlist
@@ -599,14 +598,19 @@ export default {
             await this.updatePackageRecord(postData);
           }
           this.loading = false;
-          console.log(partStatusList, 'partStatusList');
-          // return false;
+          this.isPrintAble = false;
+          this.reset();
+          this.mainidstatus = 2;
+          this.detailMessege = '当前条码产品状态值不为7';
+          return false;
         }
       } else {
         this.partStatus = {};
+        this.loading = false;
+        this.isPrintAble = false;
+        this.reset();
         this.mainidstatus = 2;
         this.detailMessege = '当前条码记录中不存在';
-        this.loading = false;
         return false;
       }
       console.log(packagerecordObj, 'packagerecordObj');
@@ -621,12 +625,21 @@ export default {
           );
           if (packageLabelRecordList.length > 0) {
             [this.packageLabelRecord] = packageLabelRecordList;
+            this.isPrintAble = true;
           } else {
             this.packageLabelRecord = {};
           }
         } else if (Number(packagerecordObj.status) === 4) {
           this.mainidstatus = 2;
           this.detailMessege = '当前条码已报废';
+          const packageLabelRecordList = await this.getPackageLabelRecord(
+            `?query=barcode=="${packagerecordObj.barcode}"`,
+          );
+          if (packageLabelRecordList.length > 0) {
+            [this.packageLabelRecord] = packageLabelRecordList;
+          } else {
+            this.packageLabelRecord = {};
+          }
         } else if (Number(packagerecordObj.status) === 0 || Number(packagerecordObj.status) === 1) {
           if (Number(packagerecordObj.status) === 0) {
             const packagerecordlistnotstart = packagerecordlist
@@ -700,6 +713,22 @@ export default {
     async scrapPackage() {
       console.log(this.packagerecord, 'this.packagerecord');
       this.loading = true;
+      if (Number(this.packageLabelRecord.status) === 1) {
+        const packageLabelRecordList = await this.getPackageLabelRecord(
+          '?query=status==0',
+        );
+        if (packageLabelRecordList.length > 0) {
+          this.setAlert({
+            show: true,
+            type: 'error',
+            message: '当前存在未完成包装箱，不可执行此操作!',
+          });
+          this.scrapDialog = false;
+          this.reset();
+          this.loading = false;
+          return;
+        }
+      }
       if (this.packagerecord && this.packagerecord._id) {
         const postData1 = {
           id: this.packagerecord._id,
@@ -743,21 +772,8 @@ export default {
       const result2 = await this.updatePartStatus(postData2);
       const result3 = await this.addRework(postData3);
       if (result2 && result3) {
-        if (Number(this.packageLabelRecord.status) === 1) {
-          const packageLabelRecordList = await this.getPackageLabelRecord(
-            '?query=status==0',
-          );
-          if (packageLabelRecordList.length > 0) {
-            this.setAlert({
-              show: true,
-              type: 'error',
-              message: '当前存在未完成包装箱，不可执行此操作!',
-            });
-            this.scrapDialog = false;
-            this.reset();
-            this.loading = false;
-            return;
-          }
+        if (Number(this.packageLabelRecord.status) === 1
+          || Number(this.packageLabelRecord.completed)) {
           const postData4 = {
             id: this.packageLabelRecord._id,
             payload: {
@@ -775,6 +791,7 @@ export default {
         });
         this.scrapDialog = false;
         this.reset();
+        this.init();
       }
       this.loading = false;
     },
